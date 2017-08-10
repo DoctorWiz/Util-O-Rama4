@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RGBcolorChanger", "RGBcolorChanger\RGBcolorChanger.csproj", "{225957F3-04DE-43B7-80A7-56322D3AC8A2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{225957F3-04DE-43B7-80A7-56322D3AC8A2}.Debug|x86.ActiveCfg = Debug|x86
+		{225957F3-04DE-43B7-80A7-56322D3AC8A2}.Debug|x86.Build.0 = Debug|x86
+		{225957F3-04DE-43B7-80A7-56322D3AC8A2}.Release|x86.ActiveCfg = Release|x86
+		{225957F3-04DE-43B7-80A7-56322D3AC8A2}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
