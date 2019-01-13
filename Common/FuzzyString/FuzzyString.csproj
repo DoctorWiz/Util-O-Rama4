@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2AAA900B-64FB-4874-9444-64AE33ACA970}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FuzzyString</RootNamespace>
+    <AssemblyName>FuzzyString</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>FuzzyP.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>FuzzyStringStrongKey.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AbstractStringMetric.cs" />
+    <Compile Include="AbstractSubstitutionCost.cs" />
+    <Compile Include="ApproximatelyEquals.cs" />
+    <Compile Include="BlockDistance.cs" />
+    <Compile Include="ChapmanLengthDeviation.cs" />
+    <Compile Include="ChapmanMeanLength.cs" />
+    <Compile Include="CosineSimilarity.cs" />
+    <Compile Include="DamerauLevenshteinDistance.cs" />
+    <Compile Include="DiffMatch.cs" />
+    <Compile Include="DummyStopTermHandler.cs" />
+    <Compile Include="FuzzyStringComparisonTolerance.cs" />
+    <Compile Include="HammingDistance.cs" />
+    <Compile Include="ICharacterSubstitution.cs" />
+    <Compile Include="IStringMetric.cs" />
+    <Compile Include="ISubstitutionCost.cs" />
+    <Compile Include="ITermHandler.cs" />
+    <Compile Include="JaccardDistance.cs" />
+    <Compile Include="Jaro.cs" />
+    <Compile Include="JaroWinkler.cs" />
+    <Compile Include="Levenshtein2.cs" />
+    <Compile Include="LevenshteinDistance.cs" />
+    <Compile Include="LongestCommonSubsequence.cs" />
+    <Compile Include="LongestCommonSubstring.cs" />
+    <Compile Include="MathFunctions.cs" />
+    <Compile Include="MetricLCS.cs" />
+    <Compile Include="NeedlemanWunch.cs" />
+    <Compile Include="NGram.cs" />
+    <Compile Include="Operations.cs" />
+    <Compile Include="OptimalStringAlignment.cs" />
+    <Compile Include="OverlapCoefficient.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="QGram.cs" />
+    <Compile Include="RankEquality.cs" />
+    <Compile Include="RatcliffObershelpSimilarity.cs" />
+    <Compile Include="ShingleBased.cs" />
+    <Compile Include="Sift4.cs" />
+    <Compile Include="SorensenDiceDistance.cs" />
+    <Compile Include="SubCostRange0To1.cs" />
+    <Compile Include="SubCostRange5ToMinus3.cs" />
+    <Compile Include="TokeniserUtilities!1.cs" />
+    <Compile Include="TokeniserWhitespace.cs" />
+    <Compile Include="WeightedLevenshtein.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fuzzy.ico" />
+    <Content Include="FuzzyP.ico" />
+    <Content Include="Resources\License.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="FuzzyStringStrongKey.pfx" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

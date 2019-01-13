@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+    <configSections>
+        <sectionGroup name="userSettings" type="System.Configuration.UserSettingsGroup, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" >
+            <section name="StripMaker.Properties.Settings" type="System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" allowExeDefinition="MachineToLocalUser" requirePermission="false" />
+            <section name="StripMaker.Properties.Settings" type="System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" allowExeDefinition="MachineToLocalUser" requirePermission="false" />
+        </sectionGroup>
+    </configSections>
+    <userSettings>
+        <StripMaker.Properties.Settings>
+            <setting name="channels" serializeAs="String">
+                <value>300</value>
+            </setting>
+            <setting name="lastFile" serializeAs="String">
+                <value />
+            </setting>
+        </StripMaker.Properties.Settings>
+        <StripMaker.Properties.Settings>
+            <setting name="lastFile" serializeAs="String">
+                <value />
+            </setting>
+            <setting name="channels" serializeAs="String">
+                <value />
+            </setting>
+        </StripMaker.Properties.Settings>
+    </userSettings>
+</configuration>
