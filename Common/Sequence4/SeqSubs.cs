@@ -209,7 +209,9 @@ namespace LORUtils
 
 		public void Parse(string lineIn)
 		{
-			string keywd = utils.getKeyWord(lineIn, VizChannel.FIELDsubParam);
+			System.Diagnostics.Debugger.Break();
+			//string keywd = utils.getKeyWord(lineIn, VizChannel.FIELDsubParam);
+			string keywd = utils.getKeyWord(lineIn, Channel.FIELDcolor);
 			if (keywd.Length == 0)
 			{
 				isViz = false;
@@ -953,7 +955,7 @@ namespace LORUtils
 		public string animationInfo = "";
 		public SequenceType sequenceType = SequenceType.Undefined;
 		public Sequence4 ParentSequence = null;
-		public Visualization4  ParentVisualization = null;
+		//public Visualization4  ParentVisualization = null;
 		public ErrInfo LastError = new ErrInfo();
 
 		public const string FIELDsaveFileVersion = " saveFileVersion";
@@ -974,11 +976,11 @@ namespace LORUtils
 			Parse(lineIn);
 		}
 
-		public Info(Visualization4 myParent, string lineIn)
-		{
-			ParentVisualization = myParent;
-			Parse(lineIn);
-		}
+		//public Info(Visualization4 myParent, string lineIn)
+		//{
+		//	ParentVisualization = myParent;
+		//	Parse(lineIn);
+		//}
 
 		public void Parse(string lineIn)
 		{
