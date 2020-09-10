@@ -7,11 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LORUtils;
+using xUtils;
 
-namespace TuneORama
+namespace xTune
 {
-	public partial class Options : Form
+	public partial class frmOptions : Form
 	{
 		public int maxTime = 0;
 		public int beats = 4;
@@ -22,7 +22,7 @@ namespace TuneORama
 		private int n44 = 0;
 		private int n34 = 0;
 
-		public Options()
+		public frmOptions()
 		{
 			InitializeComponent();
 		}

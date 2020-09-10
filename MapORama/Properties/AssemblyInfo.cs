@@ -11,7 +11,7 @@ using LORUtils;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("W⚡zster Software")]
 [assembly: AssemblyProduct("Map-O-Rama")]
-[assembly: AssemblyCopyright("Copyright ©  2018-19 by Doctor Wizard and W⚡zster Software")]
+[assembly: AssemblyCopyright("Copyright ©  2019+ by Doctor 🧙 Wizard and W⚡zster Software")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

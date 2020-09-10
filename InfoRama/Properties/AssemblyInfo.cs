@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("W⚡zster")]
 [assembly: AssemblyProduct("Info-Rama")]
-[assembly: AssemblyCopyright("Copyright ©  2017 by Doctor Wizard and W⚡zster Software")]
+[assembly: AssemblyCopyright("Copyright ©  2019+ by Doctor 🧙 Wizard and W⚡zster Software")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

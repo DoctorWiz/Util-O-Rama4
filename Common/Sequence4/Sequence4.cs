@@ -8,7 +8,7 @@ using System.Diagnostics;
 
 namespace LORUtils
 {
-	public partial class Sequence4 : IMember, IComparable<IMember>
+	public partial class Sequence4 : IMember, IComparable<IMember>, IDisposable
 	{
 		#region XML Tag Constants
 		public const string TABLEsequence = "sequence";
@@ -22,6 +22,7 @@ namespace LORUtils
 		public const string TABLEeffect = "effect";
 		public const string TABLEtimingGrid = "timingGrid";
 		public const string TABLEtrack = "track";
+		public const string TABLEcosmicDevice = "cosmicColorDevice";
 		public const string STARTtracks = "<Tracks>";
 		public const string STARTgrids = "<TimingGrids>";
 		public const string TABLEloopLevels = "loopLevels";
@@ -33,6 +34,7 @@ namespace LORUtils
 		private const string STARTconfig = utils.STFLD + TABLEchannelConfig + Info.FIELDchannelConfigFileVersion;
 		private const string STARTeffect = utils.STFLD + TABLEeffect + utils.FIELDtype;
 		public const string STARTchannel = utils.STFLD + utils.TABLEchannel + utils.FIELDname;
+		private const string STARTcosmic = utils.STFLD + TABLEcosmicDevice + utils.SPC;
 		public const string STARTrgbChannel = utils.STFLD + TABLErgbChannel + utils.SPC;
 		public const string STARTchannelGroup = utils.STFLD + TABLEchannelGroupList + utils.SPC;
 		private const string STARTtrack = utils.STFLD + TABLEtrack + utils.SPC;
@@ -48,12 +50,22 @@ namespace LORUtils
 
 		#endregion
 
+		public const int ERROR_Undefined = utils.UNDEFINED;
+		public const int ERROR_NONE = 0;
+		public const int ERROR_CantOpen = 101;
+		public const int ERROR_NotXML = 102;
+		public const int ERROR_NotSequence = 103;
+		public const int ERROR_EncryptedDemo = 104;
+		public const int ERROR_Compressed = 105;
+		public const int ERROR_UnsupportedVersion = 114;
+		public const int ERROR_UnexpectedData = 50;
 
 		public SequenceType sequenceType = SequenceType.Undefined;
 		public Membership Members;
 		public List<Channel> Channels = new List<Channel>();
 		public List<RGBchannel> RGBchannels = new List<RGBchannel>();
 		public List<ChannelGroup> ChannelGroups = new List<ChannelGroup>();
+		public List<CosmicDevice> CosmicDevices = new List<CosmicDevice>();
 		public List<TimingGrid> TimingGrids = new List<TimingGrid>();
 		public List<Track> Tracks = new List<Track>();
 		public Animation animation = null;
@@ -62,6 +74,7 @@ namespace LORUtils
 		public int errorStatus = 0;
 		public int lineCount = 0;
 		public bool dirty = false;
+		private object tag = null;
 
 		// For now at least, this will remain false, therefore ALL timing grids will ALWAYS get written
 		private bool WriteSelectedGridsOnly = false;
@@ -133,7 +146,6 @@ namespace LORUtils
 			MakeDirty();
 
 		}
-
 
 		public int Index
 		{
@@ -256,6 +268,19 @@ namespace LORUtils
 			}
 		}
 
+		public object Tag
+		{
+			get
+			{
+				return tag;
+			}
+			set
+			{
+				tag = value;
+			}
+		}
+
+
 		#endregion
 
 		public string filename
@@ -270,7 +295,24 @@ namespace LORUtils
 			}
 		}
 
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				// dispose managed resources
+				if (writer != null)
+				{
+					writer.Close();
+				}
+			}
+			// free native resources
+		}
 
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
 
 
 
@@ -317,10 +359,6 @@ namespace LORUtils
 			string xmlInfo = "";
 			int li = utils.UNDEFINED; // positions of certain key text in the line
 																//Track trk = new Track();
-			const string ERRproc = " in Sequence:ReadSequence(";
-			const string ERRgrp = "), on Line #";
-			const string ERRitem = ", at position ";
-			const string ERRline = ", Code Line #";
 			SequenceType st = SequenceType.Undefined;
 			string creation = "";
 			DateTime modification;
@@ -328,6 +366,7 @@ namespace LORUtils
 			Channel lastChannel = null;
 			RGBchannel lastRGBchannel = null;
 			ChannelGroup lastGroup = null;
+			CosmicDevice lastCosmic = null;
 			Track lastTrack = null;
 			TimingGrid lastGrid = null;
 			LoopLevel lastll = null;
@@ -345,358 +384,436 @@ namespace LORUtils
 			info.file_created = File.GetCreationTime(existingFileName);
 			info.file_saved = File.GetLastWriteTime(existingFileName);
 
+			const string ERRproc = " in Sequence4:ReadSequenceFile(";
+			const string ERRgrp = "), on Line #";
+			// const string ERRitem = ", at position ";
+			const string ERRline = ", Code Line #";
 
 
-			//try
-			//{
-			StreamReader reader = new StreamReader(existingFileName);
-
-			// Check for items in the order from most likely item to least likely
-			// Effects, Channels,  RGBchannels, Groups, Tracks...
-
-			// Sanity Check #1A, does it have ANY lines?
-			if (!reader.EndOfStream)
+			try
 			{
-				lineIn = reader.ReadLine();
-				// Sanity Check #2, is it an XML file?
-				//li = lineIn.Substring(0, 6).CompareTo("<?xml ");
-				if (lineIn.Substring(0, 6) != "<?xml ")
-				//if (li != 0)
+				StreamReader reader = new StreamReader(existingFileName);
+
+				// Check for items in the order from most likely item to least likely
+				// Effects, Channels,  RGBchannels, Groups, Tracks...
+
+				// Sanity Check #1A, does it have ANY lines?
+				if (!reader.EndOfStream)
 				{
-					errorStatus = 101;
-				}
-				else
-				{
+					lineIn = reader.ReadLine();
 					xmlInfo = lineIn;
-					// Sanity Check #1B, does it have at least 2 lines?
-					if (!reader.EndOfStream)
+					// Sanity Check #2, is it an XML file?
+					//li = lineIn.Substring(0, 6).CompareTo("<?xml ");
+					if (lineIn.Substring(0, 6) != "<?xml ")
+					//if (li != 0)
 					{
-						lineIn = reader.ReadLine();
-						// Sanity Check #3, is it a sequence?
-						if ((st == SequenceType.Musical) || (st == SequenceType.Animated))
+						errorStatus = ERROR_NotXML;
+						if (lineIn.Substring(0,6) == "******")
 						{
-							//li = lineIn.IndexOf(STARTsequence);
-							li = utils.FastIndexOf(lineIn, STARTsequence);
+							if (!reader.EndOfStream) lineIn = reader.ReadLine();
+							if (!reader.EndOfStream) lineIn = reader.ReadLine();
+							li = utils.ContainsKey(lineIn, " Demo ");
+							if (li > 0) errorStatus = ERROR_EncryptedDemo;
 						}
-						if (st == SequenceType.ChannelConfig)
+					}
+					else
+					{
+						// Sanity Check #1B, does it have at least 2 lines?
+						if (!reader.EndOfStream)
 						{
-							//li = lineIn.IndexOf(STARTconfig);
-							li = utils.FastIndexOf(lineIn, STARTconfig);
-						}
-						if (li != 0)
-						{
-							errorStatus = 102;
-						}
-						else
-						{
-							info = new Info(this, lineIn);
-							creation = info.createdAt;
-
-							// Save this for later, as they will get changed as we populate the file
-							modification = info.lastModified;
-							info.filename = existingFileName;
-
-							myName = Path.GetFileName(existingFileName);
-							info.xmlInfo = xmlInfo;
-							// Sanity Checks #4A and 4B, does it have a 'SaveFileVersion' and is it '14'
-							//   (SaveFileVersion="14" means it cane from LOR Sequence Editor ver 4.x)
-							if (info.saveFileVersion != 14)
+							lineIn = reader.ReadLine();
+							// Sanity Check #3, is it a sequence?
+							if ((st == SequenceType.Musical) || (st == SequenceType.Animated))
 							{
-								errorStatus = 114;
+								//li = lineIn.IndexOf(STARTsequence);
+								li = utils.ContainsKey(lineIn, STARTsequence);
+							}
+							if (st == SequenceType.ChannelConfig)
+							{
+								//li = lineIn.IndexOf(STARTconfig);
+								li = utils.ContainsKey(lineIn, STARTconfig);
+							}
+							if (li != 0)
+							{
+								errorStatus = ERROR_NotSequence;
+								info.infoLine = lineIn;
 							}
 							else
 							{
-								// All sanity checks passed
-								// * PARSE LINES
-								while ((lineIn = reader.ReadLine()) != null)
-								{
-									lineCount++;
-									//try
-									//{
-									//! Effects
-									if (noEffects)
-									{
-										li = utils.UNDEFINED;
-									}
-									else
-									{
-										//li = lineIn.IndexOf(STARTeffect);
-										li = utils.FastIndexOf(lineIn, STARTeffect);
-									}
-									if (li > 0)
-									{
-										while (li > 0)
-										{
-											lastChannel.AddEffect(lineIn);
+								info = new Info(this, lineIn);
+								creation = info.createdAt;
 
-											lineIn = reader.ReadLine();
-											lineCount++;
-											//li = lineIn.IndexOf(STARTeffect);
-											li = utils.FastIndexOf(lineIn, STARTeffect);
-										}
-									}
-									else // Not an Effect
+								// Save this for later, as they will get changed as we populate the file
+								modification = info.lastModified;
+								info.filename = existingFileName;
+
+								myName = Path.GetFileName(existingFileName);
+								info.xmlInfo = xmlInfo;
+								// Sanity Checks #4A and 4B, does it have a 'SaveFileVersion' and is it '14'
+								//   (SaveFileVersion="14" means it cane from LOR Sequence Editor ver 4.x)
+								if ((info.saveFileVersion < 1) || (info.saveFileVersion > 14))
+								{
+									errorStatus = ERROR_UnsupportedVersion;
+
+								}
+								else
+								{
+									// All sanity checks passed
+									// * PARSE LINES
+									while ((lineIn = reader.ReadLine()) != null)
 									{
-										//! Timings
-										//li = lineIn.IndexOf(STARTtiming);
-										li = utils.FastIndexOf(lineIn, STARTtiming);
+										lineCount++;
+										try
+										{
+										//! Effects
+										if (noEffects)
+										{
+											li = utils.UNDEFINED;
+										}
+										else
+										{
+											//li = lineIn.IndexOf(STARTeffect);
+											li = utils.ContainsKey(lineIn, STARTeffect);
+										}
 										if (li > 0)
 										{
-											int t = utils.getKeyValue(lineIn, utils.FIELDcentiseconds);
-											lastGrid.AddTiming(t);
+											while (li > 0)
+											{
+												lastChannel.AddEffect(lineIn);
+
+												lineIn = reader.ReadLine();
+												lineCount++;
+												//li = lineIn.IndexOf(STARTeffect);
+												li = utils.ContainsKey(lineIn, STARTeffect);
+											}
 										}
-										else // Not a regular channel
+										else // Not an Effect
 										{
-											//! Regular Channels
-											//li = lineIn.IndexOf(STARTchannel);
-											li = utils.FastIndexOf(lineIn, STARTchannel);
+											//! Timings
+											//li = lineIn.IndexOf(STARTtiming);
+											li = utils.ContainsKey(lineIn, STARTtiming);
 											if (li > 0)
 											{
-												lastChannel = ParseChannel(lineIn);
+												int t = utils.getKeyValue(lineIn, utils.FIELDcentiseconds);
+												lastGrid.AddTiming(t);
 											}
 											else // Not a regular channel
 											{
-												//! RGB Channels
-												//li = lineIn.IndexOf(STARTrgbChannel);
-												li = utils.FastIndexOf(lineIn, STARTrgbChannel);
+												//! Regular Channels
+												//li = lineIn.IndexOf(STARTchannel);
+												li = utils.ContainsKey(lineIn, STARTchannel);
 												if (li > 0)
 												{
-													lastRGBchannel = ParseRGBchannel(lineIn);
-													lineIn = reader.ReadLine();
-													lineCount++;
-													lineIn = reader.ReadLine();
-													lineCount++;
-
-													// RED
-													int csi = utils.getKeyValue(lineIn, utils.FIELDsavedIndex);
-													Channel ch = (Channel)Members.bySavedIndex[csi];
-													lastRGBchannel.redChannel = ch;
-													ch.rgbChild = RGBchild.Red;
-													ch.rgbParent = lastRGBchannel;
-													lineIn = reader.ReadLine();
-													lineCount++;
-
-													// GREEN
-													csi = utils.getKeyValue(lineIn, utils.FIELDsavedIndex);
-													ch = (Channel)Members.bySavedIndex[csi];
-													lastRGBchannel.grnChannel = ch;
-													ch.rgbChild = RGBchild.Green;
-													ch.rgbParent = lastRGBchannel;
-													lineIn = reader.ReadLine();
-													lineCount++;
-
-													// BLUE
-													csi = utils.getKeyValue(lineIn, utils.FIELDsavedIndex);
-													ch = (Channel)Members.bySavedIndex[csi];
-													lastRGBchannel.bluChannel = ch;
-													ch.rgbChild = RGBchild.Blue;
-													ch.rgbParent = lastRGBchannel;
-
+													lastChannel = ParseChannel(lineIn);
 												}
-												else  // Not an RGB Channel
+												else // Not a regular channel
 												{
-													//! Channel Groups
-													//li = lineIn.IndexOf(STARTchannelGroup);
-													li = utils.FastIndexOf(lineIn, STARTchannelGroup);
+													//! RGB Channels
+													//li = lineIn.IndexOf(STARTrgbChannel);
+													li = utils.ContainsKey(lineIn, STARTrgbChannel);
 													if (li > 0)
 													{
-														lastGroup = ParseChannelGroup(lineIn);
-														//li = lineIn.IndexOf(utils.ENDFLD);
-														li = utils.FastIndexOf(lineIn, utils.ENDFLD);
-														if (li < 0)
-														{
-															lineIn = reader.ReadLine();
-															lineCount++;
-															lineIn = reader.ReadLine();
-															lineCount++;
-															//li = lineIn.IndexOf(TABLEchannelGroup + utils.FIELDsavedIndex);
-															li = utils.FastIndexOf(lineIn, TABLEchannelGroup + utils.FIELDsavedIndex);
-															while (li > 0)
-															{
-																int isl = utils.getKeyValue(lineIn, utils.FIELDsavedIndex);
-																lastGroup.Members.Add(Members.bySavedIndex[isl]);
-																//savedIndexes[isl].parents.Add(lastGroup.SavedIndex);
+														lastRGBchannel = ParseRGBchannel(lineIn);
+														lineIn = reader.ReadLine();
+														lineCount++;
+														lineIn = reader.ReadLine();
+														lineCount++;
 
+														// RED
+														int csi = utils.getKeyValue(lineIn, utils.FIELDsavedIndex);
+														Channel ch = (Channel)Members.bySavedIndex[csi];
+														lastRGBchannel.redChannel = ch;
+														ch.rgbChild = RGBchild.Red;
+														ch.rgbParent = lastRGBchannel;
+														lineIn = reader.ReadLine();
+														lineCount++;
+
+														// GREEN
+														csi = utils.getKeyValue(lineIn, utils.FIELDsavedIndex);
+														ch = (Channel)Members.bySavedIndex[csi];
+														lastRGBchannel.grnChannel = ch;
+														ch.rgbChild = RGBchild.Green;
+														ch.rgbParent = lastRGBchannel;
+														lineIn = reader.ReadLine();
+														lineCount++;
+
+														// BLUE
+														csi = utils.getKeyValue(lineIn, utils.FIELDsavedIndex);
+														ch = (Channel)Members.bySavedIndex[csi];
+														lastRGBchannel.bluChannel = ch;
+														ch.rgbChild = RGBchild.Blue;
+														ch.rgbParent = lastRGBchannel;
+
+													}
+													else  // Not an RGB Channel
+													{
+														//! Channel Groups
+														//li = lineIn.IndexOf(STARTchannelGroup);
+														li = utils.ContainsKey(lineIn, STARTchannelGroup);
+														if (li > 0)
+														{
+															lastGroup = ParseChannelGroup(lineIn);
+															//li = lineIn.IndexOf(utils.ENDFLD);
+															li = utils.ContainsKey(lineIn, utils.ENDFLD);
+															if (li < 0)
+															{
+																lineIn = reader.ReadLine();
+																lineCount++;
 																lineIn = reader.ReadLine();
 																lineCount++;
 																//li = lineIn.IndexOf(TABLEchannelGroup + utils.FIELDsavedIndex);
-																li = utils.FastIndexOf(lineIn, TABLEchannelGroup + utils.FIELDsavedIndex);
+																li = utils.ContainsKey(lineIn, TABLEchannelGroup + utils.FIELDsavedIndex);
+																while (li > 0)
+																{
+																	int isl = utils.getKeyValue(lineIn, utils.FIELDsavedIndex);
+																	lastGroup.Members.Add(Members.bySavedIndex[isl]);
+																	//savedIndexes[isl].parents.Add(lastGroup.SavedIndex);
+
+																	lineIn = reader.ReadLine();
+																	lineCount++;
+																	//li = lineIn.IndexOf(TABLEchannelGroup + utils.FIELDsavedIndex);
+																	li = utils.ContainsKey(lineIn, TABLEchannelGroup + utils.FIELDsavedIndex);
+																}
 															}
 														}
-													}
-													else // Not a ChannelGroup
-													{
-														//! Track Items
-														//li = lineIn.IndexOf(STARTtrackItem);
-														li = utils.FastIndexOf(lineIn, STARTtrackItem);
-																												if (li > 0)
+														else // Not a ChannelGroup
 														{
-															int si = utils.getKeyValue(lineIn, utils.FIELDsavedIndex);
-															lastTrack.Members.Add(Members.bySavedIndex[si]);
-														}
-														else // Not a regular channel
-														{
-															//! Tracks
-
-															//! Tracks are [apparently] getting added twice														
-
-
-															//li = lineIn.IndexOf(STARTtrack);
-															li = utils.FastIndexOf(lineIn, STARTtrack);
-															if (li > 0)
-															{
-																lastTrack = ParseTrack(lineIn);
-																//for (int tg = 0; tg < TimingGrids.Count; tg++)
-																//{
-																//lastTrack.timingGrid == Members.bySaveID[TimingGrids[tg].SaveID];
-																//TODO: Assign Timing Grid!!!!
-																//{
-																//	lastTrack.timingGridObjIndex = tg;
-																//	tg = TimingGrids.Count; // break
-																//}
-																//}
-																//li = lineIn.IndexOf(utils.ENDFLD);
-																li = utils.FastIndexOf(lineIn, utils.ENDFLD);
-																if (li < 0)
-																{
-																	lineIn = reader.ReadLine();
-																	lineCount++;
-																	lineIn = reader.ReadLine();
-																	lineCount++;
-																	//li = lineIn.IndexOf(STARTtrackItem);
-																	li = utils.FastIndexOf(lineIn, STARTtrackItem);
-																	while (li > 0)
-																	{
-																		int isi = utils.getKeyValue(lineIn, utils.FIELDsavedIndex);
-																		//lastTrack.itemSavedIndexes.Add(isi);
-																		lastTrack.Members.Add(Members.bySavedIndex[isi]);
-																		//savedIndexes[isi].parents.Add(-100 - Tracks.Count);
-
-																		lineIn = reader.ReadLine();
-																		lineCount++;
-																		//li = lineIn.IndexOf(STARTtrackItem);
-																		li = utils.FastIndexOf(lineIn, STARTtrackItem);
-																	}
-																}
-															} // end if a track
-															else // not a track
-															{
-																//! Timing Grids
-																//li = lineIn.IndexOf(STARTtimingGrid);
-																li = utils.FastIndexOf(lineIn, STARTtimingGrid);
+																//! Cosmic Color Devices
+																li = utils.ContainsKey(lineIn, STARTcosmic);
 																if (li > 0)
 																{
-																	lastGrid = ParseTimingGrid(lineIn);
-																	if (lastGrid.TimingGridType == TimingGridType.Freeform)
+																	lastCosmic = ParseCosmicDevice(lineIn);
+																	li = utils.ContainsKey(lineIn, utils.ENDFLD);
+																	if (li < 0)
 																	{
 																		lineIn = reader.ReadLine();
 																		lineCount++;
-																		//li = lineIn.IndexOf(STARTgridItem);
-																		li = utils.FastIndexOf(lineIn, STARTgridItem);
+																		lineIn = reader.ReadLine();
+																		lineCount++;
+																		// Cosmic Color Devices are just like groups
+																		// inlcuding how the list of child nodes is done
+																		li = utils.ContainsKey(lineIn, TABLEchannelGroup + utils.FIELDsavedIndex);
 																		while (li > 0)
 																		{
-																			int gpos = utils.getKeyValue(lineIn, utils.FIELDcentisecond);
-																			lastGrid.AddTiming(gpos);
+																			int isl = utils.getKeyValue(lineIn, utils.FIELDsavedIndex);
+																			IMember mm = Members.bySavedIndex[isl]
+;																			lastCosmic.Members.Add(mm);
+
 																			lineIn = reader.ReadLine();
 																			lineCount++;
-																			//li = lineIn.IndexOf(STARTgridItem);
-																			li = utils.FastIndexOf(lineIn, STARTgridItem);
+																			li = utils.ContainsKey(lineIn, TABLEchannelGroup + utils.FIELDsavedIndex);
 																		}
 																	}
 																}
-																else // Not a timing grid
+																else // Not a Cosmic Device
 																{
-																	//! Loop Levels
-																	//li = lineIn.IndexOf(STARTloopLevel);
-																	li = utils.FastIndexOf(lineIn, STARTloopLevel);
+																	//! Track Items
+																	//li = lineIn.IndexOf(STARTtrackItem);
+																	li = utils.ContainsKey(lineIn, STARTtrackItem);
 																	if (li > 0)
 																	{
-																		lastll = lastTrack.AddLoopLevel(lineIn);
+																		int si = utils.getKeyValue(lineIn, utils.FIELDsavedIndex);
+																		lastTrack.Members.Add(Members.bySavedIndex[si]);
 																	}
-																	else // not a loop level
+																	else // Not a regular channel
 																	{
-																		//! Loops
-																		//li = lineIn.IndexOf(STARTloop);
-																		li = utils.FastIndexOf(lineIn, STARTloop);
+																		//! Tracks
+
+																		//! Tracks are [apparently] getting added twice														
+
+
+																		//li = lineIn.IndexOf(STARTtrack);
+																		li = utils.ContainsKey(lineIn, STARTtrack);
 																		if (li > 0)
 																		{
-																			lastll.AddLoop(lineIn);
-																		}
-																		else // not a loop
+																			lastTrack = ParseTrack(lineIn);
+																			//for (int tg = 0; tg < TimingGrids.Count; tg++)
+																			//{
+																			//lastTrack.timingGrid == Members.bySaveID[TimingGrids[tg].SaveID];
+																			//TODO: Assign Timing Grid!!!!
+																			//{
+																			//	lastTrack.timingGridObjIndex = tg;
+																			//	tg = TimingGrids.Count; // break
+																			//}
+																			//}
+																			//li = lineIn.IndexOf(utils.ENDFLD);
+																			li = utils.ContainsKey(lineIn, utils.ENDFLD);
+																			if (li < 0)
+																			{
+																				lineIn = reader.ReadLine();
+																				lineCount++;
+																				lineIn = reader.ReadLine();
+																				lineCount++;
+																				//li = lineIn.IndexOf(STARTtrackItem);
+																				li = utils.ContainsKey(lineIn, STARTtrackItem);
+																				while (li > 0)
+																				{
+																					int isi = utils.getKeyValue(lineIn, utils.FIELDsavedIndex);
+																					//lastTrack.itemSavedIndexes.Add(isi);
+																					if (isi == 2189) System.Diagnostics.Debugger.Break();
+																					if (isi <= Members.HighestSavedIndex)
+																					{
+																						IMember SIMem = Members.bySavedIndex[isi];
+																						if (SIMem != null)
+																						{
+																							lastTrack.Members.Add(SIMem);
+																						}
+																						else
+																						{
+																							///WTF why wasn't if found?!?!
+																							System.Diagnostics.Debugger.Break();
+																						}
+																					}
+																					else
+																					{
+																						///WTF why wasn't if found?!?!
+																						System.Diagnostics.Debugger.Break();
+																					}
+																					//savedIndexes[isi].parents.Add(-100 - Tracks.Count);
+
+																					lineIn = reader.ReadLine();
+																					lineCount++;
+																					//li = lineIn.IndexOf(STARTtrackItem);
+																					li = utils.ContainsKey(lineIn, STARTtrackItem);
+																				}
+																			}
+																		} // end if a track
+																		else // not a track
 																		{
-																			//! Animation Rows
-																			//li = lineIn.IndexOf(STARTaniRow);
-																			li = utils.FastIndexOf(lineIn, STARTaniRow);
+																			//! Timing Grids
+																			//li = lineIn.IndexOf(STARTtimingGrid);
+																			li = utils.ContainsKey(lineIn, STARTtimingGrid);
 																			if (li > 0)
 																			{
-																				lastAniRow = animation.AddRow(lineIn);
+																				lastGrid = ParseTimingGrid(lineIn);
+																				if (lastGrid.TimingGridType == TimingGridType.Freeform)
+																				{
+																					lineIn = reader.ReadLine();
+																					lineCount++;
+																					//li = lineIn.IndexOf(STARTgridItem);
+																					li = utils.ContainsKey(lineIn, STARTgridItem);
+																					while (li > 0)
+																					{
+																						int gpos = utils.getKeyValue(lineIn, utils.FIELDcentisecond);
+																						lastGrid.AddTiming(gpos);
+																						lineIn = reader.ReadLine();
+																						lineCount++;
+																						//li = lineIn.IndexOf(STARTgridItem);
+																						li = utils.ContainsKey(lineIn, STARTgridItem);
+																					}
+																				}
 																			}
-																			else
+																			else // Not a timing grid
 																			{
-																				//! Animation Columns
-																				//li = lineIn.IndexOf(STARTaniCol);
-																				li = utils.FastIndexOf(lineIn, STARTaniCol);
-																				if (li > 1)
+																				//! Loop Levels
+																				//li = lineIn.IndexOf(STARTloopLevel);
+																				li = utils.ContainsKey(lineIn, STARTloopLevel);
+																				if (li > 0)
 																				{
-																					lastAniRow.AddColumn(lineIn);
-																				} // end animationColumn
-																				else
+																					lastll = lastTrack.AddLoopLevel(lineIn);
+																				}
+																				else // not a loop level
 																				{
-																					//! Animation
-																					//li = lineIn.IndexOf(utils.STFLD + TABLEanimation + utils.SPC);
-																					li = utils.FastIndexOf(lineIn, utils.STFLD + TABLEanimation + utils.SPC);
+																					//! Loops
+																					//li = lineIn.IndexOf(STARTloop);
+																					li = utils.ContainsKey(lineIn, STARTloop);
 																					if (li > 0)
 																					{
-																						animation = new Animation(this, lineIn);
-																					} // end if Animation, or not
-																				} // end if AnimationColumn, or not
-																			} // end if Animation, or not
-																		} // end if LoopLevel, or not
-																	} // end if Loop, or not (as in a loopLevel loop, not a for loop)
-																} // end TimingGrid (or not)
-															} // end Track (or not)
-														} // end Track Items (or not)
-													} // end ChannelGroup (or not)
-												} // end RGBchannel (or not)
-											} // end regular Channel (or not)
-										} // end timing (or not)
-									} // end Effect (or not)
-										/*
-							} // end 2nd Try
-									catch (Exception ex)
-									{
-										StackTrace st = new StackTrace(ex, true);
-										StackFrame sf = st.GetFrame(st.FrameCount - 1);
-										string emsg = ex.ToString();
-										emsg += ERRproc + existingFileName + ERRgrp + lineCount.ToString() + ERRitem + li.ToString();
-										emsg += ERRline + sf.GetFileLineNumber();
-#if DEBUG
-										System.Diagnostics.Debugger.Break();
-#endif
-										utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
-									} // end catch
-									*/
-								} // end while lines remain
-							} // end SaveFileVersion = 14
+																						lastll.AddLoop(lineIn);
+																					}
+																					else // not a loop
+																					{
+																						//! Animation Rows
+																						//li = lineIn.IndexOf(STARTaniRow);
+																						li = utils.ContainsKey(lineIn, STARTaniRow);
+																						if (li > 0)
+																						{
+																							lastAniRow = animation.AddRow(lineIn);
+																						}
+																						else
+																						{
+																							//! Animation Columns
+																							//li = lineIn.IndexOf(STARTaniCol);
+																							li = utils.ContainsKey(lineIn, STARTaniCol);
+																							if (li > 1)
+																							{
+																								lastAniRow.AddColumn(lineIn);
+																							} // end animationColumn
+																							else
+																							{
+																								//! Animation
+																								//li = lineIn.IndexOf(utils.STFLD + TABLEanimation + utils.SPC);
+																								li = utils.ContainsKey(lineIn, utils.STFLD + TABLEanimation + utils.SPC);
+																								if (li > 0)
+																								{
+																									animation = new Animation(this, lineIn);
+																								} // end if Animation, or not
+																							} // end if AnimationColumn, or not
+																						} // end if Animation, or not
+																					} // end if LoopLevel, or not
+																				} // end if Loop, or not (as in a loopLevel loop, not a for loop)
+																			} // end TimingGrid (or not)
+																		} // end Track (or not)
+																	} // end Track Items (or not)
+																} // end Cosmic Color Device (or not)
+														} // end ChannelGroup (or not)
+													} // end RGBchannel (or not)
+												} // end regular Channel (or not)
+											} // end timing (or not)
+										} // end Effect (or not)
+											
+								} // end 2nd Try
+										catch (Exception ex)
+										{
+											StackTrace strx = new StackTrace(ex, true);
+											StackFrame sf = strx.GetFrame(strx.FrameCount - 1);
+											string emsg = ex.Message + utils.CRLF;
+											emsg += "at Sequence4.ReadSequence()" + utils.CRLF;
+											emsg += "File:" + existingFileName + utils.CRLF;
+											emsg += "on line " + lineCount.ToString() + " at position " + li.ToString() + utils.CRLF;
+											emsg += "Line Is:" + lineIn + utils.CRLF;
+											emsg += "in code line " + sf.GetFileLineNumber() + utils.CRLF;
+											emsg += "Last SavedIndex = " + Members.HighestSavedIndex.ToString();
+											info.LastError.fileLine = lineCount;
+											info.LastError.linePos = li;
+											info.LastError.codeLine = sf.GetFileLineNumber();
+											info.LastError.errName = ex.ToString();
+											info.LastError.errMsg = emsg;
+											info.LastError.lineIn = lineIn;
 
-							// Restore these to the values we captured when first reading the file info header
-							info.createdAt = creation;
-							info.lastModified = info.file_saved;
-							dirty = false;
-							Members.ReIndex();
-						} // end second line is sequence info
-					} // end has a second line
-				} // end first line was xml info
-			} // end has a first line
+	#if DEBUG
+											//System.Diagnostics.Debugger.Break();
+	#endif
+											utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+											if (utils.IsWizard)
+											{
+												DialogResult dr1 = MessageBox.Show(emsg, "Error Reading Sequence File", MessageBoxButtons.OK, MessageBoxIcon.Error);
+												System.Diagnostics.Debugger.Break();
+											}
+											errorStatus = ERROR_UnexpectedData;
+										} // end catch
+										
+									} // end while lines remain
+								} // end SaveFileVersion = 14
+
+								// Restore these to the values we captured when first reading the file info header
+								info.createdAt = creation;
+								info.lastModified = info.file_saved;
+								dirty = false;
+								Members.ReIndex();
+							} // end second line is sequence info
+						} // end has a second line
+					} // end first line was xml info
+				} // end has a first line
 
 
-			reader.Close();
-			/*
-		} // end try
+				reader.Close();
+
+			} // end first try
 			catch (Exception ex)
 			{
-				StackTrace st = new StackTrace(ex, true);
-				StackFrame sf = st.GetFrame(st.FrameCount - 1);
+				StackTrace strc = new StackTrace(ex, true);
+				StackFrame sf = strc.GetFrame(strc.FrameCount - 1);
 				string emsg = ex.ToString();
 				emsg += ERRproc + existingFileName + ERRgrp + "none";
 				emsg += ERRline + sf.GetFileLineNumber();
@@ -704,11 +821,16 @@ namespace LORUtils
 				System.Diagnostics.Debugger.Break();
 #endif
 				utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
-			} // end catch
-			*/
+				if (utils.IsWizard)
+				{
+					DialogResult dr2 = MessageBox.Show(emsg, "Error Opening Sequence File", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					System.Diagnostics.Debugger.Break();
+				}
+				errorStatus = ERROR_CantOpen;
+			} // end first catch
 
 
-			if (errorStatus <= 0)
+			if (errorStatus < 100)
 			{
 				info.filename = existingFileName;
 				//! for debugging
@@ -1330,6 +1452,11 @@ namespace LORUtils
 				//chg.Written = false;
 				chg.AltSavedIndex = utils.UNDEFINED;
 			}
+			foreach (CosmicDevice dev in CosmicDevices)
+			{
+				//chg.Written = false;
+				dev.AltSavedIndex = utils.UNDEFINED;
+			}
 			foreach (Track tr in Tracks)
 			{
 				tr.AltSavedIndex = utils.UNDEFINED;
@@ -1398,6 +1525,7 @@ namespace LORUtils
 				Channels = new List<Channel>();
 				RGBchannels = new List<RGBchannel>();
 				ChannelGroups = new List<ChannelGroup>();
+				CosmicDevices = new List<CosmicDevice>();
 				Tracks = new List<Track>();
 				TimingGrids = new List<TimingGrid>();
 				//Members.SetParentSequence(this);
@@ -1626,25 +1754,25 @@ namespace LORUtils
 				lineCount++;
 				// does this line mark the start of a channel?
 				//pos1 = lineIn.IndexOf("xml version=");
-				pos1 = utils.FastIndexOf(lineIn, "xml version=");
+				pos1 = utils.ContainsKey(lineIn, "xml version=");
 				if (pos1 > 0)
 				{
 					info.xmlInfo = lineIn;
 				}
 				//pos1 = lineIn.IndexOf("saveFileVersion=");
-				pos1 = utils.FastIndexOf(lineIn, "saveFileVersion=");
+				pos1 = utils.ContainsKey(lineIn, "saveFileVersion=");
 				if (pos1 > 0)
 				{
 					info.Parse(lineIn);
 				}
 				//pos1 = lineIn.IndexOf(utils.STFLD + utils.TABLEchannel + utils.FIELDname);
-				pos1 = utils.FastIndexOf(lineIn, utils.STFLD + utils.TABLEchannel + utils.FIELDname);
+				pos1 = utils.ContainsKey(lineIn, utils.STFLD + utils.TABLEchannel + utils.FIELDname);
 				if (pos1 > 0)
 				{
 					//channelsCount++;
 				}
 				//pos1 = lineIn.IndexOf(utils.STFLD + TABLEeffect + utils.SPC);
-				pos1 = utils.FastIndexOf(lineIn, utils.STFLD + TABLEeffect + utils.SPC);
+				pos1 = utils.ContainsKey(lineIn, utils.STFLD + TABLEeffect + utils.SPC);
 				if (pos1 > 0)
 				{
 					//effectCount++;
@@ -1653,20 +1781,20 @@ namespace LORUtils
 				{
 				}
 				//pos1 = lineIn.IndexOf(utils.STFLD + TABLEtimingGrid + utils.SPC);
-				pos1 = utils.FastIndexOf(lineIn, utils.STFLD + TABLEtimingGrid + utils.SPC);
+				pos1 = utils.ContainsKey(lineIn, utils.STFLD + TABLEtimingGrid + utils.SPC);
 				if (pos1 > 0)
 				{
 					//timingGridCount++;
 				}
 				//pos1 = lineIn.IndexOf(utils.STFLD + TimingGrid.TABLEtiming + utils.SPC);
-				pos1 = utils.FastIndexOf(lineIn, utils.STFLD + TimingGrid.TABLEtiming + utils.SPC);
+				pos1 = utils.ContainsKey(lineIn, utils.STFLD + TimingGrid.TABLEtiming + utils.SPC);
 				if (pos1 > 0)
 				{
 					//gridItemCount++;
 				}
 
 				//pos1 = lineIn.IndexOf(utils.FIELDsavedIndex);
-				pos1 = utils.FastIndexOf(lineIn, utils.FIELDsavedIndex);
+				pos1 = utils.ContainsKey(lineIn, utils.FIELDsavedIndex);
 				if (pos1 > 0)
 				{
 					curSavedIndex = utils.getKeyValue(lineIn, utils.FIELDsavedIndex);
@@ -1698,7 +1826,7 @@ namespace LORUtils
 				// have we reached the Tracks section?
 				// does this line mark the start of a regular channel?
 				//pos1 = lineIn.IndexOf(utils.TABLEchannel + utils.ENDFLD);
-				pos1 = utils.FastIndexOf(lineIn, utils.TABLEchannel + utils.ENDFLD);
+				pos1 = utils.ContainsKey(lineIn, utils.TABLEchannel + utils.ENDFLD);
 				if (pos1 > 0)
 				{
 					curChannel++;
@@ -1740,7 +1868,7 @@ namespace LORUtils
 
 				// does this line mark the start of an Effect?
 				//pos1 = lineIn.IndexOf(TABLEeffect + utils.FIELDtype);
-				pos1 = utils.FastIndexOf(lineIn, TABLEeffect + utils.FIELDtype);
+				pos1 = utils.ContainsKey(lineIn, TABLEeffect + utils.FIELDtype);
 				if (pos1 > 0)
 				{
 					curEffect++;
@@ -1763,7 +1891,7 @@ namespace LORUtils
 
 				// does this line mark the start of a Timing Grid?
 				//pos1 = lineIn.IndexOf(utils.STFLD + TABLEtimingGrid + utils.SPC);
-				pos1 = utils.FastIndexOf(lineIn, utils.STFLD + TABLEtimingGrid + utils.SPC);
+				pos1 = utils.ContainsKey(lineIn, utils.STFLD + TABLEtimingGrid + utils.SPC);
 				if (pos1 > 0)
 				{
 					curTimingGrid++;
@@ -1778,7 +1906,7 @@ namespace LORUtils
 					{
 						lineIn = reader.ReadLine();
 						//pos1 = lineIn.IndexOf(TimingGrid.TABLEtiming + utils.FIELDcentisecond);
-						pos1 = utils.FastIndexOf(lineIn, TimingGrid.TABLEtiming + utils.FIELDcentisecond);
+						pos1 = utils.ContainsKey(lineIn, TimingGrid.TABLEtiming + utils.FIELDcentisecond);
 						while (pos1 > 0)
 						{
 							curGridItem++;
@@ -1787,7 +1915,7 @@ namespace LORUtils
 
 							lineIn = reader.ReadLine();
 							//pos1 = lineIn.IndexOf(TimingGrid.TABLEtiming + utils.FIELDcentisecond);
-							pos1 = utils.FastIndexOf(lineIn, TimingGrid.TABLEtiming + utils.FIELDcentisecond);
+							pos1 = utils.ContainsKey(lineIn, TimingGrid.TABLEtiming + utils.FIELDcentisecond);
 						}
 					} // end grid is freeform
 				} // end if timingGrid
@@ -2585,6 +2713,19 @@ namespace LORUtils
 			return chg;
 		}
 
+		public CosmicDevice ParseCosmicDevice(string lineIn)
+		{
+			CosmicDevice cos = new CosmicDevice("");
+			cos.SetParentSeq(this);
+			cos.Members.SetParentSequence(this);
+			cos.SetIndex(CosmicDevices.Count);
+			cos.Parse(lineIn);
+			CosmicDevices.Add(cos);
+			Members.Add(cos);
+			myCentiseconds = Math.Max(myCentiseconds, cos.Centiseconds);
+			return cos;
+		}
+
 		public ChannelGroup CreateChannelGroup(string theName)
 		{
 			// Does NOT check to see if a group with this name already exists
@@ -2602,6 +2743,25 @@ namespace LORUtils
 			myCentiseconds = Math.Max(myCentiseconds, chg.Centiseconds);
 
 			return chg;
+		}
+
+		public CosmicDevice CreateCosmicDevice(string theName)
+		{
+			// Does NOT check to see if a device with this name already exists
+			// Therefore, allows for duplicate device names (But they will have different SavedIndexes)
+			CosmicDevice dev;
+			dev = new CosmicDevice(theName, utils.UNDEFINED);
+			int newSI = AssignNextSavedIndex(dev);
+			dev.SetParentSeq(this);
+			dev.Members.SetParentSequence(this);
+			dev.Members.owner = dev;
+			dev.Centiseconds = Centiseconds;
+			dev.SetIndex(CosmicDevices.Count);
+			CosmicDevices.Add(dev);
+			Members.Add(dev);
+			myCentiseconds = Math.Max(myCentiseconds, dev.Centiseconds);
+
+			return dev;
 		}
 
 		public Track ParseTrack(string lineIn)

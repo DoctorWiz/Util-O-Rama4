@@ -12,7 +12,7 @@ namespace ListORama.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.8.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.7.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -146,12 +146,12 @@ namespace ListORama.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string LastSaveFile {
+        public string LastSavePath {
             get {
-                return ((string)(this["LastSaveFile"]));
+                return ((string)(this["LastSavePath"]));
             }
             set {
-                this["LastSaveFile"] = value;
+                this["LastSavePath"] = value;
             }
         }
         
@@ -284,6 +284,30 @@ namespace ListORama.Properties {
             }
             set {
                 this["VizMode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Duplicates {
+            get {
+                return ((bool)(this["Duplicates"]));
+            }
+            set {
+                this["Duplicates"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TrackName {
+            get {
+                return ((string)(this["TrackName"]));
+            }
+            set {
+                this["TrackName"] = value;
             }
         }
     }

@@ -27,11 +27,15 @@ namespace LORUtils
 		//public List<Effect> effects = new List<Effect>();
 		public int SubType = utils.UNDEFINED;
 		public int SubParam = utils.UNDEFINED;
-		public MultiColors MultiColors = new MultiColors();
+		//public MultiColors MultiColors = new MultiColors();
+		public int[] colors = new int[5];
+
 		public bool LED = false;
+		private object tag = null;
 
 		private static readonly string FIELDsubType = " Sub_Type";
-		public static readonly string FIELDsubParam = " Sub_Param";
+		//public static readonly string FIELDsubParam = " Sub_Param";
+		public static readonly string FIELDsubParam = " Sub_Parm";
 		public static readonly string FIELDmultiColor = " Multi_";
 		private static readonly string FIELDled = " LED";
 
@@ -208,11 +212,11 @@ namespace LORUtils
 			output.Parse(lineIn);
 			SubType = utils.getKeyValue(lineIn, FIELDsubType);
 			SubParam = utils.getKeyValue(lineIn, FIELDsubParam);
-			MultiColors.color1 = utils.getKeyValue(lineIn, FIELDmultiColor + "1");
-			MultiColors.color2 = utils.getKeyValue(lineIn, FIELDmultiColor + "2");
-			MultiColors.color3 = utils.getKeyValue(lineIn, FIELDmultiColor + "3");
-			MultiColors.color4 = utils.getKeyValue(lineIn, FIELDmultiColor + "4");
-			MultiColors.color5 = utils.getKeyValue(lineIn, FIELDmultiColor + "5");
+			colors[0] = utils.getKeyValue(lineIn, FIELDmultiColor + "1");
+			colors[1] = utils.getKeyValue(lineIn, FIELDmultiColor + "2");
+			colors[2] = utils.getKeyValue(lineIn, FIELDmultiColor + "3");
+			colors[3] = utils.getKeyValue(lineIn, FIELDmultiColor + "4");
+			colors[4] = utils.getKeyValue(lineIn, FIELDmultiColor + "5");
 			LED = utils.getKeyState(lineIn, FIELDled);
 			if (parentVisualization != null) parentVisualization.MakeDirty();
 		}
@@ -237,27 +241,57 @@ namespace LORUtils
 			// Multi_1 ="16777215" Multi_2="16777215" Multi_3="16777215" Multi_4="16777215" Multi_5="16777215"
 			// LED ="True"/>
 
-			string ret = "";
-			ret = utils.LEVEL2 + utils.STFLD + Visualization4.TABLEvizChannel;
-			ret += Visualization4.FIELDvizID + utils.FIELDEQ + VizID.ToString() + utils.ENDQT;
-			ret += Visualization4.FIELDvizName + utils.FIELDEQ + utils.XMLifyName(myName) + utils.ENDQT;
-			ret += output.LineOut();
-			ret += Visualization4.FIELDvizColor + utils.FIELDEQ + color.ToString() + utils.ENDQT;
-			ret += FIELDsubType + utils.FIELDEQ + SubType.ToString() + utils.ENDQT;
-			ret += FIELDsubParam + utils.FIELDEQ + SubParam.ToString() + utils.ENDQT;
-			ret += MultiColors.LineOut();
-			ret += FIELDled + utils.FIELDEQ;
+			StringBuilder ret = new StringBuilder();
+
+			ret.Append(utils.StartTable(Visualization4.TABLEvizChannel, 2));
+
+			ret.Append(utils.SetKey(Visualization4.FIELDvizID, VizID));
+			ret.Append(utils.SetKey(Visualization4.FIELDvizName, utils.XMLifyName(myName)));
+			ret.Append(output.LineOut());
+			ret.Append(utils.SetKey(Visualization4.FIELDvizColor, color));
+			ret.Append(utils.SetKey(FIELDsubType, SubType));
+			ret.Append(utils.SetKey(FIELDsubParam, SubParam));
+			
+			ret.Append(ColorsLineOut());
+
+			ret.Append(FIELDled);
+			ret.Append(utils.FIELDEQ);
 			if (LED)
 			{
-				ret += "True";  // Would be nice if LOR used standard "true" (Lower Case) but NOOOooooooo
+				ret.Append("True");  // Would be nice if LOR used standard "true" (Lower Case) but NOOOooooooo
 			}
 			else
 			{
-				ret += "False";
+				ret.Append("False");
 			}
-			ret += utils.ENDQT + utils.ENDFLD;
+			ret.Append(utils.ENDQT);
+			ret.Append(utils.ENDFLD);
 
-			return ret;
+			return ret.ToString();
+		}
+
+		public string ColorsLineOut()
+		{
+			StringBuilder ret = new StringBuilder();
+
+			for (int c=0; c<5; c++)
+			{
+				ret.Append(utils.SetKey(FIELDmultiColor + c.ToString(), colors[c]));
+			}
+
+			return ret.ToString();
+		}
+
+		public object Tag
+		{
+			get
+			{
+				return tag;
+			}
+			set
+			{
+				tag = value;
+			}
 		}
 
 
@@ -271,7 +305,7 @@ namespace LORUtils
 		{
 			string seek = utils.STFLD + utils.TABLEchannel + utils.FIELDname + utils.FIELDEQ;
 			//int pos = lineIn.IndexOf(seek);
-			int pos = utils.FastIndexOf(lineIn, seek);
+			int pos = utils.ContainsKey(lineIn, seek);
 			if (pos > 0)
 			{
 				Parse(lineIn);
@@ -299,7 +333,10 @@ namespace LORUtils
 				destination.output.network = output.network;
 				destination.output.unit = output.unit;
 			}
-			destination.MultiColors = MultiColors.Clone();
+			for (int c = 0; c < 5; c++)
+			{
+				destination.colors[c] = colors[c];
+			}
 			destination.LED = LED;
 		}
 
@@ -317,7 +354,10 @@ namespace LORUtils
 				output.network = source.output.network;
 				output.unit = source.output.unit;
 			}
-			MultiColors = source.MultiColors.Clone();
+			for (int c = 0; color < 5; color++)
+			{
+				colors[color] = source.colors[c];
+			}
 			LED = source.LED;
 
 		}
@@ -352,7 +392,10 @@ namespace LORUtils
 			vch.SubType = SubType;
 			vch.SubParam = SubParam;
 			vch.LED = LED;
-			vch.MultiColors = MultiColors.Clone();
+			for (int c = 0; c < 5; c++)
+			{
+				vch.colors[c] = colors[c];
+			}
 			return vch;
 		}
 
@@ -372,6 +415,7 @@ namespace LORUtils
 
 	} // End VizChannel
 
+	/*
 	public class MultiColors
 	{
 		// Consider using array...
@@ -409,12 +453,39 @@ namespace LORUtils
 
 		public string LineOut()
 		{
-			string ret = VizChannel.FIELDmultiColor + "1" + utils.FIELDEQ + color1.ToString() + utils.ENDQT;
-			ret += VizChannel.FIELDmultiColor + "2" + utils.FIELDEQ + color2.ToString() + utils.ENDQT;
-			ret += VizChannel.FIELDmultiColor + "3" + utils.FIELDEQ + color3.ToString() + utils.ENDQT;
-			ret += VizChannel.FIELDmultiColor + "4" + utils.FIELDEQ + color4.ToString() + utils.ENDQT;
-			ret += VizChannel.FIELDmultiColor + "5" + utils.FIELDEQ + color5.ToString() + utils.ENDQT;
-			return ret;
+			StringBuilder ret = new StringBuilder();
+
+			ret.Append(VizChannel.FIELDmultiColor);
+			ret.Append("1");
+			ret.Append(utils.FIELDEQ);
+			ret.Append(color1);
+			ret.Append(utils.ENDQT);
+
+			ret.Append(VizChannel.FIELDmultiColor);
+			ret.Append("2");
+			ret.Append(utils.FIELDEQ);
+			ret.Append(color2);
+			ret.Append(utils.ENDQT);
+
+			ret.Append(VizChannel.FIELDmultiColor);
+			ret.Append("3");
+			ret.Append(utils.FIELDEQ);
+			ret.Append(color3);
+			ret.Append(utils.ENDQT);
+
+			ret.Append(VizChannel.FIELDmultiColor);
+			ret.Append("4");
+			ret.Append(utils.FIELDEQ);
+			ret.Append(color4);
+			ret.Append(utils.ENDQT);
+
+			ret.Append(VizChannel.FIELDmultiColor);
+			ret.Append("5");
+			ret.Append(utils.FIELDEQ);
+			ret.Append(color5);
+			ret.Append(utils.ENDQT);
+
+			return ret.ToString();
 		}
 
 		public MultiColors Clone()
@@ -427,6 +498,7 @@ namespace LORUtils
 		//TODO create property gets for NetColors
 
 	}
+	*/
 
 	public class DrawObject
 	{
@@ -511,31 +583,37 @@ namespace LORUtils
 
 		public string LineOut()
 		{
-			string ret = "";
-			ret = utils.LEVEL2 + utils.STFLD + Visualization4.TABLEdrawObject;
-			ret += Visualization4.FIELDvizID + utils.FIELDEQ + VizID.ToString() + utils.ENDQT;
-			ret += Visualization4.FIELDvizName + utils.FIELDEQ + utils.XMLifyName(myName) + utils.ENDQT;
-			ret += FIELDbulbSpacing + utils.FIELDEQ + BulbSpacing.ToString() + utils.ENDQT;
-			ret += FIELDcomment + utils.FIELDEQ + Comment + utils.ENDQT;
-			ret += FIELDbulbShape + utils.FIELDEQ + BulbShape.ToString() + utils.ENDQT;
-			ret += FIELDzOrder + utils.FIELDEQ + ZOrder.ToString() + utils.ENDQT;
-			ret += FIELDassignedItem + utils.FIELDEQ + AssignedItem.ToString() + utils.ENDQT;
-			ret += FIELDlocked + utils.FIELDEQ;
+			StringBuilder ret = new StringBuilder();
+
+			ret.Append(utils.StartTable(Visualization4.TABLEdrawObject, 2));
+
+			ret.Append(utils.SetKey(Visualization4.FIELDvizID, VizID));
+			ret.Append(utils.SetKey(Visualization4.FIELDvizName, utils.XMLifyName(myName)));
+			ret.Append(utils.SetKey(FIELDbulbSpacing, BulbSpacing));
+			ret.Append(utils.SetKey(FIELDcomment, Comment));
+			ret.Append(utils.SetKey(FIELDbulbShape, BulbShape));
+			ret.Append(utils.SetKey(FIELDzOrder, ZOrder));
+			ret.Append(utils.SetKey(FIELDassignedItem, AssignedItem));
+
+			ret.Append(FIELDlocked);
+			ret.Append(utils.FIELDEQ);
+			// Would be nice if LOR used standard "true" (Lower Case) but NOOOooooooo
 			if (Locked)
 			{
-				ret += "True" + utils.ENDQT;  // Would be nice if LOR used standard "true" (Lower Case) but NOOOooooooo
+				ret.Append("True");
 			}
 			else
 			{
-				ret = "False" + utils.ENDQT;
-
+				ret.Append("False");
 			}
-			ret += FIELDfixtureType + utils.FIELDEQ + FixtureType.ToString() + utils.ENDQT;
-			ret += FIELDchannelType + utils.FIELDEQ + ChannelType.ToString() + utils.ENDQT;
-			ret += FIELDmaxOpacity + utils.FIELDEQ + MaxOpacity.ToString() + utils.ENDQT;
-			ret += utils.ENDFLD;
+			ret.Append(utils.ENDQT);
 
-			return ret;
+			ret.Append(utils.SetKey(FIELDfixtureType, FixtureType));
+			ret.Append(utils.SetKey(FIELDchannelType, ChannelType));
+			ret.Append(utils.SetKey(FIELDmaxOpacity, MaxOpacity));
+			ret.Append(utils.ENDFLD);
+
+			return ret.ToString();
 		}
 
 		public void SetIndex(int newIndex)

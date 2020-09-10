@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using System.Media;
+using System.Drawing;
 using LORUtils;
 
 namespace StripORama
@@ -162,14 +163,14 @@ namespace StripORama
 			// Alternative 1: Position it entirely in the screen containing
 			// the top left corner
 
-			Point savedLoc = Properties.Settings.Default.Location;
-			Size savedSize = Properties.Settings.Default.Size;
+			System.Drawing.Point savedLoc = Properties.Settings.Default.Location;
+			System.Drawing.Size savedSize = Properties.Settings.Default.Size;
 			FormWindowState savedState = (FormWindowState)Properties.Settings.Default.WindowState;
 			int x = savedLoc.X; // Default to saved postion and size, will override if necessary
 			int y = savedLoc.Y;
 			int w = savedSize.Width;
 			int h = savedSize.Height;
-			Point center = new Point(x + w / w, y + h / 2); // Find center point
+			System.Drawing.Point center = new System.Drawing.Point(x + w / w, y + h / 2); // Find center point
 			int onScreen = 0; // Default to primary screen if not found on screen 2+
 			Screen screen = Screen.AllScreens[0];
 

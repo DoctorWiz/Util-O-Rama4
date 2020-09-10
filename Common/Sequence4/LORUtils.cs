@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Media;
 using System.Diagnostics;
+using System.Text;
 using System.Threading;
 using System.Runtime.InteropServices;
 using Microsoft.Win32;
@@ -17,6 +18,7 @@ namespace LORUtils
 		public const int UNDEFINED = -1;
 		public const string ICONtrack = "Track";
 		public const string ICONchannelGroup = "ChannelGroup";
+		public const string ICONcosmicDevice = "CosmicDevice";
 		//public const string ICONchannel = "channel";
 		public const string ICONrgbChannel = "RGBchannel";
 		//public const string ICONredChannel = "redChannel";
@@ -40,6 +42,8 @@ namespace LORUtils
 		public const string LOG_Error = "Error";
 		public const string LOG_Info = "Info";
 		public const string LOG_Debug = "Debug";
+		private const string FORMAT_DATETIME = "MM/dd/yyyy hh:mm:ss tt";
+		private const string FORMAT_FILESIZE = "###,###,###,###,##0";
 
 		public static int nodeIndex = UNDEFINED;
 
@@ -114,42 +118,65 @@ namespace LORUtils
 		private const string LOR_DIR = "Light-O-Rama\\";
 
 
-		public static void FillChannels(TreeView tree, Sequence4 seq, List<List<TreeNode>> siNodes, bool selectedOnly, bool includeRGBchildren)
+		public static void FillChannels(TreeView tree, Sequence4 seq, ref List<TreeNode>[] nodesBySI, bool selectedOnly, bool includeRGBchildren)
 		{
+			int listSize = seq.Members.HighestSavedIndex + seq.Tracks.Count + seq.TimingGrids.Count + 1;
+			//Array.Resize(ref nodesBySI, listSize);
+			if (nodesBySI == null)
+			{
+				Array.Resize(ref nodesBySI, listSize);
+			}
 			int t = SeqEnums.MEMBER_Channel | SeqEnums.MEMBER_RGBchannel | SeqEnums.MEMBER_ChannelGroup | SeqEnums.MEMBER_Track;
-			FillChannels(tree, seq, siNodes, selectedOnly, includeRGBchildren, t);
+			FillChannels(tree, seq, ref nodesBySI, selectedOnly, includeRGBchildren, t);
 		}
-		public static void FillChannels(TreeView tree, Sequence4 seq, List<List<TreeNode>> siNodes, bool selectedOnly, bool includeRGBchildren, int memberTypes)
+
+		public static void FillChannels(TreeView tree, Sequence4 seq, ref List<TreeNode>[] nodesBySI, bool selectedOnly, bool includeRGBchildren, int memberTypes)
 		{
 			//TODO: 'Selected' not implemented yet
 
 			tree.Nodes.Clear();
 			nodeIndex = 1;
 			int listSize = seq.Members.HighestSavedIndex + seq.Tracks.Count + seq.TimingGrids.Count + 1;
-			//Array.Resize(ref siNodes, listSize);
-
-			const string ERRproc = " in FillChannels(";
-			const string ERRtrk = "), in Track #";
-			const string ERRitem = ", Items #";
-			const string ERRline = ", Line #";
-
-
-
-			for (int n = 0; n < listSize; n++)
+			//Array.Resize(ref nodesBySI, listSize);
+			if (nodesBySI == null)
 			{
-				//siNodes[n] = null;
-				//siNodes[n] = new List<TreeNode>();
-				siNodes.Add(new List<TreeNode>());
+				Array.Resize(ref nodesBySI, listSize);
+			}
+			if (listSize >= nodesBySI.Length)
+			{
+				Array.Resize(ref nodesBySI, listSize);
+			}
+
+
+			//const string ERRproc = " in FillChannels(";
+			//const string ERRtrk = "), in Track #";
+			//const string ERRitem = ", Items #";
+			//const string ERRline = ", Line #";
+
+
+
+			for (int n = 0; n < nodesBySI.Length; n++)
+			{
+				//nodesBySI[n] = null;
+				//nodesBySI[n] = new List<TreeNode>();
+				//nodesBySI.Add(new List<TreeNode>());
+				nodesBySI[n] = new List<TreeNode>();
 			}
 
 			for (int t = 0; t < seq.Tracks.Count; t++)
 			{
-				TreeNode trackNode = AddTrack(seq, tree.Nodes, t, siNodes, selectedOnly, includeRGBchildren, memberTypes);
+				TreeNode trackNode = AddTrack(seq, tree.Nodes, t, ref nodesBySI, selectedOnly, includeRGBchildren, memberTypes);
 			}
+			int xx = 42;
 		}
 
-		private static TreeNode AddTrack(Sequence4 seq, TreeNodeCollection baseNodes, int trackNumber, List<List<TreeNode>> siNodes, bool selectedOnly, bool includeRGBchildren, int memberTypes)
+		private static TreeNode AddTrack(Sequence4 seq, TreeNodeCollection baseNodes, int trackNumber, ref List<TreeNode>[] nodesBySI, bool selectedOnly,
+			bool includeRGBchildren, int memberTypes)
 		{
+			if (nodesBySI == null)
+			{
+				Array.Resize(ref nodesBySI, seq.Members.HighestSavedIndex);
+			}
 
 			string nodeText = "";
 			bool inclChan = false;
@@ -158,10 +185,11 @@ namespace LORUtils
 			if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0) inclRGB = true;
 
 			// TEMPORARY, FOR DEBUGGING
-			int tcount = 0;
+			// int tcount = 0;
 			int gcount = 0;
 			int rcount = 0;
 			int ccount = 0;
+			int dcount = 0;
 
 			//try
 			//{
@@ -186,8 +214,6 @@ namespace LORUtils
 			trackNode.ImageKey = ICONtrack;
 			trackNode.SelectedImageKey = ICONtrack;
 			trackNode.Checked = theTrack.Selected;
-			qlist = siNodes[theTrack.SavedIndex];
-			qlist.Add(trackNode);
 			//}
 
 			for (int ti = 0; ti < theTrack.Members.Count; ti++)
@@ -204,29 +230,47 @@ namespace LORUtils
 						int inclCount = memGrp.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 						if (inclCount > 0)
 						{
-							TreeNode groupNode = AddGroup(seq, baseNodes, member.Index, siNodes, selectedOnly, includeRGBchildren, memberTypes);
-							//AddNode(siNodes[si], groupNode);
-							qlist = siNodes[si];
+							TreeNode groupNode = AddGroup(seq, baseNodes, member.SavedIndex, ref nodesBySI, selectedOnly, includeRGBchildren, memberTypes);
+							//AddNode(nodesBySI[si], groupNode);
+							qlist = nodesBySI[si];
+							if (qlist == null) qlist = new List<TreeNode>();
 							qlist.Add(groupNode);
 							gcount++;
-							//siNodes[si].Add(groupNode);
+							//nodesBySI[si].Add(groupNode);
+						}
+					}
+					if (member.MemberType == MemberType.CosmicDevice)
+					{
+						CosmicDevice memDev = (CosmicDevice)member;
+						int inclCount = memDev.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
+						if (inclCount > 0)
+						{
+							TreeNode cosmicNode = AddGroup(seq, baseNodes, member.SavedIndex, ref nodesBySI, selectedOnly, includeRGBchildren, memberTypes);
+							//AddNode(nodesBySI[si], groupNode);
+							qlist = nodesBySI[si];
+							if (qlist == null) qlist = new List<TreeNode>();
+							qlist.Add(cosmicNode);
+							dcount++;
+								//nodesBySI[si].Add(groupNode);
 						}
 					}
 					if (member.MemberType == MemberType.RGBchannel)
 					{
-						TreeNode rgbNode = AddRGBchannel(seq, baseNodes, member.Index, siNodes, selectedOnly, includeRGBchildren);
-						//AddNode(siNodes[si], rgbNode);
-						//siNodes[si].Add(rgbNode);
-						qlist = siNodes[si];
+						TreeNode rgbNode = AddRGBchannel(seq, baseNodes, member.SavedIndex, ref nodesBySI, selectedOnly, includeRGBchildren);
+						//AddNode(nodesBySI[si], rgbNode);
+						//nodesBySI[si].Add(rgbNode);
+						qlist = nodesBySI[si];
+						if (qlist == null) qlist = new List<TreeNode>();
 						qlist.Add(rgbNode);
 						rcount++;
 					}
 					if (member.MemberType == MemberType.Channel)
 					{
-						TreeNode channelNode = AddChannel(seq, baseNodes, member.Index, selectedOnly);
-						//AddNode(siNodes[si], channelNode);
-						//siNodes[si].Add(channelNode);
-						qlist = siNodes[si];
+						TreeNode channelNode = AddChannel(seq, baseNodes, member.SavedIndex, selectedOnly);
+						//AddNode(nodesBySI[si], channelNode);
+						//nodesBySI[si].Add(channelNode);
+						qlist = nodesBySI[si];
+						if (qlist == null) qlist = new List<TreeNode>();
 						qlist.Add(channelNode);
 						ccount++;
 					}
@@ -318,102 +362,250 @@ namespace LORUtils
 
 		
 
-				int x = 1; // Check ccount, rcount, gcount
+			//	int x = 1; // Check ccount, rcount, gcount
 
 			return trackNode;
 		} // end fillOldChannels
 
-		private static TreeNode AddGroup(Sequence4 seq, TreeNodeCollection baseNodes, int groupIndex, List<List<TreeNode>> siNodes, bool selectedOnly, bool includeRGBchildren, int memberTypes)
+
+		private static TreeNode AddGroup(Sequence4 seq, TreeNodeCollection baseNodes, int groupSI, ref List<TreeNode>[] nodesBySI, bool selectedOnly,
+			bool includeRGBchildren, int memberTypes)
 		{
-			//ChanInfo nodeTag = new ChanInfo();
-			//nodeTag.MemberType = MemberType.ChannelGroup;
-			//nodeTag.objIndex = groupIndex;
-			//nodeTag.SavedIndex = theGroup.SavedIndex;
-			//nodeTag.nodeIndex = nodeIndex;
-
-			ChannelGroup theGroup = seq.ChannelGroups[groupIndex];
-
-			//IMember groupID = theGroup;
-			string nodeText = theGroup.Name;
 			TreeNode groupNode = null;
-
-			if ((memberTypes & SeqEnums.MEMBER_ChannelGroup) > 0)
+			if (groupSI >= nodesBySI.Length)
 			{
-				groupNode = baseNodes.Add(nodeText);
-
-				nodeIndex++;
-				groupNode.Tag = theGroup;
-				groupNode.ImageKey = ICONchannelGroup;
-				groupNode.SelectedImageKey = ICONchannelGroup;
-				groupNode.Checked = theGroup.Selected;
-				baseNodes = groupNode.Nodes;
+				Array.Resize(ref nodesBySI, groupSI + 1);
 			}
-			List<TreeNode> qlist;
 
-			const string ERRproc = " in FillChannels-AddGroup(";
-			const string ERRgrp = "), in Group #";
-			const string ERRitem = ", Items #";
-			const string ERRline = ", Line #";
-
-			for (int gi = 0; gi < theGroup.Members.Count; gi++)
+			if (nodesBySI[groupSI] != null)
 			{
-				//try
-				//{
-				IMember member = theGroup.Members.Items[gi];
-				int si = member.SavedIndex;
-				if (member.MemberType == MemberType.ChannelGroup)
-				{
-					ChannelGroup memGrp = (ChannelGroup)member;
-					bool inclChan = false;
-					if ((memberTypes & SeqEnums.MEMBER_Channel) > 0) inclChan = true;
-					bool inclRGB = false;
-					if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0) inclRGB = true;
-					int inclCount = memGrp.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
-					if (inclCount > 0)
-					{
-						TreeNode subGroupNode = AddGroup(seq, baseNodes, member.Index, siNodes, selectedOnly, includeRGBchildren, memberTypes);
-						qlist = siNodes[si];
-						qlist.Add(subGroupNode);
-					}
-				}
-				if (member.MemberType == MemberType.Channel)
-				{
-				if ((memberTypes & SeqEnums.MEMBER_Channel) > 0)
-					{
-						TreeNode channelNode = AddChannel(seq, baseNodes, member.Index, selectedOnly);
-						qlist = siNodes[si];
-						qlist.Add(channelNode);
-					}
-				}
-				if (member.MemberType == MemberType.RGBchannel)
-				{
-					if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0)
-					{
-						TreeNode rgbChannelNode = AddRGBchannel(seq, baseNodes, member.Index, siNodes, selectedOnly, includeRGBchildren);
-						qlist = siNodes[si];
-						qlist.Add(rgbChannelNode);
-					}
-				}
-				#region catch
-				/*
-	} // end try
-		catch (Exception ex)
-		{
-			StackTrace st = new StackTrace(ex, true);
-			StackFrame sf = st.GetFrame(st.FrameCount - 1);
-			string emsg = ex.ToString();
-			emsg += ERRproc + seq.filename + ERRgrp + groupIndex.ToString() + ERRitem + gi.ToString();
-			emsg += ERRline + sf.GetFileLineNumber();
-			#if DEBUG
-				Debugger.Break();
-			#endif
-			utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
-		} // end catch
-		*/
-				#endregion
+				//ChanInfo nodeTag = new ChanInfo();
+				//nodeTag.MemberType = MemberType.ChannelGroup;
+				//nodeTag.objIndex = groupIndex;
+				//nodeTag.SavedIndex = theGroup.SavedIndex;
+				//nodeTag.nodeIndex = nodeIndex;
 
-			} // End loop thru items
+				//ChannelGroup theGroup = seq.ChannelGroups[groupIndex];
+				ChannelGroup theGroup = (ChannelGroup)seq.Members.bySavedIndex[groupSI];
+
+				//IMember groupID = theGroup;
+
+				// Include groups in the TreeView?
+				if ((memberTypes & SeqEnums.MEMBER_ChannelGroup) > 0)
+				{
+					string nodeText = theGroup.Name;
+					groupNode = baseNodes.Add(nodeText);
+
+					nodeIndex++;
+					groupNode.Tag = theGroup;
+					groupNode.ImageKey = ICONchannelGroup;
+					groupNode.SelectedImageKey = ICONchannelGroup;
+					groupNode.Checked = theGroup.Selected;
+					baseNodes = groupNode.Nodes;
+					nodesBySI[groupSI].Add(groupNode);
+				}
+				//List<TreeNode> qlist;
+
+				// const string ERRproc = " in FillChannels-AddGroup(";
+				// const string ERRgrp = "), in Group #";
+				// const string ERRitem = ", Items #";
+				// const string ERRline = ", Line #";
+
+				for (int gi = 0; gi < theGroup.Members.Count; gi++)
+				{
+					//try
+					//{
+					IMember member = theGroup.Members.Items[gi];
+					int si = member.SavedIndex;
+					if (member.MemberType == MemberType.ChannelGroup)
+					{
+						ChannelGroup memGrp = (ChannelGroup)member;
+						bool inclChan = false;
+						if ((memberTypes & SeqEnums.MEMBER_Channel) > 0) inclChan = true;
+						bool inclRGB = false;
+						if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0) inclRGB = true;
+						int inclCount = memGrp.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
+						if (inclCount > 0)
+						{
+							TreeNode subGroupNode = AddGroup(seq, baseNodes, member.SavedIndex, ref nodesBySI, selectedOnly, includeRGBchildren, memberTypes);
+							//qlist = nodesBySI[si];
+							//qlist.Add(subGroupNode);
+						}
+						int cosCount = memGrp.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
+					}
+					if (member.MemberType == MemberType.CosmicDevice)
+					{
+						CosmicDevice memDev = (CosmicDevice)member;
+						bool inclChan = false;
+						if ((memberTypes & SeqEnums.MEMBER_Channel) > 0) inclChan = true;
+						bool inclRGB = false;
+						if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0) inclRGB = true;
+						int inclCount = memDev.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
+						if (inclCount > 0)
+						{
+							TreeNode subGroupNode = AddGroup(seq, baseNodes, member.SavedIndex, ref nodesBySI, selectedOnly, includeRGBchildren, memberTypes);
+							//qlist = nodesBySI[si];
+							//qlist.Add(subGroupNode);
+						}
+						int cosCount = memDev.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
+					}
+					if (member.MemberType == MemberType.Channel)
+					{
+						if ((memberTypes & SeqEnums.MEMBER_Channel) > 0)
+						{
+								TreeNode channelNode = AddChannel(seq, baseNodes, member.SavedIndex, selectedOnly);
+								nodesBySI[si].Add(channelNode);
+						}
+					}
+					if (member.MemberType == MemberType.RGBchannel)
+					{
+						if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0)
+						{
+								TreeNode rgbChannelNode = AddRGBchannel(seq, baseNodes, member.SavedIndex, ref nodesBySI, selectedOnly, includeRGBchildren);
+								nodesBySI[si].Add(rgbChannelNode);
+						}
+					}
+					#region catch
+					/*
+		} // end try
+			catch (Exception ex)
+			{
+				StackTrace st = new StackTrace(ex, true);
+				StackFrame sf = st.GetFrame(st.FrameCount - 1);
+				string emsg = ex.ToString();
+				emsg += ERRproc + seq.filename + ERRgrp + groupIndex.ToString() + ERRitem + gi.ToString();
+				emsg += ERRline + sf.GetFileLineNumber();
+				#if DEBUG
+					Debugger.Break();
+				#endif
+				utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+			} // end catch
+			*/
+					#endregion
+
+				} // End loop thru items
+			}
 			return groupNode;
+		} // end AddGroup
+
+		private static TreeNode AddDevice(Sequence4 seq, TreeNodeCollection baseNodes, int deviceSI, ref List<TreeNode>[] nodesBySI, bool selectedOnly,
+			bool includeRGBchildren, int memberTypes)
+		{
+			if (deviceSI >= nodesBySI.Length)
+			{
+				Array.Resize(ref nodesBySI, deviceSI + 1);
+			}
+
+			TreeNode deviceNode = null;
+			if (nodesBySI[deviceSI] != null)
+			{
+				//ChanInfo nodeTag = new ChanInfo();
+				//nodeTag.MemberType = MemberType.ChannelGroup;
+				//nodeTag.objIndex = groupIndex;
+				//nodeTag.SavedIndex = theGroup.SavedIndex;
+				//nodeTag.nodeIndex = nodeIndex;
+
+				//ChannelGroup theGroup = seq.ChannelGroups[groupIndex];
+				CosmicDevice theDevice = (CosmicDevice)seq.Members.bySavedIndex[deviceSI];
+
+				//IMember groupID = theGroup;
+
+				// Include groups in the TreeView?
+				if ((memberTypes & SeqEnums.MEMBER_CosmicDevice) > 0)
+				{
+					string nodeText = theDevice.Name;
+					deviceNode = baseNodes.Add(nodeText);
+
+					nodeIndex++;
+					deviceNode.Tag = theDevice;
+					deviceNode.ImageKey = ICONcosmicDevice;
+					deviceNode.SelectedImageKey = ICONcosmicDevice;
+					deviceNode.Checked = theDevice.Selected;
+					baseNodes = deviceNode.Nodes;
+					nodesBySI[deviceSI].Add(deviceNode);
+				}
+				//List<TreeNode> qlist;
+
+				// const string ERRproc = " in FillChannels-AddGroup(";
+				// const string ERRgrp = "), in Group #";
+				// const string ERRitem = ", Items #";
+				// const string ERRline = ", Line #";
+
+				for (int gi = 0; gi < theDevice.Members.Count; gi++)
+				{
+					//try
+					//{
+					IMember member = theDevice.Members.Items[gi];
+					int si = member.SavedIndex;
+					if (member.MemberType == MemberType.ChannelGroup)
+					{
+						ChannelGroup memGrp = (ChannelGroup)member;
+						bool inclChan = false;
+						if ((memberTypes & SeqEnums.MEMBER_Channel) > 0) inclChan = true;
+						bool inclRGB = false;
+						if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0) inclRGB = true;
+						int inclCount = memGrp.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
+						if (inclCount > 0)
+						{
+							TreeNode subGroupNode = AddGroup(seq, baseNodes, member.SavedIndex, ref nodesBySI, selectedOnly, includeRGBchildren, memberTypes);
+							//qlist = nodesBySI[si];
+							//qlist.Add(subGroupNode);
+						}
+						int cosCount = memGrp.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
+					}
+					if (member.MemberType == MemberType.CosmicDevice)
+					{
+						CosmicDevice memDev = (CosmicDevice)member;
+						bool inclChan = false;
+						if ((memberTypes & SeqEnums.MEMBER_Channel) > 0) inclChan = true;
+						bool inclRGB = false;
+						if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0) inclRGB = true;
+						int inclCount = memDev.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
+						if (inclCount > 0)
+						{
+							TreeNode subGroupNode = AddGroup(seq, baseNodes, member.SavedIndex, ref nodesBySI, selectedOnly, includeRGBchildren, memberTypes);
+							//qlist = nodesBySI[si];
+							//qlist.Add(subGroupNode);
+						}
+						int cosCount = memDev.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
+					}
+					if (member.MemberType == MemberType.Channel)
+					{
+						if ((memberTypes & SeqEnums.MEMBER_Channel) > 0)
+						{
+								TreeNode channelNode = AddChannel(seq, baseNodes, member.SavedIndex, selectedOnly);
+								nodesBySI[si].Add(channelNode);
+						}
+					}
+					if (member.MemberType == MemberType.RGBchannel)
+					{
+						if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0)
+						{
+								TreeNode rgbChannelNode = AddRGBchannel(seq, baseNodes, member.SavedIndex, ref nodesBySI, selectedOnly, includeRGBchildren);
+								nodesBySI[si].Add(rgbChannelNode);
+						}
+					}
+					#region catch
+					/*
+		} // end try
+			catch (Exception ex)
+			{
+				StackTrace st = new StackTrace(ex, true);
+				StackFrame sf = st.GetFrame(st.FrameCount - 1);
+				string emsg = ex.ToString();
+				emsg += ERRproc + seq.filename + ERRgrp + groupIndex.ToString() + ERRitem + gi.ToString();
+				emsg += ERRline + sf.GetFileLineNumber();
+				#if DEBUG
+					Debugger.Break();
+				#endif
+				utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+			} // end catch
+			*/
+					#endregion
+
+				} // End loop thru items
+			}
+			return deviceNode;
 		} // end AddGroup
 
 		private static void AddNode(List<TreeNode> nodeList, TreeNode nOde)
@@ -433,11 +625,11 @@ namespace LORUtils
 			*/
 		}
 
-		private static TreeNode AddChannel(Sequence4 seq, TreeNodeCollection baseNodes, int channelIndex, bool selectedOnly)
+		private static TreeNode AddChannel(Sequence4 seq, TreeNodeCollection baseNodes, int channelSI, bool selectedOnly)
 		{
-			string nodeText = seq.Channels[channelIndex].Name;
+			Channel theChannel = (Channel) seq.Members.bySavedIndex[channelSI];
+			string nodeText = theChannel.Name;
 			TreeNode channelNode = baseNodes.Add(nodeText);
-			Channel theChannel = seq.Channels[channelIndex];
 			//IMember nodeTag = theChannel;
 			nodeIndex++;
 			channelNode.Tag = theChannel;
@@ -448,7 +640,7 @@ namespace LORUtils
 
 
 			ImageList icons = baseNodes[0].TreeView.ImageList;
-			int iconIndex = ColorIcon(icons, seq.Channels[channelIndex].color);
+			int iconIndex = ColorIcon(icons, theChannel.color);
 			channelNode.ImageIndex = iconIndex;
 			channelNode.SelectedImageIndex = iconIndex;
 			channelNode.Checked = theChannel.Selected;
@@ -457,62 +649,70 @@ namespace LORUtils
 			return channelNode;
 		}
 
-		private static TreeNode AddRGBchannel(Sequence4 seq, TreeNodeCollection baseNodes, int RGBIndex, List<List<TreeNode>> siNodes, bool selectedOnly, bool includeRGBchildren)
+		private static TreeNode AddRGBchannel(Sequence4 seq, TreeNodeCollection baseNodes, int RGBsi, ref List<TreeNode>[] nodesBySI, bool selectedOnly, bool includeRGBchildren)
 		{
-			List<TreeNode> qlist;
+			TreeNode channelNode = null;
 
-			string nodeText = seq.RGBchannels[RGBIndex].Name;
-			TreeNode channelNode = baseNodes.Add(nodeText);
-			RGBchannel theRGB = seq.RGBchannels[RGBIndex];
-			//IMember nodeTag = theRGB;
-			nodeIndex++;
-			channelNode.Tag = theRGB;
-			channelNode.ImageKey = ICONrgbChannel;
-			channelNode.SelectedImageKey = ICONrgbChannel;
-			channelNode.Checked = theRGB.Selected;
-
-			if (includeRGBchildren)
+			if (RGBsi >= nodesBySI.Length)
 			{
-				// * * R E D   S U B  C H A N N E L * *
-				int ci = seq.RGBchannels[RGBIndex].redChannel.Index;
-				nodeText = seq.Channels[ci].Name;
-				TreeNode colorNode = channelNode.Nodes.Add(nodeText);
-				//nodeTag = seq.Channels[ci];
+				Array.Resize(ref nodesBySI, RGBsi + 1);
+			}
+			if (nodesBySI[RGBsi] != null)
+			{ 
+				RGBchannel theRGB = (RGBchannel)seq.Members.bySavedIndex[RGBsi];
+				string nodeText = theRGB.Name;
+				channelNode = baseNodes.Add(nodeText);
+				//IMember nodeTag = theRGB;
 				nodeIndex++;
-				colorNode.Tag = seq.Channels[ci];
-				colorNode.ImageKey = ICONredChannel;
-				colorNode.SelectedImageKey = ICONredChannel;
-				colorNode.Checked = seq.Channels[ci].Selected;
-				qlist = siNodes[seq.Channels[ci].SavedIndex];
-				qlist.Add(colorNode);
+				channelNode.Tag = theRGB;
+				channelNode.ImageKey = ICONrgbChannel;
+				channelNode.SelectedImageKey = ICONrgbChannel;
+				channelNode.Checked = theRGB.Selected;
 
-				// * * G R E E N   S U B  C H A N N E L * *
-				ci = seq.RGBchannels[RGBIndex].grnChannel.Index;
-				nodeText = seq.Channels[ci].Name;
-				colorNode = channelNode.Nodes.Add(nodeText);
-				//nodeTag = seq.Channels[ci];
-				nodeIndex++;
-				colorNode.Tag = seq.Channels[ci];
-				colorNode.ImageKey = ICONgrnChannel;
-				colorNode.SelectedImageKey = ICONgrnChannel;
-				colorNode.Checked = seq.Channels[ci].Selected;
-				qlist = siNodes[seq.Channels[ci].SavedIndex];
-				qlist.Add(colorNode);
+				if (includeRGBchildren)
+				{
+					// * * R E D   S U B  C H A N N E L * *
+					TreeNode colorNode = null;
+					int ci = theRGB.redChannel.SavedIndex;
+						nodeText = theRGB.redChannel.Name;
+						colorNode = channelNode.Nodes.Add(nodeText);
+						//nodeTag = seq.Channels[ci];
+						nodeIndex++;
+						colorNode.Tag = theRGB.redChannel;
+						colorNode.ImageKey = ICONredChannel;
+						colorNode.SelectedImageKey = ICONredChannel;
+						colorNode.Checked = theRGB.redChannel.Selected;
+						nodesBySI[ci].Add(colorNode);
+						channelNode.Nodes.Add(colorNode);
 
-				// * * B L U E   S U B  C H A N N E L * *
-				ci = seq.RGBchannels[RGBIndex].bluChannel.Index;
-				nodeText = seq.Channels[ci].Name;
-				colorNode = channelNode.Nodes.Add(nodeText);
-				//nodeTag = seq.Channels[ci];
-				nodeIndex++;
-				colorNode.Tag = seq.Channels[ci];
-				colorNode.ImageKey = ICONbluChannel;
-				colorNode.SelectedImageKey = ICONbluChannel;
-				colorNode.Checked = seq.Channels[ci].Selected;
-				qlist = siNodes[seq.Channels[ci].SavedIndex];
-				qlist.Add(colorNode);
-			} // end includeRGBchildren
-
+					// * * G R E E N   S U B  C H A N N E L * *
+					ci = theRGB.grnChannel.SavedIndex;
+						nodeText = theRGB.grnChannel.Name;
+						colorNode = channelNode.Nodes.Add(nodeText);
+						//nodeTag = seq.Channels[ci];
+						nodeIndex++;
+						colorNode.Tag = theRGB.grnChannel;
+						colorNode.ImageKey = ICONgrnChannel;
+						colorNode.SelectedImageKey = ICONgrnChannel;
+						colorNode.Checked = theRGB.grnChannel.Selected;
+						nodesBySI[ci].Add(colorNode);
+						channelNode.Nodes.Add(colorNode);
+					
+					// * * B L U E   S U B  C H A N N E L * *
+					ci = theRGB.bluChannel.SavedIndex;
+					if (nodesBySI[ci] != null)
+						nodeText = theRGB.bluChannel.Name;
+						colorNode = channelNode.Nodes.Add(nodeText);
+						//nodeTag = seq.Channels[ci];
+						nodeIndex++;
+						colorNode.Tag = seq.Channels[ci];
+						colorNode.ImageKey = ICONbluChannel;
+						colorNode.SelectedImageKey = ICONbluChannel;
+						colorNode.Checked = theRGB.bluChannel.Selected;
+						nodesBySI[ci].Add(colorNode);
+						channelNode.Nodes.Add(colorNode);
+				} // end includeRGBchildren
+			}
 			return channelNode;
 		}
 
@@ -882,6 +1082,31 @@ namespace LORUtils
 			} // End get NonAudioPath (Sequences)
 		}
 
+		public static string DefaultAuthor
+		{
+			get
+			{
+				string author = "";
+				string root = "";
+				string userDocs = DefaultDocumentsPath;
+				try
+				{
+					string ky = "HKEY_CURRENT_USER\\Software\\Light-O-Rama\\Editor\\New Sequence";
+					author = (string)Registry.GetValue(ky, "Author", root);
+					if (author.Length < 1)
+					{
+						author = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+					}
+				}
+				catch
+				{
+					author = "ERROR!";
+				}
+				return author;
+			}
+		}
+
+
 		public static string DefaultVisualizationsPath
 		{
 			get
@@ -993,7 +1218,7 @@ namespace LORUtils
 			get
 			{
 				string fldr = "";
-				string root = ROOT;
+				// string root = ROOT;
 				string userDocs = DefaultDocumentsPath;
 				try
 				{
@@ -1057,7 +1282,8 @@ namespace LORUtils
 			{
 				try
 				{
-					ret = Directory.Exists(pathToCheck);
+					string p = Path.GetDirectoryName(pathToCheck);
+					ret = Directory.Exists(p);
 				}
 				catch
 				{
@@ -1093,6 +1319,36 @@ namespace LORUtils
 			return ret;
 		}
 
+		public static string WindowfyFilename(string proposedName, bool justName)
+		{
+			string finalName = proposedName;
+			finalName = finalName.Replace('?', 'Ɂ');
+			finalName = finalName.Replace('%', '‰');
+			finalName = finalName.Replace('*', '＊');
+			finalName = finalName.Replace('|', '∣');
+			finalName = finalName.Replace("\"", "ʺ");
+			finalName = finalName.Replace("&quot;", "ʺ");
+			finalName = finalName.Replace('<', '˂');
+			finalName = finalName.Replace('>', '˃');
+			finalName = finalName.Replace('$', '﹩');
+			if (justName)
+			{
+				// These are valid in a path as separators, but not in a file name
+				finalName = finalName.Replace('/', '∕');
+				finalName = finalName.Replace("\\", "╲");
+				finalName = finalName.Replace(':', '：');
+			}
+			else
+			{
+				// Not valid in a WINDOWS path
+				finalName = finalName.Replace('/', '\\');
+			}
+
+
+			return finalName;
+		}
+
+
 		public static bool IsWizard
 		{
 			get
@@ -1106,18 +1362,18 @@ namespace LORUtils
 			}
 		}
 
-		public static string fileCreatedAt(string filename)
+		public static string FileCreatedAt(string filename)
 		{
 			string ret = "";
 			if (File.Exists(filename))
 			{
 				DateTime dt = File.GetCreationTime(filename);
-				ret = dt.ToString("MM/dd/yyyy hh:mm:ss tt");
+				ret = dt.ToString(FORMAT_DATETIME);
 			}
 			return ret;
 		}
 
-		public static DateTime fileCreatedDateTime(string filename)
+		public static DateTime FileCreatedDateTime(string filename)
 		{
 			DateTime ret = new DateTime();
 			if (File.Exists(filename))
@@ -1127,14 +1383,20 @@ namespace LORUtils
 			return ret;
 		}
 
-		public static string fileModiedAt(string filename)
+		public static string FileModiedAt(string filename)
 		{
 			string ret = "";
 			if (File.Exists(filename))
 			{
 				DateTime dt = File.GetLastWriteTime(filename);
-				ret = dt.ToString("MM/dd/yyyy hh:mm:ss tt");
+				ret = dt.ToString(FORMAT_DATETIME);
 			}
+			return ret;
+		}
+
+		public static string FormatDateTime(DateTime dt)
+		{
+			string ret = dt.ToString(FORMAT_DATETIME);
 			return ret;
 		}
 
@@ -1148,34 +1410,76 @@ namespace LORUtils
 			return ret;
 		}
 
-		public static string fileSizeFormated(string filename)
+		public static string FileSizeFormated(string filename)
 		{
+			long sz = GetFileSize(filename);
+			return FileSizeFormated(sz, "");
+		}
+
+		public static string FileSizeFormated(string filename, string thousands)
+		{
+			long sz = GetFileSize(filename);
+			return FileSizeFormated(sz, thousands);
+		}
+
+		public static string FileSizeFormated(long filesize)
+		{
+			return FileSizeFormated(filesize, "");
+		}
+
+		public static string FileSizeFormated(long filesize, string thousands)
+		{
+			string thou = thousands.ToUpper();
 			string ret = "0";
-			if (File.Exists(filename))
+			if (thou == "B") // Force value in Bytes
 			{
-				FileInfo fi = new FileInfo(filename);
-				long l = fi.Length;
-				if (l < 1024)
+				ret = Bytes(filesize);
+			}
+			else
+			{
+				if (thou == "K") // Force value in KiloBytes
 				{
-					ret = l.ToString() + " bytes";
+					ret = KiloBytes(filesize);
 				}
 				else
 				{
-					if (l < 1048576)
+					if (thou == "M") // Force value in MegaBytes
 					{
-						ret = (l / 1024).ToString() + " KB";
+						ret = MegaBytes(filesize);
 					}
 					else
 					{
-						if (l < 1073741824)
+						if (thou == "G") // Force value in GigaBytes
 						{
-							ret = (l / 1048576).ToString() + " MB";
+							ret = GigaBytes(filesize);
 						}
 						else
 						{
-							if (l < 1099511627776)
+							thou = ""; // Return value in nearest size group
+							if (filesize < 100000)
 							{
-								ret = (l / 1073741824).ToString() + " GB";
+								ret = Bytes(filesize);
+							}
+							else
+							{
+								if (filesize < 100000000)
+								{
+									ret = KiloBytes(filesize);
+								}
+								else
+								{
+									if (filesize < 100000000000)
+									{
+										ret = MegaBytes(filesize);
+									}
+									else
+									{
+										//if (filesize < 1099511627776)
+										//{
+										ret = GigaBytes(filesize);
+										//}
+									}
+								}
 							}
 						}
 					}
@@ -1184,7 +1488,85 @@ namespace LORUtils
 			return ret;
 		}
 
-		public static long fileSize(string filename)
+		private static string Bytes(long size)
+		{
+			return size.ToString(FORMAT_FILESIZE) + " Bytes";
+		}
+
+		private static string KiloBytes(long size)
+		{
+			long k = size >> 10;
+			string ret = k.ToString(FORMAT_FILESIZE);
+			if (k < 100)
+			{
+				double r = (int)(size % 0x400);
+				int d = 0;
+				double f = 0;
+				if (k < 10) f = (r / 10D); else f = (r / 100D);
+				d = (int)Math.Round(f);
+				ret += "." + d.ToString();
+			}
+			else
+			{
+				double ds = (double)size;
+				double dk = Math.Round(ds / 1024D);
+				k = (int)dk;
+				ret = k.ToString(FORMAT_FILESIZE);
+			}
+			ret += " KB";
+			return ret;
+		}
+
+		private static string MegaBytes(long size)
+		{
+			long m = size >> 20;
+			string ret = m.ToString(FORMAT_FILESIZE);
+			if (m < 100)
+			{
+				double r = (int)(size % 0x10000);
+				int d = 0;
+				double f = 0;
+				if (m < 10) f = (r / 10000D); else f = (r / 100000D);
+				d = (int)Math.Round(f);
+				ret += "." + d.ToString();
+			}
+			else
+			{
+				double ds = (double)size;
+				double dm = Math.Round(ds / 1048576D);
+				m = (int)dm;
+				ret = m.ToString(FORMAT_FILESIZE);
+			}
+			ret += " MB";
+			return ret;
+		}
+
+		private static string GigaBytes(long size)
+		{
+			long g = size >> 30;
+			string ret = g.ToString(FORMAT_FILESIZE);
+			if (g < 100)
+			{
+				double r = (int)(size % 0x40000000);
+				int d = 0;
+				double f = 0;
+				if (g < 10) f = (r / 10000000D); else f = (r / 100000000D);
+				d = (int)Math.Round(f);
+				ret += "." + d.ToString();
+			}
+			else
+			{
+				double ds = (double)size;
+				double dg = Math.Round(ds / 1073741824D);
+				g = (int)dg;
+				ret = g.ToString(FORMAT_FILESIZE);
+			}
+			ret += " GB";
+			return ret;
+		}
+
+
+		public static long GetFileSize(string filename)
 		{
 				long ret = 0;
 				if (File.Exists(filename))
@@ -1212,80 +1594,152 @@ namespace LORUtils
 			return ret;
 		}
 
-		public static Int32 getKeyValue(string lineIn, string keyWord)
+		public static int ContainsKey(string lineIn, string keyWord)
 		{
-			Int32 valueOut = UNDEFINED;
 			string lowerLine = lineIn.ToLower();
 			string lowerWord = keyWord.ToLower();
 			int pos1 = UNDEFINED;
-			int pos2 = UNDEFINED;
-			string fooo = "";
+			// int pos2 = UNDEFINED;
+			// string fooo = "";
 
 			//pos1 = lowerLine.IndexOf(lowerWord + "=");
-			pos1 = FastIndexOf(lowerLine, lowerWord + "=");
-			if (pos1 > 0)
+			pos1 = FastIndexOf(lowerLine, lowerWord);
+			return pos1;
+		}
+
+		public static Int32 getKeyValue(string lineIn, string keyWord)
+		{
+			int p = ContainsKey(lineIn, keyWord + "=\"");
+			if (p >= 0)
 			{
-				fooo = lineIn.Substring(pos1 + keyWord.Length + 2);
-				pos2 = fooo.IndexOf("\"");
-				fooo = fooo.Substring(0, pos2);
-				valueOut = Convert.ToInt32(fooo);
+				return getKeyValue(p, lineIn, keyWord);
 			}
 			else
 			{
-				valueOut = UNDEFINED;
+				return utils.UNDEFINED;
 			}
+		}
 
+		public static Int32 getKeyValue(int pos1, string lineIn, string keyWord)
+		{
+			Int32 valueOut = UNDEFINED;
+			int pos2 = UNDEFINED;
+			string fooo = "";
+
+			fooo = lineIn.Substring(pos1 + keyWord.Length + 2);
+			pos2 = fooo.IndexOf("\"");
+			fooo = fooo.Substring(0, pos2);
+			valueOut = Convert.ToInt32(fooo);
 			return valueOut;
 		}
 
 		public static string getKeyWord(string lineIn, string keyWord)
 		{
-			string valueOut = "";
-			string lowerLine = lineIn.ToLower();
-			string lowerWord = keyWord.ToLower();
-			int pos1 = UNDEFINED;
-			int pos2 = UNDEFINED;
-			string fooo = "";
-
-			//pos1 = lowerLine.IndexOf(lowerWord + "=");
-			pos1 = FastIndexOf(lowerLine, lowerWord + "=");
-			if (pos1 > 0)
+			int p = ContainsKey(lineIn, keyWord + "=\"");
+			if (p >= 0)
 			{
-				fooo = lineIn.Substring(pos1 + keyWord.Length + 2);
-				pos2 = fooo.IndexOf("\"");
-				fooo = fooo.Substring(0, pos2);
-				valueOut = fooo;
+				return getKeyWord(p, lineIn, keyWord);
 			}
 			else
 			{
-				valueOut = "";
+				return "";
 			}
+
+		}
+
+		public static string getKeyWord(int pos1, string lineIn, string keyWord)
+		{
+			string valueOut = "";
+			int pos2 = UNDEFINED;
+			string fooo = "";
+
+			fooo = lineIn.Substring(pos1 + keyWord.Length + 2);
+			pos2 = fooo.IndexOf("\"");
+			fooo = fooo.Substring(0, pos2);
+			valueOut = fooo;
 
 			return valueOut;
 		}
 
 		public static bool getKeyState(string lineIn, string keyWord)
 		{
+			int p = ContainsKey(lineIn, keyWord + "=\"");
+			if (p >= 0)
+			{
+				return getKeyState(p, lineIn, keyWord);
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public static bool getKeyState(int pos1, string lineIn, string keyWord)
+		{
 			bool stateOut = false;
-			string lowerLine = lineIn.ToLower();
-			string lowerWord = keyWord.ToLower();
-			int pos1 = UNDEFINED;
 			int pos2 = UNDEFINED;
 			string fooo = "";
 
-			//pos1 = lowerLine.IndexOf(lowerWord + "=");
-			pos1 = FastIndexOf(lowerLine, lowerWord + "=");
-			if (pos1 > 0)
-			{
-				fooo = lowerLine.Substring(pos1 + keyWord.Length + 2);
-				pos2 = fooo.IndexOf("\"");
-				fooo = fooo.Substring(0, pos2);
-				if (fooo.CompareTo("true") == 0) stateOut = true;
-				if (fooo.CompareTo("1") == 0) stateOut = true;
-			}
-
+			fooo = lineIn.Substring(pos1 + keyWord.Length + 2);
+			pos2 = fooo.IndexOf("\"");
+			fooo = fooo.Substring(0, pos2).ToLower();
+			if (fooo.CompareTo("true") == 0) stateOut = true;
+			if (fooo.CompareTo("yes") == 0) stateOut = true;
+			if (fooo.CompareTo("1") == 0) stateOut = true;
 			return stateOut;
 		}
+
+		public static string SetKey(string fieldName, string value)
+		{
+			StringBuilder ret = new StringBuilder();
+
+			ret.Append(fieldName);
+			ret.Append(FIELDEQ);
+			ret.Append(value);
+			ret.Append(ENDQT);
+
+			return ret.ToString();
+		}
+
+		public static string SetKey(string fieldName, int value)
+		{
+			StringBuilder ret = new StringBuilder();
+
+			ret.Append(fieldName);
+			ret.Append(FIELDEQ);
+			ret.Append(value);
+			ret.Append(ENDQT);
+
+			return ret.ToString();
+		}
+
+		public static string StartTable(string tableName, int level)
+		{
+			StringBuilder ret = new StringBuilder();
+
+			for (int l=0; l<level; l++)
+			{
+				ret.Append(LEVEL1);
+			}
+			ret.Append(STFLD);
+			ret.Append(tableName);
+			return ret.ToString();
+		}
+
+		public static string EndTable(string tableName, int level)
+		{
+			StringBuilder ret = new StringBuilder();
+
+			for (int l = 0; l < level; l++)
+			{
+				ret.Append(LEVEL1);
+			}
+			ret.Append(utils.FINTBL);
+			ret.Append(tableName);
+			ret.Append(utils.ENDTBL);
+			return ret.ToString();
+		}
+
 
 		public static int BuildDisplayOrder(Sequence4 seq, ref int[] savedIndexes, ref int[] levels, bool selectedOnly, bool includeRGBchildren)
 		{
@@ -1311,15 +1765,15 @@ namespace LORUtils
 
 
 			// TEMPORARY, FOR DEBUGGING
-			int tcount = 0;
-			int gcount = 0;
-			int rcount = 0;
-			int ccount = 0;
+			// int tcount = 0;
+			// int gcount = 0;
+			// int rcount = 0;
+			// int ccount = 0;
 
-			const string ERRproc = " in FillChannels(";
-			const string ERRtrk = "), in Track #";
-			const string ERRitem = ", Items #";
-			const string ERRline = ", Line #";
+			//const string ERRproc = " in FillChannels(";
+			// const string ERRtrk = "), in Track #";
+			// const string ERRitem = ", Items #";
+			// const string ERRline = ", Line #";
 
 			for (int t = 0; t < seq.Tracks.Count; t++)
 			{
@@ -1347,6 +1801,10 @@ namespace LORUtils
 						if (member.MemberType == MemberType.ChannelGroup)
 						{
 							c += BuildGroup(seq, (ChannelGroup)member, level+1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
+						}
+						if (member.MemberType == MemberType.CosmicDevice)
+						{
+							c += BuildCosmic(seq, (CosmicDevice)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
 						}
 						if (member.MemberType == MemberType.RGBchannel)
 						{
@@ -1468,11 +1926,6 @@ namespace LORUtils
 			int c = 0;
 			string nodeText = theGroup.Name;
 
-			const string ERRproc = " in FillChannels-AddGroup(";
-			const string ERRgrp = "), in Group #";
-			const string ERRitem = ", Items #";
-			const string ERRline = ", Line #";
-
 			if (!selectedOnly || theGroup.Selected)
 			{
 				Array.Resize(ref savedIndexes, count + 1);
@@ -1492,6 +1945,74 @@ namespace LORUtils
 				if (member.MemberType == MemberType.ChannelGroup)
 				{
 					c += BuildGroup(seq, (ChannelGroup)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
+				}
+				if (member.MemberType == MemberType.CosmicDevice)
+				{
+					c += BuildCosmic(seq, (CosmicDevice)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
+				}
+				if (member.MemberType == MemberType.Channel)
+				{
+					c += BuildChannel(seq, (Channel)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly);
+				}
+				if (member.MemberType == MemberType.RGBchannel)
+				{
+					c += BuildRGBchannel(seq, (RGBchannel)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
+				}
+				#region catch
+				/*
+	} // end try
+		catch (Exception ex)
+		{
+			StackTrace st = new StackTrace(ex, true);
+			StackFrame sf = st.GetFrame(st.FrameCount - 1);
+			string emsg = ex.ToString();
+			emsg += ERRproc + seq.filename + ERRgrp + groupIndex.ToString() + ERRitem + gi.ToString();
+			emsg += ERRline + sf.GetFileLineNumber();
+			#if DEBUG
+				Debugger.Break();
+			#endif
+			utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+		} // end catch
+		*/
+				#endregion
+
+			} // End loop thru items
+			return c;
+		} // end AddGroup
+
+		public static int BuildCosmic(Sequence4 seq, CosmicDevice theDevice, int level, ref int count, ref int[] savedIndexes, ref int[] levels, bool selectedOnly, bool includeRGBchildren)
+		{
+			int c = 0;
+			string nodeText = theDevice.Name;
+
+			// const string ERRproc = " in FillChannels-AddGroup(";
+			// const string ERRgrp = "), in Group #";
+			// const string ERRitem = ", Items #";
+			// const string ERRline = ", Line #";
+
+			if (!selectedOnly || theDevice.Selected)
+			{
+				Array.Resize(ref savedIndexes, count + 1);
+				Array.Resize(ref levels, count + 1);
+				savedIndexes[count] = theDevice.SavedIndex;
+				levels[count] = level;
+				count++;
+				c++;
+			}
+
+			for (int gi = 0; gi < theDevice.Members.Count; gi++)
+			{
+				//try
+				//{
+				IMember member = theDevice.Members.Items[gi];
+				int si = member.SavedIndex;
+				if (member.MemberType == MemberType.ChannelGroup)
+				{
+					c += BuildGroup(seq, (ChannelGroup)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
+				}
+				if (member.MemberType == MemberType.CosmicDevice)
+				{
+					c += BuildCosmic(seq, (CosmicDevice)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
 				}
 				if (member.MemberType == MemberType.Channel)
 				{
@@ -1662,21 +2183,21 @@ namespace LORUtils
 		{
 			string timeOut = "";
 
-			int cs = (int)(centiseconds % 100);
-			int r = (int)((centiseconds - cs) / 100);
-			int sec = r % 60;
-			int min = (r - sec) / 60;
+			int totsecs = (int)(centiseconds / 100);
+			int centis = centiseconds % 100;
+			int min = (int)(totsecs / 60);
+			int secs = totsecs % 60;
 
 			if (min>0)
 			{
 				timeOut = min.ToString() + ":";
-				timeOut += sec.ToString("00");
+				timeOut += secs.ToString("00");
 			}
 			else
 			{
-				timeOut = sec.ToString();
+				timeOut = secs.ToString();
 			}
-			timeOut += "." + cs.ToString("00");
+			timeOut += "." + centis.ToString("00");
 
 			return timeOut;
 		}
@@ -2198,8 +2719,8 @@ namespace LORUtils
 			int totalCentiseconds = endCentiseconds - startCentiseconds + 1;
 			// centisecondsPerPixel = totalCentiseconds / width;
 			float cspp = (float)totalCentiseconds / (float)width;
-			int curCs = 0;
-			int lastCs = 0;
+			// int curCs = 0;
+			// int lastCs = 0;
 			int curLevel = 0;
 			int effectIdx = 0;
 			bool keepGoing = true;
@@ -2361,6 +2882,88 @@ namespace LORUtils
 			}
 			return -1;
 		}
+
+		public static string ReplaceInvalidFilenameCharacters(string oldName)
+		{
+			//! This is for the main part of the filename only!
+			//! It replaces things like \ and : so it can't be used for full paths + names
+			string newName = oldName.Replace('<', '＜');
+			newName = newName.Replace('>', '＞');
+			newName = newName.Replace(':', '﹕');
+			newName = newName.Replace('\"', '＂');
+			newName = newName.Replace('/', '∕');
+			newName = newName.Replace('\\', '＼');
+			newName = newName.Replace('?', '？');
+			newName = newName.Replace('|', '￤');
+			newName = newName.Replace('$', '§');
+			newName = newName.Replace('*', '＊');
+			return newName;
+		}
+
+		public static string Time_CentisecondsToMinutes(int centiseconds)
+		{
+			int mm = (int)(centiseconds / 6000);
+			int ss = (int)((centiseconds - mm * 6000)/100);
+			int cs = (int)(centiseconds - mm * 6000 - ss * 100);
+			string ret = mm.ToString("0") + ":" + ss.ToString("00") + "." + cs.ToString("00");
+			return ret;
+		}
+
+		public static int Time_MinutesToCentiseconds(string timeInMinutes)
+		{
+			// Time string must be formated as mm:ss.cs
+			// Where mm is minutes.  Must be specified, even if zero.
+			// Where ss is seconds 0-59.
+			// Where cs is centiseconds 0-99.  Must be specified, even if zero.
+			// Time string must contain one colon (:) and one period (.)
+			// Maximum of 60 minutes  (Anything longer can result in unmanageable sequences)
+			string newTime = timeInMinutes.Trim();
+			int ret = UNDEFINED;
+			int posColon = newTime.IndexOf(':');
+			if ((posColon > 0) && (posColon < 3))
+			{
+				int posc2 = newTime.IndexOf(':', posColon + 1);
+				if (posc2 < 0)
+				{
+					string min = newTime.Substring(0, posColon);
+					string rest = newTime.Substring(posColon + 1);
+					int posPer = rest.IndexOf('.');
+					if ((posPer == 2))
+					{
+						int posp2 = rest.IndexOf('.', posPer + 1);
+						if (posp2 < 0)
+						{
+							string sec = rest.Substring(0, posPer);
+							string cs = rest.Substring(posPer + 1);
+							int mn = utils.UNDEFINED;
+							int.TryParse(min, out mn);
+							if ((mn >=0) && (mn<61))
+							{
+								int sc = utils.UNDEFINED;
+								int.TryParse(sec, out sc);
+								if ((sc >=0 ) && (sc<60))
+								{
+									int c = utils.UNDEFINED;
+									int.TryParse(cs, out c);
+									if ((c >=0) && (c<100))
+									{
+										ret = mn * 6000 + sc * 100 + c;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			return ret;
+		}
+
+
+
+
+
+
 
 	} // end class utils
 } // end namespace LORUtils

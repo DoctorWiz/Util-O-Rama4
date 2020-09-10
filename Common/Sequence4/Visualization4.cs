@@ -62,11 +62,11 @@ namespace LORUtils
 			string xmlInfo = "";
 			int li = utils.UNDEFINED; // positions of certain key text in the line
 																//Track trk = new Track();
-			const string ERRproc = " in Visualization4:ReadVisualizationFile(";
-			const string ERRgrp = "), on Line #";
-			const string ERRitem = ", at position ";
-			const string ERRline = ", Code Line #";
-			SequenceType st = SequenceType.Undefined;
+			// const string ERRproc = " in Visualization4:ReadVisualizationFile(";
+			// const string ERRgrp = "), on Line #";
+			// const string ERRitem = ", at position ";
+			// const string ERRline = ", Code Line #";
+			//SequenceType st = SequenceType.Undefined;
 			string creation = "";
 			DateTime modification;
 
@@ -108,7 +108,7 @@ namespace LORUtils
 						lineIn = reader.ReadLine();
 						// Sanity Check #3, is it a visualization?
 						//li = lineIn.IndexOf(STARTvisualization);
-						li = utils.FastIndexOf(lineIn, STARTvisualization);
+						li = utils.ContainsKey(lineIn, STARTvisualization);
 						if (li != 0)
 						{
 							errorStatus = 102;
@@ -141,7 +141,7 @@ namespace LORUtils
 									//{
 									//! DrawPoints
 									//li = lineIn.IndexOf(STARTdrawPoint);
-									li = utils.FastIndexOf(lineIn, STARTdrawPoint);
+									li = utils.ContainsKey(lineIn, STARTdrawPoint);
 									if (li > 0)
 									{
 										//TODO Save It!
@@ -150,7 +150,7 @@ namespace LORUtils
 									{
 										//! DrawObjects
 										//li = lineIn.IndexOf(STARTdrawObject);
-										li = utils.FastIndexOf(lineIn, STARTdrawObject);
+										li = utils.ContainsKey(lineIn, STARTdrawObject);
 										if (li > 0)
 										{
 										//TODO: Save it!	
@@ -160,7 +160,7 @@ namespace LORUtils
 										{
 											//! Viz Channel
 											//li = lineIn.IndexOf(STARTvizChannel);
-											li = utils.FastIndexOf(lineIn, STARTvizChannel);
+											li = utils.ContainsKey(lineIn, STARTvizChannel);
 											if (li > 0)
 											{
 												lastVizChannel = ParseVizChannel(lineIn);
@@ -221,7 +221,7 @@ namespace LORUtils
 											{
 												//! Samples
 												//li = lineIn.IndexOf(STARTsample);
-												li = utils.FastIndexOf(lineIn, STARTsample);
+												li = utils.ContainsKey(lineIn, STARTsample);
 												if (li > 0)
 												{
 													//TODO Save It!
@@ -230,7 +230,7 @@ namespace LORUtils
 												{
 													//! Assigned Channel Groups
 													//li = lineIn.IndexOf(STARTassignedChannelsGroup);
-													li = utils.FastIndexOf(lineIn, STARTassignedChannelsGroup);
+													li = utils.ContainsKey(lineIn, STARTassignedChannelsGroup);
 													if (li > 0)
 													{
 														//TODO Collect channels in group
@@ -239,7 +239,7 @@ namespace LORUtils
 													{
 														//! DrawPoint Groups
 														//li = lineIn.IndexOf(STARTdrawPointsGroup);
-														li = utils.FastIndexOf(lineIn, STARTdrawPointsGroup);
+														li = utils.ContainsKey(lineIn, STARTdrawPointsGroup);
 														if (li > 0)
 														{
 															//TODO: Collect DrawPoints in group

@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("W⚡zster Software")]
 [assembly: AssemblyProduct("Sparkle-O-Rama")]
-[assembly: AssemblyCopyright("Copyright ©  2017 by Doctor Wizard and W⚡zster Software")]
+[assembly: AssemblyCopyright("Copyright ©  2019+ by Doctor 🧙 Wizard and W⚡zster Software")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("ca92e185-2110-403e-8f7a-612f096a04fb")]
+[assembly: Guid("ca92e185-2110-7311-8f7a-612f096a04fb")]
 
 // Version information for an assembly consists of the following four values:
 //

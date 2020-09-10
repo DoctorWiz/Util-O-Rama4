@@ -26,9 +26,11 @@ using TagLib.Aiff;
 using TagLib.Asf;
 using TagLib.MusePack;
 using TagLib.NonContainer;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 
-namespace TuneORama
+namespace xTune
 {
 	public partial class frmTune : Form
 	{
@@ -42,27 +44,37 @@ namespace TuneORama
 		public const char DELIM4 = '⬙';
 		public DialogResult closeMode = DialogResult.Cancel;
 
-		private string fileCurrent = "";  // Currently loaded Sequence File
-		private string fileSeqCur = ""; // Last Sequence File Loaded
-		private string fileSeqSave = ""; // Last Saved Sequence
-		private string fileSeqLast = ""; // last file ran.
-		private string fileChanCfg = "";
-		private string fileChanCfgLast = "";
+		//private string fileCurrent = "";  // Currently loaded Sequence File
+		//private string fileSeqCur = ""; // Last Sequence File Loaded
+		private string fileTimingsLast
+			= ""; // Last Saved Sequence
+		private string pathTimingsLast = utils.ShowDirectory;
+		private string pathAudio = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+		//private string fileSeqLast = ""; // last file ran.
+		//private string fileAudioOriginal = ""; // the file name extracted from the sequence
+		private string fileAudioLast = ""; // Usually the same as fileAudioOriginal, but can be overriden
+		private string fileAudioWork = ""; // fileAudioLast copied to the temp folder
+																			 //private string fileChanCfg = "";
+																			 //private string fileChanCfgLast = "";
 		private string originalPath = "";
 		private string originalFileName = "";
 		private string originalExt = "";
 		private string newFile = "";
-		int centiseconds = 0;
+		//int milliseconds = 0;
+		private MRU mruTimings = new MRU("filesTiming", 10);
+		private MRU mruAudio = new MRU("filesAudio", 10);
+		//private List<TimingGrid> timingsList = new List<TimingGrid>();
+		
+		//private MRU mruAudio = new MRU();
 
-
-		private Sequence4 seq = new Sequence4();
-		private bool dirtySeq = false;
-		private const string helpPage = "http://wizlights.com/utilorama/tuneorama";
-		private string applicationName = "Tune-O-Rama";
-		private string thisEXE = "tune-o-rama.exe";
-		//private string userSettingsLocalDir = "C:\\Users\\Wizard\\AppData\\Local\\UtilORama\\TuneORama";  // Gets overwritten with X:\\Username\\AppData\\Roaming\\UtilORama\\SplitORama\\
-		//private string userSettingsRoamingDir = "C:\\Users\\Wizard\\AppData\\Roaming\\UtilORama\\TuneORama";  // Gets overwritten with X:\\Username\\AppData\\Roaming\\UtilORama\\SplitORama\\
-		//private string machineSettingsDir = "C:\\ProgramData\\UtilORama\\TuneORama";  // Gets overwritten with X:\\ProgramData\\UtilORama\\TuneORama\\
+		//private Sequence4 seq = new Sequence4();
+		private bool dirtyTimes = false;
+		private const string helpPage = "http://wizlights.com/xUtils/xTune";
+		private string applicationName = "xTune";
+		private string thisEXE = "xTune.exe";
+		//private string userSettingsLocalDir = "C:\\Users\\Wizard\\AppData\\Local\\UtilORama\\xTune";  // Gets overwritten with X:\\Username\\AppData\\Roaming\\UtilORama\\SplitORama\\
+		//private string userSettingsRoamingDir = "C:\\Users\\Wizard\\AppData\\Roaming\\UtilORama\\xTune";  // Gets overwritten with X:\\Username\\AppData\\Roaming\\UtilORama\\SplitORama\\
+		//private string machineSettingsDir = "C:\\ProgramData\\UtilORama\\xTune";  // Gets overwritten with X:\\ProgramData\\UtilORama\\xTune\\
 		private string tempPath = "C:\\Windows\\Temp\\";  // Gets overwritten with X:\\Username\\AppData\\Local\\Temp\\UtilORama\\SplitORama\\
 		private string[] commandArgs;
 		private bool batchMode = false;
@@ -70,6 +82,7 @@ namespace TuneORama
 		private string[] batch_fileList = null;
 		private string cmdSelectionsFile = "";
 		private byte useSaveFormat = SAVEmixedDisplay;
+		private int curStep = 0;
 
 		//private List<TreeNode>[] siNodes;
 		private List<List<TreeNode>> siNodes = new List<List<TreeNode>>();
@@ -79,33 +92,44 @@ namespace TuneORama
 
 		//private string annotatorProgram = "C:\\PortableApps\\SonicAnnotator\\sonic-annotator.exe";
 		private int rlevel = 0;
+		bool izwiz = utils.IsWizard;
 
-
-		private bool doAutoSave = false;
-		private bool doAutoLaunch = true;
+		//private bool doAutoSave = false;
+		//private bool doAutoLaunch = true;
 		private int timeSignature = 4;  // Default 4/4 time
-		private bool doNoteOnsets = true;
-		private bool doBeatGrid = true;
-		private bool doPoly = true;
-		private bool doBeatChannels = true;
-		private bool doGroups = true;
-		private bool useRampsPoly = false;
-		private bool useRampsBeats = false;
-		private int gridBeatsX = 4;
-		private int trackBeatsX = 4;
-		private bool useOctaveGrouping = true;
-		private bool doConstQ = true;
-		private bool doChroma = true;
-		private bool doSegments = true;
-		private bool doKey = true;
-		private bool doSpeech = true;
-		private bool useChanCfg = false;
-		private int firstCobjIdx = utils.UNDEFINED;
-		private int firstCsavedIndex = utils.UNDEFINED;
-		private Channel[] noteChannels = null;
-		private ChannelGroup[] octaveGroups = null;
+		private int startBeat = 1;
+		//private bool doNoteOnsets = true;
+		//private bool doBeats = true;
+		//private bool doPoly = true;
+		//private bool doGroups = true;
+		//private bool useRampsPoly = false;
+		//private bool useRampsBeats = false;
+		//private int timesBeatsX = 4;
+		//private int trackBeatsX = 4;
+		//private bool useOctaveGrouping = true;
+		//private bool doConstQ = true;
+		//private bool doChroma = true;
+		//private bool doSegments = true;
+		//private bool doKey = true;
+		//private bool doSpeech = true;
+		//private bool useChanCfg = false;
+		//private int firstCobjIdx = utils.UNDEFINED;
+		//private int firstCsavedIndex = utils.UNDEFINED;
+		//private Channel[] noteChannels = null;
+		//private ChannelGroup[] octaveGroups = null;
+
+		private double panelX = 300;
+		private double panelY = 300;
+		private double panelAddX = 1.6666;
+		private double panelAddY = .7311;
+		private Random chaos = null;
+		BackgroundWorker myBackgroundWorker;
 
 
+
+
+		[DllImport("shlwapi.dll")]
+		static extern bool PathCompactPathEx([Out] StringBuilder pszOut, string szPath, int cchMax, int dwFlags);
 
 
 
@@ -135,29 +159,68 @@ namespace TuneORama
 
 			string appFolder = applicationName;
 			appFolder = appFolder.Replace("-", "");
-			string mySubDir = "\\UtilORama\\" + appFolder + "\\";
+			string mySubDir = "\\xUtils\\" + appFolder + "\\";
 
 			string baseDir = Path.GetTempPath();
 			tempPath = baseDir + mySubDir;
 			if (!Directory.Exists(tempPath)) Directory.CreateDirectory(tempPath);
 
-			//baseDir = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-			//userSettingsLocalDir = baseDir + mySubDir;
-			//if (!Directory.Exists(userSettingsLocalDir)) Directory.CreateDirectory(userSettingsLocalDir);
+			if (izwiz)
+			{
+				chkReuse.Visible = true;
+				chkReuse.Checked = Properties.Settings.Default.reuseFiles;
+			}
 
-			//baseDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-			//userSettingsRoamingDir = baseDir + mySubDir;
-			//if (!Directory.Exists(userSettingsRoamingDir)) Directory.CreateDirectory(userSettingsRoamingDir);
-
-			//baseDir = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-			//machineSettingsDir = baseDir + mySubDir;
-			//if (!Directory.Exists(machineSettingsDir)) Directory.CreateDirectory(machineSettingsDir);
+			chaos = new Random();
+			panelX = (this.ClientSize.Width - pnlVamping.Width)/ 2;
+			panelY = (this.ClientSize.Height - pnlVamping.Height) / 2;
+			panelAddX = chaos.NextDouble() * 2 + .5D;
+			panelAddY = chaos.NextDouble() * 2 + .5D;
 
 
+			myBackgroundWorker = new BackgroundWorker();
+			myBackgroundWorker.WorkerReportsProgress = true;
+			myBackgroundWorker.WorkerSupportsCancellation = true;
+			myBackgroundWorker.DoWork += new DoWorkEventHandler(myBackgroundWorker1_DoWork);
+			myBackgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(myBackgroundWorker1_RunWorkerCompleted);
+		
+		//baseDir = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+		//userSettingsLocalDir = baseDir + mySubDir;
+		//if (!Directory.Exists(userSettingsLocalDir)) Directory.CreateDirectory(userSettingsLocalDir);
 
-			RetrieveSettings();
+		//baseDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+		//userSettingsRoamingDir = baseDir + mySubDir;
+		//if (!Directory.Exists(userSettingsRoamingDir)) Directory.CreateDirectory(userSettingsRoamingDir);
 
-			SetTheControlsForTheHeartOfTheSun();
+		//baseDir = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+		//machineSettingsDir = baseDir + mySubDir;
+		//if (!Directory.Exists(machineSettingsDir)) Directory.CreateDirectory(machineSettingsDir);
+
+		mruAudio = new MRU("Audio", 10);
+			mruAudio.ReadFromConfig(Properties.Settings.Default);
+			mruAudio.Validate();
+			string f = mruAudio.GetItem(0);
+			fileAudioLast = mruAudio.GetItem(0);
+			if (f.Length > 5)
+			{
+				f = Path.GetDirectoryName(fileAudioLast);
+			}
+			else { 
+				f = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+			}
+			pathAudio = f;
+
+			mruTimings = new MRU("Timings", 10);
+			mruTimings.ReadFromConfig(Properties.Settings.Default);
+			mruTimings.Validate();
+			f = mruTimings.GetItem(0);
+			if (f.Length < 5)
+			{
+				f = utils.ShowDirectory;
+			}
+			pathTimingsLast = f;
+
+			GetTheControlsFromTheHeartOfTheSun();
 
 			int errs = ClearTempDir();
 
@@ -196,29 +259,54 @@ namespace TuneORama
 				{
 					// No files specified on command line
 					// Is the last file loaded from last run still valid?
-					fileSeqLast = Properties.Settings.Default.fileSeqLast;
-					if (System.IO.File.Exists(fileSeqLast))
-					{
-						//seq.ReadSequenceFile(fileSeqLast);
-						//fileCurrent = fileSeqLast;
-						//utils.FillChannels(treChannels, seq, siNodes);
-						//txtSequenceFile.Text = utils.ShortenLongPath(fileCurrent, 80);
-					}
+					//string fileTimingsLast = Properties.Settings.Default.fileTimingsLast;
+					//if (System.IO.File.Exists(fileTimingsLast))
+					//{
+					//seq.ReadSequenceFile(fileSeqLast);
+					//fileCurrent = fileSeqLast;
+					//utils.FillChannels(treChannels, seq, siNodes);
+					//txtSequenceFile.Text = utils.ShortenLongPath(fileCurrent, 80);
+					//}
+					//string pathLast = Path.GetDirectoryName(fileTimingsLast);
+					//if (Directory.Exists(pathLast)
+					//{
+					//	pathTimingsLast = pathLast;
+					//}
+
 				}
 				else
 				{
 					// 1 and only 1 file specified on command line
 					//seq.ReadSequenceFile(batch_fileList[0]);
-					fileSeqLast = batch_fileList[0];
+					//fileSeqLast = batch_fileList[0];
 					//utils.FillChannels(treChannels, seq, siNodes);
-					Properties.Settings.Default.fileSeqLast = fileSeqLast;
-					Properties.Settings.Default.Save();
+					//Properties.Settings.Default.fileTimingsLast = fileSeqLast;
+					//Properties.Settings.Default.Save();
 				}
 			}
 
 
 
-			txtFileAudio.Text = utils.ShortenLongPath(fileSeqLast, 80);
+			//txtFileAudio.Text = utils.ShortenLongPath(fileAudioLast, 80);
+			grpAudio.Enabled = true;
+
+			bool gotit = false;
+			if (fileAudioLast.Length > 5)
+			{
+				if (System.IO.File.Exists(fileAudioLast))
+				{
+					txtFileAudio.Text = ShortenPath(fileAudioLast, 100);
+					grpAnalyze.Enabled = true;
+					this.Text = "Vamperizer - " + Path.GetFileName(fileAudioLast);
+					//grpOptions.Enabled = true;
+					SelectStep(2);
+					gotit = true;
+				}
+			}
+			if (!gotit)
+			{
+				btnBrowseAudio.PerformClick();
+			}
 
 
 
@@ -226,58 +314,179 @@ namespace TuneORama
 
 		}
 
-		private void RetrieveSettings()
+		private void GetTheControlsFromTheHeartOfTheSun()
 		{
-			annotatorProgram = Properties.Settings.Default.annotatorProgram;
-			doAutoSave = Properties.Settings.Default.doAutoSave;
-			doAutoLaunch = Properties.Settings.Default.doAutoLaunch;
-			doBeatGrid = Properties.Settings.Default.doBeatGrid;
-			doBeatChannels = Properties.Settings.Default.doBeatChannels;
-			doNoteOnsets = Properties.Settings.Default.doNoteOnsets;
-			doPoly = Properties.Settings.Default.doPoly;
-			doChroma = Properties.Settings.Default.doChroma;
-			useSaveFormat = Properties.Settings.Default.useSaveFormat;
-			useOctaveGrouping = Properties.Settings.Default.useOctaveGrouping;
-			useRampsPoly = Properties.Settings.Default.useRampsPoly;
-			//doChroma = Properties.Settings.Default.Spectrogram;
-			doConstQ = Properties.Settings.Default.doConstQ;
-			doSegments = Properties.Settings.Default.doSegments;
-			doKey = Properties.Settings.Default.doKey;
-			doSpeech = Properties.Settings.Default.doSpeech;
-			useChanCfg = Properties.Settings.Default.useChanCfg;
-			fileChanCfgLast = Properties.Settings.Default.fileChanCfgLast;
-			if (System.IO.File.Exists(fileChanCfgLast))
-			{
-				SetUseChanConfig(true);
-				txtFileCurrent.Text = Path.GetFileName(fileChanCfgLast);
-			}
-			else
-			{
-				SetUseChanConfig(false);
-				useChanCfg = false;
-			}
+			SetCombo(cboMethodBarsBeats,			Properties.Settings.Default.methodBarsBeats);
+			timeSignature =										Properties.Settings.Default.timeSignature;
+			if (timeSignature == 3) swTrackBeat.Checked = true; else swTrackBeat.Checked = false;
+			startBeat =												Properties.Settings.Default.startBeat;
+			vscStartBeat.Value = startBeat;
+			SetCombo(cboDetectBarBeats,				Properties.Settings.Default.detectBars);
+			chkWhiteBarBeats.Checked =				Properties.Settings.Default.whiteBarsBeats;
+			chkBars.Checked =									Properties.Settings.Default.doBars;
+			chkBeatsFull.Checked =						Properties.Settings.Default.DoBeatsFull;
+			chkBeatsHalf.Checked =						Properties.Settings.Default.doBeatsHalf;
+			chkBeatsThird.Checked =						Properties.Settings.Default.doBeatsThird;
+			chkBeatsQuarter.Checked =					Properties.Settings.Default.doBeatsQuarter;
+			SetCombo(cboAlignBarsBeats,				Properties.Settings.Default.alignBarsBeats);
 
+			SetCombo(cboMethodOnsets,					Properties.Settings.Default.methodOnsets);
+			SetCombo(cboDetectOnsets,					Properties.Settings.Default.detectOnsets);
+			vscSensitivity.Value =						Properties.Settings.Default.sensitivityOnsets;
+			chkWhiteOnsets.Checked =					Properties.Settings.Default.whiteOnsets;
+			chkNoteOnsets.Checked =						Properties.Settings.Default.doOnsets;
+			SetCombo(cboLabelsOnsets,					Properties.Settings.Default.labelOnsets);
+			SetCombo(cboAlignOnsets,					Properties.Settings.Default.alignOnsets);
+
+			SetCombo(cboMethodTranscription,	Properties.Settings.Default.methodTranscribe);
+			chkTranscribe.Checked =						Properties.Settings.Default.doTranscribe;
+			SetCombo(cboLabelsTranscription,	Properties.Settings.Default.labelTranscribe);
+			SetCombo(cboAlignTranscribe,			Properties.Settings.Default.alignTranscribe);
+
+			SetCombo(cboMethodSpectrum,				Properties.Settings.Default.methodSpectrum);
+			chkSpectrum.Checked =							Properties.Settings.Default.doSpectrum;
+			SetCombo(cboLabelsSpectrum,				Properties.Settings.Default.labelSpectrum);
+			SetCombo(cboAlignSpectrum,				Properties.Settings.Default.alignSpectrum);
+
+			SetCombo(cboMethodPitchKey,				Properties.Settings.Default.methodPitchKey);
+			chkPitchKey.Checked =							Properties.Settings.Default.doPitchKey;
+			SetCombo(cboLabelsPitchKey,				Properties.Settings.Default.labelPitchKey);
+			SetCombo(cboAlignPitch,						Properties.Settings.Default.alignPitchKey);
+
+			SetCombo(cboMethodTempo,					Properties.Settings.Default.methodTempo);
+			chkTempo.Checked =								Properties.Settings.Default.doTempo;
+			SetCombo(cboLabelsTempo,					Properties.Settings.Default.labelTempo);
+			SetCombo(cboAlignTempo,						Properties.Settings.Default.alignTempo);
+
+			chkSegments.Checked =							Properties.Settings.Default.doSegments;
+			SetCombo(cboAlignSegments,				Properties.Settings.Default.alignSegments);
+
+			chkVocals.Checked =								Properties.Settings.Default.doVocals;
+			SetCombo(cboAlignVocals,					Properties.Settings.Default.alignVocals);
+
+			chkFlux.Checked =									Properties.Settings.Default.doFlux;
+			chkChords.Checked =								Properties.Settings.Default.doChords;
+			chkVocals.Checked =								Properties.Settings.Default.doVocals;
+
+			fileAudioLast =										Properties.Settings.Default.fileAudioLast;
+
+			RecallLastFile();
 		}
 
 		private void SetTheControlsForTheHeartOfTheSun()
 		{
+			Properties.Settings.Default.methodBarsBeats = cboMethodBarsBeats.Text;
+			Properties.Settings.Default.timeSignature = timeSignature;
+			Properties.Settings.Default.startBeat = startBeat;
+			Properties.Settings.Default.detectBars = cboDetectBarBeats.Text;
+			Properties.Settings.Default.whiteBarsBeats = chkWhiteBarBeats.Checked;
+			Properties.Settings.Default.doBars = chkBars.Checked;
+			Properties.Settings.Default.DoBeatsFull = chkBeatsFull.Checked;
+			Properties.Settings.Default.doBeatsHalf = chkBeatsHalf.Checked;
+			Properties.Settings.Default.doBeatsThird = chkBeatsThird.Checked;
+			Properties.Settings.Default.doBeatsQuarter = chkBeatsQuarter.Checked;
+			Properties.Settings.Default.alignBarsBeats = cboAlignBarsBeats.Text;
 
+			Properties.Settings.Default.methodOnsets = cboMethodOnsets.Text;
+			Properties.Settings.Default.detectOnsets = cboDetectOnsets.Text;
+			Properties.Settings.Default.sensitivityOnsets = vscSensitivity.Value;
+			Properties.Settings.Default.whiteOnsets = chkWhiteOnsets.Checked;
+			Properties.Settings.Default.doOnsets = chkNoteOnsets.Checked;
+			Properties.Settings.Default.labelOnsets = cboLabelsOnsets.Text;
+			Properties.Settings.Default.alignOnsets = cboAlignOnsets.Text;
 
-			chkAutoSave.Checked = doAutoSave;
-			chkNoteOnsets.Checked = doNoteOnsets;
-			chkBeatsGrid.Checked = doBeatGrid;
-			chkPolyphonic.Checked = doPoly;
-			//chkOctaveGrouping.Checked = doOctoGroup;
-			chkBeatChannels.Checked = doBeatChannels;
-			//optOnOff.Checked = !doRamps;
-			//optRamps.Checked = doRamps;
-			chkSegments.Checked = doSegments;
-			chkPitch.Checked = doKey;
-			chkChromagram.Checked = doChroma;
-			chkConstQ.Checked = doConstQ;
-			chkVocals.Checked = doSpeech;
-			//SetUseChanConfig(useChanCfg);
-			chkAutoLaunch.Checked = doAutoLaunch;
+			Properties.Settings.Default.methodTranscribe = cboMethodTranscription.Text;
+			Properties.Settings.Default.doTranscribe = chkTranscribe.Checked;
+			Properties.Settings.Default.labelTranscribe = cboLabelsTranscription.Text;
+			Properties.Settings.Default.alignTranscribe = cboAlignTranscribe.Text;
+
+			Properties.Settings.Default.methodSpectrum = cboMethodSpectrum.Text;
+			Properties.Settings.Default.doSpectrum = chkSpectrum.Checked;
+			Properties.Settings.Default.labelSpectrum = cboLabelsSpectrum.Text;
+			Properties.Settings.Default.alignSpectrum = cboAlignSpectrum.Text;
+
+			Properties.Settings.Default.methodPitchKey = cboMethodPitchKey.Text;
+			Properties.Settings.Default.doPitchKey = chkPitchKey.Checked;
+			Properties.Settings.Default.labelPitchKey = cboLabelsPitchKey.Text;
+			Properties.Settings.Default.alignPitchKey = cboAlignPitch.Text;
+
+			Properties.Settings.Default.methodTempo = cboMethodTempo.Text;
+			Properties.Settings.Default.doTempo = chkTempo.Checked;
+			Properties.Settings.Default.labelTempo = cboLabelsTempo.Text;
+			Properties.Settings.Default.alignTempo = cboAlignTempo.Text;
+
+			Properties.Settings.Default.doSegments = chkSegments.Checked;
+			Properties.Settings.Default.alignSegments = cboAlignSegments.Text;
+
+			Properties.Settings.Default.doVocals = chkVocals.Checked;
+			Properties.Settings.Default.alignVocals = cboAlignVocals.Text;
+
+			Properties.Settings.Default.doFlux = chkFlux.Checked;
+			Properties.Settings.Default.doChords = chkChords.Checked;
+			Properties.Settings.Default.doVocals = chkVocals.Checked;
+
+			Properties.Settings.Default.fileAudioLast = fileAudioLast;
+
+			Properties.Settings.Default.Save();
+
+			mruAudio.AddNew(fileAudioLast);
+			mruAudio.SaveToConfig(Properties.Settings.Default);
+
+		}
+
+		private void RecallLastFile()
+		{
+			fileAudioLast = Properties.Settings.Default.MRUAudio0;
+			if (System.IO.File.Exists(fileAudioLast))
+			{
+				txtFileAudio.Text = Path.GetFileName(fileAudioLast);
+				txtFileAudio.ForeColor = SystemColors.ControlText;
+			}
+			else
+			{
+				txtFileAudio.Text = "Select Audio File...";
+				txtFileAudio.ForeColor = SystemColors.GrayText;
+			}
+
+		}
+
+		private void SelectFileAudio(string theFileAudio)
+		{
+			string ex = Path.GetExtension(theFileAudio).ToLower();
+			bool hasChanged = true;
+			if (theFileAudio.ToLower().CompareTo(fileAudioLast.ToLower()) == 0) hasChanged = false;
+
+			if (hasChanged)
+			{
+				fileAudioLast = theFileAudio;
+				Properties.Settings.Default.MRUAudio0 = fileAudioLast;
+				if (System.IO.File.Exists(fileAudioLast))
+				{
+					string sv = Path.GetFileNameWithoutExtension(fileAudioLast);
+
+					sv += ".xtiming";
+					txtSaveName.Text = sv;
+					//Properties.Settings.Default.filePhooLast = sv;
+
+					//Properties.Settings.Default.fileAudioLast = fileAudioLast;
+				}
+				txtFileAudio.Text = ShortenPath(fileAudioLast, 100);
+				//Properties.Settings.Default.Save();
+			}
+
+			bool enable = false;
+			if (System.IO.File.Exists(fileAudioLast))
+			{
+				txtFileAudio.ForeColor = SystemColors.ControlText;
+				enable = false;
+			}
+			else
+			{
+				txtFileAudio.ForeColor = System.Drawing.Color.DarkRed;
+				enable = false;
+			}
+			btnOK.Enabled = enable;
+			grpAudio.Enabled = enable;
 
 		}
 
@@ -395,22 +604,20 @@ namespace TuneORama
 			{
 				if (batch_fileCount == 1)
 				{
-					if (dirtySeq)
+					if (dirtyTimes)
 					{
 						//TODO Handle Dirty Sequence
 					}
 					ImBusy(true);
-					fileCurrent = batch_fileList[0];
+					string fileCurrent = batch_fileList[0];
 
 					FileInfo fi = new FileInfo(fileCurrent);
-					Properties.Settings.Default.fileSeqLast = fileCurrent;
+					Properties.Settings.Default.fileTimingsLast = fileCurrent;
 					Properties.Settings.Default.Save();
 
-					txtFileAudio.Text = utils.ShortenLongPath(fileCurrent, 80);
-					seq.ReadSequenceFile(fileCurrent);
-					SeqSelectEverthing();
+					txtFileAudio.Text = ShrinkPath(fileCurrent, 80);
 					//utils.FillChannels(treChannels, seq, siNodes, false, false);
-					dirtySeq = false;
+					dirtyTimes = false;
 					ImBusy(false);
 
 				} // cmdSeqFileCount-- Batch Mode or Not
@@ -446,19 +653,18 @@ namespace TuneORama
 			{ }
 		} // end ImBusy
 
-
-		private DialogResult AskSaveSequence()
+		private DialogResult AskSaveTimings()
 		{
 			DialogResult ret = DialogResult.OK;
-			if (dirtySeq)
+			if (dirtyTimes)
 			{
 				string msg = "Your selections have changed.\r\n\r\n";
-				msg += "Do you want to save the Selected Channels to a new sequence?";
+				msg += "Do you want to save the Selected Timings to a new file?";
 				ret = MessageBox.Show(this, msg, "Save Changes?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
 					MessageBoxDefaultButton.Button1);
 				if (ret == DialogResult.Yes)
 				{
-					btnSaveSequence.PerformClick();
+					btnSave.PerformClick();
 					ret = DialogResult.OK;
 				}
 				if (ret == DialogResult.No)
@@ -474,38 +680,45 @@ namespace TuneORama
 			// Form closing?  Disable controls
 			//ImBusy(true);
 
-
-			DialogResult result = AskSaveSequence();
-			if (result == DialogResult.Cancel)
+			if (dirtyTimes)
 			{
-				e.Cancel = true;
-			}
-			else
-			{
-				if (result == DialogResult.Yes)
+				DialogResult result = AskSaveTimings();
+				if (result == DialogResult.Cancel)
 				{
-					btnSaveSequence.PerformClick();
+					e.Cancel = true;
+				}
+				else
+				{
+					if (result == DialogResult.Yes)
+					{
+						btnSave.PerformClick();
+					}
+				}
+
+				if (!e.Cancel)
+				{
+					//string where = tempPath; // Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+					//string when = tempPath;
+					//if (!Directory.Exists(where))
+					//	{
+					//		Directory.CreateDirectory(where);
+					//}
+					//string what = "fileSelLast.ChSel";
+					//string file = where +  what;
+					//SaveSelections(file);
+					int errs = ClearTempDir();
+					CloseForm();
+				}
+				else
+				{
+					// Close cancelled, reenable controls
+					ImBusy(false);
 				}
 			}
-
-			if (!e.Cancel)
-			{
-				//string where = tempPath; // Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-				//string when = tempPath;
-				//if (!Directory.Exists(where))
-				//	{
-				//		Directory.CreateDirectory(where);
-				//}
-				//string what = "fileSelLast.ChSel";
-				//string file = where +  what;
-				//SaveSelections(file);
-				int errs = ClearTempDir();
-				CloseForm();
-			}
 			else
 			{
-				// Close cancelled, reenable controls
-				ImBusy(false);
+				int errs = ClearTempDir();
+				CloseForm();
 			}
 
 		}
@@ -668,19 +881,18 @@ namespace TuneORama
 		{
 			string newFileIn;
 			string newFileOut;
-			string filt = "Musical Sequence (*.lms)|*.lms|Channel Configuration (*.lcc)|*.lcc";
-			string tit = "Save Partial Sequence As...";
-			string initDir = "";
-			string initFile = "";
-			initDir = utils.DefaultSequencesPath;
-
+			string filt = "xLights Timings *.xtimings|*.xtiming";
+			string tit = "Save Timings As...";
+			string initDir = pathTimingsLast;
+			if (initDir.Length < 5) initDir = utils.ShowDirectory;
+			string initFile = Path.GetFileNameWithoutExtension(fileAudioLast);
+			
 			dlgSaveFile.Filter = filt;
 			dlgSaveFile.FilterIndex = 1;
-			//dlgSaveFile.FileName = Path.GetFullPath(fileCurrent) + Path.GetFileNameWithoutExtension(fileCurrent) + " Part " + member.ToString() + ext;
-			dlgSaveFile.FileName = utils.DefaultSequencesPath + Path.GetFileNameWithoutExtension(fileAudioOriginal) + ".lms";
+			dlgSaveFile.FileName = initFile; // utils.ShowDirectory + Path.GetFileNameWithoutExtension(fileAudioLast) + ".xtiming";
 			dlgSaveFile.CheckPathExists = true;
 			dlgSaveFile.InitialDirectory = initDir;
-			dlgSaveFile.DefaultExt = ".lms";
+			dlgSaveFile.DefaultExt = ".xtiming";
 			dlgSaveFile.OverwritePrompt = true;
 			dlgSaveFile.Title = tit;
 			dlgSaveFile.SupportMultiDottedExtensions = true;
@@ -688,26 +900,17 @@ namespace TuneORama
 			//newFileIn = Path.GetFileNameWithoutExtension(fileCurrent) + " Part " + member.ToString(); // + ext;
 			//newFileIn = "Part " + member.ToString() + " of " + Path.GetFileNameWithoutExtension(fileCurrent);
 			//newFileIn = "Part Mother Fucker!!";
-			dlgSaveFile.FileName = initFile;
+			//dlgSaveFile.FileName = initFile;
 			DialogResult result = dlgSaveFile.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
-				SaveSequence(dlgSaveFile.FileName);
+				fileTimingsLast = dlgSaveFile.FileName;
+				ExportSelectedTimings(dlgSaveFile.FileName);
+				mruTimings.AddNew(fileTimingsLast);
+				mruTimings.SaveToConfig(Properties.Settings.Default);
+
 			}
 		} // end Save File As
-
-		private void SaveSequence(string newFilename)
-		{
-			ImBusy(true);
-				// normal default when not testing
-			seq.WriteSequenceFile_DisplayOrder(newFilename, true, false);
-
-			System.Media.SystemSounds.Beep.Play();
-			dirtySeq = false;
-			fileSeqSave = newFilename;
-			ImBusy(false);
-
-		}
 
 		private void btnSaveOptions_Click(object sender, EventArgs e)
 		{
@@ -719,11 +922,11 @@ namespace TuneORama
 			ImBusy(true);
 			frmSettings options = new frmSettings();
 
-			options.useRampsBeats = useRampsBeats;
-			options.useRampsPoly = useRampsPoly;
-			options.useOctaveGrouping = useOctaveGrouping;
-			options.gridBeatsX = gridBeatsX;
-			options.trackBeatsX = trackBeatsX;
+			//ptions.useRampsBeats = useRampsBeats;
+			//options.useRampsPoly = useRampsPoly;
+			//options.useOctaveGrouping = useOctaveGrouping;
+			options.timesBeatsX = timeSignature;
+			//options.trackBeatsX = trackBeatsX;
 			options.timeSignature = timeSignature; // 3 = 3/4 time, 4 = 4/4 time
 			options.useSaveFormat = useSaveFormat;
 
@@ -732,22 +935,22 @@ namespace TuneORama
 			DialogResult dr = options.closeMode;
 			if (dr == DialogResult.OK)
 			{
-				useRampsBeats = options.useRampsBeats;
-				useRampsPoly = options.useRampsPoly;
-				useOctaveGrouping = options.useOctaveGrouping;
-				gridBeatsX = options.gridBeatsX;
-				trackBeatsX = options.trackBeatsX;
+				//useRampsBeats = options.useRampsBeats;
+				//useRampsPoly = options.useRampsPoly;
+				//useOctaveGrouping = options.useOctaveGrouping;
+				timeSignature = options.timesBeatsX;
+				//trackBeatsX = options.trackBeatsX;
 				timeSignature = options.timeSignature; // 3 = 3/4 time, 4 = 4/4 time
 				useSaveFormat = options.useSaveFormat;
 
-				Properties.Settings.Default.useRampsBeats = useRampsBeats;
-				Properties.Settings.Default.useRampsPoly = useRampsPoly;
-				Properties.Settings.Default.useOctaveGrouping = useOctaveGrouping;
-				Properties.Settings.Default.gridBeatsX = gridBeatsX;
-				Properties.Settings.Default.trackBeatsX = trackBeatsX;
+				//Properties.Settings.Default.phoo9 = useRampsBeats;
+				//Properties.Settings.Default.phoo2 = useRampsPoly;
+				//Properties.Settings.Default.phoo6 = useOctaveGrouping;
+				Properties.Settings.Default.timeSignature = timeSignature;
+				//Properties.Settings.Default.phoo8 = trackBeatsX;
 				// Time signature does not get saved, reverts back to default 4/4 next time program is run
 				//Properties.Settings.Default.timeSignature = timeSignature; // 3 = 3/4 time, 4 = 4/4 time
-				Properties.Settings.Default.useSaveFormat = useSaveFormat;
+				//Properties.Settings.Default.phoo3 = useSaveFormat;
 
 
 			}
@@ -757,12 +960,11 @@ namespace TuneORama
 
 		private void SaveSettings(frmSettings settingsForm)
 		{
-			useOctaveGrouping = settingsForm.useOctaveGrouping;
-			useRampsPoly = settingsForm.useRampsPoly;
+			//useOctaveGrouping = settingsForm.useOctaveGrouping;
+			//useRampsPoly = settingsForm.useRampsPoly;
 			useSaveFormat = settingsForm.useSaveFormat;
-			
-		}
 
+		}
 
 		private void Event_DragDrop(object sender, DragEventArgs e)
 		{
@@ -784,18 +986,6 @@ namespace TuneORama
 		{
 			this.Close();
 		}
-
-
-		private void MakeDumbGrid()
-		{
-			//TimingGrid tg = new TimingGrid("Fixed Grid .05");
-			TimingGrid tg = GetGrid("Fixed Grid .05");
-			tg.spacing = 5;
-			//seq.AddTimingGrid(tg);
-		}
-
-
-
 
 		private Musik.AudioInfo ReadAudioFile(string vFilename)
 		{
@@ -923,7 +1113,7 @@ namespace TuneORama
 
 			if (btnBrowseAudio.Text == "Browse...")
 			{
-				string initDir = utils.DefaultAudioPath;
+				string initDir = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
 				string initFile = "";
 
 
@@ -942,42 +1132,20 @@ namespace TuneORama
 
 				if (result == DialogResult.OK)
 				{
-					int errs = ClearTempDir();
-					AnalyzeSong(dlgOpenFile.FileName);
-					grpSequence.Enabled = true;
+					fileAudioLast = dlgOpenFile.FileName;
+					txtFileAudio.Text = ShrinkPath(fileAudioLast, 100);
+					//int errs = ClearTempDir();
+					//AnalyzeSong(dlgOpenFile.FileName);
+					//grpSequence.Enabled = true;
+					grpTimings.Enabled = true;
+					//grpOptions.Enabled = true;
+					grpAnalyze.Enabled = true;
 				} // end if (result = DialogResult.OK)
 
 
 			}
 			else
 			{
-				string musicFile = fileAudioOriginal;
-				if (Path.GetDirectoryName(fileAudioOriginal).Length < 3)
-				{
-					fileAudioOriginal = utils.DefaultAudioPath + fileAudioOriginal;
-					grpSequence.Enabled = true;
-					btnSaveSequence.Focus();
-				}
-
-
-				if (System.IO.File.Exists(fileAudioOriginal))
-				{
-					int errs = ClearTempDir();
-					AnalyzeSong(fileAudioOriginal);
-					grpSequence.Enabled = true;
-
-					List<List<TreeNode>>	nodesSI = new List<List<TreeNode>>();
-					utils.FillChannels(treeMaster, seq, nodesSI, true, false);
-
-					btnSaveSequence.Focus();
-				}
-				else
-				{
-					string msg = "Song file '" + Path.GetFileName(fileAudioOriginal) + "' not found";
-					msg += " in '" + Path.GetDirectoryName(fileAudioOriginal) + "'.";
-					MessageBox.Show(this, msg, "File Not Found", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
-				}
 			}
 
 
@@ -1015,27 +1183,6 @@ namespace TuneORama
 
 			return ret;
 		}
-
-
-		private void AddChildToParent(IMember child, IMember parent)
-		{
-			// Tests for, and works with either a track or a channel group as the parent
-			if (parent.MemberType == MemberType.Track)
-			{
-				Track trk = (Track)parent;
-				trk.Members.Add(child);
-			}
-			if (parent.MemberType == MemberType.ChannelGroup)
-			{
-				ChannelGroup grp = (ChannelGroup)parent;
-				grp.Members.Add(child);
-			}
-
-
-		}
-
-
-
 
 		private Int32 NoteColor(int note)
 		{
@@ -1094,155 +1241,15 @@ namespace TuneORama
 			return hexClr;
 		}
 
-		private int RGBtoLOR(int RGBclr)
-		{
-			int b = RGBclr & 0xFF;
-			int g = RGBclr & 0xFF00;
-			g /= 0x100;
-			int r = RGBclr & 0xFF0000;
-			r /= 0x10000;
-
-			int n = b * 0x10000;
-			n += g * 0x100;
-			n += r;
-
-			return n;
-		}
-
 		#region Checkboxes and Radio Buttons
-		private void chkAutoSave_CheckedChanged(object sender, EventArgs e)
-		{
-			doAutoSave = chkAutoSave.Checked;
-			Properties.Settings.Default.doAutoSave = doAutoSave;
-			Properties.Settings.Default.Save();
-		}
-
-		private void chkNoteOnsets_CheckedChanged(object sender, EventArgs e)
-		{
-			doNoteOnsets = chkNoteOnsets.Checked;
-			Properties.Settings.Default.doNoteOnsets = doNoteOnsets;
-			Properties.Settings.Default.Save();
-		}
-
-		private void chkBeatsGrid_CheckedChanged(object sender, EventArgs e)
-		{
-			doBeatGrid = chkBeatsGrid.Checked;
-			Properties.Settings.Default.doBeatGrid = doBeatGrid;
-			Properties.Settings.Default.Save();
-		}
-
-		private void chkPoly_CheckedChanged(object sender, EventArgs e)
-		{
-			doPoly = chkPolyphonic.Checked;
-			Properties.Settings.Default.doPoly = doPoly;
-			Properties.Settings.Default.Save();
-		}
-
-		private void chkBeatsTrack_CheckedChanged(object sender, EventArgs e)
-		{
-			doBeatChannels = chkBeatChannels.Checked;
-			Properties.Settings.Default.doBeatChannels = doBeatChannels;
-			Properties.Settings.Default.Save();
-		}
-
-
-
-
 
 		#endregion
-
-		private void CentiFixx()
-		{
-			// If we started from a Channel config, then none of the channels, groups, etc. has a length
-			// Fill all those in with the sequence's total Centiseconds (taken from the audio file length)
-			for (int ch=0; ch< seq.Channels.Count; ch++)
-			{
-				seq.Channels[ch].Centiseconds = seq.Centiseconds;
-			}
-			
-			for (int rch=0; rch< seq.RGBchannels.Count; rch++)
-			{
-				seq.RGBchannels[rch].Centiseconds = seq.Centiseconds;
-			}
-			for (int chg=0; chg< seq.ChannelGroups.Count; chg++)
-			{
-				seq.ChannelGroups[chg].Centiseconds = seq.Centiseconds;
-			}
-			for (int tr=0; tr<seq.Tracks.Count; tr++)
-			{
-				seq.Tracks[tr].Centiseconds = seq.Centiseconds;
-			}
-			
-		} // end CentiFixx
-
-		private void chkSpectrogram_CheckedChanged(object sender, EventArgs e)
-		{
-			//doChroma = chkSpectrogram.Checked;
-			Properties.Settings.Default.doSpectrogram = doChroma;
-			Properties.Settings.Default.Save();
-		}
-
-		private void chkConstQ_CheckedChanged(object sender, EventArgs e)
-		{
-		}
-
-		private void picHoleStart_Click(object sender, EventArgs e)
-		{
-			SetUseChanConfig(!useChanCfg);
-		}
-
-		private void SetUseChanConfig(bool state)
-		{
-			if (state != useChanCfg)
-			{
-				useChanCfg = state;
-				PlayClickSound();
-				if (useChanCfg)
-				{
-					picSliderStart.Left = 0;
-					picHoleStart.Left = 16;
-					lblUseConfig.ForeColor = Color.Black;
-					lblDontUseConfig.ForeColor = Color.DarkSlateGray;
-				}
-				else
-				{
-					picSliderStart.Left = 16;
-					picHoleStart.Left = 0;
-					lblUseConfig.ForeColor = Color.DarkSlateGray;
-					lblDontUseConfig.ForeColor = Color.Black;
-				}
-				Properties.Settings.Default.useChanCfg = useChanCfg;
-				Properties.Settings.Default.Save();
-			}
-		}
-
-		private void lblUseConfig_Click(object sender, EventArgs e)
-		{
-			SetUseChanConfig(true);
-		}
-
-		private void lblDontUseConfig_Click(object sender, EventArgs e)
-		{
-			SetUseChanConfig(false);
-		}
-
-		private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-		{
-
-		}
 
 		public static void PlayClickSound()
 		{
 			string sound = Path.GetDirectoryName(Application.ExecutablePath) + "\\Click.wav";
 			SoundPlayer player = new SoundPlayer(sound);
 			player.Play();
-		}
-
-		private void chkAutoLaunch_CheckedChanged(object sender, EventArgs e)
-		{
-			doAutoLaunch = chkAutoLaunch.Checked;
-			Properties.Settings.Default.doAutoLaunch = doAutoLaunch;
-			Properties.Settings.Default.Save();
 		}
 
 		private void frmTune_Paint(object sender, PaintEventArgs e)
@@ -1256,6 +1263,12 @@ namespace TuneORama
 
 		private void FirstShow()
 		{
+			ConfirmAnnotator();
+		}
+
+		private void ConfirmAnnotator()
+		{
+			annotatorProgram = Properties.Settings.Default.annotatorProgram;
 			if (!System.IO.File.Exists(annotatorProgram))
 			{
 				frmSettings setForm = new frmSettings() { Owner = this };
@@ -1300,14 +1313,23 @@ namespace TuneORama
 						else
 						{
 							annotatorProgram = anoFile;
+
+							if (Properties.Settings.Default.annotatorProgram.Length < 6)
+							{
+								Properties.Settings.Default.Upgrade();
+								Properties.Settings.Default.Save();
+							}
+
+
 							Properties.Settings.Default.annotatorProgram = annotatorProgram;
 							Properties.Settings.Default.Save();
+
 						}
 
 					}
 					if (!System.IO.File.Exists("C:\\Program Files (x86)\\Vamp Plugins\\qm-vamp-plugins.dll"))
 					{
-						string msg = "Tune-O-Rama cannot continue until the Queen Mary Vamp Plugin has been installed.";
+						string msg = "xTune cannot continue until the Queen Mary Vamp Plugin has been installed.";
 						MessageBox.Show(this, msg, "Please install the Queen Mary Vamp Plugin", MessageBoxButtons.OK, MessageBoxIcon.Stop);
 						this.Close();
 
@@ -1315,7 +1337,7 @@ namespace TuneORama
 				}
 				if (dr == DialogResult.Cancel)
 				{
-					string msg = "Tune-O-Rama cannot continue until Sonic Annotator and the Queen Mary Vamp Plugin have been installed.";
+					string msg = "xTune cannot continue until Sonic Annotator and the Queen Mary Vamp Plugin have been installed.";
 					MessageBox.Show(this, msg, "Please install Sonic Annotator", MessageBoxButtons.OK, MessageBoxIcon.Stop);
 					this.Close();
 				}
@@ -1323,8 +1345,7 @@ namespace TuneORama
 			}
 
 			//! FOR DEBUGGING AND TESTING
-			txtFileCurrent.Text = fileSeqLast;
-			btnBrowseAudio.PerformClick();
+			//btnBrowseAudio.PerformClick();
 			//! REMOVE WHEN DONE
 
 		}
@@ -1333,19 +1354,19 @@ namespace TuneORama
 		{
 			if (toForm)
 			{
-				setForm.useOctaveGrouping = useOctaveGrouping;
-				setForm.useRampsPoly = useRampsPoly;
+				//setForm.useOctaveGrouping = useOctaveGrouping;
+				//setForm.useRampsPoly = useRampsPoly;
 				setForm.useSaveFormat = useSaveFormat;
 			}
 			else // from form
 			{
-				useOctaveGrouping = setForm.useOctaveGrouping;
-				useRampsPoly = setForm.useRampsPoly;
+				//useOctaveGrouping = setForm.useOctaveGrouping;
+				//useRampsPoly = setForm.useRampsPoly;
 				useSaveFormat = setForm.useSaveFormat;
 
-				Properties.Settings.Default.useOctaveGrouping = useOctaveGrouping;
-				Properties.Settings.Default.useRampsPoly = useRampsPoly;
-				Properties.Settings.Default.useSaveFormat = useSaveFormat;
+				//Properties.Settings.Default.phoo6 = useOctaveGrouping;
+				//Properties.Settings.Default.phoo2 = useRampsPoly;
+				//Properties.Settings.Default.phoo3 = useSaveFormat;
 				Properties.Settings.Default.Save();
 			}
 
@@ -1356,15 +1377,7 @@ namespace TuneORama
 
 		private void btnGridSettings_Click(object sender, EventArgs e)
 		{
-			ShowSettings(frmSettings.SHOWgridBeats);
-		}
-
-		private void chkSpectro_CheckedChanged(object sender, EventArgs e)
-		{
-			doConstQ = chkConstQ.Checked;
-			Properties.Settings.Default.doConstQ = doConstQ;
-			Properties.Settings.Default.Save();
-
+			ShowSettings(frmSettings.SHOWtimesBeats);
 		}
 
 		private void btnTrackSettings_Click(object sender, EventArgs e)
@@ -1377,193 +1390,373 @@ namespace TuneORama
 			ShowSettings(frmSettings.SHOWsave);
 		}
 
-
-		private void btnSaveSequence_Click(object sender, EventArgs e)
+		private void SaveTimings(object sender, EventArgs e)
 		{
-			string filter = "Musical Sequence *.lms|*.lms";
-			string idr = utils.DefaultSequencesPath;
-			
-			string ifile = Path.GetFileNameWithoutExtension(fileCurrent);
+			string filter = "xLights Timings *.xtiming|*.xtiming";
+			string idr = mruTimings.GetItem(0);
+			bool saveAsk = true;
+			string fileSeqSave = "!!!!!";
+
+			//string ifile = Path.GetFileNameWithoutExtension(fileCurrent);
+			string ifile = txtSaveName.Text;
 			if (ifile.Length < 2)
 			{
-				ifile = seq.info.music.Title + " by " + seq.info.music.Artist;
-			}
-			ifile +=  ".lms";
 
-			dlgSaveFile.Filter = filter;
-			dlgSaveFile.InitialDirectory = idr;
-			dlgSaveFile.FileName = ifile;
-			dlgSaveFile.FilterIndex = 1;
-			dlgSaveFile.OverwritePrompt = true;
-			dlgSaveFile.Title = "Save Sequence As...";
-			dlgSaveFile.ValidateNames = true;
-			DialogResult result = dlgSaveFile.ShowDialog(this);
-			if (result == DialogResult.OK)
-			{
-				fileSeqSave = dlgSaveFile.FileName;
-				txtSaveName.Text = Path.GetFileNameWithoutExtension(fileSeqSave);
-				SaveSequence(fileSeqSave);
-				if (doAutoLaunch)
+				dlgSaveFile.Filter = filter;
+				dlgSaveFile.InitialDirectory = idr;
+				dlgSaveFile.FileName = ifile;
+				dlgSaveFile.FilterIndex = 1;
+				dlgSaveFile.OverwritePrompt = true; //  false; // Handled Below
+				dlgSaveFile.Title = "Save Timings As...";
+				dlgSaveFile.ValidateNames = true;
+
+				while (saveAsk)
 				{
-					System.Diagnostics.Process.Start(fileSeqSave);
+					DialogResult result = dlgSaveFile.ShowDialog(this);
+					bool doSave = true;
+					if (result == DialogResult.OK)
+					{
+						if (System.IO.File.Exists(dlgSaveFile.FileName))
+						{
+							string fn = Path.GetFileNameWithoutExtension(dlgSaveFile.FileName).ToLower();
+							string ed = "";
+							string t = Path.GetFileName(dlgSaveFile.FileName);
+							t += " already exists.\r\nDo you want to replace it?";
+							DialogResult dr3 = MessageBox.Show(this, t, "Confirm Save As", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+							//if (dr3 == DialogResult.Cancel) saveAsk = true;
+							if (dr3 == DialogResult.No) doSave = false;
+						}
+						if (doSave)
+						{
+							fileTimingsLast = dlgSaveFile.FileName;
+							txtSaveName.Text = Path.GetFileNameWithoutExtension(fileSeqSave);
+							saveAsk = false;
+						}
+					}
 				}
 
 
 			}
-			btnBrowseSequence.Focus();
-
-
 		}
 
-		private void btnBrowseSequence_Click(object sender, EventArgs e)
+		private void SelectStep(int theStep)
 		{
-			string filt = "Channel Configs *.lcc|*.lcc|Musical Sequences *.lms|*lms";
-			string idir = utils.DefaultSequencesPath;
-
-			dlgOpenFile.Filter = filt;
-			dlgOpenFile.FilterIndex = 2;		//! Temporary?  Set back to 1 and/or change filter string?
-			dlgOpenFile.InitialDirectory = idir;
-			dlgOpenFile.FileName = Properties.Settings.Default.fileSeqLast;
-
-			DialogResult dr = dlgOpenFile.ShowDialog(this);
-			if (dr==DialogResult.OK)
+			if (theStep != curStep)
 			{
-				fileCurrent = dlgOpenFile.FileName;
-				txtFileCurrent.Text = Path.GetFileName(fileCurrent);
-				string ex = Path.GetExtension(fileCurrent).ToLower();
-				// If they picked an existing musical sequence
-				if (ex == ".lms")
+				if (theStep == 1)
 				{
-					seq.ReadSequenceFile(fileCurrent);
-					SeqSelectEverthing();
-					fileAudioOriginal = seq.info.music.File;
-					txtFileAudio.Text = Path.GetFileNameWithoutExtension(fileAudioOriginal);
-					grpAudio.Text = "      Original Audio File";
-					btnBrowseAudio.Text = "Analyze";
-					fileSeqCur = fileCurrent;
-					fileChanCfg = "";
-					Properties.Settings.Default.fileSeqLast = fileCurrent;
+					lblStep1.ForeColor = System.Drawing.Color.Red;
+					grpAudio.Font = new Font(grpSave.Font, FontStyle.Bold);
+					grpAudio.Enabled = true;
+					btnBrowseAudio.Focus();
 				}
-				// If they picked an existing channel config
-				if (ex == ".lcc")
+				else
 				{
-					seq.ReadSequenceFile(fileCurrent);
-					SeqSelectEverthing();
-					fileAudioOriginal = "";
-					txtFileAudio.Text = "";
-					grpAudio.Text = "      Select Audio File ";
-					btnBrowseAudio.Text = "Browse...";
-					fileChanCfg = fileCurrent;
-					fileSeqCur = "";
-					Properties.Settings.Default.fileChanCfgLast = fileCurrent;
+					lblStep1.ForeColor = SystemColors.Highlight;
+					grpAudio.Font = new Font(grpSave.Font, FontStyle.Regular);
 				}
-				txtFileCurrent.Text = Path.GetFileName(fileCurrent);
-				Properties.Settings.Default.Save();
 
-				grpGrids.Enabled = true;
-				grpTracks.Enabled = true;
-				grpAudio.Enabled = true;
-				btnBrowseAudio.Focus();
-
-			}
-		}
-
-		private void chkChromagram_CheckedChanged(object sender, EventArgs e)
-		{
-			doChroma = chkChromagram.Checked;
-			Properties.Settings.Default.doChroma = doChroma;
-			Properties.Settings.Default.Save();
-		}
-
-		private void chkSegments_CheckedChanged(object sender, EventArgs e)
-		{
-			doSegments = chkSegments.Checked;
-			Properties.Settings.Default.doSegments = doSegments;
-			Properties.Settings.Default.Save();
-		}
-
-		private void chkPitch_CheckedChanged(object sender, EventArgs e)
-		{
-			doKey = chkPitch.Checked;
-			Properties.Settings.Default.doKey = doKey;
-			Properties.Settings.Default.Save();
-		}
-
-		
-
-		private void SeqSelectEverthing()
-		{
-			foreach(Channel ch in seq.Channels)
-			{
-				ch.Selected = true;
-			}
-			foreach (RGBchannel rch in seq.RGBchannels)
-			{
-				rch.Selected = true;
-			}
-			foreach (ChannelGroup chg in seq.ChannelGroups)
-			{
-				chg.Selected = true;
-			}
-			foreach (Track tr in seq.Tracks)
-			{
-				tr.Selected = true;
-			}
-			foreach (TimingGrid tg in seq.TimingGrids)
-			{
-				tg.Selected = true;
-			}
-		}
-
-		private void chkVocals_CheckedChanged(object sender, EventArgs e)
-		{
-			doSpeech = chkVocals.Checked;
-			Properties.Settings.Default.doSpeech = doSpeech;
-			Properties.Settings.Default.Save();
-		}
-
-		private int ClearTempDir()
-		{
-			int errs = 0;
-
-			string[] philes = Directory.GetFiles(tempPath);
-			foreach (string phile in philes)
-			{
-				try
-				{ 
-					System.IO.File.Delete(phile);
-				}
-				catch
+				if (theStep == 2)
 				{
-					errs++;
+					lblStep2A.ForeColor = System.Drawing.Color.Red;
+					lblStep2B.ForeColor = System.Drawing.Color.Red;
+					grpOptions.Font = new Font(grpSave.Font, FontStyle.Bold);
+					grpTimings.Font = new Font(grpSave.Font, FontStyle.Bold);
+					grpOptions.Enabled = true;
+					grpTimings.Enabled = true;
+					chkBars.Focus();
+				}
+				else
+				{
+					lblStep2A.ForeColor = SystemColors.Highlight;
+					lblStep2B.ForeColor = SystemColors.Highlight;
+					grpOptions.Font = new Font(grpSave.Font, FontStyle.Regular);
+					grpTimings.Font = new Font(grpSave.Font, FontStyle.Regular);
+				}
+
+				if (theStep == 3)
+				{
+					lblStep3.ForeColor = System.Drawing.Color.Red;
+					grpAnalyze.Font = new Font(grpSave.Font, FontStyle.Bold);
+					grpAnalyze.Enabled = true;
+					btnOK.Focus();
+				}
+				else
+				{
+					lblStep3.ForeColor = SystemColors.Highlight;
+					grpAnalyze.Font = new Font(grpSave.Font, FontStyle.Regular);
+				}
+
+				if (theStep == 4)
+				{
+					lblStep4.ForeColor = System.Drawing.Color.Red;
+					grpSave.Font = new Font(grpSave.Font, FontStyle.Bold);
+					grpSave.Enabled = true;
+					btnSave.Focus();
+				}
+				else
+				{
+					lblStep4.ForeColor = SystemColors.Highlight;
+					grpSave.Font = new Font(grpSave.Font, FontStyle.Regular);
 				}
 			}
-			return errs;
+
+		}
+
+		private void btnOK_Click(object sender, EventArgs e)
+		{
+			SelectStep(4);
+			string musicFile = fileAudioLast;
+
+			if (System.IO.File.Exists(fileAudioLast))
+			{
+				SetTheControlsForTheHeartOfTheSun();
+				// Clean up temp folder from previous run
+				//! REMARKED OUT FOR TESTING DEBUGGING, LEAVE FILES
+				//int errs = ClearTempDir();
+				//! UNREMARK AFTER TESTING!
+				AnalyzeSong(fileAudioLast);
+
+
+				SelectStep(5);
+				btnSave.Focus();
+			}
+			else
+			{
+				string msg = "Song file '" + Path.GetFileName(fileAudioLast) + "' not found";
+				msg += " in '" + Path.GetDirectoryName(fileAudioLast) + "'.";
+				MessageBox.Show(this, msg, "File Not Found", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+			}
+
+		}
+
+		private void txtSaveName_TextChanged(object sender, EventArgs e)
+		{
+
+		}
+
+		private void lblSongName_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="absolutepath">The path to compress</param>
+		/// <param name="limit">The maximum length</param>
+		/// <param name="delimiter">The character(s) to use to imply incompleteness</param>
+		/// <returns></returns>
+		public string ShrinkPath(string absolutepath, int limit, string delimiter = "…")
+		{
+			//no path provided
+			if (string.IsNullOrEmpty(absolutepath))
+			{
+				return "";
+			}
+
+			var name = Path.GetFileName(absolutepath);
+			int namelen = name.Length;
+			int pathlen = absolutepath.Length;
+			var dir = absolutepath.Substring(0, pathlen - namelen);
+
+			int delimlen = delimiter.Length;
+			int idealminlen = namelen + delimlen;
+
+			var slash = (absolutepath.IndexOf("/") > -1 ? "/" : "\\");
+
+			//less than the minimum amt
+			if (limit < ((2 * delimlen) + 1))
+			{
+				return "";
+			}
+
+			//fullpath
+			if (limit >= pathlen)
+			{
+				return absolutepath;
+			}
+
+			//file name condensing
+			if (limit < idealminlen)
+			{
+				return delimiter + name.Substring(0, (limit - (2 * delimlen))) + delimiter;
+			}
+
+			//whole name only, no folder structure shown
+			if (limit == idealminlen)
+			{
+				return delimiter + name;
+			}
+
+			return dir.Substring(0, (limit - (idealminlen + 1))) + delimiter + slash + name;
+		}
+
+		public static string GetCompactedString(string stringToCompact, Font font, int maxWidth)
+		{
+			// Copy the string passed in since this string will be
+			// modified in the TextRenderer's MeasureText method
+			string compactedString = string.Copy(stringToCompact);
+			var maxSize = new Size(maxWidth, 0);
+			var formattingOptions = TextFormatFlags.PathEllipsis
+														| TextFormatFlags.ModifyString;
+			TextRenderer.MeasureText(compactedString, font, maxSize, formattingOptions);
+			return compactedString;
+		}
+
+		//[DllImport("shlwapi.dll", CharSet = CharSet.Auto)]
+		//static extern bool PathCompactPathEx([Out] StringBuilder pszOut, string szPath, int cchMax, int dwFlags);
+
+		public static string CompactPath(string longPathName, int wantedLength)
+		{
+			// NOTE: You need to create the builder with the 
+			//       required capacity before calling function.
+			// See http://msdn.microsoft.com/en-us/library/aa446536.aspx
+			StringBuilder sb = new StringBuilder(wantedLength + 1);
+			PathCompactPathEx(sb, longPathName, wantedLength + 1, 0);
+			return sb.ToString();
+		}
+		/// <summary>
+		/// Shortens a file path to the specified length
+		/// </summary>
+		/// <param name="path">The file path to shorten</param>
+		/// <param name="maxLength">The max length of the output path (including the ellipsis if inserted)</param>
+		/// <returns>The path with some of the middle directory paths replaced with an ellipsis (or the entire path if it is already shorter than maxLength)</returns>
+		/// <remarks>
+		/// Shortens the path by removing some of the "middle directories" in the path and inserting an ellipsis. If the filename and root path (drive letter or UNC server name)     in itself exceeds the maxLength, the filename will be cut to fit.
+		/// UNC-paths and relative paths are also supported.
+		/// The inserted ellipsis is not a true ellipsis char, but a string of three dots.
+		/// </remarks>
+		/// <example>
+		/// ShortenPath(@"c:\websites\myproject\www_myproj\App_Data\themegafile.txt", 50)
+		/// Result: "c:\websites\myproject\...\App_Data\themegafile.txt"
+		/// 
+		/// ShortenPath(@"c:\websites\myproject\www_myproj\App_Data\theextremelylongfilename_morelength.txt", 30)
+		/// Result: "c:\...gfilename_morelength.txt"
+		/// 
+		/// ShortenPath(@"\\myserver\theshare\myproject\www_myproj\App_Data\theextremelylongfilename_morelength.txt", 30)
+		/// Result: "\\myserver\...e_morelength.txt"
+		/// 
+		/// ShortenPath(@"\\myserver\theshare\myproject\www_myproj\App_Data\themegafile.txt", 50)
+		/// Result: "\\myserver\theshare\...\App_Data\themegafile.txt"
+		/// 
+		/// ShortenPath(@"\\192.168.1.178\theshare\myproject\www_myproj\App_Data\themegafile.txt", 50)
+		/// Result: "\\192.168.1.178\theshare\...\themegafile.txt"
+		/// 
+		/// ShortenPath(@"\theshare\myproject\www_myproj\App_Data\", 30)
+		/// Result: "\theshare\...\App_Data\"
+		/// 
+		/// ShortenPath(@"\theshare\myproject\www_myproj\App_Data\themegafile.txt", 35)
+		/// Result: "\theshare\...\themegafile.txt"
+		/// </example>
+		public static string ShortenPath(string path, int maxLength)
+		{
+			string ellipsisChars = "...";
+			char dirSeperatorChar = Path.DirectorySeparatorChar;
+			string directorySeperator = dirSeperatorChar.ToString();
+
+			//simple guards
+			if (path.Length <= maxLength)
+			{
+				return path;
+			}
+			int ellipsisLength = ellipsisChars.Length;
+			if (maxLength <= ellipsisLength)
+			{
+				return ellipsisChars;
+			}
+
+
+			//alternate between taking a section from the start (firstPart) or the path and the end (lastPart)
+			bool isFirstPartsTurn = true; //drive letter has first priority, so start with that and see what else there is room for
+
+			//vars for accumulating the first and last parts of the final shortened path
+			string firstPart = "";
+			string lastPart = "";
+			//keeping track of how many first/last parts have already been added to the shortened path
+			int firstPartsUsed = 0;
+			int lastPartsUsed = 0;
+
+			string[] pathParts = path.Split(dirSeperatorChar);
+			for (int i = 0; i < pathParts.Length; i++)
+			{
+				if (isFirstPartsTurn)
+				{
+					string partToAdd = pathParts[firstPartsUsed] + directorySeperator;
+					if ((firstPart.Length + lastPart.Length + partToAdd.Length + ellipsisLength) > maxLength)
+					{
+						break;
+					}
+					firstPart = firstPart + partToAdd;
+					if (partToAdd == directorySeperator)
+					{
+						//this is most likely the first part of and UNC or relative path 
+						//do not switch to lastpart, as these are not "true" directory seperators
+						//otherwise "\\myserver\theshare\outproject\www_project\file.txt" becomes "\\...\www_project\file.txt" instead of the intended "\\myserver\...\file.txt")
+					}
+					else
+					{
+						isFirstPartsTurn = false;
+					}
+					firstPartsUsed++;
+				}
+				else
+				{
+					int index = pathParts.Length - lastPartsUsed - 1; //-1 because of length vs. zero-based indexing
+					string partToAdd = directorySeperator + pathParts[index];
+					if ((firstPart.Length + lastPart.Length + partToAdd.Length + ellipsisLength) > maxLength)
+					{
+						break;
+					}
+					lastPart = partToAdd + lastPart;
+					if (partToAdd == directorySeperator)
+					{
+						//this is most likely the last part of a relative path (e.g. "\websites\myproject\www_myproj\App_Data\")
+						//do not proceed to processing firstPart yet
+					}
+					else
+					{
+						isFirstPartsTurn = true;
+					}
+					lastPartsUsed++;
+				}
+			}
+
+			if (lastPart == "")
+			{
+				//the filename (and root path) in itself was longer than maxLength, shorten it
+				lastPart = pathParts[pathParts.Length - 1];//"pathParts[pathParts.Length -1]" is the equivalent of "Path.GetFileName(pathToShorten)"
+				lastPart = lastPart.Substring(lastPart.Length + ellipsisLength + firstPart.Length - maxLength, maxLength - ellipsisLength - firstPart.Length);
+			}
+
+			return firstPart + ellipsisChars + lastPart;
+		}
+
+		static string PathShortener(string path)
+		{
+			const string pattern = @"^(w+:|)([^]+[^]+).*([^]+[^]+)$";
+			const string replacement = "$1$2...$3";
+			if (Regex.IsMatch(path, pattern))
+			{
+				return Regex.Replace(path, pattern, replacement);
+			}
+			else
+			{
+				return path;
+			}
+		}
+
+		static string TruncatePath(string path, int length)
+		{
+			StringBuilder sb = new StringBuilder();
+			PathCompactPathEx(sb, path, length, 0);
+			return sb.ToString();
 		}
 
 		private void pnlVamping_Paint(object sender, PaintEventArgs e)
 		{
 			e.Graphics.DrawRectangle(Pens.Blue, 0, 0, pnlVamping.Width - 1, pnlVamping.Height - 1);
-		}
-
-		private void SelectStep(int theStep)
-		{
-			if (theStep == 1)
-			{
-				lblStep1.ForeColor = System.Drawing.Color.Red;
-				grpSequence.Font = new Font(grpSequence.Font, FontStyle.Bold);
-				grpSequence.Enabled = true;
-			}
-			else
-			{
-				lblStep1.ForeColor = SystemColors.Highlight;
-				grpSequence.Font = new Font(grpSequence.Font, FontStyle.Regular);
-			}
-			if (theStep == 2)
-			{
-
-			}
-
 		}
 
 		private void pnlAbout_Click(object sender, EventArgs e)
@@ -1574,7 +1767,418 @@ namespace TuneORama
 			ImBusy(false);
 		}
 
+		private void chkTiming_CheckedChanged(object sender, EventArgs e)
+		{
+			SelectStep(2);
+		}
+
+		private void vscStartBeat_Scroll(object sender, ScrollEventArgs e)
+		{
+			startBeat = vscStartBeat.Value;
+			txtStartBeat.Text = startBeat.ToString();
+			SelectStep(4);
+		}
+
+		private void swTrackBeat_CheckedChanged(object sender, EventArgs e)
+		{
+			if (swTrackBeat.Checked) timeSignature = 3; else timeSignature = 4;
+			SelectStep(4);
+		}
+
+		private void btnExport_Click(object sender, EventArgs e)
+		{
+			ImBusy(true);
+
+			// NOTE: Default folder for Exports is the folder which was last used for exports
+			// This is because the TimingGrid files probably go into the xLights folder (or subfolder of it)
+			// Whereas the sequence probably came from the LOR folder (or subfolder of it)
+			// And therefore quite different.
+			string pathExport = "";
+			mruTimings.Validate();
+			pathExport = Path.GetDirectoryName(mruTimings.GetItem(0));
+			if (pathExport.Length < 4)
+			{
+				pathExport = utils.ShowDirectory;
+
+				if (!Directory.Exists(pathExport))
+				{
+					// No longer exists, so reset to blank
+					pathExport = "";
+				}
+			}
+			if (pathExport.Length < 4)
+			{
+				pathExport = Path.GetDirectoryName(mruAudio.GetItem(0));
+				if (!Directory.Exists(pathExport))
+				{
+					// No longer exists, so reset to blank
+					pathExport = "";
+				}
+			}
+
+			// Setup File Save Dialog
+			dlgSaveFile.DefaultExt = "xtiming";
+			dlgSaveFile.Filter = "xLights Timings (*.xtiming)|*.xTiming|All Files (*.*)|*.*";
+			dlgSaveFile.FilterIndex = 0;
+			string initFile = Path.GetFileNameWithoutExtension(fileAudioLast);
+			dlgSaveFile.FileName = initFile;
+			dlgSaveFile.InitialDirectory = pathExport;
+			dlgSaveFile.OverwritePrompt = true;
+			dlgSaveFile.CheckPathExists = true;
+			dlgSaveFile.SupportMultiDottedExtensions = true;
+			dlgSaveFile.ValidateNames = true;
+			dlgSaveFile.Title = "Save Timings As...";
+
+			DialogResult dr = dlgSaveFile.ShowDialog(this);
+			if (dr == DialogResult.OK)
+			{
+				string newFile = dlgSaveFile.FileName;
+				ExportSelectedTimings(newFile);
+				//utils.PlayNotifyGenericSound();
+				SystemSounds.Exclamation.Play();
+			} // end dialog result = OK
+			ImBusy(false);
+
+		} // end SaveSelectionsAs...
+
+		private void ExportSelectedTimings(string fileName)
+		{
+			// Get Temp Directory
+			bool startWritten = false;
+			bool endWritten = false;
+			int writeCount = 0;
 
 
-	} // end frmTune
-} // end namespace tuneorama
+			// Save Filename for next time (really only need the path, but...)
+			fileTimingsLast = fileName;
+			txtSaveName.Text = ShortenPath(fileName, 100);
+			Properties.Settings.Default.fileTimingsLast = fileTimingsLast;
+
+			if (optMultiPer.Checked) Properties.Settings.Default.saveFormat = 2;
+			else Properties.Settings.Default.saveFormat = 1;
+			mruTimings.AddNew(fileName);
+			mruTimings.SaveToConfig(Properties.Settings.Default);
+			// Get path and name for export files
+			
+			if (chkBars.Checked)
+			{
+				if (xBars != null)
+				{
+					if (xBars.effects.Count > 0)
+					{
+						WriteTimingFile(xBars, fileName);
+						writeCount++;
+					}
+				}
+			}
+			if (chkBeatsFull.Checked)
+			{
+				if (xBeatsFull != null)
+				{
+					if (xBeatsFull.effects.Count > 0)
+					{
+						WriteTimingFile(xBeatsFull, fileName);
+						writeCount++;
+					}
+				}
+			}
+			if (chkBeatsHalf.Checked)
+			{
+				if (xBeatsHalf != null)
+				{
+					if (xBeatsHalf.effects.Count > 0)
+					{
+						WriteTimingFile(xBeatsHalf, fileName);
+						writeCount++;
+					}
+				}
+			}
+			if (chkBeatsThird.Checked)
+			{
+				if (xBeatsThird != null)
+				{
+					if (xBeatsThird.effects.Count > 0)
+					{
+						WriteTimingFile(xBeatsThird, fileName);
+						writeCount++;
+					}
+				}
+			}
+			if (chkBeatsQuarter.Checked)
+			{
+				if (xBeatsQuarter != null)
+				{
+					if (xBeatsQuarter.effects.Count > 0)
+					{
+						WriteTimingFile(xBeatsQuarter, fileName);
+						writeCount++;
+					}
+				}
+			}
+			if (chkNoteOnsets.Checked)
+			{
+				if (xOnsets != null)
+				{
+					if (xOnsets.effects.Count > 0)
+					{
+						WriteTimingFile(xOnsets, fileName);
+						writeCount++;
+					}
+				}
+			}
+			if (chkTranscribe.Checked)
+			{
+				if (xTranscription != null)
+				{
+					if (xTranscription.effects.Count > 0)
+					{
+						WriteTimingFile(xTranscription, fileName);
+					}
+				}
+			}
+
+
+			//}
+			pnlStatus.Text = writeCount.ToString() + " files writen.";
+		} // end SaveSelections
+
+		private void WriteTimingFile(TimingGrid timings, string fileName)
+		{
+			string timingsTemp = "";
+			string tempDir = System.IO.Path.GetTempPath();
+			//  Allocate a stream writer
+			StreamWriter writer = null;
+			string expPath = Path.GetDirectoryName(fileName) + "\\";
+			string expBase = Path.GetFileNameWithoutExtension(fileName);
+			string expFile = "x.x";
+
+			pnlStatus.Text = "Writing " + timings.timingName + "...";
+		staStatus.Refresh();
+		// Create a temporary streamwriter file
+		timingsTemp = tempDir + Path.GetRandomFileName();
+		writer = new StreamWriter(timingsTemp);
+		string lineOut = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+		writer.WriteLine(lineOut);
+
+		// Write this xTiming to an export file
+		string xDat = timings.LineOut();
+		writer.WriteLine(xDat);
+
+		writer.Close();
+		expFile = expPath + expBase + " - " + timings.timingName + ".xtiming";
+		if (System.IO.File.Exists(expFile))
+		{
+			// If already exists, delete it
+			//TODO: Add Exception Catch
+			System.IO.File.Delete(expFile);
+		}
+		// Copy the tempfile to the new file name and delete the old temp file
+		System.IO.File.Copy(timingsTemp, expFile);
+		System.IO.File.Delete(timingsTemp);
+
+	}
+
+		private void lblHelpOnsets_Click(object sender, EventArgs e)
+		{
+			// Go to Vamp Plugins Web page
+			System.Diagnostics.Process.Start("https://vamp-plugins.org/plugin-doc/qm-vamp-plugins.html#qm-onsetdetector");
+		}
+
+		private void cboOnsetsMethod_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			bool b = false;
+			if ((cboMethodOnsets.SelectedIndex == 0) || (cboMethodOnsets.SelectedIndex == 2)) b = true;
+			lblDetectOnsets.Enabled = b;
+			cboDetectOnsets.Enabled = b;
+			if (cboMethodOnsets.SelectedIndex == 0) b = true; else b = false;
+			pnlOnsetSensitivity.Enabled = b;
+			chkWhiteOnsets.Enabled = b;
+		}
+
+		private void vscStartBeat_Scroll_1(object sender, ScrollEventArgs e)
+		{
+			txtStartBeat.Text = vscStartBeat.Value.ToString();
+		}
+
+		private void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
+		{
+			txtOnsetSensitivity.Text = vscSensitivity.Value.ToString();
+		}
+
+		private void pnlNotes_Paint(object sender, PaintEventArgs e)
+		{
+			Font fnt = new Font("Segoe UI Symbol", 15.75F, FontStyle.Regular);
+			// Bars
+			TextRenderer.DrawText(e.Graphics, "𝄁", fnt, new Point(0, -4), SystemColors.ControlText);
+			// Beats - Quarter Note
+			TextRenderer.DrawText(e.Graphics, "𝅘𝅥", fnt, new Point(0, 17), SystemColors.ControlText);
+			// Half Beats - Eighth Note
+			TextRenderer.DrawText(e.Graphics, "𝅘𝅥𝅮", fnt, new Point(0, 38), SystemColors.ControlText);
+			// Quarter Beats - Sixteenth Note
+			TextRenderer.DrawText(e.Graphics, "𝅘𝅥𝅯", fnt, new Point(0, 80), SystemColors.ControlText);
+			// Full Note
+			fnt = new Font("Segoe UI Symbol", 24F, FontStyle.Regular);
+			TextRenderer.DrawText(e.Graphics, "𝅗", fnt, new Point(3, -19), SystemColors.ControlText);
+		}
+
+		private void cboBarBeatMethod_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			bool b = false;
+			if (cboMethodBarsBeats.SelectedIndex == 1) ;
+			{
+				lblDetectBarBeats.Enabled = b;
+				cboDetectBarBeats.Enabled = b;
+				chkWhiteBarBeats.Enabled = b;
+			}
+		}
+
+		private void labelTweaks_Click(object sender, EventArgs e)
+		{
+			Form ft = new frmTweakInfo();
+			ft.ShowDialog(this);
+		}
+
+		private void btnResetDefaults_Click(object sender, EventArgs e)
+		{
+			cboMethodBarsBeats.SelectedIndex = 0;
+			swTrackBeat.Checked = false;
+			timeSignature = 4;
+			vscStartBeat.Value = 1;
+			startBeat = 1;
+			cboDetectBarBeats.SelectedIndex = 0;
+			chkWhiteBarBeats.Checked = false;
+			chkBars.Checked = true;
+			chkBeatsFull.Checked = true;
+			chkBeatsHalf.Checked = true;
+			chkBeatsThird.Checked = false;
+			chkBeatsQuarter.Checked = true;
+			cboAlignBarsBeats.SelectedIndex = 1; // 25ms 40fps
+
+			cboMethodOnsets.SelectedIndex = 0;
+			cboDetectOnsets.SelectedIndex = 0;
+			vscSensitivity.Value = 50;
+			chkWhiteOnsets.Checked = false;
+			chkNoteOnsets.Checked = true;
+			cboLabelsOnsets.SelectedIndex = 1;
+			cboAlignOnsets.SelectedIndex = 5; // Quarter Beats Sixteenth Notes
+
+			cboMethodTranscription.SelectedIndex = 0;
+			chkTranscribe.Checked = true;
+			cboLabelsTranscription.SelectedIndex = 0;
+			cboAlignTranscribe.SelectedIndex = 6; // Note Onsets
+
+			cboMethodSpectrum.SelectedIndex = 0;
+			chkSpectrum.Checked = false;
+			cboLabelsSpectrum.SelectedIndex = 1;
+			cboAlignSpectrum.SelectedIndex = 6;
+
+			cboMethodPitchKey.SelectedIndex = 0;
+			chkPitchKey.Checked = true;
+			cboLabelsPitchKey.SelectedIndex = 1;
+			cboAlignPitch.SelectedIndex = 3; // Bars
+
+			cboMethodTempo.SelectedIndex = 0;
+			chkTempo.Checked = false;
+			cboAlignTempo.SelectedIndex = 1;
+			cboAlignTempo.SelectedIndex = 3; // Bars
+
+			chkSegments.Checked = false;
+			cboAlignSegments.SelectedIndex = 3; // Bars
+
+			chkVocals.Checked = false;
+			cboAlignVocals.SelectedIndex = 0; // None
+
+		}
+
+		private int SetCombo(ComboBox cboSetting, string selection)
+		{
+			int i1 = cboSetting.FindStringExact(selection);
+			if (i1<0)
+			{
+				if (selection.Length > 3)
+				{
+					string mat = selection.Trim().ToLower().Substring(0, 4);
+					for (int s = 0; s < cboSetting.Items.Count; s++)
+					{
+						string tem = cboSetting.Items[s].ToString().Trim().ToLower().Substring(0, 4);
+						if (mat.CompareTo(tem) == 0)
+						{
+							i1 = s;
+							s = 99999;  // force exit of loop
+						}
+					}
+				}
+			}
+			if (i1>=0)
+				{
+				cboSetting.SelectedIndex = i1;
+			}
+			return i1;
+		}
+
+		private void chkReuse_CheckedChanged(object sender, EventArgs e)
+		{
+			Properties.Settings.Default.reuseFiles = chkReuse.Checked;
+			Properties.Settings.Default.Save();
+		}
+
+		private void tmrAni_Tick(object sender, EventArgs e)
+		{
+			panelX += panelAddX;
+			if (panelX < 0)
+			{
+				panelAddX = chaos.NextDouble() * 2 + .5D;
+			}
+			if (panelX + pnlVamping.Width > this.ClientSize.Width)
+			{
+				panelAddX = chaos.NextDouble() * -2 - .5D;
+			}
+			panelY += panelAddY;
+			if (panelY < 0)
+			{
+				panelAddY = chaos.NextDouble() * 2 + .5D;
+			}
+			if (panelY > this.ClientSize.Height + pnlVamping.Height)
+			{
+				panelAddY = chaos.Next() * -2 - .5D;
+			}
+			//pnlVamping.Left = (int)panelX;
+			//pnlVamping.Top = (int)panelY;
+			pnlVamping.Location = new Point((int)panelX, (int)panelY);
+			pnlVamping.Refresh();
+
+		}
+
+		private void WaitBounce()
+		{
+			panelX += panelAddX;
+			if (panelX < 0)
+			{
+				panelAddX = chaos.NextDouble() * 2 + .5D;
+			}
+			if (panelX + pnlVamping.Width > this.ClientSize.Width)
+			{
+				panelAddX = chaos.NextDouble() * -2 - .5D;
+			}
+			panelY += panelAddY;
+			if (panelY < 0)
+			{
+				panelAddY = chaos.NextDouble() * 2 + .5D;
+			}
+			if (panelY > this.ClientSize.Height + pnlVamping.Height)
+			{
+				panelAddY = chaos.Next() * -2 - .5D;
+			}
+			//pnlVamping.Left = (int)panelX;
+			//pnlVamping.Top = (int)panelY;
+			pnlVamping.Location = new Point((int)panelX, (int)panelY);
+			pnlVamping.Refresh();
+
+
+			System.Threading.Thread.Sleep(50);
+
+		}
+
+
+	} // End Form Partial Class
+}// end namespace xTune

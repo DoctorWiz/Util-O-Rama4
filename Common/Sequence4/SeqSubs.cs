@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Diagnostics;
+using System.Text;
  
 
 namespace LORUtils
@@ -31,20 +32,20 @@ namespace LORUtils
 
 		public void Parse(string lineIn)
 		{
-			Artist = utils.getKeyWord(lineIn, FIELDmusicArtist);
-			Album = utils.getKeyWord(lineIn, FIELDmusicAlbum);
-			Title = utils.getKeyWord(lineIn, FIELDmusicTitle);
+			Artist = utils.HumanizeName(utils.getKeyWord(lineIn, FIELDmusicArtist));
+			Album = utils.HumanizeName(utils.getKeyWord(lineIn, FIELDmusicAlbum));
+			Title = utils.HumanizeName(utils.getKeyWord(lineIn, FIELDmusicTitle));
 			File = utils.getKeyWord(lineIn, FIELDmusicFilename);
 		}
 
 		public string LineOut()
 		{
-			string ret = "";
-			ret += FIELDmusicAlbum + utils.FIELDEQ + Album + utils.ENDQT;
-			ret += FIELDmusicArtist + utils.FIELDEQ + Artist + utils.ENDQT;
-			ret += FIELDmusicFilename + utils.FIELDEQ + File + utils.ENDQT;
-			ret += FIELDmusicTitle + utils.FIELDEQ + Title + utils.ENDQT;
-			return ret;
+			StringBuilder ret = new StringBuilder();
+			ret.Append(utils.SetKey(FIELDmusicAlbum, utils.XMLifyName(Album)));
+			ret.Append(utils.SetKey(FIELDmusicArtist, utils.XMLifyName(Artist)));
+			ret.Append(utils.SetKey(FIELDmusicFilename, File));
+			ret.Append(utils.SetKey(FIELDmusicTitle, utils.XMLifyName(Title)));
+			return ret.ToString();
 		}
 
 		public Music Clone()
@@ -73,7 +74,7 @@ namespace LORUtils
 		} // End SavedIndex class
 	}
 
-	public class Output : IComparable<Output>
+	public class Output : IComparable<Output>, IEquatable<Output>
 	{
 		public DeviceType deviceType = DeviceType.None;
 
@@ -135,6 +136,18 @@ namespace LORUtils
 							}
 						}
 					}
+					if (deviceType == DeviceType.Dasher)
+					{
+						ret = network.CompareTo(other.network);
+						if (ret == 0)
+						{
+							ret = unit.CompareTo(other.unit);
+							if (ret == 0)
+							{
+								ret = circuit.CompareTo(other.circuit);
+							}
+						}
+					}
 					if (deviceType == DeviceType.DMX)
 					{
 						ret = network.CompareTo(other.network);
@@ -147,7 +160,37 @@ namespace LORUtils
 			}
 			return ret;
 		}
+		
+		// For IEquatible
+			public bool Equals(Output obj)
+		{
+			// Check for null values and compare run-time types.
+			if (obj == null || GetType() != obj.GetType())
+				return false;
 
+			Output o = (Output)obj;
+			return ((deviceType == o.deviceType) && (unit == o.unit) && (circuit == o.circuit) && (network == o.network));
+		}
+		
+		public override bool Equals(Object obj)
+		{
+			// Check for null values and compare run-time types.
+			if (obj == null || GetType() != obj.GetType())
+				return false;
+
+			Output o = (Output)obj;
+			return ((deviceType == o.deviceType) && (unit == o.unit) && (circuit == o.circuit) && (network == o.network));
+		}
+
+		public override int GetHashCode()
+		{
+			var hashCode = 1137;
+			hashCode += (int)deviceType;
+			hashCode += unit * 0x10;
+			hashCode += circuit * 0x1000;
+			hashCode += network * 0x2000000;
+			return hashCode;
+		}
 
 		public string SortableComparableString()
 		{
@@ -203,41 +246,47 @@ namespace LORUtils
 
 		public string LineOut()
 		{
-			string ret = "";
+			StringBuilder ret = new StringBuilder();
 			if (isViz)
 			{
 				if (deviceType == DeviceType.LOR)
 				{
-					ret += FIELDDeviceType + utils.FIELDEQ + "1" + utils.ENDQT;
+					ret.Append(utils.SetKey(FIELDDeviceType, 1));
 				}
 				else if (deviceType == DeviceType.DMX)
 				{
-					ret += FIELDDeviceType + utils.FIELDEQ + "7" + utils.ENDQT;
+					ret.Append(utils.SetKey(FIELDDeviceType, 7));
 				}
-				ret += FIELDNetwork + utils.FIELDEQ + network.ToString() + utils.ENDQT;
-				ret += FIELDController + utils.FIELDEQ + unit.ToString() + utils.ENDQT;
-				ret += FIELDChannel + utils.FIELDEQ + circuit.ToString() + utils.ENDQT;
+				ret.Append(utils.SetKey(FIELDNetwork, network));
+				ret.Append(utils.SetKey(FIELDController, unit));
+				ret.Append(utils.SetKey(FIELDChannel, circuit));
 			}
 			else
 			{
 				if (deviceType == DeviceType.LOR)
 				{
-					ret += FIELDdeviceType + utils.FIELDEQ + SeqEnums.DeviceName(deviceType) + utils.ENDQT;
-					ret += FIELDunit + utils.FIELDEQ + unit.ToString() + utils.ENDQT;
-					ret += FIELDcircuit + utils.FIELDEQ + circuit.ToString() + utils.ENDQT;
+					ret.Append(utils.SetKey(FIELDdeviceType, SeqEnums.DeviceName(deviceType)));
+					ret.Append(utils.SetKey(FIELDunit, unit));
+					ret.Append(utils.SetKey(FIELDcircuit, circuit));
 					if (network != utils.UNDEFINED)
 					{
-						ret += FIELDnetwork + utils.FIELDEQ + network.ToString() + utils.ENDQT;
+						ret.Append(utils.SetKey(FIELDnetwork, network));
 					}
 				}
 				else if (deviceType == DeviceType.DMX)
 				{
-					ret += FIELDdeviceType + utils.FIELDEQ + SeqEnums.DeviceName(deviceType) + utils.ENDQT;
-					ret += FIELDcircuit + utils.FIELDEQ + circuit.ToString() + utils.ENDQT;
-					ret += FIELDnetwork + utils.FIELDEQ + network.ToString() + utils.ENDQT;
+					ret.Append(utils.SetKey(FIELDdeviceType, SeqEnums.DeviceName(deviceType)));
+					ret.Append(utils.SetKey(FIELDcircuit, circuit));
+					ret.Append(utils.SetKey(FIELDnetwork, network));
+				}
+				else if (deviceType == DeviceType.Dasher)
+				{
+					ret.Append(utils.SetKey(FIELDdeviceType, SeqEnums.DeviceName(deviceType)));
+					ret.Append(utils.SetKey(FIELDunit, unit));
+					ret.Append(utils.SetKey(FIELDcircuit, circuit));
 				}
 			}
-			return ret;
+			return ret.ToString();
 		}
 
 		// An Alias: channel=circuit
@@ -268,6 +317,23 @@ namespace LORUtils
 			}
 		}
 
+		public string networkName
+		{
+			get
+			{
+				string n = "";
+				if (network < 0)
+				{
+					n= "Regular";
+				}
+				else
+				{
+					n= "Aux" + (char)(64 + network);
+				}
+				return n;
+			}
+		}
+
 		public Output Clone()
 		{
 			Output oout = new Output();
@@ -278,22 +344,14 @@ namespace LORUtils
 			return oout;
 		}
 
-		public override bool Equals(Object obj)
-		{
-			// Check for null values and compare run-time types.
-			if (obj == null || GetType() != obj.GetType())
-				return false;
 
-			Output o = (Output)obj;
-			return ((deviceType == o.deviceType) && (unit == o.unit) && (circuit == o.circuit) && (network == o.network));
-		}
 	} // End Output Class
 		
 	public class Effect
 	{
 		public LORUtils.EffectType EffectType = EffectType.None;
-		public int startCentisecond = utils.UNDEFINED;
-		private int myEndCentisecond = 999999999;
+		private int myStartCentisecond = utils.UNDEFINED;
+		private int myEndCentisecond = 360001;
 		public int Intensity = utils.UNDEFINED;
 		public int startIntensity = utils.UNDEFINED;
 		public int endIntensity = utils.UNDEFINED;
@@ -316,8 +374,8 @@ namespace LORUtils
 		public void Parse(string lineIn)
 		{
 			this.EffectType = SeqEnums.enumEffectType(utils.getKeyWord(lineIn, utils.FIELDtype));
-			startCentisecond = utils.getKeyValue(lineIn, utils.FIELDstartCentisecond);
-			endCentisecond = utils.getKeyValue(lineIn, utils.FIELDendCentisecond);
+			myStartCentisecond = utils.getKeyValue(lineIn, utils.FIELDstartCentisecond);
+			myEndCentisecond = utils.getKeyValue(lineIn, utils.FIELDendCentisecond);
 			Intensity = utils.getKeyValue(lineIn, FIELDintensity);
 			startIntensity = utils.getKeyValue(lineIn, FIELDstartIntensity);
 			endIntensity = utils.getKeyValue(lineIn, FIELDendIntensity);
@@ -333,38 +391,73 @@ namespace LORUtils
 
 		public string LineOut()
 		{
-			string ret = "";
-			ret = utils.LEVEL3 + utils.STFLD + Sequence4.TABLEeffect;
-			ret += utils.FIELDtype + utils.FIELDEQ + SeqEnums.EffectTypeName(this.EffectType).ToLower() + utils.ENDQT;
-			ret += utils.FIELDstartCentisecond + utils.FIELDEQ + startCentisecond.ToString() + utils.ENDQT;
-			ret += utils.FIELDendCentisecond + utils.FIELDEQ + myEndCentisecond.ToString() + utils.ENDQT;
+			StringBuilder ret = new StringBuilder();
+
+			ret.Append(utils.StartTable(Sequence4.TABLEeffect, 3));
+
+			ret.Append(utils.SetKey(utils.FIELDtype, SeqEnums.EffectTypeName(this.EffectType).ToLower()));
+			ret.Append(utils.SetKey(utils.FIELDstartCentisecond, startCentisecond));
+			ret.Append(utils.SetKey(utils.FIELDendCentisecond, myEndCentisecond));
 			if (Intensity > utils.UNDEFINED)
 			{
-				ret += FIELDintensity + utils.FIELDEQ + Intensity.ToString() + utils.ENDQT;
+				ret.Append(utils.SetKey(FIELDintensity, Intensity));
 			}
 			if (startIntensity > utils.UNDEFINED)
 			{
-				ret += FIELDstartIntensity + utils.FIELDEQ + startIntensity.ToString() + utils.ENDQT;
-				ret += FIELDendIntensity + utils.FIELDEQ + endIntensity.ToString() + utils.ENDQT;
+				ret.Append(utils.SetKey(FIELDstartIntensity, startIntensity));
+				ret.Append(utils.SetKey(FIELDendIntensity, endIntensity));
 			}
-			ret += utils.ENDFLD;
-			return ret;
+			ret.Append(utils.ENDFLD);
+			return ret.ToString();
 		}
 
 		public override string ToString()
 		{
-			string ret = SeqEnums.EffectTypeName(this.EffectTypeEX);
-			ret += " From " + startCentisecond.ToString();
-			ret += " to " + myEndCentisecond.ToString();
+			StringBuilder ret = new StringBuilder();
+
+			ret.Append(SeqEnums.EffectTypeName(this.EffectTypeEX));
+			ret.Append(" From ");
+			ret.Append(startCentisecond);
+			ret.Append(" to ");
+			ret.Append(myEndCentisecond);
 			if (Intensity > utils.UNDEFINED)
 			{
-				ret += " at " + Intensity.ToString();
+				ret.Append(" at ");
+				ret.Append(Intensity);
 			}
 			if (startIntensity > utils.UNDEFINED)
 			{
-				ret += " at " + startIntensity.ToString();
+				ret.Append(" at ");
+				ret.Append(startIntensity);
 			}
-			return ret;
+			return ret.ToString();
+		}
+
+		public int startCentisecond
+		{
+			get
+			{
+				return myStartCentisecond;
+			}
+			set
+			{
+				myStartCentisecond = value;
+				if (parent != null)
+				{
+					if (parent.ParentSequence != null)
+					{
+						parent.ParentSequence.MakeDirty();
+					}
+				}
+				if (parent != null)
+				{
+					if (myStartCentisecond >= parent.Centiseconds)
+					{
+						// Raise Error
+						parent.Centiseconds = myStartCentisecond + 1;
+					}
+				}
+			}
 		}
 
 		public int endCentisecond
@@ -383,11 +476,11 @@ namespace LORUtils
 						parent.ParentSequence.MakeDirty();
 					}
 				}
-
 				if (parent != null)
 				{
 					if (myEndCentisecond > parent.Centiseconds)
 					{
+						// Raise Error
 						parent.Centiseconds = myEndCentisecond;
 					}
 				}
@@ -512,29 +605,35 @@ namespace LORUtils
 
 		public string LineOut()
 		{
-			string ret = "";
+			StringBuilder ret = new StringBuilder();
 
 			//if (sections > 0)
 			//{
-			ret += utils.LEVEL1 + utils.STFLD + Sequence4.TABLEanimation;
-			ret += FIELDrows + utils.FIELDEQ + sections.ToString() + utils.ENDQT;
-			ret += FIELDcolumns + utils.FIELDEQ + columns.ToString() + utils.ENDQT;
-			ret += FIELDimage + utils.FIELDEQ + image + utils.ENDQT;
+			ret.Append(utils.StartTable(Sequence4.TABLEanimation, 1));
+
+			ret.Append(utils.SetKey(FIELDrows, sections));
+			ret.Append(utils.SetKey(FIELDcolumns, columns));
+			ret.Append(utils.SetKey(FIELDimage, image));
 			if (animationRows.Count > 0)
 			{
-				ret += utils.FINFLD;
+				ret.Append(utils.FINFLD);
 				foreach (AnimationRow aniRow in animationRows)
 				{
-					ret += utils.CRLF + aniRow.LineOut();
+					ret.Append(utils.CRLF);
+					ret.Append(aniRow.LineOut());
 				}
-				ret += utils.CRLF + utils.LEVEL1 + utils.FINTBL + Sequence4.TABLEanimation + utils.FINFLD;
+				ret.Append(utils.CRLF);
+				ret.Append(utils.LEVEL1);
+				ret.Append(utils.FINTBL);
+				ret.Append(Sequence4.TABLEanimation);
+				ret.Append(utils.FINFLD);
 			}
 			else
 			{
-				ret += utils.ENDFLD;
+				ret.Append(utils.ENDFLD);
 			}
 
-			return ret;
+			return ret.ToString();
 
 		}
 
@@ -598,16 +697,27 @@ namespace LORUtils
 
 		public string LineOut()
 		{
-			string ret = "";
+			StringBuilder ret = new StringBuilder();
 
-			ret += utils.CRLF + utils.LEVEL2 + utils.STFLD + FIELDrow + utils.SPC + FIELDindex + utils.FIELDEQ + rowIndex.ToString() + utils.ENDQT + utils.FINFLD;
+			ret.Append(utils.CRLF);
+			ret.Append(utils.LEVEL2);
+			ret.Append(utils.STFLD);
+			ret.Append(FIELDrow);
+			ret.Append(utils.SPC);
+			ret.Append(utils.SetKey(FIELDindex, rowIndex));
+			ret.Append(utils.FINFLD);
 			foreach (AnimationColumn aniCol in animationColumns)
 			{
-				ret += utils.CRLF + aniCol.LineOut();
+				ret.Append(utils.CRLF);
+				ret.Append(aniCol.LineOut());
 			} // end columns loop
-			ret += utils.CRLF + utils.LEVEL2 + utils.FINTBL + FIELDrow + utils.FINFLD;
+			ret.Append(utils.CRLF);
+			ret.Append(utils.LEVEL2);
+			ret.Append(utils.FINTBL);
+			ret.Append(FIELDrow);
+			ret.Append(utils.FINFLD);
 
-			return ret;
+			return ret.ToString();
 		} // end sections loop
 
 		public AnimationColumn AddColumn(string lineIn)
@@ -661,13 +771,18 @@ namespace LORUtils
 
 		public string LineOut()
 		{
-			string ret = "";
+			StringBuilder ret = new StringBuilder();
 
-			ret += utils.LEVEL3 + utils.STFLD + FIELDcolumnIndex + utils.FIELDEQ + columnIndex.ToString() + utils.ENDQT + utils.SPC;
-			ret += utils.TABLEchannel + utils.FIELDEQ + channel.ToString() + utils.ENDQT + utils.ENDFLD;
+			ret.Append(utils.LEVEL3);
+			ret.Append(utils.STFLD);
+			ret.Append(utils.SetKey(FIELDcolumnIndex, columnIndex));
+			ret.Append(utils.SPC);
+
+			ret.Append(utils.SetKey(utils.TABLEchannel, channel));
+			ret.Append(utils.ENDFLD);
 
 
-			return ret;
+			return ret.ToString();
 		}
 
 		public AnimationColumn Clone()
@@ -682,7 +797,7 @@ namespace LORUtils
 	public class Loop
 	{
 		public int startCentsecond = utils.UNDEFINED;
-		public int endCentisecond = 999999999;
+		public int endCentisecond = 360001;
 		public int loopCount = utils.UNDEFINED;
 		public const string FIELDloopCount = "loopCount";
 		public const string FIELDloop = "loop";
@@ -705,17 +820,25 @@ namespace LORUtils
 
 		public string LineOut()
 		{
-			string ret = "";
-			ret += utils.LEVEL5 + utils.STFLD + FIELDloop + utils.SPC;
-			ret += utils.FIELDstartCentisecond + utils.FIELDEQ + startCentsecond.ToString() + utils.ENDQT + utils.SPC;
-			ret += utils.FIELDendCentisecond + utils.FIELDEQ + endCentisecond.ToString() + utils.ENDQT;
-			ret += utils.LEVEL4 + utils.STFLD + Sequence4.TABLEloopLevel + utils.FINFLD;
+			StringBuilder ret = new StringBuilder();
+
+			ret.Append(utils.StartTable(FIELDloop, 5));
+			ret.Append(utils.SPC);
+
+			ret.Append(utils.SetKey(utils.FIELDstartCentisecond, startCentsecond));
+			ret.Append(utils.SPC);
+			ret.Append(utils.SetKey(utils.FIELDendCentisecond, endCentisecond));
+
+			ret.Append(utils.StartTable(Sequence4.TABLEloopLevel, 4));
+			ret.Append(utils.FINFLD);
 			if (loopCount > 0)
 			{
-				ret += utils.SPC + FIELDloopCount + utils.FIELDEQ + loopCount.ToString() + utils.ENDQT;
+				ret.Append(utils.SPC);
+				ret.Append(utils.SetKey(FIELDloopCount, loopCount));
 			}
-			ret += utils.ENDFLD;
-			return ret;
+			ret.Append(utils.ENDFLD);
+
+			return ret.ToString();
 		}
 
 		public Loop Clone()
@@ -748,26 +871,30 @@ namespace LORUtils
 
 		public string LineOut()
 		{
-			string ret = ""; ;
+			StringBuilder ret = new StringBuilder();
 
-			ret += utils.CRLF + utils.LEVEL4 + utils.STTBL + Sequence4.TABLEloopLevel;
+			ret.Append(utils.CRLF);
+			ret.Append(utils.StartTable(Sequence4.TABLEloopLevel, 4));
 			if (loops.Count > 0)
 			{
-				ret += utils.SPC + Loop.FIELDloopCount + utils.FIELDEQ + loops.Count.ToString() + utils.ENDQT;
+				ret.Append(utils.SPC);
+				ret.Append(utils.SetKey(Loop.FIELDloopCount, loops.Count));
 			}
 			if (loops.Count > 0)
 			{
 				foreach (Loop theLoop in loops)
 				{
-					ret += utils.CRLF + theLoop.LineOut();
+					ret.Append(utils.CRLF);
+					ret.Append(theLoop.LineOut());
 				}
-				ret += utils.CRLF + utils.LEVEL4 + utils.FINTBL + Sequence4.TABLEloopLevel + utils.ENDTBL;
+				ret.Append(utils.CRLF);
+				ret.Append(utils.EndTable(Sequence4.TABLEloopLevel, 4));
 			}
 			else
 			{
-				ret += utils.ENDFLD;
+				ret.Append(utils.ENDFLD);
 			}
-			return ret;
+			return ret.ToString();
 		}
 
 
@@ -792,12 +919,26 @@ namespace LORUtils
 		}
 	} // end LoopLevel class
 
+	public class ErrInfo
+	{
+		public int fileLine = utils.UNDEFINED;
+		public int linePos = utils.UNDEFINED;
+		public int codeLine = utils.UNDEFINED;
+		public string errName = "";
+		public string errMsg = "";
+		public string lineIn = "";
+	}
+
+
 	public class Info
 	{
 		public string filename = "*_UNNAMED_FILE_*";
 		public string xmlInfo = ""; // <?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>";
+		public string infoLine = ""; // only populated when the info line is considered invalid, and saved only for debugging purposes.
 		public int saveFileVersion = utils.UNDEFINED;
 		public string author = "Util-O-Rama";
+		//public string modifiedBy = "Util-O-Rama / " + System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+		public string modifiedBy = "";
 		public DateTime file_created = DateTime.Now;
 		public DateTime file_modified = DateTime.Now;
 		public DateTime file_accessed = DateTime.Now;
@@ -813,13 +954,14 @@ namespace LORUtils
 		public SequenceType sequenceType = SequenceType.Undefined;
 		public Sequence4 ParentSequence = null;
 		public Visualization4  ParentVisualization = null;
-
+		public ErrInfo LastError = new ErrInfo();
 
 		public const string FIELDsaveFileVersion = " saveFileVersion";
 		public const string FIELDlvizSaveFileVersion = " lvizSaveFileVersion";
 		public const string FIELDchannelConfigFileVersion = " channelConfigFileVersion";
 		public const string FIELDauthor = " author";
 		public const string FIELDcreatedAt = " createdAt";
+		public const string FIELDmodifiedBy = " modifiedBy";
 		public const string FIELDvideoUsage = " videoUsage";
 
 		public Info(Sequence4 myParent)
@@ -840,7 +982,8 @@ namespace LORUtils
 
 		public void Parse(string lineIn)
 		{
-			author = utils.getKeyWord(lineIn, FIELDauthor);
+			author = utils.HumanizeName(utils.getKeyWord(lineIn, FIELDauthor));
+			modifiedBy = utils.HumanizeName(utils.getKeyWord(lineIn, FIELDmodifiedBy));
 			createdAt = utils.getKeyWord(lineIn, FIELDcreatedAt);
 			music = new Music(lineIn);
 			bool musical = (music.File.Length > 4);
@@ -882,35 +1025,65 @@ namespace LORUtils
 
 		public string LineOut()
 		{
-			string ret = "";
+			StringBuilder ret = new StringBuilder();
 
 			// Use sequence.sequenceInfo when using WriteSequenceFile (which matches original unmodified file)
 			// Use sequence.fileInfo.sequenceInfo when using WriteSequenceInxxxxOrder (which creates a whole new file)
-			ret += utils.STFLD + Sequence4.TABLEsequence;
-			ret += FIELDsaveFileVersion + utils.FIELDEQ + saveFileVersion.ToString() + utils.ENDQT;
-			ret += FIELDauthor + utils.FIELDEQ + author + utils.ENDQT;
+			ret.Append(utils.STFLD);
+			ret.Append(Sequence4.TABLEsequence);
+
+			ret.Append(FIELDsaveFileVersion);
+			ret.Append(utils.FIELDEQ);
+			ret.Append(saveFileVersion);
+			ret.Append(utils.ENDQT);
+
+			ret.Append(FIELDauthor);
+			ret.Append(utils.FIELDEQ);
+			ret.Append(utils.XMLifyName(author));
+			ret.Append(utils.ENDQT);
 
 			// if Sequence's dirty flag is set, this returns a createdAt that is NOW
 			// Whereas if Sequence is 'clean' this returns the createdAt of the original file
-			ret += FIELDcreatedAt + utils.FIELDEQ;
-			if (ParentSequence.dirty)
-			{
-				string nowtime = DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt");
-				ret += nowtime;
-			}
-			else
-			{
-				ret += createdAt;
-			}
-			ret += utils.ENDQT;
+			ret.Append(FIELDcreatedAt);
+			ret.Append(utils.FIELDEQ);
+			//if (ParentSequence.dirty)
+			//{
+			//	string nowtime = DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt");
+			//	ret += nowtime;
+			//}
+			//else
+			//{
+			//!NO! Always return THE ORIGINAL date/time of creation!
+			ret.Append(createdAt);
+			ret.Append(utils.ENDQT);
+			//}
+
+			// if Sequence's dirty flag is set, this returns a modifiedBy that is NOW
+			// Whereas if Sequence is 'clean' this returns the createdAt of the original file
+			//if (modifiedBy.Length < 1)
+			//{
+				if (ParentSequence.dirty)
+				{
+					string lorAuth = utils.DefaultAuthor;
+					modifiedBy = lorAuth + " / Util-O-Rama";
+				}
+			//}
+			ret.Append(FIELDmodifiedBy);
+			ret.Append(utils.FIELDEQ);
+			ret.Append(utils.XMLifyName(modifiedBy));
+			ret.Append(utils.ENDQT);
 
 			if (sequenceType == SequenceType.Musical)
 			{
-				ret += music.LineOut();
+				ret.Append(music.LineOut());
 			}
-			ret += FIELDvideoUsage + utils.FIELDEQ + videoUsage.ToString() + utils.ENDQT + utils.ENDTBL;
+			ret.Append(FIELDvideoUsage);
+			ret.Append(utils.FIELDEQ);
+			ret.Append(videoUsage);
+			ret.Append(utils.ENDQT);
+			ret.Append(utils.ENDTBL);
 
-			return ret;
+			return ret.ToString();
 		}
 
 		public string LastModified
@@ -923,18 +1096,39 @@ namespace LORUtils
 
 		public string LineOut(string newCreatedAt)
 		{
-			string ret = xmlInfo + utils.CRLF;
-			ret += utils.STFLD + Sequence4.TABLEsequence;
-			ret += FIELDsaveFileVersion + utils.FIELDEQ + saveFileVersion.ToString() + utils.ENDQT;
-			ret += FIELDauthor + utils.FIELDEQ + author + utils.ENDQT;
-			ret += FIELDcreatedAt + utils.FIELDEQ + newCreatedAt + utils.ENDQT;
+			StringBuilder ret = new StringBuilder();
+
+			ret.Append(xmlInfo);
+			ret.Append(utils.CRLF);
+
+			ret.Append(utils.STFLD);
+			ret.Append(Sequence4.TABLEsequence);
+
+			ret.Append(FIELDsaveFileVersion);
+			ret.Append(utils.FIELDEQ);
+			ret.Append(saveFileVersion.ToString());
+			ret.Append(utils.ENDQT);
+
+			ret.Append(FIELDauthor);
+			ret.Append(utils.FIELDEQ);
+			ret.Append(utils.XMLifyName(author));
+			ret.Append(utils.ENDQT);
+
+			ret.Append(FIELDcreatedAt);
+			ret.Append(utils.FIELDEQ);
+			ret.Append(newCreatedAt);
+			ret.Append(utils.ENDQT);
 			if (sequenceType == SequenceType.Musical)
 			{
-				ret += music.ToString();
+				ret.Append(music.ToString());
 			}
-			ret += FIELDvideoUsage + utils.FIELDEQ + videoUsage.ToString() + utils.ENDQT + utils.ENDTBL;
+			ret.Append(FIELDvideoUsage);
+			ret.Append(utils.FIELDEQ);
+			ret.Append(videoUsage.ToString());
+			ret.Append(utils.ENDQT);
+			ret.Append(utils.ENDTBL);
 
-			return ret;
+			return ret.ToString();
 		} // end LineOut
 
 		public Info Clone()

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace LORUtils
 {
 	public enum DeviceType
-	{ None=utils.UNDEFINED, LOR=1, DMX=7, Digital };
+	{ None=utils.UNDEFINED, LOR=1, DMX=7, Digital=3, CosmicDevice=2, Dasher=4 };
 
 	//public enum EffectType { None=utils.UNDEFINED, Intensity=1, Shimmer, Twinkle, DMX }
 	public enum EffectType { None = utils.UNDEFINED, Intensity = 1, Shimmer, Twinkle, DMX, Constant, FadeUp, FadeDown }
@@ -35,6 +35,7 @@ namespace LORUtils
 		Channel =				SeqEnums.MEMBER_Channel,
 		RGBchannel =		SeqEnums.MEMBER_RGBchannel,
 		ChannelGroup =	SeqEnums.MEMBER_ChannelGroup,
+		CosmicDevice =  SeqEnums.MEMBER_CosmicDevice,
 		Track =					SeqEnums.MEMBER_Track,
 		TimingGrid =		SeqEnums.MEMBER_TimingGrid,
 		Sequence =			SeqEnums.MEMBER_Sequence,
@@ -54,15 +55,20 @@ namespace LORUtils
 		public const int MEMBER_Channel = 1;
 		public const int MEMBER_RGBchannel = 2;
 		public const int MEMBER_ChannelGroup = 4;
-		public const int MEMBER_Track = 8;
-		public const int MEMBER_TimingGrid = 16;
-		public const int MEMBER_Sequence = 32;
+		public const int MEMBER_CosmicDevice = 8;
+		public const int MEMBER_Track = 16;
+		public const int MEMBER_TimingGrid = 32;
+		public const int MEMBER_Sequence = 64;
 		public const int MEMBER_VizChannel = 256;
 		public const int MEMBER_VizObject = 512;
 
 		public const string DEVICElor = "LOR";
 		public const string DEVICEdmx = "DMX Universe";
 		public const string DEVICEdigital = "Digital IO";
+		public const string DEVICEcosmic = "Cosmic Color Device";
+		public const string DEVICEdasher = "Dasher";
+		public const string DEVICEnone = "None";
+
 		public const string EFFECTintensity = "intensity";
 		public const string EFFECTshimmer = "shimmer";
 		public const string EFFECTtwinkle = "twinkle";
@@ -70,8 +76,10 @@ namespace LORUtils
 		public const string EFFECTconstant = "Constant";
 		public const string EFFECTfadeUp = "Fade Up";
 		public const string EFFECTfadeDown = "Fade Down";
+
 		public const string GRIDfreeform = "freeform";
 		public const string GRIDfixed = "fixed";
+
 		public const string OBJnone = "None";
 		public const string OBJchannel = "Channel";
 		public const string OBJrgbChannel = "RGBchannel";
@@ -91,13 +99,29 @@ namespace LORUtils
 			{
 				valueOut = DeviceType.LOR;
 			}
+			else if (deviceName == "1") // Visualizer
+			{
+				valueOut = DeviceType.LOR;
+			}
 			else if (deviceName == DEVICEdmx)
+			{
+				valueOut = DeviceType.DMX;
+			}
+			else if (deviceName == "7") // Visualizer
 			{
 				valueOut = DeviceType.DMX;
 			}
 			else if (deviceName == DEVICEdigital)
 			{
 				valueOut = DeviceType.Digital;
+			}
+			else if (deviceName == DEVICEdasher)
+			{
+				valueOut = DeviceType.Dasher;
+			}
+			else if (deviceName == DEVICEcosmic)
+			{
+				valueOut = DeviceType.CosmicDevice;
 			}
 			else if (deviceName == "")
 			{
@@ -110,6 +134,7 @@ namespace LORUtils
 				string sMsg = "Unrecognized Device Type: ";
 				sMsg += deviceName;
 				//DialogResult dr = MessageBox.Show(sMsg, "Unrecognized Keyword", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				System.Diagnostics.Debugger.Break();
 			}
 
 			return valueOut;
@@ -212,8 +237,29 @@ namespace LORUtils
 					valueOut = DEVICEdmx;
 					break;
 
+				case DeviceType.None:
+					valueOut = DEVICEnone;
+					break;
+
 				case DeviceType.Digital:
 					valueOut = DEVICEdigital;
+					break;
+
+				case DeviceType.CosmicDevice:
+					valueOut = DEVICEcosmic;
+					break;
+
+				case DeviceType.Dasher:
+					valueOut = DEVICEdasher;
+					break;
+
+				default:
+					// TODO: throw exception here
+					valueOut = DEVICEnone;
+					string sMsg = "Unrecognized Device Type: ";
+					sMsg += devType.ToString();
+					//DialogResult dr = MessageBox.Show(sMsg, "Unrecognized Keyword", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					System.Diagnostics.Debugger.Break();
 					break;
 
 					//TODO: Other device types, such as cosmic color ribbon and ...

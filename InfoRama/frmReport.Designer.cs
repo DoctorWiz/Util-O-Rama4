@@ -40,6 +40,7 @@
 			this.dlgSaveFile = new System.Windows.Forms.SaveFileDialog();
 			this.btnBrowseSeq = new System.Windows.Forms.Button();
 			this.btnSaveReport = new System.Windows.Forms.Button();
+			this.btnRename = new System.Windows.Forms.Button();
 			this.pnlReport.SuspendLayout();
 			this.staStatus.SuspendLayout();
 			this.SuspendLayout();
@@ -65,6 +66,7 @@
 			// 
 			// staStatus
 			// 
+			this.staStatus.AllowDrop = true;
 			this.staStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.pnlHelp,
             this.pnlProgress,
@@ -74,7 +76,9 @@
 			this.staStatus.Name = "staStatus";
 			this.staStatus.Size = new System.Drawing.Size(608, 24);
 			this.staStatus.TabIndex = 62;
-			this.staStatus.DragDrop += new System.Windows.Forms.DragEventHandler(this.frmReport_DragDrop);
+			this.staStatus.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
+			this.staStatus.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
+			this.staStatus.DragLeave += new System.EventHandler(this.Event_DragLeave);
 			// 
 			// pnlHelp
 			// 
@@ -125,6 +129,7 @@
 			// 
 			// btnBrowseSeq
 			// 
+			this.btnBrowseSeq.AllowDrop = true;
 			this.btnBrowseSeq.Location = new System.Drawing.Point(67, 553);
 			this.btnBrowseSeq.Name = "btnBrowseSeq";
 			this.btnBrowseSeq.Size = new System.Drawing.Size(160, 23);
@@ -132,10 +137,13 @@
 			this.btnBrowseSeq.Text = "Analyze a Sequence...";
 			this.btnBrowseSeq.UseVisualStyleBackColor = true;
 			this.btnBrowseSeq.Click += new System.EventHandler(this.btnBrowseSeq_Click);
-			this.btnBrowseSeq.DragDrop += new System.Windows.Forms.DragEventHandler(this.frmReport_DragDrop);
+			this.btnBrowseSeq.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
+			this.btnBrowseSeq.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
+			this.btnBrowseSeq.DragLeave += new System.EventHandler(this.Event_DragLeave);
 			// 
 			// btnSaveReport
 			// 
+			this.btnSaveReport.AllowDrop = true;
 			this.btnSaveReport.Enabled = false;
 			this.btnSaveReport.Location = new System.Drawing.Point(319, 553);
 			this.btnSaveReport.Name = "btnSaveReport";
@@ -143,13 +151,28 @@
 			this.btnSaveReport.TabIndex = 64;
 			this.btnSaveReport.Text = "Save Report As...";
 			this.btnSaveReport.UseVisualStyleBackColor = true;
-			this.btnSaveReport.DragDrop += new System.Windows.Forms.DragEventHandler(this.frmReport_DragDrop);
+			this.btnSaveReport.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
+			this.btnSaveReport.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
+			this.btnSaveReport.DragLeave += new System.EventHandler(this.Event_DragLeave);
+			// 
+			// btnRename
+			// 
+			this.btnRename.Location = new System.Drawing.Point(10, 558);
+			this.btnRename.Name = "btnRename";
+			this.btnRename.Size = new System.Drawing.Size(43, 23);
+			this.btnRename.TabIndex = 65;
+			this.btnRename.Text = "Ren";
+			this.btnRename.UseVisualStyleBackColor = true;
+			this.btnRename.Visible = false;
+			this.btnRename.Click += new System.EventHandler(this.btnRename_Click);
 			// 
 			// frmReport
 			// 
+			this.AllowDrop = true;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(608, 635);
+			this.Controls.Add(this.btnRename);
 			this.Controls.Add(this.btnSaveReport);
 			this.Controls.Add(this.btnBrowseSeq);
 			this.Controls.Add(this.staStatus);
@@ -161,7 +184,9 @@
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmReport_FormClosing);
 			this.Load += new System.EventHandler(this.frmReport_Load);
 			this.ResizeEnd += new System.EventHandler(this.frmReport_ResizeEnd);
-			this.DragDrop += new System.Windows.Forms.DragEventHandler(this.frmReport_DragDrop);
+			this.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
+			this.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
+			this.DragLeave += new System.EventHandler(this.Event_DragLeave);
 			this.pnlReport.ResumeLayout(false);
 			this.staStatus.ResumeLayout(false);
 			this.staStatus.PerformLayout();
@@ -183,6 +208,7 @@
 		private System.Windows.Forms.SaveFileDialog dlgSaveFile;
 		private System.Windows.Forms.Button btnBrowseSeq;
 		private System.Windows.Forms.Button btnSaveReport;
+		private System.Windows.Forms.Button btnRename;
 	}
 }
 

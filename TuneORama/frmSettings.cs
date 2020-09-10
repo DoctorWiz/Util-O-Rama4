@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 
-namespace TuneORama
+namespace xTune
 {
 	public partial class frmSettings : Form
 	{
@@ -18,7 +18,7 @@ namespace TuneORama
 			InitializeComponent();
 		}
 
-		public static byte SHOWgridBeats = 1;
+		public static byte SHOWtimesBeats = 1;
 		public static byte SHOWonsets = 2;
 		public static byte SHOWPoly = 3;
 		public static byte SHOWspectro = 4;
@@ -28,10 +28,10 @@ namespace TuneORama
 		public static byte SHOWsave = 50;
 		public static byte SHOWannotator = 99;
 
-		private const int TABIDXgrids = 0;
+		private const int TABIDXtimess = 0;
 		private const int TABIDXtracks = 1;
 		private const int TABIDXsave = 2;
-		private const string TABKEYgrids   = "tabGrids";
+		private const string TABKEYtimess   = "tabGrids";
 		private const string TABKEYtracks  = "tabTracks";
 		private const string TABKEYsave    = "tabSave";
 		private const string TABKEYpoly    = "tabPoly";
@@ -45,7 +45,7 @@ namespace TuneORama
 
 		public bool useRampsPoly = false;
 		public bool useOctaveGrouping = true;
-		public int gridBeatsX = 4;
+		public int timesBeatsX = 4;
 		public int trackBeatsX = 4;
 		public int timeSignature = 4; // 3 = 3/4 time, 4 = 4/4 time
 		public bool useRampsBeats = false;
@@ -135,7 +135,7 @@ namespace TuneORama
 
 				// Then turn on just the one we need
 
-				if (newMode == SHOWgridBeats)
+				if (newMode == SHOWtimesBeats)
 				{
 					tabSubcategory.TabPages.RemoveByKey(TABKEYpoly);
 					tabSubcategory.TabPages.RemoveByKey(TABKEYspectro);
@@ -145,7 +145,7 @@ namespace TuneORama
 					}
 
 
-					//tabCategory.SelectTab(TABKEYgrids);
+					//tabCategory.SelectTab(TABKEYtimess);
 					//tabCategory.SelectTab(0);
 					tabSubcategory.Parent = tabGrids;
 					tabSubcategory.Visible = true;
@@ -373,7 +373,7 @@ namespace TuneORama
 				lblGridBeat34.ForeColor = Color.Black;
 				lblTrackBeat44.ForeColor = Color.DarkSlateGray;
 				lblTrackBeat34.ForeColor = Color.Black;
-				gridBeatsX = x34[vscGridBeatX.Value];
+				timesBeatsX = x34[vscGridBeatX.Value];
 				trackBeatsX = x34[vscTrackBeatX.Value];
 				timeSignature = 3;
 			}
@@ -385,7 +385,7 @@ namespace TuneORama
 				lblGridBeat44.ForeColor = Color.Black;
 				lblTrackBeat34.ForeColor = Color.DarkSlateGray;
 				lblTrackBeat44.ForeColor = Color.Black;
-				gridBeatsX = x44[vscGridBeatX.Value];
+				timesBeatsX = x44[vscGridBeatX.Value];
 				trackBeatsX = x44[vscTrackBeatX.Value];
 				// Default to 4 if any value other than 3
 				timeSignature = 4;
@@ -401,7 +401,7 @@ namespace TuneORama
 			{
 				for (int n = 3; n > 0; n--)
 				{
-					if (gridBeatsX == x44[n])
+					if (timesBeatsX == x44[n])
 					{
 						n44 = n;
 						n = 1; //break from loop
@@ -432,7 +432,7 @@ namespace TuneORama
 		{
 			if (tabCategory.SelectedTab == tabGrids)
 			{
-				SetShowMode(frmSettings.SHOWgridBeats);
+				SetShowMode(frmSettings.SHOWtimesBeats);
 
 			}
 			if (tabCategory.SelectedTab == tabTracks)
@@ -451,9 +451,9 @@ namespace TuneORama
 			string selSubTabName = tabSubcategory.SelectedTab.Text;
 			if (selSubTabName.CompareTo(TABKEYbeats) == 0)
 			{
-				if (selTabName.CompareTo(TABKEYgrids) == 0)
+				if (selTabName.CompareTo(TABKEYtimess) == 0)
 				{
-					SetShowMode(SHOWgridBeats);
+					SetShowMode(SHOWtimesBeats);
 				}
 				else
 				{
@@ -464,7 +464,7 @@ namespace TuneORama
 			{
 				if (selSubTabName.CompareTo(TABKEYonsets) == 0)
 				{
-					if (selTabName.CompareTo(TABKEYgrids) == 0)
+					if (selTabName.CompareTo(TABKEYtimess) == 0)
 					{
 						SetShowMode(SHOWtrackBeats);
 					}
@@ -495,13 +495,13 @@ namespace TuneORama
 		public void SetTheControlsForTheHeartOfTheSun() // Little nod to the Incredible Pink Floyd
 		{
 			SetTimeSignature(timeSignature);
-			txtGridBeatX.Text = gridBeatsX.ToString();
+			txtGridBeatX.Text = timesBeatsX.ToString();
 			txtTrackBeatX.Text = trackBeatsX.ToString();
 			for (int n = 0; n < 4; n++)
 			{
 				if (timeSignature == 3)
 				{
-					if (gridBeatsX == x34[n])
+					if (timesBeatsX == x34[n])
 					{
 						vscGridBeatX.Value = n;
 					}
@@ -512,7 +512,7 @@ namespace TuneORama
 				}
 				else // timeSignature = 4
 				{
-					if (gridBeatsX == x44[n])
+					if (timesBeatsX == x44[n])
 					{
 						vscGridBeatX.Value = n;
 					}
@@ -639,13 +639,13 @@ namespace TuneORama
 		{
 			if (timeSignature == 3)
 			{
-				gridBeatsX = x34[vscGridBeatX.Value];
+				timesBeatsX = x34[vscGridBeatX.Value];
 			}
 			else
 			{
-				gridBeatsX = x44[vscGridBeatX.Value];
+				timesBeatsX = x44[vscGridBeatX.Value];
 			}
-			txtGridBeatX.Text = gridBeatsX.ToString();
+			txtGridBeatX.Text = timesBeatsX.ToString();
 		} // end scroll
 
 		private void vscTrackBeatX_Scroll(object sender, ScrollEventArgs e)

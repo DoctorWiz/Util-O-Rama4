@@ -71,11 +71,13 @@ namespace MapORama
 		// These are used by MapList so need to be public
 		public Sequence4 seqSource = new Sequence4();
 		public Sequence4 seqMaster = new Sequence4();
-		public int[] MapMastToSrc = null;  // Array indexed by Master.SavedIndex, elements contain Source.SaveIndex
-		public List<int>[] StoM = null; // Array indexed by Source.SavedIindex, elements are Lists of Master.SavedIndex-es
+		public int[] mapMastToSrc = null;  // Array indexed by Master.SavedIndex, elements contain Source.SaveIndex
+		public List<int>[] mapSrcToMast = null; // Array indexed by Source.SavedIindex, elements are Lists of Master.SavedIndex-es
 		public int mappingCount = 0;
-		public List<List<TreeNode>> sourceNodesSI = new List<List<TreeNode>>();
-		public List<List<TreeNode>> masterNodesSI = new List<List<TreeNode>>();
+		//public List<List<TreeNode>> sourceNodesBySI = new List<List<TreeNode>>();
+		//public List<List<TreeNode>> masterNodesBySI = new List<List<TreeNode>>();
+		public List<TreeNode>[] sourceNodesBySI = null; // new List<TreeNode>();
+		public List<TreeNode>[] masterNodesBySI = null; // new List<TreeNode>();
 		public string masterFile = "";
 		public string sourceFile = "";
 		public string mapFile = "";
@@ -222,22 +224,24 @@ namespace MapORama
 				Properties.Settings.Default.BasePath = fi.DirectoryName;
 				Properties.Settings.Default.LastSourceFile = sourceFile;
 				Properties.Settings.Default.Save();
-				utils.FillChannels(treeSource, seqSource, sourceNodesSI, false, false);
+				utils.FillChannels(treeSource, seqSource, ref sourceNodesBySI, false, false);
 				// Erase any existing mappings, and create a new blank one of proper size
-				MapMastToSrc = null;
-				StoM = null;
+				mapMastToSrc = null;
+				mapSrcToMast = null;
 				mappingCount = 0;
-				Array.Resize(ref StoM, seqSource.Members.allCount);
-				for (int i = 0; i < StoM.Length; i++)
+				//Array.Resize(ref mapSrcToMast, seqSource.Members.allCount);
+				Array.Resize(ref mapSrcToMast, seqSource.Members.Items.Count);
+				for (int i = 0; i < mapSrcToMast.Length; i++)
 				{
-					StoM[i] = new List<int>();
+					mapSrcToMast[i] = new List<int>();
 				}
 				if (seqMaster.Channels.Count > 0)
 				{
-					Array.Resize(ref MapMastToSrc, seqMaster.Members.allCount);
-					for (int i = 0; i < MapMastToSrc.Length; i++)
+					//Array.Resize(ref mapMastToSrc, seqMaster.Members.allCount);
+					Array.Resize(ref mapMastToSrc, seqMaster.Members.Items.Count);
+					for (int i = 0; i < mapMastToSrc.Length; i++)
 					{
-						MapMastToSrc[i] = utils.UNDEFINED;
+						mapMastToSrc[i] = utils.UNDEFINED;
 					}
 
 				}
@@ -327,25 +331,25 @@ namespace MapORama
 
 
 
-				utils.FillChannels(treeMaster, seqMaster, masterNodesSI, false, false);
+				utils.FillChannels(treeMaster, seqMaster, ref masterNodesBySI, false, false);
 
 				// Erase any existing mappings, and create a new blank one of proper size
 				// Erase any existing mappings, and create a new blank one of proper size
-				MapMastToSrc = null;
-				StoM = null;
+				mapMastToSrc = null;
+				mapSrcToMast = null;
 				mappingCount = 0;
 				if (seqSource.Channels.Count > 0)
 				{
-					Array.Resize(ref StoM, seqSource.Members.allCount);
-					for (int i = 0; i < StoM.Length; i++)
+					Array.Resize(ref mapSrcToMast, seqSource.Members.allCount);
+					for (int i = 0; i < mapSrcToMast.Length; i++)
 					{
-						StoM[i] = new List<int>();
+						mapSrcToMast[i] = new List<int>();
 					}
 				}
-				Array.Resize(ref MapMastToSrc, seqMaster.Members.allCount);
-				for (int i = 0; i < MapMastToSrc.Length; i++)
+				Array.Resize(ref mapMastToSrc, seqMaster.Members.allCount);
+				for (int i = 0; i < mapMastToSrc.Length; i++)
 				{
-					MapMastToSrc[i] = utils.UNDEFINED;
+					mapMastToSrc[i] = utils.UNDEFINED;
 				}
 				AskToMap();
 
@@ -381,15 +385,15 @@ namespace MapORama
 
 
 
-			for (int mapLoop = 0; mapLoop < MapMastToSrc.Length; mapLoop++)
+			for (int mapLoop = 0; mapLoop < mapMastToSrc.Length; mapLoop++)
 			{
-				if (MapMastToSrc[mapLoop] > utils.UNDEFINED)
+				if (mapMastToSrc[mapLoop] > utils.UNDEFINED)
 				{
 					int newSI = mapLoop;
 					IMember newChild = seqNew.Members.bySavedIndex[newSI];
 					if (newChild.MemberType == MemberType.Channel)
 					{
-						int srcSI = MapMastToSrc[mapLoop];
+						int srcSI = mapMastToSrc[mapLoop];
 						IMember srcChild = seqSource.Members.bySavedIndex[srcSI];
 						if (srcChild.MemberType == MemberType.Channel)
 						{
@@ -406,7 +410,7 @@ namespace MapORama
 					{
 						if (newChild.MemberType == MemberType.RGBchannel)
 						{
-							int srcSI = MapMastToSrc[mapLoop];
+							int srcSI = mapMastToSrc[mapLoop];
 							IMember srcChild = seqSource.Members.bySavedIndex[srcSI];
 							if (srcChild.MemberType == MemberType.RGBchannel)
 							{
@@ -544,6 +548,8 @@ namespace MapORama
 			{
 				newTrack = seqNew.ParseTrack(sourceTrack.LineOut());
 			}
+			newTrack.Centiseconds = sourceTrack.Centiseconds;
+			seqNew.Centiseconds = sourceTrack.Centiseconds;
 			CopyItems(sourceTrack.Members, newTrack.Members);
 		}
 
@@ -1064,10 +1070,10 @@ namespace MapORama
 					SelectNodes(treeSource.Nodes, sourceSI, true);
 
 					// Is it matched?
-					if (StoM[sourceSI].Count > 0)
+					if (mapSrcToMast[sourceSI].Count > 0)
 					{
 						UnSelectAllNodes(treeMaster.Nodes);
-						foreach (int msi in StoM[sourceSI])
+						foreach (int msi in mapSrcToMast[sourceSI])
 						{
 							SelectNodes(treeMaster.Nodes, msi, true);
 							masterSI = msi;
@@ -1076,7 +1082,7 @@ namespace MapORama
 						}
 						btnMap.Enabled = false;
 						mnuMap.Enabled = false;
-						if (StoM[sourceSI].Count == 1)
+						if (mapSrcToMast[sourceSI].Count == 1)
 						{
 							btnUnmap.Enabled = true;
 							mnuUnmap.Enabled = true;
@@ -1118,15 +1124,15 @@ namespace MapORama
 					SelectNodes(treeMaster.Nodes, masterSI, true);
 
 					// Is it matched?
-					if (MapMastToSrc[masterSI] > utils.UNDEFINED)
+					if (mapMastToSrc[masterSI] > utils.UNDEFINED)
 					{
 						UnSelectAllNodes(treeSource.Nodes);
-						SelectNodes(treeSource.Nodes, MapMastToSrc[masterSI], true);
+						SelectNodes(treeSource.Nodes, mapMastToSrc[masterSI], true);
 						btnMap.Enabled = false;
 						mnuMap.Enabled = false;
 						btnUnmap.Enabled = true;
 						mnuUnmap.Enabled = true;
-						sourceSI = MapMastToSrc[masterSI];
+						sourceSI = mapMastToSrc[masterSI];
 						sourceID = seqSource.Members.bySavedIndex[sourceSI];
 					}
 					else // not matched
@@ -1386,30 +1392,31 @@ namespace MapORama
 				//   Note: A source can map to multiple masters.
 				//     A master cannot map to more than one source.
 				//       Therefore, mappings list is indexed by the Master SavedIndex
-				if (MapMastToSrc[theMasterSI] != theSourceSI)
+				if (mapMastToSrc[theMasterSI] != theSourceSI)
 				{
-					if (StoM[theSourceSI].Count > 0)
+					if (mapSrcToMast[theSourceSI].Count > 0)
 					{
-						for (int i = 0; i < StoM[theSourceSI].Count; i++)
+						for (int i = 0; i < mapSrcToMast[theSourceSI].Count; i++)
 						{
-							if (StoM[theSourceSI][i] == theMasterSI)
+							if (mapSrcToMast[theSourceSI][i] == theMasterSI)
 							{
-								StoM[theSourceSI].RemoveAt(i);
+								mapSrcToMast[theSourceSI].RemoveAt(i);
 								mappingCount--;
 							}
 						}
-						if (StoM[theSourceSI].Count == 0)
+						if (mapSrcToMast[theSourceSI].Count == 0)
 						{
-							BoldNodes(sourceNodesSI[theSourceSI], false);
+							BoldNodes(sourceNodesBySI[theSourceSI], false);
 						}
 					}
-					MapMastToSrc[theMasterSI] = theSourceSI;
+					mapMastToSrc[theMasterSI] = theSourceSI;
+					// INDEX OUT OF RANGE ERROR HERE WHILE MAPPING "DECORATIONS"
 					IMember mid = seqMaster.Members.bySavedIndex[theMasterSI];
 					mid.AltSavedIndex = theSourceSI;
-					StoM[theSourceSI].Add(theMasterSI);
+					mapSrcToMast[theSourceSI].Add(theMasterSI);
 					mappingCount++;
-					BoldNodes(sourceNodesSI[theSourceSI], true);
-					BoldNodes(masterNodesSI[theMasterSI], true);
+					BoldNodes(sourceNodesBySI[theSourceSI], true);
+					BoldNodes(masterNodesBySI[theMasterSI], true);
 
 					if (seqSource.Members.bySavedIndex[theSourceSI].MemberType == MemberType.ChannelGroup)
 					{
@@ -1474,18 +1481,18 @@ namespace MapORama
 
 			else //! UnMap
 			{
-				if (MapMastToSrc[theMasterSI] == theSourceSI)
+				if (mapMastToSrc[theMasterSI] == theSourceSI)
 				{
-					if (StoM[theSourceSI].Count > 0)
+					if (mapSrcToMast[theSourceSI].Count > 0)
 					{
-						for (int i = 0; i < StoM[theSourceSI].Count; i++)
+						for (int i = 0; i < mapSrcToMast[theSourceSI].Count; i++)
 						{
-							if (StoM[theSourceSI][i] == theMasterSI)
+							if (mapSrcToMast[theSourceSI][i] == theMasterSI)
 							{
-								StoM[theSourceSI].RemoveAt(i);
+								mapSrcToMast[theSourceSI].RemoveAt(i);
 								masterID.AltSavedIndex = utils.UNDEFINED;
-								MapMastToSrc[theMasterSI] = utils.UNDEFINED;
-								BoldNodes(masterNodesSI[theMasterSI], false);
+								mapMastToSrc[theMasterSI] = utils.UNDEFINED;
+								BoldNodes(masterNodesBySI[theMasterSI], false);
 								mappingCount--;
 							}
 						}
@@ -1530,9 +1537,9 @@ namespace MapORama
 						MapChannels(mrgb.bluChannel.SavedIndex, srgb.bluChannel.SavedIndex, map, true);
 					}
 
-					if (StoM[theSourceSI].Count == 0)
+					if (mapSrcToMast[theSourceSI].Count == 0)
 					{
-						BoldNodes(sourceNodesSI[theSourceSI], false);
+						BoldNodes(sourceNodesBySI[theSourceSI], false);
 					}
 					btnMap.Enabled = !map;
 					mnuMap.Enabled = !map;
@@ -1616,14 +1623,14 @@ namespace MapORama
 		{
 			if (master)
 			{
-				foreach(TreeNode nOde in masterNodesSI[SID])
+				foreach(TreeNode nOde in masterNodesBySI[SID])
 				{
 					HighlightNode(nOde, true);
 				}
 			}
 			else
 			{
-				foreach(TreeNode nOde in sourceNodesSI[SID])
+				foreach(TreeNode nOde in sourceNodesBySI[SID])
 				{
 					HighlightNode(nOde, true);
 				}
@@ -1762,7 +1769,7 @@ namespace MapORama
 					{
 						//seqSource.ReadSequenceFile(sourceFile);
 						LoadSourceFile(sourceFile);
-						utils.FillChannels(treeSource, seqSource, sourceNodesSI, false, false);
+						//utils.FillChannels(treeSource, seqSource, sourceNodesBySI, false, false);
 						// Is a master also already loaded?
 					}
 				} // end last sequence file exists
@@ -1813,7 +1820,7 @@ namespace MapORama
 		private void btnSummary_Click(object sender, EventArgs e)
 		{
 			ImBusy(true);
-			frmMapList dlgList = new frmMapList(seqSource, seqMaster, StoM, MapMastToSrc, imlTreeIcons);
+			frmMapList dlgList = new frmMapList(seqSource, seqMaster, mapSrcToMast, mapMastToSrc, imlTreeIcons);
 			//dlgList.Left = this.Left + 4;
 			//dlgList.Top = this.Top + 25;
 			Point l = new Point(4, 25);
@@ -1967,12 +1974,12 @@ namespace MapORama
 			lineOut = utils.LEVEL1 + utils.STTBL + TABLEmappings + utils.ENDTBL;
 			writer.WriteLine(lineOut);
 
-			for (int i = 0; i < MapMastToSrc.Length; i++)
+			for (int i = 0; i < mapMastToSrc.Length; i++)
 			{
-				if (MapMastToSrc[i] > utils.UNDEFINED)
+				if (mapMastToSrc[i] > utils.UNDEFINED)
 				{
 					IMember mid = seqMaster.Members.bySavedIndex[i];
-					IMember sid = seqSource.Members.bySavedIndex[MapMastToSrc[i]];
+					IMember sid = seqSource.Members.bySavedIndex[mapMastToSrc[i]];
 
 					lineOut = utils.LEVEL2 + utils.STTBL + TABLEchannels + utils.ENDTBL;
 					writer.WriteLine(lineOut);
@@ -2015,18 +2022,18 @@ namespace MapORama
 		{
 			mappingCount = 0;
 
-			MapMastToSrc = null;  // Array indexed by Master.SavedIndex, elements contain Source.SaveIndex
-			Array.Resize(ref MapMastToSrc, seqMaster.Members.allCount);
-			for (int i = 0; i < MapMastToSrc.Length; i++)
+			mapMastToSrc = null;  // Array indexed by Master.SavedIndex, elements contain Source.SaveIndex
+			Array.Resize(ref mapMastToSrc, seqMaster.Members.allCount);
+			for (int i = 0; i < mapMastToSrc.Length; i++)
 			{
-				MapMastToSrc[i] = utils.UNDEFINED;
+				mapMastToSrc[i] = utils.UNDEFINED;
 			}
 
-			StoM = null; // Array indexed by Source.SavedIindex, elements are Lists of Master.SavedIndex-es
-			Array.Resize(ref StoM, seqSource.Members.allCount);
-			for (int i = 0; i < StoM.Length; i++)
+			mapSrcToMast = null; // Array indexed by Source.SavedIindex, elements are Lists of Master.SavedIndex-es
+			Array.Resize(ref mapSrcToMast, seqSource.Members.allCount);
+			for (int i = 0; i < mapSrcToMast.Length; i++)
 			{
-				StoM[i] = new List<int>();
+				mapSrcToMast[i] = new List<int>();
 			}
 
 			UnHighlightAllNodes(treeMaster.Nodes);
@@ -2194,7 +2201,7 @@ namespace MapORama
 					lineNum++;
 					// Line just read should be "    <channels>"
 					//li = lineIn.IndexOf(utils.STTBL + TABLEchannels + utils.ENDTBL);
-					li = utils.FastIndexOf(lineIn, (utils.STTBL + TABLEchannels + utils.ENDTBL);
+					li = utils.FastIndexOf(lineIn, (utils.STTBL + TABLEchannels + utils.ENDTBL));
 					if (li > 0)
 					{
 						if (!reader.EndOfStream)
@@ -2883,11 +2890,12 @@ namespace MapORama
 
 
 			// TRACKS
-			foreach (IMember masID in seqMaster.Members.Items)
-			{
-				// Try matching by SavedIndex first, there is a good chance they match
-				//    (if one file is a derivative of the other)
-				lblMessage.Text = STATUSautoMap + masID.Name + STATUSto;
+			//foreach (IMember masID in seqMaster.Members.Items)
+			foreach (Track masID in seqMaster.Tracks)
+				{
+					// Try matching by SavedIndex first, there is a good chance they match
+					//    (if one file is a derivative of the other)
+					lblMessage.Text = STATUSautoMap + masID.Name + STATUSto;
 				pnlMessage.Refresh();
 				if (masID.SavedIndex <= seqSource.Members.HighestSavedIndex)
 				{
@@ -2897,7 +2905,7 @@ namespace MapORama
 				{
 					if (masID.Name.CompareTo(srcID.Name) != 0)
 					{
-						// By SavedIndex didn't work, try by name, use fuzy find if exact find fails
+						// By SavedIndex didn't work, try by name, use fuzzy find if exact find fails
 						//srcID = seqSource.Members.FindByName(masID.Name, MemberType.Track, true);
 						srcID = FuzzyFindName(masID.Name, seqSource, MemberType.Track);
 					}
@@ -2913,7 +2921,8 @@ namespace MapORama
 			}  // end Track loop
 
 			// CHANNEL GROUPS
-			foreach (IMember masID in seqMaster.Members.Items)
+			//foreach (IMember masID in seqMaster.Members.Items)
+			foreach (ChannelGroup masID in seqMaster.ChannelGroups)
 			{
 				// Try matching by SavedIndex first, there is a good chance they match
 				lblMessage.Text = STATUSautoMap + masID.Name + STATUSto;
@@ -2945,9 +2954,10 @@ namespace MapORama
 			}  // end ChannelGroup loop
 
 			// RGB CHANNELS
-			foreach (IMember masID in seqMaster.Members.Items)
-			{
-				lblMessage.Text = STATUSautoMap + masID.Name + STATUSto;
+			//foreach (IMember masID in seqMaster.Members.Items)
+			foreach (RGBchannel masID in seqMaster.RGBchannels)
+				{
+					lblMessage.Text = STATUSautoMap + masID.Name + STATUSto;
 				pnlMessage.Refresh();
 				if (masID.SavedIndex <= seqSource.Members.HighestSavedIndex)
 				{
@@ -2975,7 +2985,9 @@ namespace MapORama
 			}  // end RGBchannel loop
 
 			// regular CHANNELS
-			foreach (IMember masID in seqMaster.Members.Items)
+			//foreach (IMember masID in seqMaster.Members.Items)
+			foreach (Channel masID in seqMaster.Channels) 
+
 			{
 				lblMessage.Text = STATUSautoMap + masID.Name + STATUSto;
 				pnlMessage.Refresh();
@@ -3167,7 +3179,7 @@ namespace MapORama
 				}
 			}
 
-		} // End LoadFormPostion
+		} // End RestoreFormPostion
 
 		private void btnSaveNewSeq_Click(object sender, EventArgs e)
 		{
@@ -3610,7 +3622,8 @@ namespace MapORama
 			{
 				if (useFuzzy)
 				{
-					List<IMember> matchedMembers = null;
+					//List<IMember> matchedMembers = null;
+					List<IMember> matchedMembers = new List<IMember>();
 					double[] scores = null;
 					int[] SIs = null;
 					int count = 0;

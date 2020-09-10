@@ -7,12 +7,12 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace TuneORama
+namespace xTune
 {
 	partial class frmAbout : Form
 	{
 
-		string applicationName = "Util-O-Rama";
+		string applicationName = "Vamperizer";
 
 		public frmAbout()
 		{
@@ -24,7 +24,7 @@ namespace TuneORama
 			this.labelProductName.Text = applicationName;
 			string ver = String.Format("Version {0}", AssemblyVersion);
 			string[] vparts = AssemblyVersion.Split('.');
-			if (Int16.Parse(vparts[0]) < 1)
+			if (Int16.Parse(vparts[1]) < 51)
 			{
 				ver = "Beta " + ver + " β";
 
@@ -34,7 +34,6 @@ namespace TuneORama
 			//this.labelCopyright.Text = AssemblyCopyright;
 			//this.labelCompanyName.Text = AssemblyCompany;
 			this.textBoxDescription.Text = AssemblyDescription;
-
 
 			labelSuite.Text = applicationName + labelSuite.Text;
 			labelFreeware.Text = applicationName + labelFreeware.Text;
@@ -166,7 +165,7 @@ namespace TuneORama
 
 		private void labelBugs_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			System.Diagnostics.Process.Start("mailto:dev.utilorama@wizster.com");
+			System.Diagnostics.Process.Start("mailto:dev.xutils@wizster.com");
 		}
 
 		private void label4_Click(object sender, EventArgs e)
@@ -192,7 +191,7 @@ namespace TuneORama
 
 		private void labelUtils_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			System.Diagnostics.Process.Start("http://wizlights.com/util-o-rama/");
+			System.Diagnostics.Process.Start("http://wizlights.com/xutils/");
 		}
 
 		private void picLOR_MouseEnter(object sender, EventArgs e)
@@ -227,7 +226,12 @@ namespace TuneORama
 
 		private void picIcon_Click(object sender, EventArgs e)
 		{
-			System.Diagnostics.Process.Start("http://wizlights.com/util-o-rama/" + applicationName.ToLower() + "/");
+			System.Diagnostics.Process.Start("http://wizlights.com/xutils/" + applicationName.ToLower() + "/");
+		}
+
+		private void label5_Click(object sender, EventArgs e)
+		{
+
 		}
 	}
 }

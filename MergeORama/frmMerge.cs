@@ -41,7 +41,7 @@ namespace MergeORama
 
 
 
-		private List<List<TreeNode>> siNodes = new List<List<TreeNode>>();
+		private List<TreeNode>[] siNodes = null;
 
 
 
@@ -303,7 +303,7 @@ namespace MergeORama
 
 				txtFirstFile.Text = utils.ShortenLongPath(lastFile1, 80);
 				seqOne.ReadSequenceFile(lastFile1);
-				utils.FillChannels(treNewChannels, seqOne, siNodes, false, true);
+				utils.FillChannels(treNewChannels, seqOne, ref siNodes, false, true);
 				seqNew = seqOne;
 			} // end if (result = DialogResult.OK)
 				//pnlAll.Enabled = true;
@@ -355,7 +355,7 @@ namespace MergeORama
 					seqTwo.ReadSequenceFile(lastFile2);
 					MergeSequences();
 
-					utils.FillChannels(treNewChannels, seqNew, siNodes, false, true);
+					utils.FillChannels(treNewChannels, seqNew, ref siNodes, false, true);
 					ImBusy(false);
 					btnSave.Enabled = true;
 				}

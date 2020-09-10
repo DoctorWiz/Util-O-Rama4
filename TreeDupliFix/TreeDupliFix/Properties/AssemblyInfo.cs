@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Wizard")]
 [assembly: AssemblyProduct("TreeDupliFix")]
-[assembly: AssemblyCopyright("Copyright © Wizard 2018")]
+[assembly: AssemblyCopyright("Copyright © 2019+ by Doctor 🧙 Wizard and Wizster Software")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("5bcda386-a3c4-44f7-9bfb-98194c1b9cbb")]
+[assembly: Guid("5bcda386-a3c4-44f7-7311-98194c1b9cbb")]
 
 // Version information for an assembly consists of the following four values:
 //
