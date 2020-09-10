@@ -7,6 +7,13 @@
 # or wget:
 # wget --no-check-certificate http://gist.githubusercontent.com/kmorcinek/2710267/raw/.gitignore
 
+# Backups
+*.bak
+*.foo
+*.old
+*.wik
+*.bad
+
 # User-specific files
 *.suo
 *.user
