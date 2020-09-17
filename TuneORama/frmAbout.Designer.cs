@@ -1,4 +1,4 @@
-﻿namespace xTune
+﻿namespace TuneORama
 {
 	partial class frmAbout
 	{
@@ -74,9 +74,9 @@
 			this.labelCopyright.Location = new System.Drawing.Point(150, 75);
 			this.labelCopyright.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
 			this.labelCopyright.Name = "labelCopyright";
-			this.labelCopyright.Size = new System.Drawing.Size(151, 19);
+			this.labelCopyright.Size = new System.Drawing.Size(164, 19);
 			this.labelCopyright.TabIndex = 28;
-			this.labelCopyright.Text = "Copyright © 2019+ by";
+			this.labelCopyright.Text = "Copyright © 2017-18 by";
 			// 
 			// okButton
 			// 
@@ -131,10 +131,10 @@
 			this.labelCompanyName.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.labelCompanyName.Location = new System.Drawing.Point(280, 102);
 			this.labelCompanyName.Name = "labelCompanyName";
-			this.labelCompanyName.Size = new System.Drawing.Size(131, 19);
+			this.labelCompanyName.Size = new System.Drawing.Size(119, 19);
 			this.labelCompanyName.TabIndex = 34;
 			this.labelCompanyName.TabStop = true;
-			this.labelCompanyName.Text = "W⚡zster Software";
+			this.labelCompanyName.Text = "Wizster Software";
 			this.labelCompanyName.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.labelCompanyName_LinkClicked);
 			// 
 			// labelAuthorName
@@ -211,7 +211,7 @@
 			this.labelBugs.Size = new System.Drawing.Size(184, 16);
 			this.labelBugs.TabIndex = 43;
 			this.labelBugs.TabStop = true;
-			this.labelBugs.Text = "dev.xutils@wizster.com";
+			this.labelBugs.Text = "dev.utilorama@wizster.com";
 			this.labelBugs.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.labelBugs_LinkClicked);
 			// 
 			// picGPL
@@ -229,10 +229,9 @@
 			// picLOR
 			// 
 			this.picLOR.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("picLOR.BackgroundImage")));
-			this.picLOR.InitialImage = ((System.Drawing.Image)(resources.GetObject("picLOR.InitialImage")));
-			this.picLOR.Location = new System.Drawing.Point(64, 179);
+			this.picLOR.Location = new System.Drawing.Point(58, 184);
 			this.picLOR.Name = "picLOR";
-			this.picLOR.Size = new System.Drawing.Size(85, 28);
+			this.picLOR.Size = new System.Drawing.Size(90, 19);
 			this.picLOR.TabIndex = 45;
 			this.picLOR.TabStop = false;
 			this.picLOR.Click += new System.EventHandler(this.picLOR_Click);
@@ -246,30 +245,29 @@
 			this.labelSuite.Name = "labelSuite";
 			this.labelSuite.Size = new System.Drawing.Size(113, 35);
 			this.labelSuite.TabIndex = 46;
-			this.labelSuite.Text = " is a member of the";
+			this.labelSuite.Text = " is part of the";
 			// 
 			// labelUtils
 			// 
 			this.labelUtils.AutoEllipsis = true;
 			this.labelUtils.AutoSize = true;
 			this.labelUtils.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelUtils.Location = new System.Drawing.Point(350, 40);
+			this.labelUtils.Location = new System.Drawing.Point(309, 41);
 			this.labelUtils.Name = "labelUtils";
-			this.labelUtils.Size = new System.Drawing.Size(35, 14);
+			this.labelUtils.Size = new System.Drawing.Size(70, 14);
 			this.labelUtils.TabIndex = 47;
 			this.labelUtils.TabStop = true;
-			this.labelUtils.Text = "xUtils";
+			this.labelUtils.Text = "Util-O-Rama";
 			this.labelUtils.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.labelUtils_LinkClicked);
 			// 
 			// label5
 			// 
 			this.label5.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label5.Location = new System.Drawing.Point(380, 40);
+			this.label5.Location = new System.Drawing.Point(376, 41);
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(35, 14);
 			this.label5.TabIndex = 48;
 			this.label5.Text = "Suite";
-			this.label5.Click += new System.EventHandler(this.label5_Click);
 			// 
 			// label1
 			// 

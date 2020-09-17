@@ -7,12 +7,12 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace xTune
+namespace TuneORama
 {
 	partial class frmAbout : Form
 	{
 
-		string applicationName = "Vamperizer";
+		string applicationName = "Util-O-Rama";
 
 		public frmAbout()
 		{
@@ -24,7 +24,7 @@ namespace xTune
 			this.labelProductName.Text = applicationName;
 			string ver = String.Format("Version {0}", AssemblyVersion);
 			string[] vparts = AssemblyVersion.Split('.');
-			if (Int16.Parse(vparts[1]) < 51)
+			if (Int16.Parse(vparts[0]) < 1)
 			{
 				ver = "Beta " + ver + " β";
 
@@ -34,6 +34,7 @@ namespace xTune
 			//this.labelCopyright.Text = AssemblyCopyright;
 			//this.labelCompanyName.Text = AssemblyCompany;
 			this.textBoxDescription.Text = AssemblyDescription;
+
 
 			labelSuite.Text = applicationName + labelSuite.Text;
 			labelFreeware.Text = applicationName + labelFreeware.Text;
@@ -121,9 +122,9 @@ namespace xTune
 
 		private void frmAbout_Load(object sender, EventArgs e)
 		{
-			//labelAuthorName.Links.Add("http://drwiz.net");
+			//labelAuthorName.Links.Add("http://drwiz.guru");
 			//labelCompanyName.Links.Add("http://wizster.com");
-			//labelAuthorName.Links.Add(6, 4, "http://drwiz.net");
+			//labelAuthorName.Links.Add(6, 4, "http://drwiz.guru");
 			//labelCompanyName.Links.Add(6, 4, "http://wizster.com");
 		}
 
@@ -145,7 +146,7 @@ namespace xTune
 
 		private void labelAuthorName_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			System.Diagnostics.Process.Start("http://drwiz.net/");
+			System.Diagnostics.Process.Start("http://drwiz.guru/");
 		}
 
 		private void labelCompanyName_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -165,7 +166,7 @@ namespace xTune
 
 		private void labelBugs_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			System.Diagnostics.Process.Start("mailto:dev.xutils@wizster.com");
+			System.Diagnostics.Process.Start("mailto:dev.utilorama@wizster.com");
 		}
 
 		private void label4_Click(object sender, EventArgs e)
@@ -191,7 +192,7 @@ namespace xTune
 
 		private void labelUtils_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			System.Diagnostics.Process.Start("http://wizlights.com/xutils/");
+			System.Diagnostics.Process.Start("http://wizlights.com/util-o-rama/");
 		}
 
 		private void picLOR_MouseEnter(object sender, EventArgs e)
@@ -226,12 +227,7 @@ namespace xTune
 
 		private void picIcon_Click(object sender, EventArgs e)
 		{
-			System.Diagnostics.Process.Start("http://wizlights.com/xutils/" + applicationName.ToLower() + "/");
-		}
-
-		private void label5_Click(object sender, EventArgs e)
-		{
-
+			System.Diagnostics.Process.Start("http://wizlights.com/util-o-rama/" + applicationName.ToLower() + "/");
 		}
 	}
 }

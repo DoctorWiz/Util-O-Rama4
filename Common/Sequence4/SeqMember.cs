@@ -1943,6 +1943,10 @@ namespace LORUtils
 
 		public TimingGrid(string lineIn)
 		{
+#if DEBUG
+			string msg = "TimingGrid.TimingGrid(" + lineIn + ") // Constructor";
+			Debug.WriteLine(msg);
+#endif
 			string seek = utils.STFLD + Sequence4.TABLEtimingGrid + FIELDsaveID;
 			//int pos = lineIn.IndexOf(seek);
 			int pos = utils.ContainsKey(lineIn, seek);
@@ -2552,8 +2556,14 @@ namespace LORUtils
 			}
 		}
 
+		
+		// Membership.Add(Member)
 		public int Add(IMember newMember)
 		{
+			#if DEBUG
+				string msg = "Membership.Add(" + newMember.Name + ":" + newMember.MemberType.ToString() + ")";
+				Debug.WriteLine(msg);
+			#endif
 			if (this.parentSequence == null)
 			{
 				if (newMember.ParentSequence == null)
@@ -2639,7 +2649,8 @@ namespace LORUtils
 				{
 					highestSaveID++;
 					memberSI = highestSaveID;
-					newMember.SetSavedIndex(memberSI);
+					//newMember.SetSavedIndex(memberSI);
+					//newMember.setSaveID(memberSI);
 				}
 				if (memberSI > highestSaveID)
 				{
@@ -3009,9 +3020,14 @@ namespace LORUtils
 		}
 
 
-
+		// Membership.find(name, type, create)
 		public IMember Find(string theName, MemberType theType, bool createIfNotFound)
 		{
+#if DEBUG
+			string msg = "Membership.find(" + theName + ", ";
+			msg += theType.ToString() + ", " + createIfNotFound.ToString() + ")";
+			Debug.WriteLine(msg);
+#endif
 			IMember ret = null;
 			if (ret==null)
 			{

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27428.2005
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TuneORama", "TuneORama.csproj", "{D0CB347F-95A1-4A9E-BD42-D9474B0A28A5}"
 EndProject
@@ -20,6 +20,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {8B4EF62C-92AD-4B36-939C-DEB616ECBA71}
+		SolutionGuid = {68C2BE7B-4FA8-4C82-ABDE-111D0C80324A}
 	EndGlobalSection
 EndGlobal

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 
-namespace xTune
+namespace TuneORama
 {
 	public partial class frmSettings : Form
 	{
@@ -18,7 +18,7 @@ namespace xTune
 			InitializeComponent();
 		}
 
-		public static byte SHOWtimesBeats = 1;
+		public static byte SHOWgridBeats = 1;
 		public static byte SHOWonsets = 2;
 		public static byte SHOWPoly = 3;
 		public static byte SHOWspectro = 4;
@@ -28,10 +28,10 @@ namespace xTune
 		public static byte SHOWsave = 50;
 		public static byte SHOWannotator = 99;
 
-		private const int TABIDXtimess = 0;
+		private const int TABIDXgrids = 0;
 		private const int TABIDXtracks = 1;
 		private const int TABIDXsave = 2;
-		private const string TABKEYtimess   = "tabGrids";
+		private const string TABKEYgrids   = "tabGrids";
 		private const string TABKEYtracks  = "tabTracks";
 		private const string TABKEYsave    = "tabSave";
 		private const string TABKEYpoly    = "tabPoly";
@@ -45,7 +45,7 @@ namespace xTune
 
 		public bool useRampsPoly = false;
 		public bool useOctaveGrouping = true;
-		public int timesBeatsX = 4;
+		public int gridBeatsX = 4;
 		public int trackBeatsX = 4;
 		public int timeSignature = 4; // 3 = 3/4 time, 4 = 4/4 time
 		public bool useRampsBeats = false;
@@ -135,7 +135,7 @@ namespace xTune
 
 				// Then turn on just the one we need
 
-				if (newMode == SHOWtimesBeats)
+				if (newMode == SHOWgridBeats)
 				{
 					tabSubcategory.TabPages.RemoveByKey(TABKEYpoly);
 					tabSubcategory.TabPages.RemoveByKey(TABKEYspectro);
@@ -145,7 +145,7 @@ namespace xTune
 					}
 
 
-					//tabCategory.SelectTab(TABKEYtimess);
+					//tabCategory.SelectTab(TABKEYgrids);
 					//tabCategory.SelectTab(0);
 					tabSubcategory.Parent = tabGrids;
 					tabSubcategory.Visible = true;
@@ -373,7 +373,7 @@ namespace xTune
 				lblGridBeat34.ForeColor = Color.Black;
 				lblTrackBeat44.ForeColor = Color.DarkSlateGray;
 				lblTrackBeat34.ForeColor = Color.Black;
-				timesBeatsX = x34[vscGridBeatX.Value];
+				gridBeatsX = x34[vscGridBeatX.Value];
 				trackBeatsX = x34[vscTrackBeatX.Value];
 				timeSignature = 3;
 			}
@@ -385,7 +385,7 @@ namespace xTune
 				lblGridBeat44.ForeColor = Color.Black;
 				lblTrackBeat34.ForeColor = Color.DarkSlateGray;
 				lblTrackBeat44.ForeColor = Color.Black;
-				timesBeatsX = x44[vscGridBeatX.Value];
+				gridBeatsX = x44[vscGridBeatX.Value];
 				trackBeatsX = x44[vscTrackBeatX.Value];
 				// Default to 4 if any value other than 3
 				timeSignature = 4;
@@ -401,7 +401,7 @@ namespace xTune
 			{
 				for (int n = 3; n > 0; n--)
 				{
-					if (timesBeatsX == x44[n])
+					if (gridBeatsX == x44[n])
 					{
 						n44 = n;
 						n = 1; //break from loop
@@ -432,7 +432,7 @@ namespace xTune
 		{
 			if (tabCategory.SelectedTab == tabGrids)
 			{
-				SetShowMode(frmSettings.SHOWtimesBeats);
+				SetShowMode(frmSettings.SHOWgridBeats);
 
 			}
 			if (tabCategory.SelectedTab == tabTracks)
@@ -451,9 +451,9 @@ namespace xTune
 			string selSubTabName = tabSubcategory.SelectedTab.Text;
 			if (selSubTabName.CompareTo(TABKEYbeats) == 0)
 			{
-				if (selTabName.CompareTo(TABKEYtimess) == 0)
+				if (selTabName.CompareTo(TABKEYgrids) == 0)
 				{
-					SetShowMode(SHOWtimesBeats);
+					SetShowMode(SHOWgridBeats);
 				}
 				else
 				{
@@ -464,7 +464,7 @@ namespace xTune
 			{
 				if (selSubTabName.CompareTo(TABKEYonsets) == 0)
 				{
-					if (selTabName.CompareTo(TABKEYtimess) == 0)
+					if (selTabName.CompareTo(TABKEYgrids) == 0)
 					{
 						SetShowMode(SHOWtrackBeats);
 					}
@@ -495,13 +495,13 @@ namespace xTune
 		public void SetTheControlsForTheHeartOfTheSun() // Little nod to the Incredible Pink Floyd
 		{
 			SetTimeSignature(timeSignature);
-			txtGridBeatX.Text = timesBeatsX.ToString();
+			txtGridBeatX.Text = gridBeatsX.ToString();
 			txtTrackBeatX.Text = trackBeatsX.ToString();
 			for (int n = 0; n < 4; n++)
 			{
 				if (timeSignature == 3)
 				{
-					if (timesBeatsX == x34[n])
+					if (gridBeatsX == x34[n])
 					{
 						vscGridBeatX.Value = n;
 					}
@@ -512,7 +512,7 @@ namespace xTune
 				}
 				else // timeSignature = 4
 				{
-					if (timesBeatsX == x44[n])
+					if (gridBeatsX == x44[n])
 					{
 						vscGridBeatX.Value = n;
 					}
@@ -639,13 +639,13 @@ namespace xTune
 		{
 			if (timeSignature == 3)
 			{
-				timesBeatsX = x34[vscGridBeatX.Value];
+				gridBeatsX = x34[vscGridBeatX.Value];
 			}
 			else
 			{
-				timesBeatsX = x44[vscGridBeatX.Value];
+				gridBeatsX = x44[vscGridBeatX.Value];
 			}
-			txtGridBeatX.Text = timesBeatsX.ToString();
+			txtGridBeatX.Text = gridBeatsX.ToString();
 		} // end scroll
 
 		private void vscTrackBeatX_Scroll(object sender, ScrollEventArgs e)

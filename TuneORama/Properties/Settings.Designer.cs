@@ -8,11 +8,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace xTune.Properties {
+namespace TuneORama.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.7.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.3.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -28,7 +28,7 @@ namespace xTune.Properties {
         [global::System.Configuration.DefaultSettingValueAttribute("100, 10")]
         public global::System.Drawing.Point Location {
             get {
-                return ((global::System.Drawing.Point)(this["Location"]));
+				return ((global::System.Drawing.Point)(this["Location"]));
             }
             set {
                 this["Location"] = value;
@@ -49,25 +49,25 @@ namespace xTune.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int WindowState {
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Minimized {
             get {
-                return ((int)(this["WindowState"]));
+                return ((bool)(this["Minimized"]));
             }
             set {
-                this["WindowState"] = value;
+                this["Minimized"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string fileTimingsLast {
+        public string fileSeqLast {
             get {
-                return ((string)(this["fileTimingsLast"]));
+                return ((string)(this["fileSeqLast"]));
             }
             set {
-                this["fileTimingsLast"] = value;
+                this["fileSeqLast"] = value;
             }
         }
         
@@ -97,769 +97,205 @@ namespace xTune.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool doAutoSave {
+            get {
+                return ((bool)(this["doAutoSave"]));
+            }
+            set {
+                this["doAutoSave"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool doNoteOnsets {
+            get {
+                return ((bool)(this["doNoteOnsets"]));
+            }
+            set {
+                this["doNoteOnsets"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool doBeatGrid {
+            get {
+                return ((bool)(this["doBeatGrid"]));
+            }
+            set {
+                this["doBeatGrid"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool doPoly {
+            get {
+                return ((bool)(this["doPoly"]));
+            }
+            set {
+                this["doPoly"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool doBeatTrack {
+            get {
+                return ((bool)(this["doBeatTrack"]));
+            }
+            set {
+                this["doBeatTrack"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool useRampsPoly {
+            get {
+                return ((bool)(this["useRampsPoly"]));
+            }
+            set {
+                this["useRampsPoly"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int saveFormat {
+        public byte useSaveFormat {
             get {
-                return ((int)(this["saveFormat"]));
+                return ((byte)(this["useSaveFormat"]));
             }
             set {
-                this["saveFormat"] = value;
+                this["useSaveFormat"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool doBarsBars {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string fileChanCfgLast {
             get {
-                return ((bool)(this["doBarsBars"]));
+                return ((string)(this["fileChanCfgLast"]));
             }
             set {
-                this["doBarsBars"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool DoBeatsFull {
-            get {
-                return ((bool)(this["DoBeatsFull"]));
-            }
-            set {
-                this["DoBeatsFull"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool doSpectrum {
-            get {
-                return ((bool)(this["doSpectrum"]));
-            }
-            set {
-                this["doSpectrum"] = value;
+                this["fileChanCfgLast"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool doTranscribe {
+        public bool useChanCfg {
             get {
-                return ((bool)(this["doTranscribe"]));
+                return ((bool)(this["useChanCfg"]));
             }
             set {
-                this["doTranscribe"] = value;
+                this["useChanCfg"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("25ms")]
-        public string alignBarsBeats {
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool useOctaveGrouping {
             get {
-                return ((string)(this["alignBarsBeats"]));
+                return ((bool)(this["useOctaveGrouping"]));
             }
             set {
-                this["alignBarsBeats"] = value;
+                this["useOctaveGrouping"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool doOnsets {
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool doSpectrogram {
             get {
-                return ((bool)(this["doOnsets"]));
+                return ((bool)(this["doSpectrogram"]));
             }
             set {
-                this["doOnsets"] = value;
+                this["doSpectrogram"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool doChroma {
+            get {
+                return ((bool)(this["doChroma"]));
+            }
+            set {
+                this["doChroma"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool doConstQ {
+            get {
+                return ((bool)(this["doConstQ"]));
+            }
+            set {
+                this["doConstQ"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool doAutoLaunch {
+            get {
+                return ((bool)(this["doAutoLaunch"]));
+            }
+            set {
+                this["doAutoLaunch"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("4")]
-        public int timeSignature {
+        public int gridBeatsX {
             get {
-                return ((int)(this["timeSignature"]));
+                return ((int)(this["gridBeatsX"]));
             }
             set {
-                this["timeSignature"] = value;
+                this["gridBeatsX"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        public int trackBeatsX {
+            get {
+                return ((int)(this["trackBeatsX"]));
+            }
+            set {
+                this["trackBeatsX"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool doSegments {
+        public bool useRampsBeats {
             get {
-                return ((bool)(this["doSegments"]));
+                return ((bool)(this["useRampsBeats"]));
             }
             set {
-                this["doSegments"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool doPitchKey {
-            get {
-                return ((bool)(this["doPitchKey"]));
-            }
-            set {
-                this["doPitchKey"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool doVocals {
-            get {
-                return ((bool)(this["doVocals"]));
-            }
-            set {
-                this["doVocals"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string MRUAudio0 {
-            get {
-                return ((string)(this["MRUAudio0"]));
-            }
-            set {
-                this["MRUAudio0"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string MRUAudio1 {
-            get {
-                return ((string)(this["MRUAudio1"]));
-            }
-            set {
-                this["MRUAudio1"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string MRUAudio2 {
-            get {
-                return ((string)(this["MRUAudio2"]));
-            }
-            set {
-                this["MRUAudio2"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string MRUAudio3 {
-            get {
-                return ((string)(this["MRUAudio3"]));
-            }
-            set {
-                this["MRUAudio3"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string MRUAudio4 {
-            get {
-                return ((string)(this["MRUAudio4"]));
-            }
-            set {
-                this["MRUAudio4"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string MRUAudio5 {
-            get {
-                return ((string)(this["MRUAudio5"]));
-            }
-            set {
-                this["MRUAudio5"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string MRUAudio6 {
-            get {
-                return ((string)(this["MRUAudio6"]));
-            }
-            set {
-                this["MRUAudio6"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string MRUAudio7 {
-            get {
-                return ((string)(this["MRUAudio7"]));
-            }
-            set {
-                this["MRUAudio7"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string MRUAudio8 {
-            get {
-                return ((string)(this["MRUAudio8"]));
-            }
-            set {
-                this["MRUAudio8"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string MRUAudio9 {
-            get {
-                return ((string)(this["MRUAudio9"]));
-            }
-            set {
-                this["MRUAudio9"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string fileAudioLast {
-            get {
-                return ((string)(this["fileAudioLast"]));
-            }
-            set {
-                this["fileAudioLast"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool doBars {
-            get {
-                return ((bool)(this["doBars"]));
-            }
-            set {
-                this["doBars"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool doBeatsHalf {
-            get {
-                return ((bool)(this["doBeatsHalf"]));
-            }
-            set {
-                this["doBeatsHalf"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool doBeatsThird {
-            get {
-                return ((bool)(this["doBeatsThird"]));
-            }
-            set {
-                this["doBeatsThird"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool doBeatsQuarter {
-            get {
-                return ((bool)(this["doBeatsQuarter"]));
-            }
-            set {
-                this["doBeatsQuarter"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool doFlux {
-            get {
-                return ((bool)(this["doFlux"]));
-            }
-            set {
-                this["doFlux"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool doChords {
-            get {
-                return ((bool)(this["doChords"]));
-            }
-            set {
-                this["doChords"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool doTempo {
-            get {
-                return ((bool)(this["doTempo"]));
-            }
-            set {
-                this["doTempo"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int startBeat {
-            get {
-                return ((int)(this["startBeat"]));
-            }
-            set {
-                this["startBeat"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string MRUTimings0 {
-            get {
-                return ((string)(this["MRUTimings0"]));
-            }
-            set {
-                this["MRUTimings0"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string MRUTimings1 {
-            get {
-                return ((string)(this["MRUTimings1"]));
-            }
-            set {
-                this["MRUTimings1"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string MRUTimings2 {
-            get {
-                return ((string)(this["MRUTimings2"]));
-            }
-            set {
-                this["MRUTimings2"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string MRUTimings3 {
-            get {
-                return ((string)(this["MRUTimings3"]));
-            }
-            set {
-                this["MRUTimings3"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string MRUTimings4 {
-            get {
-                return ((string)(this["MRUTimings4"]));
-            }
-            set {
-                this["MRUTimings4"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string MRUTimings5 {
-            get {
-                return ((string)(this["MRUTimings5"]));
-            }
-            set {
-                this["MRUTimings5"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string MRUTimings6 {
-            get {
-                return ((string)(this["MRUTimings6"]));
-            }
-            set {
-                this["MRUTimings6"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string MRUTimings7 {
-            get {
-                return ((string)(this["MRUTimings7"]));
-            }
-            set {
-                this["MRUTimings7"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string MRUTimings8 {
-            get {
-                return ((string)(this["MRUTimings8"]));
-            }
-            set {
-                this["MRUTimings8"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string MRUTimings9 {
-            get {
-                return ((string)(this["MRUTimings9"]));
-            }
-            set {
-                this["MRUTimings9"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string detectBars {
-            get {
-                return ((string)(this["detectBars"]));
-            }
-            set {
-                this["detectBars"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string detectOnsets {
-            get {
-                return ((string)(this["detectOnsets"]));
-            }
-            set {
-                this["detectOnsets"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string methodBarsBeats {
-            get {
-                return ((string)(this["methodBarsBeats"]));
-            }
-            set {
-                this["methodBarsBeats"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string methodOnsets {
-            get {
-                return ((string)(this["methodOnsets"]));
-            }
-            set {
-                this["methodOnsets"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string methodTranscribe {
-            get {
-                return ((string)(this["methodTranscribe"]));
-            }
-            set {
-                this["methodTranscribe"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string methodSpectrum {
-            get {
-                return ((string)(this["methodSpectrum"]));
-            }
-            set {
-                this["methodSpectrum"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string methodPitchKey {
-            get {
-                return ((string)(this["methodPitchKey"]));
-            }
-            set {
-                this["methodPitchKey"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string methodTempo {
-            get {
-                return ((string)(this["methodTempo"]));
-            }
-            set {
-                this["methodTempo"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string alignOnsets {
-            get {
-                return ((string)(this["alignOnsets"]));
-            }
-            set {
-                this["alignOnsets"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string alignTranscribe {
-            get {
-                return ((string)(this["alignTranscribe"]));
-            }
-            set {
-                this["alignTranscribe"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string alignSegments {
-            get {
-                return ((string)(this["alignSegments"]));
-            }
-            set {
-                this["alignSegments"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string alignVocals {
-            get {
-                return ((string)(this["alignVocals"]));
-            }
-            set {
-                this["alignVocals"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string alignSpectrum {
-            get {
-                return ((string)(this["alignSpectrum"]));
-            }
-            set {
-                this["alignSpectrum"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string alignPitchKey {
-            get {
-                return ((string)(this["alignPitchKey"]));
-            }
-            set {
-                this["alignPitchKey"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string alignTempo {
-            get {
-                return ((string)(this["alignTempo"]));
-            }
-            set {
-                this["alignTempo"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string labelOnsets {
-            get {
-                return ((string)(this["labelOnsets"]));
-            }
-            set {
-                this["labelOnsets"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string labelTranscribe {
-            get {
-                return ((string)(this["labelTranscribe"]));
-            }
-            set {
-                this["labelTranscribe"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string labelSpectrum {
-            get {
-                return ((string)(this["labelSpectrum"]));
-            }
-            set {
-                this["labelSpectrum"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string labelPitchKey {
-            get {
-                return ((string)(this["labelPitchKey"]));
-            }
-            set {
-                this["labelPitchKey"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string labelTempo {
-            get {
-                return ((string)(this["labelTempo"]));
-            }
-            set {
-                this["labelTempo"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool whiteBarsBeats {
-            get {
-                return ((bool)(this["whiteBarsBeats"]));
-            }
-            set {
-                this["whiteBarsBeats"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool whiteOnsets {
-            get {
-                return ((bool)(this["whiteOnsets"]));
-            }
-            set {
-                this["whiteOnsets"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("50")]
-        public int sensitivityOnsets {
-            get {
-                return ((int)(this["sensitivityOnsets"]));
-            }
-            set {
-                this["sensitivityOnsets"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool reuseFiles {
-            get {
-                return ((bool)(this["reuseFiles"]));
-            }
-            set {
-                this["reuseFiles"] = value;
+                this["useRampsBeats"] = value;
             }
         }
     }

@@ -196,7 +196,7 @@ namespace LORUtils
 			return valueOut;
 		}
 
-		public static MemberType enumTableType(string typeName)
+		public static MemberType enumMemberType(string typeName)
 		{
 			// Only supported the 5 needed for Identity owners
 			MemberType valueOut = MemberType.None;

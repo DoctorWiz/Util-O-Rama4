@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace LORUtils
 {
@@ -60,7 +61,7 @@ namespace LORUtils
 		public const int ERROR_UnsupportedVersion = 114;
 		public const int ERROR_UnexpectedData = 50;
 
-		public SequenceType sequenceType = SequenceType.Undefined;
+		//public SequenceType sequenceType = SequenceType.Undefined;
 		public Membership Members;
 		public List<Channel> Channels = new List<Channel>();
 		public List<RGBchannel> RGBchannels = new List<RGBchannel>();
@@ -79,7 +80,7 @@ namespace LORUtils
 		// For now at least, this will remain false, therefore ALL timing grids will ALWAYS get written
 		private bool WriteSelectedGridsOnly = false;
 
-		private string myName = "$_UNNAMED_$";
+		//private string myName = "$_UNNAMED_$";
 		private int myCentiseconds = utils.UNDEFINED;
 		private int mySavedIndex = utils.UNDEFINED;
 		private int myAltSavedIndex = utils.UNDEFINED;
@@ -106,13 +107,15 @@ namespace LORUtils
 		{
 			get
 			{
-				return myName;
+				//return myName;
+				return info.filename;
 			}
 		}
 
 		public void ChangeName(string newName)
 		{
-			myName = newName;
+			//myName = newName;
+			info.filename = newName;
 			MakeDirty();
 		}
 
@@ -223,11 +226,12 @@ namespace LORUtils
 			{
 				if (parentSequence.Members.sortMode == Membership.SORTbyName)
 				{
-					if (myName == "")
-					{
-						myName = Path.GetFileName(info.filename);
-					}
-					result = myName.CompareTo(other.Name);
+					//if (myName == "")
+
+					//{
+					//	myName = Path.GetFileName(info.filename);
+					//}
+					result = Name.CompareTo(other.Name);
 				}
 				else
 				{
@@ -250,7 +254,7 @@ namespace LORUtils
 
 		public override string ToString()
 		{
-			return myName;
+			return Name;
 		}
 
 		public void Parse(string lineIn)
@@ -324,6 +328,7 @@ namespace LORUtils
 			this.Members.SetParentSequence(this);
 			this.info = new Info(this);
 			this.animation = new Animation(this);
+			this.info.sequenceType = SequenceType.Animated;
 			//Members.SetParentSequence(this);
 		}
 
@@ -338,7 +343,17 @@ namespace LORUtils
 		}
 		#endregion
 
-
+		public SequenceType SequenceType
+		{
+			get
+			{
+				return info.sequenceType;
+			}
+			set
+			{
+				info.sequenceType = value;
+			}
+		}
 
 		//////////////////////////////////////////////////
 		//                                             //
@@ -376,7 +391,7 @@ namespace LORUtils
 			if (ext == ".lms") st = SequenceType.Musical;
 			if (ext == ".las") st = SequenceType.Animated;
 			if (ext == ".lcc") st = SequenceType.ChannelConfig;
-			sequenceType = st;
+			SequenceType = st;
 
 			Clear(true);
 
@@ -447,7 +462,7 @@ namespace LORUtils
 								modification = info.lastModified;
 								info.filename = existingFileName;
 
-								myName = Path.GetFileName(existingFileName);
+								//myName = Path.GetFileName(existingFileName);
 								info.xmlInfo = xmlInfo;
 								// Sanity Checks #4A and 4B, does it have a 'SaveFileVersion' and is it '14'
 								//   (SaveFileVersion="14" means it cane from LOR Sequence Editor ver 4.x)
@@ -1757,7 +1772,7 @@ namespace LORUtils
 				pos1 = utils.ContainsKey(lineIn, "xml version=");
 				if (pos1 > 0)
 				{
-					info.xmlInfo = lineIn;
+						info.xmlInfo = lineIn;
 				}
 				//pos1 = lineIn.IndexOf("saveFileVersion=");
 				pos1 = utils.ContainsKey(lineIn, "saveFileVersion=");
@@ -2177,7 +2192,7 @@ namespace LORUtils
 			return ret;
 		}
 
-		public Track FindTrack(string trackName)
+		public Track FindTrack(string trackName, bool createIfNotFound = false)
 		{
 			Track ret = null;
 			IMember member = Members.Find(trackName, MemberType.Track, false);
@@ -2197,17 +2212,41 @@ namespace LORUtils
 					}
 				}
 			}
+			if (ret == null)
+			{
+				if (createIfNotFound)
+				{
+					ret = CreateTrack(trackName);
+				}
+			}
 			return ret;
 		}
 
-
-		public TimingGrid FindTimingGrid(string timingGridName)
+		// Sequence4.FindTimingGrid(name, create)
+		public TimingGrid FindTimingGrid(string timingGridName, bool createIfNotFound = false)
 		{
+#if DEBUG
+			string msg = "Sequence4.FindTimingGrid(" + timingGridName + ", " + createIfNotFound.ToString() + ")";
+			Debug.WriteLine(msg);
+#endif
 			TimingGrid ret = null;
-			IMember member = Members.Find(timingGridName, MemberType.TimingGrid, false);
-			if (member != null)
+			//IMember member = Members.Find(timingGridName, MemberType.TimingGrid, createIfNotFound);
+			//IMember member = null;
+			for (int i=0; i< TimingGrids.Count; i++)
 			{
-				ret = (TimingGrid)member;
+				TimingGrid member = TimingGrids[i];
+				if (member.Name.CompareTo(timingGridName) == 0)
+				{
+					ret = member;
+					i = TimingGrids.Count; // exit for loop
+				}
+			}
+			if (ret==null)
+			{
+				if (createIfNotFound)
+				{
+					ret = CreateTimingGrid(timingGridName);
+				}
 			}
 			return ret;
 		}
@@ -2799,7 +2838,11 @@ namespace LORUtils
 			tr.SetIndex(Tracks.Count);
 			Tracks.Add(tr);
 			//tr.TrackNumber = Tracks.Count;
-			tr.timingGrid = TimingGrids[0];
+			if (TimingGrids.Count > 0)
+			{
+				//! Is this gonna cause a problem later?
+				tr.timingGrid = TimingGrids[0];
+			}
 			myCentiseconds = Math.Max(myCentiseconds, tr.Centiseconds);
 			Members.Add(tr);
 			return tr;
@@ -2818,8 +2861,13 @@ namespace LORUtils
 			return tg;
 		}
 
+		// Sequence4.CreateTimingGrid(name)
 		public TimingGrid CreateTimingGrid(string theName)
 		{
+#if DEBUG
+			string msg = "Sequence4.CreateTimingGrid(" + theName + ")";
+			Debug.WriteLine(msg);
+#endif
 			// Does NOT check to see if a grid with this name already exists
 			// Therefore, allows for duplicate grid names (But they will have different SaveIDs)
 			TimingGrid tg = new TimingGrid(theName);
@@ -2827,8 +2875,8 @@ namespace LORUtils
 			int newSI = AssignNextSaveID(tg);
 			tg.Centiseconds = Centiseconds;
 			tg.SetIndex(TimingGrids.Count);
-			TimingGrids.Add(tg);
-			Members.Add(tg);
+			//TimingGrids.Add(tg);
+			//Members.Add(tg);
 			return tg;
 		}
 
@@ -2887,7 +2935,7 @@ namespace LORUtils
 
 		public IMember Clone()
 		{
-			return this.Clone(myName);
+			return this.Clone(Name);
 		}
 
 		public IMember Clone(string newName)
@@ -2899,8 +2947,8 @@ namespace LORUtils
 			seqOut.Centiseconds = myCentiseconds;
 			seqOut.filename = filename;
 			seqOut.lineCount = lineCount;
-			seqOut.myName = newName;
-			seqOut.sequenceType = sequenceType;
+			seqOut.info.filename = newName;
+			seqOut.SequenceType = SequenceType;
 			seqOut.videoUsage = videoUsage;
 			for (int idx = 0; idx < Members.bySavedIndex.Count; idx++)
 			{

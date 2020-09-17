@@ -935,9 +935,9 @@ namespace LORUtils
 	public class Info
 	{
 		public string filename = "*_UNNAMED_FILE_*";
-		public string xmlInfo = ""; // <?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>";
+		public string xmlInfo = utils.XMLINFO;
 		public string infoLine = ""; // only populated when the info line is considered invalid, and saved only for debugging purposes.
-		public int saveFileVersion = utils.UNDEFINED;
+		public int saveFileVersion = 14; // utils.UNDEFINED;
 		public string author = "Util-O-Rama";
 		//public string modifiedBy = "Util-O-Rama / " + System.Security.Principal.WindowsIdentity.GetCurrent().Name;
 		public string modifiedBy = "";

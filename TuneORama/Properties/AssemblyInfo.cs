@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Tune-O-Rama")]
-[assembly: AssemblyDescription("Creates Light-O-Rama Timing Tracks based on the Vamp Plugins")]
+[assembly: AssemblyDescription("Creates Light-O-Rama Sequences based on musical notes")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("W⚡zster Software")]
+[assembly: AssemblyCompany("Wizster Software")]
 [assembly: AssemblyProduct("Tune-O-Rama")]
-[assembly: AssemblyCopyright("Copyright © 2019+ by Doctor 🧙 Wizard and W⚡zster Software")]
+[assembly: AssemblyCopyright("Copyright ©  2017 by Doctor Wizard and Wizster Software")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("d0cb347f-7311-6745-bd42-d9474b0a28a5")]
+[assembly: Guid("d0cb347f-7311-4a9e-bd42-d9474b0a28a5")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.2.0.0")]
-[assembly: AssemblyFileVersion("0.2.0.0")]
+[assembly: AssemblyVersion("4.0.0.0")]
+[assembly: AssemblyFileVersion("4.0.0.0")]

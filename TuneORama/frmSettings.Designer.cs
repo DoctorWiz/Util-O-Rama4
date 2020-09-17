@@ -1,4 +1,4 @@
-﻿namespace xTune
+﻿namespace TuneORama
 {
 	partial class frmSettings
 	{
@@ -28,7 +28,6 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSettings));
 			this.cmdOK = new System.Windows.Forms.Button();
 			this.cmdCancel = new System.Windows.Forms.Button();
 			this.tabCategory = new System.Windows.Forms.TabControl();
@@ -39,8 +38,6 @@
 			this.tabSpectro = new System.Windows.Forms.TabPage();
 			this.tabOnsets = new System.Windows.Forms.TabPage();
 			this.tabBeats = new System.Windows.Forms.TabPage();
-			this.tabChroma = new System.Windows.Forms.TabPage();
-			this.tabSegment = new System.Windows.Forms.TabPage();
 			this.tabSave = new System.Windows.Forms.TabPage();
 			this.brBrowserMsg = new System.Windows.Forms.WebBrowser();
 			this.grpTrackPoly = new System.Windows.Forms.GroupBox();
@@ -87,6 +84,8 @@
 			this.chkSpectroOctaveGrouping = new System.Windows.Forms.CheckBox();
 			this.grpGridsOnsets = new System.Windows.Forms.GroupBox();
 			this.lblGridOffsetsNoOptions = new System.Windows.Forms.Label();
+			this.tabChroma = new System.Windows.Forms.TabPage();
+			this.tabSegment = new System.Windows.Forms.TabPage();
 			this.tabCategory.SuspendLayout();
 			this.tabTracks.SuspendLayout();
 			this.tabSubcategory.SuspendLayout();
@@ -210,24 +209,6 @@
 			this.tabBeats.TabIndex = 3;
 			this.tabBeats.Text = "Beats";
 			this.tabBeats.UseVisualStyleBackColor = true;
-			// 
-			// tabChroma
-			// 
-			this.tabChroma.Location = new System.Drawing.Point(4, 22);
-			this.tabChroma.Name = "tabChroma";
-			this.tabChroma.Size = new System.Drawing.Size(344, 245);
-			this.tabChroma.TabIndex = 4;
-			this.tabChroma.Text = "Chromagram";
-			this.tabChroma.UseVisualStyleBackColor = true;
-			// 
-			// tabSegment
-			// 
-			this.tabSegment.Location = new System.Drawing.Point(4, 22);
-			this.tabSegment.Name = "tabSegment";
-			this.tabSegment.Size = new System.Drawing.Size(344, 245);
-			this.tabSegment.TabIndex = 5;
-			this.tabSegment.Text = "Segmenting";
-			this.tabSegment.UseVisualStyleBackColor = true;
 			// 
 			// tabSave
 			// 
@@ -727,6 +708,24 @@
 			this.lblGridOffsetsNoOptions.Text = "(No options - at this time...)";
 			this.lblGridOffsetsNoOptions.UseMnemonic = false;
 			// 
+			// tabChroma
+			// 
+			this.tabChroma.Location = new System.Drawing.Point(4, 22);
+			this.tabChroma.Name = "tabChroma";
+			this.tabChroma.Size = new System.Drawing.Size(344, 245);
+			this.tabChroma.TabIndex = 4;
+			this.tabChroma.Text = "Chromagram";
+			this.tabChroma.UseVisualStyleBackColor = true;
+			// 
+			// tabSegment
+			// 
+			this.tabSegment.Location = new System.Drawing.Point(4, 22);
+			this.tabSegment.Name = "tabSegment";
+			this.tabSegment.Size = new System.Drawing.Size(344, 245);
+			this.tabSegment.TabIndex = 5;
+			this.tabSegment.Text = "Segmenting";
+			this.tabSegment.UseVisualStyleBackColor = true;
+			// 
 			// frmSettings
 			// 
 			this.AcceptButton = this.cmdOK;
@@ -745,10 +744,10 @@
 			this.Controls.Add(this.cmdCancel);
 			this.Controls.Add(this.cmdOK);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Location = new System.Drawing.Point(800, 200);
 			this.MaximizeBox = false;
 			this.Name = "frmSettings";
+			this.ShowIcon = false;
 			this.ShowInTaskbar = false;
 			this.Text = "Settings";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmSettings_FormClosing);

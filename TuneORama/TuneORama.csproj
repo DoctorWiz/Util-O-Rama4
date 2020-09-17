@@ -4,37 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C78726B1-9406-43FB-8F5D-450F61D2AF30}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>xTune</RootNamespace>
+    <ProjectGuid>{D0CB347F-95A1-4A9E-BD42-D9474B0A28A5}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>TuneORama</RootNamespace>
     <AssemblyName>Tune-O-Rama</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <IsWebBootstrapper>true</IsWebBootstrapper>
-    <PublishUrl>ftp://wizlights.com/xutils/download/</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Web</InstallFrom>
-    <UpdateEnabled>true</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>http://wizlights.com/xutils/download/</InstallUrl>
-    <SupportUrl>http://wizlights.com/xutils/xtune</SupportUrl>
-    <ProductName>xTune</ProductName>
-    <PublisherName>Wizster Software</PublisherName>
-    <SuiteName>xUtils</SuiteName>
-    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
-    <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>1</ApplicationRevision>
-    <ApplicationVersion>4.0.0.%2a</ApplicationVersion>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <PublishWizardCompleted>true</PublishWizardCompleted>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -58,65 +34,24 @@
   <PropertyGroup>
     <ApplicationIcon>Tune-O-Rama.ico</ApplicationIcon>
   </PropertyGroup>
-  <PropertyGroup>
-    <ManifestCertificateThumbprint>DFEA86D9CB3FA985769C66E2F25E93D7E92C1ABB</ManifestCertificateThumbprint>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ManifestKeyFile>TuneORama_TemporaryKey.pfx</ManifestKeyFile>
-  </PropertyGroup>
-  <PropertyGroup>
-    <GenerateManifests>true</GenerateManifests>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignManifests>false</SignManifests>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject>
-    </StartupObject>
-  </PropertyGroup>
-  <PropertyGroup />
   <ItemGroup>
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="Syncfusion.Core.WinForms, Version=16.2451.0.50, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>..\packages\Syncfusion.Core.WinForms.16.2.0.50\lib\net451\Syncfusion.Core.WinForms.dll</HintPath>
+    <Reference Include="FuzzyString, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Libraries\FuzzyString\bin\Debug\FuzzyString.dll</HintPath>
     </Reference>
-    <Reference Include="Syncfusion.DataSource.WinForms, Version=16.2451.0.50, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>..\packages\Syncfusion.DataSource.WinForms.16.2.0.50\lib\net451\Syncfusion.DataSource.WinForms.dll</HintPath>
-    </Reference>
-    <Reference Include="Syncfusion.Grid.Base, Version=15.2460.0.46, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89">
-      <HintPath>..\packages\Syncfusion.Grid.Base.16.2.0.50\lib\net451\Syncfusion.Grid.Base.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="Syncfusion.Grid.Base, Version=15.2460.0.46, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
     <Reference Include="Syncfusion.Grid.Windows, Version=15.2460.0.46, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
-    <Reference Include="Syncfusion.GridCommon.WinForms, Version=16.2451.0.50, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>..\packages\Syncfusion.GridCommon.WinForms.16.2.0.50\lib\net451\Syncfusion.GridCommon.WinForms.dll</HintPath>
-    </Reference>
-    <Reference Include="Syncfusion.Licensing, Version=16.2451.0.50, Culture=neutral, PublicKeyToken=632609b4d040f6b4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Syncfusion.Licensing.16.2.0.50\lib\net451\Syncfusion.Licensing.dll</HintPath>
-    </Reference>
-    <Reference Include="Syncfusion.SfListView.WinForms, Version=16.2451.0.50, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>..\packages\Syncfusion.SfListView.WinForms.16.2.0.50\lib\net451\Syncfusion.SfListView.WinForms.dll</HintPath>
-    </Reference>
-    <Reference Include="Syncfusion.Shared.Base, Version=15.2460.0.46, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89">
-      <HintPath>..\packages\Syncfusion.Shared.Base.16.2.0.50\lib\net451\Syncfusion.Shared.Base.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Syncfusion.Shared.Windows, Version=15.2460.0.46, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89">
-      <HintPath>..\packages\Syncfusion.Shared.Windows.16.2.0.50\lib\net451\Syncfusion.Shared.Windows.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="Syncfusion.Shared.Base, Version=15.2460.0.46, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
+    <Reference Include="Syncfusion.Shared.Windows, Version=15.2460.0.46, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
     <Reference Include="Syncfusion.SpellChecker.Base, Version=15.2460.0.46, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
-    <Reference Include="Syncfusion.Tools.Base, Version=15.2460.0.46, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89">
-      <HintPath>..\packages\Syncfusion.Tools.Base.16.2.0.50\lib\net451\Syncfusion.Tools.Base.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="Syncfusion.Tools.Base, Version=15.2460.0.46, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
     <Reference Include="Syncfusion.Tools.Windows, Version=15.2460.0.46, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />
-    <Reference Include="System.DirectoryServices.AccountManagement" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -127,37 +62,13 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="taglib-sharp">
-      <HintPath>..\..\TagLib-Sharp 2.0.4.0\bin\Release\taglib-sharp.dll</HintPath>
+      <HintPath>..\..\..\TagLib-Sharp 2.0.4.0\bin\Release\taglib-sharp.dll</HintPath>
     </Reference>
     <Reference Include="ToggleSwitch">
-      <HintPath>..\..\ToggleSwitch\ToggleSwitch\bin\Release\ToggleSwitch.dll</HintPath>
+      <HintPath>..\..\..\ToggleSwitch\ToggleSwitch\bin\Release\ToggleSwitch.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Common\Sequence4\LORUtils.cs">
-      <Link>LORUtils.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\SeqEnums.cs">
-      <Link>SeqEnums.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\SeqMember.cs">
-      <Link>SeqMember.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\SeqSubs.cs">
-      <Link>SeqSubs.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\Sequence4.cs">
-      <Link>Sequence4.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\Visualization4.cs">
-      <Link>Visualization4.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\VizMembers.cs">
-      <Link>VizMembers.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\xUtils\xUtils.cs">
-      <Link>xUtils.cs</Link>
-    </Compile>
     <Compile Include="frmAbout.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -176,33 +87,13 @@
     <Compile Include="frmTune.Designer.cs">
       <DependentUpon>frmTune.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmTweakInfo.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmTweakInfo.Designer.cs">
-      <DependentUpon>frmTweakInfo.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MRU.cs" />
-    <Compile Include="Options.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Options.Designer.cs">
-      <DependentUpon>Options.cs</DependentUpon>
-    </Compile>
+    <Compile Include="LORUtils.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
+    <Compile Include="SeqEnums.cs" />
+    <Compile Include="SeqSubs.cs" />
+    <Compile Include="Sequence4.cs" />
     <Compile Include="SongFields.cs" />
-    <Compile Include="VampConstants.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Vamp.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <EmbeddedResource Include="frmAbout.resx">
       <DependentUpon>frmAbout.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -215,19 +106,10 @@
       <DependentUpon>frmTune.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmTweakInfo.resx">
-      <DependentUpon>frmTweakInfo.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Options.resx">
-      <DependentUpon>Options.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <SubType>Designer</SubType>
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -242,20 +124,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="OrangeNoteBulb.ico" />
     <Content Include="Tune-O-Rama.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4.5.2 %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

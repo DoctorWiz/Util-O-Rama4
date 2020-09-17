@@ -28,9 +28,9 @@ namespace LORUtils
 		public const string ICONgrnChannel = "00FF00";
 		public const string ICONbluChannel = "0000FF";
 		// Note: LOR colors not in the same order as .Net or Web colors, Red and Blue are reversed
-		public const Int32 LORCOLOR_RED = 255;			// 0x0000FF
-		public const Int32 LORCOLOR_GRN = 65280;		// 0x00FF00
-		public const Int32 LORCOLOR_BLU = 16711680;	// 0xFF0000
+		public const Int32 LORCOLOR_RED = 255;      // 0x0000FF
+		public const Int32 LORCOLOR_GRN = 65280;    // 0x00FF00
+		public const Int32 LORCOLOR_BLU = 16711680; // 0xFF0000
 		public const Int32 LORCOLOR_BLK = 0;
 		public const Int32 LORCOLOR_WHT = 0xFFFFFF;
 
@@ -56,6 +56,7 @@ namespace LORUtils
 		public const string FIELDtotalCentiseconds = " totalCentiseconds";
 		public const string FIELDstartCentisecond = " startCentisecond";
 		public const string FIELDendCentisecond = " endCentisecond";
+		public const string XMLINFO = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>";
 
 		public const string FILE_SEQ = "All Sequences *.las, *.lms|*.las;*.lms";
 		public const string FILE_CFG = "All Sequences *.las, *.lms, *.lcc|*.las;*.lms;*.lcc";
@@ -251,7 +252,7 @@ namespace LORUtils
 							if (qlist == null) qlist = new List<TreeNode>();
 							qlist.Add(cosmicNode);
 							dcount++;
-								//nodesBySI[si].Add(groupNode);
+							//nodesBySI[si].Add(groupNode);
 						}
 					}
 					if (member.MemberType == MemberType.RGBchannel)
@@ -360,7 +361,7 @@ namespace LORUtils
 				*/
 			#endregion
 
-		
+
 
 			//	int x = 1; // Check ccount, rcount, gcount
 
@@ -453,16 +454,16 @@ namespace LORUtils
 					{
 						if ((memberTypes & SeqEnums.MEMBER_Channel) > 0)
 						{
-								TreeNode channelNode = AddChannel(seq, baseNodes, member.SavedIndex, selectedOnly);
-								nodesBySI[si].Add(channelNode);
+							TreeNode channelNode = AddChannel(seq, baseNodes, member.SavedIndex, selectedOnly);
+							nodesBySI[si].Add(channelNode);
 						}
 					}
 					if (member.MemberType == MemberType.RGBchannel)
 					{
 						if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0)
 						{
-								TreeNode rgbChannelNode = AddRGBchannel(seq, baseNodes, member.SavedIndex, ref nodesBySI, selectedOnly, includeRGBchildren);
-								nodesBySI[si].Add(rgbChannelNode);
+							TreeNode rgbChannelNode = AddRGBchannel(seq, baseNodes, member.SavedIndex, ref nodesBySI, selectedOnly, includeRGBchildren);
+							nodesBySI[si].Add(rgbChannelNode);
 						}
 					}
 					#region catch
@@ -573,16 +574,16 @@ namespace LORUtils
 					{
 						if ((memberTypes & SeqEnums.MEMBER_Channel) > 0)
 						{
-								TreeNode channelNode = AddChannel(seq, baseNodes, member.SavedIndex, selectedOnly);
-								nodesBySI[si].Add(channelNode);
+							TreeNode channelNode = AddChannel(seq, baseNodes, member.SavedIndex, selectedOnly);
+							nodesBySI[si].Add(channelNode);
 						}
 					}
 					if (member.MemberType == MemberType.RGBchannel)
 					{
 						if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0)
 						{
-								TreeNode rgbChannelNode = AddRGBchannel(seq, baseNodes, member.SavedIndex, ref nodesBySI, selectedOnly, includeRGBchildren);
-								nodesBySI[si].Add(rgbChannelNode);
+							TreeNode rgbChannelNode = AddRGBchannel(seq, baseNodes, member.SavedIndex, ref nodesBySI, selectedOnly, includeRGBchildren);
+							nodesBySI[si].Add(rgbChannelNode);
 						}
 					}
 					#region catch
@@ -627,7 +628,7 @@ namespace LORUtils
 
 		private static TreeNode AddChannel(Sequence4 seq, TreeNodeCollection baseNodes, int channelSI, bool selectedOnly)
 		{
-			Channel theChannel = (Channel) seq.Members.bySavedIndex[channelSI];
+			Channel theChannel = (Channel)seq.Members.bySavedIndex[channelSI];
 			string nodeText = theChannel.Name;
 			TreeNode channelNode = baseNodes.Add(nodeText);
 			//IMember nodeTag = theChannel;
@@ -658,7 +659,7 @@ namespace LORUtils
 				Array.Resize(ref nodesBySI, RGBsi + 1);
 			}
 			if (nodesBySI[RGBsi] != null)
-			{ 
+			{
 				RGBchannel theRGB = (RGBchannel)seq.Members.bySavedIndex[RGBsi];
 				string nodeText = theRGB.Name;
 				channelNode = baseNodes.Add(nodeText);
@@ -674,43 +675,43 @@ namespace LORUtils
 					// * * R E D   S U B  C H A N N E L * *
 					TreeNode colorNode = null;
 					int ci = theRGB.redChannel.SavedIndex;
-						nodeText = theRGB.redChannel.Name;
-						colorNode = channelNode.Nodes.Add(nodeText);
-						//nodeTag = seq.Channels[ci];
-						nodeIndex++;
-						colorNode.Tag = theRGB.redChannel;
-						colorNode.ImageKey = ICONredChannel;
-						colorNode.SelectedImageKey = ICONredChannel;
-						colorNode.Checked = theRGB.redChannel.Selected;
-						nodesBySI[ci].Add(colorNode);
-						channelNode.Nodes.Add(colorNode);
+					nodeText = theRGB.redChannel.Name;
+					colorNode = channelNode.Nodes.Add(nodeText);
+					//nodeTag = seq.Channels[ci];
+					nodeIndex++;
+					colorNode.Tag = theRGB.redChannel;
+					colorNode.ImageKey = ICONredChannel;
+					colorNode.SelectedImageKey = ICONredChannel;
+					colorNode.Checked = theRGB.redChannel.Selected;
+					nodesBySI[ci].Add(colorNode);
+					channelNode.Nodes.Add(colorNode);
 
 					// * * G R E E N   S U B  C H A N N E L * *
 					ci = theRGB.grnChannel.SavedIndex;
-						nodeText = theRGB.grnChannel.Name;
-						colorNode = channelNode.Nodes.Add(nodeText);
-						//nodeTag = seq.Channels[ci];
-						nodeIndex++;
-						colorNode.Tag = theRGB.grnChannel;
-						colorNode.ImageKey = ICONgrnChannel;
-						colorNode.SelectedImageKey = ICONgrnChannel;
-						colorNode.Checked = theRGB.grnChannel.Selected;
-						nodesBySI[ci].Add(colorNode);
-						channelNode.Nodes.Add(colorNode);
-					
+					nodeText = theRGB.grnChannel.Name;
+					colorNode = channelNode.Nodes.Add(nodeText);
+					//nodeTag = seq.Channels[ci];
+					nodeIndex++;
+					colorNode.Tag = theRGB.grnChannel;
+					colorNode.ImageKey = ICONgrnChannel;
+					colorNode.SelectedImageKey = ICONgrnChannel;
+					colorNode.Checked = theRGB.grnChannel.Selected;
+					nodesBySI[ci].Add(colorNode);
+					channelNode.Nodes.Add(colorNode);
+
 					// * * B L U E   S U B  C H A N N E L * *
 					ci = theRGB.bluChannel.SavedIndex;
 					if (nodesBySI[ci] != null)
 						nodeText = theRGB.bluChannel.Name;
-						colorNode = channelNode.Nodes.Add(nodeText);
-						//nodeTag = seq.Channels[ci];
-						nodeIndex++;
-						colorNode.Tag = seq.Channels[ci];
-						colorNode.ImageKey = ICONbluChannel;
-						colorNode.SelectedImageKey = ICONbluChannel;
-						colorNode.Checked = theRGB.bluChannel.Selected;
-						nodesBySI[ci].Add(colorNode);
-						channelNode.Nodes.Add(colorNode);
+					colorNode = channelNode.Nodes.Add(nodeText);
+					//nodeTag = seq.Channels[ci];
+					nodeIndex++;
+					colorNode.Tag = seq.Channels[ci];
+					colorNode.ImageKey = ICONbluChannel;
+					colorNode.SelectedImageKey = ICONbluChannel;
+					colorNode.Checked = theRGB.bluChannel.Selected;
+					nodesBySI[ci].Add(colorNode);
+					channelNode.Nodes.Add(colorNode);
 				} // end includeRGBchildren
 			}
 			return channelNode;
@@ -722,13 +723,13 @@ namespace LORUtils
 			string tempID = colorVal.ToString("X6");
 			// LOR's Color Format is in BGR format, so have to reverse the Red and the Blue
 			string colorID = tempID.Substring(4, 2) + tempID.Substring(2, 2) + tempID.Substring(0, 2);
-			ret = icons.Images.IndexOfKey (colorID);
+			ret = icons.Images.IndexOfKey(colorID);
 			if (ret < 0)
 			{
 				// Convert rearranged hex value a real color
 				Color theColor = System.Drawing.ColorTranslator.FromHtml("#" + colorID);
 				// Create a temporary working bitmap
-				Bitmap bmp = new Bitmap(16,16);
+				Bitmap bmp = new Bitmap(16, 16);
 				// get the graphics handle from it
 				Graphics gr = Graphics.FromImage(bmp);
 				// A colored solid brush to fill the middle
@@ -1091,11 +1092,14 @@ namespace LORUtils
 				string userDocs = DefaultDocumentsPath;
 				try
 				{
-					string ky = "HKEY_CURRENT_USER\\Software\\Light-O-Rama\\Editor\\New Sequence";
+					string ky = "HKEY_CURRENT_USER\\Software\\Light-O-Rama\\Editor\\NewSequence";
 					author = (string)Registry.GetValue(ky, "Author", root);
-					if (author.Length < 1)
+					if (author != null)
 					{
-						author = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+						if (author.Length < 1)
+						{
+							author = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+						}
 					}
 				}
 				catch
@@ -1568,13 +1572,13 @@ namespace LORUtils
 
 		public static long GetFileSize(string filename)
 		{
-				long ret = 0;
-				if (File.Exists(filename))
-				{
-					FileInfo fi = new FileInfo(filename);
-					ret = fi.Length;
-				}
-				return ret;
+			long ret = 0;
+			if (File.Exists(filename))
+			{
+				FileInfo fi = new FileInfo(filename);
+				ret = fi.Length;
+			}
+			return ret;
 		}
 
 		public static string HumanizeName(string XMLizedName)
@@ -1717,7 +1721,7 @@ namespace LORUtils
 		{
 			StringBuilder ret = new StringBuilder();
 
-			for (int l=0; l<level; l++)
+			for (int l = 0; l < level; l++)
 			{
 				ret.Append(LEVEL1);
 			}
@@ -1800,7 +1804,7 @@ namespace LORUtils
 					{
 						if (member.MemberType == MemberType.ChannelGroup)
 						{
-							c += BuildGroup(seq, (ChannelGroup)member, level+1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
+							c += BuildGroup(seq, (ChannelGroup)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
 						}
 						if (member.MemberType == MemberType.CosmicDevice)
 						{
@@ -1921,7 +1925,7 @@ namespace LORUtils
 
 		} // end fillOldChannels
 
-		public static int BuildGroup(Sequence4 seq, ChannelGroup theGroup, int level, ref int count, ref int[] savedIndexes, ref int[]levels, bool selectedOnly, bool includeRGBchildren)
+		public static int BuildGroup(Sequence4 seq, ChannelGroup theGroup, int level, ref int count, ref int[] savedIndexes, ref int[] levels, bool selectedOnly, bool includeRGBchildren)
 		{
 			int c = 0;
 			string nodeText = theGroup.Name;
@@ -2047,7 +2051,7 @@ namespace LORUtils
 		public static int BuildChannel(Sequence4 seq, Channel theChannel, int level, ref int count, ref int[] savedIndexes, ref int[] levels, bool selectedOnly)
 		{
 			int c = 0;
-			if (!selectedOnly || theChannel.Selected) 
+			if (!selectedOnly || theChannel.Selected)
 			{
 				Array.Resize(ref savedIndexes, count + 1);
 				Array.Resize(ref levels, count + 1);
@@ -2188,7 +2192,7 @@ namespace LORUtils
 			int min = (int)(totsecs / 60);
 			int secs = totsecs % 60;
 
-			if (min>0)
+			if (min > 0)
 			{
 				timeOut = min.ToString() + ":";
 				timeOut += secs.ToString("00");
@@ -2441,7 +2445,7 @@ namespace LORUtils
 			if (channel.effects.Count > 0)
 			{
 				int[] levels = PlotLevels(channel, startCentiseconds, endCentiseconds, width);
-				for (int x=0; x < width; x++)
+				for (int x = 0; x < width; x++)
 				{
 					Debug.Write(levels[x].ToString() + " ");
 					bool shimmer = ((levels[x] & utils.ADDshimmer) > 0);
@@ -2454,10 +2458,10 @@ namespace LORUtils
 						int lineLen = ll / 100 + 1;
 						if (shimmer)
 						{
-							for (int n=0; n< lineLen; n++)
+							for (int n = 0; n < lineLen; n++)
 							{
 								int m = (n + x) % 6;
-								if (m <2)
+								if (m < 2)
 								{
 									gr.FillRectangle(br, x, height - n, 1, 1);
 								}
@@ -2804,7 +2808,7 @@ namespace LORUtils
 								curLevel = 0;
 								// are there more effects?
 								if (effectIdx < (channel.effects.Count - 1))
-								{										// move to next effect
+								{                   // move to next effect
 									effectIdx++;
 									curEffect = channel.effects[effectIdx];
 									// does it end before this time slice
@@ -2829,7 +2833,7 @@ namespace LORUtils
 									keepGoing = false;
 								}
 							} // end curent effect ends at or before this time slice
-						} 
+						}
 						else
 						{
 							keepGoing = false;
@@ -2903,7 +2907,7 @@ namespace LORUtils
 		public static string Time_CentisecondsToMinutes(int centiseconds)
 		{
 			int mm = (int)(centiseconds / 6000);
-			int ss = (int)((centiseconds - mm * 6000)/100);
+			int ss = (int)((centiseconds - mm * 6000) / 100);
 			int cs = (int)(centiseconds - mm * 6000 - ss * 100);
 			string ret = mm.ToString("0") + ":" + ss.ToString("00") + "." + cs.ToString("00");
 			return ret;
@@ -2937,15 +2941,15 @@ namespace LORUtils
 							string cs = rest.Substring(posPer + 1);
 							int mn = utils.UNDEFINED;
 							int.TryParse(min, out mn);
-							if ((mn >=0) && (mn<61))
+							if ((mn >= 0) && (mn < 61))
 							{
 								int sc = utils.UNDEFINED;
 								int.TryParse(sec, out sc);
-								if ((sc >=0 ) && (sc<60))
+								if ((sc >= 0) && (sc < 60))
 								{
 									int c = utils.UNDEFINED;
 									int.TryParse(cs, out c);
-									if ((c >=0) && (c<100))
+									if ((c >= 0) && (c < 100))
 									{
 										ret = mn * 6000 + sc * 100 + c;
 									}
@@ -2959,7 +2963,32 @@ namespace LORUtils
 			return ret;
 		}
 
-
+		public static bool ValidFilename(string theName, bool testPath = false, bool testExists = false)
+		{
+			bool isValid = false;
+			try
+			{
+				isValid = !string.IsNullOrEmpty(theName) && theName.IndexOfAny(Path.GetInvalidFileNameChars()) < 0;
+				if (isValid)
+				{
+					if (testPath)
+					{
+						string p = Path.GetDirectoryName(theName);
+						isValid = Directory.Exists(p);
+						if (isValid)
+						{
+							if (testExists)
+							{
+								isValid = File.Exists(theName);
+							}
+						}
+					}
+				}
+			}
+			catch
+			{ }
+			return isValid;
+		}
 
 
 
