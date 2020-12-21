@@ -303,7 +303,7 @@ namespace MergeORama
 
 				txtFirstFile.Text = utils.ShortenLongPath(lastFile1, 80);
 				seqOne.ReadSequenceFile(lastFile1);
-				utils.FillChannels(treNewChannels, seqOne, ref siNodes, false, true);
+				utils.TreeFillChannels(treNewChannels, seqOne, ref siNodes, false, true);
 				seqNew = seqOne;
 			} // end if (result = DialogResult.OK)
 				//pnlAll.Enabled = true;
@@ -355,7 +355,7 @@ namespace MergeORama
 					seqTwo.ReadSequenceFile(lastFile2);
 					MergeSequences();
 
-					utils.FillChannels(treNewChannels, seqNew, ref siNodes, false, true);
+					utils.TreeFillChannels(treNewChannels, seqNew, ref siNodes, false, true);
 					ImBusy(false);
 					btnSave.Enabled = true;
 				}

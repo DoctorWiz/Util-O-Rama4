@@ -37,9 +37,6 @@
     <ApplicationIcon>MergeBulbs.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FuzzyString">
-      <HintPath>..\..\..\Libraries\FuzzyString\obj\Release\FuzzyString.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -130,6 +127,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MergeBulbs.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\FuzzyString\FuzzyString.csproj">
+      <Project>{2aaa900b-64fb-4874-9444-64ae33aca970}</Project>
+      <Name>FuzzyString</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

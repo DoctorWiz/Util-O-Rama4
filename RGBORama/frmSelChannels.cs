@@ -26,7 +26,7 @@ namespace RGBORama
 		{
 			InitializeComponent();
 			seq = theSequence;
-			utils.FillChannels(treeChannels, seq, nodeList, false, false);
+			utils.TreeFillChannels(treeChannels, seq, nodeList, false, false);
 		}
 
 		private void cmdOK_Click(object sender, EventArgs e)

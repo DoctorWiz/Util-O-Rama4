@@ -115,7 +115,7 @@ namespace LORUtils
 						}
 						else
 						{
-							info = new Info(this, lineIn);
+							info = new Info(null, lineIn);
 							creation = info.createdAt;
 
 							// Save this for later, as they will get changed as we populate the file

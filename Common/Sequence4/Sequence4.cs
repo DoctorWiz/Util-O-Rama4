@@ -76,6 +76,7 @@ namespace LORUtils
 		public int lineCount = 0;
 		public bool dirty = false;
 		private object tag = null;
+		private IMember mappedTo = null;
 
 		// For now at least, this will remain false, therefore ALL timing grids will ALWAYS get written
 		private bool WriteSelectedGridsOnly = false;
@@ -284,6 +285,24 @@ namespace LORUtils
 			}
 		}
 
+		public IMember MapTo
+		{
+			get
+			{
+				return mappedTo;
+			}
+			set
+			{
+				if (value.MemberType == MemberType.Sequence)
+				{
+					mappedTo = value;
+				}
+				else
+				{
+					System.Diagnostics.Debugger.Break();
+				}
+			}
+		}
 
 		#endregion
 
@@ -386,6 +405,7 @@ namespace LORUtils
 			TimingGrid lastGrid = null;
 			LoopLevel lastll = null;
 			AnimationRow lastAniRow = null;
+			Membership lastMembership = null;
 
 			string ext = Path.GetExtension(existingFileName).ToLower();
 			if (ext == ".lms") st = SequenceType.Musical;
@@ -492,7 +512,11 @@ namespace LORUtils
 										}
 										if (li > 0)
 										{
-											while (li > 0)
+		///////////////////
+		///   EFFECT   ///
+		/////////////////
+												#region Effect
+												while (li > 0)
 											{
 												lastChannel.AddEffect(lineIn);
 
@@ -501,34 +525,49 @@ namespace LORUtils
 												//li = lineIn.IndexOf(STARTeffect);
 												li = utils.ContainsKey(lineIn, STARTeffect);
 											}
-										}
-										else // Not an Effect
+												#endregion // Effect
+											}
+											else // Not an Effect
 										{
 											//! Timings
 											//li = lineIn.IndexOf(STARTtiming);
 											li = utils.ContainsKey(lineIn, STARTtiming);
 											if (li > 0)
 											{
-												int t = utils.getKeyValue(lineIn, utils.FIELDcentiseconds);
+		//////////////////
+		///  TIMING   ///
+		////////////////
+													#region Timing
+													int t = utils.getKeyValue(lineIn, utils.FIELDcentiseconds);
 												lastGrid.AddTiming(t);
-											}
-											else // Not a regular channel
+													#endregion // Timing
+												}
+												else // Not a regular channel
 											{
 												//! Regular Channels
 												//li = lineIn.IndexOf(STARTchannel);
 												li = utils.ContainsKey(lineIn, STARTchannel);
 												if (li > 0)
 												{
-													lastChannel = ParseChannel(lineIn);
-												}
-												else // Not a regular channel
+		////////////////////////////
+		///   REGULAR CHANNEL   ///
+		//////////////////////////
+														#region Regular Channel
+														lastChannel = ParseChannel(lineIn);
+														#endregion // Regular Channel
+													}
+													else // Not a regular channel
 												{
 													//! RGB Channels
 													//li = lineIn.IndexOf(STARTrgbChannel);
 													li = utils.ContainsKey(lineIn, STARTrgbChannel);
 													if (li > 0)
 													{
-														lastRGBchannel = ParseRGBchannel(lineIn);
+		////////////////////////
+		///   RGB CHANNEL   ///
+		//////////////////////
+															#region RGB Channel
+															lastRGBchannel = ParseRGBchannel(lineIn);
 														lineIn = reader.ReadLine();
 														lineCount++;
 														lineIn = reader.ReadLine();
@@ -558,16 +597,20 @@ namespace LORUtils
 														lastRGBchannel.bluChannel = ch;
 														ch.rgbChild = RGBchild.Blue;
 														ch.rgbParent = lastRGBchannel;
-
-													}
-													else  // Not an RGB Channel
+															#endregion // RGB Channel
+														}
+														else  // Not an RGB Channel
 													{
 														//! Channel Groups
 														//li = lineIn.IndexOf(STARTchannelGroup);
 														li = utils.ContainsKey(lineIn, STARTchannelGroup);
 														if (li > 0)
 														{
-															lastGroup = ParseChannelGroup(lineIn);
+		//////////////////////////
+		///   CHANNEL GROUP   ///
+		////////////////////////
+																#region Channel Group
+																lastGroup = ParseChannelGroup(lineIn);
 															//li = lineIn.IndexOf(utils.ENDFLD);
 															li = utils.ContainsKey(lineIn, utils.ENDFLD);
 															if (li < 0)
@@ -590,13 +633,18 @@ namespace LORUtils
 																	li = utils.ContainsKey(lineIn, TABLEchannelGroup + utils.FIELDsavedIndex);
 																}
 															}
-														}
-														else // Not a ChannelGroup
+																#endregion // Channel Group
+															}
+															else // Not a ChannelGroup
 														{
 																//! Cosmic Color Devices
 																li = utils.ContainsKey(lineIn, STARTcosmic);
 																if (li > 0)
 																{
+		////////////////////////////////
+		///   COSMIC COLOR DEVICE   ///
+		//////////////////////////////
+																	#region Cosmic Color Device
 																	lastCosmic = ParseCosmicDevice(lineIn);
 																	li = utils.ContainsKey(lineIn, utils.ENDFLD);
 																	if (li < 0)
@@ -619,16 +667,24 @@ namespace LORUtils
 																			li = utils.ContainsKey(lineIn, TABLEchannelGroup + utils.FIELDsavedIndex);
 																		}
 																	}
+																	#endregion // Cosmic Color Device
 																}
 																else // Not a Cosmic Device
 																{
 																	//! Track Items
 																	//li = lineIn.IndexOf(STARTtrackItem);
+																	if (lineCount == 972) System.Diagnostics.Debugger.Break();
+																	if (lineCount == 200) System.Diagnostics.Debugger.Break();
 																	li = utils.ContainsKey(lineIn, STARTtrackItem);
 																	if (li > 0)
 																	{
+		///////////////////////
+		///   TRACK ITEM   ///
+		/////////////////////
+																		#region Track Item
 																		int si = utils.getKeyValue(lineIn, utils.FIELDsavedIndex);
 																		lastTrack.Members.Add(Members.bySavedIndex[si]);
+																		#endregion // Track Item
 																	}
 																	else // Not a regular channel
 																	{
@@ -641,6 +697,10 @@ namespace LORUtils
 																		li = utils.ContainsKey(lineIn, STARTtrack);
 																		if (li > 0)
 																		{
+		//////////////////
+		///   TRACK   ///
+		////////////////
+																			#region Track
 																			lastTrack = ParseTrack(lineIn);
 																			//for (int tg = 0; tg < TimingGrids.Count; tg++)
 																			//{
@@ -692,6 +752,7 @@ namespace LORUtils
 																					li = utils.ContainsKey(lineIn, STARTtrackItem);
 																				}
 																			}
+																			#endregion // Track
 																		} // end if a track
 																		else // not a track
 																		{
@@ -700,6 +761,10 @@ namespace LORUtils
 																			li = utils.ContainsKey(lineIn, STARTtimingGrid);
 																			if (li > 0)
 																			{
+		////////////////////////
+		///   TIMING GRID   ///
+		//////////////////////
+																				#region Timing Grid
 																				lastGrid = ParseTimingGrid(lineIn);
 																				if (lastGrid.TimingGridType == TimingGridType.Freeform)
 																				{
@@ -717,6 +782,7 @@ namespace LORUtils
 																						li = utils.ContainsKey(lineIn, STARTgridItem);
 																					}
 																				}
+																				#endregion
 																			}
 																			else // Not a timing grid
 																			{
@@ -797,7 +863,7 @@ namespace LORUtils
 											info.LastError.lineIn = lineIn;
 
 	#if DEBUG
-											//System.Diagnostics.Debugger.Break();
+											System.Diagnostics.Debugger.Break();
 	#endif
 											utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 											if (utils.IsWizard)
@@ -2815,10 +2881,25 @@ namespace LORUtils
 			{
 				// AltSavedIndex has been temporarily set to the track's TimingGrid's SaveID
 				// So get the specified TimingGrid by it's SaveID
-				IMember tg = Members.bySaveID[tr.AltSavedIndex];
+				//IMember tg = Members.bySaveID[tr.AltSavedIndex];
+				TimingGrid tg = null;
+				for (int i =0; i< TimingGrids.Count; i++)
+				{
+					if (TimingGrids[i].SaveID == tr.AltSavedIndex)
+					{
+						tg = TimingGrids[i];
+						i = TimingGrids.Count; // force exit of loop
+					}
+				}
+				if (tg == null)
+				{
+					string msg ="Timing Grid with SaveID " + tr.AltSavedIndex.ToString() + " not found!";
+					System.Diagnostics.Debugger.Break();
+
+				}
 				// And assign it to the track
 				tr.timingGrid = (TimingGrid)tg;
-				// Clear the AltSavedIndex which was temoorarily holding the SaveID of the TimingGrid
+				// Clear the AltSavedIndex which was temporarily holding the SaveID of the TimingGrid
 				tr.AltSavedIndex = utils.UNDEFINED;
 			}
 			myCentiseconds = Math.Max(myCentiseconds, tr.Centiseconds);
@@ -2857,7 +2938,7 @@ namespace LORUtils
 			tg.SetIndex(TimingGrids.Count);
 			TimingGrids.Add(tg);
 			tg.Parse(lineIn);
-			Members.Add(tg);
+			//Members.Add(tg);
 			return tg;
 		}
 
@@ -2875,7 +2956,7 @@ namespace LORUtils
 			int newSI = AssignNextSaveID(tg);
 			tg.Centiseconds = Centiseconds;
 			tg.SetIndex(TimingGrids.Count);
-			//TimingGrids.Add(tg);
+			TimingGrids.Add(tg); // Handled in Members.Add called from AssignNextSaveID
 			//Members.Add(tg);
 			return tg;
 		}
@@ -2964,6 +3045,36 @@ namespace LORUtils
 			return seqOut;
 		}
 
+		public void MoveTrack(int oldPosition, int newPosition)
+		{
+			// Sanity Checks
+			if ((oldPosition >= 0) ||
+				(oldPosition < Tracks.Count) ||
+				(newPosition >= 0) ||
+				(newPosition <= Tracks.Count) ||
+				(newPosition != oldPosition))
+			{
+				List<Track> tracksNew = new List<Track>();
+				int newIndex = 0;
+				for (int i=0; i< Tracks.Count; i++)
+				{
+					if (i != oldPosition)
+					{
+						Tracks[i].SetIndex(newIndex);
+						tracksNew.Add(Tracks[i]);
+					}
+					if (i == newPosition)
+					{
+						Tracks[oldPosition].SetIndex(newIndex);
+						tracksNew.Add(Tracks[oldPosition]);
+					}
+					newIndex++;
+				}
+				Tracks = tracksNew;
+			}
+		} // End MoveTrack
 
+
+		// END SEQUENCE CLASS
 	} // end sequence class
 } // end namespace LORUtils

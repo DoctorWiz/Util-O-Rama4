@@ -19,8 +19,8 @@ namespace MapORama
 		private int lastCol = 0;
 		public Sequence4 seqSource;
 		public Sequence4 seqMaster;
-		public int[] MtoS = null;  // Array indexed by Master.SavedIndex, elements contain Source.SaveIndex
-		public List<int>[] StoM = null; // Array indexed by Source.SavedIindex, elements are Lists of Master.SavedIndex-es
+		public IMember[] mapMastToSrc = null;  // Array indexed by Master.SavedIndex, elements contain Source.SaveIndex
+		public List<IMember>[] mapSrcToMast = null; // Array indexed by Source.SavedIindex, elements are Lists of Master.SavedIndex-es
 
 		private const char DELIM_Map = (char)164;  // ¤
 		private const string NOTMAPPED = "\t(Not Mapped)";
@@ -34,14 +34,14 @@ namespace MapORama
 		private const string MAPSUM = "Channel Mapping Summary - ";
 
 
-		public frmMapList(Sequence4 seqSourceuence, Sequence4 seqMasteruence, List<int>[] stom, int[] mtos, ImageList icons)
+		public frmMapList(Sequence4 seqSourceuence, Sequence4 seqMasteruence, List<IMember>[] srcToMastMap, IMember[] mastToSrcMap, ImageList icons)
 		{
 			InitializeComponent();
 
 			seqSource = seqSourceuence;
 			seqMaster = seqMasteruence;
-			MtoS = mtos;
-			StoM = stom;
+			mapMastToSrc = mastToSrcMap;
+			mapSrcToMast = srcToMastMap;
 			imlTreeIcons = icons;
 			lstMap.SmallImageList = icons;
 
@@ -120,23 +120,23 @@ namespace MapORama
 			//Console.WriteLine();
 
 			//for (int i = 0; i < seqSource.Members.byName.Count; i++)
-			foreach(IMember sID in seqSource.Members.byName.Values)
+			foreach(IMember sourceMember in seqSource.Members.byName.Values)
 			{
-				//IMember sID = seqSource.Members.byName[i];
+				//IMember sourceMember = seqSource.Members.byName[i];
 				RGBchild rchild = RGBchild.None;
-				MemberType tt = sID.MemberType;
+				MemberType tt = sourceMember.MemberType;
 
 				if (tt == MemberType.Channel)
 				{
-					Channel ch = (Channel)seqSource.Members.bySavedIndex[sID.SavedIndex];
+					Channel ch = (Channel)seqSource.Members.bySavedIndex[sourceMember.SavedIndex];
 					rchild = ch.rgbChild;
 				}
-					//string n = sID.Name;
+					//string n = sourceMember.Name;
 					//Console.Write(n + "\t");
-					//Console.Write(sID.SavedIndex);
+					//Console.Write(sourceMember.SavedIndex);
 					//Console.Write("\t");
 
-					//IMember s2 = seqSource.Members.bySavedIndex[sID.SavedIndex];
+					//IMember s2 = seqSource.Members.bySavedIndex[sourceMember.SavedIndex];
 					//string n2 = s2.Name;
 					//Console.Write(n2 + "\t");
 					//Console.Write(s2.SavedIndex);
@@ -144,19 +144,19 @@ namespace MapORama
 
 				if (rchild == RGBchild.None)
 				{ 
-					if (StoM[sID.SavedIndex].Count == 0)
+					if (mapSrcToMast[sourceMember.SavedIndex].Count == 0)
 					{
 						if (chkUnmapped.Checked)
 						{
-							AddMapping(sID.SavedIndex, utils.UNDEFINED, 0, 0);
+							AddMapping(null, sourceMember, 0, 0);
 						}
 					}
 					else
 					{
-						for (int j = 0; j < StoM[sID.SavedIndex].Count; j++)
+						for (int j = 0; j < mapSrcToMast[sourceMember.SavedIndex].Count; j++)
 						{
-							int mSI = StoM[sID.SavedIndex][j];
-							AddMapping(sID.SavedIndex, mSI, 0, 0);
+							IMember masterMember = mapSrcToMast[sourceMember.SavedIndex][j];
+							AddMapping(masterMember, sourceMember, 0, 0);
 						} // end loop thru mappings
 					} // end mapped or not
 				} // end not rgb child
@@ -165,21 +165,20 @@ namespace MapORama
 			if (chkUnmapped.Checked)
 			{
 				//for (int i = 0; i < seqMaster.Members.byName.Count; i++)
-				foreach (IMember mID in seqMaster.Members.byName.Values)
+				foreach (IMember masterMember in seqMaster.Members.byName.Values)
 				{
 					//int mSI = seqMaster.Members.byName[i].SavedIndex;
-					int mSI = mID.SavedIndex;
-					if (MtoS[mSI] < 0)
+					if (mapMastToSrc[masterMember.SavedIndex] == null)
 					{
 						RGBchild rchild = RGBchild.None;
-						if (seqMaster.Members.bySavedIndex[mSI].MemberType == MemberType.Channel)
+						if (masterMember.MemberType == MemberType.Channel)
 						{
-							Channel ch = (Channel)seqMaster.Members.bySavedIndex[mSI];
+							Channel ch = (Channel)masterMember;
 							rchild = ch.rgbChild;
 						}
 						if (rchild == RGBchild.None)
 						{
-							AddMapping(utils.UNDEFINED, mSI, 0, 0);
+							AddMapping(masterMember, null, 0, 0);
 						}
 					} // end if not mapped
 				} // end loop thru master by AlphaAllNames
@@ -191,35 +190,35 @@ namespace MapORama
 			int[] savedIndexes = null;
 			int[] levels = null;
 
-			int c = utils.BuildDisplayOrder(seqSource, ref savedIndexes, ref levels, false, false);
+			int c = utils.DisplayOrderBuildLists(seqSource, ref savedIndexes, ref levels, false, false);
 
 			for (int i = 0; i < savedIndexes.Length; i++)
 			{
-				IMember sID = seqSource.Members.bySavedIndex[savedIndexes[i]];
+				IMember sourceMember = seqSource.Members.bySavedIndex[savedIndexes[i]];
 				RGBchild rchild = RGBchild.None;
-				MemberType tt = sID.MemberType;
+				MemberType sourceType = sourceMember.MemberType;
 
-				if (tt == MemberType.Channel)
+				if (sourceType == MemberType.Channel)
 				{
-					Channel ch = (Channel)seqSource.Members.bySavedIndex[sID.SavedIndex];
+					Channel ch = (Channel)sourceMember;
 					rchild = ch.rgbChild;
 				}
 
 				if (rchild == RGBchild.None)
 				{
-					if (StoM[savedIndexes[i]].Count == 0)
+					if (mapSrcToMast[savedIndexes[i]].Count == 0)
 					{
 						if (chkUnmapped.Checked)
 						{
-							AddMapping(savedIndexes[i], utils.UNDEFINED, levels[i], 0);
+							AddMapping(null, sourceMember, levels[i], 0);
 						}
 					}
 					else
 					{
-						for (int j = 0; j < StoM[savedIndexes[i]].Count; j++)
+						for (int j = 0; j < mapSrcToMast[savedIndexes[i]].Count; j++)
 						{
-							int mSI = StoM[savedIndexes[i]][j];
-							AddMapping(savedIndexes[i], mSI, levels[i], 0);
+							IMember masterMember = mapSrcToMast[savedIndexes[i]][j];
+							AddMapping(masterMember, sourceMember, levels[i], 0);
 						} // end loop thru mapped list
 					} // end mapped or not
 				} // end not rgb child
@@ -227,21 +226,22 @@ namespace MapORama
 
 			if (chkUnmapped.Checked)
 			{
-				c = utils.BuildDisplayOrder(seqMaster, ref savedIndexes, ref levels, false, false);
+				c = utils.DisplayOrderBuildLists(seqMaster, ref savedIndexes, ref levels, false, false);
 				for (int i = 0; i < savedIndexes.Length; i++)
 				{
-					int mSI = savedIndexes[i];
-					if (MtoS[mSI] < 0)
+					IMember masterMember = seqMaster.Members.bySavedIndex[savedIndexes[i]];
+					int masterSI = masterMember.SavedIndex;
+					if (mapMastToSrc[masterSI] == null)
 					{
 						RGBchild rchild = RGBchild.None;
-						if (seqMaster.Members.bySavedIndex[mSI].MemberType == MemberType.Channel)
+						if (masterMember.MemberType == MemberType.Channel)
 						{
-							Channel ch = (Channel)seqMaster.Members.bySavedIndex[mSI];
+							Channel ch = (Channel)masterMember;
 							rchild = ch.rgbChild;
 						}
 						if (rchild == RGBchild.None)
 						{
-							AddMapping(utils.UNDEFINED, mSI, 0, 0);
+							AddMapping(masterMember, null, 0, 0);
 						}
 					} // end if unmapped
 				} // end loop thru master by display order saved indexes
@@ -251,33 +251,33 @@ namespace MapORama
 		public void FillByMasterAlpha()
 		{
 			//for (int i = 0; i < seqMaster.Members.byName.Count; i++)
-			foreach(IMember mID in seqMaster.Members.byName.Values)
+			foreach(IMember masterMember in seqMaster.Members.byName.Values)
 			{
-				//IMember mID = seqMaster.Members.byName[i];
+				//IMember masterMember = seqMaster.Members.byName[i];
 				RGBchild rchild = RGBchild.None;
-				MemberType tt = mID.MemberType;
+				MemberType tt = masterMember.MemberType;
 
 				if (tt == MemberType.Channel)
 				{
-					Channel ch = (Channel)seqMaster.Members.bySavedIndex[mID.SavedIndex];
+					Channel ch = (Channel)seqMaster.Members.bySavedIndex[masterMember.SavedIndex];
 					rchild = ch.rgbChild;
 				}
 
 				if (rchild == RGBchild.None)
 				{
-					string n = mID.Name;
+					string n = masterMember.Name;
 					//Console.WriteLine(n);
-					if (MtoS[mID.SavedIndex] < 0)
+					if (mapMastToSrc[masterMember.SavedIndex] == null)
 					{
 						if (chkUnmapped.Checked)
 						{
-							AddMapping(utils.UNDEFINED, mID.SavedIndex, 0, 0);
+							AddMapping(masterMember, null, 0, 0);
 						}
 					}
 					else
 					{
-						int sSI = MtoS[mID.SavedIndex];
-						AddMapping(sSI, mID.SavedIndex, 0, 0);
+						IMember sourceMember = mapMastToSrc[masterMember.SavedIndex];
+						AddMapping(masterMember, sourceMember, 0, 0);
 					} // end mapped or not
 				} // end not RGB child
 			} // end for loop thru AlphaAllNames
@@ -285,20 +285,20 @@ namespace MapORama
 			if (chkUnmapped.Checked)
 			{
 				//for (int i = 0; i < seqSource.Members.byName.Count; i++)
-				foreach (IMember sID in seqSource.Members.byName.Values)
+				foreach (IMember sourceMember in seqSource.Members.byName.Values)
 				{
-					int sSI = sID.SavedIndex;
-					if (StoM[sSI].Count == 0)
+					int sourceSI = sourceMember.SavedIndex;
+					if (mapSrcToMast[sourceSI].Count == 0)
 					{
 						RGBchild rchild = RGBchild.None;
-						if (seqSource.Members.bySavedIndex[sSI].MemberType == MemberType.Channel)
+						if (sourceMember.MemberType == MemberType.Channel)
 						{
-							Channel ch = (Channel)seqSource.Members.bySavedIndex[sSI];
+							Channel ch = (Channel)sourceMember;
 							rchild = ch.rgbChild;
 						}
 						if (rchild == RGBchild.None)
 						{
-							AddMapping(sSI, utils.UNDEFINED, 0, 0);
+							AddMapping(null, sourceMember, 0, 0);
 						} // end if not rgb child
 					} // end not mapped
 				} // end for loop thru AlphaAllNames list
@@ -310,60 +310,62 @@ namespace MapORama
 			int[] savedIndexes = null;
 			int[] levels = null;
 
-			int c = utils.BuildDisplayOrder(seqMaster, ref savedIndexes, ref levels, false, false);
+			int c = utils.DisplayOrderBuildLists(seqMaster, ref savedIndexes, ref levels, false, false);
 
 			for (int i = 0; i < savedIndexes.Length; i++)
 			{
-				IMember mID = seqMaster.Members.bySavedIndex[savedIndexes[i]];
+				IMember masterMember = seqMaster.Members.bySavedIndex[savedIndexes[i]];
+				int masterSI = masterMember.SavedIndex;
 				RGBchild rchild = RGBchild.None;
-				MemberType tt = mID.MemberType;
+				MemberType masterType = masterMember.MemberType;
 
-				if (tt == MemberType.Channel)
+				if (masterType == MemberType.Channel)
 				{
-					Channel ch = (Channel)seqMaster.Members.bySavedIndex[mID.SavedIndex];
+					Channel ch = (Channel)masterMember;
 					rchild = ch.rgbChild;
 				}
 
 				if (rchild == RGBchild.None)
 				{
-					if (MtoS[savedIndexes[i]] < 0)
+					if (mapMastToSrc[masterSI] == null)
 					{
 						if (chkUnmapped.Checked)
 						{
-							AddMapping(utils.UNDEFINED, savedIndexes[i], 0, levels[i]);
+							AddMapping(masterMember, null, 0, levels[i]);
 						}
 						else
 						{
-							int sSI = MtoS[savedIndexes[i]];
-							AddMapping(sSI, savedIndexes[i], 0, levels[i]);
+							IMember sourceMember = mapMastToSrc[masterSI];
+							AddMapping(masterMember, sourceMember,  0, levels[i]);
 						}
 					} // end if mappings (or not)
 				} // end if not an RGB child
 			} // end for loop thru display order saved indexes
 			if (chkUnmapped.Checked)
 			{
-				c = utils.BuildDisplayOrder(seqSource, ref savedIndexes, ref levels, false, false);
+				c = utils.DisplayOrderBuildLists(seqSource, ref savedIndexes, ref levels, false, false);
 				for (int i = 0; i < savedIndexes.Length; i++)
 				{
-					int sSI = savedIndexes[i];
-					if (StoM[sSI].Count == 0)
+					int sourceSI = savedIndexes[i];
+					IMember sourceMember = seqSource.Members.bySavedIndex[sourceSI];
+					if (mapSrcToMast[sourceSI].Count == 0)
 					{
 						RGBchild rchild = RGBchild.None;
-						if (seqSource.Members.bySavedIndex[sSI].MemberType == MemberType.Channel)
+						if (sourceMember.MemberType == MemberType.Channel)
 						{
-							Channel ch = (Channel)seqSource.Members.bySavedIndex[sSI];
+							Channel ch = (Channel)sourceMember;
 							rchild = ch.rgbChild;
 						}
 						if (rchild == RGBchild.None)
 						{
-							AddMapping(sSI, utils.UNDEFINED, levels[i], 0);
+							AddMapping(null, sourceMember, levels[i], 0);
 						} // end if not RGB child
 					} // end if not mapped
 				} // end for loop thru display order saved indexes
 			} // end include unmapped
 		} // end FillByMasterDispOrder
 
-		public void AddMapping(int sourceSI, int masterSI, int levelS, int levelM)
+		public void AddMapping(IMember masterMember, IMember sourceMember, int levelS, int levelM)
 		{
 			string[] lvi = { "", "" };
 			string s = "";
@@ -373,13 +375,13 @@ namespace MapORama
 			{
 				s += "  ";
 			}
-			if (sourceSI < 0)
+			if (sourceMember == null)
 			{
 				s += "  (Unmapped)";
 			}
 			else
 			{
-				string n = seqSource.Members.bySavedIndex[sourceSI].Name;
+				string n = sourceMember.Name;
 				s += n;
 			}
 			if (sourceOnRight)
@@ -397,30 +399,30 @@ namespace MapORama
 			{
 				m += "  ";
 			}
-			if (masterSI < 0)
+			if (masterMember == null)
 			{
 				m += "  (Unmapped)";
-				MemberType o = seqSource.Members.bySavedIndex[sourceSI].MemberType;
+				MemberType o = sourceMember.MemberType;
 				if (o == MemberType.Track) k = utils.ICONtrack;
 				if (o == MemberType.RGBchannel) k = utils.ICONrgbChannel;
 				if (o == MemberType.ChannelGroup) k = utils.ICONchannelGroup;
 				if (o == MemberType.Channel)
 				{
-					Channel ch = (Channel)seqSource.Members.bySavedIndex[sourceSI];
+					Channel ch = (Channel)sourceMember;
 					iconIndex = utils.ColorIcon(imlTreeIcons, ch.color);
 				}
 			}
 			else
 			{
-				string n = seqMaster.Members.bySavedIndex[masterSI].Name;
+				string n = masterMember.Name;
 				m += n;
-				MemberType o = seqMaster.Members.bySavedIndex[masterSI].MemberType;
+				MemberType o = masterMember.MemberType;
 				if (o == MemberType.Track) k = utils.ICONtrack;
 				if (o == MemberType.RGBchannel) k = utils.ICONrgbChannel;
 				if (o == MemberType.ChannelGroup) k = utils.ICONchannelGroup;
 				if (o == MemberType.Channel)
 				{
-					Channel ch = (Channel)seqMaster.Members.bySavedIndex[masterSI];
+					Channel ch = (Channel)masterMember;
 					iconIndex = utils.ColorIcon(imlTreeIcons, ch.color);
 				}
 			}
@@ -449,7 +451,7 @@ namespace MapORama
 			{
 				newItem.BackColor = Color.LightCyan;
 			}
-			if ((masterSI < 0) || (sourceSI < 0))
+			if ((masterMember == null) || (sourceMember == null))
 			{
 				newItem.Font = new Font(newItem.Font, FontStyle.Italic);
 			}

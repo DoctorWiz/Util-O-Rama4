@@ -135,7 +135,7 @@ namespace SplitORama
 			txtSequenceFile.Text = utils.ShortenLongPath(theFile, 80);
 			seq.ReadSequenceFile(theFile);
 			Array.Resize(ref gridItem_Checked, seq.TimingGrids.Count);
-			utils.FillChannels(treChannels, seq, siNodes, false, false);
+			utils.TreeFillChannels(treChannels, seq, siNodes, false, false);
 			FillGridList();
 			member = 1;
 			dirtySeq = false;
@@ -267,7 +267,7 @@ namespace SplitORama
 					{
 						//seq.ReadSequenceFile(fileSeqLast);
 						//fileSeqCur = fileSeqLast;
-						//utils.FillChannels(treChannels, seq, siNodes);
+						//utils.TreeFillChannels(treChannels, seq, siNodes);
 						//txtSequenceFile.Text = utils.ShortenLongPath(fileSeqCur, 80);
 					}
 				}
@@ -276,7 +276,7 @@ namespace SplitORama
 					// 1 and only 1 file specified on command line
 					//seq.ReadSequenceFile(batch_fileList[0]);
 					fileSeqLast = batch_fileList[0];
-					//utils.FillChannels(treChannels, seq, siNodes);
+					//utils.TreeFillChannels(treChannels, seq, siNodes);
 					Properties.Settings.Default.FileSeqLast = fileSeqLast;
 					Properties.Settings.Default.Save();
 				}
@@ -437,7 +437,7 @@ namespace SplitORama
 
 					txtSequenceFile.Text = utils.ShortenLongPath(fileSeqCur, 80);
 					seq.ReadSequenceFile(fileSeqCur);
-					utils.FillChannels(treChannels, seq, siNodes, false, false);
+					utils.TreeFillChannels(treChannels, seq, siNodes, false, false);
 					member = 1;
 					dirtySeq = false;
 					ImBusy(false);
