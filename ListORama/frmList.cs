@@ -1495,7 +1495,7 @@ namespace ListORama
 				//Properties.Settings.Default.BasePath = fi.DirectoryName;
 				Properties.Settings.Default.LastSeqFile = lastSeqFile;
 				Properties.Settings.Default.Save();
-				utils.FillChannels(treeSource, theSequence, sourceNodesSI, false, false);
+				utils.TreeFillChannels(treeSource, theSequence, ref sourceNodesSI, false, false);
 
 				cboTracks.Items.Clear();
 				cboTracks.Items.Add("All Tracks");
@@ -2555,7 +2555,7 @@ namespace ListORama
 			}
 
 
-			//const string ERRproc = " in FillChannels(";
+			//const string ERRproc = " in TreeFillChannels(";
 			//const string ERRtrk = "), in Track #";
 			//const string ERRitem = ", Items #";
 			//const string ERRline = ", Line #";
@@ -2838,7 +2838,7 @@ namespace ListORama
 				}
 				//List<TreeNode> qlist;
 
-				// const string ERRproc = " in FillChannels-AddGroup(";
+				// const string ERRproc = " in TreeFillChannels-AddGroup(";
 				// const string ERRgrp = "), in Group #";
 				// const string ERRitem = ", Items #";
 				// const string ERRline = ", Line #";
@@ -3002,7 +3002,7 @@ namespace ListORama
 				}
 				//List<TreeNode> qlist;
 
-				// const string ERRproc = " in FillChannels-AddGroup(";
+				// const string ERRproc = " in TreeFillChannels-AddGroup(";
 				// const string ERRgrp = "), in Group #";
 				// const string ERRitem = ", Items #";
 				// const string ERRline = ", Line #";

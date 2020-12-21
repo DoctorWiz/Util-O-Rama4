@@ -28,8 +28,11 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmRemapper));
 			this.pnlAll = new System.Windows.Forms.Panel();
+			this.lblMapped = new System.Windows.Forms.Label();
+			this.lblMappedCount = new System.Windows.Forms.Label();
 			this.btnEaves = new System.Windows.Forms.Button();
 			this.lblDebug = new System.Windows.Forms.Label();
 			this.chkCopyBeats = new System.Windows.Forms.CheckBox();
@@ -39,13 +42,12 @@
 			this.btnAutoMap = new System.Windows.Forms.Button();
 			this.btnSummary = new System.Windows.Forms.Button();
 			this.treeMaster = new System.Windows.Forms.TreeView();
-			this.imlTreeIcons = new System.Windows.Forms.ImageList();
+			this.imlTreeIcons = new System.Windows.Forms.ImageList(this.components);
 			this.treeSource = new System.Windows.Forms.TreeView();
 			this.btnSaveMap = new System.Windows.Forms.Button();
 			this.txtMappingFile = new System.Windows.Forms.TextBox();
 			this.btnLoadMap = new System.Windows.Forms.Button();
 			this.btnUnmap = new System.Windows.Forms.Button();
-			this.btnMap = new System.Windows.Forms.Button();
 			this.btnSaveNewSeq = new System.Windows.Forms.Button();
 			this.lblMasterTree = new System.Windows.Forms.Label();
 			this.lblSourceTree = new System.Windows.Forms.Label();
@@ -88,37 +90,43 @@
 			this.mnuReapply = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.mnuAutoMap = new System.Windows.Forms.ToolStripMenuItem();
-			this.ttip = new System.Windows.Forms.ToolTip();
+			this.ttip = new System.Windows.Forms.ToolTip(this.components);
 			this.staStatus = new System.Windows.Forms.StatusStrip();
 			this.pnlHelp = new System.Windows.Forms.ToolStripStatusLabel();
 			this.pnlProgress = new System.Windows.Forms.ToolStripProgressBar();
 			this.pnlStatus = new System.Windows.Forms.ToolStripStatusLabel();
 			this.pnlAbout = new System.Windows.Forms.ToolStripStatusLabel();
+			this.picPreviewSource = new System.Windows.Forms.PictureBox();
+			this.pnlOverwrite = new System.Windows.Forms.Panel();
+			this.picPreviewMaster = new System.Windows.Forms.PictureBox();
+			this.pnlMapWarn = new System.Windows.Forms.Panel();
+			this.btnMap = new System.Windows.Forms.Button();
 			this.pnlAll.SuspendLayout();
 			this.pnlMessage.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.prgBarInner)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.prgBarOuter)).BeginInit();
 			this.menuStrip1.SuspendLayout();
 			this.staStatus.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.picPreviewSource)).BeginInit();
+			this.pnlOverwrite.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.picPreviewMaster)).BeginInit();
+			this.pnlMapWarn.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// pnlAll
 			// 
+			this.pnlAll.Controls.Add(this.pnlMapWarn);
+			this.pnlAll.Controls.Add(this.pnlOverwrite);
+			this.pnlAll.Controls.Add(this.picPreviewSource);
+			this.pnlAll.Controls.Add(this.lblMapped);
+			this.pnlAll.Controls.Add(this.lblMappedCount);
 			this.pnlAll.Controls.Add(this.btnEaves);
 			this.pnlAll.Controls.Add(this.lblDebug);
-			this.pnlAll.Controls.Add(this.chkCopyBeats);
-			this.pnlAll.Controls.Add(this.chkAutoLaunch);
-			this.pnlAll.Controls.Add(this.pnlMessage);
 			this.pnlAll.Controls.Add(this.btnAutoMap);
 			this.pnlAll.Controls.Add(this.btnSummary);
 			this.pnlAll.Controls.Add(this.treeMaster);
 			this.pnlAll.Controls.Add(this.treeSource);
-			this.pnlAll.Controls.Add(this.btnSaveMap);
-			this.pnlAll.Controls.Add(this.txtMappingFile);
-			this.pnlAll.Controls.Add(this.btnLoadMap);
 			this.pnlAll.Controls.Add(this.btnUnmap);
-			this.pnlAll.Controls.Add(this.btnMap);
-			this.pnlAll.Controls.Add(this.btnSaveNewSeq);
 			this.pnlAll.Controls.Add(this.lblMasterTree);
 			this.pnlAll.Controls.Add(this.lblSourceTree);
 			this.pnlAll.Controls.Add(this.lblMasterFile);
@@ -127,15 +135,39 @@
 			this.pnlAll.Controls.Add(this.lblSourceFile);
 			this.pnlAll.Controls.Add(this.btnBrowseSource);
 			this.pnlAll.Controls.Add(this.txtSourceFile);
-			this.pnlAll.Controls.Add(this.prgBarInner);
-			this.pnlAll.Controls.Add(this.prgBarOuter);
 			this.pnlAll.Location = new System.Drawing.Point(0, 26);
 			this.pnlAll.Name = "pnlAll";
-			this.pnlAll.Size = new System.Drawing.Size(762, 674);
+			this.pnlAll.Size = new System.Drawing.Size(762, 580);
 			this.pnlAll.TabIndex = 19;
 			this.pnlAll.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
 			this.pnlAll.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
 			this.pnlAll.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlAll_Paint);
+			// 
+			// lblMapped
+			// 
+			this.lblMapped.AllowDrop = true;
+			this.lblMapped.Font = new System.Drawing.Font("DejaVu Sans Mono", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblMapped.ForeColor = System.Drawing.Color.DarkMagenta;
+			this.lblMapped.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.lblMapped.Location = new System.Drawing.Point(324, 330);
+			this.lblMapped.Name = "lblMapped";
+			this.lblMapped.Size = new System.Drawing.Size(81, 12);
+			this.lblMapped.TabIndex = 52;
+			this.lblMapped.Text = "Mapped";
+			this.lblMapped.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// lblMappedCount
+			// 
+			this.lblMappedCount.AllowDrop = true;
+			this.lblMappedCount.Font = new System.Drawing.Font("DejaVu Sans Mono", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblMappedCount.ForeColor = System.Drawing.Color.DarkMagenta;
+			this.lblMappedCount.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.lblMappedCount.Location = new System.Drawing.Point(324, 318);
+			this.lblMappedCount.Name = "lblMappedCount";
+			this.lblMappedCount.Size = new System.Drawing.Size(81, 12);
+			this.lblMappedCount.TabIndex = 51;
+			this.lblMappedCount.Text = "0";
+			this.lblMappedCount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// btnEaves
 			// 
@@ -165,7 +197,7 @@
 			this.chkCopyBeats.AutoSize = true;
 			this.chkCopyBeats.Checked = true;
 			this.chkCopyBeats.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkCopyBeats.Location = new System.Drawing.Point(33, 628);
+			this.chkCopyBeats.Location = new System.Drawing.Point(33, 704);
 			this.chkCopyBeats.Name = "chkCopyBeats";
 			this.chkCopyBeats.Size = new System.Drawing.Size(117, 17);
 			this.chkCopyBeats.TabIndex = 48;
@@ -175,7 +207,7 @@
 			// chkAutoLaunch
 			// 
 			this.chkAutoLaunch.AutoSize = true;
-			this.chkAutoLaunch.Location = new System.Drawing.Point(435, 628);
+			this.chkAutoLaunch.Location = new System.Drawing.Point(435, 704);
 			this.chkAutoLaunch.Name = "chkAutoLaunch";
 			this.chkAutoLaunch.Size = new System.Drawing.Size(84, 17);
 			this.chkAutoLaunch.TabIndex = 47;
@@ -186,7 +218,7 @@
 			// pnlMessage
 			// 
 			this.pnlMessage.Controls.Add(this.lblMessage);
-			this.pnlMessage.Location = new System.Drawing.Point(15, 536);
+			this.pnlMessage.Location = new System.Drawing.Point(15, 612);
 			this.pnlMessage.Name = "pnlMessage";
 			this.pnlMessage.Size = new System.Drawing.Size(700, 15);
 			this.pnlMessage.TabIndex = 43;
@@ -279,7 +311,7 @@
 			// 
 			this.btnSaveMap.AllowDrop = true;
 			this.btnSaveMap.Enabled = false;
-			this.btnSaveMap.Location = new System.Drawing.Point(506, 562);
+			this.btnSaveMap.Location = new System.Drawing.Point(506, 638);
 			this.btnSaveMap.Name = "btnSaveMap";
 			this.btnSaveMap.Size = new System.Drawing.Size(100, 25);
 			this.btnSaveMap.TabIndex = 34;
@@ -293,7 +325,7 @@
 			// 
 			this.txtMappingFile.AllowDrop = true;
 			this.txtMappingFile.Enabled = false;
-			this.txtMappingFile.Location = new System.Drawing.Point(200, 565);
+			this.txtMappingFile.Location = new System.Drawing.Point(200, 641);
 			this.txtMappingFile.Name = "txtMappingFile";
 			this.txtMappingFile.Size = new System.Drawing.Size(300, 20);
 			this.txtMappingFile.TabIndex = 36;
@@ -303,7 +335,7 @@
 			// btnLoadMap
 			// 
 			this.btnLoadMap.AllowDrop = true;
-			this.btnLoadMap.Location = new System.Drawing.Point(94, 562);
+			this.btnLoadMap.Location = new System.Drawing.Point(94, 638);
 			this.btnLoadMap.Name = "btnLoadMap";
 			this.btnLoadMap.Size = new System.Drawing.Size(100, 25);
 			this.btnLoadMap.TabIndex = 35;
@@ -327,25 +359,11 @@
 			this.btnUnmap.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
 			this.btnUnmap.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
 			// 
-			// btnMap
-			// 
-			this.btnMap.AllowDrop = true;
-			this.btnMap.Enabled = false;
-			this.btnMap.Location = new System.Drawing.Point(327, 142);
-			this.btnMap.Name = "btnMap";
-			this.btnMap.Size = new System.Drawing.Size(76, 29);
-			this.btnMap.TabIndex = 32;
-			this.btnMap.Text = "Map";
-			this.btnMap.UseVisualStyleBackColor = true;
-			this.btnMap.Click += new System.EventHandler(this.btnMap_Click);
-			this.btnMap.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
-			this.btnMap.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
-			// 
 			// btnSaveNewSeq
 			// 
 			this.btnSaveNewSeq.AllowDrop = true;
 			this.btnSaveNewSeq.Enabled = false;
-			this.btnSaveNewSeq.Location = new System.Drawing.Point(296, 591);
+			this.btnSaveNewSeq.Location = new System.Drawing.Point(296, 667);
 			this.btnSaveNewSeq.Name = "btnSaveNewSeq";
 			this.btnSaveNewSeq.Size = new System.Drawing.Size(129, 62);
 			this.btnSaveNewSeq.TabIndex = 31;
@@ -471,7 +489,7 @@
 			this.prgBarInner.ForegroundImage = null;
 			this.prgBarInner.GradientEndColor = System.Drawing.Color.Lime;
 			this.prgBarInner.GradientStartColor = System.Drawing.Color.Red;
-			this.prgBarInner.Location = new System.Drawing.Point(2, 566);
+			this.prgBarInner.Location = new System.Drawing.Point(2, 642);
 			this.prgBarInner.MultipleColors = new System.Drawing.Color[] {
         System.Drawing.Color.Empty};
 			this.prgBarInner.Name = "prgBarInner";
@@ -502,7 +520,7 @@
 			this.prgBarOuter.ForegroundImage = null;
 			this.prgBarOuter.GradientEndColor = System.Drawing.Color.Red;
 			this.prgBarOuter.GradientStartColor = System.Drawing.Color.Lime;
-			this.prgBarOuter.Location = new System.Drawing.Point(0, 557);
+			this.prgBarOuter.Location = new System.Drawing.Point(0, 633);
 			this.prgBarOuter.MultipleColors = new System.Drawing.Color[] {
         System.Drawing.Color.Empty};
 			this.prgBarOuter.Name = "prgBarOuter";
@@ -554,7 +572,7 @@
             this.mnuOpenSource,
             this.mnuOpenMap});
 			this.mnuFileOpen.Name = "mnuFileOpen";
-			this.mnuFileOpen.Size = new System.Drawing.Size(134, 22);
+			this.mnuFileOpen.Size = new System.Drawing.Size(135, 22);
 			this.mnuFileOpen.Text = "&Open";
 			// 
 			// mnuOpenMaster
@@ -587,7 +605,7 @@
             this.mnuSaveNewSequence,
             this.mnuSaveNewMap});
 			this.mnuFileSaveAs.Name = "mnuFileSaveAs";
-			this.mnuFileSaveAs.Size = new System.Drawing.Size(134, 22);
+			this.mnuFileSaveAs.Size = new System.Drawing.Size(135, 22);
 			this.mnuFileSaveAs.Text = "Save &As";
 			// 
 			// mnuSaveNewSequence
@@ -607,7 +625,7 @@
 			// mnuFileDivider1
 			// 
 			this.mnuFileDivider1.Name = "mnuFileDivider1";
-			this.mnuFileDivider1.Size = new System.Drawing.Size(131, 6);
+			this.mnuFileDivider1.Size = new System.Drawing.Size(132, 6);
 			// 
 			// mnuOptions
 			// 
@@ -618,7 +636,7 @@
             this.mnuMatchOptions,
             this.mnuSaveOptions});
 			this.mnuOptions.Name = "mnuOptions";
-			this.mnuOptions.Size = new System.Drawing.Size(134, 22);
+			this.mnuOptions.Size = new System.Drawing.Size(135, 22);
 			this.mnuOptions.Text = "O&ptions";
 			// 
 			// mnuSourceLeft
@@ -666,13 +684,13 @@
 			// mnuFileDivider2
 			// 
 			this.mnuFileDivider2.Name = "mnuFileDivider2";
-			this.mnuFileDivider2.Size = new System.Drawing.Size(131, 6);
+			this.mnuFileDivider2.Size = new System.Drawing.Size(132, 6);
 			// 
 			// mnuExit
 			// 
 			this.mnuExit.Name = "mnuExit";
 			this.mnuExit.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-			this.mnuExit.Size = new System.Drawing.Size(134, 22);
+			this.mnuExit.Size = new System.Drawing.Size(135, 22);
 			this.mnuExit.Text = "E&xit";
 			// 
 			// mnuMapMenu
@@ -768,7 +786,7 @@
             this.pnlProgress,
             this.pnlStatus,
             this.pnlAbout});
-			this.staStatus.Location = new System.Drawing.Point(0, 685);
+			this.staStatus.Location = new System.Drawing.Point(0, 732);
 			this.staStatus.Name = "staStatus";
 			this.staStatus.Size = new System.Drawing.Size(761, 24);
 			this.staStatus.TabIndex = 107;
@@ -802,7 +820,7 @@
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlStatus.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
 			this.pnlStatus.Name = "pnlStatus";
-			this.pnlStatus.Size = new System.Drawing.Size(516, 19);
+			this.pnlStatus.Size = new System.Drawing.Size(649, 19);
 			this.pnlStatus.Spring = true;
 			// 
 			// pnlAbout
@@ -818,15 +836,74 @@
 			this.pnlAbout.Text = "About...";
 			this.pnlAbout.Click += new System.EventHandler(this.pnlAbout_Click);
 			// 
+			// picPreviewSource
+			// 
+			this.picPreviewSource.BackColor = System.Drawing.Color.Tan;
+			this.picPreviewSource.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.picPreviewSource.Location = new System.Drawing.Point(15, 538);
+			this.picPreviewSource.Name = "picPreviewSource";
+			this.picPreviewSource.Size = new System.Drawing.Size(300, 20);
+			this.picPreviewSource.TabIndex = 111;
+			this.picPreviewSource.TabStop = false;
+			this.picPreviewSource.Visible = false;
+			// 
+			// pnlOverwrite
+			// 
+			this.pnlOverwrite.Controls.Add(this.picPreviewMaster);
+			this.pnlOverwrite.Location = new System.Drawing.Point(412, 534);
+			this.pnlOverwrite.Name = "pnlOverwrite";
+			this.pnlOverwrite.Size = new System.Drawing.Size(306, 26);
+			this.pnlOverwrite.TabIndex = 113;
+			this.pnlOverwrite.Visible = false;
+			// 
+			// picPreviewMaster
+			// 
+			this.picPreviewMaster.BackColor = System.Drawing.Color.Tan;
+			this.picPreviewMaster.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.picPreviewMaster.Location = new System.Drawing.Point(3, 3);
+			this.picPreviewMaster.Name = "picPreviewMaster";
+			this.picPreviewMaster.Size = new System.Drawing.Size(300, 20);
+			this.picPreviewMaster.TabIndex = 113;
+			this.picPreviewMaster.TabStop = false;
+			this.picPreviewMaster.Visible = false;
+			// 
+			// pnlMapWarn
+			// 
+			this.pnlMapWarn.Controls.Add(this.btnMap);
+			this.pnlMapWarn.Location = new System.Drawing.Point(324, 140);
+			this.pnlMapWarn.Name = "pnlMapWarn";
+			this.pnlMapWarn.Size = new System.Drawing.Size(82, 35);
+			this.pnlMapWarn.TabIndex = 114;
+			// 
+			// btnMap
+			// 
+			this.btnMap.AllowDrop = true;
+			this.btnMap.Enabled = false;
+			this.btnMap.Location = new System.Drawing.Point(3, 3);
+			this.btnMap.Name = "btnMap";
+			this.btnMap.Size = new System.Drawing.Size(76, 29);
+			this.btnMap.TabIndex = 33;
+			this.btnMap.Text = "Map";
+			this.btnMap.UseVisualStyleBackColor = true;
+			// 
 			// frmRemapper
 			// 
 			this.AllowDrop = true;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(761, 709);
+			this.ClientSize = new System.Drawing.Size(761, 756);
 			this.Controls.Add(this.menuStrip1);
 			this.Controls.Add(this.staStatus);
 			this.Controls.Add(this.pnlAll);
+			this.Controls.Add(this.btnSaveNewSeq);
+			this.Controls.Add(this.chkCopyBeats);
+			this.Controls.Add(this.prgBarOuter);
+			this.Controls.Add(this.chkAutoLaunch);
+			this.Controls.Add(this.prgBarInner);
+			this.Controls.Add(this.pnlMessage);
+			this.Controls.Add(this.btnLoadMap);
+			this.Controls.Add(this.txtMappingFile);
+			this.Controls.Add(this.btnSaveMap);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
@@ -847,6 +924,10 @@
 			this.menuStrip1.PerformLayout();
 			this.staStatus.ResumeLayout(false);
 			this.staStatus.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.picPreviewSource)).EndInit();
+			this.pnlOverwrite.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.picPreviewMaster)).EndInit();
+			this.pnlMapWarn.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -859,7 +940,6 @@
 		private System.Windows.Forms.TextBox txtMappingFile;
 		private System.Windows.Forms.Button btnLoadMap;
 		private System.Windows.Forms.Button btnUnmap;
-		private System.Windows.Forms.Button btnMap;
 		private System.Windows.Forms.Button btnSaveNewSeq;
 		private System.Windows.Forms.Label lblMasterTree;
 		private System.Windows.Forms.Label lblSourceTree;
@@ -919,6 +999,13 @@
 		private System.Windows.Forms.CheckBox chkCopyBeats;
 		private System.Windows.Forms.Label lblDebug;
 		private System.Windows.Forms.Button btnEaves;
+		private System.Windows.Forms.Label lblMapped;
+		private System.Windows.Forms.Label lblMappedCount;
+		private System.Windows.Forms.PictureBox picPreviewSource;
+		private System.Windows.Forms.Panel pnlOverwrite;
+		private System.Windows.Forms.PictureBox picPreviewMaster;
+		private System.Windows.Forms.Panel pnlMapWarn;
+		private System.Windows.Forms.Button btnMap;
 	}
 }
 

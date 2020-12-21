@@ -220,7 +220,7 @@ namespace TuneORama
 					{
 						//seq.ReadSequenceFile(fileSeqLast);
 						//fileCurrent = fileSeqLast;
-						//utils.FillChannels(treChannels, seq, siNodes);
+						//utils.TreeFillChannels(treChannels, seq, siNodes);
 						//txtSequenceFile.Text = utils.ShortenLongPath(fileCurrent, 80);
 					}
 				}
@@ -229,7 +229,7 @@ namespace TuneORama
 					// 1 and only 1 file specified on command line
 					//seq.ReadSequenceFile(batch_fileList[0]);
 					fileSeqLast = batch_fileList[0];
-					//utils.FillChannels(treChannels, seq, siNodes);
+					//utils.TreeFillChannels(treChannels, seq, siNodes);
 					Properties.Settings.Default.fileSeqLast = fileSeqLast;
 					Properties.Settings.Default.Save();
 				}
@@ -421,7 +421,7 @@ namespace TuneORama
 
 					txtFileAudio.Text = utils.ShortenLongPath(fileCurrent, 80);
 					seq.ReadSequenceFile(fileCurrent);
-					//utils.FillChannels(treChannels, seq, siNodes, false, false);
+					//utils.TreeFillChannels(treChannels, seq, siNodes, false, false);
 					dirtySeq = false;
 					ImBusy(false);
 

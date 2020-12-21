@@ -78,7 +78,7 @@ namespace LORUtils
 		private const char DELIM_X = (char)182;  // ¶
 
 
-		public static void FillChannels(TreeView tree, Sequence4 seq, List<List<TreeNode>> siNodes, bool selectedOnly, bool includeRGBchildren)
+		public static void TreeFillChannels(TreeView tree, Sequence4 seq, List<List<TreeNode>> siNodes, bool selectedOnly, bool includeRGBchildren)
 		{
 			//TODO: 'Selected' not implemented yet
 
@@ -94,7 +94,7 @@ namespace LORUtils
 			int rcount = 0;
 			int ccount = 0;
 
-			const string ERRproc = " in FillChannels(";
+			const string ERRproc = " in TreeFillChannels(";
 			const string ERRtrk = "), in Track #";
 			const string ERRitem = ", Items #";
 			const string ERRline = ", Line #";
@@ -278,7 +278,7 @@ namespace LORUtils
 			groupNode.SelectedImageKey = ICONchannelGroup;
 			List<TreeNode> qlist;
 
-			const string ERRproc = " in FillChannels-AddGroup(";
+			const string ERRproc = " in TreeFillChannels-AddGroup(";
 			const string ERRgrp = "), in Group #";
 			const string ERRitem = ", Items #";
 			const string ERRline = ", Line #";
@@ -957,7 +957,7 @@ namespace LORUtils
 		}
 
 
-		public static int BuildDisplayOrder(Sequence4 seq, ref int[] savedIndexes, ref int[] levels, bool selectedOnly, bool includeRGBchildren)
+		public static int DisplayOrderBuildLists(Sequence4 seq, ref int[] savedIndexes, ref int[] levels, bool selectedOnly, bool includeRGBchildren)
 		{
 			//TODO: 'Selected' not implemented yet
 
@@ -986,7 +986,7 @@ namespace LORUtils
 			int rcount = 0;
 			int ccount = 0;
 
-			const string ERRproc = " in FillChannels(";
+			const string ERRproc = " in TreeFillChannels(";
 			const string ERRtrk = "), in Track #";
 			const string ERRitem = ", Items #";
 			const string ERRline = ", Line #";
@@ -1016,15 +1016,15 @@ namespace LORUtils
 					{
 						if (part.TableType == TableType.ChannelGroup)
 						{
-							c += BuildGroup(seq, si, level+1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
+							c += DisplayOrderBuildGroup(seq, si, level+1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
 						}
 						if (part.TableType == TableType.RGBchannel)
 						{
-							c += BuildRGBchannel(seq, si, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
+							c += DisplayOrderBuildRGBchannel(seq, si, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
 						}
 						if (part.TableType == TableType.Channel)
 						{
-							c += BuildChannel(seq, si, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly);
+							c += DisplayOrderBuildChannel(seq, si, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly);
 						}
 					} // end not null
 						//} // end try
@@ -1133,14 +1133,14 @@ namespace LORUtils
 
 		} // end fillOldChannels
 
-		public static int BuildGroup(Sequence4 seq, int groupSI, int level, ref int count, ref int[] savedIndexes, ref int[]levels, bool selectedOnly, bool includeRGBchildren)
+		public static int DisplayOrderBuildGroup(Sequence4 seq, int groupSI, int level, ref int count, ref int[] savedIndexes, ref int[]levels, bool selectedOnly, bool includeRGBchildren)
 		{
 			int c = 0;
 			ChannelGroup theGroup = (ChannelGroup)seq.Children.bySavedIndex[groupSI];
 			SeqPart groupID = theGroup;
 			string nodeText = theGroup.Name;
 
-			const string ERRproc = " in FillChannels-AddGroup(";
+			const string ERRproc = " in TreeFillChannels-AddGroup(";
 			const string ERRgrp = "), in Group #";
 			const string ERRitem = ", Items #";
 			const string ERRline = ", Line #";
@@ -1163,15 +1163,15 @@ namespace LORUtils
 				int si = part.SavedIndex;
 				if (part.TableType == TableType.ChannelGroup)
 				{
-					c += BuildGroup(seq, si, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
+					c += DisplayOrderBuildGroup(seq, si, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
 				}
 				if (part.TableType == TableType.Channel)
 				{
-					c += BuildChannel(seq, si, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly);
+					c += DisplayOrderBuildChannel(seq, si, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly);
 				}
 				if (part.TableType == TableType.RGBchannel)
 				{
-					c += BuildRGBchannel(seq, si, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
+					c += DisplayOrderBuildRGBchannel(seq, si, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
 				}
 				#region catch
 				/*
@@ -1195,7 +1195,7 @@ namespace LORUtils
 			return c;
 		} // end AddGroup
 
-		public static int BuildChannel(Sequence4 seq, int channelSI, int level, ref int count, ref int[] savedIndexes, ref int[] levels, bool selectedOnly)
+		public static int DisplayOrderBuildChannel(Sequence4 seq, int channelSI, int level, ref int count, ref int[] savedIndexes, ref int[] levels, bool selectedOnly)
 		{
 			int c = 0;
 			if (!selectedOnly || seq.Children.bySavedIndex[channelSI].Selected) 
@@ -1210,7 +1210,7 @@ namespace LORUtils
 			return c;
 		}
 
-		public static int BuildRGBchannel(Sequence4 seq, int channelSI, int level, ref int count, ref int[] savedIndexes, ref int[] levels, bool selectedOnly, bool includeRGBchildren)
+		public static int DisplayOrderBuildRGBchannel(Sequence4 seq, int channelSI, int level, ref int count, ref int[] savedIndexes, ref int[] levels, bool selectedOnly, bool includeRGBchildren)
 		{
 			int c = 0;
 			RGBchannel theRGB = (RGBchannel)seq.Children.bySavedIndex[channelSI];

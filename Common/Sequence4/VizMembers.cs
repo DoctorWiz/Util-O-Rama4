@@ -32,6 +32,7 @@ namespace LORUtils
 
 		public bool LED = false;
 		private object tag = null;
+		private IMember mappedTo = null;
 
 		private static readonly string FIELDsubType = " Sub_Type";
 		//public static readonly string FIELDsubParam = " Sub_Param";
@@ -294,6 +295,20 @@ namespace LORUtils
 			}
 		}
 
+		public IMember MapTo
+		{
+			get
+			{
+				return mappedTo;
+			}
+			set
+			{
+				if (value.MemberType == MemberType.VizChannel)
+				{
+					mappedTo = value;
+				}
+			}
+		}
 
 		public VizChannel(string theName, int theVizID)
 		{

@@ -45,6 +45,13 @@ namespace MapORama
 		private int batchTypes = BATCHnone;
 		private bool processDrop = false;
 		private bool sourceOnRight = false;
+		public int pp = 0;
+		private const string STATUSautoMap = "AutoMap \"";
+		private const string STATUSto = "\" to...";
+		public bool bulkOp = false;
+		private int beatTrack = utils.UNDEFINED;
+
+
 
 
 		private const string MSG_MapRegularToRegular = "Regular Channels can only be mapped to other regular Channels.";
@@ -71,9 +78,12 @@ namespace MapORama
 		// These are used by MapList so need to be public
 		public Sequence4 seqSource = new Sequence4();
 		public Sequence4 seqMaster = new Sequence4();
-		public int[] mapMastToSrc = null;  // Array indexed by Master.SavedIndex, elements contain Source.SaveIndex
-		public List<int>[] mapSrcToMast = null; // Array indexed by Source.SavedIindex, elements are Lists of Master.SavedIndex-es
-		public int mappingCount = 0;
+		//public int[] mapMastToSrc = null;  // Array indexed by Master.SavedIndex, elements contain Source.SaveIndex
+		public IMember[] mapMastToSrc = null; // Array indexed by Master.SavedIndex, elements contain Source Members
+	 //public List<int>[] mapSrcToMast = null; // Array indexed by Source.SavedIindex, elements are Lists of Master.SavedIndex-es
+		public List<IMember>[] mapSrcToMast = null; // Array indexed by Source.SavedIindex, elements are Lists of Master Members
+		public int mappedMemberCount = 0;
+		public int mappedChannelCount = 0;
 		//public List<List<TreeNode>> sourceNodesBySI = new List<List<TreeNode>>();
 		//public List<List<TreeNode>> masterNodesBySI = new List<List<TreeNode>>();
 		public List<TreeNode>[] sourceNodesBySI = null; // new List<TreeNode>();
@@ -88,12 +98,12 @@ namespace MapORama
 
 		private string basePath = "";
 		private string SeqFolder = "";
-		private TreeNode sourceNode = null;
-		private TreeNode masterNode = null;
-		private IMember sourceID = null;
-		private IMember masterID = null;
-		private int sourceSI = utils.UNDEFINED;
-		private int masterSI = utils.UNDEFINED;
+		private TreeNode selectedSourceNode = null;
+		private TreeNode selectedMasterNode = null;
+		private IMember selectedSourceMember = null;
+		private IMember selectedMasterMember = null;
+		//private int sourceSI = utils.UNDEFINED;
+		//private int masterSI = utils.UNDEFINED;
 		// int activeList = 0;
 		public string statMsg = "Hello World!";
 		//private Assembly assy = this.GetType().Assembly;
@@ -106,18 +116,18 @@ namespace MapORama
 		//private int miLoadLeft = 0;
 		//private int miLoadTop = 0;
 
-			/*
-		private class ChanInfo
-		{
-			public MemberType chType = MemberType.None;
-			public int chIndex = 0;
-			public int SavedIndex = utils.UNDEFINED;
-			public int mapCount = 0;
-			//public int[] mapChIndexes;
-			//public int[] mapSavedIndexes;
-			public int nodeIndex = utils.UNDEFINED;
-		}
-		*/
+		/*
+	private class ChanInfo
+	{
+		public MemberType chType = MemberType.None;
+		public int chIndex = 0;
+		public int SavedIndex = utils.UNDEFINED;
+		public int mapCount = 0;
+		//public int[] mapChIndexes;
+		//public int[] mapSavedIndexes;
+		public int nodeIndex = utils.UNDEFINED;
+	}
+	*/
 
 		private int nodeIndex = utils.UNDEFINED;
 		// Note Master->Source mappings are a 1:Many relationship.
@@ -170,7 +180,7 @@ namespace MapORama
 		}
 
 		private void BrowseSourceFile()
-		{ 
+		{
 			string initDir = utils.DefaultSequencesPath;
 			string initFile = "";
 			if (sourceFile.Length > 4)
@@ -206,7 +216,7 @@ namespace MapORama
 				AskToMap();
 			} // end if (result = DialogResult.OK)
 			pnlAll.Enabled = true;
-			btnSummary.Enabled = (mappingCount > 0);
+			btnSummary.Enabled = (mappedMemberCount > 0);
 			mnuSummary.Enabled = btnSummary.Enabled;
 
 		}
@@ -217,6 +227,45 @@ namespace MapORama
 			int err = seqSource.ReadSequenceFile(sourceChannelFile);
 			if (err < 100)
 			{
+				// Search for any sort of Beats, Song Parts, Tune-O-Rama, or Vamperizer Track
+				// Default = not found
+				beatTrack = utils.UNDEFINED;
+				// Loop thru tracks checking names
+				for (int t = 0; t < seqSource.Tracks.Count; t++)
+				{
+					string tn = seqSource.Tracks[t].Name.ToLower();
+					if (tn.IndexOf("beat") >= 0)
+					{
+						beatTrack = t;
+					}
+					if (tn.IndexOf("song parts") >= 0)
+					{
+						beatTrack = t;
+					}
+					if (tn.IndexOf("information") >= 0)
+					{
+						beatTrack = t;
+					}
+					if (tn.IndexOf("o-rama") >= 0)
+					{
+						beatTrack = t;
+					}
+					if (tn.IndexOf("vamperizer") >= 0)
+					{
+						beatTrack = t;
+					}
+				}
+				// Enable or Disable the Copy Beats Checkbox according to if found or not
+				if (beatTrack < 0)
+				{
+					chkCopyBeats.Enabled = false;
+				}
+				else
+				{
+					chkCopyBeats.Enabled = true;
+				}
+
+
 				sourceFile = sourceChannelFile;
 				txtSourceFile.Text = utils.ShortenLongPath(sourceFile, 80);
 				this.Text = "Map-O-Rama - " + Path.GetFileName(sourceFile);
@@ -224,16 +273,16 @@ namespace MapORama
 				Properties.Settings.Default.BasePath = fi.DirectoryName;
 				Properties.Settings.Default.LastSourceFile = sourceFile;
 				Properties.Settings.Default.Save();
-				utils.FillChannels(treeSource, seqSource, ref sourceNodesBySI, false, false);
+				utils.TreeFillChannels(treeSource, seqSource, ref sourceNodesBySI, false, false);
 				// Erase any existing mappings, and create a new blank one of proper size
 				mapMastToSrc = null;
 				mapSrcToMast = null;
-				mappingCount = 0;
+				mappedMemberCount = 0;
 				//Array.Resize(ref mapSrcToMast, seqSource.Members.allCount);
 				Array.Resize(ref mapSrcToMast, seqSource.Members.Items.Count);
 				for (int i = 0; i < mapSrcToMast.Length; i++)
 				{
-					mapSrcToMast[i] = new List<int>();
+					mapSrcToMast[i] = new List<IMember>();
 				}
 				if (seqMaster.Channels.Count > 0)
 				{
@@ -241,7 +290,7 @@ namespace MapORama
 					Array.Resize(ref mapMastToSrc, seqMaster.Members.Items.Count);
 					for (int i = 0; i < mapMastToSrc.Length; i++)
 					{
-						mapMastToSrc[i] = utils.UNDEFINED;
+						mapMastToSrc[i] = null;
 					}
 
 				}
@@ -256,7 +305,7 @@ namespace MapORama
 		}
 
 		private void BrowseMasterFile()
-		{ 
+		{
 
 			string initDir = utils.DefaultSequencesPath;
 			string initFile = "";
@@ -299,7 +348,7 @@ namespace MapORama
 				}
 
 			} // end if (result = DialogResult.OK)
-			//pnlAll.Enabled = true;
+				//pnlAll.Enabled = true;
 			if (treeSource.Nodes.Count > 0)
 			{
 				//btnSummary.Enabled = true;
@@ -331,25 +380,25 @@ namespace MapORama
 
 
 
-				utils.FillChannels(treeMaster, seqMaster, ref masterNodesBySI, false, false);
+				utils.TreeFillChannels(treeMaster, seqMaster, ref masterNodesBySI, false, false);
 
 				// Erase any existing mappings, and create a new blank one of proper size
 				// Erase any existing mappings, and create a new blank one of proper size
 				mapMastToSrc = null;
 				mapSrcToMast = null;
-				mappingCount = 0;
+				mappedMemberCount = 0;
 				if (seqSource.Channels.Count > 0)
 				{
 					Array.Resize(ref mapSrcToMast, seqSource.Members.allCount);
 					for (int i = 0; i < mapSrcToMast.Length; i++)
 					{
-						mapSrcToMast[i] = new List<int>();
+						mapSrcToMast[i] = new List<IMember>();
 					}
 				}
 				Array.Resize(ref mapMastToSrc, seqMaster.Members.allCount);
 				for (int i = 0; i < mapMastToSrc.Length; i++)
 				{
-					mapMastToSrc[i] = utils.UNDEFINED;
+					mapMastToSrc[i] = null;
 				}
 				AskToMap();
 
@@ -367,7 +416,7 @@ namespace MapORama
 
 			seqNew.info = seqSource.info;
 			seqNew.info.filename = newSeqFileName;
-			seqNew.sequenceType = seqSource.sequenceType;
+			seqNew.SequenceType = seqSource.SequenceType;
 			seqNew.Centiseconds = seqSource.Centiseconds;
 			seqNew.animation = seqSource.animation;
 			seqNew.videoUsage = seqSource.videoUsage;
@@ -378,31 +427,59 @@ namespace MapORama
 
 			seqNew.ClearAllEffects();
 
-			if (chkCopyBeats.Checked)
+			//seqNew.TimingGrids = new List<TimingGrid>();
+			foreach (TimingGrid sourceGrid in seqSource.TimingGrids)
 			{
-				CopyBeats(seqNew);
+				TimingGrid newGrid = null;
+				for (int gridIndex = 0; gridIndex < seqNew.TimingGrids.Count; gridIndex++)
+				{
+					if (sourceGrid.Name.ToLower() == seqNew.TimingGrids[gridIndex].Name.ToLower())
+					{
+						newGrid = seqNew.TimingGrids[gridIndex];
+						gridIndex = seqNew.TimingGrids.Count; // Force exit of loop
+					}
+				}
+				if (newGrid == null)
+				{
+					newGrid = seqNew.ParseTimingGrid(sourceGrid.LineOut());
+				}
+				newGrid.CopyTimings(sourceGrid.timings, false);
 			}
 
+
+			// Copy beats enabled and checked?
+			if (chkCopyBeats.Enabled)
+			{
+				if (chkCopyBeats.Checked)
+				{
+					// Is it the FIRST track?
+					if (beatTrack == 0)
+					{
+						CopyBeats(seqNew);
+					}
+				}
+			}
 
 
 			for (int mapLoop = 0; mapLoop < mapMastToSrc.Length; mapLoop++)
 			{
-				if (mapMastToSrc[mapLoop] > utils.UNDEFINED)
+				if (mapMastToSrc[mapLoop] != null)
 				{
 					int newSI = mapLoop;
 					IMember newChild = seqNew.Members.bySavedIndex[newSI];
 					if (newChild.MemberType == MemberType.Channel)
 					{
-						int srcSI = mapMastToSrc[mapLoop];
-						IMember srcChild = seqSource.Members.bySavedIndex[srcSI];
-						if (srcChild.MemberType == MemberType.Channel)
+						//int sourceSI = mapMastToSrc[mapLoop];
+						//IMember sourceChildMember = seqSource.Members.bySavedIndex[sourceSI];
+						IMember sourceChildMember = mapMastToSrc[mapLoop];
+						if (sourceChildMember.MemberType == MemberType.Channel)
 						{
-							Channel srcChan = (Channel)srcChild;
-							if (srcChan.effects.Count > 0)
+							Channel sourceChannel = (Channel)sourceChildMember;
+							if (sourceChannel.effects.Count > 0)
 							{
-								Channel newChan = (Channel)newChild;
-								newChan.CopyEffects(srcChan.effects, false);
-								newChan.Centiseconds = srcChan.Centiseconds;
+								Channel newChannel = (Channel)newChild;
+								newChannel.CopyEffects(sourceChannel.effects, false);
+								newChannel.Centiseconds = sourceChannel.Centiseconds;
 							} // end if effects.Count
 						} // end if source obj is channel
 					}
@@ -410,33 +487,34 @@ namespace MapORama
 					{
 						if (newChild.MemberType == MemberType.RGBchannel)
 						{
-							int srcSI = mapMastToSrc[mapLoop];
-							IMember srcChild = seqSource.Members.bySavedIndex[srcSI];
-							if (srcChild.MemberType == MemberType.RGBchannel)
+							//int sourceSI = mapMastToSrc[mapLoop];
+							//IMember sourceChildMember = seqSource.Members.bySavedIndex[sourceSI];
+							IMember sourceChildMember = mapMastToSrc[mapLoop];
+							if (sourceChildMember.MemberType == MemberType.RGBchannel)
 							{
-								RGBchannel srgb = (RGBchannel)srcChild;
-								RGBchannel mrgb = (RGBchannel)newChild;
-								mrgb.Centiseconds = srgb.Centiseconds;
-								Channel srcChan = srgb.redChannel;
-								Channel newChan;
-								if (srcChan.effects.Count > 0)
+								RGBchannel sourceRGBchannel = (RGBchannel)sourceChildMember;
+								RGBchannel masterRGBchannel = (RGBchannel)newChild;
+								masterRGBchannel.Centiseconds = sourceRGBchannel.Centiseconds;
+								Channel sourceChannel = sourceRGBchannel.redChannel;
+								Channel newChannel;
+								if (sourceChannel.effects.Count > 0)
 								{
-									newChan = mrgb.redChannel;
-									newChan.CopyEffects(srcChan.effects, false);
+									newChannel = masterRGBchannel.redChannel;
+									newChannel.CopyEffects(sourceChannel.effects, false);
 								} // end if effects.Count
-								srcChan = srgb.grnChannel;
-								if (srcChan.effects.Count > 0)
+								sourceChannel = sourceRGBchannel.grnChannel;
+								if (sourceChannel.effects.Count > 0)
 								{
-									newChan = mrgb.grnChannel;
-									newChan.CopyEffects(srcChan.effects, false);
+									newChannel = masterRGBchannel.grnChannel;
+									newChannel.CopyEffects(sourceChannel.effects, false);
 								} // end if effects.Count
-								srcChan = srgb.bluChannel;
-								if (srcChan.effects.Count > 0)
+								sourceChannel = sourceRGBchannel.bluChannel;
+								if (sourceChannel.effects.Count > 0)
 								{
-									newChan = mrgb.bluChannel;
-									newChan.CopyEffects(srcChan.effects, false);
+									newChannel = masterRGBchannel.bluChannel;
+									newChannel.CopyEffects(sourceChannel.effects, false);
 								} // end if effects.Count
-								
+
 							} // end if source obj is RGB channel
 						}
 						else // newer obj is NOT an RGBchannel
@@ -448,6 +526,19 @@ namespace MapORama
 					} // end if newer obj is channel (or not)
 				} // end if mapping is undefined
 			} // loop thru newer Channels
+
+			// Copy beats enabled and checked?
+			if (chkCopyBeats.Enabled)
+			{
+				if (chkCopyBeats.Checked)
+				{
+					// Is it the NOT the FIRST track (at the end maybe?)
+					if (beatTrack > 0)
+					{
+						CopyBeats(seqNew);
+					}
+				}
+			}
 
 			foreach (Channel ch in seqMaster.Channels)
 			{
@@ -466,24 +557,6 @@ namespace MapORama
 				tr.Centiseconds = seqSource.Centiseconds;
 			}
 
-			//seqNew.TimingGrids = new List<TimingGrid>();
-			foreach(TimingGrid srcTG in seqSource.TimingGrids)
-			{
-				TimingGrid newTG = null;
-				for (int tgIndex=0; tgIndex < seqNew.TimingGrids.Count; tgIndex++)
-				{
-					if (srcTG.Name.ToLower() == seqNew.TimingGrids[tgIndex].Name.ToLower())
-					{
-						newTG = seqNew.TimingGrids[tgIndex];
-						tgIndex = seqNew.TimingGrids.Count; // Force exit of loop
-					}
-				}
-				if (newTG == null)
-				{
-					newTG = seqNew.ParseTimingGrid(srcTG.LineOut());
-				}
-				newTG.CopyTimings(srcTG.timings,false);
-			}
 
 			//if (chkCopyBeats.Checked)
 			//{
@@ -511,34 +584,34 @@ namespace MapORama
 		#region Copy Beat Track
 		private void CopyBeats(Sequence4 seqNew)
 		{
-			foreach (Track trk in seqSource.Tracks)
+			/*
+			foreach (Track sourceTrack in seqSource.Tracks)
 			{
-				//int p = trk.Name.ToLower().IndexOf("beat");
-				string lowerName = trk.Name.ToLower();
+				//int p = sourceTrack.Name.ToLower().IndexOf("beat");
+				string lowerName = sourceTrack.Name.ToLower();
 				int p = utils.FastIndexOf(lowerName, "beat");
 				if (p == 0)
 				{
-					// p = trk.Name.ToLower().IndexOf("information");
+					// p = sourceTrack.Name.ToLower().IndexOf("information");
 					p = utils.FastIndexOf(lowerName, "information");
 				}
 				if (p == 0)
 				{
-					//p = trk.Name.ToLower().IndexOf("-o-rama");
+					//p = sourceTrack.Name.ToLower().IndexOf("-o-rama");
 					p = utils.FastIndexOf(lowerName, "-o-rama");
 				}
 				if (p == 0)
 				{
-					//p = trk.Name.ToLower().IndexOf("reserved for ...");
+					//p = sourceTrack.Name.ToLower().IndexOf("reserved for ...");
 					p = utils.FastIndexOf(lowerName, "reserved for ...");
 				}
+				*/
+			Track sourceTrack = seqSource.Tracks[beatTrack];
 
-
-
-				if (p >= 0)
-				{
-					CopyTrack(trk, seqNew);
-				}
-			}
+			//if (p >= 0)
+			//{
+			CopyTrack(sourceTrack, seqNew);
+			//}
 		}
 
 		private void CopyTrack(Track sourceTrack, Sequence4 seqNew)
@@ -678,7 +751,7 @@ namespace MapORama
 			}
 			if (!valid) masterFile = utils.DefaultChannelConfigsPath;
 			if (!File.Exists(masterFile))
-			{ 
+			{
 				masterFile = utils.DefaultChannelConfigsPath;
 				Properties.Settings.Default.LastMasterFile = masterFile;
 			}
@@ -792,12 +865,12 @@ namespace MapORama
 				if (masterType == MemberType.ChannelGroup)
 				{
 					// are they similar enough?
-					TreeNode sourceNode = treeSource.SelectedNode;
-					IMember sourceID = (IMember)sourceNode.Tag;
-					int sourceSI = sourceID.SavedIndex;
-					TreeNode masterNode = treeMaster.SelectedNode;
-					IMember masterID = (IMember)masterNode.Tag;
-					int masterSI = masterID.SavedIndex;
+					TreeNode selectedSourceNode = treeSource.SelectedNode;
+					IMember selectedSourceMember = (IMember)selectedSourceNode.Tag;
+					int sourceSI = selectedSourceMember.SavedIndex;
+					TreeNode selectedMasterNode = treeMaster.SelectedNode;
+					IMember selectedMasterMember = (IMember)selectedMasterNode.Tag;
+					int masterSI = selectedMasterMember.SavedIndex;
 					enM = IsCompatible(sourceSI, masterSI);
 					if (!enM)
 					{
@@ -857,7 +930,7 @@ namespace MapORama
 								Track sourceTrk = (Track)seqSource.Members.bySavedIndex[sourceThingSI];
 								Track masterTrk = (Track)seqMaster.Members.bySavedIndex[masterThingSI];
 								//if ((sourceTrk.itemSavedIndexes[0] < 0) || (masterTrk.itemSavedIndexes[0] < 0))
-								if ((sourceTrk.Members.Items.Count<1) || (masterTrk.Members.Items.Count<1))
+								if ((sourceTrk.Members.Items.Count < 1) || (masterTrk.Members.Items.Count < 1))
 								{
 									ret = false;
 								}
@@ -886,8 +959,8 @@ namespace MapORama
 								{
 									ChannelGroup sourceGrp = (ChannelGroup)seqSource.Members.bySavedIndex[sourceThingSI]; // seqSource.ChannelGroups[seqSource.savedIndexes[sourceThingSI].objIndex];
 									ChannelGroup masterGrp = (ChannelGroup)seqMaster.Members.bySavedIndex[masterThingSI]; // seqMaster.ChannelGroups[seqMaster.savedIndexes[masterThingSI].objIndex];
-									//if ((sourceGrp.itemSavedIndexes[0] < 0) || (masterGrp.itemSavedIndexes[0] < 0))
-									if ((sourceGrp.Members.Items.Count < 1) || (masterGrp.Members.Items.Count <1))
+																																																				//if ((sourceGrp.itemSavedIndexes[0] < 0) || (masterGrp.itemSavedIndexes[0] < 0))
+									if ((sourceGrp.Members.Items.Count < 1) || (masterGrp.Members.Items.Count < 1))
 									{
 										ret = false;
 									}
@@ -1053,98 +1126,298 @@ namespace MapORama
 
 		private void treeSource_AfterSelect(object sender, TreeViewEventArgs e)
 		{
-			TreeNode sn = e.Node;
-			if (sn != null)
+			TreeNode newSourceNode = e.Node;
+			if (newSourceNode != null)
 			{
-				IMember sid = (IMember)sn.Tag;
-				//int sourceSI = sid.SavedIndex;
-				// Did the selection change?
-				if (sid.SavedIndex != sourceSI)
+				if (newSourceNode.Tag != null)
 				{
-					sourceNode = sn;
-					sourceID = sid;
-					sourceSI = sid.SavedIndex;
-					// Unselect any previous selections
-					UnSelectAllNodes(treeSource.Nodes);
-					// and highlight this one (and any others in this tree with a matching SavedIndex)
-					SelectNodes(treeSource.Nodes, sourceSI, true);
+					IMember sourceMember = (IMember)newSourceNode.Tag;
+					SelectSourceMember(sourceMember);
 
-					// Is it matched?
-					if (mapSrcToMast[sourceSI].Count > 0)
+					if (sourceMember.MemberType == MemberType.Channel)
 					{
-						UnSelectAllNodes(treeMaster.Nodes);
-						foreach (int msi in mapSrcToMast[sourceSI])
-						{
-							SelectNodes(treeMaster.Nodes, msi, true);
-							masterSI = msi;
-							masterID = seqMaster.Members.bySavedIndex[msi];
+						Channel ch = (Channel)sourceMember;
+						Bitmap bmp = utils.RenderEffects(ch, 0, ch.Centiseconds, 300, 20, true);
+						picPreviewSource.Visible = true;
+						picPreviewSource.Image = bmp;
+						//picPreview.Refresh();
+					}
+					if (sourceMember.MemberType == MemberType.RGBchannel)
+					{
+						RGBchannel rgb = (RGBchannel)sourceMember;
+						Bitmap bmp = utils.RenderEffects(rgb, 0, seqSource.Centiseconds, 300, 21, false);
+						picPreviewSource.Image = bmp;
+						picPreviewSource.Visible = true;
+					}
+					if ((sourceMember.MemberType == MemberType.ChannelGroup) ||
+						  (sourceMember.MemberType == MemberType.Track) ||
+							(sourceMember.MemberType == MemberType.CosmicDevice))
+					{
+						picPreviewSource.Visible = false;
+					}
+				}
+				else
+				{
+					picPreviewSource.Visible = false;
+				}
+			}
+			else
+			{
+				picPreviewSource.Visible = false;
+			}
 
-						}
-						btnMap.Enabled = false;
-						mnuMap.Enabled = false;
-						if (mapSrcToMast[sourceSI].Count == 1)
+			selectedSourceNode = newSourceNode;
+		}
+
+		private void SelectSourceMember(IMember sourceMember)
+		{
+			IMember newSourceMember = sourceMember;
+			IMember lastSelectedSourceMember = selectedSourceMember;
+
+
+			int masterSI = utils.UNDEFINED;
+			bool doSelect = false;
+			List<TreeNode> nodeList = null;
+			btnMap.Enabled = false;
+			mnuMap.Enabled = false;
+			btnUnmap.Enabled = false;
+			mnuUnmap.Enabled = false;
+
+			if (newSourceMember.MemberType == MemberType.Track)
+			{
+				// Unselect any previous selections
+				UnSelectAllNodes(treeSource.Nodes);
+			}
+			else // NOT a Track
+			{
+				// Was one already selected?
+				if (lastSelectedSourceMember != null)
+				{
+					// Is it different from before?
+					if (newSourceMember.SavedIndex != lastSelectedSourceMember.SavedIndex)
+					{
+						// Clear previous selection
+						nodeList = sourceNodesBySI[lastSelectedSourceMember.SavedIndex];
+						SelectNodes(nodeList, false);
+
+						// and highlight this one (and any others in this tree with a matching SavedIndex)
+						nodeList = sourceNodesBySI[newSourceMember.SavedIndex];
+						SelectNodes(nodeList, true);
+
+						if (!bulkOp)  // If not a bulk operation (such as reading a map)
 						{
+							// Is it matched?
+							if (mapSrcToMast[newSourceMember.SavedIndex].Count > 0)
+							{
+								// UnSelect All Previous Master Nodes
+								foreach (IMember masterMember in mapSrcToMast[lastSelectedSourceMember.SavedIndex])
+								{
+									nodeList = masterNodesBySI[masterMember.SavedIndex];
+									SelectNodes(nodeList, false);
+								}
+								// Select all Master Nodes already mapped to this Source node
+								foreach (IMember masterMember in mapSrcToMast[newSourceMember.SavedIndex])
+								{
+									nodeList = masterNodesBySI[masterMember.SavedIndex];
+									SelectNodes(nodeList, true);
+								}
+								selectedMasterMember = mapSrcToMast[newSourceMember.SavedIndex][0];
+							}
+							if (mapSrcToMast[newSourceMember.SavedIndex].Count == 1)
+							{
+								btnUnmap.Enabled = true;
+								mnuUnmap.Enabled = true;
+							}
+							else
+							{
+								if (mapSrcToMast[newSourceMember.SavedIndex].Count == 0)
+								{
+									if (selectedMasterMember != null)
+									{
+										if (newSourceMember.MemberType == selectedMasterMember.MemberType)
+										{
+											btnMap.Enabled = true;
+											mnuMap.Enabled = true;
+										} // end types match
+									} // end not null
+								} // end not mapped
+							} // end mapping count
+						} // End not BulkOp
+					} // end selection changed
+				} // end Previously selected member
+				else
+				{
+					if (selectedMasterMember != null)
+					{
+						if (newSourceMember.MemberType == selectedMasterMember.MemberType)
+						{
+							btnMap.Enabled = true;
+							mnuMap.Enabled = true;
+						} // end types match
+					} // end not null
+				}
+				nodeList = sourceNodesBySI[newSourceMember.SavedIndex];
+				SelectNodes(nodeList, true);
+			} // end Track (or not)
+			selectedSourceMember = newSourceMember;
+		}
+		private void treeMaster_AfterSelect(object sender, TreeViewEventArgs e)
+		{
+			TreeNode newMasterNode = e.Node;
+			Color overBackColor = SystemColors.Control;
+
+			if (newMasterNode != null)
+			{
+				if (newMasterNode.Tag != null)
+				{
+					IMember masterMember = (IMember)newMasterNode.Tag;
+					SelectMasterMember(masterMember);
+
+					if (masterMember.MemberType == MemberType.Channel)
+					{
+						Channel ch = (Channel)masterMember;
+						Bitmap bmp = utils.RenderEffects(ch, 0, ch.Centiseconds, 300, 20, true);
+						picPreviewMaster.Visible = true;
+						pnlOverwrite.Visible = true;
+						picPreviewMaster.Image = bmp;
+						//picPreview.Refresh();
+						//if (mapMastToSrc[masterMember.SavedIndex] != null)
+						//{
+							if (ch.effects.Count > 0)
+							{
+								overBackColor = Color.Red;
+							}
+						//}
+
+					}
+					if (masterMember.MemberType == MemberType.RGBchannel)
+					{
+						RGBchannel rgb = (RGBchannel)masterMember;
+						Bitmap bmp = utils.RenderEffects(rgb, 0, seqMaster.Centiseconds, 300, 21, false);
+						picPreviewMaster.Image = bmp;
+						picPreviewMaster.Visible = true;
+						pnlOverwrite.Visible = true;
+						if (mapMastToSrc[masterMember.SavedIndex] != null)
+						{
+							if ((rgb.redChannel.effects.Count > 0) ||
+									(rgb.grnChannel.effects.Count > 0) ||
+									(rgb.bluChannel.effects.Count > 0))
+							{
+										overBackColor = Color.Red;
+							}
+						}
+					}
+					if ((masterMember.MemberType == MemberType.ChannelGroup) ||
+							(masterMember.MemberType == MemberType.Track) ||
+							(masterMember.MemberType == MemberType.CosmicDevice))
+					{
+						picPreviewMaster.Visible = false;
+						pnlOverwrite.Visible = false;
+					}
+				}
+				else
+				{
+					picPreviewMaster.Visible = false;
+					pnlOverwrite.Visible = false;
+				}
+			}
+			else
+			{
+				picPreviewMaster.Visible = false;
+				pnlOverwrite.Visible = false;
+			}
+			pnlOverwrite.BackColor = overBackColor;
+			pnlMapWarn.BackColor = overBackColor;
+			selectedMasterNode = newMasterNode;
+
+		}
+
+		private void SelectMasterMember(IMember masterMember)
+		{
+			IMember newMasterMember = masterMember;
+			IMember lastSelectedMasterMember = selectedMasterMember;
+			
+			int sourceSI = utils.UNDEFINED;
+			bool doSelect = false;
+			List<TreeNode> nodeList = null;
+			btnMap.Enabled = false;
+			mnuMap.Enabled = false;
+			btnUnmap.Enabled = false;
+			mnuUnmap.Enabled = false;
+
+			if (newMasterMember.MemberType == MemberType.Track)
+			{
+				// Unselect any previous selections
+				UnSelectAllNodes(treeMaster.Nodes);
+			}
+			else // NOT a Track
+			{
+				// was one already selected?
+				if (lastSelectedMasterMember != null)
+				{
+					// Is it different from before
+					if (newMasterMember.SavedIndex == lastSelectedMasterMember.SavedIndex)
+					{
+						// Clear previous selection
+						nodeList = masterNodesBySI[lastSelectedMasterMember.SavedIndex];
+						HighlightNodes(nodeList, false);
+
+						// and highlight this one (and any others in this tree with a matching SavedIndex)
+						nodeList = masterNodesBySI[newMasterMember.SavedIndex];
+						HighlightNodes(nodeList, true);
+					}
+					if (bulkOp == false)
+					{
+						// Is new master matched?
+						IMember newSource = mapMastToSrc[newMasterMember.SavedIndex];
+						if (newSource != null)
+						{
+							// Was old master matched?
+							IMember oldSource = mapMastToSrc[lastSelectedMasterMember.SavedIndex];
+							if (oldSource != null)
+							{
+								// Unselect All Previous Source Nodes
+								nodeList = sourceNodesBySI[oldSource.SavedIndex];
+								HighlightNodes(nodeList, false);
+							}
+							// Select all Source Nodes already mapped to this Master node
+							nodeList = sourceNodesBySI[newSource.SavedIndex];
+							HighlightNodes(nodeList, true);
+
 							btnUnmap.Enabled = true;
 							mnuUnmap.Enabled = true;
 						}
-						else
+						else // Not Previously Mapped
 						{
-							btnUnmap.Enabled = false;
-							mnuUnmap.Enabled = false;
+							if (selectedSourceMember != null)
+							{
+								if (newMasterMember.MemberType == selectedSourceMember.MemberType)
+								{
+									btnMap.Enabled = true;
+									mnuMap.Enabled = true;
+								}
+							}
+						}
+					} // end BulkOp = false
+				
+				}
+				else
+				{
+					if (selectedSourceMember != null)
+					{
+						if (newMasterMember.MemberType == selectedSourceMember.MemberType)
+						{
+							btnMap.Enabled = true;
+							mnuMap.Enabled = true;
 						}
 					}
-					else // not matched
-					{
-						btnUnmap.Enabled = false;
-						mnuUnmap.Enabled = false;
-						bool mappable = IsCompatible(sourceSI, masterSI);
-						btnMap.Enabled = mappable;
-						mnuMap.Enabled = mappable;
 
-					}
 				}
+				nodeList = masterNodesBySI[newMasterMember.SavedIndex];
+				SelectNodes(nodeList, true);
 			}
-		} // end treeSource_AfterSelect
+			selectedMasterMember = newMasterMember;
 
-		private void treeMaster_AfterSelect(object sender, TreeViewEventArgs e)
-		{
-			TreeNode mn = e.Node;
-			if (mn != null)
-			{
-				IMember mid = (IMember)mn.Tag;
-				// Did the selection change?
-				if (mid.SavedIndex != masterSI)
-				{
-					masterNode = mn;
-					masterID = mid;
-					masterSI = mid.SavedIndex;
-					// Unselect any previous selections
-					UnSelectAllNodes(treeMaster.Nodes);
-					// and highlight this one (and any others in this tree with a matching SavedIndex)
-					SelectNodes(treeMaster.Nodes, masterSI, true);
-
-					// Is it matched?
-					if (mapMastToSrc[masterSI] > utils.UNDEFINED)
-					{
-						UnSelectAllNodes(treeSource.Nodes);
-						SelectNodes(treeSource.Nodes, mapMastToSrc[masterSI], true);
-						btnMap.Enabled = false;
-						mnuMap.Enabled = false;
-						btnUnmap.Enabled = true;
-						mnuUnmap.Enabled = true;
-						sourceSI = mapMastToSrc[masterSI];
-						sourceID = seqSource.Members.bySavedIndex[sourceSI];
-					}
-					else // not matched
-					{
-						btnUnmap.Enabled = false;
-						mnuUnmap.Enabled = false;
-						bool mappable = IsCompatible(sourceSI, masterSI);
-						btnMap.Enabled = mappable;
-						mnuMap.Enabled = mappable;
-					}
-				}
-			}
 		} // end treNewChannel_Click
 
 		private void btnMap_Click(object sender, EventArgs e)
@@ -1153,17 +1426,18 @@ namespace MapORama
 			// Verify it anyway!
 
 			// Is a node Selected on each side?
-			if (sourceNode != null)
+			if (selectedSourceNode != null)
 			{
-				if (masterNode != null)
+				if (selectedMasterNode != null)
 				{
 					// Types match?
 
-					if (seqSource.Members.bySavedIndex[sourceSI].MemberType == MemberType.Channel)
+					if (selectedMasterMember.MemberType == MemberType.Channel)
 					{
-						if (seqMaster.Members.bySavedIndex[masterSI].MemberType == MemberType.Channel)
+						if (selectedSourceMember.MemberType == MemberType.Channel)
 						{
-							MapChannels(masterSI, sourceSI, true, true);
+							int newMaps = MapMembers(selectedMasterMember, selectedSourceMember, true);
+							mappedMemberCount += newMaps;
 							dirtyMap = true;
 							btnSaveMap.Enabled = dirtyMap;
 							mnuSaveNewMap.Enabled = dirtyMap;
@@ -1175,11 +1449,12 @@ namespace MapORama
 							System.Media.SystemSounds.Beep.Play();
 						}
 					}
-					if (seqSource.Members.bySavedIndex[sourceSI].MemberType == MemberType.RGBchannel)
+					if (selectedSourceMember.MemberType == MemberType.RGBchannel)
 					{
-						if (seqMaster.Members.bySavedIndex[masterSI].MemberType == MemberType.RGBchannel)
+						if (selectedMasterMember.MemberType == MemberType.RGBchannel)
 						{
-							MapChannels(masterSI, sourceSI, true, true);
+							int newMaps = MapMembers(selectedMasterMember, selectedSourceMember, true);
+							mappedMemberCount += newMaps;
 							dirtyMap = true;
 							btnSaveMap.Enabled = dirtyMap;
 							mnuSaveNewMap.Enabled = dirtyMap;
@@ -1191,11 +1466,12 @@ namespace MapORama
 							System.Media.SystemSounds.Beep.Play();
 						}
 					}
-					if (seqSource.Members.bySavedIndex[sourceSI].MemberType == MemberType.ChannelGroup)
+					if (selectedSourceMember.MemberType == MemberType.ChannelGroup)
 					{
-						if (seqMaster.Members.bySavedIndex[masterSI].MemberType == MemberType.ChannelGroup)
+						if (selectedMasterMember.MemberType == MemberType.ChannelGroup)
 						{
-							MapChannels(masterSI, sourceSI, true, true);
+							int newMaps = MapMembers(selectedMasterMember, selectedSourceMember, true);
+							mappedMemberCount += newMaps;
 							dirtyMap = true;
 							btnSaveMap.Enabled = dirtyMap;
 							mnuSaveNewMap.Enabled = dirtyMap;
@@ -1207,18 +1483,19 @@ namespace MapORama
 							System.Media.SystemSounds.Beep.Play();
 						}
 					}
-					if (seqSource.Members.bySavedIndex[sourceSI].MemberType == MemberType.Track)
+					if (selectedSourceMember.MemberType == MemberType.Track)
 					{
 						statMsg = Resources.MSG_Tracks;
 						StatusMessage(statMsg);
 						System.Media.SystemSounds.Beep.Play();
 					}
-					if (seqMaster.Members.bySavedIndex[masterSI].MemberType == MemberType.Track)
+					if (selectedMasterMember.MemberType == MemberType.Track)
 					{
 						statMsg = Resources.MSG_Tracks;
 						StatusMessage(statMsg);
 						System.Media.SystemSounds.Beep.Play();
 					}
+					UpdateMappedCount(0);
 				}
 				else
 				{
@@ -1289,7 +1566,7 @@ namespace MapORama
 				}
 			}
 		}
-
+		/*
 		private void SelectNodes(TreeNodeCollection nOdes, int SavedIndex, bool select)
 		{
 			//string nTag = "";
@@ -1309,7 +1586,21 @@ namespace MapORama
 			}
 			//nOdes[0].EnsureVisible();
 		}
-
+		*/
+		private void SelectNodes(List<TreeNode> nodeList, bool select)
+		{
+			if (nodeList.Count < 1)
+			{
+				System.Diagnostics.Debugger.Break();
+			}
+			else
+			{
+				for (int i=0; i<nodeList.Count; i++)
+				{
+					SelectNode(nodeList[i], select);
+				}
+			}
+		}
 		private void UnSelectAllNodes(TreeNodeCollection nOdes)
 		{
 			foreach (TreeNode nOde in nOdes)
@@ -1330,7 +1621,8 @@ namespace MapORama
 				}
 			}
 		}
-
+		
+		/*
 		private void HighlightNodes(TreeNodeCollection nOdes, int SavedIndex, bool highlight)
 		{
 			//string nTag = "";
@@ -1349,6 +1641,24 @@ namespace MapORama
 				}
 			}
 		}
+		*/
+
+		private void HighlightNodes(List<TreeNode> nodeList, bool highlight)
+		{
+			if (nodeList.Count < 1)
+			{
+				System.Diagnostics.Debugger.Break();
+			}
+			else
+			{
+				for (int i = 0; i < nodeList.Count; i++)
+				{
+					HighlightNode(nodeList[i], highlight);
+				}
+			}
+		}
+
+
 
 		private void BoldNodes(List<TreeNode> nodeList, bool emBolden)
 		{
@@ -1357,15 +1667,15 @@ namespace MapORama
 
 			foreach (TreeNode thenOde in nodeList)
 			{
-					if (emBolden)
-					{
-						thenOde.NodeFont = new Font(treeSource.Font, FontStyle.Bold);
-					}
-					else
-					{
-						thenOde.NodeFont = new Font(treeSource.Font, FontStyle.Regular);
-					}
-					thenOde.Checked = emBolden;
+				if (emBolden)
+				{
+					thenOde.NodeFont = new Font(treeSource.Font, FontStyle.Bold);
+				}
+				else
+				{
+					thenOde.NodeFont = new Font(treeSource.Font, FontStyle.Regular);
+				}
+				thenOde.Checked = emBolden;
 			}
 		}
 
@@ -1374,188 +1684,335 @@ namespace MapORama
 			// Is a node Selected on each side?
 			if (theSourceNode != null)
 			{
-				IMember sid = (IMember)sourceNode.Tag;
-				if (masterNode != null)
+				IMember sid = (IMember)selectedSourceNode.Tag;
+				if (selectedMasterNode != null)
 				{
-					IMember mid = (IMember)masterNode.Tag;
-					MapChannels(mid.SavedIndex, sid.SavedIndex, map, true);
+					IMember mid = (IMember)selectedMasterNode.Tag;
+					int newMaps = MapMembers(mid.SavedIndex, sid.SavedIndex, map, true);
+					UpdateMappedCount(newMaps);
 				} // end masterNodeannel Node isn't null
 			} // end sourceNodeannel Node isn't null
 		} // end btnMap_Click
 
-		private void MapChannels(int theMasterSI, int theSourceSI, bool map, bool andMembers)
+		private int MapMembers(int masterSI, int sourceSI, bool andMembers, bool map)
 		{
+			int mapCount = 0;
 			// Are we mapping or unmapping?
-			if (map)
+			try
 			{
+				IMember masterMember = seqMaster.Members[masterSI];
+				IMember newSourceMember = seqSource.Members[sourceSI];
+
+				if (map)
+				{
+					mapCount = MapMembers(masterMember, newSourceMember, andMembers);
+				}
+				else
+				{
+					mapCount = UnmapMembers(masterMember, newSourceMember, andMembers);
+				}
+
+				bool e = false;
+				btnMap.Enabled = !map;
+				mnuMap.Enabled = !map;
+				btnUnmap.Enabled = map;
+				btnUnmap.Enabled = map;
+				if (mapCount > 0) e = true;
+				btnSummary.Enabled = e;
+				mnuSummary.Enabled = e;
+				btnSaveMap.Enabled = e;
+				mnuSaveNewMap.Enabled = e;
+				btnSaveNewSeq.Enabled = e;
+				mnuSaveNewSequence.Enabled = e;
+			}
+			catch
+			{
+				// Ignore?  Do Nothing?
+				System.Diagnostics.Debugger.Break();
+			}
+			return mapCount;
+		}
+
+		private int MapMembers(IMember masterMember, IMember sourceMember, bool andMembers)
+		{
+			int mapCount = 0;
+			bool redundant = false;
+
+			// First, is it a track?  And do we want to map its children?
+			// Note: Tracks themselves cannot be mapped, but we can try to map its children
+			if (masterMember.MemberType == MemberType.Track)
+			{
+				if (andMembers)
+				{
+					// Cast member to tracks so we can get the child membership
+					Track sourceTrack = (Track)sourceMember;
+					Track masterTrack = (Track)masterMember;
+					// Is it even possible to map children, do they have the same number?
+					if (sourceTrack.Members.Items.Count == masterTrack.Members.Items.Count)
+					{
+						for (int i = 0; i < sourceTrack.Members.Items.Count; i++)
+						{
+							IMember sourceItem = sourceTrack.Members.Items[i];
+							IMember masterItem = masterTrack.Members.Items[i];
+							// Are they the same type
+							if (sourceItem.MemberType ==
+									masterItem.MemberType)
+							{
+								//mapCount += MapMembers(masterItem, sourceItem, andMembers);
+							}
+						}
+					}
+				}
+			}
+			else
+			{
+				// Fetch the source and master
+				//IMember sourceMember = seqSource.Members.bySavedIndex[theSourceSI];
+				int masterSI = masterMember.SavedIndex;
+				int sourceSI = sourceMember.SavedIndex;
+
 				// Is the master channel already mapped to a different source?
 				//   Note: A source can map to multiple masters.
 				//     A master cannot map to more than one source.
 				//       Therefore, mappings list is indexed by the Master SavedIndex
-				if (mapMastToSrc[theMasterSI] != theSourceSI)
+
+				// First, is this master mapped to something, anything?
+				if (mapMastToSrc[masterSI] != null)
 				{
-					if (mapSrcToMast[theSourceSI].Count > 0)
+					// Is this redundant, is it already mapped to this one?
+					if (mapMastToSrc[masterSI].SavedIndex == sourceSI)
 					{
-						for (int i = 0; i < mapSrcToMast[theSourceSI].Count; i++)
+						redundant = true;
+					}
+					else // NOT redundant
+					{
+						// Is this source channel mapped to more than one master channel?
+						if (mapSrcToMast[sourceSI].Count > 0)
 						{
-							if (mapSrcToMast[theSourceSI][i] == theMasterSI)
+							// If so, find this master in its list of mappings and remove it
+							for (int i = 0; i < mapSrcToMast[sourceSI].Count; i++)
 							{
-								mapSrcToMast[theSourceSI].RemoveAt(i);
-								mappingCount--;
+								if (mapSrcToMast[sourceSI][i].SavedIndex == masterSI)
+								{
+									//mapSrcToMast[sourceSI].RemoveAt(i);
+									//mapCount--;
+									int newMaps = UnmapMembers(masterMember, mapSrcToMast[sourceSI][i], true);
+									mapCount += newMaps;
+								}
+							}
+							// Was that the only channel the source was mapped to, and thus is now mapped to nothing?
+							if (mapSrcToMast[sourceSI].Count == 0)
+							{
+								// Deselect it
+								//List<TreeNode> nodeList = (List<TreeNode>)sourceMember.Tag;
+								List<TreeNode> nodeList = sourceNodesBySI[sourceSI];
+								BoldNodes(nodeList, false);
+								sourceMember.Selected = false;
 							}
 						}
-						if (mapSrcToMast[theSourceSI].Count == 0)
-						{
-							BoldNodes(sourceNodesBySI[theSourceSI], false);
-						}
 					}
-					mapMastToSrc[theMasterSI] = theSourceSI;
-					// INDEX OUT OF RANGE ERROR HERE WHILE MAPPING "DECORATIONS"
-					IMember mid = seqMaster.Members.bySavedIndex[theMasterSI];
-					mid.AltSavedIndex = theSourceSI;
-					mapSrcToMast[theSourceSI].Add(theMasterSI);
-					mappingCount++;
-					BoldNodes(sourceNodesBySI[theSourceSI], true);
-					BoldNodes(masterNodesBySI[theMasterSI], true);
+				}
 
-					if (seqSource.Members.bySavedIndex[theSourceSI].MemberType == MemberType.ChannelGroup)
+				if (!redundant)
+				{
+					// Sanity Check: Are they the same type?
+					if (sourceMember.MemberType == masterMember.MemberType)
 					{
+						string msgOut = "Mapping " + masterMember.MemberType.ToString() + " MEMBER " + sourceMember.Name + " to " + masterMember.Name;
+						Debug.WriteLine(msgOut);
+						// Map this source to this master in the mapping list
+						mapMastToSrc[masterSI] = sourceMember;
+						masterMember.MapTo = sourceMember;
+
+
+						// In addition to the map list, put the source SavedIndex in the master channels AltSavedIndex
+						masterMember.AltSavedIndex = sourceSI;
+						masterMember.Selected = true;
+						// Map this master to this source in the other mapping list
+						mapSrcToMast[sourceSI].Add(masterMember);
+						// Select them and increase count
+						mapCount++;
+						if (masterMember.MemberType == MemberType.Channel)
+						{
+							mappedChannelCount++;
+						}
+						sourceMember.Selected = true;
+						//List<TreeNode> nodeList = (List<TreeNode>)sourceMember.Tag;
+						List<TreeNode> nodeList = sourceNodesBySI[sourceSI];
+						BoldNodes(nodeList, true);
+						masterMember.Selected = true;
+						//nodeList = (List<TreeNode>)sourceMember.Tag;
+						nodeList = masterNodesBySI[masterSI];
+						BoldNodes(nodeList, true);
+						btnMap.Enabled = false;
+						mnuMap.Enabled = false;
+						btnUnmap.Enabled = true;
+						btnUnmap.Enabled = true;
+
+						// Do we need to map its children also?
 						if (andMembers)
 						{
-							ChannelGroup scg = (ChannelGroup)seqSource.Members.bySavedIndex[theSourceSI];
-							ChannelGroup mcg = (ChannelGroup)seqMaster.Members.bySavedIndex[theMasterSI];
-							if (scg.Members.Items.Count == mcg.Members.Items.Count)
+							// Is it a group, and do we want its children mapped?
+							if (masterMember.MemberType == MemberType.ChannelGroup)
 							{
-								for (int i = 0; i < scg.Members.Items.Count; i++)
+								// Cast Member to Group (so we can get its children membership)
+								ChannelGroup sourceGroup = (ChannelGroup)sourceMember;
+								ChannelGroup masterGroup = (ChannelGroup)masterMember;
+								// Is it even possible to map children, do they have the same number?
+								if (sourceGroup.Members.Items.Count == masterGroup.Members.Items.Count)
 								{
-									int sgsi = scg.Members.Items[i].SavedIndex;
-									int mgsi = mcg.Members.Items[i].SavedIndex;
-									MapChannels(mgsi, sgsi, map, andMembers);
+									msgOut = "Recurse GROUP " + sourceMember.Name + " to " + masterMember.Name;
+									Debug.WriteLine(msgOut);
+									for (int i = 0; i < sourceGroup.Members.Items.Count; i++)
+									{
+										IMember sourceItem = sourceGroup.Members.Items[i];
+										IMember masterItem = masterGroup.Members.Items[i];
+										// Are they the same type
+										if (masterItem.MemberType == sourceItem.MemberType)
+										{
+											int newMaps = MapMembers(masterItem, sourceItem, andMembers);
+											mapCount += newMaps;
+										}
+									}
 								}
 							}
 						}
-					}
-					if (seqSource.Members.bySavedIndex[theSourceSI].MemberType == MemberType.Track)
-					{
-						if (andMembers)
-						{
-							Track str = (Track)seqSource.Members.bySavedIndex[theSourceSI];
-							Track mtr = (Track)seqMaster.Members.bySavedIndex[theMasterSI];
-							if (str.Members.Items.Count == mtr.Members.Items.Count)
-							{
-								for (int i = 0; i < str.Members.Items.Count; i++)
-								{
-									MapChannels(mtr.Members.Items[i].SavedIndex, str.Members.Items[i].SavedIndex, map, andMembers);
-								}
-							}
-						}
-					}
-					if (seqSource.Members.bySavedIndex[theSourceSI].MemberType == MemberType.RGBchannel)
-					{
-						if (seqMaster.Members.bySavedIndex[theMasterSI].MemberType == MemberType.RGBchannel)
-						{
-							RGBchannel srgb = (RGBchannel)seqSource.Members.bySavedIndex[theSourceSI];
-							RGBchannel mrgb = (RGBchannel)seqMaster.Members.bySavedIndex[theMasterSI];
-							MapChannels(mrgb.redChannel.SavedIndex, srgb.redChannel.SavedIndex, map, true);
-							MapChannels(mrgb.grnChannel.SavedIndex, srgb.grnChannel.SavedIndex, map, true);
-							MapChannels(mrgb.bluChannel.SavedIndex, srgb.bluChannel.SavedIndex, map, true);
-						}
-						else
-						{
-							RGBchannel srgb = (RGBchannel)seqSource.Members.bySavedIndex[theSourceSI];
-							RGBchannel mrgb = (RGBchannel)seqMaster.Members.bySavedIndex[theMasterSI];
-							string msg = "Trying to map " + SeqEnums.MemberName(srgb.MemberType) + " " + srgb.Name;
-							msg += " to " + SeqEnums.MemberName(mrgb.MemberType) + " " + mrgb.Name;
-							Console.WriteLine(msg);
-							//! Types don't match!  Source is RGB, Master is not...
 
-							System.Diagnostics.Debugger.Break();
+						// Or, instead of a group or track, is it an RGB channel?
+						if (masterMember.MemberType == MemberType.RGBchannel)
+						{
+							// You know the drill by now, cast to RGBchannel so we can get its 3 subchannels	
+							RGBchannel sourceRGBchannel = (RGBchannel)sourceMember;
+							RGBchannel masterRGBchannel = (RGBchannel)masterMember;
+							// Always map an RGBchannels subchannels (don't bother to check 'andMembers' flag)
+							msgOut = "Recurse RGB CHANNEL " + sourceMember.Name + " to " + masterMember.Name;
+							Debug.WriteLine(msgOut);
+							int newMaps = MapMembers(masterRGBchannel.redChannel, sourceRGBchannel.redChannel, false);
+							mapCount += newMaps;
+							newMaps = MapMembers(masterRGBchannel.grnChannel, sourceRGBchannel.grnChannel, false);
+							mapCount += newMaps;
+							newMaps = MapMembers(masterRGBchannel.bluChannel, sourceRGBchannel.bluChannel, false);
+							mapCount += newMaps;
 						}
-					}
-					btnMap.Enabled = !map;
-					mnuMap.Enabled = !map;
-					btnUnmap.Enabled = map;
-					btnUnmap.Enabled = map;
-				} // end not already mapped
-			} // end if map
+					} // end if map
+				} // End if track, or not
 
-			else //! UnMap
+				//totalMappedMasters += mapCount;
+				//mappedMemberCount += mapCount;
+				//lblMapCount.Text = mappedMemberCount.ToString();
+			} // end NOT redundant
+
+			return mapCount;
+
+		}
+
+		private int UnmapMembers(IMember masterMember, IMember newSourceMember, bool andMembers)
+		{
+			int mapCount = 0;
+			List<TreeNode> nodeList = null;
+
+			// First, is it a track?  And do we want to map its children?
+			// Note: Tracks themselves cannot be mapped, but we can try to map its children
+			if (masterMember.MemberType == MemberType.Track)
 			{
-				if (mapMastToSrc[theMasterSI] == theSourceSI)
+				// Cast the members to groups so we can get thier child memberships
+				//Track sourceTrack = (Track)newSourceMember;
+				Track masterTrack = (Track)masterMember;
+				for (int i = 0; i < masterTrack.Members.Items.Count; i++)
 				{
-					if (mapSrcToMast[theSourceSI].Count > 0)
-					{
-						for (int i = 0; i < mapSrcToMast[theSourceSI].Count; i++)
-						{
-							if (mapSrcToMast[theSourceSI][i] == theMasterSI)
-							{
-								mapSrcToMast[theSourceSI].RemoveAt(i);
-								masterID.AltSavedIndex = utils.UNDEFINED;
-								mapMastToSrc[theMasterSI] = utils.UNDEFINED;
-								BoldNodes(masterNodesBySI[theMasterSI], false);
-								mappingCount--;
-							}
-						}
-					}
-					if (seqSource.Members.bySavedIndex[theSourceSI].MemberType == MemberType.ChannelGroup)
-					{
-						if (andMembers)
-						{
-							ChannelGroup scg = (ChannelGroup)seqSource.Members.bySavedIndex[theSourceSI];
-							ChannelGroup mcg = (ChannelGroup)seqMaster.Members.bySavedIndex[theMasterSI];
-							if (scg.Members.Items.Count == mcg.Members.Items.Count)
-							{
-								for (int i = 0; i < scg.Members.Items.Count; i++)
-								{
-									MapChannels(mcg.Members.Items[i].SavedIndex, scg.Members.Items[i].SavedIndex, map, andMembers);
-								}
-							}
+					//mapCount += UnmapMembers(masterTrack.Members.Items[i].SavedIndex, masterTrack.AltSavedIndex, true);
+					int masterItemSI = masterTrack.Members.Items[i].SavedIndex;
+					int newMaps = UnmapMembers(masterTrack.Members.Items[i], mapMastToSrc[masterItemSI], true);
+					mapCount += newMaps;
+				}
 
-						}
-					}
-					if (seqSource.Members.bySavedIndex[theSourceSI].MemberType == MemberType.Track)
+			}
+			else // Not a track
+			{
+				// Fetch the source and master
+				int sourceSI = newSourceMember.SavedIndex;
+				int masterSI = masterMember.SavedIndex;
+
+				// First sanity check, are these two channels actually already mapped?
+				if (mapMastToSrc[masterSI].SavedIndex == sourceSI)
+				{
+					// Next sanity check, Is this source channel mapped to any masters (one or more)?
+					if (mapSrcToMast[sourceSI].Count > 0)
 					{
-						if (andMembers)
+						// Find and remove this master
+						for (int i = 0; i < mapSrcToMast[sourceSI].Count; i++)
 						{
-							Track str = (Track)seqSource.Members.bySavedIndex[theSourceSI];
-							Track mtr = (Track)seqMaster.Members.bySavedIndex[theMasterSI];
-							if (str.Members.Items.Count == mtr.Members.Items.Count)
+							if (mapSrcToMast[sourceSI][i].SavedIndex == masterSI)
 							{
-								for (int i = 0; i < str.Members.Items.Count; i++)
-								{
-									MapChannels(mtr.Members.Items[i].SavedIndex, str.Members.Items[i].SavedIndex, map, andMembers);
-								}
+								mapSrcToMast[sourceSI].RemoveAt(i);
+								i = mapSrcToMast[sourceSI].Count; // Force loop to end
 							}
 						}
 					}
-					if (seqSource.Members.bySavedIndex[theSourceSI].MemberType == MemberType.RGBchannel)
+					// Was that the only channel the source was mapped to, and thus is now mapped to nothing?
+					if (mapSrcToMast[sourceSI].Count == 0)
 					{
-						RGBchannel srgb = (RGBchannel)seqSource.Members.bySavedIndex[theSourceSI];
-						RGBchannel mrgb = (RGBchannel)seqMaster.Members.bySavedIndex[theMasterSI];
-						MapChannels(mrgb.redChannel.SavedIndex, srgb.redChannel.SavedIndex, map, true);
-						MapChannels(mrgb.grnChannel.SavedIndex, srgb.grnChannel.SavedIndex, map, true);
-						MapChannels(mrgb.bluChannel.SavedIndex, srgb.bluChannel.SavedIndex, map, true);
+						// Deselect it
+						//nodeList = (List<TreeNode>)newSourceMember.Tag;
+						nodeList = sourceNodesBySI[sourceSI];
+						BoldNodes(nodeList, false);
+						newSourceMember.Selected = false;
+					}
+					masterMember.AltSavedIndex = utils.UNDEFINED;
+					//masterMember.MapTo = null;
+					mapMastToSrc[masterSI] = null;
+					//nodeList = (List<TreeNode>)masterMember.Tag;
+					nodeList = masterNodesBySI[masterSI];
+					BoldNodes(nodeList, false);
+					masterMember.Selected = false;
+					mapCount--;
+					if (masterMember.MemberType == MemberType.Channel)
+					{
+						mappedChannelCount--;
+					}
+					btnMap.Enabled = true;
+					mnuMap.Enabled = true;
+					btnUnmap.Enabled = false;
+					btnUnmap.Enabled = false;
+
+					// ALWAYS UNGROUP ALL CHILD MEMBERS whether specified or not
+					//if (andMembers)
+					//{ 
+					// Are they groups?
+					if (masterMember.MemberType == MemberType.ChannelGroup)
+					{
+						// Cast the members to groups so we can get their child memberships
+						//ChannelGroup sourceGroup = (ChannelGroup)newSourceMember;
+						ChannelGroup masterGroup = (ChannelGroup)masterMember;
+						for (int i = 0; i < masterGroup.Members.Items.Count; i++)
+						{
+							//Unmap all children and descendants	
+							//mapCount += UnmapMembers(masterGroup.Members.Items[i].SavedIndex, masterGroup.AltSavedIndex, true);
+							mapCount += UnmapMembers(masterGroup.Members.Items[i], mapMastToSrc[masterSI], true);
+						}
 					}
 
-					if (mapSrcToMast[theSourceSI].Count == 0)
+					// if not a group, is it an RGB channel?
+					if (masterMember.MemberType == MemberType.RGBchannel)
 					{
-						BoldNodes(sourceNodesBySI[theSourceSI], false);
+						//RGBchannel sourceRGBchannel = (RGBchannel)seqSource.Members.bySavedIndex[theSourceSI];
+						RGBchannel masterRGBchannel = (RGBchannel)masterMember;
+						RGBchannel sourceRGBchannel = (RGBchannel)newSourceMember;
+						//mapCount += UnmapMembers(masterRGBchannel.redChannel.SavedIndex, sourceRGBchannel.redChannel.SavedIndex, true);
+						//mapCount += UnmapMembers(masterRGBchannel.grnChannel.SavedIndex, sourceRGBchannel.grnChannel.SavedIndex, true);
+						//mapCount += UnmapMembers(masterRGBchannel.bluChannel.SavedIndex, sourceRGBchannel.bluChannel.SavedIndex, true);
+						int newMaps = UnmapMembers(masterRGBchannel.redChannel, sourceRGBchannel.redChannel, true);
+						mapCount += newMaps;
+						newMaps = UnmapMembers(masterRGBchannel.grnChannel, sourceRGBchannel.grnChannel, true);
+						mapCount += newMaps;
+						newMaps = UnmapMembers(masterRGBchannel.bluChannel, sourceRGBchannel.bluChannel, true);
+						mapCount += newMaps;
 					}
-					btnMap.Enabled = !map;
-					mnuMap.Enabled = !map;
-					btnUnmap.Enabled = map;
-					mnuUnmap.Enabled = map;
-				} // end they are mapped
+				}
 			} // end map or unmap
-			bool e = false;
-			if (mappingCount > 0) e = true;
-			btnSummary.Enabled = e;
-			mnuSummary.Enabled = e;
-			btnSaveMap.Enabled = e;
-			mnuSaveNewMap.Enabled = e;
-			btnSaveNewSeq.Enabled = e;
-			mnuSaveNewSequence.Enabled = e;
-
+			//mappedMemberCount += mapCount;
+			//lblMapCount.Text = mappedMemberCount.ToString();
+			return mapCount;
 		}
 
 		private int addElement(ref int[] numbers)
@@ -1623,14 +2080,14 @@ namespace MapORama
 		{
 			if (master)
 			{
-				foreach(TreeNode nOde in masterNodesBySI[SID])
+				foreach (TreeNode nOde in masterNodesBySI[SID])
 				{
 					HighlightNode(nOde, true);
 				}
 			}
 			else
 			{
-				foreach(TreeNode nOde in sourceNodesBySI[SID])
+				foreach (TreeNode nOde in sourceNodesBySI[SID])
 				{
 					HighlightNode(nOde, true);
 				}
@@ -1643,17 +2100,20 @@ namespace MapORama
 			// Verify it anyway!
 
 			// Is a node Selected on each side?
-			if (sourceNode != null)
+			if (selectedSourceNode != null)
 			{
-				if (masterNode != null)
+				if (selectedMasterNode != null)
 				{
 					// Types match?
 
-					if (seqSource.Members.bySavedIndex[sourceSI].MemberType == MemberType.Channel)
+					if (selectedSourceMember.MemberType == MemberType.Channel)
 					{
-						if (seqMaster.Members.bySavedIndex[masterSI].MemberType == MemberType.Channel)
+						if (selectedMasterMember.MemberType == MemberType.Channel)
 						{
-							MapChannels(masterSI, sourceSI, false, true);
+							//MapMembers(masterSI, sourceSI, false, true);
+							int newMaps = UnmapMembers(selectedMasterMember, selectedSourceMember, true);
+							mappedMemberCount += newMaps;
+							
 							dirtyMap = true;
 							btnSaveMap.Enabled = dirtyMap;
 							mnuSaveNewMap.Enabled = dirtyMap;
@@ -1665,11 +2125,13 @@ namespace MapORama
 							System.Media.SystemSounds.Beep.Play();
 						}
 					}
-					if (seqSource.Members.bySavedIndex[sourceSI].MemberType == MemberType.RGBchannel)
+					if (selectedSourceMember.MemberType == MemberType.RGBchannel)
 					{
-						if (seqMaster.Members.bySavedIndex[masterSI].MemberType == MemberType.RGBchannel)
+						if (selectedMasterMember.MemberType == MemberType.RGBchannel)
 						{
-							MapChannels(masterSI, sourceSI, false, true);
+							//MapMembers(masterSI, sourceSI, false, true);
+							int newMaps = UnmapMembers(selectedMasterMember, selectedSourceMember, true);
+							mappedMemberCount += newMaps;
 							dirtyMap = true;
 							btnSaveMap.Enabled = dirtyMap;
 							mnuSaveNewMap.Enabled = dirtyMap;
@@ -1681,11 +2143,13 @@ namespace MapORama
 							System.Media.SystemSounds.Beep.Play();
 						}
 					}
-					if (seqSource.Members.bySavedIndex[sourceSI].MemberType == MemberType.ChannelGroup)
+					if (selectedSourceMember.MemberType == MemberType.ChannelGroup)
 					{
-						if (seqMaster.Members.bySavedIndex[masterSI].MemberType == MemberType.ChannelGroup)
+						if (selectedMasterMember.MemberType == MemberType.ChannelGroup)
 						{
-							MapChannels(masterSI, sourceSI, false, true);
+							//MapMembers(masterSI, sourceSI, false, true);
+							int newMaps = UnmapMembers(selectedMasterMember, selectedSourceMember, true);
+							mappedMemberCount += newMaps;
 							dirtyMap = true;
 							btnSaveMap.Enabled = dirtyMap;
 							mnuSaveNewMap.Enabled = dirtyMap;
@@ -1697,18 +2161,19 @@ namespace MapORama
 							System.Media.SystemSounds.Beep.Play();
 						}
 					}
-					if (seqSource.Members.bySavedIndex[sourceSI].MemberType == MemberType.Track)
+					if (selectedSourceMember.MemberType == MemberType.Track)
 					{
 						statMsg = Resources.MSG_Tracks;
 						StatusMessage(statMsg);
 						System.Media.SystemSounds.Beep.Play();
 					}
-					if (seqMaster.Members.bySavedIndex[masterSI].MemberType == MemberType.Track)
+					if (selectedMasterMember.MemberType == MemberType.Track)
 					{
 						statMsg = Resources.MSG_Tracks;
 						StatusMessage(statMsg);
 						System.Media.SystemSounds.Beep.Play();
 					}
+					UpdateMappedCount(0);
 				}
 				else
 				{
@@ -1769,7 +2234,7 @@ namespace MapORama
 					{
 						//seqSource.ReadSequenceFile(sourceFile);
 						LoadSourceFile(sourceFile);
-						//utils.FillChannels(treeSource, seqSource, sourceNodesBySI, false, false);
+						//utils.TreeFillChannels(treeSource, seqSource, sourceNodesBySI, false, false);
 						// Is a master also already loaded?
 					}
 				} // end last sequence file exists
@@ -1801,8 +2266,8 @@ namespace MapORama
 							} // end load/apply last map
 						} // end map file line count
 					} // end map file exists
-	
-					if (mappingCount < 1)
+
+					if (mappedMemberCount < 1)
 					{
 						msg = "Perform an Auto Map?";
 						dr = MessageBox.Show(this, msg, "Perform Auto Map?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
@@ -1898,7 +2363,7 @@ namespace MapORama
 		}
 
 		private void BrowseForMap()
-		{ 
+		{
 			dlgOpenFile.DefaultExt = utils.EXT_CHMAP;
 			dlgOpenFile.Filter = utils.FILE_CHMAP;
 			dlgOpenFile.FilterIndex = 0;
@@ -1976,24 +2441,24 @@ namespace MapORama
 
 			for (int i = 0; i < mapMastToSrc.Length; i++)
 			{
-				if (mapMastToSrc[i] > utils.UNDEFINED)
+				if (mapMastToSrc[i] != null)
 				{
-					IMember mid = seqMaster.Members.bySavedIndex[i];
-					IMember sid = seqSource.Members.bySavedIndex[mapMastToSrc[i]];
+					IMember masterMember = seqMaster.Members.bySavedIndex[i];
+					IMember newSourceMember = mapMastToSrc[i];
 
 					lineOut = utils.LEVEL2 + utils.STTBL + TABLEchannels + utils.ENDTBL;
 					writer.WriteLine(lineOut);
 
 					lineOut = utils.LEVEL3 + utils.STTBL + FIELDmasterChannel;
-					lineOut += utils.FIELDname + utils.FIELDEQ + utils.XMLifyName(mid.Name) + utils.ENDQT;
-					lineOut += utils.FIELDtype + utils.FIELDEQ + SeqEnums.MemberName(mid.MemberType) + utils.ENDQT;
-					lineOut += utils.FIELDsavedIndex + utils.FIELDEQ + mid.SavedIndex + utils.ENDQT + utils.ENDFLD;
+					lineOut += utils.FIELDname + utils.FIELDEQ + utils.XMLifyName(masterMember.Name) + utils.ENDQT;
+					lineOut += utils.FIELDtype + utils.FIELDEQ + SeqEnums.MemberName(masterMember.MemberType) + utils.ENDQT;
+					lineOut += utils.FIELDsavedIndex + utils.FIELDEQ + masterMember.SavedIndex + utils.ENDQT + utils.ENDFLD;
 					writer.WriteLine(lineOut);
 
 					lineOut = utils.LEVEL3 + utils.STTBL + FIELDsourceChannel;
-					lineOut += utils.FIELDname + utils.FIELDEQ + utils.XMLifyName(sid.Name) + utils.ENDQT;
-					lineOut += utils.FIELDtype + utils.FIELDEQ + SeqEnums.MemberName(sid.MemberType) + utils.ENDQT;
-					lineOut += utils.FIELDsavedIndex + utils.FIELDEQ + sid.SavedIndex + utils.ENDQT + utils.ENDFLD;
+					lineOut += utils.FIELDname + utils.FIELDEQ + utils.XMLifyName(newSourceMember.Name) + utils.ENDQT;
+					lineOut += utils.FIELDtype + utils.FIELDEQ + SeqEnums.MemberName(newSourceMember.MemberType) + utils.ENDQT;
+					lineOut += utils.FIELDsavedIndex + utils.FIELDEQ + newSourceMember.SavedIndex + utils.ENDQT + utils.ENDFLD;
 					writer.WriteLine(lineOut);
 
 					lineOut = utils.LEVEL2 + utils.FINTBL + TABLEchannels + utils.ENDTBL;
@@ -2020,28 +2485,28 @@ namespace MapORama
 
 		private void ClearAllMappings()
 		{
-			mappingCount = 0;
+			mappedMemberCount = 0;
 
 			mapMastToSrc = null;  // Array indexed by Master.SavedIndex, elements contain Source.SaveIndex
 			Array.Resize(ref mapMastToSrc, seqMaster.Members.allCount);
 			for (int i = 0; i < mapMastToSrc.Length; i++)
 			{
-				mapMastToSrc[i] = utils.UNDEFINED;
+				mapMastToSrc[i] = null;
 			}
 
 			mapSrcToMast = null; // Array indexed by Source.SavedIindex, elements are Lists of Master.SavedIndex-es
 			Array.Resize(ref mapSrcToMast, seqSource.Members.allCount);
 			for (int i = 0; i < mapSrcToMast.Length; i++)
 			{
-				mapSrcToMast[i] = new List<int>();
+				mapSrcToMast[i] = new List<IMember>();
 			}
 
 			UnHighlightAllNodes(treeMaster.Nodes);
 			UnHighlightAllNodes(treeSource.Nodes);
 
-	}
+		}
 
-	private string ReadApplyMap(string fileName)
+		private string ReadApplyMap(string fileName)
 		{
 			ImBusy(true);
 			//int w = pnlStatus.Width;
@@ -2050,14 +2515,6 @@ namespace MapORama
 			//pnlStatus.Visible = false;
 			//pnlProgress.Visible = true;
 			//staStatus.Refresh();
-			if (batchMode)
-			{
-				ShowProgressBars(2);
-			}
-			else
-			{
-				ShowProgressBars(1);
-			}
 			//int mq = seqMaster.Tracks.Count + seqMaster.ChannelGroups.Count + seqMaster.Channels.Count;
 			//mq -= seqMaster.RGBchannels.Count * 2;
 			//int sq = seqSource.Tracks.Count + seqSource.ChannelGroups.Count + seqSource.Channels.Count;
@@ -2067,10 +2524,6 @@ namespace MapORama
 			//int pp = 0;
 			int lineCount = 0;
 			int lineNum = 0;
-
-			ClearAllMappings();
-
-
 			string errMsgs = "";
 			string lineIn;
 			string[] mapData;
@@ -2084,8 +2537,8 @@ namespace MapORama
 			int masterSI = utils.UNDEFINED;
 			MemberType sourceType = MemberType.None;
 			MemberType masterType = MemberType.None;
-			IMember masterID = null;
-			IMember sourceID = null;
+			IMember masterMember = null;
+			IMember newSourceMember = null;
 			IMember foundID = null;
 			string mfile = "";
 			string sfile = "";
@@ -2093,8 +2546,6 @@ namespace MapORama
 			double minPreMatch = Properties.Settings.Default.FuzzyMinPrematch;
 			double minFinalMatch = Properties.Settings.Default.FuzzyMinFinal;
 			long preAlgorithm = Properties.Settings.Default.FuzzyPrematchAlgorithm;
-
-
 			logFile1 = logHomeDir + "Apply" + batch_fileNumber.ToString() + ".log";
 			logWriter1 = new StreamWriter(logFile1);
 			log1Open = true;
@@ -2104,14 +2555,26 @@ namespace MapORama
 			logWriter1.WriteLine(logMsg);
 			logMsg = "Map File: " + fileName;
 			logWriter1.WriteLine(logMsg);
-
-			mappingCount = 0;
+			mappedMemberCount = 0;
 			int li = 0;
 			int errorStatus = 0;
 
 			string msg = "GLB";
 			msg += LeftBushesChildCount().ToString();
 			lblDebug.Text = msg;
+
+			if (batchMode)
+			{
+				ShowProgressBars(2);
+			}
+			else
+			{
+				ShowProgressBars(1);
+			}
+			ClearAllMappings();
+
+
+
 
 			////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// First Pass, just make sure it's valid and get line count so we can update the progress bar accordingly
@@ -2164,12 +2627,18 @@ namespace MapORama
 				} //its in XML format
 			} // it has at least 1 line
 			reader.Close();
-
-			#endregion
+			#endregion // First Pass
 			// end of first pass
 
-			if ((errorStatus == 0) && ( lineCount> 12))
+
+
+
+			if ((errorStatus == 0) && (lineCount > 12))
 			{
+				#region Second Pass
+				///////////////////////////////////////////////
+				// Second Pass, look for EXACT matches only
+				/////////////////////////////////////////////
 				// All sanity checks passed
 
 				//pnlProgress.Maximum = lineCount;
@@ -2182,10 +2651,6 @@ namespace MapORama
 				// Updating and repainting the status takes time, so set an update frequence resulting in no more that 200 updates
 				int updFreq = lineCount / 200;
 
-				///////////////////////////////////////////////
-				// Second Pass, look for EXACT matches only
-				/////////////////////////////////////////////
-				#region Second Pass
 				reader = new StreamReader(fileName);
 				// Read in and then ignore the first 8 lines
 				//   xml, channelMap, files, mappings...
@@ -2215,7 +2680,7 @@ namespace MapORama
 							{
 								masterName = utils.HumanizeName(utils.getKeyWord(lineIn, utils.FIELDname));
 								masterSI = utils.getKeyValue(lineIn, utils.FIELDsavedIndex);
-								masterType = SeqEnums.enumTableType(utils.getKeyWord(lineIn, utils.FIELDtype));
+								masterType = SeqEnums.enumMemberType(utils.getKeyWord(lineIn, utils.FIELDtype));
 								//lblMessage.Text = "Map \"" + masterName + "\" to...";
 								//pnlMessage.Refresh();
 
@@ -2231,7 +2696,7 @@ namespace MapORama
 									{
 										sourceName = utils.HumanizeName(utils.getKeyWord(lineIn, utils.FIELDname));
 										sourceSI = utils.getKeyValue(lineIn, utils.FIELDsavedIndex);
-										sourceType = SeqEnums.enumTableType(utils.getKeyWord(lineIn, utils.FIELDtype));
+										sourceType = SeqEnums.enumMemberType(utils.getKeyWord(lineIn, utils.FIELDtype));
 
 										// is it time to update?
 										if ((lineNum % updFreq) == 0)
@@ -2248,324 +2713,258 @@ namespace MapORama
 											pnlMessage.Refresh();
 										} // end update if needed
 
-										// Check the master file member using the SI from the map file, is the type correct?
-										if (seqMaster.Members.bySavedIndex[masterSI].MemberType == masterType)
+										// Try to find the master member by SavedIndex first since that is the easiest.
+										// May not be a match, but good chance it is.
+										// Is the Saved Index within range?
+										if (masterSI <= seqMaster.Members.HighestSavedIndex)
 										{
-											// Is there enough members in the source file to match by the saved index from the map file?
+											// In range, so fetch it
+											masterMember = seqMaster.Members.bySavedIndex[masterSI];
+											// Now compare the name, is it actually the same member?
+											// (May not be a match, but good chance it is.)
+											if (masterMember.Name.ToLower().CompareTo(masterName.ToLower()) != 0)
+											{
+												// Nope, name doesn't match, nullify the find (by SavedIndex)
+												masterMember = null;
+											}
+										}
+										// Did we get it?
+										if (masterMember == null)
+										{
+											// No, search again by name this time
+											masterMember = seqMaster.Members.Find(masterName, masterType, false);
+										}
+										// Did we get it (by name)?
+										if (masterMember != null)
+										{
+											// Did we find the master?  If not, no sense in searching for the source.
+											// Follow same procedure as above to try and find the source
+											// (Read comments above)
 											if (sourceSI <= seqSource.Members.HighestSavedIndex)
 											{
-												// Check the source file member using the SI from the map file, is the type correct?
-												if (seqSource.Members.bySavedIndex[sourceSI].MemberType == sourceType)
+												newSourceMember = seqSource.Members.bySavedIndex[sourceSI];
+												if (newSourceMember.Name.ToLower().CompareTo(sourceName.ToLower()) != 0)
 												{
-													// Are the specifed members of the same type?
-													if (seqMaster.Members.bySavedIndex[masterSI].MemberType ==
-															seqSource.Members.bySavedIndex[sourceSI].MemberType)
-													{
-														// Does the name of the master member match that from the map file?
-														if (seqMaster.Members.bySavedIndex[masterSI].Name.CompareTo(masterName) == 0)
-														{
-															// Does the name of the source member match that from the map file?
-															if (seqSource.Members.bySavedIndex[sourceSI].Name.CompareTo(sourceName) == 0)
-															{
-																// Got it!
-																masterID = seqMaster.Members.bySavedIndex[masterSI];
-															}
-															else // source name wrong
-															{
-																// Not it!
-																masterSI = utils.UNDEFINED;
-															}
-														}
-														else // master name wrong
-														{
-															// Not it!
-															masterSI = utils.UNDEFINED;
-														}
-													}
-													else // member types different
-													{
-														// Not it!
-														masterSI = utils.UNDEFINED;
-													}
-												}
-												else // source type wrong
-												{
-													// Not it!
-													masterSI = utils.UNDEFINED;
+													newSourceMember = null;
 												}
 											}
-											else // source SavedIndex too high
+											if (newSourceMember == null)
 											{
-												// Not it!
-												masterSI = utils.UNDEFINED;
+												newSourceMember = seqSource.Members.Find(sourceName, sourceType, false);
 											}
-										}
-										else // master type wrong
-										{
-											// Not it!
-											masterSI = utils.UNDEFINED;
-										}
-
-										// Got it?
-										if (masterSI < 0)
-										{
-											// Search for it by name, exact matches only, no fuzzy find
-											// (Note: Using btree search on alpha index) (hopefully)
-											foundID = seqMaster.Members.Find(masterName, masterType, false);
-											if (foundID != null)
+											if (newSourceMember != null)
 											{
-												masterSI = foundID.SavedIndex;
-											}
-										}
-										if (masterSI < 0)
+												// So did we succeed in finding the source member?
+												// Final Sanity Checks
+												if (masterMember.MemberType == (newSourceMember.MemberType))
+												{
+													if (masterMember.MemberType == masterType)
+													{
+														logMsg = "Exact Matched " + masterName + " to " + sourceName;
+														Console.WriteLine(logMsg);
+														logWriter1.WriteLine(logMsg);
+														//MapMembers(masterSI, sourceSI, true, false);
+														//seqMaster.Members.bySavedIndex[masterSI].Selected = true;
+														//seqSource.Members.bySavedIndex[sourceSI].Selected = true;
+														//MapMembers(masterSI, sourceSI, false);
+														int newMaps = MapMembers(masterMember, newSourceMember, true);
+														mappedMemberCount += newMaps;
+													}
+												} // End final sanity checks
+											} // End and found source member
+										} // End found master member
+										else
 										{
 											logMsg = masterName + " not found in Master.";
 											Console.WriteLine(logMsg);
 											logWriter1.WriteLine(logMsg);
 										}
-
-										// Got it yet?
-										if (masterSI > utils.UNDEFINED)
-										{
-											if (sourceSI < seqSource.Members.bySavedIndex.Count)
-											{
-												if (seqSource.Members.bySavedIndex[sourceSI].MemberType == sourceType)
-												{
-													if (seqSource.Members.bySavedIndex[sourceSI].MemberType == masterType)
-													{
-														if (seqSource.Members.bySavedIndex[sourceSI].Name.CompareTo(sourceName) == 0)
-														{
-															// Got it!
-															sourceID = seqSource.Members.bySavedIndex[sourceSI];
-														}
-														else // source name failed compare
-														{
-															// Not it!
-															sourceSI = utils.UNDEFINED;
-														}
-													}
-													else // source type != master type
-													{
-														// Not it!
-														sourceSI = utils.UNDEFINED;
-													}
-												}
-												else // source type not correct
-												{
-													// Not it!
-													sourceSI = utils.UNDEFINED;
-												}
-											}
-											else // source index > count
-											{
-												// Not it!
-												sourceSI = utils.UNDEFINED;
-											}
-
-											// Got it?
-											if (sourceSI < 0)
-											{
-												//try to find exact match name
-												foundID = seqSource.Members.Find(sourceName, sourceType, false);
-												if (foundID != null)
-												{
-													sourceSI = foundID.SavedIndex;
-												}
-											}
-											if (sourceSI < 0)
-											{
-												logMsg = sourceName + " not found in Source.";
-												Console.WriteLine(logMsg);
-												logWriter1.WriteLine(logMsg);
-											}
-
-											// Got it yet?
-											if (sourceSI > utils.UNDEFINED)
-											{
-												logMsg = "Exact Matched " + masterName + " to " + sourceName;
-												Console.WriteLine(logMsg);
-												logWriter1.WriteLine(logMsg);
-												MapChannels(masterSI, sourceSI, true, false);
-												seqMaster.Members.bySavedIndex[masterSI].Selected = true;
-												seqSource.Members.bySavedIndex[sourceSI].Selected = true;
-											} // If we still didn't get it
-												//pnlProgress.Value = lineNum;
-										} // if this is the source line
-									} // if another line waiting
-								} // if got the Master Channel
-							} // if this is the Master line
-						} // if another line waiting
-					} // it channels table
-					prgBarInner.Value = lineNum;
-					//staStatus.Refresh();
-					prgBarInner.Refresh();
-					if (batchMode)
-					{
-						int v = batch_fileNumber * lineCount * 10;
-						v += lineNum;
-						prgBarOuter.Value = v;
-						prgBarOuter.Refresh();
-					}
-					// After every 256 lines, perform a DoEvents
-					// (Can change to 128 with 0x7F or every 64 with 0x3F, etc.)
-					int lcr = lineNum & 0xFF;
-					if (lcr == 0xFF)
-					{
-						Application.DoEvents();
-					}
-				} // while lines remain
+									} // End got source info from file line
+									else
+									{
+										logMsg = sourceName + " not found in Source.";
+										Console.WriteLine(logMsg);
+										logWriter1.WriteLine(logMsg);
+									}
+								} // End not end of stream
+							} // End got master info from file line
+							prgBarInner.Value = lineNum;
+							//staStatus.Refresh();
+							prgBarInner.Refresh();
+							if (batchMode)
+							{
+								int v = batch_fileNumber * lineCount * 10;
+								v += lineNum;
+								prgBarOuter.Value = v;
+								prgBarOuter.Refresh();
+							}
+							// After every 256 lines, perform a DoEvents
+							// (Can change to 128 with 0x7F or every 64 with 0x3F, etc.)
+							int lcr = lineNum & 0xFF;
+							if (lcr == 0xFF)
+							{
+								Application.DoEvents();
+							}
+						} // End not end of stream
+					} // End line not null
+				} // End got channels XML table header
 				reader.Close();
+				#endregion // Second Pass
 
-				#endregion
-				// end of second pass
+
+
 
 				////////////////////////////////////////////////////////////////////
 				// Third pass, attempt to fuzzy find anything not already matched
 				//////////////////////////////////////////////////////////////////
 				#region Third Pass
-				reader = new StreamReader(fileName);
-				// Read in and then ignore the first 8 lines
-				//   xml, channelMap, files, mappings...
-				for (int n = 0; n < 7; n++)
+				// Don't think should do fuzzy find on reading a map file
+				if (true == false)
 				{
-					lineIn = reader.ReadLine();
-				}
-				lineNum = 7;
-
-				// * PARSE LINES
-				while ((lineIn = reader.ReadLine()) != null)
-				{
-					lineNum++;
-					// Line just read should be "    <channels>"
-					//li = lineIn.IndexOf(utils.STTBL + TABLEchannels + utils.ENDTBL);
-					li = utils.FastIndexOf(lineIn, utils.STTBL + TABLEchannels + utils.ENDTBL);
-					if (li > 0)
+					reader = new StreamReader(fileName);
+					// Read in and then ignore the first 8 lines
+					//   xml, channelMap, files, mappings...
+					for (int n = 0; n < 7; n++)
 					{
-						if (!reader.EndOfStream)
+						lineIn = reader.ReadLine();
+					}
+					lineNum = 7;
+
+					// * PARSE LINES
+					while ((lineIn = reader.ReadLine()) != null)
+					{
+						lineNum++;
+						// Line just read should be "    <channels>"
+						//li = lineIn.IndexOf(utils.STTBL + TABLEchannels + utils.ENDTBL);
+						li = utils.FastIndexOf(lineIn, utils.STTBL + TABLEchannels + utils.ENDTBL);
+						if (li > 0)
 						{
-							// Next line is the Master Channel
-							lineIn = reader.ReadLine();
-							lineNum++;
-							//li = lineIn.IndexOf(FIELDmasterChannel);
-							li = utils.FastIndexOf(lineIn, FIELDmasterChannel);
-							if (li > 0)
+							if (!reader.EndOfStream)
 							{
-								masterName = utils.HumanizeName(utils.getKeyWord(lineIn, utils.FIELDname));
-								//lblMessage.Text = "Map \"" + masterName + "\" to...";
-								//pnlMessage.Refresh();
-								masterSI = utils.getKeyValue(lineIn, utils.FIELDsavedIndex);
-								masterType = SeqEnums.enumTableType(utils.getKeyWord(lineIn, utils.FIELDtype));
-								// Next line (let's assume its there) is the Source Channel
-								if (!reader.EndOfStream)
+								// Next line is the Master Channel
+								lineIn = reader.ReadLine();
+								lineNum++;
+								//li = lineIn.IndexOf(FIELDmasterChannel);
+								li = utils.FastIndexOf(lineIn, FIELDmasterChannel);
+								if (li > 0)
 								{
-									// Next line is the Source Channel
-									lineIn = reader.ReadLine();
-									lineNum++;
-									//li = lineIn.IndexOf(FIELDsourceChannel);
-									li = utils.FastIndexOf(lineIn, FIELDsourceChannel);
-									if (li > 0)
+									masterName = utils.HumanizeName(utils.getKeyWord(lineIn, utils.FIELDname));
+									//lblMessage.Text = "Map \"" + masterName + "\" to...";
+									//pnlMessage.Refresh();
+									masterSI = utils.getKeyValue(lineIn, utils.FIELDsavedIndex);
+									masterType = SeqEnums.enumMemberType(utils.getKeyWord(lineIn, utils.FIELDtype));
+									// Next line (let's assume its there) is the Source Channel
+									if (!reader.EndOfStream)
 									{
-										sourceName = utils.HumanizeName(utils.getKeyWord(lineIn, utils.FIELDname));
-										if (sourceOnRight)
+										// Next line is the Source Channel
+										lineIn = reader.ReadLine();
+										lineNum++;
+										//li = lineIn.IndexOf(FIELDsourceChannel);
+										li = utils.FastIndexOf(lineIn, FIELDsourceChannel);
+										if (li > 0)
 										{
-											lblMessage.Text = masterName + " to " + sourceName;
-										}
-										else
-										{
-											lblMessage.Text = sourceName + " to " + masterName;
-										}
-										prgBarInner.CustomText = lblMessage.Text;
-										pnlMessage.Refresh();
-										sourceSI = utils.getKeyValue(lineIn, utils.FIELDsavedIndex);
-										sourceType = SeqEnums.enumTableType(utils.getKeyWord(lineIn, utils.FIELDtype));
-
-										if (!seqMaster.Members.bySavedIndex[masterSI].Selected)
-										{
-											if (seqMaster.Members.bySavedIndex[masterSI].MemberType == masterType)
+											sourceName = utils.HumanizeName(utils.getKeyWord(lineIn, utils.FIELDname));
+											if (sourceOnRight)
 											{
-												// Search for it again by name, this time use fuzzy find
-												logMsg = "Fuzzy searching Master for ";
-												logMsg += sourceName;
-												Console.WriteLine(logMsg);
-												logWriter1.WriteLine(logMsg);
+												lblMessage.Text = masterName + " to " + sourceName;
+											}
+											else
+											{
+												lblMessage.Text = sourceName + " to " + masterName;
+											}
+											prgBarInner.CustomText = lblMessage.Text;
+											pnlMessage.Refresh();
+											sourceSI = utils.getKeyValue(lineIn, utils.FIELDsavedIndex);
+											sourceType = SeqEnums.enumMemberType(utils.getKeyWord(lineIn, utils.FIELDtype));
 
-												foundID = FindByName(masterName, seqMaster.Members, masterType, preAlgorithm, minPreMatch, finalAlgorithms, minFinalMatch, true);
-												if (foundID != null)
+											if (!seqMaster.Members.bySavedIndex[masterSI].Selected)
+											{
+												if (seqMaster.Members.bySavedIndex[masterSI].MemberType == masterType)
 												{
-													masterSI = foundID.SavedIndex;
-													masterName = foundID.Name;
-												}
+													// Search for it again by name, this time use fuzzy find
+													logMsg = "Fuzzy searching Master for ";
+													logMsg += sourceName;
+													Console.WriteLine(logMsg);
+													logWriter1.WriteLine(logMsg);
 
-												// Got it yet?
-												if (masterSI > utils.UNDEFINED)
-												{
-													if (sourceSI < seqSource.Members.bySavedIndex.Count)
+													foundID = FindByName(masterName, seqMaster.Members, masterType, preAlgorithm, minPreMatch, finalAlgorithms, minFinalMatch, true);
+													if (foundID != null)
 													{
-														if (seqSource.Members.bySavedIndex[sourceSI].MemberType == sourceType)
-														{
-															if (!seqSource.Members.bySavedIndex[sourceSI].Selected)
-															{
-																//try to find it again by name and this time use fuzzy matching
-																logMsg = "Fuzzy searching Source for ";
-																logMsg += sourceName;
-																Console.WriteLine(logMsg);
-																logWriter1.WriteLine(logMsg);
-																foundID = FindByName(sourceName, seqSource.Members, sourceType, preAlgorithm, minPreMatch, finalAlgorithms, minFinalMatch, true);
-																if (foundID != null)
-																{
-																	sourceSI = foundID.SavedIndex;
-																}
-															} // if not Selected
+														masterSI = foundID.SavedIndex;
+														masterName = foundID.Name;
+													}
 
-															// Got it yet?
-															if (sourceSI > utils.UNDEFINED)
+													// Got it yet?
+													if (masterSI > utils.UNDEFINED)
+													{
+														if (sourceSI < seqSource.Members.bySavedIndex.Count)
+														{
+															if (seqSource.Members.bySavedIndex[sourceSI].MemberType == sourceType)
 															{
-																if (seqSource.Members.bySavedIndex[sourceSI].MemberType ==
-																		seqMaster.Members.bySavedIndex[masterSI].MemberType)
+																if (!seqSource.Members.bySavedIndex[sourceSI].Selected)
 																{
-																	logMsg = "Fuzzy Matched " + masterName + " to " + sourceName;
+																	//try to find it again by name and this time use fuzzy matching
+																	logMsg = "Fuzzy searching Source for ";
+																	logMsg += sourceName;
 																	Console.WriteLine(logMsg);
 																	logWriter1.WriteLine(logMsg);
-																	MapChannels(masterSI, sourceSI, true, false);
-																	seqMaster.Members.bySavedIndex[masterSI].Selected = true;
-																	seqSource.Members.bySavedIndex[sourceSI].Selected = true;
+																	foundID = FindByName(sourceName, seqSource.Members, sourceType, preAlgorithm, minPreMatch, finalAlgorithms, minFinalMatch, true);
+																	if (foundID != null)
+																	{
+																		sourceSI = foundID.SavedIndex;
+																	}
+																} // if not Selected
+
+																// Got it yet?
+																if (sourceSI > utils.UNDEFINED)
+																{
+																	if (seqSource.Members.bySavedIndex[sourceSI].MemberType ==
+																			seqMaster.Members.bySavedIndex[masterSI].MemberType)
+																	{
+																		logMsg = "Fuzzy Matched " + masterName + " to " + sourceName;
+																		Console.WriteLine(logMsg);
+																		logWriter1.WriteLine(logMsg);
+																		int newMaps = MapMembers(masterSI, sourceSI, true, false);
+																		mappedMemberCount += newMaps;
+																		seqMaster.Members.bySavedIndex[masterSI].Selected = true;
+																		seqSource.Members.bySavedIndex[sourceSI].Selected = true;
+																	}
 																}
-															}
-														} // if source type matchies
-													} // if source SavedIndex in range
-												} // if source section line
-											} // if lines remain
-										} // if got a smaster channel
-									} // if master type matches
-								} // if master SI not Selected
-							} // if line is a master channel
-						} // if lines left
-					} // if a channel section
-						//pnlProgress.Value = lineNum;
-					prgBarInner.Value = lineCount + lineNum * 9;
-					//staStatus.Refresh();
-					prgBarInner.Refresh();
-					if (batchMode)
-					{
-						int v = batch_fileNumber * lineCount * 10;
-						v += (lineCount + lineNum * 9);
-						prgBarOuter.Value = v;
-						prgBarOuter.Refresh();
-					}
-					// After every 256 lines, perform a DoEvents
-					// (Can change to 128 with 0x7F or every 64 with 0x3F, etc.)
-					int lcr = lineNum & 0xFF;
-					if (lcr == 0xFF)
-					{
-						Application.DoEvents();
-					}
+															} // if source type matchies
+														} // if source SavedIndex in range
+													} // if source section line
+												} // if lines remain
+											} // if got a smaster channel
+										} // if master type matches
+									} // if master SI not Selected
+								} // if line is a master channel
+							} // if lines left
+						} // if a channel section
+							//pnlProgress.Value = lineNum;
+						prgBarInner.Value = lineCount + lineNum * 9;
+						//staStatus.Refresh();
+						prgBarInner.Refresh();
+						if (batchMode)
+						{
+							int v = batch_fileNumber * lineCount * 10;
+							v += (lineCount + lineNum * 9);
+							prgBarOuter.Value = v;
+							prgBarOuter.Refresh();
+						}
+						// After every 256 lines, perform a DoEvents
+						// (Can change to 128 with 0x7F or every 64 with 0x3F, etc.)
+						int lcr = lineNum & 0xFF;
+						if (lcr == 0xFF)
+						{
+							Application.DoEvents();
+						}
 
-				} // if lines remain
-				reader.Close();
-
+					} // if lines remain
+					reader.Close();
+				} // End False=True
 				#endregion
 				// end third pass
-			} // no error on the first pass
+			} // End no errors, and correct # of lines
 
 			//pnlProgress.Visible = false;
 			//pnlStatus.Visible = true;
@@ -2577,14 +2976,87 @@ namespace MapORama
 			}
 
 			logWriter1.Close();
-			//System.Diagnostics.Process.Start(logFile1);
-			msg = "GLB";
-			msg += LeftBushesChildCount().ToString();
-			lblDebug.Text = msg;
-			btnSummary.Enabled = true;
+			UpdateMappedCount(0);
+			
 
 			return errMsgs;
 		} // end ReadApplyMap
+
+		private int UpdateMappedCount(int change)
+		{
+			mappedMemberCount += change;
+			lblMappedCount.Text = mappedMemberCount.ToString() + " / " + mappedChannelCount.ToString();
+			if (mappedMemberCount > 0)
+			{
+				btnSummary.Enabled = true;
+				btnSaveNewSeq.Enabled = true;
+			}
+			else
+			{
+				btnSummary.Enabled = false;
+				btnSaveNewSeq.Enabled = false;
+			}
+			EnableMappingButtons();
+
+			return mappedMemberCount;
+		}
+
+		private void EnableMappingButtons()
+		{
+			if (selectedMasterMember == null)
+			{
+				btnMap.Enabled = false;
+				btnUnmap.Enabled = false;
+			}
+			else
+			{
+				if (selectedSourceMember == null)
+				{
+					btnMap.Enabled = false;
+					btnUnmap.Enabled = false;
+				}
+				else
+				{
+					// TODO: Allow tracks to be mapped
+					if (selectedMasterMember.MemberType == MemberType.Track)
+					{
+						btnMap.Enabled = false;
+						btnUnmap.Enabled = false;
+					}
+					else
+					{
+						if (selectedMasterMember.MemberType == MemberType.Track)
+						{
+							btnMap.Enabled = false;
+							btnUnmap.Enabled = false;
+						}
+						else
+						{
+							if (mapMastToSrc[selectedMasterMember.SavedIndex].SavedIndex == selectedSourceMember.SavedIndex)
+							{
+								btnMap.Enabled = false;
+								btnUnmap.Enabled = true;
+							}
+							else
+							{
+								if (selectedMasterMember.MemberType == selectedSourceMember.MemberType)
+								{
+									btnMap.Enabled = true;
+									btnUnmap.Enabled = false;
+								}
+								else
+								{
+									btnMap.Enabled = false;
+									btnUnmap.Enabled = false;
+								} // End Types Match
+							} // End Already Mapped
+						} // End Not Track
+					} // End Not Track
+				} // End Source Set
+			} // End Master Set
+		} // End EnableMappingButtons
+
+
 
 		private int[] FindChannelNames(Sequence4 seq, string theName, MemberType type)
 		{
@@ -2858,6 +3330,7 @@ namespace MapORama
 		private void AutoMap()
 		{
 			ImBusy(true);
+			bulkOp = true;
 
 			string sourceName = "";
 			int sourceSI = utils.UNDEFINED;
@@ -2868,166 +3341,185 @@ namespace MapORama
 			const string STATUSto = "\" to...";
 
 			int w =  pnlStatus.Width;
+			int matchCount = 0;
 			pnlProgress.Width = w;
 			pnlProgress.Size = new Size(w, pnlProgress.Height);
 			pnlStatus.Visible = false;
 			pnlProgress.Visible = true;
 			staStatus.Refresh();
-			int mq = seqMaster.Tracks.Count + seqMaster.ChannelGroups.Count + seqMaster.Channels.Count;
+			//int mq = seqMaster.Tracks.Count + seqMaster.ChannelGroups.Count + seqMaster.Channels.Count;
+			int mq = seqMaster.Tracks.Count;
 			//mq -= seqMaster.RGBchannels.Count * 2;
-			int sq = seqSource.Tracks.Count + seqSource.ChannelGroups.Count + seqSource.Channels.Count;
+			//int sq = seqSource.Tracks.Count + seqSource.ChannelGroups.Count + seqSource.Channels.Count;
+			int sq = seqSource.Tracks.Count;
 			//sq -= seqSource.RGBchannels.Count * 2;
-			int qq = mq * sq;
-			pnlProgress.Maximum = (int)(qq);
-			int pp = 0;
+			int mm = seqMaster.Members.Count;
+			int qq = mq + sq + mm;
+			//pnlProgress.Maximum = (int)(qq);
+			pnlProgress.Maximum = seqMaster.Members.Count * 10;
+			pp = 0;
 			string logFile = utils.GetAppTempFolder() + "Fuzzy.log";
 			if (File.Exists(logFile))
 			{
 				File.Delete(logFile);
 			}
 
-			//frmOptions opt = new frmOptions();
 
 
+
+			// First Pass, try to match by SavedIndex
 			// TRACKS
-			//foreach (IMember masID in seqMaster.Members.Items)
-			foreach (Track masID in seqMaster.Tracks)
-				{
-					// Try matching by SavedIndex first, there is a good chance they match
-					//    (if one file is a derivative of the other)
-					lblMessage.Text = STATUSautoMap + masID.Name + STATUSto;
-				pnlMessage.Refresh();
-				if (masID.SavedIndex <= seqSource.Members.HighestSavedIndex)
-				{
-					srcID = seqSource.Members.bySavedIndex[masID.SavedIndex];
-				}
-				if (srcID != null)
-				{
-					if (masID.Name.CompareTo(srcID.Name) != 0)
-					{
-						// By SavedIndex didn't work, try by name, use fuzzy find if exact find fails
-						//srcID = seqSource.Members.FindByName(masID.Name, MemberType.Track, true);
-						srcID = FuzzyFindName(masID.Name, seqSource, MemberType.Track);
-					}
-				}
-				if (srcID != null)
-				{
-					// Got a match, map it!
-					MapChannels(masID.SavedIndex, srcID.SavedIndex, true, false);
-				}
-				pp++;
-				pnlProgress.Value = pp;
-				staStatus.Refresh();
-			}  // end Track loop
+			//for (int tridx = 0; tridx < seqMaster.Tracks.Count; tridx++)
+			//{
+			//	Track masterTrack = seqMaster.Tracks[tridx];
+			//	lblMessage.Text = STATUSautoMap + masterTrack.Name + STATUSto;
+			//	pnlMessage.Refresh();
+			//	pp++;
+			//	pnlProgress.Value = pp;
+			//	staStatus.Refresh();
+			//int mcs = AutoMapMembersBySavedIndex(masterTrack.Members);
+			int mcs = AutoMapMembersBySavedIndex(seqMaster.Members);
+				//matchCount += mcs;
+			mappedMemberCount += mcs;
+			//}
 
-			// CHANNEL GROUPS
-			//foreach (IMember masID in seqMaster.Members.Items)
-			foreach (ChannelGroup masID in seqMaster.ChannelGroups)
-			{
-				// Try matching by SavedIndex first, there is a good chance they match
-				lblMessage.Text = STATUSautoMap + masID.Name + STATUSto;
-				pnlMessage.Refresh();
-				if (masID.SavedIndex <= seqSource.Members.HighestSavedIndex)
-				{
-					srcID = seqSource.Members.bySavedIndex[masID.SavedIndex];
-				}
-				if (srcID != null)
-				{
-					if (masID.Name.CompareTo(srcID.Name) != 0)
-					{
-						// By SavedIndex didn't work, try by name, use fuzy find if exact find fails
-						//srcID = seqSource.Members.FindByName(masID.Name, MemberType.ChannelGroup, true);
-						srcID = FuzzyFindName(masID.Name, seqSource, MemberType.ChannelGroup);
-					}
-				}
-				if (srcID != null)
-				{
-					// Got a match, map it!
-					MapChannels(masID.SavedIndex, srcID.SavedIndex, true, false);
-				}
-				pp++;
-				if (pp < pnlProgress.Maximum)
-				{
-					pnlProgress.Value = pp;
-					staStatus.Refresh();
-				}
-			}  // end ChannelGroup loop
+			//for (int tridx = 0; tridx < seqMaster.Tracks.Count; tridx++)
+			//{
+			//Track masterTrack = seqMaster.Tracks[tridx];
+			//lblMessage.Text = STATUSautoMap + masterTrack.Name + STATUSto;
+			//pnlMessage.Refresh();
+			//pp++;
+			//pnlProgress.Value = pp;
+			//staStatus.Refresh();
+			//int mcn = AutoMapMembersByName(masterTrack.Members);
+			int mcn = AutoMapMembersByName(seqMaster.Members);
+			//matchCount += mcn;
+			mappedMemberCount += mcn;
+			//}
 
-			// RGB CHANNELS
-			//foreach (IMember masID in seqMaster.Members.Items)
-			foreach (RGBchannel masID in seqMaster.RGBchannels)
-				{
-					lblMessage.Text = STATUSautoMap + masID.Name + STATUSto;
-				pnlMessage.Refresh();
-				if (masID.SavedIndex <= seqSource.Members.HighestSavedIndex)
-				{
-					srcID = seqSource.Members.bySavedIndex[masID.SavedIndex];
-				}
-				if (srcID != null)
-				{
-					if (masID.Name.CompareTo(srcID.Name) != 0)
-					{
-						//srcID = seqSource.Members.FindByName(masID.Name, MemberType.RGBchannel, true);
-						srcID = FuzzyFindName(masID.Name, seqSource, MemberType.RGBchannel);
-					}
-				}
-				if (srcID != null)
-				{
-					// Always map children of RGB Channels
-					MapChannels(masID.SavedIndex, srcID.SavedIndex, true, true);
-				}
-				pp++;
-				if (pp < pnlProgress.Maximum)
-				{
-					pnlProgress.Value = pp;
-					staStatus.Refresh();
-				}
-			}  // end RGBchannel loop
-
-			// regular CHANNELS
-			//foreach (IMember masID in seqMaster.Members.Items)
-			foreach (Channel masID in seqMaster.Channels) 
-
-			{
-				lblMessage.Text = STATUSautoMap + masID.Name + STATUSto;
-				pnlMessage.Refresh();
-				Channel ch = (Channel)masID;
-				if (ch.rgbChild == RGBchild.None)
-				{
-					if (masID.SavedIndex <= seqSource.Members.HighestSavedIndex)
-					{
-						srcID = seqSource.Members.bySavedIndex[masID.SavedIndex];
-					}
-					if (srcID != null)
-					{
-						if (masID.Name.CompareTo(srcID.Name) != 0)
-						{
-							//srcID = seqSource.Members.FindByName(masID.Name, MemberType.Channel, true);
-							srcID = FuzzyFindName(masID.Name, seqSource, MemberType.Channel);
-						}
-					}
-					if (srcID != null)
-					{
-						MapChannels(masID.SavedIndex, srcID.SavedIndex, true, true);
-					}
-					pp++;
-					if (pp < pnlProgress.Maximum)
-					{
-						pnlProgress.Value = pp;
-						staStatus.Refresh();
-					}
-				}
-			}  // end regular Channel loop
+			//for (int tridx = 0; tridx < seqMaster.Tracks.Count; tridx++)
+			//{
+			//Track masterTrack = seqMaster.Tracks[tridx];
+			//int mc = AutoMapMembersByFuzzy(masterTrack.Members);
+			int mcc = AutoMapMembersByFuzzy(seqMaster.Members);
+			//matchCount += mcc;
+			mappedMemberCount += mcc;
+			//}
 
 			pnlProgress.Visible = false;
-			pnlStatus.Visible = true;
+			lblMessage.Text = "Automap Complete";
+			UpdateMappedCount(0);
+			bulkOp = false;
 			ImBusy(false);
-			if (File.Exists(logFile))
+		}  // end Track loop
+
+		private int AutoMapMembersBySavedIndex(Membership masterMembers)
+		{
+			int matchCount = 0;
+			for (int memidx = 0; memidx < masterMembers.Count; memidx++)
 			{
-				System.Diagnostics.Process.Start(logFile);
+				IMember masterMember = masterMembers[memidx];
+				if (masterMember.MemberType != MemberType.Track)
+				{
+					if (mapMastToSrc[masterMember.SavedIndex] == null) // Mapped already?
+					{
+						if (masterMember.SavedIndex <= seqSource.Members.HighestSavedIndex)
+						{
+							IMember newSourceMember = seqSource.Members.bySavedIndex[masterMember.SavedIndex];
+							if (masterMember.MemberType == newSourceMember.MemberType)
+							{
+								if (masterMember.Name.ToLower().CompareTo(newSourceMember.Name.ToLower()) == 0)
+								{
+									int newMaps = MapMembers(masterMember, newSourceMember, false);
+									matchCount += newMaps;
+									if (masterMember.MemberType == MemberType.ChannelGroup)
+									{
+										//	ChannelGroup masterGroup = (ChannelGroup)masterMember;
+										//	int mc = AutoMapMembersBySavedIndex(masterGroup.Members); // Recurse
+										//	mappedMemberCount += mc;
+										lblMessage.Text = STATUSautoMap + masterMember.Name + STATUSto;
+										pnlMessage.Refresh();
+									}
+								}
+							}
+						}
+					}
+				}
+				pp ++;
+				pnlProgress.Value = pp;
+				staStatus.Refresh();
 			}
+			return matchCount;
+		}
 
+		private int AutoMapMembersByName(Membership masterMembers)
+		{
+			int matchCount = 0;
+			for (int memidx = 0; memidx < masterMembers.Count; memidx++)
+			{
+				IMember masterMember = masterMembers[memidx];
+				if (masterMember.MemberType != MemberType.Track)
+				{
+					if (mapMastToSrc[masterMember.SavedIndex] == null) // Mapped already?
+					{
+						IMember newSourceMember = seqSource.Members.Find(masterMember.Name, masterMember.MemberType, false);
+						if (newSourceMember != null)
+						{
+							if (masterMember.Name.ToLower().CompareTo(newSourceMember.Name.ToLower()) == 0)
+							{
+								int newMaps = MapMembers(masterMember, newSourceMember, false);
+								matchCount += newMaps;
+								if (masterMember.MemberType == MemberType.ChannelGroup)
+								{
+									//	ChannelGroup masterGroup = (ChannelGroup)masterMember;
+									//	int mc = AutoMapMembersByName(masterGroup.Members); // Recurse
+									//	mappedMemberCount += mc;
+									lblMessage.Text = STATUSautoMap + masterMember.Name + STATUSto;
+									pnlMessage.Refresh();
 
+								}
+							}
+						}
+					}
+				}
+				pp ++;
+				pnlProgress.Value = pp;
+				staStatus.Refresh();
+			}
+			return matchCount;
+		}
+
+		private int AutoMapMembersByFuzzy(Membership masterMembers)
+		{
+			int matchCount = 0;
+			for (int memidx = 0; memidx < masterMembers.Count; memidx++)
+			{
+				IMember masterMember = masterMembers[memidx];
+				if (masterMember.MemberType != MemberType.Track)
+				{
+					if (mapMastToSrc[masterMember.SavedIndex] == null) // Mapped already?
+					{
+						lblMessage.Text = STATUSautoMap + masterMember.Name + STATUSto;
+						pnlMessage.Refresh();
+						IMember newSourceMember = FuzzyFindName(masterMember.Name, seqSource, masterMember.MemberType);
+						if (newSourceMember != null)
+						{
+							int newMaps = MapMembers(masterMember, newSourceMember, false);
+							matchCount += newMaps;
+							//if (masterMember.MemberType == MemberType.ChannelGroup)
+							//{
+							//	ChannelGroup masterGroup = (ChannelGroup)masterMember;
+							//	int mc = AutoMapMembersByName(masterGroup.Members); // Recurse
+							//	matchCount += mc;
+							//}
+						}
+					}
+				}
+				pp+=8;
+				pnlProgress.Value = pp;
+				staStatus.Refresh();
+			}
+			return matchCount;
 		}
 
 		private void frmRemapper_Paint(object sender, PaintEventArgs e)
@@ -4067,7 +4559,7 @@ namespace MapORama
 			{
 				int mSI = seqMaster.RGBchannels[masIdx].SavedIndex;
 				int sSI = seqSource.RGBchannels[srcIdx].SavedIndex;
-				MapChannels(mSI, sSI, true, true);
+				MapMembers(mSI, sSI, true, true);
 				masIdx++;
 				srcIdx++;
 			}
@@ -4082,7 +4574,7 @@ namespace MapORama
 			{
 				int mSI = seqMaster.RGBchannels[masIdx].SavedIndex;
 				int sSI = seqSource.RGBchannels[srcIdx].SavedIndex;
-				MapChannels(mSI, sSI, true, true);
+				MapMembers(mSI, sSI, true, true);
 				masIdx++;
 				srcIdx++;
 			}

@@ -96,7 +96,7 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1297, 450);
 			this.Controls.Add(this.dataGridView1);
-			this.Name = "TableView";
+			//this.Name = "TableView";
 			this.Text = "TableView";
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
 			this.ResumeLayout(false);

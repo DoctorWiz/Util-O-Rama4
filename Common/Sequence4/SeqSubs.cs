@@ -209,10 +209,12 @@ namespace LORUtils
 
 		public void Parse(string lineIn)
 		{
-			System.Diagnostics.Debugger.Break();
+			//System.Diagnostics.Debugger.Break();
 			//string keywd = utils.getKeyWord(lineIn, VizChannel.FIELDsubParam);
-			string keywd = utils.getKeyWord(lineIn, Channel.FIELDcolor);
-			if (keywd.Length == 0)
+			//string keywd = utils.getKeyWord(lineIn, Channel.FIELDcolor);
+			int idt = lineIn.IndexOf(FIELDdeviceType);
+			//if (keywd.Length == 0)
+			if (idt>0)
 			{
 				isViz = false;
 				string dev = utils.getKeyWord(lineIn, FIELDdeviceType); // Note: deviceType is NOT capitalized and is a String
@@ -372,6 +374,45 @@ namespace LORUtils
 		{
 			Parse(lineIn);
 		}
+
+		public Effect(EffectType effectType, int startTime, int endTime)
+		{
+			if (startTime >= endTime)
+			{
+				// Raise Error to Debugger
+				System.Diagnostics.Debugger.Break();
+			}
+			this.EffectType = effectType;
+			myStartCentisecond = startCentisecond;
+			myEndCentisecond = endCentisecond;
+		}
+		public Effect(EffectType effectType, int startTime, int endTime, int intensity)
+		{
+			if (startTime >= endTime)
+			{
+				// Raise Error to Debugger
+				System.Diagnostics.Debugger.Break();
+			}
+			this.EffectType = effectType;
+			myStartCentisecond = startCentisecond;
+			myEndCentisecond = endCentisecond;
+			Intensity = intensity;
+		}
+
+		public Effect(EffectType effectType, int startTime, int endTime, int start_Intensity, int end_Intensity)
+		{
+			if (startTime >= endTime)
+			{
+				// Raise Error to Debugger
+				System.Diagnostics.Debugger.Break();
+			}
+			this.EffectType = effectType;
+			myStartCentisecond = startCentisecond;
+			myEndCentisecond = endCentisecond;
+			startIntensity = start_Intensity;
+			endIntensity = end_Intensity;
+		}
+
 
 		public void Parse(string lineIn)
 		{

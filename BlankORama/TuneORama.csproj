@@ -51,7 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Common\Sequence\Sequence.cs">
+    <Compile Include="..\..\Common\Sequence4\Sequence.cs">
       <Link>Sequence.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\Utils\LORUtils.cs">

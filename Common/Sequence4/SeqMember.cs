@@ -69,7 +69,12 @@ namespace LORUtils
 			get;
 			set;
 		}
-		
+		IMember MapTo
+		{
+			get;
+			set;
+		}
+
 	}
 
 	public class Channel : IMember, IComparable<IMember>
@@ -89,6 +94,7 @@ namespace LORUtils
 		public RGBchannel rgbParent = null;
 		public List<Effect> effects = new List<Effect>();
 		private object tag = null;
+		IMember mappedTo = null;
 
 		public const string FIELDcolor = " color";
 
@@ -417,6 +423,25 @@ namespace LORUtils
 			}
 		}
 
+		public IMember MapTo
+		{
+			get
+			{
+				return mappedTo;
+			}
+			set
+			{
+				if (value.MemberType == MemberType.Channel)
+				{
+					mappedTo = value;
+				}
+				else
+				{
+					System.Diagnostics.Debugger.Break();
+				}
+			}
+		}
+
 
 		public Channel(string theName, int theSavedIndex)
 		{
@@ -574,6 +599,7 @@ namespace LORUtils
 		private Sequence4 parentSequence = null;
 		private bool imSelected = false;
 		private object tag = null;
+		private IMember mappedTo = null;
 
 		public Channel redChannel = null;
 		public Channel grnChannel = null;
@@ -790,6 +816,25 @@ namespace LORUtils
 			}
 		}
 
+		public IMember MapTo
+		{
+			get
+			{
+				return mappedTo;
+			}
+			set
+			{
+				if (value.MemberType == MemberType.RGBchannel)
+				{
+					mappedTo = value;
+				}
+				else
+				{
+					System.Diagnostics.Debugger.Break();
+				}
+			}
+		}
+
 		public RGBchannel(string theName, int theSavedIndex)
 		{
 			myName = theName;
@@ -939,6 +984,7 @@ namespace LORUtils
 		public const string TABLEchannelGroupList = "channelGroupList";
 		private const string STARTchannelGroup = utils.STFLD + TABLEchannelGroupList + utils.SPC;
 		private object tag = null;
+		private IMember mappedTo = null;
 
 		public Membership Members; // = new Membership(this);
 
@@ -1155,6 +1201,25 @@ namespace LORUtils
 			}
 		}
 
+		public IMember MapTo
+		{
+			get
+			{
+				return mappedTo;
+			}
+			set
+			{
+				if (value.MemberType == MemberType.ChannelGroup)
+				{
+					mappedTo = value;
+				}
+				else
+				{
+					System.Diagnostics.Debugger.Break();
+				}
+			}
+		}
+
 		public ChannelGroup(string theName, int theSavedIndex)
 		{
 			myName = theName;
@@ -1306,6 +1371,7 @@ namespace LORUtils
 		public const string TABLEcosmicDeviceDevice = "colorCosmicDevice";
 		private const string STARTcosmicDevice = utils.STFLD + TABLEcosmicDeviceDevice + utils.SPC;
 		private object tag = null;
+		private IMember mappedTo = null;
 
 		public Membership Members; // = new Membership(this);
 
@@ -1518,6 +1584,25 @@ namespace LORUtils
 			}
 		}
 
+		public IMember MapTo
+		{
+			get
+			{
+				return mappedTo;
+			}
+			set
+			{
+				if (value.MemberType == MemberType.CosmicDevice)
+				{
+					mappedTo = value;
+				}
+				else
+				{
+					System.Diagnostics.Debugger.Break();
+				}
+			}
+		}
+
 		public CosmicDevice(string theName, int theSavedIndex)
 		{
 			myName = theName;
@@ -1651,8 +1736,8 @@ namespace LORUtils
 		private string myName = "";
 		private int myCentiseconds = utils.UNDEFINED;
 		private int myIndex = utils.UNDEFINED;
-		private int mySavedIndex = utils.UNDEFINED;
-		private int myAltSavedIndex = utils.UNDEFINED;
+		private int mySaveID = utils.UNDEFINED;
+		private int myAltSaveID = utils.UNDEFINED;
 		private Sequence4 parentSequence = null;
 		private bool imSelected = false;
 
@@ -1660,6 +1745,7 @@ namespace LORUtils
 		public int spacing = utils.UNDEFINED;
 		public List<int> timings = new List<int>();
 		private object tag = null;
+		private IMember mappedTo = null;
 
 		public const string FIELDsaveID = " saveID";
 		public const string TABLEtiming = "timing";
@@ -1721,8 +1807,19 @@ namespace LORUtils
 		{
 			get
 			{
-				int n = ParentSequence.Channels.Count + ParentSequence.RGBchannels.Count + ParentSequence.ChannelGroups.Count + ParentSequence.Tracks.Count;
-				return n + myIndex;
+				//int n = ParentSequence.Channels.Count + ParentSequence.RGBchannels.Count + ParentSequence.ChannelGroups.Count + ParentSequence.Tracks.Count;
+				//return n + myIndex;
+				int n = -mySaveID -1;
+				if (utils.IsWizard)
+				{
+					if (System.Diagnostics.Debugger.IsAttached)
+					{
+						string msg = "Why is something trying to get the SavedIndex of a Timing Grid?";
+						System.Diagnostics.Debugger.Break();
+					}
+				}
+
+				return n;
 			}
 		}
 
@@ -1731,19 +1828,54 @@ namespace LORUtils
 			//mySavedIndex = theSaveID;
 			//if (parentSequence != null) parentSequence.MakeDirty();
 			//! We should not attempt to set the SavedIndex of a timing grid, set it's SaveID instead
+			System.Diagnostics.Debugger.Break();
+			if (theSaveID < 0)
+			{
+				mySaveID = Math.Abs(theSaveID) - 1;
+			}
+			else
+			{
+				mySaveID = theSaveID;
+			}
 		}
 
 		public int AltSavedIndex
+		// Required for iMember compatibility
 		{
 			get
 			{
-				return myAltSavedIndex;
+				// Check Call Stack - consider changing call
+				//System.Diagnostics.Debugger.Break();
+				int n = -myAltSaveID-1;
+				return n;
 			}
 			set
 			{
-				myAltSavedIndex = value;
+				// Check Call Stack - consider changing call
+				//System.Diagnostics.Debugger.Break();
+				if (value < 0)
+				{
+					myAltSaveID = Math.Abs(value) - 1;
+				}
+				else
+				{
+					myAltSaveID = value;
+				}
 			}
 		}
+
+		public int AltSaveID
+		{
+			get
+			{
+				return myAltSaveID;
+			}
+			set
+			{
+				myAltSaveID = Math.Abs(value);
+			}
+		}
+
 
 		public Sequence4 ParentSequence
 		{
@@ -1795,7 +1927,7 @@ namespace LORUtils
 				{
 					if (parentSequence.Members.sortMode == Membership.SORTbyAltSavedIndex)
 					{
-						result = myAltSavedIndex.CompareTo(other.AltSavedIndex);
+						result = myAltSaveID.CompareTo(other.AltSavedIndex);
 					}
 				}
 			}
@@ -1810,7 +1942,7 @@ namespace LORUtils
 			ret.Append(utils.STFLD);
 			ret.Append(Sequence4.TABLEtimingGrid);
 
-			ret.Append(utils.SetKey(FIELDsaveID, myAltSavedIndex));
+			ret.Append(utils.SetKey(FIELDsaveID, myAltSaveID));
 			if (myName.Length > 1)
 			{
 				ret.Append(utils.SetKey(utils.FIELDname, utils.XMLifyName(myName)));
@@ -1858,7 +1990,7 @@ namespace LORUtils
 		public void Parse(string lineIn)
 		{
 			myName = utils.HumanizeName(utils.getKeyWord(lineIn, utils.FIELDname));
-			mySavedIndex = utils.getKeyValue(lineIn, FIELDsaveID);
+			mySaveID = utils.getKeyValue(lineIn, FIELDsaveID);
 			Centiseconds = utils.getKeyValue(lineIn, utils.FIELDcentiseconds);
 			this.TimingGridType = SeqEnums.enumGridType(utils.getKeyWord(lineIn, utils.FIELDtype));
 			spacing = utils.getKeyValue(lineIn, FIELDspacing);
@@ -1870,7 +2002,7 @@ namespace LORUtils
 			get
 			{
 				bool r = false;
-				if (myAltSavedIndex > utils.UNDEFINED) r = true;
+				if (myAltSaveID > utils.UNDEFINED) r = true;
 				return r;
 			}
 		}
@@ -1886,7 +2018,7 @@ namespace LORUtils
 			TimingGrid grid = new TimingGrid(newName, utils.UNDEFINED);
 			grid.myCentiseconds = myCentiseconds;
 			grid.myIndex = myIndex;
-			grid.mySavedIndex = mySavedIndex; // SaveID
+			grid.mySaveID = mySaveID; // SaveID
 			grid.TimingGridType = this.TimingGridType;
 			grid.spacing = spacing;
 			if (this.TimingGridType == LORUtils.TimingGridType.Freeform)
@@ -1905,25 +2037,13 @@ namespace LORUtils
 		{
 			get
 			{
-				return mySavedIndex;
+				return mySaveID;
 			}
 			set
 			{
-				//mySavedIndex = value;
-				//if (parentSequence != null) parentSequence.MakeDirty();
+				mySaveID = value;
+				if (parentSequence != null) parentSequence.MakeDirty();
 				//System.Diagnostics.Debugger.Break();
-			}
-		}
-
-		public int AltSaveID
-		{
-			get
-			{
-				return myAltSavedIndex;
-			}
-			set
-			{
-				myAltSavedIndex = value;
 			}
 		}
 
@@ -1939,6 +2059,24 @@ namespace LORUtils
 			}
 		}
 
+		public IMember MapTo
+		{
+			get
+			{
+				return mappedTo;
+			}
+			set
+			{
+				if (value.MemberType == MemberType.TimingGrid)
+				{
+					mappedTo = value;
+				}
+				else
+				{
+					System.Diagnostics.Debugger.Break();
+				}
+			}
+		}
 
 
 		public TimingGrid(string lineIn)
@@ -1963,7 +2101,7 @@ namespace LORUtils
 		public TimingGrid(string theName, int theSaveID)
 		{
 			myName = theName;
-			mySavedIndex = theSaveID;
+			mySaveID = theSaveID;
 		}
 
 
@@ -2069,11 +2207,13 @@ namespace LORUtils
 		private string myName = "";
 		private int myCentiseconds = utils.UNDEFINED;
 		private int myIndex = utils.UNDEFINED;
-		private int mySavedIndex = utils.UNDEFINED;
-		private int myAltSavedIndex = utils.UNDEFINED;
+		//private int mySavedIndex = utils.UNDEFINED;
+		private int myAltTrackIndex = utils.UNDEFINED;
+		private int tempGridSaveID = utils.UNDEFINED;
 		private Sequence4 parentSequence = null;
 		private bool imSelected = false;
 		private object tag = null;
+		private IMember mappedTo = null;
 
 		public Membership Members; // = new Membership(null);
 		public List<LoopLevel> loopLevels = new List<LoopLevel>();
@@ -2137,8 +2277,17 @@ namespace LORUtils
 		{
 			get
 			{
-				int n = ParentSequence.Channels.Count + ParentSequence.RGBchannels.Count + ParentSequence.ChannelGroups.Count;
-				return n + myIndex + 1;
+				//int n = ParentSequence.Channels.Count + ParentSequence.RGBchannels.Count + ParentSequence.ChannelGroups.Count;
+				int n = -myIndex - 1;
+				if (utils.IsWizard)
+				{
+					if (System.Diagnostics.Debugger.IsAttached)
+					{
+						string msg = "Why is something trying to get the SavedIndex of a Track?";
+						System.Diagnostics.Debugger.Break();
+					}
+				}
+				return n;
 			}
 		}
 
@@ -2148,17 +2297,25 @@ namespace LORUtils
 			//if (parentSequence != null) parentSequence.MakeDirty();
 			//! Why are we trying to set the SavedIndex of a track?!?
 			System.Diagnostics.Debugger.Break();
+			//mySavedIndex = Math.Abs(theTrackNumber);
 		}
 
 		public int AltSavedIndex
 		{
 			get
 			{
-				return myAltSavedIndex;
+				return -myAltTrackIndex;
 			}
 			set
 			{
-				myAltSavedIndex = value;
+				if (value < 0)
+				{
+					myAltTrackIndex = Math.Abs(value) - 1;
+				}
+				else
+				{
+					myAltTrackIndex = value;
+				}
 			}
 		}
 
@@ -2212,7 +2369,7 @@ namespace LORUtils
 				{
 					if (parentSequence.Members.sortMode == Membership.SORTbyAltSavedIndex)
 					{
-						result = myAltSavedIndex.CompareTo(other.AltSavedIndex);
+						result = myAltTrackIndex.CompareTo(other.AltSavedIndex);
 					}
 				}
 			}
@@ -2233,18 +2390,18 @@ namespace LORUtils
 		{
 			this.Members = new Membership(this);
 			myName = utils.HumanizeName(utils.getKeyWord(lineIn, utils.FIELDname));
-			mySavedIndex = utils.getKeyValue(lineIn, utils.FIELDsavedIndex);
+			//mySavedIndex = utils.getKeyValue(lineIn, utils.FIELDsavedIndex);
 			myCentiseconds = utils.getKeyValue(lineIn, utils.FIELDtotalCentiseconds);
-			int tgsi = utils.getKeyValue(lineIn, Sequence4.TABLEtimingGrid);
+			tempGridSaveID = utils.getKeyValue(lineIn, Sequence4.TABLEtimingGrid);
 			if (this.parentSequence == null)
 			{
 				// If the parent has not been assigned yet, there is no way to get ahold of the grid
 				// So temporarily set the AltSavedIndex to this Track's TimingGrid's SaveID
-				myAltSavedIndex = tgsi;
+				//myAltSavedIndex = tempGridSaveID;
 			}
 			else
 			{
-				if (tgsi < 0)
+				if (tempGridSaveID < 0)
 				{
 					// For Channel Configs, there will be no timing grid
 					timingGrid = null;
@@ -2252,8 +2409,22 @@ namespace LORUtils
 				else
 				{
 					// Assign the TimingGrid based on the SaveID
-					IMember member = parentSequence.Members.bySaveID[tgsi];
-					timingGrid = (TimingGrid)member;
+					//IMember member = parentSequence.Members.bySaveID[tempGridSaveID];
+					TimingGrid tg = null;
+					for (int i=0; i< parentSequence.TimingGrids.Count; i++)
+					{
+						if (parentSequence.TimingGrids[i].SaveID == tempGridSaveID)
+						{
+							tg = parentSequence.TimingGrids[i];
+							i = parentSequence.TimingGrids.Count; // force exit of loop
+						}
+					}
+					if (tg == null)
+					{
+						string msg = "ERROR: Timing Grid with SaveID of " + tempGridSaveID.ToString() + " not found!";
+						System.Diagnostics.Debugger.Break();
+					}
+					timingGrid = tg;
 				}
 			}
 			if (parentSequence != null) parentSequence.MakeDirty();
@@ -2264,7 +2435,7 @@ namespace LORUtils
 			get
 			{
 				bool r = false;
-				if (myAltSavedIndex > utils.UNDEFINED) r = true;
+				if (myAltTrackIndex > utils.UNDEFINED) r = true;
 				return r;
 			}
 		}
@@ -2280,7 +2451,8 @@ namespace LORUtils
 			Track tr = new Track(newName, utils.UNDEFINED);
 			tr.myCentiseconds = myCentiseconds;
 			tr.myIndex = myIndex;
-			tr.mySavedIndex = mySavedIndex;
+			tr.myAltTrackIndex = myAltTrackIndex;
+			tr.tempGridSaveID = tempGridSaveID;
 			tr.imSelected = imSelected;
 			tr.timingGrid = (TimingGrid)timingGrid.Clone();
 
@@ -2314,13 +2486,31 @@ namespace LORUtils
 			}
 		}
 
+		public IMember MapTo
+		{
+			get
+			{
+				return mappedTo;
+			}
+			set
+			{
+				if (value.MemberType == MemberType.Track)
+				{
+					mappedTo = value;
+				}
+				else
+				{
+					System.Diagnostics.Debugger.Break();
+				}
+			}
+		}
 
 
 		public Track(string theName, int theTrackNo)
 		{
 			Members = new Membership(this);
 			myName = theName;
-			mySavedIndex= theTrackNo;
+			myIndex= theTrackNo -1;  // Tracks are numbered starting with 1, Indexes start with 0
 			//Members.ParentSequence = ID.ParentSequence;
 		}
 
@@ -2515,6 +2705,8 @@ namespace LORUtils
 		public List<IMember> byAltSavedIndex = new List<IMember>();
 		public List<TimingGrid> bySaveID = new List<TimingGrid>();
 		public List<TimingGrid> byAltSaveID = new List<TimingGrid>();
+		public List<Track> byTrackIndex = new List<Track>();
+		public List<Track> byAltTrackIndex = new List<Track>();
 		public SortedDictionary<string, IMember> byName = new SortedDictionary<string, IMember>();
 		//public SortedList<string, IMember> byName = new SortedList<string, IMember>();
 
@@ -2560,10 +2752,22 @@ namespace LORUtils
 		// Membership.Add(Member)
 		public int Add(IMember newMember)
 		{
-			#if DEBUG
-				string msg = "Membership.Add(" + newMember.Name + ":" + newMember.MemberType.ToString() + ")";
-				Debug.WriteLine(msg);
-			#endif
+			int memberSI = utils.UNDEFINED;
+			//#if DEBUG
+			//	string msg = "Membership.Add(" + newMember.Name + ":" + newMember.MemberType.ToString() + ")";
+			//	Debug.WriteLine(msg);
+			//#endif
+			//#if DEBUG
+			//	if ((newMember.SavedIndex == 6) || (newMember.MemberType == MemberType.TimingGrid))
+			//	{
+			//		string msg = "Membership.Add(" + newMember.Name + ":" + newMember.MemberType.ToString() + ")";
+			//		msg += " to owner " + this.owner.Name;
+			//		Debug.WriteLine(msg);
+				// Check to make sure timing grid is not being added to a channel group (while initial reading of file)
+				// If so, trace stack, find out why
+					//System.Diagnostics.Debugger.Break();
+			//	}
+			//#endif
 			if (this.parentSequence == null)
 			{
 				if (newMember.ParentSequence == null)
@@ -2581,13 +2785,14 @@ namespace LORUtils
 			}
 
 
-			int memberSI = newMember.SavedIndex;
 			if (parentSequence != null) parentSequence.MakeDirty();
 			if ((newMember.MemberType == MemberType.Channel) ||
 				  (newMember.MemberType == MemberType.RGBchannel) ||
 				  (newMember.MemberType == MemberType.ChannelGroup) ||
 				  (newMember.MemberType == MemberType.CosmicDevice))
 			{
+				// Reminder, Must be a member which really has a SavedIndex to hit this point
+				memberSI = newMember.SavedIndex;
 				if (memberSI < 0)
 				{
 					highestSavedIndex++;
@@ -2627,7 +2832,7 @@ namespace LORUtils
 				}
 				bySavedIndex[memberSI] = newMember;
 				byAltSavedIndex[memberSI] = newMember;
-				
+				Items.Add(newMember);
 			}
 
 			if (newMember.MemberType == MemberType.Track)
@@ -2636,66 +2841,88 @@ namespace LORUtils
 				// Tracks don't use saved Indexes
 				// but they get assigned one anyway for matching purposes
 				//byAlphaTrackNames.Add(newMember);
-				bySavedIndex.Add(newMember);
-				byAltSavedIndex.Add(newMember);
+				//bySavedIndex.Add(newMember);
+				//byAltSavedIndex.Add(newMember);
+				Track tr = (Track)newMember;
+				int trackIdx = tr.Index;
+				if (trackIdx < 0) // Sanity Check
+				{
+					System.Diagnostics.Debugger.Break();
+				}
+				while ((byTrackIndex.Count -1) < trackIdx)
+				{
+					byTrackIndex.Add(null);
+					byAltTrackIndex.Add(null);
+				}
+				byTrackIndex[trackIdx] = tr;
+				byAltTrackIndex[trackIdx] = tr;
 				trackCount++;
 			}
 
 			if (newMember.MemberType == MemberType.TimingGrid)
 			{
 				TimingGrid tg = (TimingGrid)newMember;
-				memberSI = tg.SaveID;
-				if (memberSI < 0)
+				int gridSID = tg.SaveID;
+				if (gridSID < 0)
 				{
 					highestSaveID++;
-					memberSI = highestSaveID;
+					gridSID = highestSaveID;
 					//newMember.SetSavedIndex(memberSI);
-					//newMember.setSaveID(memberSI);
+					tg.SaveID = gridSID;
 				}
-				if (memberSI > highestSaveID)
+				if (gridSID > highestSaveID)
 				{
-					highestSaveID = memberSI;
+					highestSaveID = gridSID;
 				}
-				while ((bySaveID.Count - 1) < memberSI)
+				while ((bySaveID.Count - 1) < gridSID)
 				{
 					bySaveID.Add(null);
 					byAltSaveID.Add(null);
 				}
 				bySaveID[memberSI] = tg;
 				byAltSaveID[memberSI] = tg;
-
-				bySavedIndex.Add(newMember);
-				byAltSavedIndex.Add(newMember);
 				timingGridCount++;
 			}
 
 			if (owner.MemberType == MemberType.Sequence)
 			{
-				bool need2add = false;
-				if (newMember.SavedIndex < 0)
+				bool need2add = false; // Reset
+															 //if (newMember.SavedIndex < 0)
+															 //{
+															 //	need2add = true;
+															 //}
+				if ((newMember.MemberType == MemberType.Channel) ||
+						(newMember.MemberType == MemberType.RGBchannel) ||
+						(newMember.MemberType == MemberType.ChannelGroup) ||
+						(newMember.MemberType == MemberType.CosmicDevice))
 				{
-					need2add = true;
-				}
-				if (memberSI > ParentSequence.Members.highestSavedIndex)
-				{
-					if ((newMember.MemberType == MemberType.Channel) ||
-							(newMember.MemberType == MemberType.RGBchannel) ||
-							(newMember.MemberType == MemberType.ChannelGroup) ||
-							(newMember.MemberType == MemberType.CosmicDevice))
+					memberSI = newMember.SavedIndex;
+					if (memberSI > ParentSequence.Members.highestSavedIndex)
 					{
 						need2add = true;
 					}
 				}
-				else
+				// Else new member is Track or Timing Grid
+				if (newMember.MemberType == MemberType.Track)
 				{
-					if (newMember.Name.CompareTo(ParentSequence.Members.bySavedIndex[memberSI].Name) != 0)
+					Track newTrack = (Track)newMember;
+					int trkIdx = newTrack.Index;
+					if (trkIdx > parentSequence.Tracks.Count)
 					{
-						if (newMember.MemberType == ParentSequence.Members.bySavedIndex[memberSI].MemberType)
-						{
-							need2add = true;
-						}
+						need2add = true;
 					}
 				}
+				if (newMember.MemberType == MemberType.TimingGrid)
+				{
+					TimingGrid newGrid = (TimingGrid)newMember;
+					int gridSaveID = newGrid.SaveID;
+					if (gridSaveID > parentSequence.Members.highestSaveID)
+					{ 
+						need2add = true;
+					}
+				}
+
+
 				if (need2add)
 				{
 					if (newMember.MemberType == MemberType.Channel)
@@ -2722,18 +2949,11 @@ namespace LORUtils
 					{
 						ParentSequence.TimingGrids.Add((TimingGrid)newMember);
 					}
+
+					Items.Add(newMember);
+					allCount++;
 				} // end if need2add
 			} // end if owner is the sequenced
-
-
-
-
-			Items.Add(newMember);
-			//bySavedIndex.Add(newMember);
-			//byAltSavedIndex.Add(newMember);
-			allCount++;
-
-
 
 			return memberSI;
 		}
