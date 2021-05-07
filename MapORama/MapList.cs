@@ -34,12 +34,12 @@ namespace MapORama
 		private const string MAPSUM = "Channel Mapping Summary - ";
 
 
-		public frmMapList(Sequence4 seqSourceuence, Sequence4 seqMasteruence, List<IMember>[] srcToMastMap, IMember[] mastToSrcMap, ImageList icons)
+		public frmMapList(Sequence4 sourceSequence, Sequence4 masterSequence, List<IMember>[] srcToMastMap, IMember[] mastToSrcMap, ImageList icons)
 		{
 			InitializeComponent();
 
-			seqSource = seqSourceuence;
-			seqMaster = seqMasteruence;
+			seqSource = sourceSequence;
+			seqMaster = masterSequence;
 			mapMastToSrc = mastToSrcMap;
 			mapSrcToMast = srcToMastMap;
 			imlTreeIcons = icons;
@@ -91,19 +91,19 @@ namespace MapORama
 					FillBySourceDispOrder();
 				} // end Sort by Alpha
 			}
-			else // Sort by Master
+			else // Sort by Destination
 			{
-				lblKey.Text = "by Master";
+				lblKey.Text = "by Destination";
 				if (sortAlpha)
 				{
 					lblAlpha.Text = "by Alpha";
-					this.Text = MAPSUM + "By Master in Alphabetical order";
+					this.Text = MAPSUM + "By Destination in Alphabetical order";
 					FillByMasterAlpha();
 				}
 				else // NOT sort Alpha
 				{
 					lblAlpha.Text = "by DispOrder";
-					this.Text = MAPSUM + "by Master in Display Order";
+					this.Text = MAPSUM + "by Destination in Display Order";
 					FillByMasterDispOrder();
 				} // end Sort by Alpha
 			}
@@ -559,13 +559,13 @@ namespace MapORama
 		{
 			if (sourceNowOnRight)
 			{
-				lstMap.Columns[0].Text = "Master Channel";
+				lstMap.Columns[0].Text = "Destination Channel";
 				lstMap.Columns[1].Text = "Source Channel";
 			}
 			else
 			{
 				lstMap.Columns[0].Text = "Source Channel";
-				lstMap.Columns[1].Text = "Master Channel";
+				lstMap.Columns[1].Text = "Destination Channel";
 			}
 			sourceOnRight = sourceNowOnRight;
 			//BuildList();

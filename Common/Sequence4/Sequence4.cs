@@ -500,18 +500,18 @@ namespace LORUtils
 										lineCount++;
 										try
 										{
-										//! Effects
-										if (noEffects)
-										{
-											li = utils.UNDEFINED;
-										}
-										else
-										{
-											//li = lineIn.IndexOf(STARTeffect);
-											li = utils.ContainsKey(lineIn, STARTeffect);
-										}
-										if (li > 0)
-										{
+											//! Effects
+											if (noEffects)
+											{
+												li = utils.UNDEFINED;
+											}
+											else
+											{
+												//li = lineIn.IndexOf(STARTeffect);
+												li = utils.ContainsKey(lineIn, STARTeffect);
+											}
+											if (li > 0)
+											{
 		///////////////////
 		///   EFFECT   ///
 		/////////////////
@@ -528,12 +528,12 @@ namespace LORUtils
 												#endregion // Effect
 											}
 											else // Not an Effect
-										{
-											//! Timings
-											//li = lineIn.IndexOf(STARTtiming);
-											li = utils.ContainsKey(lineIn, STARTtiming);
-											if (li > 0)
 											{
+												//! Timings
+												//li = lineIn.IndexOf(STARTtiming);
+												li = utils.ContainsKey(lineIn, STARTtiming);
+												if (li > 0)
+												{
 		//////////////////
 		///  TIMING   ///
 		////////////////
@@ -543,12 +543,12 @@ namespace LORUtils
 													#endregion // Timing
 												}
 												else // Not a regular channel
-											{
-												//! Regular Channels
-												//li = lineIn.IndexOf(STARTchannel);
-												li = utils.ContainsKey(lineIn, STARTchannel);
-												if (li > 0)
 												{
+													//! Regular Channels
+													//li = lineIn.IndexOf(STARTchannel);
+													li = utils.ContainsKey(lineIn, STARTchannel);
+													if (li > 0)
+													{
 		////////////////////////////
 		///   REGULAR CHANNEL   ///
 		//////////////////////////
@@ -557,12 +557,12 @@ namespace LORUtils
 														#endregion // Regular Channel
 													}
 													else // Not a regular channel
-												{
-													//! RGB Channels
-													//li = lineIn.IndexOf(STARTrgbChannel);
-													li = utils.ContainsKey(lineIn, STARTrgbChannel);
-													if (li > 0)
 													{
+														//! RGB Channels
+														//li = lineIn.IndexOf(STARTrgbChannel);
+														li = utils.ContainsKey(lineIn, STARTrgbChannel);
+														if (li > 0)
+														{
 		////////////////////////
 		///   RGB CHANNEL   ///
 		//////////////////////
@@ -600,13 +600,13 @@ namespace LORUtils
 															#endregion // RGB Channel
 														}
 														else  // Not an RGB Channel
-													{
-														//! Channel Groups
-														//li = lineIn.IndexOf(STARTchannelGroup);
-														li = utils.ContainsKey(lineIn, STARTchannelGroup);
-														if (li > 0)
 														{
-		//////////////////////////
+															//! Channel Groups
+															//li = lineIn.IndexOf(STARTchannelGroup);
+															li = utils.ContainsKey(lineIn, STARTchannelGroup);
+															if (li > 0)
+															{
+			//////////////////////////
 		///   CHANNEL GROUP   ///
 		////////////////////////
 																#region Channel Group
@@ -636,7 +636,7 @@ namespace LORUtils
 																#endregion // Channel Group
 															}
 															else // Not a ChannelGroup
-														{
+															{
 																//! Cosmic Color Devices
 																li = utils.ContainsKey(lineIn, STARTcosmic);
 																if (li > 0)
@@ -865,7 +865,7 @@ namespace LORUtils
 	#if DEBUG
 											System.Diagnostics.Debugger.Break();
 	#endif
-											utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+											utils.WriteLogEntry(emsg, utils.LOG_Error);
 											if (utils.IsWizard)
 											{
 												DialogResult dr1 = MessageBox.Show(emsg, "Error Reading Sequence File", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -901,7 +901,7 @@ namespace LORUtils
 #if DEBUG
 				System.Diagnostics.Debugger.Break();
 #endif
-				utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+				utils.WriteLogEntry(emsg, utils.LOG_Error);
 				if (utils.IsWizard)
 				{
 					DialogResult dr2 = MessageBox.Show(emsg, "Error Opening Sequence File", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1752,6 +1752,15 @@ namespace LORUtils
 		{
 			// Sets the sequence, and all tracks, channels, groups, to the new time (length)
 			// And removes any timing marks or effects after that time.
+			if (newCentiseconds > 360000)
+			{
+				string m = "WARNING!! Setting Centiseconds to more than 60 minutes!  Are you sure?";
+				utils.WriteLogEntry(m, "Warning");
+				if (Debugger.IsAttached)
+				{
+					System.Diagnostics.Debugger.Break();
+				}
+			}
 			myCentiseconds = newCentiseconds;
 			for (int i=0; i< Tracks.Count; i++)
 			{
@@ -3045,34 +3054,169 @@ namespace LORUtils
 			return seqOut;
 		}
 
-		public void MoveTrack(int oldPosition, int newPosition)
+		public void MoveTrackByNumber(int oldTrackNumber, int newTrackNumber)
 		{
+			MoveTrackByIndex(oldTrackNumber - 1, newTrackNumber - 1);
+		}
+		public void MoveTrackByIndex(int oldIndex, int newIndex)
+		{
+			// IMPORTANT NOTE:
+			// POSITIONS ARE THE INDEX (ZERO TO COUNT-1)
+			// THEY ARE **NOT** THE TRACK NUMBER (ONE TO COUNT) !!
+			string info = "";
+			
 			// Sanity Checks
-			if ((oldPosition >= 0) ||
-				(oldPosition < Tracks.Count) ||
-				(newPosition >= 0) ||
-				(newPosition <= Tracks.Count) ||
-				(newPosition != oldPosition))
+			if ((oldIndex >= 0) &&
+				(oldIndex < Tracks.Count) &&
+				(newIndex >= 0) &&
+				(newIndex <= Tracks.Count) &&
+				(newIndex != oldIndex))
 			{
 				List<Track> tracksNew = new List<Track>();
-				int newIndex = 0;
+				int newSpot = 0;
 				for (int i=0; i< Tracks.Count; i++)
 				{
-					if (i != oldPosition)
+					if (i == newIndex)
 					{
-						Tracks[i].SetIndex(newIndex);
-						tracksNew.Add(Tracks[i]);
+						info = Tracks[oldIndex].Name + " shifted from " + oldIndex.ToString() + " to " + newSpot.ToString();
+						Debug.WriteLine(info);
+						tracksNew.Add(Tracks[oldIndex]);
+						Tracks[oldIndex].SetIndex(newSpot);
 					}
-					if (i == newPosition)
+					else
 					{
-						Tracks[oldPosition].SetIndex(newIndex);
-						tracksNew.Add(Tracks[oldPosition]);
+						if (i != oldIndex)
+						{
+							info = Tracks[i].Name + " shifted from " + i.ToString() + " to " + newSpot.ToString();
+							Debug.WriteLine(info);
+							tracksNew.Add(Tracks[i]);
+							Tracks[i].SetIndex(newSpot);
+						}
 					}
-					newIndex++;
+					newSpot++;
 				}
 				Tracks = tracksNew;
 			}
 		} // End MoveTrack
+
+		public int LongestMember
+		{
+			get
+			{
+				int longest = 0;
+				for (int i=0; i< Members.Count; i++)
+				{
+					if (Members[i].Centiseconds > longest)
+					{
+						longest = Members[i].Centiseconds;
+					}
+					if (longest > 360000)
+					{
+						string m = "WARNING!  Member " + Members[i].Name + " is over 60 minutes!";
+						utils.WriteLogEntry(m, "Warning");
+						if (Debugger.IsAttached)
+						{
+							System.Diagnostics.Debugger.Break();
+						}
+					}
+					if (longest > myCentiseconds)
+					{
+						string m = "ERROR!  Member " + Members[i].Name + " is longer than the sequence!";
+						utils.WriteLogEntry(m, "Error");
+						if (Debugger.IsAttached)
+						{
+							System.Diagnostics.Debugger.Break();
+						}
+					}
+				}
+				return longest;
+			}
+		}
+
+		public int LastEffect
+		{
+			get
+			{
+				int last = 0;
+				for (int i=0; i< Channels.Count; i++)
+				{
+					if (Channels[i].effects.Count > 0)
+					{
+						for (int e=0; e< Channels[i].effects.Count; e++)
+						{
+							if (Channels[i].effects[e].endCentisecond > last)
+							{
+								last = Channels[i].effects[e].endCentisecond;
+								if (last > 360000)
+								{
+									string m = "WARNING!  Last Effect on Channel " + Channels[i].Name + " is past 60 minutes!";
+									utils.WriteLogEntry(m, "Warning");
+									if (Debugger.IsAttached)
+									{
+										System.Diagnostics.Debugger.Break();
+									}
+								}
+								if (last > myCentiseconds)
+								{
+									string m = "ERROR! Last effect on Channel " + Channels[i].Name + " is past the end of the sequence!";
+									utils.WriteLogEntry(m, "Error");
+									if (Debugger.IsAttached)
+									{
+										System.Diagnostics.Debugger.Break();
+									}
+								}
+							}
+						}
+					}
+				}
+				return last;
+			}
+		} // End Last Effect
+
+		public int LastFreeformTiming
+		{
+			//! Important Note: Returns the last FREEFORM timing
+			get
+			{
+				int last = 0;
+				for (int i = 0; i < TimingGrids.Count; i++)
+				{
+					if (TimingGrids[i].TimingGridType == TimingGridType.Freeform)
+					{
+						if (TimingGrids[i].timings.Count > 0)
+						{
+							for (int e = 0; e < TimingGrids[i].timings.Count; e++)
+							{
+								if (TimingGrids[i].timings[e] > last)
+								{
+									last = TimingGrids[i].timings[e];
+									if (last > 360000)
+									{
+										string m = "WARNING!  Last Timing in Grid " + TimingGrids[i].Name + " is past 60 minutes!";
+										utils.WriteLogEntry(m, "Warning");
+										if (Debugger.IsAttached)
+										{
+											System.Diagnostics.Debugger.Break();
+										}
+									}
+									if (last > myCentiseconds)
+									{
+										string m = "ERROR! Last Timing in Grid " + TimingGrids[i].Name + " is past the end of the sequence!";
+										utils.WriteLogEntry(m, "Error");
+										if (Debugger.IsAttached)
+										{
+											System.Diagnostics.Debugger.Break();
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				return last;
+			}
+		} // End Last Timing
+
 
 
 		// END SEQUENCE CLASS

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using LORUtils;
 
 namespace MapORama
 {
@@ -18,7 +19,7 @@ namespace MapORama
 		{
 			InitializeComponent();
 
-			applicationName = AssemblyTitle;
+			applicationName = utils.AssemblyTitle;
 
 			this.Text = String.Format("About {0}", applicationName);
 			this.labelProductName.Text = applicationName;
@@ -48,6 +49,8 @@ namespace MapORama
 
 		#region Assembly Attribute Accessors
 
+		// Moved to LORutils
+		/*
 		public string AssemblyTitle
 		{
 			get
@@ -64,6 +67,7 @@ namespace MapORama
 				return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
 			}
 		}
+		*/
 
 		public string AssemblyVersion
 		{

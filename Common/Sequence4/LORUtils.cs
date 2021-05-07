@@ -6,6 +6,7 @@ using System.IO;
 using System.Media;
 using System.Diagnostics;
 using System.Text;
+using System.Reflection;
 using System.Threading;
 using System.Runtime.InteropServices;
 using Microsoft.Win32;
@@ -131,6 +132,16 @@ namespace LORUtils
 				return ret;
 			}
 		}
+
+		public static string WindowsUsername
+		{
+			get
+			{
+				string usr = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+				return usr;
+			}
+		}
+
 
 		#region TreeStuff
 		public static void TreeFillChannels(TreeView tree, Sequence4 seq, ref List<TreeNode>[] nodesBySI, bool selectedOnly, bool includeRGBchildren)
@@ -1397,10 +1408,9 @@ namespace LORUtils
 			return c;
 		}
 
-#endregion // Display Order
+		#endregion // Display Order
 
-		#region ColorFunctions
-
+		#region ColorFunctions (Some are generic, some are LOR specific)
 		public static Color Color_LORtoNet(Int32 LORcolorVal)
 		{
 			string colorID = Color_LORtoHTML(LORcolorVal);
@@ -1434,6 +1444,7 @@ namespace LORUtils
 			c += b * 0x10000;
 			return c;
 		}
+		
 		public static Int32 Color_HTMLtoLOR(string HTMLcolor)
 		{
 			// LOR's Color Format is in BGR format, so have to reverse the Red and the Blue
@@ -1621,7 +1632,7 @@ namespace LORUtils
 			Color c = Color_LORtoNet(channel.color);
 			Pen p = new Pen(c, 1);
 			Brush br = new SolidBrush(c);
-			Debug.WriteLine(""); Debug.WriteLine("");
+			//Debug.WriteLine(""); Debug.WriteLine("");
 			if (channel.effects.Count > 0)
 			{
 				int[] levels = PlotLevels(channel, startCentiseconds, endCentiseconds, width);
@@ -1883,15 +1894,65 @@ namespace LORUtils
 				}
 				else // use fades instead of ramps
 				{
-					rLevels[x] = (int)((float)rLevels[x] * 2.55F);
-					gLevels[x] = (int)((float)gLevels[x] * 2.55F);
-					bLevels[x] = (int)((float)bLevels[x] * 2.55F);
+					int R = rLevels[x];
+					int G = gLevels[x];
+					int B = bLevels[x];
 
-					Color c = Color.FromArgb(rLevels[x], gLevels[x], bLevels[x]);
+					// Shimmer and Twinkle
+					if (R >= ADDtwinkle)
+					{
+						R -= ADDtwinkle;
+						R /= 2;
+					}
+					if (R >= ADDshimmer)
+					{
+						R -= ADDshimmer;
+						R /= 2;
+					}
+					if (R > 100)
+					{
+						R = 100;
+					}
+					if (G >= ADDtwinkle)
+					{
+						G -= ADDtwinkle;
+						G /= 2;
+					}
+					if (G >= ADDshimmer)
+					{
+						G -= ADDshimmer;
+						G /= 2;
+					}
+					if (G > 100)
+					{
+						G = 100;
+					}
+					if (B >= ADDtwinkle)
+					{
+						B -= ADDtwinkle;
+						B /= 2;
+					}
+					if (B >= ADDshimmer)
+					{
+						B -= ADDshimmer;
+						B /= 2;
+					}
+					if (B > 100)
+					{
+						B= 100;
+					}
+
+					int r = (int)((float)R * 2.55F);
+					int g = (int)((float)G * 2.55F);
+					int b = (int)((float)B * 2.55F);
+
+
+
+					Color c = Color.FromArgb(r, g, b);
 					Pen p = new Pen(c, 1);
 					gr.DrawLine(p, x, 0, x, height - 1);
 				}
-			} // end For
+			} // end For X Coord (Horiz)
 			return bmp;
 		}
 
@@ -1917,6 +1978,14 @@ namespace LORUtils
 			{
 				for (int x = 0; x < width; x++)
 				{
+					if (IsWizard)
+					{
+						if (x==42)
+						{
+							//System.Diagnostics.Debugger.Break();
+						}
+					}
+					
 					keepGoing = true;
 					while (keepGoing)
 					{
@@ -2019,6 +2088,14 @@ namespace LORUtils
 							keepGoing = false;
 						} // end current effect starts at or before this time slice
 					} // end while(keepGoing) loop looking at effects
+					if (curLevel > 100)
+					{
+						string msg = "WTF? More than 100%";
+						if (IsWizard)
+						{
+							//stem.Diagnostics.Debugger.Break();
+						}
+					}
 					levels[x] = curLevel;
 				} // end for loop (columns/pixels, horizontal x left to right)
 			} // end muliple centiseconds per pixel
@@ -2071,157 +2148,42 @@ namespace LORUtils
 		}
 		#endregion // FastIndexOf
 
-		#region File Functions
-
-		public static int InvalidCharacterCount(string testName)
+		#region LOR Specific File & Directory Functions
+		
+		public static string SequenceEditor
 		{
-			int ret = 0;
-			int pos1 = 0;
-			int pos2 = UNDEFINED;
-
-			// These are not valid anywhere
-			char[] badChars = { '<', '>', '\"', '/', '|', '?', '*' };
-			for (int c = 0; c < badChars.Length; c++)
+			get
 			{
-				pos1 = 0;
-				pos2 = testName.IndexOf(badChars[c], pos1);
-				while (pos2 > UNDEFINED)
+				string exe = "";
+				string root = ROOT;
+				try
 				{
-					ret++;
-					pos1 = pos2 + 1;
-					pos2 = testName.IndexOf(badChars[c], pos1);
+					string ky = "HKEY_CLASSES_ROOT\\lms_auto_file\\shell\\open";
+					exe = (string)Registry.GetValue(ky, "command", root);
+					exe = exe.Replace(" \"%1\"", "");
+					if (exe == null)
+					{
+						exe = "C:\\Program Files (x86)\\Light-O-Rama\\LORSequenceEditor.exe";
+					}
+					if (exe.Length < 10)
+					{
+						exe = "C:\\Program Files (x86)\\Light-O-Rama\\LORSequenceEditor.exe";
+					}
+					bool valid = System.IO.File.Exists(exe);
+					if (!valid)
+					{
+						exe = "";
+					}
 				}
-			}
-
-			// and the colon is not valid past position 2
-			pos1 = 2;
-			pos2 = testName.IndexOf(':', pos1);
-			while (pos2 > UNDEFINED)
-			{
-				ret++;
-				pos1 = pos2 + 1;
-				pos2 = testName.IndexOf(':', pos1);
-			}
-
-			return ret;
-		}
-
-		public static string ShortenLongPath(string longPath, int maxLen)
-		{
-			//TODO I'm not too pleased with the current results of this function
-			//TODO Try to make something better
-
-			string shortPath = longPath;
-			// Can't realistically shorten a path and filename to much less than 18 characters, reliably
-			if (maxLen > 18)
-			{
-				// Do even need to shorten it all?
-				if (longPath.Length > maxLen)
+				catch
 				{
-					// Split it into pieces, get count
-					string[] splits = longPath.Split('\\');
-					int parts = splits.Length;
-					int h = maxLen / 2;
-					// loop thru, look for excessively long single pieces
-					for (int i = 0; i < parts; i++)
-					{
-						if (splits[i].Length > h)
-						{
-							// Is it the filename itself that's too long?
-							if (i == (parts - 1))
-							{
-								// if filename is too long, shorten it, but not as aggressively as a folder
-								if (splits[i].Length > (maxLen * .7))
-								{
-									// shorten filename to "xxxxx…xxxx" (10 characters)
-									// which should include .ext assuming a 3 char extension
-									splits[i] = splits[i].Substring(0, 5) + "…" + splits[i].Substring(splits[i].Length - 4, 4);
-								}
-							}
-							else
-							{
-								// shorten folder to "xxx…xxx" (7 characters)
-								splits[i] = splits[i].Substring(0, 3) + "…" + splits[i].Substring(splits[i].Length - 3, 3);
-							}
-						}
-					}
+					exe = "";
+				}
+				return exe;
 
-					// at minimum, we want the filename, lets start with that
-					shortPath = splits[parts - 1];
-					// figure out what drive it is on
-					string drive = "";
-					//byte b = 0;
-					if (splits[0].Length == 2)
-					{
-						// Regular drive letter like C:
-						drive = splits[0] + "\\";
-						//b = 1;
-					}
-					if (splits[0].Length + splits[1].Length == 0)
-					{
-						// UNC path like //server/share
-						drive = "\\\\" + splits[0] + "\\" + splits[1] + "\\";
-						//b = 2;
-					}
-					// if drive + filename is still short enough, change to that
-					if ((shortPath.Length + drive.Length + 2) <= maxLen)
-					{
-						shortPath = drive + "…\\" + shortPath;
-					}
-					// if drive + last folder + filename is still short enough, change to that
-					if ((shortPath.Length + splits[parts - 2].Length + 1) <= maxLen)
-					{
-						shortPath = drive + "…\\" + splits[parts - 2] + "\\" + splits[parts - 1];
-					}
-					// if drive + first folder + last folder + filename is still short enough, change to that
-					if ((shortPath.Length + splits[1].Length + 1) <= maxLen)
-					{
-						shortPath = drive + splits[1] + "\\…\\" + splits[parts - 2] + "\\" + splits[parts - 1];
-					}
-				} // end if (longPath.Length > maxLen)
-			} // end if (maxLen > 18)
-				// whatever we ended up with, return it
-			return shortPath;
-		} // end ShortenLongPath(string longPath, int maxLen)
-
-		public static void WriteLogEntry(string message, string logType, string applicationName)
-		{
-			string appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-			string mySubDir = "\\UtilORama\\";
-			if (applicationName.Length > 2)
-			{
-				applicationName.Replace("-", "");
-				mySubDir += applicationName + "\\";
 			}
-			string file = appDataDir + mySubDir;
-			if (!Directory.Exists(file)) Directory.CreateDirectory(file);
-			file += logType + ".log";
-			//string dt = DateTime.Now.ToString("yyyy-MM-dd ")
-			string dt = DateTime.Now.ToString("s") + "=";
-			string msgLine = dt + message;
-			try
-			{
-				StreamWriter writer = new StreamWriter(file, append: true);
-				writer.WriteLine(msgLine);
-				writer.Flush();
-				writer.Close();
-			}
-			catch (System.IO.IOException ex)
-			{
-				string errMsg = "An error has occurred in this application!\r\n";
-				errMsg += "Another error has occurred while trying to write the details of the first error to a log file!\r\n\r\n";
-				errMsg += "The first error was: " + message + "\r\n";
-				errMsg += "The second error was: " + ex.ToString();
-				errMsg += "The log file is: " + file;
-				DialogResult dr = MessageBox.Show(errMsg, "Errors!", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Error);
-			}
-			finally
-			{
-			}
-
-		} // end write log entry
-
-
+		}
+		
 		public static string DefaultUserDataPath
 		{
 			get
@@ -2253,6 +2215,42 @@ namespace LORUtils
 				return fldr;
 			} // End get UserDataPath
 		}
+
+		public static string DefaultAuthor
+		{
+			get
+			{
+				string author = "[Unknown Author]";
+				string root = ROOT;
+				try
+				{
+					string ky = "HKEY_CURRENT_USER\\Software\\Light-O-Rama\\Editor\\NewSequence";
+					author = (string)Registry.GetValue(ky, "Author", root);
+					if (author == null)
+					{
+						// If key does not exist, string will be NULL instead of empty
+						author = "";
+					}
+					if (author.Length < 2)
+					{
+						ky = LOR_REGKEY + "\\Licensing";
+						author = (string)Registry.GetValue(ky, "LicenseName", root);
+						if (author.Length < 2)
+						{
+							// Fallback Failsafe
+							author = WindowsUsername;
+						}
+					}
+				}
+				catch
+				{
+					author = WindowsUsername;
+				}
+				return author;
+			} // End get UserDataPath
+		}
+
+
 
 		public static string DefaultNonAudioPath
 		{
@@ -2287,7 +2285,7 @@ namespace LORUtils
 			} // End get NonAudioPath (Sequences)
 		}
 
-		public static string DefaultAuthor
+		public static string OLD_DefaultAuthor
 		{
 			get
 			{
@@ -2313,7 +2311,6 @@ namespace LORUtils
 				return author;
 			}
 		}
-
 
 		public static string DefaultVisualizationsPath
 		{
@@ -2354,7 +2351,6 @@ namespace LORUtils
 				return DefaultNonAudioPath;
 			}
 		}
-
 
 		public static string DefaultAudioPath
 		{
@@ -2454,7 +2450,9 @@ namespace LORUtils
 				return fldr;
 			} // End get ChannelConfigsPath
 		}
+		#endregion LOR Specific File Functions
 
+		#region Generic File Functions - TODO: Move these to a separate new 'FileHelper' utility class
 		public static string DefaultDocumentsPath
 		{
 			get
@@ -2464,6 +2462,164 @@ namespace LORUtils
 				return myDocs;
 			}
 		}
+
+		public static int InvalidCharacterCount(string testName)
+		{
+			int ret = 0;
+			int pos1 = 0;
+			int pos2 = UNDEFINED;
+
+			// These are not valid anywhere
+			char[] badChars = { '<', '>', '\"', '/', '|', '?', '*' };
+			for (int c = 0; c < badChars.Length; c++)
+			{
+				pos1 = 0;
+				pos2 = testName.IndexOf(badChars[c], pos1);
+				while (pos2 > UNDEFINED)
+				{
+					ret++;
+					pos1 = pos2 + 1;
+					pos2 = testName.IndexOf(badChars[c], pos1);
+				}
+			}
+
+			// and the colon is not valid past position 2
+			pos1 = 2;
+			pos2 = testName.IndexOf(':', pos1);
+			while (pos2 > UNDEFINED)
+			{
+				ret++;
+				pos1 = pos2 + 1;
+				pos2 = testName.IndexOf(':', pos1);
+			}
+
+			return ret;
+		}
+		
+		public static string ShortenLongPath(string longPath, int maxLen)
+		{
+			//TODO I'm not too pleased with the current results of this function
+			//TODO Try to make something better
+
+			string shortPath = longPath;
+			// Can't realistically shorten a path and filename to much less than 18 characters, reliably
+			if (maxLen > 18)
+			{
+				// Do even need to shorten it all?
+				if (longPath.Length > maxLen)
+				{
+					// Split it into pieces, get count
+					string[] splits = longPath.Split('\\');
+					int parts = splits.Length;
+					int h = maxLen / 2;
+					// loop thru, look for excessively long single pieces
+					for (int i = 0; i < parts; i++)
+					{
+						if (splits[i].Length > h)
+						{
+							// Is it the filename itself that's too long?
+							if (i == (parts - 1))
+							{
+								// if filename is too long, shorten it, but not as aggressively as a folder
+								if (splits[i].Length > (maxLen * .7))
+								{
+									// shorten filename to "xxxxx…xxxx" (10 characters)
+									// which should include .ext assuming a 3 char extension
+									splits[i] = splits[i].Substring(0, 5) + "…" + splits[i].Substring(splits[i].Length - 4, 4);
+								}
+							}
+							else
+							{
+								// shorten folder to "xxx…xxx" (7 characters)
+								splits[i] = splits[i].Substring(0, 3) + "…" + splits[i].Substring(splits[i].Length - 3, 3);
+							}
+						}
+					}
+
+					// at minimum, we want the filename, lets start with that
+					shortPath = splits[parts - 1];
+					// figure out what drive it is on
+					string drive = "";
+					//byte b = 0;
+					if (splits[0].Length == 2)
+					{
+						// Regular drive letter like C:
+						drive = splits[0] + "\\";
+						//b = 1;
+					}
+					if (splits[0].Length + splits[1].Length == 0)
+					{
+						// UNC path like //server/share
+						drive = "\\\\" + splits[0] + "\\" + splits[1] + "\\";
+						//b = 2;
+					}
+					// if drive + filename is still short enough, change to that
+					if ((shortPath.Length + drive.Length + 2) <= maxLen)
+					{
+						shortPath = drive + "…\\" + shortPath;
+					}
+					// if drive + last folder + filename is still short enough, change to that
+					if ((shortPath.Length + splits[parts - 2].Length + 1) <= maxLen)
+					{
+						shortPath = drive + "…\\" + splits[parts - 2] + "\\" + splits[parts - 1];
+					}
+					// if drive + first folder + last folder + filename is still short enough, change to that
+					if ((shortPath.Length + splits[1].Length + 1) <= maxLen)
+					{
+						shortPath = drive + splits[1] + "\\…\\" + splits[parts - 2] + "\\" + splits[parts - 1];
+					}
+				} // end if (longPath.Length > maxLen)
+			} // end if (maxLen > 18)
+				// whatever we ended up with, return it
+			return shortPath;
+		} // end ShortenLongPath(string longPath, int maxLen)
+
+		public static void WriteLogEntry (string message)
+		{
+			WriteLogEntry(message, "Debug", AssemblyTitle);
+		}
+		
+		public static void WriteLogEntry(string message, string logType)
+		{
+			WriteLogEntry(message, logType, AssemblyTitle);
+		}
+
+		public static void WriteLogEntry(string message, string logType, string applicationName)
+		{
+			string appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+			string mySubDir = "\\UtilORama\\";
+			if (applicationName.Length > 2)
+			{
+				applicationName.Replace("-", "");
+				mySubDir += applicationName + "\\";
+			}
+			string file = appDataDir + mySubDir;
+			if (!Directory.Exists(file)) Directory.CreateDirectory(file);
+			file += logType + ".log";
+			//string dt = DateTime.Now.ToString("yyyy-MM-dd ")
+			string dt = DateTime.Now.ToString("s") + "=";
+			string msgLine = dt + message;
+			try
+			{
+				StreamWriter writer = new StreamWriter(file, append: true);
+				writer.WriteLine(msgLine);
+				writer.Flush();
+				writer.Close();
+			}
+			catch (System.IO.IOException ex)
+			{
+				string errMsg = "An error has occurred in this application!\r\n";
+				errMsg += "Another error has occurred while trying to write the details of the first error to a log file!\r\n\r\n";
+				errMsg += "The first error was: " + message + "\r\n";
+				errMsg += "The second error was: " + ex.ToString();
+				errMsg += "The log file is: " + file;
+				DialogResult dr = MessageBox.Show(errMsg, "Errors!", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Error);
+			}
+			finally
+			{
+			}
+
+		} // end write log entry
 
 		public static bool IsValidPath(string pathToCheck)
 		{
@@ -2555,7 +2711,6 @@ namespace LORUtils
 
 			return finalName;
 		}
-
 
 		public static string FileCreatedAt(string filename)
 		{
@@ -2760,6 +2915,22 @@ namespace LORUtils
 			return ret;
 		}
 
+		public static string AssemblyTitle
+		{
+			get
+			{
+				object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
+				if (attributes.Length > 0)
+				{
+					AssemblyTitleAttribute titleAttribute = (AssemblyTitleAttribute)attributes[0];
+					if (titleAttribute.Title != "")
+					{
+						return titleAttribute.Title;
+					}
+				}
+				return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
+			}
+		}
 
 		public static long GetFileSize(string filename)
 		{
@@ -2782,6 +2953,8 @@ namespace LORUtils
 			{
 				Directory.CreateDirectory(tempPath);
 			}
+			//! Use AssemblyTitle instead?
+			string foo = AssemblyTitle;
 			mySubDir += Application.ProductName + "\\";
 			mySubDir = mySubDir.Replace("-", "");
 			tempPath = appDataDir + mySubDir;
@@ -2791,7 +2964,6 @@ namespace LORUtils
 			}
 			return tempPath;
 		}
-
 
 		public static string ReplaceInvalidFilenameCharacters(string oldName)
 		{
@@ -2837,7 +3009,49 @@ namespace LORUtils
 			return isValid;
 		}
 
-		#endregion // File Functions
+		public static int SafeCopy(string fromFile, string toFile, bool overWrite = true)
+		{
+			int err = 0;
+			try
+			{
+				System.IO.File.Copy(fromFile, toFile, overWrite);
+			}
+			catch (Exception e)
+			{
+				err = e.HResult;
+			}
+			return err;
+		}
+
+		public static string FixInvalidFilenameCharacters(string invalidFilename)
+		{
+			string validFilename = invalidFilename.Replace("*", "+");
+			validFilename = validFilename.Replace("\"", "''");
+			validFilename = validFilename.Replace("/", "-");
+			validFilename = validFilename.Replace("\\", "_");
+			validFilename = validFilename.Replace(':', ';');
+			validFilename = validFilename.Replace('|', '!');
+			validFilename = validFilename.Replace("<", "{");
+			validFilename = validFilename.Replace(">", "}");
+			validFilename = validFilename.Replace("?", "`");
+			return validFilename;
+		}
+
+		private static string FixInvalidFilenameCharactersWithUnicode(string invalidFilename)
+		{
+			string validFilename = invalidFilename.Replace('*', '✻');
+			validFilename = validFilename.Replace("\"", "”");
+			validFilename = validFilename.Replace('/', '̷');
+			validFilename = validFilename.Replace("\\", "╲");
+			validFilename = validFilename.Replace(':', '∶');
+			validFilename = validFilename.Replace('|', '∣');
+			validFilename = validFilename.Replace('<', '≺');
+			validFilename = validFilename.Replace('>', '≻');
+			validFilename = validFilename.Replace('?', 'ʔ');
+			return validFilename;
+		}
+
+		#endregion Generic File Functios
 
 		#region TimeFunctions
 		public static string FormatTime(int centiseconds)

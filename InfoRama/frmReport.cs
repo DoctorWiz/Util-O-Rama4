@@ -1326,8 +1326,145 @@ namespace InfoRama
 			}
 		}
 
+		// STUFF FOR DAN
+		/*
+		private void btnProgLogin_Click(object sender, EventArgs e)
+        {
+            string sConn;
+            string sQuery;
+            sConn = "datasource = " + Properties.Settings.Default.hostname + "; username = " + Properties.Settings.Default.username + "; password = " + Properties.Settings.Default.password + ";database = " + Properties.Settings.Default.database;
+            MySqlConnection conn = new MySqlConnection(sConn);
+            MySqlCommand command = conn.CreateCommand();
+            sQuery = "SELECT perms FROM login WHERE Username = '" + TxtProgUname.Text + "' AND passwords = '" + TxtProgPw.Text + "' ";
+            try
+            {
+                command.CommandText = sQuery;
+                conn.Open();
+            }
+            catch (Exception exc)
+            {
+                string sMsg;
+                sMsg = exc.Message;
+                MessageBox.Show(sMsg);
+            }
+            MySqlDataReader reader = command.ExecuteReader();
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    int iadminlevel;
+					
+					
+					// STATUS DEBUGGING
+					int stat = reader.Status;
+					MessageBox.Show("Database Status is " + stat.ToString());
+					stat = reader.ItemCount;
+					MessageBox.Show("And it has " + stat.ToString() + " items.");
+					if (reader.EndOfStream)
+					{
+						MessageBox.Show("You are at the end!");
+					}
+					// END STATUS DEBUGGING
 
+					if (reader.IsDBNull(3) == false)
+                    {
+                        iadminlevel = reader.GetInt32(3);
+                        if (iadminlevel == 0)
+                        {
+                            string NaMsg;
+                            NaMsg = "Username " + TxtProgUname.Text + " Found. You Have No Access To Edit";
+                            MessageBox.Show(NaMsg, "NoAccess Username Found", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            frmMenu oMenuForm = new frmMenu();
+                            oMenuForm.btnUseradmin.Enabled = false;
+                            oMenuForm.btnConnections.Enabled = false;
+                            oMenuForm.btnCpu.Enabled = false;
+                            oMenuForm.btnDCLocation.Enabled = false;
+                            oMenuForm.btnMachType.Enabled = false;
+                            oMenuForm.btnOSType.Enabled = false;
+                            oMenuForm.btnServices.Enabled = false;
+                            oMenuForm.btnMainDb.Enabled = false;
+                            oMenuForm.Show();
+                            this.Close();
+                        }
+                        if (iadminlevel == 1)
+                        {
+                            string LmMsg;
+                            LmMsg = "Username " + TxtProgUname.Text + " Found. You Have Limited Access";
+                            MessageBox.Show(LmMsg, "Limited Username Found", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            frmMenu oMenuForm = new frmMenu();
+                            oMenuForm.btnUseradmin.Enabled = false;
+                            oMenuForm.btnConnections.Enabled = true;
+                            oMenuForm.btnCpu.Enabled = false;
+                            oMenuForm.btnDCLocation.Enabled = false;
+                            oMenuForm.btnMachType.Enabled = false;
+                            oMenuForm.btnOSType.Enabled = false;
+                            oMenuForm.btnServices.Enabled = false;
+                            oMenuForm.btnMainDb.Enabled = true;
+                            oMenuForm.Show();
+                            this.Close();
+                        }
+                        if (iadminlevel == 2)
+                        {
+                            string aMsg;
+                            aMsg = "Username " + TxtProgUname.Text + " Found. You Have Administrative Access";
+                            MessageBox.Show(aMsg, "Administrative Username Found", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            frmMenu oMenuForm = new frmMenu();
+                            oMenuForm.btnUseradmin.Enabled = false;
+                            oMenuForm.btnConnections.Enabled = true;
+                            oMenuForm.btnCpu.Enabled = true;
+                            oMenuForm.btnDCLocation.Enabled = true;
+                            oMenuForm.btnMachType.Enabled = false;
+                            oMenuForm.btnOSType.Enabled = true;
+                            oMenuForm.btnServices.Enabled = false;
+                            oMenuForm.btnMainDb.Enabled = true;
+                            oMenuForm.Show();
+                            this.Close();
+                        }
+                        if (iadminlevel == 3)
+                        {
+                            string aMsg;
+                            aMsg = "Username " + TxtProgUname.Text + " Found. You Have Administrative Access";
+                            MessageBox.Show(aMsg, "Administrative Username Found", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            frmMenu oMenuForm = new frmMenu();
+                            oMenuForm.btnUseradmin.Enabled = false;
+                            oMenuForm.btnConnections.Enabled = true;
+                            oMenuForm.btnCpu.Enabled = true;
+                            oMenuForm.btnDCLocation.Enabled = true;
+                            oMenuForm.btnMachType.Enabled = true;
+                            oMenuForm.btnOSType.Enabled = true;
+                            oMenuForm.btnServices.Enabled = false;
+                            oMenuForm.btnMainDb.Enabled = true;
+                            oMenuForm.Show();
+                            this.Close();
+                        }
+                        if (iadminlevel == 4)
+                        {
+                            string SaMsg;
+                            SaMsg = "Username " + TxtProgUname.Text + " Found. You Have Administrative Access";
+                            MessageBox.Show(SaMsg, "Super Admin Username Found", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            frmMenu oMenuForm = new frmMenu();
+                            oMenuForm.btnUseradmin.Enabled = true;
+                            oMenuForm.btnConnections.Enabled = true;
+                            oMenuForm.btnCpu.Enabled = true;
+                            oMenuForm.btnDCLocation.Enabled = true;
+                            oMenuForm.btnMachType.Enabled = true;
+                            oMenuForm.btnOSType.Enabled = true;
+                            oMenuForm.btnServices.Enabled = true;
+                            oMenuForm.btnMainDb.Enabled = true;
+                            oMenuForm.Show();
+                            this.Close();
+                        }
+                    }
+                }
+            }
+            else
+            {
+                string sMsg;
+                sMsg = "Username " + TxtProgUname.Text + " not found in the list! Talk To Your DB Administrator";
+                MessageBox.Show(sMsg, "Username Not Found", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
-
+            }
+        }
+		*/
 	} // end form frmReport
 } // end namespace InfoRama

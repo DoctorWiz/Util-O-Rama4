@@ -1105,11 +1105,14 @@ namespace LORUtils
 			// Whereas if Sequence is 'clean' this returns the createdAt of the original file
 			//if (modifiedBy.Length < 1)
 			//{
-				if (ParentSequence.dirty)
+			if (ParentSequence.dirty)
+			{
+				if (author.Length < 2)
 				{
-					string lorAuth = utils.DefaultAuthor;
-					modifiedBy = lorAuth + " / Util-O-Rama";
+					author = utils.DefaultAuthor;
 				}
+				modifiedBy = author + " / Util-O-Rama";
+			}
 			//}
 			ret.Append(FIELDmodifiedBy);
 			ret.Append(utils.FIELDEQ);

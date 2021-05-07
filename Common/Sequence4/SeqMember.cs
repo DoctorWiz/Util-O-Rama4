@@ -2082,8 +2082,8 @@ namespace LORUtils
 		public TimingGrid(string lineIn)
 		{
 #if DEBUG
-			string msg = "TimingGrid.TimingGrid(" + lineIn + ") // Constructor";
-			Debug.WriteLine(msg);
+			//string msg = "TimingGrid.TimingGrid(" + lineIn + ") // Constructor";
+			//Debug.WriteLine(msg);
 #endif
 			string seek = utils.STFLD + Sequence4.TABLEtimingGrid + FIELDsaveID;
 			//int pos = lineIn.IndexOf(seek);
@@ -2284,7 +2284,7 @@ namespace LORUtils
 					if (System.Diagnostics.Debugger.IsAttached)
 					{
 						string msg = "Why is something trying to get the SavedIndex of a Track?";
-						System.Diagnostics.Debugger.Break();
+						//System.Diagnostics.Debugger.Break();
 					}
 				}
 				return n;
@@ -2879,8 +2879,11 @@ namespace LORUtils
 					bySaveID.Add(null);
 					byAltSaveID.Add(null);
 				}
-				bySaveID[memberSI] = tg;
-				byAltSaveID[memberSI] = tg;
+				//! Exception Here!  memberSI not set!  (=-1 Undefined)
+				//bySaveID[memberSI] = tg;
+				bySaveID[tg.SaveID] = tg;
+				//byAltSaveID[memberSI] = tg;
+				byAltSaveID[tg.SaveID] = tg;
 				timingGridCount++;
 			}
 

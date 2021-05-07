@@ -65,7 +65,7 @@
 			// 
 			// hedMaster
 			// 
-			this.hedMaster.Text = "Master Channel";
+			this.hedMaster.Text = "Destination Channel";
 			this.hedMaster.Width = 321;
 			// 
 			// button1

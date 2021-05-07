@@ -60,8 +60,9 @@ namespace SplitORama
 		private int gridSelCount = 0;
 		private bool[] gridItem_Checked = null;
 
-		//private List<TreeNode>[] siNodes;
-		private List<List<TreeNode>> siNodes = new List<List<TreeNode>>();
+		//private List<TreeNode>[] nodesBySI;
+		//private List<List<TreeNode>> nodesBySI = new List<List<TreeNode>>();
+		private List<TreeNode>[] nodesBySI;
 
 		private bool firstShown = false;
 		private TreeNode previousNode = null;
@@ -135,7 +136,7 @@ namespace SplitORama
 			txtSequenceFile.Text = utils.ShortenLongPath(theFile, 80);
 			seq.ReadSequenceFile(theFile);
 			Array.Resize(ref gridItem_Checked, seq.TimingGrids.Count);
-			utils.TreeFillChannels(treChannels, seq, siNodes, false, false);
+			utils.TreeFillChannels(treChannels, seq, ref nodesBySI, false, false);
 			FillGridList();
 			member = 1;
 			dirtySeq = false;
@@ -267,7 +268,7 @@ namespace SplitORama
 					{
 						//seq.ReadSequenceFile(fileSeqLast);
 						//fileSeqCur = fileSeqLast;
-						//utils.TreeFillChannels(treChannels, seq, siNodes);
+						//utils.TreeFillChannels(treChannels, seq, nodesBySI);
 						//txtSequenceFile.Text = utils.ShortenLongPath(fileSeqCur, 80);
 					}
 				}
@@ -276,7 +277,7 @@ namespace SplitORama
 					// 1 and only 1 file specified on command line
 					//seq.ReadSequenceFile(batch_fileList[0]);
 					fileSeqLast = batch_fileList[0];
-					//utils.TreeFillChannels(treChannels, seq, siNodes);
+					//utils.TreeFillChannels(treChannels, seq, nodesBySI);
 					Properties.Settings.Default.FileSeqLast = fileSeqLast;
 					Properties.Settings.Default.Save();
 				}
@@ -437,7 +438,7 @@ namespace SplitORama
 
 					txtSequenceFile.Text = utils.ShortenLongPath(fileSeqCur, 80);
 					seq.ReadSequenceFile(fileSeqCur);
-					utils.TreeFillChannels(treChannels, seq, siNodes, false, false);
+					utils.TreeFillChannels(treChannels, seq, ref nodesBySI, false, false);
 					member = 1;
 					dirtySeq = false;
 					ImBusy(false);
@@ -950,7 +951,7 @@ namespace SplitORama
 		void SelectChannel(TreeNode nOde, bool select)
 		{
 			IMember m = (IMember)nOde.Tag;
-			List<TreeNode> chNodes = siNodes[m.SavedIndex];
+			List<TreeNode> chNodes = nodesBySI[m.SavedIndex];
 			int selCount = 0;
 			bool selSome = false;
 
@@ -976,7 +977,7 @@ namespace SplitORama
 			IMember m;
 			List<TreeNode> qlist;
 
-			//if (siNodes[nodeSI]!= null)
+			//if (nodesBySI[nodeSI]!= null)
 			if (nodeSI == utils.UNDEFINED)
 			{
 				// WHY?
@@ -984,16 +985,16 @@ namespace SplitORama
 			}
 			else
 			{
-				qlist = siNodes[nodeSI];
+				qlist = nodesBySI[nodeSI];
 				if (qlist.Count > 0)
 				{
-					//if (siNodes[nodeSI].Length > 0)
-					//if (siNodes[nodeSI])
+					//if (nodesBySI[nodeSI].Length > 0)
+					//if (nodesBySI[nodeSI])
 					//{
-					//foreach (TreeNode nOde in siNodes[nodeSI])
-					for (int q = 0; q < siNodes[nodeSI].Count; q++)
+					//foreach (TreeNode nOde in nodesBySI[nodeSI])
+					for (int q = 0; q < nodesBySI[nodeSI].Count; q++)
 					{
-						TreeNode nOde = siNodes[nodeSI][q];
+						TreeNode nOde = nodesBySI[nodeSI][q];
 						m = (IMember)nOde.Tag;
 						if (select)
 						{
@@ -1050,12 +1051,12 @@ namespace SplitORama
 								}
 							} // node.checked
 						} // if (select)
-					} // foreach (TreeNode nOde in siNodes[nodeSI])
+					} // foreach (TreeNode nOde in nodesBySI[nodeSI])
 						//}
-				} // siNodes[nodeSI].Count > 0
+				} // nodesBySI[nodeSI].Count > 0
 				else
 				{
-					// siNodes[nodeSI].Count = 0
+					// nodesBySI[nodeSI].Count = 0
 					//? Why Not?
 					int x = 1;
 				}
@@ -1782,7 +1783,7 @@ namespace SplitORama
 					if (foundIdx > utils.UNDEFINED)
 					{
 						IMember m = (IMember)nOdes[foundIdx].Tag;
-						//IMember nodeTag = (IMember)siNodes[foundIdx];
+						//IMember nodeTag = (IMember)nodesBySI[foundIdx];
 
 						if (m.MemberType == tableType)
 						{
