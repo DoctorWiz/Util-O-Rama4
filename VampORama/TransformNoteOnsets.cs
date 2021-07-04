@@ -11,15 +11,34 @@ namespace VampORama
 {
 	class NoteOnsets : ITransform
 	{
-		private const int PLUGINqmBarAndBeat = 0;
-		private const int PLUGINqmTempo = 1;
-		private const int PLUGINbeatRoot = 2;
-		private const int PLUGINporto = 3;
-		private const int PLUGINaubio = 4;
+		public const int PLUGINqmOnset = 0;
+		public const int PLUGINqmTranscribe = 1;
+		public const int PLUGINOnsetDS = 2;
+		public const int PLUGINSilvet = 3;
+		public const int PLUGINaubioOnset = 4;
+		public const int PLUGINaubioTracker = 5;
+		public int lastPluginUsed = PLUGINqmOnset;
+
+		public const int METHOD1frequency = 0;
+		public const int METHOD1spectral = 1;
+		public const int METHOD1phase = 2;
+		public const int METHOD1domain = 3;
+		public const int METHOD1energy = 4;
+
+		public const int METHOD2energy = 0;
+		public const int METHOD2spectral = 1;
+		public const int METHOD2frequency = 2;
+		public const int METHOD2domain = 3;
+		public const int METHOD2phase = 4;
+		public const int METHOD2kullback = 5;
+		public const int METHOD2modKulback = 6;
+		public const int METHOD2flux = 7;
+
 		public xTimings xOnsets = new xTimings("Note Onsets");
 		public int BeatsPerBar = 4;
 		public int FirstBeat = 1;
 		public bool ReuseResults = false;
+		public xTimings alignTimes = null;
 
 		public readonly string[] availablePluginNames = {	"Queen Mary Note Onset Detector",
 																											"Queen Mary Polyphonic Transcription",
@@ -30,19 +49,23 @@ namespace VampORama
 		//																											"#Alicante Note Onset Detector",
 		//																										"#Alicante Polyphonic Transcription" };
 
-		private readonly string[] availablePluginCodes = {"vamp:qm-vamp-plugins:qm-onsetdetector:onsets",
+		public readonly string[] availablePluginCodes = {"vamp:qm-vamp-plugins:qm-onsetdetector:onsets",
 																											"vamp:qm-vamp-plugins:qm-transcription:transcription",
 																											"vamp:vamp-onsetsds:onsetsds:onsets",
 																											"vamp:silvet:silvet:onsets",
 																											"vamp:vamp-aubio:aubioonset:onsets",
 																											"vamp:vamp-aubio:aubionotes:notes" };
 
-		private readonly string[] availablePluginFiles = {"qm-onsetdetector.n3",
-																											"qm-transcription.n3",
-																											"onsetsds_onsetsds_onsets.n3",
-																											"silvet_silvet_onsets.n3",
-																											"aubio_aubioonset_onsets.n3",
-																											"aubio_aubionotes_notes.n3" };
+		public readonly string[] filesAvailableConfigs = {"vamp_qm-vamp-plugins_qm-onsetdetector_onsets.n3",
+																											"vamp_qm-vamp-plugins_qm-transcription_transcription.n3",
+																											"vamp_vamp-onsetsds_onsetsds_onsets.n3",
+																											"vamp_silvet_silvet_onsets.n3",
+																											"vamp_vamp-aubio_aubioonset_onsets.n3",
+																											"vamp_vamp-aubio_aubionotes_notes.n3" };
+
+		public static readonly string[] availableLabels = {"None",
+																								"Note Names",
+																								"Midi Note Numbers" };
 
 	private SequenceFunctions seqFunct = new SequenceFunctions();
 
@@ -50,12 +73,6 @@ namespace VampORama
 		{
 			// Constructor
 
-		}
-
-		public NoteOnsets(Annotator annot)
-		{
-			// Alternate Constructor
-			annotator = annot;
 		}
 
 		public string[] AvailablePluginNames
@@ -66,19 +83,18 @@ namespace VampORama
 			}
 		}
 
-		private int pluginIndex = 0;
 
 		public int UsePlugin
 		{
 			set
 			{
-				pluginIndex = value;
-				if (pluginIndex < 0) pluginIndex = 0;
-				if (pluginIndex >= availablePluginNames.Length) pluginIndex = availablePluginNames.Length - 1;
+				lastPluginUsed = value;
+				if (lastPluginUsed < 0) lastPluginUsed = 0;
+				if (lastPluginUsed >= availablePluginNames.Length) lastPluginUsed = availablePluginNames.Length - 1;
 			}
 			get
 			{
-				return pluginIndex;
+				return lastPluginUsed;
 			}
 		}
 
@@ -136,20 +152,6 @@ namespace VampORama
 			}
 		}
 
-		private Annotator annotator;
-
-		public Annotator Annotator
-		{
-			set
-			{
-				annotator = Annotator;
-			}
-			get
-			{
-				return Annotator;
-			}
-		}
-
 		public xTimings Timings
 		{
 			get
@@ -173,62 +175,56 @@ namespace VampORama
 			}
 		}
 
-		public string AnnotateSong(string songFile, int pluginIndex)
-		{
-			return AnnotateSong(songFile, pluginIndex, 4, 512);
-		}
 
-		public string AnnotateSong(string songFile, int pluginIndex, int beatsPerBar, int stepSize, 
-								bool reuse = false)
+		public int PrepareToVamp(string fileSong, int pluginIndex, int beatsPerBar, int stepSize,
+								int detectionMethod = METHOD1domain, bool reuse = false, bool whiten = true)
 		{
 			// Song file should have already been copied to the temp folder and named song.mp3
 			// Annotator will use the same folder the song is in for it's files
 			// Returns the name of the results file, which will also be in the same temp folder
 
-			string results = "";
-			int errs = 0;
-			string vampParams = "";
-			//string homedir = AppDomain.CurrentDomain.BaseDirectory + "VampConfigs\\";
+			int err = 0;
+			string fileConfig = filesAvailableConfigs[pluginIndex];
+			//string vampParams = availablePluginCodes[pluginIndex];
+			string pathConfigs = AppDomain.CurrentDomain.BaseDirectory + "VampConfigs\\";
+			string pathWork = Path.GetDirectoryName(fileSong) + "\\";
+			lastPluginUsed = pluginIndex;
+
 			int lineCount = 0;
 			string lineIn = "";
-			string fromVamp = ""; // vampConfigs;
-			string toVamp = ""; // tempPath;
+			//string fileConfigFrom = ""; // vampConfigs;
+			//string fileConfigTo = ""; // tempPath;
 			string vampFile = "";
-			int err = 0;
 			//string rezults = "";
 			BeatsPerBar = beatsPerBar;
 			ReuseResults = reuse;
 			StreamReader reader;
 			StreamWriter writer;
 
-			string tempPath = Path.GetDirectoryName(songFile);
-			vampParams = availablePluginNames[pluginIndex];
-			vampFile = vampParams.Replace(':', '_') + ".n3";
-			fromVamp += vampFile;
-			toVamp = tempPath + vampFile;
+			string fileConfigFrom = pathConfigs + fileConfig;
+			string fileConfigTo = pathWork + fileConfig;
+
+			//string tempPath = Path.GetDirectoryName(fileSong);
+			//string vampParams = availablePluginNames[pluginIndex];
+			//vampFile = vampParams.Replace(':', '_') + ".n3";
+			//fileConfigFrom += vampFile;
+			//fileConfigTo = tempPath + vampFile;
 
 			try
 			{
 				switch (pluginIndex)
 				{
-					case PLUGINqmBarAndBeat:
-						// Queen Mary Bar and Beat Tracker
-						reader = new StreamReader(fromVamp);
-						writer = new StreamWriter(toVamp);
+					case PLUGINqmOnset:
+						// Queen Mary Note Onsets
+						reader = new StreamReader(fileConfigFrom);
+						writer = new StreamWriter(fileConfigTo);
 						while (!reader.EndOfStream)
 						{
 							lineCount++;
 							lineIn = reader.ReadLine();
 							if (lineCount == 7)
 							{
-								lineIn = lineIn.Replace("557", stepSize.ToString());
-							}
-							if (lineCount == 16)
-							{
-								if (beatsPerBar == 3)
-								{
-									lineIn = lineIn.Replace('4', '3');
-								}
+								lineIn = lineIn.Replace("512", stepSize.ToString());
 							}
 							writer.WriteLine(lineIn);
 						}
@@ -236,40 +232,111 @@ namespace VampORama
 						writer.Close();
 						break;
 
-					case PLUGINqmTempo:
-						// Queen Mary Tempo and Beat Tracker
-						reader = new StreamReader(fromVamp);
-						writer = new StreamWriter(toVamp);
+					case PLUGINqmTranscribe:
+						// Queen Mary Polyphonic Transcription
+						reader = new StreamReader(fileConfigFrom);
+						writer = new StreamWriter(fileConfigTo);
 						while (!reader.EndOfStream)
 						{
 							lineCount++;
 							lineIn = reader.ReadLine();
 							if (lineCount == 7)
 							{
-								lineIn = lineIn.Replace("557", stepSize.ToString());
+								lineIn = lineIn.Replace("441", stepSize.ToString());
 							}
 							writer.WriteLine(lineIn);
 						}
 						reader.Close();
 						writer.Close();
 						break;
-					case 2:
-						// BeatRoot Beat Tracker
-						err = utils.SafeCopy(fromVamp, toVamp);
+					case PLUGINOnsetDS:
+						// Onset DS
+						reader = new StreamReader(fileConfigFrom);
+						writer = new StreamWriter(fileConfigTo);
+						while (!reader.EndOfStream)
+						{
+							lineCount++;
+							lineIn = reader.ReadLine();
+							if (lineCount == 7)
+							{
+								lineIn = lineIn.Replace("1024", stepSize.ToString());
+							}
+							writer.WriteLine(lineIn);
+						}
+						reader.Close();
+						writer.Close();
 						break;
-					case 3:
-						// Porto Beat Tracker
-						err = utils.SafeCopy(fromVamp, toVamp);
+					case PLUGINSilvet:
+						// Silvet
+						reader = new StreamReader(fileConfigFrom);
+						writer = new StreamWriter(fileConfigTo);
+						while (!reader.EndOfStream)
+						{
+							lineCount++;
+							lineIn = reader.ReadLine();
+							if (lineCount == 7)
+							{
+								lineIn = lineIn.Replace("1024", stepSize.ToString());
+							}
+							writer.WriteLine(lineIn);
+						}
+						reader.Close();
+						writer.Close();
 						break;
-					case 4:
-						// Aubio Beat Tracker
-						err = utils.SafeCopy(fromVamp, toVamp);
+					case PLUGINaubioOnset:
+						// Aubio Onsets
+						reader = new StreamReader(fileConfigFrom);
+						writer = new StreamWriter(fileConfigTo);
+						while (!reader.EndOfStream)
+						{
+							lineCount++;
+							lineIn = reader.ReadLine();
+							if (lineCount == 7)
+							{
+								lineIn = lineIn.Replace("256", stepSize.ToString());
+							}
+							if (lineCount == 16)
+							{
+								//string m = (cboDetectBarBeats.SelectedIndex + 1).ToString();
+								int dt = detectionMethod + 1;
+								string m = dt.ToString();
+								lineIn = lineIn.Replace("3", m);
+							}
+							writer.WriteLine(lineIn);
+						}
+						reader.Close();
+						writer.Close();
+						break;
+					case PLUGINaubioTracker:
+						// Aubio Tracker
+						reader = new StreamReader(fileConfigFrom);
+						writer = new StreamWriter(fileConfigTo);
+						while (!reader.EndOfStream)
+						{
+							lineCount++;
+							lineIn = reader.ReadLine();
+							if (lineCount == 7)
+							{
+								lineIn = lineIn.Replace("256", stepSize.ToString());
+							}
+							if (lineCount == 28)
+							{
+								//string m = (cboDetectBarBeats.SelectedIndex + 1).ToString();
+								int dt = detectionMethod + 1;
+								string m = dt.ToString();
+								lineIn = lineIn.Replace("3", m);
+							}
+							writer.WriteLine(lineIn);
+						}
+						reader.Close();
+						writer.Close();
 						break;
 				}
 			} // End try
 			catch (Exception e)
 			{
 				err = e.HResult;
+				string m = e.Message;
 				if (utils.IsWizard)
 				{
 					System.Diagnostics.Debugger.Break();
@@ -279,10 +346,10 @@ namespace VampORama
 
 			if (err == 0)
 			{
-				results = Annotator.AnnotateSong("XX", songFile, toVamp, reuse);
+				//results = AnnotateSong("XX", songFile, fileConfigTo, reuse);
 			}
 
-			return results;
+			return err;
 		}
 
 		private int fps = 40;
@@ -325,7 +392,21 @@ namespace VampORama
 		public int ResultsToxTimings(string resultsFile, vamps.AlignmentType alignmentType, vamps.LabelTypes labelType, DetectionMethods detectMethod = DetectionMethods.ComplexDomain)
 		{
 			int err = 0;
-			if ((xOnsets == null) || (!ReuseResults))
+			bool redo = true;
+
+			if (xOnsets == null)
+			{
+				xOnsets = new xTimings("Note Onsets");
+			}
+			if ((xOnsets.effects.Count > 0) && (!ReuseResults))
+			{
+				xOnsets.effects.Clear();
+			}
+
+
+			//TODO Fix this so it works correctly
+			//if ((xOnsets == null) || (!ReuseResults))
+			//if (xOnsets == null)
 			{
 				int onsetCount = 0;
 				string lineIn = "";
@@ -338,6 +419,10 @@ namespace VampORama
 				int subSubBeat = 0;
 				int subSubSubBeat = 0;
 				int theTime = 0;
+				int milliLen = 0;
+				string noteNum = "";
+				int midiNum = -1;
+				string label = "1";
 
 				int countLines = 0;
 				int countBars = 1;
@@ -352,21 +437,45 @@ namespace VampORama
 
 				//int align = seqFunct.GetAlignment(cboAlignBarsBeats.Text);
 
-				if (alignmentType == vamps.AlignmentType.None)
+				fps = 1000;
+				msPF = 1;
+				switch (alignmentType)
 				{
-					fps = 1000;
-					msPF = 1;
+					case vamps.AlignmentType.FPS10:
+						fps = 10;
+						msPF = 100;
+						break;
+					case vamps.AlignmentType.FPS20:
+						fps = 20;
+						msPF = 50;
+						break;
+					case vamps.AlignmentType.FPS30:
+						fps = 30;
+						msPF = 33;
+						break;
+					case vamps.AlignmentType.FPS40:
+						fps = 40;
+						msPF = 25;
+						break;
+					case vamps.AlignmentType.FPS60:
+						fps = 60;
+						msPF = 17;
+						break;
+					case vamps.AlignmentType.BeatsFull:
+						Annotator.xAlignTo = Annotator.xBeatsFull;
+						break;
+					case vamps.AlignmentType.BeatsHalf:
+						Annotator.xAlignTo = Annotator.xBeatsHalf;
+						break;
+					case vamps.AlignmentType.BeatsThird:
+						Annotator.xAlignTo = Annotator.xBeatsThird;
+						break;
+					case vamps.AlignmentType.BeatsQuarter:
+						Annotator.xAlignTo = Annotator.xBeatsQuarter;
+						break;
 				}
-				if (alignmentType == vamps.AlignmentType.FPS20)
-				{
-					fps = 20;
-					msPF = 50;
-				}
-				if (alignmentType == vamps.AlignmentType.FPS40)
-				{
-					fps = 40;
-					msPF = 25;
-				}
+				Annotator.alignIdx = 0; // Reset
+
 
 				// Pass 1, count lines
 				StreamReader reader = new StreamReader(resultsFile);
@@ -377,7 +486,6 @@ namespace VampORama
 				}
 				reader.Close();
 
-				xOnsets = new xTimings("Note Onsets");
 
 				// Pass 2, read data into arrays
 				reader = new StreamReader(resultsFile);
@@ -393,9 +501,26 @@ namespace VampORama
 						string[] parts = lineIn.Split(',');
 
 						millisecs = xUtils.ParseMilliseconds(parts[0]);
-						millisecs = xUtils.RoundTimeTo(millisecs, msPF);
+						millisecs = Annotator.AlignTimeTo(millisecs, alignmentType);
 						lastBeat = millisecs;
 						lastBar = millisecs;
+
+						if (parts.Length > 1)
+						{
+							milliLen = xUtils.ParseMilliseconds(parts[1]);
+						}
+						if (parts.Length > 2)
+						{
+							noteNum = parts[2];
+							if (noteNum.Length > 0)
+							{
+								midiNum = Int32.Parse(noteNum);
+								if (midiNum > 0)
+								{
+									//label = SequenceFunctions.noteNames[midiNum];
+								}
+							}
+						}
 					} // end line contains a period
 				} // end while loop more lines remaining
 				while (!reader.EndOfStream)
@@ -408,17 +533,51 @@ namespace VampORama
 						string[] parts = lineIn.Split(',');
 
 						millisecs = xUtils.ParseMilliseconds(parts[0]);
+						label = countBeats.ToString();
 						// FULL BEATS - QUARTER NOTES
-						millisecs = xUtils.RoundTimeTo(millisecs, msPF);
+						//millisecs = xUtils.RoundTimeTo(millisecs, msPF);
+						// Moved down to below > lastbeat check
+						//millisecs = Annotator.AlignTimeTo(millisecs, alignmentType);
 						beatLength = millisecs - lastBeat;
-						xOnsets.Add(countBeats.ToString(), lastBeat, millisecs);
-						countBeats++;
+						if (parts.Length > 1)
+						{
+							milliLen = xUtils.ParseMilliseconds(parts[1]);
+						}
 
+						// Has it advanced since the last one?
+						if (millisecs > lastBeat)
+						{
+							// OK, now align it
+							millisecs = Annotator.AlignTimeTo(millisecs, alignmentType);
+							// Is it still past the lastone after alignment?
+							if (millisecs > lastBeat)
+							{
+								// Save it, add it to list
+								xOnsets.Add(label, lastBeat, millisecs, midiNum);
+								// update count
+								countBeats++;
+								// Remember this for next round (in order to skip ones which haven't advanced)
+								lastBeat = millisecs;
+							}
+						}
 
-						lastBeat = millisecs;
+						// Get length and midi number for next entry
+						if (parts.Length > 2)
+						{
+							noteNum = parts[2];
+							if (noteNum.Length > 0)
+							{
+								midiNum = Int32.Parse(noteNum);
+								if (midiNum > 0)
+								{
+									//label = SequenceFunctions.noteNames[midiNum];
+								}
+							}
+						}
 						onsetCount++;
 					} // end line contains a period
 				} // end while loop more lines remaining
+				xOnsets.Add(label, lastBeat, millisecs, midiNum);
 
 				reader.Close();
 			}

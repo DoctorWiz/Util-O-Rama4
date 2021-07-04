@@ -38,6 +38,7 @@ namespace VampORama
 		public const byte SAVEmixedDisplay = 1;
 		public const byte SAVEcrgDisplay = 2;
 		public const byte SAVEcrgAlpha = 3;
+
 		// end enums
 
 		public const char DELIM1 = '⬖';
@@ -65,7 +66,7 @@ namespace VampORama
 		private MRU mruTimings = new MRU(heartOfTheSun, "filesTiming", 10);
 		private MRU mruAudio = new MRU(heartOfTheSun, "filesAudio", 10);
 		//private List<xTimings> timingsList = new List<xTimings>();
-		
+
 		//private MRU mruAudio = new MRU();
 
 		//private Sequence4 seq = new Sequence4();
@@ -86,7 +87,7 @@ namespace VampORama
 		private string cmdSelectionsFile = "";
 		private byte useSaveFormat = SAVEmixedDisplay;
 		private int curStep = 0;
-		
+
 		public bool lightORamaInstalled = false;
 		public bool xLightsInstalled = false;
 		public string applicationName = "Vamp-O-Rama";  // Or changed to "Vamperizer" if only xLights is installed (but not Light-O-Rama)
@@ -138,6 +139,7 @@ namespace VampORama
 		private const int STEP_AnalyzeAudio = 3;
 		private const int STEP_SaveTimings = 4;
 
+		private frmOutputLog logWindow = null;
 
 
 
@@ -210,7 +212,7 @@ namespace VampORama
 				grpSpectrum.Top -= moveBy;
 				grpVocals.Top -= moveBy;
 				grpTempo.Top -= moveBy;
-				
+
 			}
 			if (!lightORamaInstalled) chkLOR.Checked = false;
 			if (!xLightsInstalled) chkxLights.Checked = false;
@@ -237,7 +239,7 @@ namespace VampORama
 			}
 
 			chaos = new Random();
-			panelX = (this.ClientSize.Width - pnlVamping.Width)/ 2;
+			panelX = (this.ClientSize.Width - pnlVamping.Width) / 2;
 			panelY = (this.ClientSize.Height - pnlVamping.Height) / 2;
 			panelAddX = chaos.NextDouble() * 2 + .5D;
 			panelAddY = chaos.NextDouble() * 2 + .5D;
@@ -248,20 +250,20 @@ namespace VampORama
 			//myBackgroundWorker.WorkerSupportsCancellation = true;
 			//myBackgroundWorker.DoWork += new DoWorkEventHandler(myBackgroundWorker1_DoWork);
 			//myBackgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(myBackgroundWorker1_RunWorkerCompleted);
-		
-		//baseDir = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-		//userSettingsLocalDir = baseDir + mySubDir;
-		//if (!Directory.Exists(userSettingsLocalDir)) Directory.CreateDirectory(userSettingsLocalDir);
 
-		//baseDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-		//userSettingsRoamingDir = baseDir + mySubDir;
-		//if (!Directory.Exists(userSettingsRoamingDir)) Directory.CreateDirectory(userSettingsRoamingDir);
+			//baseDir = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+			//userSettingsLocalDir = baseDir + mySubDir;
+			//if (!Directory.Exists(userSettingsLocalDir)) Directory.CreateDirectory(userSettingsLocalDir);
 
-		//baseDir = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-		//machineSettingsDir = baseDir + mySubDir;
-		//if (!Directory.Exists(machineSettingsDir)) Directory.CreateDirectory(machineSettingsDir);
+			//baseDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+			//userSettingsRoamingDir = baseDir + mySubDir;
+			//if (!Directory.Exists(userSettingsRoamingDir)) Directory.CreateDirectory(userSettingsRoamingDir);
 
-		// mruAudio = new MRU(heartOfTheSun, "Audio", 10);
+			//baseDir = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+			//machineSettingsDir = baseDir + mySubDir;
+			//if (!Directory.Exists(machineSettingsDir)) Directory.CreateDirectory(machineSettingsDir);
+
+			// mruAudio = new MRU(heartOfTheSun, "Audio", 10);
 			//mruAudio.ReadFromConfig(Properties.Settings.Default);
 			//mruAudio.Validate();
 			string f = mruAudio.GetItem(0);
@@ -270,7 +272,7 @@ namespace VampORama
 			{
 				f = Path.GetDirectoryName(fileAudioLast);
 			}
-			else { 
+			else {
 				f = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
 			}
 			pathAudio = f;
@@ -387,67 +389,67 @@ namespace VampORama
 			SetTheControlsToDefaults();
 			bool foo = false;
 
-			SetCombo(cboMethodBarsBeats,			heartOfTheSun.methodBarsBeats);
-			timeSignature										=	heartOfTheSun.timeSignature;
+			SetCombo(cboMethodBarsBeats, heartOfTheSun.methodBarsBeats);
+			timeSignature = heartOfTheSun.timeSignature;
 			if (timeSignature == 3) swTrackBeat.Checked = true; else swTrackBeat.Checked = false;
-			startBeat												=	heartOfTheSun.startBeat;
-			vscStartBeat.Value							=	startBeat;
-			SetCombo(cboDetectBarBeats,				heartOfTheSun.detectBars);
-			chkWhiteBarBeats.Checked				=	heartOfTheSun.whiteBarsBeats;
-			chkBars.Checked									=	heartOfTheSun.doBars;
-			chkBeatsFull.Checked						=	heartOfTheSun.DoBeatsFull;
-			chkBeatsHalf.Checked						=	heartOfTheSun.doBeatsHalf;
-			chkBeatsThird.Checked						=	heartOfTheSun.doBeatsThird;
-			chkBeatsQuarter.Checked					=	heartOfTheSun.doBeatsQuarter;
+			startBeat = heartOfTheSun.startBeat;
+			vscStartBeat.Value = startBeat;
+			SetCombo(cboDetectBarBeats, heartOfTheSun.detectBars);
+			chkWhiteBarBeats.Checked = heartOfTheSun.whiteBarsBeats;
+			chkBars.Checked = heartOfTheSun.doBars;
+			chkBeatsFull.Checked = heartOfTheSun.DoBeatsFull;
+			chkBeatsHalf.Checked = heartOfTheSun.doBeatsHalf;
+			chkBeatsThird.Checked = heartOfTheSun.doBeatsThird;
+			chkBeatsQuarter.Checked = heartOfTheSun.doBeatsQuarter;
 			//SetCombo(cboAlignBarsBeats,				heartOfTheSun.alignBarsBeats);
 
-			SetCombo(cboMethodOnsets,					heartOfTheSun.methodOnsets);
-			SetCombo(cboDetectOnsets,					heartOfTheSun.detectOnsets);
-			vscSensitivity.Value						=	heartOfTheSun.sensitivityOnsets;
-			chkWhiteOnsets.Checked					=	heartOfTheSun.whiteOnsets;
-			chkNoteOnsets.Checked						=	heartOfTheSun.doOnsets;
-			SetCombo(cboLabelsOnsets,					heartOfTheSun.labelOnsets);
+			SetCombo(cboOnsetsPlugin, heartOfTheSun.methodOnsets);
+			SetCombo(cboOnsetsDetect, heartOfTheSun.detectOnsets);
+			vscSensitivity.Value = heartOfTheSun.sensitivityOnsets;
+			chkOnsetsWhite.Checked = heartOfTheSun.whiteOnsets;
+			chkNoteOnsets.Checked = heartOfTheSun.doOnsets;
+			SetCombo(cboOnsetsLabels, heartOfTheSun.labelOnsets);
 			//SetCombo(cboAlignOnsets,					heartOfTheSun.alignOnsets);
-			SetCombo(cboStepSize,							heartOfTheSun.stepSize);
-			swRamps.Checked									=	heartOfTheSun.Ramps;
+			SetCombo(cboStepSize, heartOfTheSun.stepSize);
+			swRamps.Checked = heartOfTheSun.Ramps;
 
-			SetCombo(cboMethodTranscription,	heartOfTheSun.methodTranscribe);
-			chkTranscribe.Checked						=	heartOfTheSun.doTranscribe;
-			SetCombo(cboLabelsTranscription,	heartOfTheSun.labelTranscribe);
-			SetCombo(cboAlignTranscribe,			heartOfTheSun.alignTranscribe);
+			SetCombo(cboMethodTranscription, heartOfTheSun.methodTranscribe);
+			chkTranscribe.Checked = heartOfTheSun.doTranscribe;
+			SetCombo(cboLabelsTranscription, heartOfTheSun.labelTranscribe);
+			SetCombo(cboAlignTranscribe, heartOfTheSun.alignTranscribe);
 
-			SetCombo(cboMethodSpectrum,				heartOfTheSun.methodSpectrum);
-			chkSpectrum.Checked							=	heartOfTheSun.doSpectrum;
-			SetCombo(cboLabelsSpectrum,				heartOfTheSun.labelSpectrum);
-			SetCombo(cboAlignSpectrum,				heartOfTheSun.alignSpectrum);
+			SetCombo(cboMethodSpectrum, heartOfTheSun.methodSpectrum);
+			chkSpectrum.Checked = heartOfTheSun.doSpectrum;
+			SetCombo(cboLabelsSpectrum, heartOfTheSun.labelSpectrum);
+			SetCombo(cboAlignSpectrum, heartOfTheSun.alignSpectrum);
 
-			SetCombo(cboMethodPitchKey,				heartOfTheSun.methodPitchKey);
-			chkPitchKey.Checked							=	heartOfTheSun.doPitchKey;
-			SetCombo(cboLabelsPitchKey,				heartOfTheSun.labelPitchKey);
-			SetCombo(cboAlignPitch,						heartOfTheSun.alignPitchKey);
+			SetCombo(cboMethodPitchKey, heartOfTheSun.methodPitchKey);
+			chkPitchKey.Checked = heartOfTheSun.doPitchKey;
+			SetCombo(cboLabelsPitchKey, heartOfTheSun.labelPitchKey);
+			SetCombo(cboAlignPitch, heartOfTheSun.alignPitchKey);
 
-			SetCombo(cboMethodTempo,					heartOfTheSun.methodTempo);
-			chkTempo.Checked								=	heartOfTheSun.doTempo;
-			SetCombo(cboLabelsTempo,					heartOfTheSun.labelTempo);
-			SetCombo(cboAlignTempo,						heartOfTheSun.alignTempo);
+			SetCombo(cboMethodTempo, heartOfTheSun.methodTempo);
+			chkTempo.Checked = heartOfTheSun.doTempo;
+			SetCombo(cboLabelsTempo, heartOfTheSun.labelTempo);
+			SetCombo(cboAlignTempo, heartOfTheSun.alignTempo);
 
-			chkSegments.Checked							=	heartOfTheSun.doSegments;
-			SetCombo(cboAlignSegments,				heartOfTheSun.alignSegments);
-			SetCombo(cboMethodSegments,				heartOfTheSun.methodSegments);
-			SetCombo(cboLabelsSegments,				heartOfTheSun.labelSegments);
+			chkSegments.Checked = heartOfTheSun.doSegments;
+			SetCombo(cboAlignSegments, heartOfTheSun.alignSegments);
+			SetCombo(cboMethodSegments, heartOfTheSun.methodSegments);
+			SetCombo(cboLabelsSegments, heartOfTheSun.labelSegments);
 
-			chkVocals.Checked								=	heartOfTheSun.doVocals;
-			SetCombo(cboAlignVocals,					heartOfTheSun.alignVocals);
+			chkVocals.Checked = heartOfTheSun.doVocals;
+			SetCombo(cboAlignVocals, heartOfTheSun.alignVocals);
 
-			chkFlux.Checked									=	heartOfTheSun.doFlux;
-			chkChords.Checked								=	heartOfTheSun.doChords;
-			chkVocals.Checked								=	heartOfTheSun.doVocals;
+			chkFlux.Checked = heartOfTheSun.doFlux;
+			chkChords.Checked = heartOfTheSun.doChords;
+			chkVocals.Checked = heartOfTheSun.doVocals;
 
-			fileAudioLast										=	heartOfTheSun.fileAudioLast;
+			fileAudioLast = heartOfTheSun.fileAudioLast;
 
-			chkLOR.Checked									=	heartOfTheSun.UseLOR;
-			chkxLights.Checked							=	heartOfTheSun.UsexLights;
-			chkAutolaunch.Checked						=	heartOfTheSun.autoLaunch;
+			chkLOR.Checked = heartOfTheSun.UseLOR;
+			chkxLights.Checked = heartOfTheSun.UsexLights;
+			chkAutolaunch.Checked = heartOfTheSun.autoLaunch;
 
 			SetAlignments();
 
@@ -463,65 +465,65 @@ namespace VampORama
 		{
 			Properties.Settings heartOfTheSun = Properties.Settings.Default;
 
-			heartOfTheSun.methodBarsBeats		= cboMethodBarsBeats.Text;
-			heartOfTheSun.timeSignature			= timeSignature;
-			heartOfTheSun.startBeat					= startBeat;
-			heartOfTheSun.detectBars				= cboDetectBarBeats.Text;
-			heartOfTheSun.whiteBarsBeats		= chkWhiteBarBeats.Checked;
-			heartOfTheSun.doBars						= chkBars.Checked;
-			heartOfTheSun.DoBeatsFull				= chkBeatsFull.Checked;
-			heartOfTheSun.doBeatsHalf				= chkBeatsHalf.Checked;
-			heartOfTheSun.doBeatsThird			= chkBeatsThird.Checked;
-			heartOfTheSun.doBeatsQuarter		= chkBeatsQuarter.Checked;
-			heartOfTheSun.alignBarsBeats		= cboAlignBarsBeats.Text;
-			heartOfTheSun.Ramps							= swRamps.Checked;
+			heartOfTheSun.methodBarsBeats = cboMethodBarsBeats.Text;
+			heartOfTheSun.timeSignature = timeSignature;
+			heartOfTheSun.startBeat = startBeat;
+			heartOfTheSun.detectBars = cboDetectBarBeats.Text;
+			heartOfTheSun.whiteBarsBeats = chkWhiteBarBeats.Checked;
+			heartOfTheSun.doBars = chkBars.Checked;
+			heartOfTheSun.DoBeatsFull = chkBeatsFull.Checked;
+			heartOfTheSun.doBeatsHalf = chkBeatsHalf.Checked;
+			heartOfTheSun.doBeatsThird = chkBeatsThird.Checked;
+			heartOfTheSun.doBeatsQuarter = chkBeatsQuarter.Checked;
+			heartOfTheSun.alignBarsBeats = cboAlignBarsBeats.Text;
+			heartOfTheSun.Ramps = swRamps.Checked;
 
-			heartOfTheSun.methodOnsets			= cboMethodOnsets.Text;
-			heartOfTheSun.detectOnsets			= cboDetectOnsets.Text;
+			heartOfTheSun.methodOnsets = cboOnsetsPlugin.Text;
+			heartOfTheSun.detectOnsets = cboOnsetsDetect.Text;
 			heartOfTheSun.sensitivityOnsets = vscSensitivity.Value;
-			heartOfTheSun.whiteOnsets				= chkWhiteOnsets.Checked;
-			heartOfTheSun.doOnsets					= chkNoteOnsets.Checked;
-			heartOfTheSun.labelOnsets				= cboLabelsOnsets.Text;
-			heartOfTheSun.alignOnsets				= cboAlignOnsets.Text;
-			heartOfTheSun.stepSize					= cboStepSize.Text;
+			heartOfTheSun.whiteOnsets = chkOnsetsWhite.Checked;
+			heartOfTheSun.doOnsets = chkNoteOnsets.Checked;
+			heartOfTheSun.labelOnsets = cboOnsetsLabels.Text;
+			heartOfTheSun.alignOnsets = cboAlignOnsets.Text;
+			heartOfTheSun.stepSize = cboStepSize.Text;
 
-			heartOfTheSun.methodTranscribe	= cboMethodTranscription.Text;
-			heartOfTheSun.doTranscribe			= chkTranscribe.Checked;
-			heartOfTheSun.labelTranscribe		= cboLabelsTranscription.Text;
-			heartOfTheSun.alignTranscribe		= cboAlignTranscribe.Text;
+			heartOfTheSun.methodTranscribe = cboMethodTranscription.Text;
+			heartOfTheSun.doTranscribe = chkTranscribe.Checked;
+			heartOfTheSun.labelTranscribe = cboLabelsTranscription.Text;
+			heartOfTheSun.alignTranscribe = cboAlignTranscribe.Text;
 
-			heartOfTheSun.methodSpectrum		= cboMethodSpectrum.Text;
-			heartOfTheSun.doSpectrum				= chkSpectrum.Checked;
-			heartOfTheSun.labelSpectrum			= cboLabelsSpectrum.Text;
-			heartOfTheSun.alignSpectrum			= cboAlignSpectrum.Text;
+			heartOfTheSun.methodSpectrum = cboMethodSpectrum.Text;
+			heartOfTheSun.doSpectrum = chkSpectrum.Checked;
+			heartOfTheSun.labelSpectrum = cboLabelsSpectrum.Text;
+			heartOfTheSun.alignSpectrum = cboAlignSpectrum.Text;
 
-			heartOfTheSun.methodPitchKey		= cboMethodPitchKey.Text;
-			heartOfTheSun.doPitchKey				= chkPitchKey.Checked;
-			heartOfTheSun.labelPitchKey			= cboLabelsPitchKey.Text;
-			heartOfTheSun.alignPitchKey			= cboAlignPitch.Text;
+			heartOfTheSun.methodPitchKey = cboMethodPitchKey.Text;
+			heartOfTheSun.doPitchKey = chkPitchKey.Checked;
+			heartOfTheSun.labelPitchKey = cboLabelsPitchKey.Text;
+			heartOfTheSun.alignPitchKey = cboAlignPitch.Text;
 
-			heartOfTheSun.methodTempo				= cboMethodTempo.Text;
-			heartOfTheSun.doTempo						= chkTempo.Checked;
-			heartOfTheSun.labelTempo				= cboLabelsTempo.Text;
-			heartOfTheSun.alignTempo				= cboAlignTempo.Text;
+			heartOfTheSun.methodTempo = cboMethodTempo.Text;
+			heartOfTheSun.doTempo = chkTempo.Checked;
+			heartOfTheSun.labelTempo = cboLabelsTempo.Text;
+			heartOfTheSun.alignTempo = cboAlignTempo.Text;
 
-			heartOfTheSun.doSegments				= chkSegments.Checked;
-			heartOfTheSun.methodSegments		= cboMethodSegments.Text;
-			heartOfTheSun.alignSegments			= cboAlignSegments.Text;
-			heartOfTheSun.labelSegments			= cboLabelsSegments.Text;
+			heartOfTheSun.doSegments = chkSegments.Checked;
+			heartOfTheSun.methodSegments = cboMethodSegments.Text;
+			heartOfTheSun.alignSegments = cboAlignSegments.Text;
+			heartOfTheSun.labelSegments = cboLabelsSegments.Text;
 
-			heartOfTheSun.doVocals					= chkVocals.Checked;
-			heartOfTheSun.alignVocals				= cboAlignVocals.Text;
+			heartOfTheSun.doVocals = chkVocals.Checked;
+			heartOfTheSun.alignVocals = cboAlignVocals.Text;
 
-			heartOfTheSun.doFlux						= chkFlux.Checked;
-			heartOfTheSun.doChords					= chkChords.Checked;
-			heartOfTheSun.doVocals					= chkVocals.Checked;
+			heartOfTheSun.doFlux = chkFlux.Checked;
+			heartOfTheSun.doChords = chkChords.Checked;
+			heartOfTheSun.doVocals = chkVocals.Checked;
 
-			heartOfTheSun.fileAudioLast			= fileAudioLast;
+			heartOfTheSun.fileAudioLast = fileAudioLast;
 
-			heartOfTheSun.UseLOR						= chkLOR.Checked;
-			heartOfTheSun.UsexLights				= chkxLights.Checked;
-			heartOfTheSun.autoLaunch				= chkAutolaunch.Checked;
+			heartOfTheSun.UseLOR = chkLOR.Checked;
+			heartOfTheSun.UsexLights = chkxLights.Checked;
+			heartOfTheSun.autoLaunch = chkAutolaunch.Checked;
 
 			heartOfTheSun.Save();
 
@@ -870,7 +872,7 @@ namespace VampORama
 			}
 
 			// Save it for later!
-			int x = this.Left;  
+			int x = this.Left;
 			heartOfTheSun.Location = myLoc;
 			heartOfTheSun.Size = mySize;
 			heartOfTheSun.WindowState = (int)myState;
@@ -1005,16 +1007,18 @@ namespace VampORama
 
 		}
 
-		private void btnSave_Click(object sender, EventArgs e)
+		private void btnSavexL_Click(object sender, EventArgs e)
 		{
 			string newFileIn;
 			string newFileOut;
 			string filt = "xLights Timings *.xtimings|*.xtiming";
 			string tit = "Save Timings As...";
-			string initDir = pathTimingsLast;
+			string initDir = Properties.Settings.Default.LastxLightsTimingsSavePath;
 			if (initDir.Length < 5) initDir = xUtils.ShowDirectory;
+			if (!Directory.Exists(initDir)) initDir = xUtils.ShowDirectory;
+
 			string initFile = Path.GetFileNameWithoutExtension(fileAudioLast);
-			
+
 			dlgSaveFile.Filter = filt;
 			dlgSaveFile.FilterIndex = 1;
 			dlgSaveFile.FileName = initFile; // xUtils.ShowDirectory + Path.GetFileNameWithoutExtension(fileAudioLast) + ".xtiming";
@@ -1032,10 +1036,16 @@ namespace VampORama
 			DialogResult result = dlgSaveFile.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
+				ImBusy(true);
 				fileTimingsLast = dlgSaveFile.FileName;
-				ExportSelectedTimings(dlgSaveFile.FileName);
+				Properties.Settings.Default.LastxLightsTimingsSavePath = Path.GetDirectoryName(dlgSaveFile.FileName);
+				ExportSelectedxTimings(dlgSaveFile.FileName);
 				mruTimings.AddNew(fileTimingsLast);
 				mruTimings.SaveToConfig();
+				dirtyTimes = false;
+				//SystemSounds.Beep.Play();
+				utils.MakeNoise(utils.Noises.TaDa);
+				ImBusy(false);
 			}
 		} // end Save File As
 
@@ -1422,8 +1432,8 @@ namespace VampORama
 					}
 					//if (!System.IO.File.Exists("C:\\Program Files (x86)\\Vamp Plugins\\qm-vamp-plugins.dll")) // 32-bit
 					if (!System.IO.File.Exists("C:\\Program Files\\Vamp Plugins\\qm-vamp-plugins.dll")) // 64-bit
-						{
-							string msg = applicationName + " cannot continue until the Queen Mary Vamp Plugin has been installed.";
+					{
+						string msg = applicationName + " cannot continue until the Queen Mary Vamp Plugin has been installed.";
 						MessageBox.Show(this, msg, "Please install the Queen Mary Vamp Plugin", MessageBoxButtons.OK, MessageBoxIcon.Stop);
 						this.Close();
 
@@ -1627,6 +1637,7 @@ namespace VampORama
 			if (System.IO.File.Exists(fileAudioLast))
 			{
 				ImBusy(true);
+				utils.MakeNoise(utils.Noises.DrumRoll);
 				// Remember all current user settings, options, selections, etc. on the main form
 				SetTheControlsForTheHeartOfTheSun();
 
@@ -1635,11 +1646,33 @@ namespace VampORama
 				//int errs = ClearTempDir();
 				//! UNREMARK AFTER TESTING!
 				//Vamperize(fileAudioLast);
+				outLog.Clear();
+				outputChanged = false;
+				
+				if (logWindow == null)
+				{
+					logWindow = new frmOutputLog(this);
+				}
+				if (logWindow.IsDisposed)
+				{
+					logWindow = new frmOutputLog(this);
+				}
+				logWindow.Show(this);
+				logWindow.LogText = "";
 				PrepareToAnnotate();
 				AnnotateSelectedVamps();
 
 
 				SelectStep(STEP_SaveTimings);
+				logWindow.Done = true;
+				utils.MakeNoise(utils.Noises.TaDa);
+
+				while (!logWindow.IsDisposed)
+				{
+					Application.DoEvents();
+				}
+
+
 				ImBusy(false);
 			}
 			else
@@ -1962,8 +1995,10 @@ namespace VampORama
 
 		} // end SaveSelectionsAs...
 
-		
-		private void ExportSelectedTimings(string fileName)
+
+
+
+		private void ExportSelectedLORTimings(string fileName)
 		{
 			// Get Temp Directory
 			bool startWritten = false;
@@ -1992,9 +2027,8 @@ namespace VampORama
 					{
 						if (transBarBeats.xBars.effects.Count > 0)
 						{
-							WriteTimingFileX(transBarBeats.xBars, fileName);
-							WriteTimingFile4(transBarBeats.xBars, fileName);
-							WriteTimingFile5(transBarBeats.xBars, fileName);
+							//WriteTimingFile4(transBarBeats.xBars, fileName);
+							//WriteTimingFile5(transBarBeats.xBars, fileName);
 							writeCount += 3;
 						}
 					}
@@ -2005,9 +2039,8 @@ namespace VampORama
 					{
 						if (transBarBeats.xBeatsFull.effects.Count > 0)
 						{
-							WriteTimingFileX(transBarBeats.xBeatsFull, fileName);
-							WriteTimingFile4(transBarBeats.xBeatsFull, fileName);
-							WriteTimingFile5(transBarBeats.xBeatsFull, fileName);
+							//WriteTimingFile4(transBarBeats.xBeatsFull, fileName);
+							//WriteTimingFile5(transBarBeats.xBeatsFull, fileName);
 							writeCount += 3;
 						}
 					}
@@ -2018,9 +2051,8 @@ namespace VampORama
 					{
 						if (transBarBeats.xBeatsHalf.effects.Count > 0)
 						{
-							WriteTimingFileX(transBarBeats.xBeatsHalf, fileName);
-							WriteTimingFile4(transBarBeats.xBeatsHalf, fileName);
-							WriteTimingFile5(transBarBeats.xBeatsHalf, fileName);
+							//WriteTimingFile4(transBarBeats.xBeatsHalf, fileName);
+							//WriteTimingFile5(transBarBeats.xBeatsHalf, fileName);
 							writeCount += 3;
 						}
 					}
@@ -2031,9 +2063,8 @@ namespace VampORama
 					{
 						if (transBarBeats.xBeatsThird.effects.Count > 0)
 						{
-							WriteTimingFileX(transBarBeats.xBeatsThird, fileName);
-							WriteTimingFile4(transBarBeats.xBeatsThird, fileName);
-							WriteTimingFile5(transBarBeats.xBeatsThird, fileName);
+							//WriteTimingFile4(transBarBeats.xBeatsThird, fileName);
+							//WriteTimingFile5(transBarBeats.xBeatsThird, fileName);
 							writeCount += 3;
 						}
 					}
@@ -2044,9 +2075,8 @@ namespace VampORama
 					{
 						if (transBarBeats.xBeatsQuarter.effects.Count > 0)
 						{
-							WriteTimingFileX(transBarBeats.xBeatsQuarter, fileName);
-							WriteTimingFile4(transBarBeats.xBeatsQuarter, fileName);
-							WriteTimingFile5(transBarBeats.xBeatsQuarter, fileName);
+							//WriteTimingFile4(transBarBeats.xBeatsQuarter, fileName);
+							//WriteTimingFile5(transBarBeats.xBeatsQuarter, fileName);
 							writeCount += 3;
 						}
 					}
@@ -2060,9 +2090,8 @@ namespace VampORama
 					{
 						if (transOnsets.xOnsets.effects.Count > 0)
 						{
-							WriteTimingFileX(transOnsets.xOnsets, fileName);
-							WriteTimingFile4(transOnsets.xOnsets, fileName);
-							WriteTimingFile5(transOnsets.xOnsets, fileName);
+							//WriteTimingFile4(transOnsets.xOnsets, fileName);
+							//WriteTimingFile5(transOnsets.xOnsets, fileName);
 							writeCount += 3;
 						}
 					}
@@ -2116,32 +2145,25 @@ namespace VampORama
 			//}
 			pnlStatus.Text = writeCount.ToString() + " files writen.";
 		} // end SaveSelections
-		
 
+
+		/*
 		private void WriteTimingFileX(xTimings timings, string fileName)
 		{
-			string timingsTemp = "";
-			string tempDir = System.IO.Path.GetTempPath();
 			int err = 0;
 			//  Allocate a stream writer
 			StreamWriter writer = null;
 			string expPath = Path.GetDirectoryName(fileName) + "\\";
 			string expBase = Path.GetFileNameWithoutExtension(fileName);
 			string expFile = "x.x";
+			string tempDir = System.IO.Path.GetTempPath();
+			string timingsTemp = tempDir + Path.GetRandomFileName();
 
-			pnlStatus.Text = "Writing " + timings.timingName + "...";
-			staStatus.Refresh();
-			// Create a temporary streamwriter file
-			timingsTemp = tempDir + Path.GetRandomFileName();
 			writer = new StreamWriter(timingsTemp);
-				string lineOut = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+			string lineOut = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 			writer.WriteLine(lineOut);
+			WriteTimingFileX(timings, writer);
 
-			// Write this xTiming to an export file
-			string xDat = timings.LineOutX();
-			writer.WriteLine(xDat);
-
-			writer.Close();
 			expFile = expPath + expBase + " - " + timings.timingName + ".xtiming";
 			if (System.IO.File.Exists(expFile))
 			{
@@ -2152,7 +2174,38 @@ namespace VampORama
 			// Copy the tempfile to the new file name and delete the old temp file
 			err = utils.SafeCopy(timingsTemp, expFile);
 			System.IO.File.Delete(timingsTemp);
+		}
+		*/
 
+		private void WriteTimingFileXX(xTimings timings, StreamWriter writer)
+		{
+			/*
+			private bool closeWriter = false;
+		string fileName = "";
+		//	if (writer == null)
+		//	{
+		//		int err = 0;
+		////  Allocate a stream writer
+		//string expPath = Path.GetDirectoryName(fileName) + "\\";
+		//string expBase = Path.GetFileNameWithoutExtension(fileName);
+		//string expFile = "x.x";
+		//string tempDir = System.IO.Path.GetTempPath();
+		//string timingsTemp = tempDir + Path.GetRandomFileName();
+
+		//writer = new StreamWriter(timingsTemp);
+		//string lineOut = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+		//writer.WriteLine(lineOut);
+		//	}
+	pnlStatus.Text = "Writing " + timings.timingName + "...";
+			staStatus.Refresh();
+			// Create a temporary streamwriter file
+			
+			// Write this xTiming to an export file
+			string xDat = timings.LineOutX();
+	writer.WriteLine(xDat);
+
+			writer.Close();
+			*/
 		}
 
 		private void WriteTimingFile4(xTimings timings, string fileName)
@@ -2242,16 +2295,6 @@ namespace VampORama
 			System.Diagnostics.Process.Start("https://vamp-plugins.org/plugin-doc/qm-vamp-plugins.html#qm-onsetdetector");
 		}
 
-		private void cboOnsetsMethod_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			bool b = false;
-			if ((cboMethodOnsets.SelectedIndex == 0) || (cboMethodOnsets.SelectedIndex == 2)) b = true;
-			lblDetectOnsets.Enabled = b;
-			cboDetectOnsets.Enabled = b;
-			if (cboMethodOnsets.SelectedIndex == 0) b = true; else b = false;
-			pnlOnsetSensitivity.Enabled = b;
-			chkWhiteOnsets.Enabled = b;
-		}
 
 		private void vscStartBeat_Scroll_1(object sender, ScrollEventArgs e)
 		{
@@ -2281,12 +2324,46 @@ namespace VampORama
 
 		private void cboBarBeatMethod_SelectedIndexChanged(object sender, EventArgs e)
 		{
+			//TODO Move this to TransformBarBeats class
+			int plugin = cboMethodBarsBeats.SelectedIndex;
 			bool b = false;
-			if (cboMethodBarsBeats.SelectedIndex == 1)
+			switch (plugin)
 			{
-				lblDetectBarBeats.Enabled = b;
-				cboDetectBarBeats.Enabled = b;
-				chkWhiteBarBeats.Enabled = b;
+				case BarBeats.PLUGINqmBarAndBeat:
+					lblDetectBarBeats.Enabled = false;
+					cboDetectBarBeats.Enabled = false;
+					chkWhiteBarBeats.Enabled = false;
+					break;
+				case BarBeats.PLUGINqmTempo:
+					lblDetectBarBeats.Enabled = true;
+					cboDetectBarBeats.Enabled = true;
+					cboDetectBarBeats.Items.Clear();
+					cboDetectBarBeats.Items.Add("High-Frequence Content");
+					cboDetectBarBeats.Items.Add("Spectral Difference (Percussion: Drums, Chimes)");
+					cboDetectBarBeats.Items.Add("Phase Deviation (Wind: Flute, Sax, Trumpet)");
+					cboDetectBarBeats.Items.Add("Complex Domain (Strings/Mixed: Piano, Guitar)");
+					cboDetectBarBeats.Items.Add("Broadband Energy Rise (Percussion mixed with other)");
+					chkWhiteBarBeats.Enabled = true;
+					break;
+				case BarBeats.PLUGINbeatRoot:
+					lblDetectBarBeats.Enabled = false;
+					cboDetectBarBeats.Enabled = false;
+					chkWhiteBarBeats.Enabled = false;
+					break;
+				case BarBeats.PLUGINaubio:
+					lblDetectBarBeats.Enabled = true;
+					cboDetectBarBeats.Enabled = true;
+					cboDetectBarBeats.Items.Clear();
+					cboDetectBarBeats.Items.Add("Energy Based");
+					cboDetectBarBeats.Items.Add("Spectral Difference (Percussion: Drums, Chimes)");
+					cboDetectBarBeats.Items.Add("High-Frequence Content");
+					cboDetectBarBeats.Items.Add("Complex Domain (Strings/Mixed: Piano, Guitar)");
+					cboDetectBarBeats.Items.Add("Phase Deviation (Wind: Flute, Sax, Trumpet)");
+					cboDetectBarBeats.Items.Add("Kullback-Liebler");
+					cboDetectBarBeats.Items.Add("Modified Kullback-Liebler");
+					cboDetectBarBeats.Items.Add("Spectral Flux");
+					chkWhiteBarBeats.Enabled = false;
+					break;
 			}
 		}
 
@@ -2317,12 +2394,12 @@ namespace VampORama
 			chkBeatsQuarter.Checked = true;
 			cboAlignBarsBeats.SelectedIndex = 1; // 25ms 40fps
 
-			cboMethodOnsets.SelectedIndex = 0;
-			cboDetectOnsets.SelectedIndex = 0;
+			cboOnsetsPlugin.SelectedIndex = 0;
+			cboOnsetsDetect.SelectedIndex = 0;
 			vscSensitivity.Value = 50;
-			chkWhiteOnsets.Checked = false;
+			chkOnsetsWhite.Checked = false;
 			chkNoteOnsets.Checked = true;
-			cboLabelsOnsets.SelectedIndex = 1;
+			cboOnsetsLabels.SelectedIndex = 0;
 			cboAlignOnsets.SelectedIndex = 5; // Quarter Beats Sixteenth Notes
 
 			cboMethodTranscription.SelectedIndex = 0;
@@ -2467,6 +2544,7 @@ namespace VampORama
 				SaveInExistingSequence();
 			}
 			dirtyTimes = false;
+			utils.MakeNoise(utils.Noises.Gong);
 			ImBusy(false);
 		}
 
@@ -2639,9 +2717,105 @@ namespace VampORama
 			SetCombo(cboAlignOnsets, heartOfTheSun.alignBarsBeats);
 		}
 
+
+
 		private void frmVamp_FormClosed(object sender, FormClosedEventArgs e)
 		{
 			CloseForm();
+		}
+
+		private void AlphaWarning()
+		{
+			StringBuilder msg = new StringBuilder();
+			msg.Append("This is an ALPHA release of Vamperizer.  ");
+			msg.Append("It is absolutely, positively guaranteed to be buggy as hell and many features may be broken or not finished yet.  ");
+			msg.Append("Do not use it for production work.  Keep backups of all your files.\r\n");
+			msg.Append("Use only as directed.  Use at your own risk.  Do not ingest.  Biohazard.  ");
+			msg.Append("Not responsible for climate change, war, hurricanes, volcanic erruptions, ");
+			msg.Append("divorce, explosive diarrhea, hair loss, blindness, headaches, ");
+			msg.Append("ornery mother-in-laws, ADD, ADHD, PMS, UFOs, purple urine, or death.  Other drastic conditions may occur.  ");
+			msg.Append("Take with Tylenol, Xanax, Valium, or Prozac as needed.  ");
+			msg.Append("Keep out of the reach of children and IT specialists.");
+			msg.Append("No warranty express or implied (except to be buggy).  No refunds, credits, or exchanges.  Not for resale.");
+			msg.Append("\r\nSend bug reports and good dirty jokes to wizard@wizlights.com");
+
+			utils.MakeNoise(utils.Noises.Crash);
+			DialogResult d = MessageBox.Show(this, msg.ToString(), "WARNING!", MessageBoxButtons.OK, MessageBoxIcon.Warning); ;
+
+
+		}
+
+		private void cboOnsetsPlugin_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			//TODO Move this to TransformNoteOnsets class
+			int plugin = cboOnsetsPlugin.SelectedIndex;
+			switch (plugin)
+			{
+				case NoteOnsets.PLUGINqmOnset:
+					cboOnsetsLabels.Items.Clear();
+					cboOnsetsLabels.Items.Add(NoteOnsets.availableLabels[0]);
+					chkOnsetsWhite.Enabled = true;
+					pnlOnsetSensitivity.Enabled = true;
+					cboOnsetsDetect.Items.Clear();
+					cboOnsetsDetect.Items.Add("High-Frequence Content");
+					cboOnsetsDetect.Items.Add("Spectral Difference (Percussion: Drums, Chimes)");
+					cboOnsetsDetect.Items.Add("Phase Deviation (Wind: Flute, Sax, Trumpet)");
+					cboOnsetsDetect.Items.Add("Complex Domain (Strings/Mixed: Piano, Guitar)");
+					cboOnsetsDetect.Items.Add("Broadband Energy Rise (Percussion mixed with other)");
+					cboOnsetsDetect.Enabled = true;
+					break;
+				case NoteOnsets.PLUGINqmTranscribe:
+					cboOnsetsLabels.Items.Clear();
+					cboOnsetsLabels.Items.Add(NoteOnsets.availableLabels[0]);
+					cboOnsetsLabels.Items.Add(NoteOnsets.availableLabels[1]);
+					cboOnsetsLabels.Items.Add(NoteOnsets.availableLabels[2]);
+					chkOnsetsWhite.Enabled = false;
+					pnlOnsetSensitivity.Enabled = false;
+					cboOnsetsDetect.Enabled = false;
+					break;
+				case NoteOnsets.PLUGINOnsetDS:
+					chkOnsetsWhite.Enabled = false;
+					pnlOnsetSensitivity.Enabled = false;
+					cboOnsetsDetect.Enabled = false;
+					cboOnsetsLabels.Items.Clear();
+					cboOnsetsLabels.Items.Add(NoteOnsets.availableLabels[0]);
+					break;
+				case NoteOnsets.PLUGINSilvet:
+					chkOnsetsWhite.Enabled = false;
+					pnlOnsetSensitivity.Enabled = false;
+					cboOnsetsDetect.Enabled = false;
+					cboOnsetsLabels.Items.Clear();
+					cboOnsetsLabels.Items.Add(NoteOnsets.availableLabels[0]);
+					break;
+				case NoteOnsets.PLUGINaubioOnset:
+					chkOnsetsWhite.Enabled = false;
+					pnlOnsetSensitivity.Enabled = false;
+					cboOnsetsDetect.Enabled = false;
+					cboOnsetsLabels.Items.Clear();
+					cboOnsetsLabels.Items.Add(NoteOnsets.availableLabels[0]);
+					break;
+				case NoteOnsets.PLUGINaubioTracker:
+					chkOnsetsWhite.Enabled = false;
+					pnlOnsetSensitivity.Enabled = false;
+					cboOnsetsDetect.Items.Add("Energy Based");
+					cboOnsetsDetect.Items.Add("Spectral Difference (Percussion: Drums, Chimes)");
+					cboOnsetsDetect.Items.Add("High-Frequence Content");
+					cboOnsetsDetect.Items.Add("Complex Domain (Strings/Mixed: Piano, Guitar)");
+					cboOnsetsDetect.Items.Add("Phase Deviation (Wind: Flute, Sax, Trumpet)");
+					cboOnsetsDetect.Items.Add("Kullback-Liebler");
+					cboOnsetsDetect.Items.Add("Modified Kullback-Liebler");
+					cboOnsetsDetect.Items.Add("Spectral Flux");
+					cboOnsetsDetect.Enabled = true;
+					break;
+
+			}
+
+
+		}
+
+		private void cboDetectBarBeats_SelectedIndexChanged(object sender, EventArgs e)
+		{
+
 		}
 	}
 

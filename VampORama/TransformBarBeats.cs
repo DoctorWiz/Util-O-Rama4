@@ -12,11 +12,11 @@ namespace VampORama
 {
 	public class BarBeats : ITransform
 	{
-		private const int PLUGINqmBarAndBeat = 0;
-		private const int PLUGINqmTempo = 1;
-		private const int PLUGINbeatRoot = 2;
-		private const int PLUGINporto = 3;
-		private const int PLUGINaubio = 4;
+		public const int PLUGINqmBarAndBeat = 0;
+		public const int PLUGINqmTempo = 1;
+		public const int PLUGINbeatRoot = 2;
+		//public const int PLUGINporto = 3;
+		public const int PLUGINaubio = 3;
 		public xTimings xBars = new xTimings("Bars" + " (Whole notes, (4 Quarter notes))");
 		public xTimings xBeatsFull = new xTimings("Beats-Full (Quarter notes)");
 		public xTimings xBeatsHalf = new xTimings("Beats-Half (Eighth notes)");
@@ -29,25 +29,28 @@ namespace VampORama
 		public int totalCentiseconds = 0;
 		public int totalMilliseconds = 0;
 
-		private Annotator myAnnotator = null;
+		//private Annotator myAnnotator = null;
 
 		public readonly string[] availablePluginNames = {	"Queen Mary Bar and Beat Tracker",
 																											"Queen Mary Tempo and Beat Tracker",
 																											"BeatRoot Beat Tracker",
-																											"Porto Beat Tracker",
+																											// Does not work with latest Sonic Annotator, and 32-bit only (for older Annotator)
+																											//"Porto Beat Tracker",
 																											"Aubio Beat Tracker"};
 
-		private readonly string[] availablePluginCodes = {"vamp:qm-vamp-plugins:qm-barbeattracker:beats",
+		public readonly string[] availablePluginCodes = {"vamp:qm-vamp-plugins:qm-barbeattracker:beats",
 																											"vamp:qm-vamp-plugins:qm-tempotracker:beats",
 																											"vamp:beatroot-vamp:beatroot:beats",
-																											"vamp:mvamp-ibt:marsyas_ibt:beat_times",
+																											//"vamp:mvamp-ibt:marsyas_ibt:beat_times",
 																											"vamp:vamp-aubio:aubiotempo:beats" };
 
-		private readonly string[] filesAvailableConfigs = {"vamp_qm-vamp-plugins_qm-barbeattracker_beats.n3",
+		public readonly string[] filesAvailableConfigs = {"vamp_qm-vamp-plugins_qm-barbeattracker_beats.n3",
 																											"vamp_qm-vamp-plugins_qm-tempotracker_output_beats.n3",
-																											"vamp_beatroot_beats.n3",
-																											"mvamp-ibt_marsyas_ibt_beat_times.n3",
-																											"vamp-aubio_aubiotempo_beats.n3" };
+																											"vamp_beatroot-vamp_beatroot_beats.n3",
+																											//"mvamp-ibt_marsyas_ibt_beat_times.n3",
+																											"vamp_vamp-aubio_aubiotempo_beats.n3" };
+
+		public readonly string[] availableLabels = { "Numbers" };
 
 		private string fileConfigBase = "vamp_qm-vamp-plugins_qm-barbeattracker_beats";
 
@@ -57,12 +60,6 @@ namespace VampORama
 		{
 			// Constructor
 
-		}
-
-		public BarBeats(Annotator annot)
-		{
-			// Alternate Constructor
-			myAnnotator = annot;
 		}
 
 		public string[] AvailablePluginNames
@@ -168,19 +165,6 @@ namespace VampORama
 			}
 		}
 
-
-		public Annotator Annotator
-		{
-			set
-			{
-				myAnnotator = Annotator;
-			}
-			get
-			{
-				return myAnnotator;
-			}
-		}
-
 		public xTimings Timings
 		{
 			get
@@ -204,22 +188,16 @@ namespace VampORama
 			}
 		}
 
-		public string AnnotateSong(string songFile, int pluginIndex)
-		{
-			return AnnotateSong(songFile, pluginIndex, 4, 512);
-		}
-
-		public string AnnotateSong(string fileSong, int pluginIndex, int beatsPerBar, int stepSize, 
+		public int PrepareToVamp(string fileSong, int pluginIndex, int beatsPerBar, int stepSize, 
 								int detectionMethod = METHODdomain, bool reuse = false, bool whiten = true)
 		{
 			// Song file should have already been copied to the temp folder and named song.mp3
 			// Annotator will use the same folder the song is in for it's files
 			// Returns the name of the results file, which will also be in the same temp folder
 
-			string results = "";
 			int err = 0;
 			string fileConfig = filesAvailableConfigs[pluginIndex];
-			string vampParams = availablePluginCodes[pluginIndex];
+			//string vampParams = availablePluginCodes[pluginIndex];
 			string pathConfigs = AppDomain.CurrentDomain.BaseDirectory + "VampConfigs\\";
 			string pathWork = Path.GetDirectoryName(fileSong) + "\\";
 	
@@ -295,15 +273,48 @@ namespace VampORama
 						break;
 					case PLUGINbeatRoot:
 						// BeatRoot Beat Tracker
-						err = utils.SafeCopy(fileConfigFrom, fileConfigTo);
+						reader = new StreamReader(fileConfigFrom);
+						writer = new StreamWriter(fileConfigTo);
+						while (!reader.EndOfStream)
+						{
+							lineCount++;
+							lineIn = reader.ReadLine();
+							if (lineCount == 7)
+							{
+								lineIn = lineIn.Replace("441", stepSize.ToString());
+							}
+							writer.WriteLine(lineIn);
+						}
+						reader.Close();
+						writer.Close();
 						break;
-					case PLUGINporto:
-						// Porto Beat Tracker
-						err = utils.SafeCopy(fileConfigFrom, fileConfigTo);
-						break;
+					//case PLUGINporto:
+					// Porto Beat Tracker
+					//err = utils.SafeCopy(fileConfigFrom, fileConfigTo);
+					//break;
 					case PLUGINaubio:
 						// Aubio Beat Tracker
-						err = utils.SafeCopy(fileConfigFrom, fileConfigTo);
+						reader = new StreamReader(fileConfigFrom);
+						writer = new StreamWriter(fileConfigTo);
+						while (!reader.EndOfStream)
+						{
+							lineCount++;
+							lineIn = reader.ReadLine();
+							if (lineCount == 7)
+							{
+								lineIn = lineIn.Replace("512", stepSize.ToString());
+							}
+							if (lineCount == 12)
+							{
+								//string m = (cboDetectBarBeats.SelectedIndex + 1).ToString();
+								int dt = detectionMethod + 1;
+								string m = dt.ToString();
+								lineIn = lineIn.Replace("3", m);
+							}
+							writer.WriteLine(lineIn);
+						}
+						reader.Close();
+						writer.Close();
 						break;
 				}
 			} // End try
@@ -316,6 +327,7 @@ namespace VampORama
 					string ermsg = "Error: " + msg;
 					ermsg += " copying " + fileConfigFrom;
 					ermsg += " to " + fileConfigTo;
+					utils.MakeNoise(utils.Noises.WrongButton);
 					DialogResult dr = MessageBox.Show(ermsg, "Config File Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 					System.Diagnostics.Debugger.Break();
 				}
@@ -324,10 +336,10 @@ namespace VampORama
 
 			if (err == 0)
 			{
-				results = Annotator.AnnotateSong(fileSong, vampParams, fileConfigTo, reuse);
+				//results = Annotator.AnnotateSong(fileSong, vampParams, fileConfigTo, reuse);
 			}
 
-			return results;
+			return err;
 		}
 
 		private int fps = 40;
@@ -467,14 +479,14 @@ namespace VampORama
 						// FULL BEATS - QUARTER NOTES
 						millisecs = xUtils.RoundTimeTo(millisecs, msPF);
 						beatLength = millisecs - lastBeat;
-						xBeatsFull.Add(countBeats.ToString(), lastBeat, millisecs);
+						xBeatsFull.Add(countBeats.ToString(), lastBeat, millisecs,countBeats);
 						countBeats++;
 
 						// BARS
 						if (countBeats > maxBeats)
 						{
 							countBeats = 1;
-							xBars.Add(countBars.ToString(), lastBar, millisecs);
+							xBars.Add(countBars.ToString(), lastBar, millisecs,countBars);
 							countBars++;
 							lastBar = millisecs;
 						}
@@ -482,45 +494,45 @@ namespace VampORama
 						// HALF BEATS - EIGHTH NOTES
 						subBeat = lastBeat + (beatLength / 2);
 						subBeat = xUtils.RoundTimeTo(subBeat, msPF);
-						xBeatsHalf.Add(countHalves.ToString(), lastBeat, subBeat);
+						xBeatsHalf.Add(countHalves.ToString(), lastBeat, subBeat,countHalves);
 						countHalves++;
 
-						xBeatsHalf.Add(countHalves.ToString(), subBeat, millisecs);
+						xBeatsHalf.Add(countHalves.ToString(), subBeat, millisecs, countHalves);
 						countHalves++;
 						if (countHalves > maxHalves) countHalves = 1;
 
 						// THIRD BEATS - TWELTH NOTES
 						subBeat = lastBeat + (beatLength / 3);
 						subBeat = xUtils.RoundTimeTo(subBeat, msPF);
-						xBeatsThird.Add(countThirds.ToString(), lastBeat, subBeat);
+						xBeatsThird.Add(countThirds.ToString(), lastBeat, subBeat, countThirds);
 						countThirds++;
 
 						subSubBeat = lastBeat + (beatLength * 2 / 3);
 						subSubBeat = xUtils.RoundTimeTo(subSubBeat, msPF);
-						xBeatsThird.Add(countThirds.ToString(), subBeat, subSubBeat);
+						xBeatsThird.Add(countThirds.ToString(), subBeat, subSubBeat, countThirds);
 						countThirds++;
 
-						xBeatsThird.Add(countThirds.ToString(), subSubBeat, millisecs);
+						xBeatsThird.Add(countThirds.ToString(), subSubBeat, millisecs, countThirds);
 						countThirds++;
 						if (countThirds > maxThirds) countThirds = 1;
 
 						// QUARTER BEATS - SIXTEENTH NOTES
 						subBeat = lastBeat + (beatLength / 4);
 						subBeat = xUtils.RoundTimeTo(subBeat, msPF);
-						xBeatsQuarter.Add(countQuarters.ToString(), lastBeat, subBeat);
+						xBeatsQuarter.Add(countQuarters.ToString(), lastBeat, subBeat, countQuarters);
 						countQuarters++;
 
 						subSubBeat = lastBeat + (beatLength / 2);
 						subSubBeat = xUtils.RoundTimeTo(subSubBeat, msPF);
-						xBeatsQuarter.Add(countQuarters.ToString(), subBeat, subSubBeat);
+						xBeatsQuarter.Add(countQuarters.ToString(), subBeat, subSubBeat, countQuarters);
 						countQuarters++;
 
 						subSubSubBeat = lastBeat + (beatLength * 3 / 4);
 						subSubSubBeat = xUtils.RoundTimeTo(subSubSubBeat, msPF);
-						xBeatsQuarter.Add(countQuarters.ToString(), subSubBeat, subSubSubBeat);
+						xBeatsQuarter.Add(countQuarters.ToString(), subSubBeat, subSubSubBeat, countQuarters);
 						countQuarters++;
 
-						xBeatsQuarter.Add(countQuarters.ToString(), subSubSubBeat, millisecs);
+						xBeatsQuarter.Add(countQuarters.ToString(), subSubSubBeat, millisecs, countQuarters);
 						countQuarters++;
 						if (countQuarters > maxQuarters) countQuarters = 1;
 
@@ -620,6 +632,11 @@ namespace VampORama
 
 
 			}
+			Annotator.xBars = xBars;
+			Annotator.xBeatsFull = xBeatsFull;
+			Annotator.xBeatsHalf = xBeatsHalf;
+			Annotator.xBeatsThird = xBeatsThird;
+			Annotator.xBeatsQuarter = xBeatsQuarter;
 			return err;
 		} // end Beats
 

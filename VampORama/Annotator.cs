@@ -32,27 +32,31 @@ using LORUtils;
 
 namespace VampORama
 {
-	public class Annotator
+	public static class Annotator
 	{
 		private	const string WRITEformat = " -f -w csv --csv-force ";
 
 		//public ITransform transformer = new BarBeats();
 		//public Transpose transposer = new Transpose();
-		public string annotatorProgram = "C:\\PortableApps\\SonicAnnotator\\sonic-annotator.exe";
+		public static string annotatorProgram = "C:\\PortableApps\\SonicAnnotator\\sonic-annotator.exe";
 
-		public BarBeats BarBeatsTransformer = null; // Initialized in constructor
+		public static BarBeats BarBeatsTransformer = null; // Initialized in constructor
 
+		public static xTimings xBars = null;
+		public static xTimings xBeatsFull = null;
+		public static xTimings xBeatsHalf = null;
+		public static xTimings xBeatsThird = null;
+		public static xTimings xBeatsQuarter = null;
+		public static xTimings xOnsets = null;
+		public static xTimings xAlignTo = null;
+		public static int songTimeMS = 0;
+
+		public static int alignIdx = 0;
 
 		
-		public Annotator(string anoProgram)
-		{
-			annotatorProgram = anoProgram;
-			// Constructor
-			//BarBeatsTransformer = new BarBeats(this);
-		}
 
 
-		public string AnnotateSong(string fileSong, string vampParams, string fileConfig, bool reuse = false)
+		public static string OLDAnnotateSong(string fileSong, string vampParams, string fileConfig, bool reuse = false)
 		{
 			string resultsFile = "";
 			string pathWork = Path.GetDirectoryName(fileSong) + "\\";
@@ -87,7 +91,7 @@ namespace VampORama
 						if ((!reuse) || (!System.IO.File.Exists(resultsFile)))
 						{
 							string runthis = annotatorProgram + " " + annotatorArguments;
-						runthis = "/c " + runthis + " 2>output.txt";
+						runthis = "/c " + runthis; // + " 2>output.txt";
 
 						string vampCommandLast = runthis;
 							if (utils.IsWizard) Clipboard.SetText(runthis);
@@ -96,32 +100,35 @@ namespace VampORama
 							ProcessStartInfo procInfo = new ProcessStartInfo();
 						//x procInfo.FileName = annotatorProgram;
 						procInfo.FileName = "cmd.exe";
-							//annotatorArguments += " > " + outputFile;
-							procInfo.CreateNoWindow = true;
+						procInfo.RedirectStandardOutput = true;
+						procInfo.RedirectStandardError = true;
+						procInfo.CreateNoWindow = true;
 						procInfo.WindowStyle = ProcessWindowStyle.Hidden;
-						//procInfo.RedirectStandardOutput = true;
-						//procInfo.RedirectStandardInput = true;
-						//procInfo.RedirectStandardError = true;
-						//procInfo.UseShellExecute = false;
+						procInfo.UseShellExecute = false;
 						//x procInfo.Arguments = annotatorArguments;
 						procInfo.Arguments = runthis;
 						procInfo.WorkingDirectory = pathWork;
 							cmdProc.StartInfo = procInfo;
-							
-						//! SEE THESE ARTICLES:
-						// https://stackoverflow.com/questions/186822/capturing-console-output-from-a-net-application-c
-						// https://stackoverflow.com/questions/3633653/how-to-capture-the-standard-output-error-of-a-process
-						// https://stackoverflow.com/questions/139593/processstartinfo-hanging-on-waitforexit-why?lq=1
-						
-						
-						
-						
+						cmdProc.EnableRaisingEvents = true;
+						//cmdProc.ErrorDataReceived += ProcessVampError;
+						//cmdProc.OutputDataReceived += ProcessVampError;
+						//cmdProc.Exited += VampProcessEnded;
 						cmdProc.Start();
-							cmdProc.WaitForExit(120000);  // 2 minute timeout
-							int x = cmdProc.ExitCode;
+						cmdProc.BeginErrorReadLine();
+						cmdProc.BeginOutputReadLine();
+
+						//cmdProc.WaitForExit();
+						while (cmdProc != null)
+						{
+							//while (!cmdProc.HasExited)
+							//{
+							Application.DoEvents(); // This keeps your form responsive by processing events
+																			//}
 						}
 
-						if (System.IO.File.Exists(resultsFile))
+					}
+
+					if (System.IO.File.Exists(resultsFile))
 						{
 							// return resultsFile;
 							// errCount = 99999;
@@ -149,7 +156,7 @@ namespace VampORama
 			return resultsFile;
 		}
 
-		public string TestAnnotateSong(string fileSong, string vampParams, string fileConfig, bool reuse = false)
+		public static string TestAnnotateSong(string fileSong, string vampParams, string fileConfig, bool reuse = false)
 		{
 			// Does pretty much the same thing as the regular 'AnnotateSong' procedure
 			// Except leaves the command prompt open so the user can review it for errors
@@ -222,6 +229,162 @@ namespace VampORama
 			}
 
 			return resultsFile;
+		}
+
+		public static int AlignTimeTo(int startTime, vamps.AlignmentType alignTo)
+		{
+			int msPerFrame = 0;
+			int ret = startTime;
+			if (alignTo == vamps.AlignmentType.FPS10) msPerFrame = 100;
+			if (alignTo == vamps.AlignmentType.FPS20) msPerFrame = 50;
+			if (alignTo == vamps.AlignmentType.FPS30) msPerFrame = 33;
+			if (alignTo == vamps.AlignmentType.FPS40) msPerFrame = 25;
+			if (alignTo == vamps.AlignmentType.FPS60) msPerFrame = 17;
+			//if (alignTo == vamps.AlignmentType.FPScustom)
+			if (msPerFrame > 1 && msPerFrame < 1000)
+			{ 
+				int half = msPerFrame / 2;
+				int newStart = startTime / msPerFrame * msPerFrame;
+				int diff = startTime - newStart;
+				if (diff > half) newStart += msPerFrame;
+				ret = newStart;
+			}
+			else
+			{
+				if ((alignTo == vamps.AlignmentType.Bars) ||
+						(alignTo == vamps.AlignmentType.BeatsFull) ||
+						(alignTo == vamps.AlignmentType.BeatsHalf) ||
+						(alignTo == vamps.AlignmentType.BeatsThird) ||
+						(alignTo == vamps.AlignmentType.BeatsQuarter) ||
+						(alignTo == vamps.AlignmentType.NoteOnsets))
+				{
+				if (xAlignTo != null)
+					{
+						if (xAlignTo.effects.Count > 0)
+						{
+							int ns = AlignToNearestTiming(startTime);
+							ret = ns;
+						}
+					}
+				}
+			}
+			return ret;
+		}
+
+		private static int AlignToNearestTiming(int startTime)
+		{
+			//! Important: Reset lastFoundIdx to xUtils.UNDEFINED before starting new timings and/or different alignTimes.
+			//! alignTimes are assumed to be in ascending numerical order.
+
+			int retIdx = -1;
+			int diffLo = 0;
+			int diffHi = 0;
+			bool keepTrying = true;
+			int matchTime = -1;
+			int newStart = startTime;
+
+			while (keepTrying)
+			{
+				if (alignIdx >= 0)
+				{
+					//! Crashing Here!  xAlignTo is null-not assigned
+					diffLo = startTime - xAlignTo.effects[alignIdx].starttime;
+					if (diffLo < 0)
+					{
+						alignIdx--;
+					}
+					else
+					{
+						if (alignIdx < xAlignTo.effects.Count - 1)
+						{
+							diffHi = xAlignTo.effects[alignIdx + 1].starttime - startTime;
+							if (diffHi < 0)
+							{
+								alignIdx++;
+							}
+							else
+							{
+								if (diffLo < diffHi)
+								{
+									retIdx = alignIdx;
+									matchTime = xAlignTo.effects[alignIdx].starttime;
+									keepTrying = false;
+								}
+								else
+								{
+									alignIdx++;
+									retIdx = alignIdx;
+									matchTime = xAlignTo.effects[alignIdx].starttime;
+									keepTrying = false;
+								}
+							}
+						}
+						else
+						{
+							diffLo = startTime - xAlignTo.effects[xAlignTo.effects.Count - 1].starttime;
+							if (diffLo < 0)
+							{
+								alignIdx--;
+							}
+							else
+							{
+								diffHi = songTimeMS - startTime;
+								if (diffLo <= diffHi)
+								{
+									retIdx = alignIdx;
+									matchTime = xAlignTo.effects[alignIdx].starttime;
+									keepTrying = false;
+								}
+								else
+								{
+									alignIdx++;
+									retIdx = alignIdx;
+									matchTime = xAlignTo.effects[alignIdx].starttime;
+									keepTrying = false;
+								}
+							}
+						}
+					}
+				}
+				else
+				{
+					diffHi = xAlignTo.effects[0].starttime - startTime;
+					if (diffHi < 0)
+					{
+						alignIdx++;
+					}
+					else
+					{
+						diffLo = startTime;
+						if (diffLo < diffHi)
+						{
+							retIdx = alignIdx;
+							matchTime = 0;
+							keepTrying = false;
+						}
+						else
+						{
+							alignIdx++;
+							retIdx = alignIdx;
+							matchTime = xAlignTo.effects[alignIdx].starttime;
+							keepTrying = false;
+						}
+					}
+				}
+			}
+			if (utils.IsWizard)
+			{
+				string msg = "Start time " + startTime.ToString() + " aligned to " + matchTime.ToString();
+				Console.WriteLine(msg);
+			}
+
+			//if (retIdx >= 0)
+			//{
+			//	newStart = xAlignTo.effects[retIdx].starttime;
+			//}
+
+			//return newStart;
+			return matchTime;
 		}
 
 
@@ -441,7 +604,7 @@ namespace VampORama
 			// Note Onsets Timings
 			if (chkNoteOnsets.Checked)
 			{
-				if (resultsNoteOnset.Length > 4)
+				if (resultsNoteOnsets.Length > 4)
 				{
 					AddNoteOnsetTimings(ALIGNnone);
 				}

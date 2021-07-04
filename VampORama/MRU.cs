@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Configuration;
+using System.Windows.Forms;
 using System.Diagnostics;
 
 namespace VampORama
@@ -150,7 +151,12 @@ namespace VampORama
 						//if (settings[pName] == null)
 						if (!DoesSettingExist(pName))
 						{
+							// Requested Setting pName does NOT already exist amongst the default settings
+							// Thus, we need to create and add it
+
 							//SettingsProvider prov = Properties.Settings.Default.Providers.
+							
+							// Create it, and set type and other properties
 							SettingsProperty prop = new System.Configuration.SettingsProperty(pName);
 							prop.PropertyType = typeof(string);
 							prop.IsReadOnly = false;
@@ -160,9 +166,9 @@ namespace VampORama
 							//prop.Provider = prov;
 							prop.SerializeAs = SettingsSerializeAs.Xml;
 							SettingsPropertyValue valu = new SettingsPropertyValue(prop);
+							
+							// Add it to the Default Settings
 							appSettings.Properties.Add(prop);
-
-
 
 							//settings[pName] = files[q];
 							appSettings.Save();
@@ -183,7 +189,12 @@ namespace VampORama
 						{ 
 							if (IsWizard)
 							{
-								System.Diagnostics.Debugger.Break();
+								string msg = e.Message;
+								DialogResult dr = MessageBox.Show(msg, "Most-Recently-Used Error", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Error);
+								if (dr == DialogResult.Abort)
+								{
+									System.Diagnostics.Debugger.Break();
+								}
 							}
 						}
 					}
@@ -192,7 +203,11 @@ namespace VampORama
 						if (IsWizard)
 						{
 							string msg = e.Message;
-							//System.Diagnostics.Debugger.Break();
+							DialogResult dr = MessageBox.Show(msg, "Most-Recently-Used Error", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Error);
+							if (dr == DialogResult.Abort)
+							{
+								System.Diagnostics.Debugger.Break();
+							}
 						}
 					}
 				}

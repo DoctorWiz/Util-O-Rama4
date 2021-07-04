@@ -119,6 +119,14 @@ namespace LORUtils
 		private const string ROOT = "C:\\";
 		private const string LOR_REGKEY = "HKEY_CURRENT_USER\\SOFTWARE\\Light-O-Rama\\Shared";
 		private const string LOR_DIR = "Light-O-Rama\\";
+		private static string noisePath = Path.GetDirectoryName(Application.ExecutablePath) + "\\Noises\\";
+
+		public enum Noises
+		{
+			None, Activate, Boing, Bonnggg, Brain, Crap, Crash, Dammit, Doh, DrumRoll, Excellent, Gong, Kalimbra, Log, Medievel,
+			Pop, ScaleUp, SamCurseC, SamCurseF, SystemWorks, TaDa, ThatsThat, Wheee, Wizard, WooHoo, WrongButton
+		};
+
 		#endregion // Constants
 		public static bool IsWizard
 		{
@@ -3194,6 +3202,107 @@ namespace LORUtils
 		}
 
 		#endregion // Time Functions
+
+		public static void MakeNoise(Noises noise)
+		{
+			if (noise != Noises.None)
+			{
+				string file = "";
+				switch (noise)
+				{
+					case Noises.Activate:
+						file += "Activate";
+						break;
+					case Noises.Boing:
+						file += "Boing";
+						break;
+					case Noises.Bonnggg:
+						file += "Bonnggg";
+						break;
+					case Noises.Brain:
+						file += "Brain";
+						break;
+					case Noises.Crap:
+						file += "Crap";
+						break;
+					case Noises.Crash:
+						file += "Crash";
+						break;
+					case Noises.Dammit:
+						file += "Dammit";
+						break;
+					case Noises.Doh:
+						file += "D'oh";
+						break;
+					case Noises.DrumRoll:
+						file += "DrumRoll";
+						break;
+					case Noises.Excellent:
+						file += "Excellent";
+						break;
+					case Noises.Gong:
+						file += "Gong";
+						break;
+					case Noises.Kalimbra:
+						file += "Kalimbra";
+						break;
+					case Noises.Log:
+						file += "Log";
+						break;
+					case Noises.Medievel:
+						file += "Medievel";
+						break;
+					case Noises.Pop:
+						file += "Pop";
+						break;
+					case Noises.SamCurseC:
+						file += "SamCurseC";
+						break;
+					case Noises.SamCurseF:
+						file += "SamCurseF";
+						break;
+					case Noises.ScaleUp:
+						file += "ScaleUp";
+						break;
+					case Noises.SystemWorks:
+						file += "SystemWorks";
+						break;
+					case Noises.ThatsThat:
+						file += "ThatsThat";
+						break;
+					case Noises.TaDa:
+						file += "Ta-da";
+						break;
+					case Noises.Wheee:
+						file += "Wheee";
+						break;
+					case Noises.Wizard:
+						file += "I'mAWizard";
+						break;
+					case Noises.WooHoo:
+						file += "Woo-Hoo";
+						break;
+					case Noises.WrongButton:
+						file += "WrongButton";
+						break;
+				}
+				if (file.Length > 1)
+				{
+					string wavFile = noisePath + file + ".wav";
+					try
+					{
+						System.Media.SoundPlayer player = new System.Media.SoundPlayer(wavFile);
+						player.Play();
+					}
+					catch (Exception e)
+					{
+						// Ignore error, don't play any noise
+					}
+				}
+			}
+		}
+
+
 
 
 		/*

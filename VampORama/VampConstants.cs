@@ -119,20 +119,22 @@ namespace VampORama
 		private const int ALIGNfps25 = 25;
 		private const int ALIGNfps50 = 50;
 
-		private const string ALIGNNAMEnone = "None";
-		private const string ALIGNNAMEbars = "Bars";
-		private const string ALIGNNAMEbeatsFull = "Full Beats";
-		private const string ALIGNNAMEbeatsHalf = "Half Beats";
-		private const string ALIGNNAMEbeatsThird = "Third Beats";
-		private const string ALIGNNAMEbeatsQuarter = "Quarter Beats";
-		private const string ALIGNNAMEnoteOnsets = "Note Onsets";
-		private const string ALIGNNAMEfps10l = "10 FPS, 10 cs";
-		private const string ALIGNNAMEfps20x = "20 FPS, 50 ms";
-		private const string ALIGNNAMEfps20l = "20 FPS, 5 cs";
-		private const string ALIGNNAMEfps30l = "30 FPS, 3.33 cs";
-		private const string ALIGNNAMEfps40x = "40 FPS, 25 ms";
+		public const string ALIGNNAMEnone = "None";
+		public const string ALIGNNAMEbars = "Bars: Whole Notes";
+		public const string ALIGNNAMEbeatsFull = "Full Beats: Quarter Notes";
+		public const string ALIGNNAMEbeatsHalf = "Half Beats: Eighth Notes";
+		public const string ALIGNNAMEbeatsThird = "Third Beats: 12X 16ths";
+		public const string ALIGNNAMEbeatsQuarter = "Quarter Beats: Sixteenth Notes";
+		public const string ALIGNNAMEnoteOnsets = "Note Onsets";
+
+		public const string ALIGNNAMEfps40x = "40 FPS, 25 ms";
+		public const string ALIGNNAMEfps20x = "20 FPS, 50 ms";
+
+		public const string ALIGNNAMEfps60l = "60 FPS, 1.67 cs";
+		public const string ALIGNNAMEfps30l = "30 FPS, 3.33 cs";
+		public const string ALIGNNAMEfps20l = "20 FPS, 5 cs";
+		public const string ALIGNNAMEfps10l = "10 FPS, 10 cs";
 		//private const string ALIGNNAMEfps50l = "50 FPS, 2 cs";
-		private const string ALIGNNAMEfps60l = "60 FPS, 1.667 cs";
 
 
 		private const string ALIGNNAMEcustom = "Custom Frames-Per-Second";

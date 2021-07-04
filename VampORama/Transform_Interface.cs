@@ -24,12 +24,6 @@ namespace VampORama
 			get;
 		}
 
-		Annotator Annotator
-		{
-			get;
-			set;
-		}
-
 		xTimings Timings
 		{
 			get;
@@ -45,7 +39,7 @@ namespace VampORama
 			get;
 		}
 
-		string AnnotateSong(string songFile, int pluginIndex);
+		//string AnnotateSong(string songFile, int pluginIndex);
 
 		int xTimingsToxLights(xTimings timings, string baseFileName);
 

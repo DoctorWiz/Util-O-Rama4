@@ -35,7 +35,7 @@ namespace VampORama
 														"8372",  "8870",  "9397",  "9956", "10548", "11175", "11840", "12544", "13290", "14080", "14917", "15804",
 													 "16744", "17740", "18795", "19912", "21096", "22351", "23680", "25088", "26579", "28160", "29834", "31608" };
 
-		public readonly static string[] octaveFreqs = { "0-31", "31-63", "63-127", "127-253", "253-507", "507-1015", "1015-2034", "2035-4068", "4068-8137", "8137-16274", "16274-32000" };
+		public readonly static string[] octaveFreqs = { "0-31", "31-63", "63-127", "127-253", "253-507", "507-1015", "1015-2034", "2035-4068", "4068-8137", "8137-16274", "16274-32000", "Err", "Err" };
 
 		public readonly static string[] octaveNamesA = { "CCCCCC 128'", "CCCCC 64'", "CCCC 32'", "CCC 16'", "CC 8'", "C4'", "c1 2'", "c2 1'", "c3 1/2'", "c4 1/4'", "c5 1/8'", "c6 1/16'", "Err", "Err" };
 		public readonly static string[] octaveNamesB = { "Sub-Sub-Sub Contra", "Sub-Sub Contra", "Sub-Contra", "Contra", "Great", "Small", "1-Line", "2-Line", "3-Line", "4-Line", "5-Line", "6-Line", "Err", "Err" };

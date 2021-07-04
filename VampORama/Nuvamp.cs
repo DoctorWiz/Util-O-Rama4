@@ -38,7 +38,7 @@ namespace VampORama
 		private string annotatorProgram = "";
 
 
-		private Annotator anno = null;
+		//private static Annotator anno = null;
 		private BarBeats transBarBeats = null;
 		private NoteOnsets transOnsets = null;
 
@@ -48,7 +48,7 @@ namespace VampORama
 		private string resultsPortoBeat = "";
 		private string resultsAubioBeat = "";
 
-		private string resultsNoteOnset = "";
+		private string resultsNoteOnsets = "";
 		private string resultsOnsetDS = "";
 		private string resultsSilvetOnset = "";
 		private string resultsAubioOnset = "";
@@ -72,6 +72,12 @@ namespace VampORama
 		int stepSize = 512;
 		bool reuse = false;
 		bool whiten = false;
+		
+		private object syncGate = new object();
+		private Process cmdProc;
+		private StringBuilder outLog = new StringBuilder();
+		private StreamWriter writer = null;
+		private bool outputChanged;
 
 		private int PrepareToAnnotate()
 		{
@@ -94,7 +100,8 @@ namespace VampORama
 			reuse = chkReuse.Checked;
 			Int32.TryParse(cboStepSize.Text, out stepSize);
 			if ((stepSize < 200) || (stepSize > 800)) stepSize = 512;
-			anno = new Annotator(annotatorProgram);
+			//anno = new Annotator(annotatorProgram);
+			//anno.songTimeMS
 
 			return errs;
 		}
@@ -102,39 +109,256 @@ namespace VampORama
 		private int AnnotateSelectedVamps()
 		{
 			int completed = 0;
+			int err = 0;
 			
 			// BARS AND BEATS
 			if (chkBarsBeats.Checked)
 			{
-				transBarBeats = new BarBeats(anno);
+				transBarBeats = new BarBeats();
 				int pluginIndex = cboMethodBarsBeats.SelectedIndex;
 				int detectionMethod = cboDetectBarBeats.SelectedIndex;
 				whiten = chkWhiteBarBeats.Checked;
 
-				resultsBarBeats = transBarBeats.AnnotateSong (fileSongTemp, pluginIndex, beatsPerBar, stepSize, detectionMethod, reuse, whiten);
-				if (resultsBarBeats.Length > 4)
+				err = transBarBeats.PrepareToVamp (fileSongTemp, pluginIndex, beatsPerBar, stepSize, detectionMethod, reuse, whiten);
+				if (err == 0)
 				{
-					vamps.AlignmentType algn = vamps.GetAlignmentTypeFromName(cboAlignBarsBeats.Text);
-					transBarBeats.ResultsToxTimings(resultsBarBeats, algn, vamps.LabelTypes.Numbers);
-					completed++;
+					string fileConfig = transBarBeats.filesAvailableConfigs[pluginIndex];
+					string vampParams = transBarBeats.availablePluginCodes[pluginIndex];
+					resultsBarBeats = VampThatSong(fileSongTemp, vampParams, fileConfig, reuse);
+					if (resultsBarBeats.Length > 4)
+					{
+						vamps.AlignmentType algn = vamps.GetAlignmentTypeFromName(cboAlignBarsBeats.Text);
+						transBarBeats.ResultsToxTimings(resultsBarBeats, algn, vamps.LabelTypes.Numbers);
+						completed++;
+					}
 				}
 			}
 
 			// NOTE ONSETS
 			if (chkNoteOnsets.Checked)
 			{
-				transOnsets = new NoteOnsets(anno);
-				int pluginIndex = cboMethodOnsets.SelectedIndex;
-				int detectionMethod = cboDetectOnsets.SelectedIndex;
-				whiten = chkWhiteOnsets.Checked;
+				transOnsets = new NoteOnsets();
+				int pluginIndex = cboOnsetsPlugin.SelectedIndex;
+				int detectionMethod = cboOnsetsDetect.SelectedIndex;
+				whiten = chkOnsetsWhite.Checked;
 
 				//resultsNoteOnsets = transOnsets.AnnotateSong(fileSongTemp, pluginIndex, beatsPerBar, stepSize, detectionMethod, reuse, whiten);
-				if (resultsBarBeats.Length > 4) completed++;
+				//err = transOnsets.PrepareToVamp(fileSongTemp, pluginIndex, beatsPerBar, stepSize, reuse);
+				err = transOnsets.PrepareToVamp(fileSongTemp, pluginIndex, beatsPerBar, stepSize, detectionMethod, reuse, whiten);
+				if (err == 0)
+				{
+					string fileConfig = transOnsets.filesAvailableConfigs[pluginIndex];
+					string vampParams = transOnsets.availablePluginCodes[pluginIndex];
+					resultsNoteOnsets = VampThatSong(fileSongTemp, vampParams, fileConfig, reuse);
+					if (resultsNoteOnsets.Length > 4)
+					{
+						vamps.AlignmentType algn = vamps.GetAlignmentTypeFromName(cboAlignOnsets.Text);
+						//TODO Get user choice of label type and detection method from combo boxes
+						transOnsets.ResultsToxTimings(resultsNoteOnsets, algn, vamps.LabelTypes.NoteNames, NoteOnsets.DetectionMethods.ComplexDomain);
+						completed++;
+					}
+				}
 			}
 
 			dirtyTimes = true;
 
 			return completed;
+		}
+
+		private void ExportSelectedxTimings(string fileName)
+		{
+			// Get Temp Directory
+			int writeCount = 0;
+			bool allInOne = optMultiPer.Checked;
+			string lineOut = "<timings>";
+			string fileBaseName = Path.GetDirectoryName(fileName) + "\\" + Path.GetFileNameWithoutExtension(fileName);
+			string exten = ".xtiming";
+
+			// Save Filename for next time (really only need the path, but...)
+			fileTimingsLast = fileName;
+			txtSaveNamexL.Text = ShortenPath(fileName, 100);
+			heartOfTheSun.fileTimingsLast = fileTimingsLast;
+
+			if (optMultiPer.Checked) heartOfTheSun.saveFormat = 2;
+			else heartOfTheSun.saveFormat = 1;
+			mruTimings.AddNew(fileName);
+			mruTimings.SaveToConfig();
+			// Get path and name for export files
+
+			if (allInOne)
+			{
+				writer = BeginTimingsXFile(fileName);
+				writer.WriteLine(lineOut);
+				writeCount++;
+			}
+
+			// BARS AND BEATS
+			//if (chkBars.Checked)
+			//if (doBarsBeats)
+			if (chkBarsBeats.Checked)
+			{
+				if (transBarBeats != null)
+				{
+					if (transBarBeats.xBars != null)
+					{
+						if (transBarBeats.xBars.effects.Count > 0)
+						{
+							if (!allInOne)
+							{
+								writer = BeginTimingsXFile(fileBaseName + " - " + transBarBeats.xBars.timingName + exten);
+								writeCount++;
+							}
+							lineOut = xTimingsOutX(transBarBeats.xBars, xTimings.LabelTypes.Numbers, allInOne);
+							writer.WriteLine(lineOut);
+						}
+					}
+				}
+				if (chkBeatsFull.Checked)
+				{
+					if (transBarBeats.xBeatsFull != null)
+					{
+						if (transBarBeats.xBeatsFull.effects.Count > 0)
+						{
+							if (!allInOne)
+							{
+								writer = BeginTimingsXFile(fileBaseName + " - " + transBarBeats.xBeatsFull.timingName + exten);
+								writeCount++;
+							}
+							lineOut = xTimingsOutX(transBarBeats.xBeatsFull, xTimings.LabelTypes.Numbers, allInOne);
+							writer.WriteLine(lineOut);
+						}
+					}
+				}
+				if (chkBeatsHalf.Checked)
+				{
+					if (transBarBeats.xBeatsHalf != null)
+					{
+						if (transBarBeats.xBeatsHalf.effects.Count > 0)
+						{
+							if (!allInOne)
+							{
+								writer = BeginTimingsXFile(fileBaseName + " - " + transBarBeats.xBeatsHalf.timingName + exten);
+								writeCount++;
+							}
+							lineOut = xTimingsOutX(transBarBeats.xBeatsHalf, xTimings.LabelTypes.Numbers, allInOne);
+							writer.WriteLine(lineOut);
+						}
+					}
+				}
+				if (chkBeatsThird.Checked)
+				{
+					if (transBarBeats.xBeatsThird != null)
+					{
+						if (transBarBeats.xBeatsThird.effects.Count > 0)
+						{
+							if (!allInOne)
+							{
+								writer = BeginTimingsXFile(fileBaseName + " - " + transBarBeats.xBeatsThird.timingName + exten);
+								writeCount++;
+							}
+							lineOut = xTimingsOutX(transBarBeats.xBeatsThird, xTimings.LabelTypes.Numbers, allInOne);
+							writer.WriteLine(lineOut);
+						}
+					}
+				}
+				if (chkBeatsQuarter.Checked)
+				{
+					if (transBarBeats.xBeatsQuarter != null)
+					{
+						if (transBarBeats.xBeatsQuarter.effects.Count > 0)
+						{
+							if (!allInOne)
+							{
+								writer = BeginTimingsXFile(fileBaseName + " - " + transBarBeats.xBeatsQuarter.timingName + exten);
+								writeCount++;
+							}
+							lineOut = xTimingsOutX(transBarBeats.xBeatsQuarter, xTimings.LabelTypes.Numbers, allInOne);
+							writer.WriteLine(lineOut);
+						}
+					}
+				}
+			}
+
+			// NOTE ONSETS
+			if (transOnsets != null)
+			{
+				if (chkNoteOnsets.Checked)
+				{
+					if (transOnsets.xOnsets != null)
+					{
+						if (transOnsets.xOnsets.effects.Count > 0)
+						{
+							if (!allInOne)
+							{
+								writer = BeginTimingsXFile(fileBaseName + " - " + transOnsets.xOnsets.timingName + exten);
+								writeCount++;
+							}
+							xTimings.LabelTypes lt = xTimings.LabelType(cboOnsetsLabels.Text);
+							lineOut = xTimingsOutX(transOnsets.xOnsets, lt, allInOne);
+							writer.WriteLine(lineOut);
+						}
+					}
+				}
+			}
+
+			/*
+			if (chkTranscribe.Checked)
+			{
+				if (transOnsets.xTranscription != null)
+				{
+					if (xTimes.xTranscription.effects.Count > 0)
+					{
+						WriteTimingFileX(xTimes.xTranscription, fileName);
+						WriteTimingFile4(xTimes.xTranscription, fileName);
+						WriteTimingFile5(xTimes.xTranscription, fileName);
+						writeCount+=3;
+					}
+				}
+			}
+			if (chkPitchKey.Checked)
+			{
+				if (xTimes.xKey != null)
+				{
+					if (xTimes.xKey.effects.Count > 0)
+					{
+						WriteTimingFileX(xTimes.xKey, fileName);
+						WriteTimingFile4(xTimes.xKey, fileName);
+						WriteTimingFile5(xTimes.xKey, fileName);
+						writeCount += 3;
+					}
+				}
+			}
+			if (chkSegments.Checked)
+			{
+				if (xTimes.xSegments != null)
+				{
+					if (xTimes.xSegments.effects.Count > 0)
+					{
+						WriteTimingFileX(xTimes.xSegments, fileName);
+						WriteTimingFile4(xTimes.xSegments, fileName);
+						WriteTimingFile5(xTimes.xSegments, fileName);
+						writeCount += 3;
+					}
+				}
+			}
+
+
+			*/
+
+			//}
+
+			if (allInOne)
+			{
+				lineOut = "</timings>";
+				writer.WriteLine(lineOut);
+			}
+			writer.Close();
+
+
+
+			pnlStatus.Text = writeCount.ToString() + " files writen.";
+
+
 		}
 
 		private int ExportSelectedVamps()
@@ -264,7 +488,8 @@ namespace VampORama
 			originalExt = Path.GetExtension(originalAudioFile);
 
 			//string preppedFileName = PrepName(originalFileName);
-			newFile = pathWork + "song" + originalExt;
+			//newFile = pathWork + "song" + originalExt;
+			newFile = pathWork + originalFileName + originalExt;
 			//fileAudioWork = newFile;
 			//fileResults = tempPath + preppedFileName;
 
@@ -279,7 +504,7 @@ namespace VampORama
 			ms += audioTime.Seconds * 1000;
 			ms += audioTime.Milliseconds;
 			//milliseconds = ms;
-
+			Annotator.songTimeMS = ms;
 			
 			// Fill in blank or missing tag info
 			if (audioData.Artist == null)
@@ -322,6 +547,294 @@ namespace VampORama
 
 		}
 
+		public StreamWriter BeginTimingsXFile(string fileName)
+		{
+			if (writer != null)
+			{
+				writer.Close();
+			}
+			writer = new StreamWriter(fileName);
+			writer.WriteLine(xTimings.XMLinfo);
+			return writer;
+		}
+
+
+		public string xTimingsOutX(xTimings timings, xTimings.LabelTypes labelType, bool indent = false)
+		{
+			string label = "";
+			string level0 = "";
+			string level1 = "  ";
+			string level2 = "    ";
+			if (indent)
+			{
+				level0 = "  ";
+				level1 = "    ";
+				level2 = "      ";
+			}
+			xEffect effect = null;
+
+			StringBuilder ret = new StringBuilder();
+			//  <timing
+			ret.Append(level0);
+			ret.Append(xTimings.RECORD_start);
+			ret.Append(xTimings.TABLE_timing);
+			ret.Append(xTimings.SPC);
+			//  name="the Name"
+			ret.Append(xTimings.FIELD_name);
+			ret.Append(xTimings.VALUE_start);
+			ret.Append(timings.timingName);
+			ret.Append(xTimings.VALUE_end);
+			ret.Append(xTimings.SPC);
+			//  SourceVersion="2019.21">
+			ret.Append(xTimings.FIELD_source);
+			ret.Append(xTimings.VALUE_start);
+			ret.Append(timings.sourceVersion);
+			ret.Append(xTimings.VALUE_end);
+			ret.Append(xTimings.RECORD_end);
+			ret.Append(xTimings.CRLF);
+			//    <EffectLayer>
+			ret.Append(level1);
+			ret.Append(xTimings.RECORD_start);
+			ret.Append(xTimings.TABLE_layers);
+			ret.Append(xTimings.RECORD_end);
+			ret.Append(xTimings.CRLF);
+
+			for (int i = 0; i < timings.effects.Count; i++)
+			{
+				effect = timings.effects[i];
+				ret.Append(level2);
+				ret.Append(xTimings.RECORD_start);
+				ret.Append(xEffect.TABLE_Effect);
+				ret.Append(xTimings.SPC);
+				//  label="foo" 
+				ret.Append(xEffect.FIELD_label);
+				ret.Append(xTimings.VALUE_start);
+				switch(labelType)
+				{
+					case xTimings.LabelTypes.None:
+						// Append Nothing!
+						break;
+					case xTimings.LabelTypes.Numbers:
+						ret.Append(effect.xlabel);
+						break;
+					case xTimings.LabelTypes.NoteNames:
+						label = "";
+						if (effect.Midi >= 0 && effect.Midi <= 127)
+						{
+							//label = SequenceFunctions.noteNames[timings.effects[i].Midi];
+							label = xUtils.noteNames[effect.Midi];
+						}
+						ret.Append(label);
+						break;
+					case xTimings.LabelTypes.MidiNumbers:
+						ret.Append(effect.Midi.ToString());
+						break;
+					case xTimings.LabelTypes.KeyNumbers:
+						ret.Append(effect.Midi.ToString());
+						break;
+					case xTimings.LabelTypes.KeyNames:
+						label = "";
+						if (effect.Midi >= 0 && effect.Midi <= 24)
+						{
+							label = SequenceFunctions.keyNames[effect.Midi];
+						}
+						ret.Append(label);
+						break;
+					case xTimings.LabelTypes.Letters:
+						ret.Append(effect.xlabel);
+						break;
+					case xTimings.LabelTypes.Frequency:
+						label = "";
+						if (effect.Midi >= 0 && effect.Midi <= 127)
+						{
+							label = SequenceFunctions.noteFreqs[effect.Midi];
+						}
+						ret.Append(label);
+						break;
+				}
+				ret.Append(xTimings.VALUE_end);
+				ret.Append(xTimings.SPC);
+				//  starttime="50" 
+				ret.Append(xEffect.FIELD_start);
+				ret.Append(xTimings.VALUE_start);
+				ret.Append(timings.effects[i].starttime.ToString());
+				ret.Append(xTimings.VALUE_end);
+				ret.Append(xTimings.SPC);
+				//  endtime="350" />
+				ret.Append(xEffect.FIELD_end);
+				ret.Append(xTimings.VALUE_start);
+				ret.Append(timings.effects[i].endtime.ToString());
+				ret.Append(xTimings.VALUE_end);
+				ret.Append(xTimings.SPC);
+
+				ret.Append(xEffect.RECORD_end);
+				ret.Append(xTimings.CRLF);
+			}
+
+			//     </EffectLayer>
+			ret.Append(level1);
+			ret.Append(xTimings.RECORDS_done);
+			ret.Append(xTimings.TABLE_layers);
+			ret.Append(xTimings.RECORD_end);
+			ret.Append(xTimings.CRLF);
+			//  </timing>
+			ret.Append(level0);
+			ret.Append(xTimings.RECORDS_done);
+			ret.Append(xTimings.TABLE_timing);
+			ret.Append(xTimings.RECORD_end);
+
+			return ret.ToString();
+		}
+
+
+		public string VampThatSong(string fileSong, string vampParams, string fileConfig, bool reuse = false)
+		{
+			string resultsFile = "";
+			string pathWork = Path.GetDirectoryName(fileSong) + "\\";
+			string ex = Path.GetExtension(fileSong);
+			//! string annotatorArguments = "-t " + vampParams;
+			string annotatorArguments = "-t " + fileConfig;
+			string WRITEformat = " -f -w csv --csv-force ";
+
+			annotatorArguments += " \"" + fileSong + "\""; // + ex;
+			annotatorArguments += WRITEformat;
+			//annotatorArguments += " 2>output.txt";
+			//string outputFile = tempPath + "output.log";
+			string fileOutput = vampParams.Replace(':', '_') + ".n3";
+			//string fileOutput = fileConfig;
+
+			try
+			{
+				string emsg = annotatorProgram + " " + annotatorArguments;
+				Console.WriteLine(emsg);
+				//DialogResult dr = MessageBox.Show(this, emsg, "About to launch", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Asterisk);
+				DialogResult dr = DialogResult.Yes;
+
+				if (dr == DialogResult.Yes)
+				{
+					if (utils.IsWizard) Clipboard.SetText(emsg);
+				}
+				if (dr != DialogResult.Cancel)
+				{
+					resultsFile = pathWork;
+					//resultsFile += "song_";
+					resultsFile += Path.GetFileNameWithoutExtension(fileSong);
+					//resultsFile += "_" + Path.GetFileNameWithoutExtension(fileConfig);
+					resultsFile += "_" + Path.GetFileNameWithoutExtension(fileOutput);
+					resultsFile += ".csv";
+
+					//! FOR TESTING DEBUGGING, if set to re-use old files, OR if no file from a previous run exists
+					//if ((!reuse) || (!System.IO.File.Exists(resultsFile)))
+					if (true) 
+					{
+						lock (syncGate)
+						{
+							if (cmdProc != null) return "";
+						}
+
+						string runthis = annotatorProgram + " " + annotatorArguments;
+						runthis = "/c " + runthis; // + " 2>output.txt";
+
+						string vampCommandLast = runthis;
+						if (utils.IsWizard) Clipboard.SetText(runthis);
+
+						cmdProc = new Process();
+						ProcessStartInfo procInfo = new ProcessStartInfo();
+						procInfo.FileName = "cmd.exe";
+						procInfo.RedirectStandardOutput = true;
+						procInfo.RedirectStandardError = true;
+						procInfo.CreateNoWindow = true;
+						//procInfo.WindowStyle = ProcessWindowStyle.Hidden;
+						procInfo.UseShellExecute = false;
+						procInfo.Arguments = runthis;
+						procInfo.WorkingDirectory = pathWork;
+
+						cmdProc.StartInfo = procInfo;
+						cmdProc.EnableRaisingEvents = true;
+						cmdProc.ErrorDataReceived += ProcessVampError;
+						cmdProc.OutputDataReceived += ProcessVampError;
+						cmdProc.Exited += VampProcessEnded;
+						cmdProc.Start();
+						cmdProc.BeginErrorReadLine();
+						cmdProc.BeginOutputReadLine();
+
+						//cmdProc.WaitForExit();
+						while (cmdProc != null)
+						{
+							//while (!cmdProc.HasExited)
+							//{
+							if (cmdProc.HasExited)
+							{
+								cmdProc = null;
+							}
+							Application.DoEvents(); // This keeps your form responsive by processing events
+																			//}
+						}
+
+					}
+
+					if (System.IO.File.Exists(resultsFile))
+					{
+						// return resultsFile;
+						// errCount = 99999;
+					}
+					else
+					{
+						// NO RESULTS FILE!	
+						if (utils.IsWizard)
+						{
+							utils.MakeNoise(utils.Noises.SamCurseC);
+							System.Diagnostics.Debugger.Break();
+						}
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				if (utils.IsWizard)
+				{
+					string msg = e.Message;
+					utils.MakeNoise(utils.Noises.Crash);
+					System.Diagnostics.Debugger.Break();
+				}
+				resultsFile = "";
+			}
+
+			return resultsFile;
+		}
+
+
+
+		private void ProcessVampError(object sender, DataReceivedEventArgs drea)
+		{
+			lock (syncGate)
+			{
+				if (sender != cmdProc) return;
+				outLog.AppendLine(drea.Data);
+				if (outputChanged) return;
+				outputChanged = true;
+				BeginInvoke(new Action(OnOutputChanged));
+			}
+		}
+
+		private void OnOutputChanged()
+		{
+			lock (syncGate)
+			{
+				logWindow.LogText = outLog.ToString();
+				outputChanged = false;
+			}
+		}
+
+		private void VampProcessEnded(object sender, EventArgs e)
+		{
+			lock (syncGate)
+			{
+				if (sender != cmdProc) return;
+				cmdProc.Dispose();
+				cmdProc = null;
+			}
+		}
 
 	}
 }

@@ -40,6 +40,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CentiFix", "CentiFix\CentiF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VampORama", "VampORama\VampORama.csproj", "{D0CB347F-95A1-4A9E-BD42-D9474B0A28A5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xMove", "xMove\xMove.csproj", "{935191FB-7EB7-4684-A58C-9293AB6510DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -174,9 +176,20 @@ Global
 		{D0CB347F-95A1-4A9E-BD42-D9474B0A28A5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D0CB347F-95A1-4A9E-BD42-D9474B0A28A5}.Release|x86.ActiveCfg = Release|Any CPU
 		{D0CB347F-95A1-4A9E-BD42-D9474B0A28A5}.Release|x86.Build.0 = Release|Any CPU
+		{935191FB-7EB7-4684-A58C-9293AB6510DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{935191FB-7EB7-4684-A58C-9293AB6510DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{935191FB-7EB7-4684-A58C-9293AB6510DF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{935191FB-7EB7-4684-A58C-9293AB6510DF}.Debug|x86.Build.0 = Debug|Any CPU
+		{935191FB-7EB7-4684-A58C-9293AB6510DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{935191FB-7EB7-4684-A58C-9293AB6510DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{935191FB-7EB7-4684-A58C-9293AB6510DF}.Release|x86.ActiveCfg = Release|Any CPU
+		{935191FB-7EB7-4684-A58C-9293AB6510DF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{935191FB-7EB7-4684-A58C-9293AB6510DF} = {ED4532EF-88FF-48FC-9C92-FAD9965ACF9C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {01CCE452-7636-4590-8946-7B7AE3584B77}

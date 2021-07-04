@@ -191,11 +191,11 @@ namespace VampORama
 		private int RunNoteOnsets()
 		{
 			int errLevel = 6001;
-			resultsNoteOnset = GenerateNoteOnsetsData();
+			resultsNoteOnsets = GenerateNoteOnsetsData();
 			// Note Onsets Data
-			if (resultsNoteOnset.Length > 4)
+			if (resultsNoteOnsets.Length > 4)
 			{
-				ReadOnsetData(resultsNoteOnset);
+				ReadOnsetData(resultsNoteOnsets);
 				errLevel = 0;
 			}
 			else
@@ -1040,7 +1040,7 @@ namespace VampORama
 			int errs = 0;
 			if (!chkReuse.Checked)
 			{
-				try { if (System.IO.File.Exists(resultsNoteOnset)) System.IO.File.Delete(resultsNoteOnset); }
+				try { if (System.IO.File.Exists(resultsNoteOnsets)) System.IO.File.Delete(resultsNoteOnsets); }
 				catch { errs++; }
 				try { if (System.IO.File.Exists(resultsBarBeats)) System.IO.File.Delete(resultsBarBeats); }
 				catch { errs++; }
@@ -1061,7 +1061,7 @@ namespace VampORama
 
 				errs += ClearTempDir();
 
-				resultsNoteOnset = "";
+				resultsNoteOnsets = "";
 				resultsBarBeats = "";
 				resultsqmBeats = "";
 				resultsTranscribe = "";
