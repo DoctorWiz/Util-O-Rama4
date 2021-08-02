@@ -11,7 +11,7 @@ using System.IO;
 using LORUtils;
 using Microsoft.Win32;
 
-namespace MergeORama
+namespace UtilORama4
 {
 	public partial class frmMerge : Form
 	{

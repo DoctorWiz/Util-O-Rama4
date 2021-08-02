@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using xUtilities;
 using LORUtils;
 
-namespace VampORama
+namespace UtilORama4
 {
 	public partial class frmTweakInfo : Form
 	{

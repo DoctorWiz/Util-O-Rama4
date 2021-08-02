@@ -1,4 +1,4 @@
-﻿namespace MergeORama
+﻿namespace UtilORama4
 {
 	partial class frmMerge
 	{

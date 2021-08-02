@@ -1,0 +1,24 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="UtilORama4.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Location" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">100, 100</Value>
+    </Setting>
+    <Setting Name="Size" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">500, 500</Value>
+    </Setting>
+    <Setting Name="WindowState" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="rgbeffects" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Users\Me\Documents\xLights\MyShow\xlights_rgbeffects.xml</Value>
+    </Setting>
+    <Setting Name="Sequence" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Users\Me\Documents\Light-O-Rama\MySequence.lms</Value>
+    </Setting>
+    <Setting Name="Spreadsheet" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Users\Me\Documents\LOR-to-xLights_Channel_Comparison.csv</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

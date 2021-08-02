@@ -216,6 +216,7 @@
 			this.treeMaster.ToolTipControl.TabIndex = 0;
 			this.treeMaster.ToolTipControl.Visible = true;
 			this.treeMaster.AfterSelect += new System.EventHandler(this.treeMaster_AfterSelect);
+			this.treeMaster.Click += new System.EventHandler(this.treeMaster_Click);
 			// 
 			// imlTreeIcons
 			// 
@@ -735,7 +736,7 @@
             this.mnuOpenSource,
             this.mnuOpenMap});
 			this.mnuFileOpen.Name = "mnuFileOpen";
-			this.mnuFileOpen.Size = new System.Drawing.Size(180, 22);
+			this.mnuFileOpen.Size = new System.Drawing.Size(135, 22);
 			this.mnuFileOpen.Text = "&Open";
 			// 
 			// mnuOpenMaster
@@ -768,7 +769,7 @@
             this.mnuSaveNewSequence,
             this.mnuSaveNewMap});
 			this.mnuFileSaveAs.Name = "mnuFileSaveAs";
-			this.mnuFileSaveAs.Size = new System.Drawing.Size(180, 22);
+			this.mnuFileSaveAs.Size = new System.Drawing.Size(135, 22);
 			this.mnuFileSaveAs.Text = "Save &As";
 			// 
 			// mnuSaveNewSequence
@@ -788,7 +789,7 @@
 			// mnuFileDivider1
 			// 
 			this.mnuFileDivider1.Name = "mnuFileDivider1";
-			this.mnuFileDivider1.Size = new System.Drawing.Size(177, 6);
+			this.mnuFileDivider1.Size = new System.Drawing.Size(132, 6);
 			// 
 			// mnuOptions
 			// 
@@ -799,7 +800,7 @@
             this.mnuMatchOptions,
             this.mnuSaveOptions});
 			this.mnuOptions.Name = "mnuOptions";
-			this.mnuOptions.Size = new System.Drawing.Size(180, 22);
+			this.mnuOptions.Size = new System.Drawing.Size(135, 22);
 			this.mnuOptions.Text = "O&ptions";
 			// 
 			// mnuSourceLeft
@@ -847,13 +848,13 @@
 			// mnuFileDivider2
 			// 
 			this.mnuFileDivider2.Name = "mnuFileDivider2";
-			this.mnuFileDivider2.Size = new System.Drawing.Size(177, 6);
+			this.mnuFileDivider2.Size = new System.Drawing.Size(132, 6);
 			// 
 			// mnuExit
 			// 
 			this.mnuExit.Name = "mnuExit";
 			this.mnuExit.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-			this.mnuExit.Size = new System.Drawing.Size(180, 22);
+			this.mnuExit.Size = new System.Drawing.Size(135, 22);
 			this.mnuExit.Text = "E&xit";
 			// 
 			// mnuMapMenu
@@ -878,66 +879,66 @@
 			// 
 			this.mnuMap.Name = "mnuMap";
 			this.mnuMap.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.M)));
-			this.mnuMap.Size = new System.Drawing.Size(180, 22);
+			this.mnuMap.Size = new System.Drawing.Size(162, 22);
 			this.mnuMap.Text = "&Map";
 			// 
 			// mnuUnmap
 			// 
 			this.mnuUnmap.Name = "mnuUnmap";
 			this.mnuUnmap.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.U)));
-			this.mnuUnmap.Size = new System.Drawing.Size(180, 22);
+			this.mnuUnmap.Size = new System.Drawing.Size(162, 22);
 			this.mnuUnmap.Text = "&Unmap";
 			// 
 			// mnuSummary
 			// 
 			this.mnuSummary.Name = "mnuSummary";
 			this.mnuSummary.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.Y)));
-			this.mnuSummary.Size = new System.Drawing.Size(180, 22);
+			this.mnuSummary.Size = new System.Drawing.Size(162, 22);
 			this.mnuSummary.Text = "Summar&y";
 			// 
 			// mnuClearMap
 			// 
 			this.mnuClearMap.Name = "mnuClearMap";
 			this.mnuClearMap.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.C)));
-			this.mnuClearMap.Size = new System.Drawing.Size(180, 22);
+			this.mnuClearMap.Size = new System.Drawing.Size(162, 22);
 			this.mnuClearMap.Text = "&Clear All";
 			// 
 			// toolStripSeparator1
 			// 
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+			this.toolStripSeparator1.Size = new System.Drawing.Size(159, 6);
 			// 
 			// mnuLoadMap
 			// 
 			this.mnuLoadMap.Name = "mnuLoadMap";
 			this.mnuLoadMap.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.L)));
-			this.mnuLoadMap.Size = new System.Drawing.Size(180, 22);
+			this.mnuLoadMap.Size = new System.Drawing.Size(162, 22);
 			this.mnuLoadMap.Text = "&Load";
 			// 
 			// mnuSaveMap
 			// 
 			this.mnuSaveMap.Name = "mnuSaveMap";
 			this.mnuSaveMap.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.S)));
-			this.mnuSaveMap.Size = new System.Drawing.Size(180, 22);
+			this.mnuSaveMap.Size = new System.Drawing.Size(162, 22);
 			this.mnuSaveMap.Text = "&Save";
 			// 
 			// mnuReapply
 			// 
 			this.mnuReapply.Name = "mnuReapply";
 			this.mnuReapply.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.R)));
-			this.mnuReapply.Size = new System.Drawing.Size(180, 22);
+			this.mnuReapply.Size = new System.Drawing.Size(162, 22);
 			this.mnuReapply.Text = "&Reapply";
 			// 
 			// toolStripSeparator2
 			// 
 			this.toolStripSeparator2.Name = "toolStripSeparator2";
-			this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
+			this.toolStripSeparator2.Size = new System.Drawing.Size(159, 6);
 			// 
 			// mnuAutoMap
 			// 
 			this.mnuAutoMap.Name = "mnuAutoMap";
 			this.mnuAutoMap.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.A)));
-			this.mnuAutoMap.Size = new System.Drawing.Size(180, 22);
+			this.mnuAutoMap.Size = new System.Drawing.Size(162, 22);
 			this.mnuAutoMap.Text = "&AutoMap";
 			this.mnuAutoMap.Click += new System.EventHandler(this.mnuAutoMap_Click);
 			// 
@@ -987,7 +988,7 @@
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlStatus.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
 			this.pnlStatus.Name = "pnlStatus";
-			this.pnlStatus.Size = new System.Drawing.Size(649, 19);
+			this.pnlStatus.Size = new System.Drawing.Size(516, 19);
 			this.pnlStatus.Spring = true;
 			// 
 			// pnlAbout

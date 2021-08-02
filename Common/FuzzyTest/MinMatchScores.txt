@@ -1,0 +1,46 @@
+**Algorithm Chapman Length Deviation
+Min Correct Score was 0.7083
+**Algorithm Chapman Mean Length
+Min Correct Score was 0.8542
+**Algorithm Cosine Similarity
+Min Correct Score was 0.4082
+**Algorithm Padded Hamming
+Min Correct Score was 0.7059
+**Algorithm Hamming-Wizmo
+Min Correct Score was 0.4000
+**Algorithm Jaccard Similarity
+Min Correct Score was 0.5833
+**Algorithm Jaro Similarity
+Min Correct Score was 0.7805
+**Algorithm Jaro-Winkler
+Min Correct Score was 0.4000
+**Algorithm Levenshtein Similarity
+Min Correct Score was 0.4167
+**Algorithm Normalized Levenshtein
+Min Correct Score was 0.4167
+**Algorithm Damerau-Levenshtein
+Min Correct Score was 0.4167
+**Algorithm Yeti-Levenshtein
+Min Correct Score was 0.4167
+**Algorithm Weighted Levenshtein
+Min Correct Score was 0.8000
+**Algorithm Longest Common Subsequence
+Min Correct Score was 0.8000
+**Algorithm Longest Common Substring
+Min Correct Score was 0.8000
+**Algorithm Metric Similarity
+Min Correct Score was 0.9778
+**Algorithm Needleman-Wunsch
+Min Correct Score was 0.6667
+**Algorithm 
+Min Correct Score was 100.0000
+**Algorithm Q-Gram Similarity
+Min Correct Score was 0.5882
+**Algorithm Optimal String Alignment
+Min Correct Score was 0.4167
+**Algorithm Overlap Coefficient
+Min Correct Score was 0.5000
+**Algorithm Sift Similarity
+Min Correct Score was 0.5882
+**Algorithm Sorensen-Dice
+Min Correct Score was 0.6667

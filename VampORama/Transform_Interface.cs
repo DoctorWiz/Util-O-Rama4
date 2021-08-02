@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LORUtils;
 
-namespace VampORama
+namespace UtilORama4
 {
 	public interface ITransform //: IComparable<IMember>
 	{

@@ -6,11 +6,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{25B963FD-2957-4617-8903-2351236FC377}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>FoobarORama</RootNamespace>
+    <RootNamespace>UtilORama4</RootNamespace>
     <AssemblyName>FoobarORama</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -34,6 +35,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -66,6 +68,12 @@
     <Compile Include="..\Common\Sequence4\VizMembers.cs">
       <Link>VizMembers.cs</Link>
     </Compile>
+    <Compile Include="frmCompare.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmCompare.Designer.cs">
+      <DependentUpon>frmCompare.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmFoobar.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -74,6 +82,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="frmCompare.resx">
+      <DependentUpon>frmCompare.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmFoobar.resx">
       <DependentUpon>frmFoobar.cs</DependentUpon>
     </EmbeddedResource>
@@ -85,6 +96,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

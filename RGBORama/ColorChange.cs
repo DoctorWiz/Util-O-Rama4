@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RGBORama
+namespace UtilORama4
 {
     class ColorChange
     {

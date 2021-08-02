@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using LORUtils;
 using xUtilities;
 
-namespace VampORama
+namespace UtilORama4
 {
 	public partial class frmOptions : Form
 	{

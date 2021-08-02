@@ -1,4 +1,4 @@
-﻿namespace WindowsFormsApp1
+﻿namespace UtilORama4
 {
 	partial class frmColorPicker
 	{

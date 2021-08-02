@@ -383,8 +383,8 @@ namespace MapORama
 		private void pnlAbout_Click(object sender, EventArgs e)
 		{
 			ImBusy(true);
-			Form aboutBox = new About();
-			aboutBox.ShowDialog(this);
+			//Form aboutBox = new About();
+			//aboutBox.ShowDialog(this);
 			ImBusy(false);
 		}
 
@@ -575,6 +575,11 @@ namespace MapORama
 					ttip.Tag = null;
 				}
 			}
+		}
+
+		private void treeMaster_Click(object sender, EventArgs e)
+		{
+
 		}
 	}
 }// end namespace MapORama

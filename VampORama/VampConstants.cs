@@ -15,7 +15,7 @@ using Microsoft.Win32;
 using xUtilities;
 using Musik;
 
-namespace VampORama
+namespace UtilORama4
 {
 	public static class vamps
 	{

@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Resources;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -8,9 +9,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("String-O-Rama")]
 [assembly: AssemblyDescription("Creates Light-O-Rama Channel Configs for Keywdel Strings")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("W⚡zster Software")]
+[assembly: AssemblyCompany("Doctor 🧙 Wizard and W⚡zlights Software")]
 [assembly: AssemblyProduct("String-O-Rama")]
-[assembly: AssemblyCopyright("Copyright © 2019+ by Doctor 🧙 Wizard and W⚡zster Software")]
+[assembly: AssemblyCopyright("Copyright © 2021+ by Doctor 🧙 Wizard and W⚡zlights Software")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +33,6 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("4.0.0.0")]
+[assembly: AssemblyFileVersion("4.0.0.0")]
+[assembly: NeutralResourcesLanguage("en-US")]

@@ -30,7 +30,7 @@ using TagLib.NonContainer;
 using System.Diagnostics.Eventing.Reader;
 using LORUtils;
 
-namespace VampORama
+namespace UtilORama4
 {
 	public static class Annotator
 	{

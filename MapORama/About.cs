@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using LORUtils;
 
-namespace MapORama
+namespace UtilORama4
 {
 	partial class About : Form
 	{

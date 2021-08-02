@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using LORUtils;
 
-namespace VampORama
+namespace UtilORama4
 {
 	public class SequenceFunctions
 	{

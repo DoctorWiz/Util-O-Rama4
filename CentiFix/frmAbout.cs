@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CentiFix
+namespace UtilORama4
 {
 	partial class frmAbout : Form
 	{

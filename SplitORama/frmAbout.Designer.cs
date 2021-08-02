@@ -1,4 +1,4 @@
-﻿namespace SplitORama
+﻿namespace UtilORama4
 {
 	partial class frmAbout
 	{

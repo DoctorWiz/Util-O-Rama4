@@ -8,7 +8,7 @@ using System.IO;
 using LORUtils;
 using xUtilities;
 
-namespace VampORama
+namespace UtilORama4
 {
 	public class BarBeats : ITransform
 	{

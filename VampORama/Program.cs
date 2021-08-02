@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace VampORama
+namespace UtilORama4
 {
 	static class Program
 	{

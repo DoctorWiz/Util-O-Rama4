@@ -8,7 +8,10 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Runtime.InteropServices;
+using System.DirectoryServices;
 using Microsoft.Win32;
+
+
 
 //using FuzzyString;
 
@@ -524,7 +527,9 @@ namespace xUtils
 			get
 			{
 				bool ret = false;
-				string usr = System.DirectoryServices.AccountManagement.UserPrincipal.Current.DisplayName;
+				//string usr = System.DirectoryServices.AccountManagement.UserPrincipal.Current.DisplayName;
+				string usr = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+
 				usr = usr.ToLower();
 				int i = usr.IndexOf("wizard");
 				if (i >= 0) ret = true;
@@ -1178,5 +1183,70 @@ namespace xUtils
 			} // End get ShowDirectory
 		}
 
+		public static Bitmap RenderTimings(xTimings timeTrack, int startMilliseconds, int endMilliseconds, int width, int height)
+		{
+			// Create a temporary working bitmap
+			Bitmap bmp = new Bitmap(width, height);
+			// get the graphics handle from it
+			Graphics gr = Graphics.FromImage(bmp);
+			// Paint the entire 'background' black
+			gr.FillRectangle(Brushes.Black, 0, 0, width - 1, height - 1);
+			Color c = Color.FromArgb(64, 64, 64);
+			Pen p = new Pen(c, 1);
+			Brush br = new SolidBrush(c);
+			int totalMS = endMilliseconds - startMilliseconds;
+			float q = (totalMS) / width;
+			int div = 15000;
+			if (totalMS < 30000) div = 1000;
+			if (totalMS > 300000) div = 30000;
+			// Dark gray tick marks every 30 seconds
+			int n30 = totalMS / div;
+			for (int cx=startMilliseconds; cx < endMilliseconds; cx+=div)
+			{
+				float xf = (cx - startMilliseconds) / q;
+				int x = (int)Math.Round(xf, 0);
+				gr.DrawLine(p, x, 0, x, height);
+			}
+			
+			c = Color.White;
+			p = new Pen(c, 1);
+			br = new SolidBrush(c);
+						//Debug.WriteLine(""); Debug.WriteLine("");
+			if (timeTrack.effects.Count > 0)
+			{
+				
+				for (int i = 0; i < timeTrack.effects.Count; i++)
+				{
+					int xs = 0;
+					int xe = width - 1;
+					int ts = timeTrack.effects[i].starttime;
+					int te = timeTrack.effects[i].endtime;
+					if (ts==te)
+					{
+						int nnnn = 2;
+					}
+					if ((ts >= startMilliseconds) && (ts <= endMilliseconds))
+					{
+						float xfs = (ts - startMilliseconds) / q;
+						xs = (int)Math.Round(xfs, 0);
+						//gr.DrawLine(p, xs, height - 1, xs, height);
+						gr.DrawLine(p, xs, 3, xs, height-5);
+					} // End timing start in range
+					if ((te >= startMilliseconds) && (te <= endMilliseconds))
+					{
+						float xfe = (te - startMilliseconds) / q;
+						xe = (int)Math.Round(xfe, 0);
+						//gr.DrawLine(p, xe, height - 1, xe, height);
+						gr.DrawLine(p, xe, 3, xe, height-5);
+					} // End timing end in range
+					int y = height / 2;
+					gr.DrawLine(p, xs, y, xe, y);
+				} // End loop thru timings
+			} // End grid has timings
+
+			return bmp;
+		}
+
+
 	} // end class utils
-} // end namespace LORUtils
+} // end namespace xUtils

@@ -301,7 +301,7 @@
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlStatus.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
 			this.pnlStatus.Name = "pnlStatus";
-			this.pnlStatus.Size = new System.Drawing.Size(281, 19);
+			this.pnlStatus.Size = new System.Drawing.Size(148, 19);
 			this.pnlStatus.Spring = true;
 			// 
 			// pnlAbout
@@ -432,7 +432,7 @@
             this.mnuOpenSequence,
             this.mnuOpenSelections});
 			this.mnuFileOpen.Name = "mnuFileOpen";
-			this.mnuFileOpen.Size = new System.Drawing.Size(134, 22);
+			this.mnuFileOpen.Size = new System.Drawing.Size(135, 22);
 			this.mnuFileOpen.Text = "&Open";
 			this.mnuFileOpen.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
 			// 
@@ -459,7 +459,7 @@
             this.mnuSaveAsSequence,
             this.mnuSaveAsSelections});
 			this.mnuFileSaveAs.Name = "mnuFileSaveAs";
-			this.mnuFileSaveAs.Size = new System.Drawing.Size(134, 22);
+			this.mnuFileSaveAs.Size = new System.Drawing.Size(135, 22);
 			this.mnuFileSaveAs.Text = "Save &As";
 			// 
 			// mnuSaveAsSequence
@@ -482,7 +482,7 @@
 			// mnuFileDivider1
 			// 
 			this.mnuFileDivider1.Name = "mnuFileDivider1";
-			this.mnuFileDivider1.Size = new System.Drawing.Size(131, 6);
+			this.mnuFileDivider1.Size = new System.Drawing.Size(132, 6);
 			// 
 			// mnuOptions
 			// 
@@ -490,7 +490,7 @@
             this.mnuMatchOptions,
             this.mnuSaveOptions});
 			this.mnuOptions.Name = "mnuOptions";
-			this.mnuOptions.Size = new System.Drawing.Size(134, 22);
+			this.mnuOptions.Size = new System.Drawing.Size(135, 22);
 			this.mnuOptions.Text = "&Options";
 			// 
 			// mnuMatchOptions
@@ -514,13 +514,13 @@
 			// mnuFileDivider2
 			// 
 			this.mnuFileDivider2.Name = "mnuFileDivider2";
-			this.mnuFileDivider2.Size = new System.Drawing.Size(131, 6);
+			this.mnuFileDivider2.Size = new System.Drawing.Size(132, 6);
 			// 
 			// mnuExit
 			// 
 			this.mnuExit.Name = "mnuExit";
 			this.mnuExit.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-			this.mnuExit.Size = new System.Drawing.Size(134, 22);
+			this.mnuExit.Size = new System.Drawing.Size(135, 22);
 			this.mnuExit.Text = "E&xit";
 			this.mnuExit.Click += new System.EventHandler(this.mnuExit_Click);
 			// 

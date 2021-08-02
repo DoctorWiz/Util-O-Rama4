@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{4332EE08-7311-42DF-8822-17F809E93DF5}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>TestORama</RootNamespace>
+    <RootNamespace>UtilORama4</RootNamespace>
     <AssemblyName>Test-O-Rama</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -71,6 +71,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />

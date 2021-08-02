@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Resources;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -8,9 +9,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("TestORama")]
 [assembly: AssemblyDescription("For testing the Util-O-Rama Sequence Class and it's operation.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Wizster")]
+[assembly: AssemblyCompany("Doctor 🧙 Wizard and W⚡zlights Software")]
 [assembly: AssemblyProduct("Test-O-Rama")]
-[assembly: AssemblyCopyright("Copyright © 2019+ by Doctor 🧙 Wizard and Wizster Software")]
+[assembly: AssemblyCopyright("Copyright © 2021+ by Doctor 🧙 Wizard and W⚡zlights Software")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +33,6 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.1.1.0")]
-[assembly: AssemblyFileVersion("0.1.1.0")]
+[assembly: AssemblyVersion("4.0.1.0")]
+[assembly: AssemblyFileVersion("4.0.1.0")]
+[assembly: NeutralResourcesLanguage("en-US")]

@@ -12,7 +12,7 @@ using System.IO;
 using System.Media;
 using LORUtils;
 
-namespace CentiFix
+namespace UtilORama4
 {
 	public partial class frmCenti : Form
 	{

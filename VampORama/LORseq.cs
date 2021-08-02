@@ -12,7 +12,7 @@ using xUtilities;
 using System.Diagnostics;
 using System.Linq.Expressions;
 
-namespace VampORama
+namespace UtilORama4
 {
 	public partial class frmVamp : Form
 	{

@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Resources;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using LORUtils;
@@ -9,9 +10,9 @@ using LORUtils;
 [assembly: AssemblyTitle("Map-O-Rama")]
 [assembly: AssemblyDescription("Remaps channels in Light-O-Rama Sequence Files")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("W⚡zster Software")]
+[assembly: AssemblyCompany("Copyright ©  2021+ by Doctor 🧙 Wizard and W⚡zster Software")]
 [assembly: AssemblyProduct("Map-O-Rama")]
-[assembly: AssemblyCopyright("Copyright ©  2019+ by Doctor 🧙 Wizard and W⚡zster Software")]
+[assembly: AssemblyCopyright("Copyright ©  2021+ by Doctor 🧙 Wizard and W⚡zster Software")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -35,3 +36,4 @@ using LORUtils;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("4.0.0.0")]
 [assembly: AssemblyFileVersion("4.0.0.0")]
+[assembly: NeutralResourcesLanguage("en-US")]

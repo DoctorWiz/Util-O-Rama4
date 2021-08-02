@@ -1,4 +1,4 @@
-﻿namespace FoobarORama
+﻿namespace UtilORama4
 {
 	partial class frmFoobar
 	{

@@ -9,6 +9,7 @@ using System.Text;
 using System.Reflection;
 using System.Threading;
 using System.Runtime.InteropServices;
+using System.DirectoryServices;
 using Microsoft.Win32;
 //using FuzzyString;
 
@@ -939,6 +940,13 @@ namespace LORUtils
 			ret = ret.Replace("&quot", "\"");
 			ret = ret.Replace("&lt", "<");
 			ret = ret.Replace("&gt", ">");
+			ret = ret.Replace("&#34", "\"");
+			ret = ret.Replace("&#38", "&");
+			ret = ret.Replace("&#39", "'");
+			ret = ret.Replace("&#60", "<");
+			ret = ret.Replace("&#62", ">");
+			ret = ret.Replace("&#9837", "♭");
+			ret = ret.Replace("&#9839", "♯");
 			return ret;
 		}
 
@@ -950,6 +958,10 @@ namespace LORUtils
 			ret = ret.Replace("\"", "&quot");
 			ret = ret.Replace("<", "&lt");
 			ret = ret.Replace(">", "&gt");
+			ret = ret.Replace("&", "&#38");
+			ret = ret.Replace("'", "&#34");
+			ret = ret.Replace("♭", "&#9837");
+			ret = ret.Replace("♯", "&#9839");
 			return ret;
 		}
 
@@ -1734,6 +1746,56 @@ namespace LORUtils
 
 			return bmp;
 		}
+
+		public static Bitmap RenderTimings(TimingGrid grid, int startCentiseconds, int endCentiseconds, int width, int height)
+		{
+			int h12 = height / 2;
+			int h13 = height / 3;
+			// Create a temporary working bitmap
+			Bitmap bmp = new Bitmap(width, height);
+			// get the graphics handle from it
+			Graphics gr = Graphics.FromImage(bmp);
+			// Paint the entire 'background' pale yellow
+			Brush br = new SolidBrush(Color.FromArgb(240, 240, 128));
+			gr.FillRectangle(br, 0, 0, width - 1, height - 1);
+			Color c = Color.Black;
+			Pen p = new Pen(c, 1);
+			br = new SolidBrush(c);
+			int totalCS = endCentiseconds - startCentiseconds;
+			float q = totalCS / width;
+			//Debug.WriteLine(""); Debug.WriteLine("");
+			int div = 1500;
+			if (totalCS < 3000) div = 100;
+			if (totalCS > 30000) div = 3000;
+
+			// Taller, thicker tick marks every 30 seconds
+			int n30 = totalCS / div;
+
+			for (int cx=startCentiseconds; cx < endCentiseconds; cx+=div)
+			{
+				float xf = (cx - startCentiseconds) / q;
+				int x = (int)Math.Round(xf, 0);
+				gr.DrawLine(p, x, h13, x, height-1);
+				gr.DrawLine(p, x + 1, h13, x + 1, height-1);
+			}
+
+			if (grid.timings.Count > 0)
+			{
+				for (int i = 0; i < grid.timings.Count; i++)
+				{
+					int t = grid.timings[i];
+					if ((t >= startCentiseconds) && (t <= endCentiseconds))
+					{
+						float xf = (t - startCentiseconds) / q;
+						int x = (int)Math.Round(xf, 0);
+						gr.DrawLine(p, x, h12, x, height-1);
+					} // End timing in range
+				} // End loop thru timings
+			} // End grid has timings
+
+			return bmp;
+		}
+
 
 		public static Bitmap RenderEffects(RGBchannel rgb, int startCentiseconds, int endCentiseconds, int width, int height, bool useRamps)
 		{

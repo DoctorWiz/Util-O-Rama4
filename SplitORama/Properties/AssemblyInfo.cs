@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Resources;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -8,9 +9,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Split-O-Rama")]
 [assembly: AssemblyDescription("Splits Light-O-Rama sequences into multiple parts")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("W⚡zster Software")]
+[assembly: AssemblyCompany("Doctor 🧙 Wizard and W⚡zlights Software")]
 [assembly: AssemblyProduct("Split-O-Rama")]
-[assembly: AssemblyCopyright("Copyright © 2019+ Doctor 🧙 Wizard and W⚡zster Software")]
+[assembly: AssemblyCopyright("Copyright © 2021+ by Doctor 🧙 Wizard and W⚡zlights Software")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +21,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("553f85e5-6af8-7311-acfe-68bf3dcbb3fd")]
+[assembly: Guid("553f85e5-7311-acfe-8899-68bf3dcbb3fd")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -32,5 +33,6 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.1.0.0")]
-[assembly: AssemblyFileVersion("0.1.0.0")]
+[assembly: AssemblyVersion("4.0.0.0")]
+[assembly: AssemblyFileVersion("4.0.0.0")]
+[assembly: NeutralResourcesLanguage("en-US")]

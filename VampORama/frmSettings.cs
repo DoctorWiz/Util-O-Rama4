@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 
-namespace VampORama
+namespace UtilORama4
 {
 	public partial class frmSettings : Form
 	{

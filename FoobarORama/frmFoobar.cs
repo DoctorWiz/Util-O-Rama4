@@ -11,7 +11,7 @@ using LORUtils;
 using System.IO;
 using System.Media;
 
-namespace FoobarORama
+namespace UtilORama4
 {
 	public partial class frmFoobar : Form
 	{

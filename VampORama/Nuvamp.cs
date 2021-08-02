@@ -31,7 +31,7 @@ using TagLib.NonContainer;
 using System.Diagnostics.Eventing.Reader;
 
 
-namespace VampORama
+namespace UtilORama4
 {
 	public partial class frmVamp : Form
 	{

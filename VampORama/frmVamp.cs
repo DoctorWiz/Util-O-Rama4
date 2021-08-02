@@ -30,7 +30,7 @@ using TagLib.Asf;
 using TagLib.MusePack;
 using TagLib.NonContainer;
 
-namespace VampORama
+namespace UtilORama4
 {
 	public partial class frmVamp : Form
 	{
@@ -2845,4 +2845,4 @@ namespace VampORama
 		}
 		*/
 	} // End Form Partial Class
-//}// end namespace VampORama
+//}// end namespace UtilORama4

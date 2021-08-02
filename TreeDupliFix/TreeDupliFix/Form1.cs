@@ -10,8 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using LORUtils;
 
-namespace TreeDupliFix
-{
+namespace UtilORama4
 	public partial class Form1 : Form
 	{
 		Sequence4 seq = null;
