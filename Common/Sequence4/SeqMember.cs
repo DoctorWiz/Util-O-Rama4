@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Diagnostics;
+using FileHelper;
 
 namespace LORUtils
 {
@@ -74,6 +75,19 @@ namespace LORUtils
 			get;
 			set;
 		}
+		bool MatchExact
+		{
+			get;
+			set;
+		}
+		int UniverseNumber
+		{
+			get;
+		}
+		int DMXAddress
+		{
+			get;
+		}
 
 	}
 
@@ -95,6 +109,7 @@ namespace LORUtils
 		public List<Effect> effects = new List<Effect>();
 		private object tag = null;
 		IMember mappedTo = null;
+		private bool matchExact = false;
 
 		public const string FIELDcolor = " color";
 
@@ -246,25 +261,26 @@ namespace LORUtils
 		public int CompareTo(IMember other)
 		{
 			int result = 0;
-			if (parentSequence.Members.sortMode == Membership.SORTbySavedIndex)
+			//if (parentSequence.Members.sortMode == Membership.SORTbySavedIndex)
+			if (Membership.sortMode == Membership.SORTbySavedIndex)
 			{
 				result = mySavedIndex.CompareTo(other.SavedIndex);
 			}
 			else
 			{
-				if (parentSequence.Members.sortMode == Membership.SORTbyName)
+				if (Membership.sortMode == Membership.SORTbyName)
 				{
 					result = myName.CompareTo(other.Name);
 				}
 				else
 				{
-					if (parentSequence.Members.sortMode == Membership.SORTbyAltSavedIndex)
+					if (Membership.sortMode == Membership.SORTbyAltSavedIndex)
 					{
 						result = myAltSavedIndex.CompareTo(other.AltSavedIndex);
 					}
 					else
 					{
-						if (parentSequence.Members.sortMode == Membership.SORTbyOutput)
+						if (Membership.sortMode == Membership.SORTbyOutput)
 						{
 							Channel ch = (Channel)other;
 							output.ToString().CompareTo(ch.output.ToString());
@@ -442,6 +458,22 @@ namespace LORUtils
 			}
 		}
 
+		public bool MatchExact
+		{ get { return matchExact; } set { matchExact = value; } }
+		public int UniverseNumber
+		{
+			get
+			{
+				return output.network;
+			}
+		}
+		public int DMXAddress
+		{
+			get
+			{
+				return output.channel;
+			}
+		}
 
 		public Channel(string theName, int theSavedIndex)
 		{
@@ -600,6 +632,7 @@ namespace LORUtils
 		private bool imSelected = false;
 		private object tag = null;
 		private IMember mappedTo = null;
+		private bool matchExact = false;
 
 		public Channel redChannel = null;
 		public Channel grnChannel = null;
@@ -730,19 +763,19 @@ namespace LORUtils
 		public int CompareTo(IMember other)
 		{
 			int result = 0;
-			if (parentSequence.Members.sortMode == Membership.SORTbySavedIndex)
+			if (Membership.sortMode == Membership.SORTbySavedIndex)
 			{
 				result = mySavedIndex.CompareTo(other.SavedIndex);
 			}
 			else
 			{
-				if (parentSequence.Members.sortMode == Membership.SORTbyName)
+				if (Membership.sortMode == Membership.SORTbyName)
 				{
 					result = myName.CompareTo(other.Name);
 				}
 				else
 				{
-					if (parentSequence.Members.sortMode == Membership.SORTbyAltSavedIndex)
+					if (Membership.sortMode == Membership.SORTbyAltSavedIndex)
 					{
 						result = myAltSavedIndex.CompareTo(other.AltSavedIndex);
 					}
@@ -834,6 +867,9 @@ namespace LORUtils
 				}
 			}
 		}
+
+		public bool MatchExact
+		{ get { return matchExact; } set { matchExact = value; } }
 
 		public RGBchannel(string theName, int theSavedIndex)
 		{
@@ -960,6 +996,21 @@ namespace LORUtils
 			return ret.ToString();
 		} // end LineOut
 
+		public int UniverseNumber
+		{
+			get
+			{
+				return redChannel.output.network;
+			}
+		}
+		public int DMXAddress
+		{
+			get
+			{
+				return redChannel.output.channel;
+			}
+		}
+
 	} // end RGBchannel Class
 
 	public class ChannelGroup : IMember, IComparable<IMember>
@@ -985,6 +1036,7 @@ namespace LORUtils
 		private const string STARTchannelGroup = utils.STFLD + TABLEchannelGroupList + utils.SPC;
 		private object tag = null;
 		private IMember mappedTo = null;
+		private bool matchExact = false;
 
 		public Membership Members; // = new Membership(this);
 
@@ -1115,19 +1167,19 @@ namespace LORUtils
 		public int CompareTo(IMember other)
 		{
 			int result = 0;
-			if (parentSequence.Members.sortMode == Membership.SORTbySavedIndex)
+			if (Membership.sortMode == Membership.SORTbySavedIndex)
 			{
 				result = mySavedIndex.CompareTo(other.SavedIndex);
 			}
 			else
 			{
-				if (parentSequence.Members.sortMode == Membership.SORTbyName)
+				if (Membership.sortMode == Membership.SORTbyName)
 				{
 					result = myName.CompareTo(other.Name);
 				}
 				else
 				{
-					if (parentSequence.Members.sortMode == Membership.SORTbyAltSavedIndex)
+					if (Membership.sortMode == Membership.SORTbyAltSavedIndex)
 					{
 						result = myAltSavedIndex.CompareTo(other.AltSavedIndex);
 					}
@@ -1219,6 +1271,9 @@ namespace LORUtils
 				}
 			}
 		}
+
+		public bool MatchExact
+		{ get { return matchExact; } set { matchExact = value; } }
 
 		public ChannelGroup(string theName, int theSavedIndex)
 		{
@@ -1346,6 +1401,35 @@ namespace LORUtils
 			return AddItem(newPart);
 		}
 
+		public int UniverseNumber
+		{
+			get
+			{
+				if (Members.Count > 0)
+				{
+					return Members[0].UniverseNumber;
+				}
+				else
+				{
+					return 0;
+				}
+			}
+		}
+		public int DMXAddress
+		{
+			get
+			{
+				if (Members.Count > 0)
+				{
+					return Members[0].DMXAddress;
+				}
+				else
+				{
+					return 0;
+				}
+			}
+		}
+
 		//TODO: add RemoveItem procedure
 	}
 
@@ -1372,6 +1456,7 @@ namespace LORUtils
 		private const string STARTcosmicDevice = utils.STFLD + TABLEcosmicDeviceDevice + utils.SPC;
 		private object tag = null;
 		private IMember mappedTo = null;
+		private bool matchExact = false;
 
 		public Membership Members; // = new Membership(this);
 
@@ -1502,19 +1587,19 @@ namespace LORUtils
 		public int CompareTo(IMember other)
 		{
 			int result = 0;
-			if (parentSequence.Members.sortMode == Membership.SORTbySavedIndex)
+			if (Membership.sortMode == Membership.SORTbySavedIndex)
 			{
 				result = mySavedIndex.CompareTo(other.SavedIndex);
 			}
 			else
 			{
-				if (parentSequence.Members.sortMode == Membership.SORTbyName)
+				if (Membership.sortMode == Membership.SORTbyName)
 				{
 					result = myName.CompareTo(other.Name);
 				}
 				else
 				{
-					if (parentSequence.Members.sortMode == Membership.SORTbyAltSavedIndex)
+					if (Membership.sortMode == Membership.SORTbyAltSavedIndex)
 					{
 						result = myAltSavedIndex.CompareTo(other.AltSavedIndex);
 					}
@@ -1602,6 +1687,8 @@ namespace LORUtils
 				}
 			}
 		}
+		public bool MatchExact
+		{ get { return matchExact; } set { matchExact = value; } }
 
 		public CosmicDevice(string theName, int theSavedIndex)
 		{
@@ -1728,6 +1815,20 @@ namespace LORUtils
 			return AddItem(newPart);
 		}
 
+		public int UniverseNumber
+		{
+			get
+			{
+				return 0;
+			}
+		}
+		public int DMXAddress
+		{
+			get
+			{
+				return 0;
+			}
+		}
 		//TODO: add RemoveItem procedure
 	}
 
@@ -1746,6 +1847,7 @@ namespace LORUtils
 		public List<int> timings = new List<int>();
 		private object tag = null;
 		private IMember mappedTo = null;
+		private bool matchExact = false;
 
 		public const string FIELDsaveID = " saveID";
 		public const string TABLEtiming = "timing";
@@ -1810,7 +1912,7 @@ namespace LORUtils
 				//int n = ParentSequence.Channels.Count + ParentSequence.RGBchannels.Count + ParentSequence.ChannelGroups.Count + ParentSequence.Tracks.Count;
 				//return n + myIndex;
 				int n = -mySaveID -1;
-				if (utils.IsWizard)
+				if (Sequence4.isWiz)
 				{
 					if (System.Diagnostics.Debugger.IsAttached)
 					{
@@ -1913,19 +2015,19 @@ namespace LORUtils
 		public int CompareTo(IMember other)
 		{
 			int result = 0;
-			if (parentSequence.Members.sortMode == Membership.SORTbySavedIndex)
+			if (Membership.sortMode == Membership.SORTbySavedIndex)
 			{
 				result = SavedIndex.CompareTo(other.SavedIndex);
 			}
 			else
 			{
-				if (parentSequence.Members.sortMode == Membership.SORTbyName)
+				if (Membership.sortMode == Membership.SORTbyName)
 				{
 					result = myName.CompareTo(other.Name);
 				}
 				else
 				{
-					if (parentSequence.Members.sortMode == Membership.SORTbyAltSavedIndex)
+					if (Membership.sortMode == Membership.SORTbyAltSavedIndex)
 					{
 						result = myAltSaveID.CompareTo(other.AltSavedIndex);
 					}
@@ -2078,6 +2180,8 @@ namespace LORUtils
 			}
 		}
 
+		public bool MatchExact
+		{ get { return matchExact; } set { matchExact = value; } }
 
 		public TimingGrid(string lineIn)
 		{
@@ -2188,6 +2292,21 @@ namespace LORUtils
 			if (parentSequence != null) parentSequence.MakeDirty();
 			return count;
 		}
+		public int UniverseNumber
+		{
+			get
+			{
+				return 0;
+			}
+		}
+		public int DMXAddress
+		{
+			get
+			{
+				return 0;
+			}
+		}
+
 
 	} // end timingGrid class
 
@@ -2214,6 +2333,7 @@ namespace LORUtils
 		private bool imSelected = false;
 		private object tag = null;
 		private IMember mappedTo = null;
+		private bool matchExact = false;
 
 		public Membership Members; // = new Membership(null);
 		public List<LoopLevel> loopLevels = new List<LoopLevel>();
@@ -2279,7 +2399,7 @@ namespace LORUtils
 			{
 				//int n = ParentSequence.Channels.Count + ParentSequence.RGBchannels.Count + ParentSequence.ChannelGroups.Count;
 				int n = -myIndex - 1;
-				if (utils.IsWizard)
+				if (Sequence4.isWiz)
 				{
 					if (System.Diagnostics.Debugger.IsAttached)
 					{
@@ -2355,19 +2475,19 @@ namespace LORUtils
 		public int CompareTo(IMember other)
 		{
 			int result = 0;
-			if (parentSequence.Members.sortMode == Membership.SORTbySavedIndex)
+			if (Membership.sortMode == Membership.SORTbySavedIndex)
 			{
 				result = SavedIndex.CompareTo(other.SavedIndex);
 			}
 			else
 			{
-				if (parentSequence.Members.sortMode == Membership.SORTbyName)
+				if (Membership.sortMode == Membership.SORTbyName)
 				{
 					result = myName.CompareTo(other.Name);
 				}
 				else
 				{
-					if (parentSequence.Members.sortMode == Membership.SORTbyAltSavedIndex)
+					if (Membership.sortMode == Membership.SORTbyAltSavedIndex)
 					{
 						result = myAltTrackIndex.CompareTo(other.AltSavedIndex);
 					}
@@ -2505,6 +2625,8 @@ namespace LORUtils
 			}
 		}
 
+		public bool MatchExact
+		{ get { return matchExact; } set { matchExact = value; } }
 
 		public Track(string theName, int theTrackNo)
 		{
@@ -2695,6 +2817,21 @@ namespace LORUtils
 			return loopLevels.Count - 1;
 		}
 
+		public int UniverseNumber
+		{
+			get
+			{
+				return 0;
+			}
+		}
+		public int DMXAddress
+		{
+			get
+			{
+				return 0;
+			}
+		}
+
 		//TODO: add RemoveItem procedure
 	} // end class track
 
@@ -2721,7 +2858,7 @@ namespace LORUtils
 		public const int SORTbyAltSavedIndex = 2;
 		public const int SORTbyName = 3;
 		public const int SORTbyOutput = 4;
-		public int sortMode = SORTbySavedIndex;
+		public static int sortMode = SORTbySavedIndex;
 
 		public int channelCount = 0;
 		public int rgbChannelCount = 0;

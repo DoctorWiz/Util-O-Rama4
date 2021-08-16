@@ -15,6 +15,7 @@ using Microsoft.Win32;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using LORUtils;
+using FileHelper;
 using xUtilities;
 using Musik;
 //using Ini;
@@ -101,7 +102,7 @@ namespace UtilORama4
 
 		//private string annotatorProgram = "C:\\PortableApps\\SonicAnnotator\\sonic-annotator.exe";
 		private int rlevel = 0;
-		bool izwiz = xUtils.IsWizard;
+		bool isWiz = Fyle.IsWizard || Fyle.IsAWizard;
 
 		//private bool doAutoSave = false;
 		//private bool doAutoLaunch = true;
@@ -228,7 +229,7 @@ namespace UtilORama4
 			pathWork = baseDir + mySubDir;
 			if (!Directory.Exists(pathWork)) Directory.CreateDirectory(pathWork);
 
-			if (izwiz)
+			if (isWiz)
 			{
 				chkReuse.Visible = true;
 				chkReuse.Checked = heartOfTheSun.reuseFiles;
@@ -1044,7 +1045,7 @@ namespace UtilORama4
 				mruTimings.SaveToConfig();
 				dirtyTimes = false;
 				//SystemSounds.Beep.Play();
-				utils.MakeNoise(utils.Noises.TaDa);
+				Fyle.MakeNoise(Fyle.Noises.TaDa);
 				ImBusy(false);
 			}
 		} // end Save File As
@@ -1637,7 +1638,7 @@ namespace UtilORama4
 			if (System.IO.File.Exists(fileAudioLast))
 			{
 				ImBusy(true);
-				utils.MakeNoise(utils.Noises.DrumRoll);
+				Fyle.MakeNoise(Fyle.Noises.DrumRoll);
 				// Remember all current user settings, options, selections, etc. on the main form
 				SetTheControlsForTheHeartOfTheSun();
 
@@ -1665,7 +1666,7 @@ namespace UtilORama4
 
 				SelectStep(STEP_SaveTimings);
 				logWindow.Done = true;
-				utils.MakeNoise(utils.Noises.TaDa);
+				Fyle.MakeNoise(Fyle.Noises.TaDa);
 
 				while (!logWindow.IsDisposed)
 				{
@@ -2248,7 +2249,7 @@ namespace UtilORama4
 				System.IO.File.Delete(expFile);
 			}
 			// Copy the tempfile to the new file name and delete the old temp file
-			err = utils.SafeCopy(timingsTemp, expFile);
+			err = Fyle.SafeCopy(timingsTemp, expFile);
 			System.IO.File.Delete(timingsTemp);
 
 		}
@@ -2284,7 +2285,7 @@ namespace UtilORama4
 				System.IO.File.Delete(expFile);
 			}
 			// Copy the tempfile to the new file name and delete the old temp file
-			err = utils.SafeCopy(timingsTemp, expFile);
+			err = Fyle.SafeCopy(timingsTemp, expFile);
 			System.IO.File.Delete(timingsTemp);
 
 		}
@@ -2544,7 +2545,7 @@ namespace UtilORama4
 				SaveInExistingSequence();
 			}
 			dirtyTimes = false;
-			utils.MakeNoise(utils.Noises.Gong);
+			Fyle.MakeNoise(Fyle.Noises.Gong);
 			ImBusy(false);
 		}
 
@@ -2739,7 +2740,7 @@ namespace UtilORama4
 			msg.Append("No warranty express or implied (except to be buggy).  No refunds, credits, or exchanges.  Not for resale.");
 			msg.Append("\r\nSend bug reports and good dirty jokes to wizard@wizlights.com");
 
-			utils.MakeNoise(utils.Noises.Crash);
+			Fyle.MakeNoise(Fyle.Noises.Crash);
 			DialogResult d = MessageBox.Show(this, msg.ToString(), "WARNING!", MessageBoxButtons.OK, MessageBoxIcon.Warning); ;
 
 

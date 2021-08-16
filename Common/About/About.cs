@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LORUtils;
+using LORUtils; using FileHelper;
 
 namespace UtilORama4
 {
@@ -19,7 +19,7 @@ namespace UtilORama4
 		{
 			InitializeComponent();
 
-			applicationName = utils.AssemblyTitle;
+			applicationName = Fyle.AssemblyTitle;
 
 			this.Text = String.Format("About {0}", applicationName);
 			this.labelProductName.Text = applicationName;

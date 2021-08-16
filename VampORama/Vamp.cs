@@ -14,7 +14,7 @@ using System.Configuration;
 //using System.Threading;
 using Microsoft.Win32;
 using xUtilities;
-using LORUtils;
+using LORUtils; using FileHelper;
 using Musik;
 //using Ini;
 using TagLib;
@@ -417,7 +417,7 @@ namespace UtilORama4
 					p = lineIn.ToLower().IndexOf("step_size");
 					if (p >= 0)
 					{
-						if (izwiz)
+						if (isWiz)
 						{
 							System.Diagnostics.Debugger.Break();
 						}
@@ -446,7 +446,7 @@ namespace UtilORama4
 				int p = lineIn.ToLower().IndexOf("step_size");
 				if (p>=0)
 				{
-					if (izwiz)
+					if (isWiz)
 					{
 						System.Diagnostics.Debugger.Break();
 					}
@@ -845,7 +845,7 @@ namespace UtilORama4
 
 					if (dr == DialogResult.Yes)
 					{
-						if (izwiz) Clipboard.SetText(emsg);
+						if (isWiz) Clipboard.SetText(emsg);
 					}
 					if (dr != DialogResult.Cancel)
 					{
@@ -863,7 +863,7 @@ namespace UtilORama4
 							//annotator.Arguments = annotatorArguments;
 							string runthis = annotatorProgram + " " + annotatorArguments;
 							vampCommandLast = runthis;
-							if (izwiz) Clipboard.SetText(runthis);
+							if (isWiz) Clipboard.SetText(runthis);
 
 
 
@@ -968,7 +968,7 @@ namespace UtilORama4
 			catch
 			{
 				errCount = 99995;
-				if (izwiz)
+				if (isWiz)
 				{
 
 				}
@@ -2582,7 +2582,7 @@ namespace UtilORama4
 					}
 				}
 			}
-			if (izwiz)
+			if (isWiz)
 			{
 				string msg = "Start time " + startTime.ToString() + " aligned to " + matchTime.ToString();
 				Console.WriteLine(msg);

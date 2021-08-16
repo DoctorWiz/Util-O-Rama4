@@ -11,16 +11,17 @@ using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
 using Microsoft.Win32;
-using LORUtils;
+using LORUtils; using FileHelper;
 using FuzzyString;
 using Syncfusion.Windows.Forms.Tools;
 
-namespace MapORama
+namespace UtilORama4
 {
 	public partial class frmRemapper : Form
 	{
 		private bool firstShown = false;
-		private Control currentToolTipControl = null; 
+		private Control currentToolTipControl = null;
+		private bool isWiz = Fyle.IsWizard || Fyle.IsAWizard;
 
 		public frmRemapper()
 		{
@@ -31,12 +32,12 @@ namespace MapORama
 		{
 			bool valid = false;
 			SeqFolder = utils.DefaultSequencesPath;
-			logHomeDir = utils.GetAppTempFolder();
+			logHomeDir = Fyle.GetAppTempFolder();
 
 			masterFile = Properties.Settings.Default.LastMasterFile;
 			if (masterFile.Length > 6)
 			{
-				valid = utils.IsValidPath(masterFile, true);
+				valid = Fyle.IsValidPath(masterFile, true);
 			}
 			if (!valid) masterFile = utils.DefaultChannelConfigsPath;
 			if (!File.Exists(masterFile))
@@ -49,7 +50,7 @@ namespace MapORama
 			sourceFile = Properties.Settings.Default.LastSourceFile;
 			if (sourceFile.Length > 6)
 			{
-				valid = utils.IsValidPath(sourceFile, true);
+				valid = Fyle.IsValidPath(sourceFile, true);
 			}
 			if (!valid) sourceFile = utils.DefaultSequencesPath;
 			if (!File.Exists(sourceFile))
@@ -62,7 +63,7 @@ namespace MapORama
 			mapFile = Properties.Settings.Default.LastMapFile;
 			if (mapFile.Length > 6)
 			{
-				valid = utils.IsValidPath(mapFile, true);
+				valid = Fyle.IsValidPath(mapFile, true);
 			}
 			if (!valid) mapFile = utils.DefaultChannelConfigsPath;
 			if (!File.Exists(mapFile))
@@ -74,7 +75,7 @@ namespace MapORama
 			saveFile = Properties.Settings.Default.LastSaveFile;
 			if (saveFile.Length > 6)
 			{
-				valid = utils.IsValidPath(saveFile, true);
+				valid = Fyle.IsValidPath(saveFile, true);
 			}
 			if (!valid) saveFile = utils.DefaultSequencesPath;
 			if (!File.Exists(saveFile))
@@ -89,7 +90,7 @@ namespace MapORama
 			Properties.Settings.Default.Save();
 
 			chkAutoLaunch.Checked = Properties.Settings.Default.AutoLaunch;
-			btnEaves.Visible = utils.IsWizard;
+			btnEaves.Visible = isWiz;
 
 			RestoreFormPosition();
 
@@ -582,4 +583,4 @@ namespace MapORama
 
 		}
 	}
-}// end namespace MapORama
+}// end namespace UtilORama4

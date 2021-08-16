@@ -223,7 +223,7 @@ namespace LORUtils
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 					}
 					catch (System.InvalidCastException ex)
 					{
@@ -235,7 +235,7 @@ namespace LORUtils
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 					}
 					catch (Exception ex)
 					{
@@ -247,7 +247,7 @@ namespace LORUtils
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 					}
 					*/
 				#endregion
@@ -266,7 +266,7 @@ namespace LORUtils
 					#if DEBUG
 						System.Diagnostics.Debugger.Break();
 					#endif
-					utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+					Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 				}
 				catch (System.InvalidCastException ex)
 				{
@@ -278,7 +278,7 @@ namespace LORUtils
 					#if DEBUG
 						System.Diagnostics.Debugger.Break();
 					#endif
-					utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+					Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 				}
 				catch (Exception ex)
 				{
@@ -290,7 +290,7 @@ namespace LORUtils
 					#if DEBUG
 						System.Diagnostics.Debugger.Break();
 					#endif
-					utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+					Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 				}
 				*/
 			#endregion
@@ -385,7 +385,7 @@ namespace LORUtils
 			#if DEBUG
 				Debugger.Break();
 			#endif
-			utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+			Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 		} // end catch
 		*/
 				#endregion
@@ -914,7 +914,7 @@ namespace LORUtils
 			return ret;
 		}
 
-		public static string fileSizeFormated(string filename)
+		public static string fileSizeFormatted(string filename)
 		{
 			string ret = "0";
 			if (File.Exists(filename))
@@ -1105,7 +1105,7 @@ namespace LORUtils
 							#if DEBUG
 								System.Diagnostics.Debugger.Break();
 							#endif
-							utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+							Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 						}
 						catch (System.InvalidCastException ex)
 						{
@@ -1117,7 +1117,7 @@ namespace LORUtils
 							#if DEBUG
 								System.Diagnostics.Debugger.Break();
 							#endif
-							utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+							Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 						}
 						catch (Exception ex)
 						{
@@ -1129,7 +1129,7 @@ namespace LORUtils
 							#if DEBUG
 								System.Diagnostics.Debugger.Break();
 							#endif
-							utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+							Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 						}
 						*/
 					#endregion
@@ -1148,7 +1148,7 @@ namespace LORUtils
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 					}
 					catch (System.InvalidCastException ex)
 					{
@@ -1160,7 +1160,7 @@ namespace LORUtils
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 					}
 					catch (Exception ex)
 					{
@@ -1172,7 +1172,7 @@ namespace LORUtils
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 					}
 					*/
 				#endregion
@@ -1249,7 +1249,7 @@ namespace LORUtils
 			#if DEBUG
 				Debugger.Break();
 			#endif
-			utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+			Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 		} // end catch
 		*/
 				#endregion
@@ -1966,20 +1966,20 @@ namespace LORUtils
 								// We Got One!
 								keepGoing = false;
 								// This is the current effect at this time
-								if (curEffect.EffectTypeEX == EffectTypeEX.Constant)
+								if (curEffect.EffectType == EffectType.intensity)
 								{
 									curLevel = curEffect.Intensity;
 								}
-								if (curEffect.EffectTypeEX == EffectTypeEX.Shimmer)
+								if (curEffect.EffectType == EffectType.shimmer)
 								{
 									curLevel = curEffect.Intensity | ADDshimmer;
 								}
-								if (curEffect.EffectTypeEX == EffectTypeEX.Twinkle)
+								if (curEffect.EffectType == EffectType.twinkle)
 								{
 									curLevel = curEffect.Intensity | ADDtwinkle;
 								}
-								if ((curEffect.EffectTypeEX == EffectTypeEX.FadeDown) ||
-										(curEffect.EffectTypeEX == EffectTypeEX.FadeUp))
+								if ((curEffect.EffectType == EffectType.intensity))
+										
 								{
 									// Amount of difference in level, from start to end
 									int levelDiff = curEffect.endIntensity - curEffect.startIntensity;

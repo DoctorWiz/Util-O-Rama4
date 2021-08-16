@@ -14,7 +14,7 @@ using System.Configuration;
 using System.Threading;
 using Microsoft.Win32;
 using xUtilities;
-using LORUtils;
+using LORUtils; using FileHelper;
 using Musik;
 //using Ini;
 using TagLib;
@@ -495,7 +495,7 @@ namespace UtilORama4
 
 			if (overwriteExistingVamps || !System.IO.File.Exists(newFile))
 			{
-				err = utils.SafeCopy(originalAudioFile, newFile, true);
+				err = Fyle.SafeCopy(originalAudioFile, newFile, true);
 			}
 
 			audioData = ReadAudioFile(newFile);
@@ -712,7 +712,7 @@ namespace UtilORama4
 
 				if (dr == DialogResult.Yes)
 				{
-					if (utils.IsWizard) Clipboard.SetText(emsg);
+					if (isWiz) Clipboard.SetText(emsg);
 				}
 				if (dr != DialogResult.Cancel)
 				{
@@ -736,7 +736,7 @@ namespace UtilORama4
 						runthis = "/c " + runthis; // + " 2>output.txt";
 
 						string vampCommandLast = runthis;
-						if (utils.IsWizard) Clipboard.SetText(runthis);
+						if (isWiz) Clipboard.SetText(runthis);
 
 						cmdProc = new Process();
 						ProcessStartInfo procInfo = new ProcessStartInfo();
@@ -781,9 +781,9 @@ namespace UtilORama4
 					else
 					{
 						// NO RESULTS FILE!	
-						if (utils.IsWizard)
+						if (isWiz)
 						{
-							utils.MakeNoise(utils.Noises.SamCurseC);
+							Fyle.MakeNoise(Fyle.Noises.SamCurseC);
 							System.Diagnostics.Debugger.Break();
 						}
 					}
@@ -791,10 +791,10 @@ namespace UtilORama4
 			}
 			catch (Exception e)
 			{
-				if (utils.IsWizard)
+				if (isWiz)
 				{
 					string msg = e.Message;
-					utils.MakeNoise(utils.Noises.Crash);
+					Fyle.MakeNoise(Fyle.Noises.Crash);
 					System.Diagnostics.Debugger.Break();
 				}
 				resultsFile = "";

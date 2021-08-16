@@ -308,7 +308,7 @@ namespace LORUtils
 		}
 
 		// An Alias: universe=network for DMX
-		public int universe
+		public int UniverseNumber
 		{
 			get
 			{

@@ -187,13 +187,13 @@ namespace LORUtils
 		public int CompareTo(IMember other)
 		{
 			int result = 0;
-			if (parentSequence.Members.sortMode == Membership.SORTbySavedIndex)
+			if (Membership.sortMode == Membership.SORTbySavedIndex)
 			{
 				result = mySavedIndex.CompareTo(other.SavedIndex);
 			}
 			else
 			{
-				if (parentSequence.Members.sortMode == Membership.SORTbyName)
+				if (Membership.sortMode == Membership.SORTbyName)
 				{
 					if (myName == "")
 					{
@@ -203,7 +203,7 @@ namespace LORUtils
 				}
 				else
 				{
-					if (parentSequence.Members.sortMode == Membership.SORTbyAltSavedIndex)
+					if (Membership.sortMode == Membership.SORTbyAltSavedIndex)
 					{
 						result = myAltSavedIndex.CompareTo(other.AltSavedIndex);
 					}
@@ -632,7 +632,7 @@ namespace LORUtils
 #if DEBUG
 										System.Diagnostics.Debugger.Break();
 #endif
-										utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+										Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 									} // end catch
 									*/
 								} // end while lines remain
@@ -662,7 +662,7 @@ namespace LORUtils
 #if DEBUG
 				System.Diagnostics.Debugger.Break();
 #endif
-				utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+				Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 			} // end catch
 			*/
 
@@ -2601,7 +2601,7 @@ namespace LORUtils
 			seqOut.filename = filename;
 			seqOut.lineCount = lineCount;
 			seqOut.myName = myName;
-			seqOut.sequenceType = sequenceType;
+			seqOut.SequenceType = sequenceType;
 			seqOut.videoUsage = videoUsage;
 			for (int idx = 0; idx < Members.bySavedIndex.Count; idx++)
 			{

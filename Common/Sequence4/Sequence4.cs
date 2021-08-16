@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using FileHelper;
 
 namespace LORUtils
 {
@@ -101,7 +102,7 @@ namespace LORUtils
 			public int itemIdx;
 		}
 
-
+		public static bool isWiz = Fyle.IsWizard || Fyle.IsAWizard;
 
 		#region IMember Interface
 		public string Name
@@ -219,13 +220,13 @@ namespace LORUtils
 		public int CompareTo(IMember other)
 		{
 			int result = 0;
-			if (parentSequence.Members.sortMode == Membership.SORTbySavedIndex)
+			if (Membership.sortMode == Membership.SORTbySavedIndex)
 			{
 				result = mySavedIndex.CompareTo(other.SavedIndex);
 			}
 			else
 			{
-				if (parentSequence.Members.sortMode == Membership.SORTbyName)
+				if (Membership.sortMode == Membership.SORTbyName)
 				{
 					//if (myName == "")
 
@@ -236,7 +237,7 @@ namespace LORUtils
 				}
 				else
 				{
-					if (parentSequence.Members.sortMode == Membership.SORTbyAltSavedIndex)
+					if (Membership.sortMode == Membership.SORTbyAltSavedIndex)
 					{
 						result = myAltSavedIndex.CompareTo(other.AltSavedIndex);
 					}
@@ -303,6 +304,24 @@ namespace LORUtils
 				}
 			}
 		}
+		public bool MatchExact
+		{ get { return false; } set {  } }
+		public int UniverseNumber
+		{
+			get
+			{
+				return 0;
+			}
+		}
+		public int DMXAddress
+		{
+			get
+			{
+				return 0;
+			}
+		}
+
+
 
 		#endregion
 
@@ -865,8 +884,8 @@ namespace LORUtils
 	#if DEBUG
 											System.Diagnostics.Debugger.Break();
 	#endif
-											utils.WriteLogEntry(emsg, utils.LOG_Error);
-											if (utils.IsWizard)
+											Fyle.WriteLogEntry(emsg, utils.LOG_Error);
+											if (isWiz)
 											{
 												DialogResult dr1 = MessageBox.Show(emsg, "Error Reading Sequence File", MessageBoxButtons.OK, MessageBoxIcon.Error);
 												System.Diagnostics.Debugger.Break();
@@ -901,8 +920,8 @@ namespace LORUtils
 #if DEBUG
 				System.Diagnostics.Debugger.Break();
 #endif
-				utils.WriteLogEntry(emsg, utils.LOG_Error);
-				if (utils.IsWizard)
+				Fyle.WriteLogEntry(emsg, utils.LOG_Error);
+				if (isWiz)
 				{
 					DialogResult dr2 = MessageBox.Show(emsg, "Error Opening Sequence File", MessageBoxButtons.OK, MessageBoxIcon.Error);
 					System.Diagnostics.Debugger.Break();
@@ -1755,7 +1774,7 @@ namespace LORUtils
 			if (newCentiseconds > 360000)
 			{
 				string m = "WARNING!! Setting Centiseconds to more than 60 minutes!  Are you sure?";
-				utils.WriteLogEntry(m, "Warning");
+				Fyle.WriteLogEntry(m, "Warning");
 				if (Debugger.IsAttached)
 				{
 					System.Diagnostics.Debugger.Break();
@@ -3113,7 +3132,7 @@ namespace LORUtils
 					if (longest > 360000)
 					{
 						string m = "WARNING!  Member " + Members[i].Name + " is over 60 minutes!";
-						utils.WriteLogEntry(m, "Warning");
+						Fyle.WriteLogEntry(m, "Warning");
 						if (Debugger.IsAttached)
 						{
 							System.Diagnostics.Debugger.Break();
@@ -3122,7 +3141,7 @@ namespace LORUtils
 					if (longest > myCentiseconds)
 					{
 						string m = "ERROR!  Member " + Members[i].Name + " is longer than the sequence!";
-						utils.WriteLogEntry(m, "Error");
+						Fyle.WriteLogEntry(m, "Error");
 						if (Debugger.IsAttached)
 						{
 							System.Diagnostics.Debugger.Break();
@@ -3150,7 +3169,7 @@ namespace LORUtils
 								if (last > 360000)
 								{
 									string m = "WARNING!  Last Effect on Channel " + Channels[i].Name + " is past 60 minutes!";
-									utils.WriteLogEntry(m, "Warning");
+									Fyle.WriteLogEntry(m, "Warning");
 									if (Debugger.IsAttached)
 									{
 										System.Diagnostics.Debugger.Break();
@@ -3159,7 +3178,7 @@ namespace LORUtils
 								if (last > myCentiseconds)
 								{
 									string m = "ERROR! Last effect on Channel " + Channels[i].Name + " is past the end of the sequence!";
-									utils.WriteLogEntry(m, "Error");
+									Fyle.WriteLogEntry(m, "Error");
 									if (Debugger.IsAttached)
 									{
 										System.Diagnostics.Debugger.Break();
@@ -3193,7 +3212,7 @@ namespace LORUtils
 									if (last > 360000)
 									{
 										string m = "WARNING!  Last Timing in Grid " + TimingGrids[i].Name + " is past 60 minutes!";
-										utils.WriteLogEntry(m, "Warning");
+										Fyle.WriteLogEntry(m, "Warning");
 										if (Debugger.IsAttached)
 										{
 											System.Diagnostics.Debugger.Break();
@@ -3202,7 +3221,7 @@ namespace LORUtils
 									if (last > myCentiseconds)
 									{
 										string m = "ERROR! Last Timing in Grid " + TimingGrids[i].Name + " is past the end of the sequence!";
-										utils.WriteLogEntry(m, "Error");
+										Fyle.WriteLogEntry(m, "Error");
 										if (Debugger.IsAttached)
 										{
 											System.Diagnostics.Debugger.Break();

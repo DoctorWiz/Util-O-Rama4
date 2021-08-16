@@ -11,10 +11,11 @@ using System.Windows.Forms;
 using System.IO;
 using System.Media;
 using LORUtils;
+using FileHelper;
 using FuzzyString;
 
 
-namespace SplitORama
+namespace UtilORama4
 {
 	public partial class frmSplit : Form
 	{
@@ -59,6 +60,7 @@ namespace SplitORama
 		private byte saveFormat = SAVEmixedDisplay;
 		private int gridSelCount = 0;
 		private bool[] gridItem_Checked = null;
+		private bool isWiz = Fyle.IsWizard || Fyle.IsAWizard;
 
 		//private List<TreeNode>[] nodesBySI;
 		//private List<List<TreeNode>> nodesBySI = new List<List<TreeNode>>();
@@ -133,7 +135,7 @@ namespace SplitORama
 			}
 			this.Text = applicationName + " - " + Path.GetFileName(theFile);
 
-			txtSequenceFile.Text = utils.ShortenLongPath(theFile, 80);
+			txtSequenceFile.Text = Fyle.ShortenLongPath(theFile, 80);
 			seq.ReadSequenceFile(theFile);
 			Array.Resize(ref gridItem_Checked, seq.TimingGrids.Count);
 			utils.TreeFillChannels(treChannels, seq, ref nodesBySI, false, false);
@@ -223,7 +225,7 @@ namespace SplitORama
 
 			ImBusy(true);
 			RestoreFormPosition();
-			tempPath = utils.GetAppTempFolder();
+			tempPath = Fyle.GetAppTempFolder();
 			bool valid = false;
 
 			ProcessCommandLine();
@@ -261,7 +263,7 @@ namespace SplitORama
 					fileSeqLast = Properties.Settings.Default.FileSeqLast;
 					if (fileSelLast.Length > 6)
 					{
-						valid = utils.IsValidPath(fileSeqLast, true);
+						valid = Fyle.IsValidPath(fileSeqLast, true);
 					}
 					if (!valid) fileSeqLast = utils.DefaultSequencesPath;
 					if (File.Exists(fileSeqLast))
@@ -269,7 +271,7 @@ namespace SplitORama
 						//seq.ReadSequenceFile(fileSeqLast);
 						//fileSeqCur = fileSeqLast;
 						//utils.TreeFillChannels(treChannels, seq, nodesBySI);
-						//txtSequenceFile.Text = utils.ShortenLongPath(fileSeqCur, 80);
+						//txtSequenceFile.Text = Fyle.ShortenLongPath(fileSeqCur, 80);
 					}
 				}
 				else
@@ -296,15 +298,15 @@ namespace SplitORama
 			valid = false;
 			if (fileSelLast.Length > 6)
 			{
-				valid = utils.IsValidPath(fileSelLast, true);
+				valid = Fyle.IsValidPath(fileSelLast, true);
 			}
 			if (!valid) fileSelLast = utils.DefaultChannelConfigsPath;
 
 
-			//txtSequenceFile.Text = utils.ShortenLongPath(fileSeqLast, 80);
-			//txtSelectionsFile.Text = utils.ShortenLongPath(fileSelLast, 80);
+			//txtSequenceFile.Text = Fyle.ShortenLongPath(fileSeqLast, 80);
+			//txtSelectionsFile.Text = Fyle.ShortenLongPath(fileSelLast, 80);
 
-			cmdNothing.Visible = utils.IsWizard;
+			cmdNothing.Visible = isWiz;
 
 			treChannels.DrawMode = TreeViewDrawMode.OwnerDrawAll;
 
@@ -324,7 +326,7 @@ namespace SplitORama
 				if (arg.Substring(1, 2).CompareTo(":\\") == 0) isFile = 1;  // Local File
 				if (arg.Substring(0, 2).CompareTo("\\\\") == 0) isFile = 1; // UNC file
 				if (arg.Substring(4).IndexOf(".") > utils.UNDEFINED) isFile++;  // contains a period
-				if (utils.InvalidCharacterCount(arg) == 0) isFile++;
+				if (Fyle.InvalidCharacterCount(arg) == 0) isFile++;
 				if (isFile == 3)
 				{
 					if (File.Exists(arg))
@@ -436,7 +438,7 @@ namespace SplitORama
 					Properties.Settings.Default.FileSeqLast = fileSeqCur;
 					Properties.Settings.Default.Save();
 
-					txtSequenceFile.Text = utils.ShortenLongPath(fileSeqCur, 80);
+					txtSequenceFile.Text = Fyle.ShortenLongPath(fileSeqCur, 80);
 					seq.ReadSequenceFile(fileSeqCur);
 					utils.TreeFillChannels(treChannels, seq, ref nodesBySI, false, false);
 					member = 1;
@@ -2242,4 +2244,4 @@ namespace SplitORama
 
 		}
 	} // end frmSplit
-} // end namespace SplitORama
+} // end namespace UtilORama4

@@ -264,7 +264,7 @@ namespace LORUtils
 #if DEBUG
 										System.Diagnostics.Debugger.Break();
 #endif
-										utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+										Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 									} // end catch
 									*/
 								} // end while lines remain
@@ -294,7 +294,7 @@ namespace LORUtils
 #if DEBUG
 				System.Diagnostics.Debugger.Break();
 #endif
-				utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+				Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 			} // end catch
 			*/
 

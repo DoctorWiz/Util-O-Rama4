@@ -1,4 +1,4 @@
-﻿namespace MapORama
+﻿namespace UtilORama4
 {
 	partial class frmOptions
 	{

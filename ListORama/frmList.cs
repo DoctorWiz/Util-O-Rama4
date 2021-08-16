@@ -12,6 +12,7 @@ using System.IO;
 using System.Diagnostics;
 using Microsoft.Win32;
 using LORUtils;
+using FileHelper;
 
 namespace UtilORama4
 {
@@ -1489,7 +1490,7 @@ namespace UtilORama4
 			if (err < 100)
 			{
 				lastSeqFile = sourceChannelFile;
-				txtSourceFile.Text = utils.ShortenLongPath(lastSeqFile, 80);
+				txtSourceFile.Text = Fyle.ShortenLongPath(lastSeqFile, 80);
 				this.Text = "List-O-Rama - " + Path.GetFileName(lastSeqFile);
 				FileInfo fi = new FileInfo(sourceChannelFile);
 				//Properties.Settings.Default.BasePath = fi.DirectoryName;
@@ -1563,7 +1564,7 @@ namespace UtilORama4
 			if (err < 100)
 			{
 				lastVizFile = vizFile;
-				txtSourceFile.Text = utils.ShortenLongPath(lastVizFile, 80);
+				txtSourceFile.Text = Fyle.ShortenLongPath(lastVizFile, 80);
 				this.Text = "List-O-Rama - " + Path.GetFileName(lastVizFile);
 				//FileInfo fi = new FileInfo(vizFile);
 				//Properties.Settings.Default.BasePath = fi.DirectoryName;
@@ -2193,7 +2194,7 @@ namespace UtilORama4
 				if (arg.Substring(1, 2).CompareTo(":\\") == 0) isFile = 1;  // Local File
 				if (arg.Substring(0, 2).CompareTo("\\\\") == 0) isFile = 1; // UNC file
 				if (arg.Substring(4).IndexOf(".") > utils.UNDEFINED) isFile++;  // contains a period
-				if (utils.InvalidCharacterCount(arg) == 0) isFile++;
+				if (Fyle.InvalidCharacterCount(arg) == 0) isFile++;
 				if (isFile == 3)
 				{
 					if (File.Exists(arg))
@@ -2470,7 +2471,7 @@ namespace UtilORama4
 								if (errs == 0)
 								{
 									lastSeqFile = lf;
-									txtSourceFile.Text = utils.ShortenLongPath(lf, 100);
+									txtSourceFile.Text = Fyle.ShortenLongPath(lf, 100);
 									enbl = true;
 								}
 							}
@@ -2504,7 +2505,7 @@ namespace UtilORama4
 								if (errs == 0)
 								{
 									lastSeqFile = lf;
-									txtSourceFile.Text = utils.ShortenLongPath(lf, 100);
+									txtSourceFile.Text = Fyle.ShortenLongPath(lf, 100);
 									enbl = true;
 								}
 							}
@@ -2716,7 +2717,7 @@ namespace UtilORama4
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 					}
 					catch (System.InvalidCastException ex)
 					{
@@ -2728,7 +2729,7 @@ namespace UtilORama4
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 					}
 					catch (Exception ex)
 					{
@@ -2740,7 +2741,7 @@ namespace UtilORama4
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 					}
 					*/
 				#endregion
@@ -2759,7 +2760,7 @@ namespace UtilORama4
 					#if DEBUG
 						System.Diagnostics.Debugger.Break();
 					#endif
-					utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+					Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 				}
 				catch (System.InvalidCastException ex)
 				{
@@ -2771,7 +2772,7 @@ namespace UtilORama4
 					#if DEBUG
 						System.Diagnostics.Debugger.Break();
 					#endif
-					utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+					Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 				}
 				catch (Exception ex)
 				{
@@ -2783,7 +2784,7 @@ namespace UtilORama4
 					#if DEBUG
 						System.Diagnostics.Debugger.Break();
 					#endif
-					utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+					Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 				}
 				*/
 			#endregion
@@ -2922,7 +2923,7 @@ namespace UtilORama4
 				#if DEBUG
 					Debugger.Break();
 				#endif
-				utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+				Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 			} // end catch
 			*/
 					#endregion
@@ -3086,7 +3087,7 @@ namespace UtilORama4
 				#if DEBUG
 					Debugger.Break();
 				#endif
-				utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+				Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 			} // end catch
 			*/
 					#endregion

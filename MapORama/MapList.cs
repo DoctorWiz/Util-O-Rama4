@@ -7,10 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LORUtils;
+using LORUtils; using FileHelper;
 using System.Diagnostics;
 
-namespace MapORama
+namespace UtilORama4
 {
 	public partial class frmMapList : Form
 	{
@@ -576,6 +576,6 @@ namespace MapORama
 
 
 	} // end public partial class frmMapList : Form
-} // end namespace MapORama
+} // end namespace UtilORama4
  
 	

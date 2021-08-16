@@ -11,7 +11,7 @@ using System.Threading;
 using System.Runtime.InteropServices;
 using Microsoft.Win32;
 using Syncfusion.Windows.Forms.Tools;
-using LORUtils;
+using LORUtils; using FileHelper;
 
 
 namespace LORUtils
@@ -218,7 +218,7 @@ namespace LORUtils
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 					}
 					catch (System.InvalidCastException ex)
 					{
@@ -230,7 +230,7 @@ namespace LORUtils
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 					}
 					catch (Exception ex)
 					{
@@ -242,7 +242,7 @@ namespace LORUtils
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 					}
 					*/
 				#endregion
@@ -261,7 +261,7 @@ namespace LORUtils
 					#if DEBUG
 						System.Diagnostics.Debugger.Break();
 					#endif
-					utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+					Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 				}
 				catch (System.InvalidCastException ex)
 				{
@@ -273,7 +273,7 @@ namespace LORUtils
 					#if DEBUG
 						System.Diagnostics.Debugger.Break();
 					#endif
-					utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+					Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 				}
 				catch (Exception ex)
 				{
@@ -285,7 +285,7 @@ namespace LORUtils
 					#if DEBUG
 						System.Diagnostics.Debugger.Break();
 					#endif
-					utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+					Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 				}
 				*/
 			#endregion
@@ -413,7 +413,7 @@ namespace LORUtils
 				#if DEBUG
 					Debugger.Break();
 				#endif
-				utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+				Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 			} // end catch
 			*/
 					#endregion
@@ -537,7 +537,7 @@ namespace LORUtils
 				#if DEBUG
 					Debugger.Break();
 				#endif
-				utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+				Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 			} // end catch
 			*/
 					#endregion

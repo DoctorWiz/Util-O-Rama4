@@ -74,6 +74,9 @@
   <PropertyGroup />
   <PropertyGroup />
   <ItemGroup>
+    <Compile Include="..\..\COMMON\FileHelper.cs">
+      <Link>FileHelper.cs</Link>
+    </Compile>
     <Compile Include="..\Common\Sequence4\LORUtils.cs">
       <Link>LORUtils.cs</Link>
     </Compile>
@@ -212,6 +215,7 @@
     <Reference Include="System.Deployment" />
     <Reference Include="System.Design" />
     <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Drawing.Design" />
     <Reference Include="System.Runtime.Serialization.Formatters.Soap" />

@@ -9,7 +9,7 @@ using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LORUtils;
+using LORUtils; using FileHelper;
 using xUtils;
 
 namespace UtilORama4

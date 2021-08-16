@@ -11,11 +11,12 @@ using System.Threading;
 using System.Runtime.InteropServices;
 using System.DirectoryServices;
 using Microsoft.Win32;
+using FileHelper;
 //using FuzzyString;
 
 namespace LORUtils
 {
-	public class utils
+	public static class utils
 	{
 		#region Constants
 		public const int UNDEFINED = -1;
@@ -30,6 +31,7 @@ namespace LORUtils
 		public const string ICONredChannel = "FF0000";
 		public const string ICONgrnChannel = "00FF00";
 		public const string ICONbluChannel = "0000FF";
+		public const string ICONwhtChannel = "FFFFFF";
 		// Note: LOR colors not in the same order as .Net or Web colors, Red and Blue are reversed
 		public const Int32 LORCOLOR_RED = 255;      // 0x0000FF
 		public const Int32 LORCOLOR_GRN = 65280;    // 0x00FF00
@@ -45,8 +47,8 @@ namespace LORUtils
 		public const string LOG_Error = "Error";
 		public const string LOG_Info = "Info";
 		public const string LOG_Debug = "Debug";
-		private const string FORMAT_DATETIME = "MM/dd/yyyy hh:mm:ss tt";
-		private const string FORMAT_FILESIZE = "###,###,###,###,##0";
+		//private const string FORMAT_DATETIME = "MM/dd/yyyy hh:mm:ss tt";
+		//private const string FORMAT_FILESIZE = "###,###,###,###,##0";
 
 		public static int nodeIndex = UNDEFINED;
 
@@ -120,13 +122,18 @@ namespace LORUtils
 		private const string ROOT = "C:\\";
 		private const string LOR_REGKEY = "HKEY_CURRENT_USER\\SOFTWARE\\Light-O-Rama\\Shared";
 		private const string LOR_DIR = "Light-O-Rama\\";
-		private static string noisePath = Path.GetDirectoryName(Application.ExecutablePath) + "\\Noises\\";
+		//private static string noisePath = Path.GetDirectoryName(Application.ExecutablePath) + "\\Noises\\";
 
-		public enum Noises
-		{
-			None, Activate, Boing, Bonnggg, Brain, Crap, Crash, Dammit, Doh, DrumRoll, Excellent, Gong, Kalimbra, Log, Medievel,
-			Pop, ScaleUp, SamCurseC, SamCurseF, SystemWorks, TaDa, ThatsThat, Wheee, Wizard, WooHoo, WrongButton
-		};
+
+		private static Dictionary<int, String> colorMap = new Dictionary<int, String>();
+		
+		/* Moved to FileHelper.Fyle
+			public enum Noises
+			{
+				None, Activate, Boing, Bonnggg, Brain, Crap, Crash, Dammit, Doh, DrumRoll, Excellent, Gong, Kalimbra, Log, Medievel,
+				Pop, ScaleUp, SamCurseC, SamCurseF, SystemWorks, TaDa, ThatsThat, Wheee, Wizard, WooHoo, WrongButton, Click
+			}
+		*/
 
 		#endregion // Constants
 		public static bool IsWizard
@@ -142,6 +149,7 @@ namespace LORUtils
 			}
 		}
 
+		/* Moved to FileHelper.Fyle
 		public static string WindowsUsername
 		{
 			get
@@ -150,6 +158,7 @@ namespace LORUtils
 				return usr;
 			}
 		}
+		*/
 
 
 		#region TreeStuff
@@ -338,7 +347,7 @@ namespace LORUtils
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 					}
 					catch (System.InvalidCastException ex)
 					{
@@ -350,7 +359,7 @@ namespace LORUtils
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 					}
 					catch (Exception ex)
 					{
@@ -362,7 +371,7 @@ namespace LORUtils
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 					}
 					*/
 				#endregion
@@ -381,7 +390,7 @@ namespace LORUtils
 					#if DEBUG
 						System.Diagnostics.Debugger.Break();
 					#endif
-					utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+					Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 				}
 				catch (System.InvalidCastException ex)
 				{
@@ -393,7 +402,7 @@ namespace LORUtils
 					#if DEBUG
 						System.Diagnostics.Debugger.Break();
 					#endif
-					utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+					Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 				}
 				catch (Exception ex)
 				{
@@ -405,7 +414,7 @@ namespace LORUtils
 					#if DEBUG
 						System.Diagnostics.Debugger.Break();
 					#endif
-					utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+					Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 				}
 				*/
 			#endregion
@@ -532,7 +541,7 @@ namespace LORUtils
 				#if DEBUG
 					Debugger.Break();
 				#endif
-				utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+				Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 			} // end catch
 			*/
 					#endregion
@@ -655,7 +664,7 @@ namespace LORUtils
 				#if DEBUG
 					Debugger.Break();
 				#endif
-				utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+				Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 			} // end catch
 			*/
 					#endregion
@@ -836,24 +845,59 @@ namespace LORUtils
 			return channelNode;
 		}
 
-
-		public static int ColorIcon(ImageList icons, Int32 colorVal)
+		public static Int32 ColorInt(Color theColor)
 		{
+			return theColor.ToArgb();
+		}
+		
+		public static string ColorToHex(Color color)
+			// Returns 7 characters in typical web color format starting with a #
+		{
+			return "#" + color.R.ToString("X2") + color.G.ToString("X2") + color.B.ToString("X2");
+		}
+
+		public static Color HexToColor(string hexCode)
+		{
+			Color c = Color.White;
+			// Eliminate any characters before the last 6
+			// This gets rid of "#" or "0x" or even "0x??" or "#??" if alpha is specified
+			if (hexCode.Length > 5)
+			{
+				// Yes, this looks absurdly complicated.
+				// I could combine most of this into one longer line of code but it wouldn't speed it
+				// up because it basically breaks down to this anyway.
+				// Might as well go for the obvious understandable way.
+				hexCode = hexCode.Substring(hexCode.Length - 6, 6);
+				string rs = hexCode.Substring(0, 2);
+				string gs = hexCode.Substring(2, 2);
+				string gb = hexCode.Substring(4, 2);
+				int r = Convert.ToInt32(rs, 16);
+				int g = Convert.ToInt32(gs, 16);
+				int b = Convert.ToInt32(gb, 16);
+				c = Color.FromArgb(r, g, b);
+			}
+			return c;
+		}
+
+		public static int ColorIcon(ImageList icons, Int32 LORcolorVal)
+		{
+			return ColorIcon(icons, Color_LORtoNet(LORcolorVal));
+		}
+
+		public static int ColorIcon(ImageList icons, Color color)
+		{ 
 			int ret = -1;
-			string tempID = colorVal.ToString("X6");
 			// LOR's Color Format is in BGR format, so have to reverse the Red and the Blue
-			string colorID = tempID.Substring(4, 2) + tempID.Substring(2, 2) + tempID.Substring(0, 2);
+			string colorID = ColorToHex(color);
 			ret = icons.Images.IndexOfKey(colorID);
 			if (ret < 0)
 			{
-				// Convert rearranged hex value a real color
-				Color theColor = System.Drawing.ColorTranslator.FromHtml("#" + colorID);
 				// Create a temporary working bitmap
 				Bitmap bmp = new Bitmap(16, 16);
 				// get the graphics handle from it
 				Graphics gr = Graphics.FromImage(bmp);
 				// A colored solid brush to fill the middle
-				SolidBrush b = new SolidBrush(theColor);
+				SolidBrush b = new SolidBrush(color);
 				// define a rectangle for the middle
 				Rectangle r = new Rectangle(2, 2, 12, 12);
 				// Fill the middle rectangle with color
@@ -880,6 +924,56 @@ namespace LORUtils
 			// Return the numeric index of the new image
 			return ret;
 		}
+
+		public static string ColorName(Color color)
+		{
+			string name = "";
+			
+			foreach (Color c in Enum.GetValues(typeof(KnownColor)))
+			{
+				if (c == color)
+				{
+					name = c.Name;
+				}
+			}
+			return name;
+		}
+
+		public static string NearestColorName(Color color)
+		{
+			string name = "";
+			//TODO Fix 'Specified Cast is not valid' error!!
+			/*
+			if (color != null)
+			{
+				Int32 myARGB = color.ToArgb();
+				int myR = (myARGB >> 0) & 255;
+				int myG = (myARGB >> 8) & 255;
+				int myB = (myARGB >> 16) & 255;
+
+				Color match = Color.Black;
+				Int32 diff = 9999999;
+				foreach (Color c in Enum.GetValues(typeof(KnownColor)))
+				{
+					Int32 cARGB = c.ToArgb();
+					int cR = (cARGB >> 0) & 255;
+					int cG = (cARGB >> 8) & 255;
+					int cB = (cARGB >> 16) & 255;
+					int d = Math.Abs(myR - cR);
+					d += Math.Abs(myG - cG);
+					d += Math.Abs(myB - cB);
+					if (d < diff)
+					{
+						match = c;
+						diff = d;
+						name = c.Name;
+					}
+				}
+			}
+			*/
+			return name;
+		}
+
 		#endregion // Tree Stuff
 
 		#region Sounds
@@ -1177,7 +1271,7 @@ namespace LORUtils
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 					}
 					catch (System.InvalidCastException ex)
 					{
@@ -1189,7 +1283,7 @@ namespace LORUtils
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 					}
 					catch (Exception ex)
 					{
@@ -1201,7 +1295,7 @@ namespace LORUtils
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 					}
 					*/
 				#endregion
@@ -1302,7 +1396,7 @@ namespace LORUtils
 			#if DEBUG
 				Debugger.Break();
 			#endif
-			utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+			Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 		} // end catch
 		*/
 				#endregion
@@ -1366,7 +1460,7 @@ namespace LORUtils
 			#if DEBUG
 				Debugger.Break();
 			#endif
-			utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+			Fyle.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
 		} // end catch
 		*/
 				#endregion
@@ -2260,7 +2354,7 @@ namespace LORUtils
 			{
 				string fldr = "";
 				string root = ROOT;
-				string userDocs = DefaultDocumentsPath;
+				string userDocs = Fyle.DefaultDocumentsPath;
 				try
 				{
 					fldr = (string)Registry.GetValue(LOR_REGKEY, "UserDataPath", root);
@@ -2268,7 +2362,7 @@ namespace LORUtils
 					{
 						fldr = userDocs + LOR_DIR;
 					}
-					bool valid = IsValidPath(fldr);
+					bool valid = Directory.Exists(fldr); // Fyle.IsValidPath(fldr);
 					if (!valid)
 					{
 						fldr = userDocs + LOR_DIR;
@@ -2308,13 +2402,13 @@ namespace LORUtils
 						if (author.Length < 2)
 						{
 							// Fallback Failsafe
-							author = WindowsUsername;
+							author = Fyle.WindowsUsername;
 						}
 					}
 				}
 				catch
 				{
-					author = WindowsUsername;
+					author = Fyle.WindowsUsername;
 				}
 				return author;
 			} // End get UserDataPath
@@ -2329,7 +2423,7 @@ namespace LORUtils
 			{
 				string fldr = "";
 				string root = ROOT;
-				string userDocs = DefaultDocumentsPath;
+				string userDocs = Fyle.DefaultDocumentsPath;
 				try
 				{
 					fldr = (string)Registry.GetValue(LOR_REGKEY, "NonAudioPath", root);
@@ -2337,7 +2431,7 @@ namespace LORUtils
 					{
 						fldr = DefaultUserDataPath + "Sequences\\";
 					}
-					bool valid = IsValidPath(fldr);
+					bool valid = Fyle.IsValidPath(fldr);
 					if (!valid)
 					{
 						fldr = DefaultUserDataPath + "Sequences\\";
@@ -2355,40 +2449,13 @@ namespace LORUtils
 			} // End get NonAudioPath (Sequences)
 		}
 
-		public static string OLD_DefaultAuthor
-		{
-			get
-			{
-				string author = "";
-				string root = "";
-				string userDocs = DefaultDocumentsPath;
-				try
-				{
-					string ky = "HKEY_CURRENT_USER\\Software\\Light-O-Rama\\Editor\\NewSequence";
-					author = (string)Registry.GetValue(ky, "Author", root);
-					if (author != null)
-					{
-						if (author.Length < 1)
-						{
-							author = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-						}
-					}
-				}
-				catch
-				{
-					author = "ERROR!";
-				}
-				return author;
-			}
-		}
-
 		public static string DefaultVisualizationsPath
 		{
 			get
 			{
 				string fldr = "";
 				string root = ROOT;
-				string userDocs = DefaultDocumentsPath;
+				string userDocs = Fyle.DefaultDocumentsPath;
 				try
 				{
 					fldr = (string)Registry.GetValue(LOR_REGKEY, "VisualizationsPath", root);
@@ -2396,7 +2463,7 @@ namespace LORUtils
 					{
 						fldr = DefaultUserDataPath + "Visualizations\\";
 					}
-					bool valid = IsValidPath(fldr);
+					bool valid = Fyle.IsValidPath(fldr);
 					if (!valid)
 					{
 						fldr = DefaultUserDataPath + "Visualizations\\";
@@ -2428,7 +2495,7 @@ namespace LORUtils
 			{
 				string fldr = "";
 				string root = ROOT;
-				string userDocs = DefaultDocumentsPath;
+				string userDocs = Fyle.DefaultDocumentsPath;
 				string userMusic = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
 				try
 				{
@@ -2437,7 +2504,7 @@ namespace LORUtils
 					{
 						fldr = DefaultUserDataPath + "Audio\\";
 					}
-					bool valid = IsValidPath(fldr);
+					bool valid = Fyle.IsValidPath(fldr);
 					if (!valid)
 					{
 						fldr = DefaultUserDataPath + "Audio\\";
@@ -2461,7 +2528,7 @@ namespace LORUtils
 			{
 				string fldr = "";
 				string root = ROOT;
-				string userDocs = DefaultDocumentsPath;
+				string userDocs = Fyle.DefaultDocumentsPath;
 				try
 				{
 					fldr = (string)Registry.GetValue(LOR_REGKEY, "ClipboardsPath", root);
@@ -2469,7 +2536,7 @@ namespace LORUtils
 					{
 						fldr = DefaultUserDataPath + "Clipboards\\";
 					}
-					bool valid = IsValidPath(fldr);
+					bool valid = Fyle.IsValidPath(fldr);
 					if (!valid)
 					{
 						fldr = DefaultUserDataPath + "Clipboards\\";
@@ -2493,7 +2560,7 @@ namespace LORUtils
 			{
 				string fldr = "";
 				// string root = ROOT;
-				string userDocs = DefaultDocumentsPath;
+				string userDocs = Fyle.DefaultDocumentsPath;
 				try
 				{
 					fldr = (string)Registry.GetValue(LOR_REGKEY, "ChannelConfigsPath", "");
@@ -2502,7 +2569,7 @@ namespace LORUtils
 						fldr = DefaultUserDataPath + "Sequences\\ChannelConfigs\\";
 						Registry.SetValue(LOR_REGKEY, "ChannelConfigsPath", fldr, RegistryValueKind.String);
 					}
-					bool valid = IsValidPath(fldr);
+					bool valid = Fyle.IsValidPath(fldr);
 					if (!valid)
 					{
 						fldr = DefaultUserDataPath + "Sequences\\ChannelConfigs\\";
@@ -2521,7 +2588,8 @@ namespace LORUtils
 			} // End get ChannelConfigsPath
 		}
 		#endregion LOR Specific File Functions
-
+	
+		/* Moved to FileHelper.Fyle
 		#region Generic File Functions - TODO: Move these to a separate new 'FileHelper' utility class
 		public static string DefaultDocumentsPath
 		{
@@ -2830,24 +2898,24 @@ namespace LORUtils
 			return ret;
 		}
 
-		public static string FileSizeFormated(string filename)
+		public static string FileSizeFormatted(string filename)
 		{
 			long sz = GetFileSize(filename);
-			return FileSizeFormated(sz, "");
+			return FileSizeFormatted(sz, "");
 		}
 
-		public static string FileSizeFormated(string filename, string thousands)
+		public static string FileSizeFormatted(string filename, string thousands)
 		{
 			long sz = GetFileSize(filename);
-			return FileSizeFormated(sz, thousands);
+			return FileSizeFormatted(sz, thousands);
 		}
 
-		public static string FileSizeFormated(long filesize)
+		public static string FileSizeFormatted(long filesize)
 		{
-			return FileSizeFormated(filesize, "");
+			return FileSizeFormatted(filesize, "");
 		}
 
-		public static string FileSizeFormated(long filesize, string thousands)
+		public static string FileSizeFormatted(long filesize, string thousands)
 		{
 			string thou = thousands.ToUpper();
 			string ret = "0";
@@ -3121,7 +3189,22 @@ namespace LORUtils
 			return validFilename;
 		}
 
+		public static int LaunchFile(string theFile)
+		{
+			int err = 0;
+			try
+			{
+				System.Diagnostics.Process sdp = System.Diagnostics.Process.Start(theFile);
+				var q = sdp.MainWindowTitle;
+			}
+			catch (Exception ex)
+			{
+				err++;				
+			}
+			return err;
+		}
 		#endregion Generic File Functios
+		*/
 
 		#region TimeFunctions
 		public static string FormatTime(int centiseconds)
@@ -3265,6 +3348,7 @@ namespace LORUtils
 
 		#endregion // Time Functions
 
+		/* moved to FileHelper.Fyle
 		public static void MakeNoise(Noises noise)
 		{
 			if (noise != Noises.None)
@@ -3363,8 +3447,17 @@ namespace LORUtils
 				}
 			}
 		}
-
-
+		*/
+		public static int ExceptionLineNumber(Exception ex)
+		{
+			// Get stack trace for the exception with source file information
+			StackTrace st = new StackTrace(ex, true);
+			// Get the top stack frame
+			StackFrame frame = st.GetFrame(0);
+			// Get the line number from the stack frame
+			int line = frame.GetFileLineNumber();
+			return line;
+		}
 
 
 		/*

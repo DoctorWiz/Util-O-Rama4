@@ -9,7 +9,7 @@ using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LORUtils;
+using LORUtils; using FileHelper;
 using xUtils;
 using FuzzyString;
 
@@ -466,7 +466,7 @@ namespace UtilORama4
 			if (!Directory.Exists(initDir))
 			{
 				// Last Gasp, go the for the user's documents folder
-				initDir = LORUtils.utils.DefaultDocumentsPath;
+				initDir = LORUtils.Fyle.DefaultDocumentsPath;
 			}
 
 			string initFile = "";
@@ -538,7 +538,7 @@ namespace UtilORama4
 			if (!Directory.Exists(initDir))
 			{
 				// Last Gasp, go the for the user's documents folder
-				initDir = LORUtils.utils.DefaultDocumentsPath;
+				initDir = LORUtils.Fyle.DefaultDocumentsPath;
 			}
 
 			string initFile = "";
@@ -878,7 +878,7 @@ namespace UtilORama4
 			if (!Directory.Exists(initDir))
 			{
 				// Last Gasp, go the for the user's documents folder
-				initDir = LORUtils.utils.DefaultDocumentsPath;
+				initDir = LORUtils.Fyle.DefaultDocumentsPath;
 			}
 
 			string seqName = Path.GetFileNameWithoutExtension(txtLORfile.Text);

@@ -310,6 +310,13 @@ namespace LORUtils
 			}
 		}
 
+		public bool MatchExact
+		{ get { return false; } set { } }
+		public int UniverseNumber
+		{ get { return 0; } }
+		public int DMXAddress
+		{ get { return 0; } }
+
 		public VizChannel(string theName, int theVizID)
 		{
 			myName = theName;

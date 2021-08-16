@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
 using System.Media;
-using LORUtils;
+using LORUtils; using FileHelper;
 
 namespace UtilORama4
 {
@@ -81,7 +81,7 @@ namespace UtilORama4
 				if (arg.Substring(1, 2).CompareTo(":\\") == 0) isFile = 1;  // Local File
 				if (arg.Substring(0, 2).CompareTo("\\\\") == 0) isFile = 1; // UNC file
 				if (arg.Substring(4).IndexOf(".") > utils.UNDEFINED) isFile++;  // contains a period
-				if (utils.InvalidCharacterCount(arg) == 0) isFile++;
+				if (Fyle.InvalidCharacterCount(arg) == 0) isFile++;
 				if (isFile == 3)
 				{
 					if (File.Exists(arg))
@@ -690,7 +690,7 @@ namespace UtilORama4
 			newName += i;
 			newName += " " + y2 + "] ";
 			newName += seq.Channels.Count.ToString() + "ch";
-			newName = utils.ReplaceInvalidFilenameCharacters(newName);
+			newName = Fyle.ReplaceInvalidFilenameCharacters(newName);
 			string msg = "... to '" + newName + "'" + utils.CRLF + utils.CRLF;
 			msg += "(In folder '" + Path.GetDirectoryName(seq.filename) + "')";
 			DialogResult dr = MessageBox.Show(this, msg, "Rename file...", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);

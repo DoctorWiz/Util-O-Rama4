@@ -56,6 +56,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\COMMON\FileHelper.cs">
+      <Link>FileHelper.cs</Link>
+    </Compile>
     <Compile Include="..\Common\Sequence4\LORUtils.cs">
       <Link>LORUtils.cs</Link>
     </Compile>

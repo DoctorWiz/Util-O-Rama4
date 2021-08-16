@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31424.327
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChannelORama", "ChannelORama.csproj", "{625B1D42-4E48-4DD5-AD91-F83C26D07BBB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{625B1D42-4E48-4DD5-AD91-F83C26D07BBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{625B1D42-4E48-4DD5-AD91-F83C26D07BBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{625B1D42-4E48-4DD5-AD91-F83C26D07BBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{625B1D42-4E48-4DD5-AD91-F83C26D07BBB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E2077248-E64D-4CF6-A8E6-6F1A417DE092}
+	EndGlobalSection
+EndGlobal

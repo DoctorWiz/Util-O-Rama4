@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
-using LORUtils;
+using LORUtils; using FileHelper;
 
 namespace TestORama
 {
@@ -72,7 +72,7 @@ namespace TestORama
 				if (arg.Substring(1, 2).CompareTo(":\\") == 0) isFile = 1;  // Local File
 				if (arg.Substring(0, 2).CompareTo("\\\\") == 0) isFile = 1; // UNC file
 				if (arg.Substring(4).IndexOf(".") > utils.UNDEFINED) isFile++;  // contains a period
-				if (utils.InvalidCharacterCount(arg) == 0) isFile++;
+				if (Fyle.InvalidCharacterCount(arg) == 0) isFile++;
 				if (isFile == 3)
 				{
 					if (File.Exists(arg))

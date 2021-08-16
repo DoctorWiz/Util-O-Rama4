@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Media;
-using LORUtils;
+using LORUtils; using FileHelper;
 using xUtilities;
 
 using System.Diagnostics;
@@ -36,7 +36,7 @@ namespace UtilORama4
 				//ifile = seq.info.music.Title + " by " + seq.info.music.Artist;
 				ifile = audioData.Title + " by " + audioData.Artist;
 			}
-			ifile = utils.FixInvalidFilenameCharacters(ifile);
+			ifile = Fyle.FixInvalidFilenameCharacters(ifile);
 			ifile += ".lms";
 
 			dlgSaveFile.Filter = filter;
@@ -79,10 +79,10 @@ namespace UtilORama4
 			string idir = utils.DefaultSequencesPath;
 			string ifl = txtSeqName.Text.Trim();
 			string theFile = "";
-			if (utils.ValidFilename(ifl, true, false))
+			if (Fyle.ValidFilename(ifl, true, false))
 			{
 				idir = Path.GetDirectoryName(ifl);
-				if (utils.ValidFilename(ifl, true, true))
+				if (Fyle.ValidFilename(ifl, true, true))
 				{
 					if (Path.GetExtension(ifl.ToLower()) == "lms")
 					{

@@ -83,6 +83,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\COMMON\FileHelper.cs">
+      <Link>FileHelper.cs</Link>
+    </Compile>
     <Compile Include="frmTest.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -95,6 +98,7 @@
     <Compile Include="SeqMember.cs" />
     <Compile Include="SeqSubs.cs" />
     <Compile Include="Sequence4.cs" />
+    <Compile Include="Sequence4\SeqEnums.cs" />
     <EmbeddedResource Include="frmTest.resx">
       <DependentUpon>frmTest.cs</DependentUpon>
     </EmbeddedResource>

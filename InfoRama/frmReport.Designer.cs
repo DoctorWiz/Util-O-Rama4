@@ -1,4 +1,4 @@
-﻿namespace InfoRama
+﻿namespace UtilORama4
 {
 	partial class frmReport
 	{

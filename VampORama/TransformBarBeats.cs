@@ -5,7 +5,7 @@ using System.Text;
 //using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-using LORUtils;
+using LORUtils; using FileHelper;
 using xUtilities;
 
 namespace UtilORama4
@@ -321,13 +321,13 @@ namespace UtilORama4
 			catch (Exception e)
 			{
 				err = e.HResult;
-				if (utils.IsWizard)
+				if (Fyle.isWiz)
 				{
 					string msg = e.Message;
 					string ermsg = "Error: " + msg;
 					ermsg += " copying " + fileConfigFrom;
 					ermsg += " to " + fileConfigTo;
-					utils.MakeNoise(utils.Noises.WrongButton);
+					Fyle.MakeNoise(Fyle.Noises.WrongButton);
 					DialogResult dr = MessageBox.Show(ermsg, "Config File Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 					System.Diagnostics.Debugger.Break();
 				}

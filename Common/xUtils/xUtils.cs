@@ -585,24 +585,24 @@ namespace xUtils
 			return ret;
 		}
 
-		public static string FileSizeFormated(string filename)
+		public static string FileSizeFormatted(string filename)
 		{
 			long sz = GetFileSize(filename);
-			return FileSizeFormated(sz, "");
+			return FileSizeFormatted(sz, "");
 		}
 
-		public static string FileSizeFormated(string filename, string thousands)
+		public static string FileSizeFormatted(string filename, string thousands)
 		{
 			long sz = GetFileSize(filename);
-			return FileSizeFormated(sz, thousands);
+			return FileSizeFormatted(sz, thousands);
 		}
 
-		public static string FileSizeFormated(long filesize)
+		public static string FileSizeFormatted(long filesize)
 		{
-			return FileSizeFormated(filesize, "");
+			return FileSizeFormatted(filesize, "");
 		}
 
-		public static string FileSizeFormated(long filesize, string thousands)
+		public static string FileSizeFormatted(long filesize, string thousands)
 		{
 			string thou = thousands.ToUpper();
 			string ret = "0";
@@ -803,7 +803,16 @@ namespace xUtils
 			fooo = lineIn.Substring(pos1 + keyWord.Length + 2);
 			pos2 = fooo.IndexOf("\"");
 			fooo = fooo.Substring(0, pos2);
-			valueOut = Convert.ToInt32(fooo);
+			int vo = -1;
+			int.TryParse(fooo, out vo);
+			if (vo == -1)
+			{
+				if (IsWizard)
+				{
+					System.Diagnostics.Debugger.Break();
+				}
+			}
+			valueOut = vo;
 			return valueOut;
 		}
 

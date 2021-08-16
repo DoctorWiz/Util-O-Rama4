@@ -8,11 +8,11 @@ using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
 using Microsoft.Win32;
-using LORUtils;
+using LORUtils; using FileHelper;
 using FuzzyString;
 using Syncfusion.Windows.Forms.Tools;
 
-namespace MapORama
+namespace UtilORama4
 {
 	public partial class frmRemapper : Form
 	{
@@ -246,7 +246,7 @@ namespace MapORama
 
 
 				sourceFile = sourceChannelFile;
-				txtSourceFile.Text = utils.ShortenLongPath(sourceFile, 80);
+				txtSourceFile.Text = Fyle.ShortenLongPath(sourceFile, 80);
 				this.Text = "Map-O-Rama - " + Path.GetFileName(sourceFile);
 				FileInfo fi = new FileInfo(sourceChannelFile);
 				Properties.Settings.Default.BasePath = fi.DirectoryName;
@@ -353,7 +353,7 @@ namespace MapORama
 				Properties.Settings.Default.LastMasterFile = masterFile;
 				Properties.Settings.Default.Save();
 
-				txtMasterFile.Text = utils.ShortenLongPath(masterFile, 80);
+				txtMasterFile.Text = Fyle.ShortenLongPath(masterFile, 80);
 
 
 
@@ -3280,7 +3280,7 @@ namespace MapORama
 			//pnlProgress.Maximum = (int)(qq);
 			pnlProgress.Maximum = seqMaster.Members.Count * 10;
 			pp = 0;
-			string logFile = utils.GetAppTempFolder() + "Fuzzy.log";
+			string logFile = Fyle.GetAppTempFolder() + "Fuzzy.log";
 			if (File.Exists(logFile))
 			{
 				File.Delete(logFile);
@@ -4169,7 +4169,7 @@ namespace MapORama
 				if (arg.Substring(1, 2).CompareTo(":\\") == 0) isFile = 1;  // Local File
 				if (arg.Substring(0, 2).CompareTo("\\\\") == 0) isFile = 1; // UNC file
 				if (arg.Substring(4).IndexOf(".") > utils.UNDEFINED) isFile++;  // contains a period
-				if (utils.InvalidCharacterCount(arg) == 0) isFile++;
+				if (Fyle.InvalidCharacterCount(arg) == 0) isFile++;
 				if (isFile == 3)
 				{
 					if (File.Exists(arg))
@@ -4427,7 +4427,7 @@ namespace MapORama
 			string lineOut = "";
 			if (writeLog)
 			{
-				logFile = utils.GetAppTempFolder() + "Fuzzy.log";
+				logFile = Fyle.GetAppTempFolder() + "Fuzzy.log";
 				writer = new StreamWriter(logFile, true);
 				writer.WriteLine("");
 				lineOut = "Looking for     \"" + theName + "\" in ";
@@ -4840,4 +4840,4 @@ namespace MapORama
 
 
 	} // end partial class frmRemapper
-} // end namespace MapORama
+} // end namespace UtilORama4

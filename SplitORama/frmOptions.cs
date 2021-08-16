@@ -8,10 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using FuzzyString;
-using LORUtils;
+using LORUtils; using FileHelper;
 using System.IO;
 
-namespace SplitORama
+namespace UtilORama4
 {
 	public partial class frmOptions : Form
 	{
@@ -146,10 +146,6 @@ namespace SplitORama
 			{
 				alg = FuzzyString.FuzzyFunctions.USE_NEEDLEMANWUNSCH;
 			}
-			else if (start == "N-G")
-			{
-				alg = FuzzyString.FuzzyFunctions.USE_NGRAM;
-			}
 			else if (start == "Q-G")
 			{
 				alg = FuzzyString.FuzzyFunctions.USE_QGRAM;
@@ -263,9 +259,6 @@ namespace SplitORama
 					break;
 				case FuzzyFunctions.USE_NEEDLEMANWUNSCH:
 					idx = 16;
-					break;
-				case FuzzyFunctions.USE_NGRAM:
-					idx = 17;
 					break;
 				case FuzzyFunctions.USE_QGRAM:
 					idx = 18;

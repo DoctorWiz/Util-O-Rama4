@@ -315,7 +315,7 @@ namespace LORUtils
 
 		public override string ToString()
 		{
-			string ret = SeqEnums.EffectTypeEXName(this.EffectTypeEX);
+			string ret = SeqEnums.EffectTypeName(this.EffectType);
 			ret += " From " + startCentisecond.ToString();
 			ret += " to " + myEndCentisecond.ToString();
 			if (Intensity > utils.UNDEFINED)
@@ -356,29 +356,29 @@ namespace LORUtils
 			}
 		}
 
-		public LORUtils.EffectTypeEX EffectTypeEX
+		public LORUtils.EffectType EffectTypeEX
 		{
 			get
 			{
-				EffectTypeEX levelOut = LORUtils.EffectTypeEX.None;
-				if (this.EffectType == EffectType.Shimmer) levelOut = LORUtils.EffectTypeEX.Shimmer;
-				if (this.EffectType == EffectType.Twinkle) levelOut = LORUtils.EffectTypeEX.Twinkle;
-				if (this.EffectType == EffectType.DMX) levelOut = LORUtils.EffectTypeEX.DMX;
+				EffectTypeEX levelOut = LORUtils.EffectType.None;
+				if (this.EffectType == EffectType.Shimmer) levelOut = LORUtils.EffectType.Shimmer;
+				if (this.EffectType == EffectType.Twinkle) levelOut = LORUtils.EffectType.Twinkle;
+				if (this.EffectType == EffectType.DMX) levelOut = LORUtils.EffectType.DMX;
 				if (this.EffectType == EffectType.Intensity)
 				{
 					if (endIntensity < 0)
 					{
-						levelOut = LORUtils.EffectTypeEX.Constant;
+						levelOut = LORUtils.EffectType.Constant;
 					}
 					else
 					{
 						if (endIntensity > startIntensity)
 						{
-							levelOut = LORUtils.EffectTypeEX.FadeUp;
+							levelOut = LORUtils.EffectType.FadeUp;
 						}
 						else
 						{
-							levelOut = LORUtils.EffectTypeEX.FadeDown;
+							levelOut = LORUtils.EffectType.FadeDown;
 						}
 					}
 				}
@@ -869,7 +869,7 @@ namespace LORUtils
 			data.music = music.Duplicate();
 			data.videoUsage = videoUsage;
 			data.animationInfo = animationInfo;
-			data.sequenceType = this.sequenceType;
+			data.SequenceType = this.SequenceType;
 			return data;
 		}
 	} // end Info class

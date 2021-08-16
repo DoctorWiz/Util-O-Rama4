@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
-using LORUtils;
+using LORUtils; using FileHelper;
 using xUtils;
 
 
@@ -18,7 +18,7 @@ namespace UtilORama4
 	public partial class frmConverter : Form
 	{
 		private Sequence4 seq = null;
-		private bool izWiz = false;
+		private bool isWiz = false;
 		private bool gotx = false;
 		private bool gotLOR = false;
 		private bool gotItem = false;
@@ -397,7 +397,7 @@ namespace UtilORama4
 			if (!Directory.Exists(initDir))
 			{
 				// Last Gasp, go the for the user's documents folder
-				initDir = LORUtils.utils.DefaultDocumentsPath;
+				initDir = Fyle.DefaultDocumentsPath;
 			}
 
 			string initFile = "";

@@ -28,7 +28,7 @@ using TagLib.Asf;
 using TagLib.MusePack;
 using TagLib.NonContainer;
 using System.Diagnostics.Eventing.Reader;
-using LORUtils;
+using LORUtils; using FileHelper;
 
 namespace UtilORama4
 {
@@ -52,7 +52,7 @@ namespace UtilORama4
 		public static int songTimeMS = 0;
 
 		public static int alignIdx = 0;
-
+		private static bool isWiz = Fyle.IsWizard || Fyle.IsAWizard;
 		
 
 
@@ -78,7 +78,7 @@ namespace UtilORama4
 
 					if (dr == DialogResult.Yes)
 					{
-						if (utils.IsWizard) Clipboard.SetText(emsg);
+						if (isWiz) Clipboard.SetText(emsg);
 					}
 					if (dr != DialogResult.Cancel)
 					{
@@ -94,7 +94,7 @@ namespace UtilORama4
 						runthis = "/c " + runthis; // + " 2>output.txt";
 
 						string vampCommandLast = runthis;
-							if (utils.IsWizard) Clipboard.SetText(runthis);
+							if (isWiz) Clipboard.SetText(runthis);
 
 							Process cmdProc = new Process();
 							ProcessStartInfo procInfo = new ProcessStartInfo();
@@ -136,7 +136,7 @@ namespace UtilORama4
 						else
 						{
 						// NO RESULTS FILE!	
-						if (utils.IsWizard)
+						if (isWiz)
 						{
 							System.Diagnostics.Debugger.Break();
 						}
@@ -145,7 +145,7 @@ namespace UtilORama4
 			}
 			catch (Exception e)
 			{
-				if (utils.IsWizard)
+				if (isWiz)
 				{
 					string msg = e.Message;
 					System.Diagnostics.Debugger.Break();
@@ -177,7 +177,7 @@ namespace UtilORama4
 
 				if (dr == DialogResult.Yes)
 				{
-					if (utils.IsWizard) Clipboard.SetText(emsg);
+					if (isWiz) Clipboard.SetText(emsg);
 				}
 				if (dr != DialogResult.Cancel)
 				{
@@ -192,7 +192,7 @@ namespace UtilORama4
 						string runthis = annotatorProgram + " " + annotatorArguments;
 						//runthis += " 2>output.txt";
 						string vampCommandLast = runthis;
-						if (utils.IsWizard) Clipboard.SetText(runthis);
+						if (isWiz) Clipboard.SetText(runthis);
 
 						Process cmdProc = new Process();
 						ProcessStartInfo procInfo = new ProcessStartInfo();
@@ -211,7 +211,7 @@ namespace UtilORama4
 					else
 					{
 						// NO RESULTS FILE!	
-						if (utils.IsWizard)
+						if (isWiz)
 						{
 							System.Diagnostics.Debugger.Break();
 						}
@@ -220,7 +220,7 @@ namespace UtilORama4
 			}
 			catch (Exception e)
 			{
-				if (utils.IsWizard)
+				if (isWiz)
 				{
 					string msg = e.Message;
 					System.Diagnostics.Debugger.Break();
@@ -372,7 +372,7 @@ namespace UtilORama4
 					}
 				}
 			}
-			if (utils.IsWizard)
+			if (isWiz)
 			{
 				string msg = "Start time " + startTime.ToString() + " aligned to " + matchTime.ToString();
 				Console.WriteLine(msg);

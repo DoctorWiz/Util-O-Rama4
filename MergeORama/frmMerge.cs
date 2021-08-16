@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-using LORUtils;
+using LORUtils; using FileHelper;
 using Microsoft.Win32;
 
 namespace UtilORama4
@@ -38,7 +38,7 @@ namespace UtilORama4
 		private byte duplicateNameAction = ACTIONkeepFirst;
 		private bool mergeEffects = false;
 		private string numberFormat = " (#)";
-
+		private bool isWiz = Fyle.IsWizard || Fyle.IsAWizard;
 
 
 		private List<TreeNode>[] siNodes = null;
@@ -89,22 +89,22 @@ namespace UtilORama4
 			string dir = "";
 			if (lastFile1.Length > 6)
 			{
-				valid = utils.IsValidPath(lastFile1, true);
+				valid = Fyle.IsValidPath(lastFile1, true);
 			}
 			if (!valid) lastFile1 = utils.DefaultSequencesPath;
 			valid = false;
 			if (lastFile2.Length > 6)
 			{
-				valid = utils.IsValidPath(lastFile2, true);
+				valid = Fyle.IsValidPath(lastFile2, true);
 			}
 			if (!valid) lastFile2 = utils.DefaultSequencesPath;
 			valid = false;
 			if (lastNewFile.Length > 6)
 			{
-				valid = utils.IsValidPath(lastNewFile, true);
+				valid = Fyle.IsValidPath(lastNewFile, true);
 			}
 			if (!valid) lastNewFile = utils.DefaultSequencesPath;
-			button1.Visible = utils.IsWizard;
+			button1.Visible = isWiz;
 
 
 			RestoreFormPosition();
@@ -270,7 +270,7 @@ namespace UtilORama4
 			if (lastFile1.Length > 6) initDir = Path.GetDirectoryName(lastFile1);
 			if (!Directory.Exists(initDir)) initDir = utils.DefaultChannelConfigsPath;
 			if (!Directory.Exists(initDir)) initDir = utils.DefaultSequencesPath;
-			if (!Directory.Exists(initDir)) initDir = utils.DefaultDocumentsPath;
+			if (!Directory.Exists(initDir)) initDir = Fyle.DefaultDocumentsPath;
 			if (!Directory.Exists(initDir))
 			{
 				initDir = utils.DefaultSequencesPath;
@@ -301,7 +301,7 @@ namespace UtilORama4
 				Properties.Settings.Default.LastFile1 = lastFile1;
 				Properties.Settings.Default.Save();
 
-				txtFirstFile.Text = utils.ShortenLongPath(lastFile1, 80);
+				txtFirstFile.Text = Fyle.ShortenLongPath(lastFile1, 80);
 				seqOne.ReadSequenceFile(lastFile1);
 				utils.TreeFillChannels(treNewChannels, seqOne, ref siNodes, false, true);
 				seqNew = seqOne;
@@ -315,7 +315,7 @@ namespace UtilORama4
 			if (lastFile2.Length > 6) initDir = Path.GetDirectoryName(lastFile2);
 			if (!Directory.Exists(initDir)) initDir = utils.DefaultChannelConfigsPath;
 			if (!Directory.Exists(initDir)) initDir = utils.DefaultSequencesPath;
-			if (!Directory.Exists(initDir)) initDir = utils.DefaultDocumentsPath;
+			if (!Directory.Exists(initDir)) initDir = Fyle.DefaultDocumentsPath;
 			if (!Directory.Exists(initDir))
 			{
 				initDir = utils.DefaultSequencesPath;
@@ -345,7 +345,7 @@ namespace UtilORama4
 				Properties.Settings.Default.LastFile2 = lastFile2;
 				Properties.Settings.Default.Save();
 
-				txtSecondFile.Text = utils.ShortenLongPath(lastFile2, 80);
+				txtSecondFile.Text = Fyle.ShortenLongPath(lastFile2, 80);
 
 				//MergeSequences();
 				DialogResult dr = GetMergeOptions();

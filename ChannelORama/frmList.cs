@@ -1,0 +1,2162 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Drawing;
+using System.IO;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Media;
+using ReadWriteCsv;
+using LORUtils;
+using FileHelper;
+using xUtils;
+using FuzzyString;
+//using xUtils;
+
+namespace UtilORama4
+{
+	public partial class frmList : Form
+	{
+		private static Properties.Settings heartOfTheSun = Properties.Settings.Default;
+		private const string helpPage = "http://wizlights.com/utilorama/channelorama";
+		private List<DMXUniverse> universes = new List<DMXUniverse>();
+		
+		//private List<DMXChannel> AllChannels = new List<DMXChannel>();
+		// Just creating a convenient reference to the static list in the DMXUniverse class
+		private List<DMXChannel> AllChannels = DMXUniverse.AllChannels;
+		
+		//public List<DMXDevice> devices = new List<DMXDevice>();
+		// Just creating a convenient reference to the static list in the DMXChannel class
+		public List<DMXDevice> devices = DMXChannel.Devices;
+		
+		private string lastFile = "";
+		private bool formShown = false;
+		private string dbPath = "";
+		private int year = 2021;
+		private int lastID = -1;
+		public bool dirty = false;
+		private bool isWiz = Fyle.IsWizard || Fyle.IsAWizard;
+
+		private xRGBEffects xSeq = null;
+
+		public frmList()
+		{
+			InitializeComponent();
+		}
+
+		private void btnWiz_Click(object sender, EventArgs e)
+		{
+			//////////////////////////////
+			//!/  WIZARD TEST BUTTON   ///
+			//!/  DO SOMETHING COOL!  ///
+			///////////////////////////
+
+			string seqFile = "W:\\Documents\\Christmas\\2021\\Light-O-Rama\\Wizlights\\Sequences\\Wizlights 2021 !Master Channel List (cf21a).las";
+
+
+			xSeq = new xRGBEffects();
+			MatchUp(seqFile);
+
+		}
+
+
+		private void frmList_Load(object sender, EventArgs e)
+		{
+			RestoreFormPosition();
+			GetTheControlsFromTheHeartOfTheSun();
+		}
+
+
+		private void SaveFormPosition()
+		{
+			// Get current location, size, and state
+			Point myLoc = this.Location;
+			Size mySize = this.Size;
+			FormWindowState myState = this.WindowState;
+			// if minimized or maximized
+			if (myState != FormWindowState.Normal)
+			{
+				// override with the restore location and size
+				myLoc = new Point(this.RestoreBounds.X, this.RestoreBounds.Y);
+				mySize = new Size(this.RestoreBounds.Width, this.RestoreBounds.Height);
+			}
+
+			// Save it for later!
+			int x = this.Left;
+			heartOfTheSun.Location = myLoc;
+			heartOfTheSun.Size = mySize;
+			heartOfTheSun.WindowState = (int)myState;
+			heartOfTheSun.Save();
+		} // End SaveFormPostion
+
+		private void RestoreFormPosition()
+		{
+			// Multi-Monitor aware
+			// AND NOW with overlooked support for fixed borders!
+			// with bounds checking
+			// repositions as necessary
+			// should(?) be able to handle an additional screen that is no longer there,
+			// a repositioned taskbar or gadgets bar,
+			// or a resolution change.
+
+			// Note: If the saved position spans more than one screen
+			// the form will be repositioned to fit all within the
+			// screen containing the center point of the form.
+			// Thus, when restoring the position, it will no longer
+			// span monitors.
+			// This is by design!
+			// Alternative 1: Position it entirely in the screen containing
+			// the top left corner
+
+			Point savedLoc = heartOfTheSun.Location;
+			Size savedSize = heartOfTheSun.Size;
+			if (this.FormBorderStyle != FormBorderStyle.Sizable)
+			{
+				savedSize = new Size(this.Width, this.Height);
+				this.MinimumSize = this.Size;
+				this.MaximumSize = this.Size;
+			}
+			FormWindowState savedState = (FormWindowState)heartOfTheSun.WindowState;
+			int x = savedLoc.X; // Default to saved postion and size, will override if necessary
+			int y = savedLoc.Y;
+			int w = savedSize.Width;
+			int h = savedSize.Height;
+			Point center = new Point(x + w / w, y + h / 2); // Find center point
+			int onScreen = 0; // Default to primary screen if not found on screen 2+
+			Screen screen = Screen.AllScreens[0];
+
+			// Find which screen it is on
+			for (int si = 0; si < Screen.AllScreens.Length; si++)
+			{
+				// Alternative 1: Change "Contains(center)" to "Contains(savedLoc)"
+				if (Screen.AllScreens[si].WorkingArea.Contains(center))
+				{
+					screen = Screen.AllScreens[si];
+					onScreen = si;
+				}
+			}
+			Rectangle bounds = screen.WorkingArea;
+			// Alternate 2:
+			//Rectangle bounds = Screen.GetWorkingArea(center);
+
+			// Test Horizontal Positioning, correct if necessary
+			if (this.MinimumSize.Width > bounds.Width)
+			{
+				// Houston, we have a problem, monitor is too narrow
+				System.Diagnostics.Debugger.Break();
+				w = this.MinimumSize.Width;
+				// Center it horizontally over the working area...
+				//x = (bounds.Width - w) / 2 + bounds.Left;
+				// OR position it on left edge
+				x = bounds.Left;
+			}
+			else
+			{
+				// Should fit horizontally
+				// Is it too far left?
+				if (x < bounds.Left) x = bounds.Left; // Move over
+																							// Is it too wide?
+				if (w > bounds.Width) w = bounds.Width; // Shrink it
+																								// Is it too far right?
+				if ((x + w) > bounds.Right)
+				{
+					// Keep width, move it over
+					x = (bounds.Width - w) + bounds.Left;
+				}
+			}
+
+			// Test Vertical Positioning, correct if necessary
+			if (this.MinimumSize.Height > bounds.Height)
+			{
+				// Houston, we have a problem, monitor is too short
+				System.Diagnostics.Debugger.Break();
+				h = this.MinimumSize.Height;
+				// Center it vertically over the working area...
+				//y = (bounds.Height - h) / 2 + bounds.Top;
+				// OR position at the top edge
+				y = bounds.Top;
+			}
+			else
+			{
+				// Should fit vertically
+				// Is it too high?
+				if (y < bounds.Top) y = bounds.Top; // Move it down
+																						// Is it too tall;
+				if (h > bounds.Height) h = bounds.Height; // Shorten it
+																									// Is it too low?
+				if ((y + h) > bounds.Bottom)
+				{
+					// Kepp height, raise it up
+					y = (bounds.Height - h) + bounds.Top;
+				}
+			}
+
+			// Position and Size should be safe!
+			// Move and Resize the form
+			this.SetDesktopLocation(x, y);
+			this.Size = new Size(w, h);
+
+			// Window State
+			if (savedState == FormWindowState.Maximized)
+			{
+				if (this.MaximizeBox)
+				{
+					// Optional.  Personally, I think it should always be reloaded non-maximized.
+					//this.WindowState = savedState;
+				}
+			}
+			if (savedState == FormWindowState.Minimized)
+			{
+				if (this.MinimizeBox)
+				{
+					// Don't think it's right to reload to a minimized state (confuses the user),
+					// but you can enable this if you want.
+					//this.WindowState = savedState;
+				}
+			}
+		}
+
+		private void SetTheControlsForTheHeartOfTheSun()
+		{
+
+		}
+
+		private void GetTheControlsFromTheHeartOfTheSun()
+		{
+			
+			
+			btnWiz.Visible = isWiz;
+		}
+
+		public void ImBusy(bool busy)
+		{
+			if (busy)
+			{
+				this.Cursor = Cursors.WaitCursor;
+				this.Enabled = false;
+			}
+			else
+			{
+				this.Cursor = Cursors.Default;
+				this.Enabled = true;
+			}
+		}
+
+		private void pnlHelp_Click(object sender, EventArgs e)
+		{
+			System.Diagnostics.Process.Start(helpPage);
+
+		}
+
+		private void pnlAbout_Click(object sender, EventArgs e)
+		{
+			ImBusy(true);
+			Form aboutBox = new About();
+			// aboutBox.setIcon = picAboutIcon.Image;
+			aboutBox.ShowDialog(this);
+			ImBusy(false);
+
+		}
+
+		private string PathToDB(int year)
+		{
+			string ret = Fyle.DefaultDocumentsPath;
+			ret += "Christmas\\";
+			ret += year.ToString();
+			ret += "\\Docs\\ChannelDB\\";
+			return ret;
+		}
+
+		public int LoadData(string filePath)
+		{
+			int errs = LoadUniverses(filePath);
+			errs += LoadControllers(filePath);
+			errs += LoadDevices(filePath);
+			errs += LoadChannels(filePath);
+			return errs;
+		}
+
+		public int LoadUniverses(string filePath)
+		{
+			int errs = 0;
+			string uniName = ""; // for debugging exceptions
+			string uniFile = filePath + "Universes.csv";
+			try
+			{
+				CsvFileReader reader = new CsvFileReader(uniFile);
+				CsvRow row = new CsvRow();
+				// Read and throw away first line which is headers;
+				reader.ReadRow(row);
+				while (reader.ReadRow(row))
+				{
+					try
+					{
+						DMXUniverse universe = new DMXUniverse();
+
+						int i = -1;
+						int.TryParse(row[0], out i);   // Field 0 Universe Number
+						universe.UniverseNumber = i;
+
+						universe.Name = row[1];  // Field 1 Name
+						uniName = universe.Name;  // For debugging exceptions
+						universe.Location = row[2]; // Field 2 Location
+						universe.Comment = row[3]; // Field 3 Comment
+
+						bool b = true;
+						bool.TryParse(row[4], out b); // Field 4 Active
+						universe.Active = b;
+
+						i = 512;
+						int.TryParse(row[5], out i);   // Field 5 Size Limit
+						universe.SizeLimit = i;
+
+						i = 1;
+						int.TryParse(row[6], out i);   // Field 6 xLights Start
+						universe.xLightsAddress = i;
+
+						universe.Connection = row[7];  // Field 7 Connection
+						lastID++;
+						universe.ID = lastID;
+						universes.Add(universe);
+					}
+					catch (Exception ex)
+					{
+						string msg = "Error " + ex.ToString() + " while reading Universe " + uniName;
+						if (isWiz)
+						{
+							DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						}
+						errs++;
+					}
+				}
+				reader.Close();
+				universes.Sort();
+			}
+			catch (Exception ex)
+			{
+				string msg = "Error " + ex.ToString() + " while reading Universes file " + uniFile;
+				if (isWiz)
+				{
+					DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+				errs++;
+			}
+			return errs;
+		}
+
+		public int LoadControllers(string filePath)
+		{
+			int errs = 0;
+			string ctlName = ""; // For debugging exceptions
+			if (universes.Count > 0)
+			{
+				string ctlFile = filePath + "Controllers.csv";
+				try
+				{
+					CsvFileReader reader = new CsvFileReader(ctlFile);
+					CsvRow row = new CsvRow();
+					// Read and throw away first line which is headers;
+					reader.ReadRow(row);
+					while (reader.ReadRow(row))
+					{
+						try
+						{
+							DMXController controller = new DMXController();
+							int universe = 1;
+							int.TryParse(row[0], out universe);   // Field 0 Universe Number
+
+							controller.LetterID = row[1];  // Field 1 Letter ID
+							controller.Name = row[2];  // Field 2 Name
+							ctlName = controller.Name; // For debugging exceptions
+							controller.Location = row[3]; // Field 3 Location
+							controller.Comment = row[4]; // Field 4 Comment
+
+							bool b = true;
+							bool.TryParse(row[5], out b); // Field 5 Active
+							controller.Active = b;
+
+							controller.ControllerBrand = row[6];
+							controller.ControllerModel = row[7];
+
+							int i = 16;
+							int.TryParse(row[8], out i);   // Field 8 Channel Count
+							controller.OutputCount = i;
+
+							i = 1;
+							int.TryParse(row[9], out i);   // Field 9 DMX Start Channel
+							controller.DMXStartAddress = i;
+
+							i = 120;
+							int.TryParse(row[10], out i);   // Field 10 voltage
+							controller.Voltage = i;
+
+							bool uniFound = false;
+							for (int u = 0; u < universes.Count; u++)
+							{
+								if (universe == universes[u].UniverseNumber)
+								{
+									universes[u].DMXControllers.Add(controller);
+									controller.DMXUniverse = universes[u];
+									uniFound = true;
+									u = universes.Count; // Exit loop
+								}
+							}
+							if (!uniFound)
+							{
+								string msg = "Universe not found for controller:" + controller.Name;
+								int qqqqq = 1;
+							}
+							lastID++;
+							controller.ID = lastID;
+						}
+						catch (Exception ex)
+						{
+							string msg = "Error " + ex.ToString() + " while reading Controller " + ctlName;
+							if (isWiz)
+							{
+								DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+							}
+							errs++;
+						}
+					}
+
+					reader.Close();
+					for (int u = 0; u < universes.Count; u++)
+					{
+						universes[u].DMXControllers.Sort();
+					}
+				}
+				catch (Exception ex)
+				{
+					string msg = "Error " + ex.ToString() + " while reading Controllers file " + ctlFile;
+					if (isWiz)
+					{
+						DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					}
+					errs++;
+
+				}
+			}
+			return errs;
+		}
+
+		public int LoadChannels(string filePath)
+		{
+			int errs = 0;
+			string chanName = ""; // for debugging exceptions
+			if (universes.Count > 0)
+			{ 
+				string chnFile = filePath + "Channels.csv";
+				try
+				{
+					CsvFileReader reader = new CsvFileReader(chnFile);
+					CsvRow row = new CsvRow();
+					// Read and throw away first line which is headers;
+					reader.ReadRow(row);
+					while (reader.ReadRow(row))
+					{
+						try
+						{
+							DMXChannel channel = new DMXChannel();
+							int uniNum = 1;
+							int.TryParse(row[0], out uniNum); // Field 0 = Universe Number
+							
+							string ctlrLetter = row[1];				// Field 1 = Controller Letter
+
+							int i = 1;
+							int.TryParse(row[2], out i);
+							channel.Output = i;								// Field 2 = Output Number
+
+							channel.Name = row[3];								// Field 3 = Name
+							chanName = channel.Name;							// For debugging exceptions
+							channel.Location = row[4];						// Field 4 = Location
+							channel.Comment = row[5];							// Field 5 = Comment
+
+							bool b = true;
+							bool.TryParse(row[6], out b);			// Field 6 = Active
+							channel.Active = b;
+
+							int devID = -1;
+							int.TryParse(row[7], out devID);      // Field 7 = Channel Type
+
+
+
+							//! ONE TIME FIX
+							//if (devID == 0) devID = 22;
+
+
+
+
+
+							if (devID >= 0 && devID < devices.Count)
+							{
+								//! Note: Devices should not yet be sorted by Display Order
+								//! Should still be sorted by ID
+								string dn = devices[devID].Name;
+								channel.DMXDevice = devices[devID];
+							}
+
+							string colhex = row[8];           // Field 8 = Color
+							if (chanName.Substring(0,5).CompareTo("Eaves") == 0)
+							{
+								if (isWiz)
+								{
+									string foo = colhex;
+								}
+							}
+							//Color color = System.Drawing.ColorTranslator.FromHtml(colhex);
+							Color color = LORUtils.utils.HexToColor(colhex);
+							channel.Color = color;
+
+							AllChannels.Add(channel);
+							bool ctlFound = false;
+							for (int u = 0; u < universes.Count; u++)
+							{
+								DMXUniverse universe = universes[u];
+								for (int c = 0; c < universe.DMXControllers.Count; c++)
+								{
+									if (ctlrLetter == universe.DMXControllers[c].LetterID)
+									{
+										channel.DMXController = universe.DMXControllers[c];
+										universe.DMXControllers[c].DMXChannels.Add(channel);
+										ctlFound = true;
+										c = universe.DMXControllers.Count;
+										u = universes.Count; // Exit loop
+									}
+								}
+							}
+							if (!ctlFound)
+							{
+								string msg = "Controller not found for channel " + channel.Name;
+								int qqq5 = 5;
+							}
+							lastID++;
+							channel.ID = lastID;
+						}
+						catch (Exception ex)
+						{
+							int ln = LORUtils.utils.ExceptionLineNumber(ex);
+							string msg = "Error on line " + ln.ToString() + "\r\n";
+							msg += ex.ToString() + " while reading Channel " + chanName;
+							if (isWiz)
+							{
+								DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+							}
+							errs++;
+						}
+					}
+					reader.Close();
+					for (int u = 0; u < universes.Count; u++)
+					{
+						DMXUniverse universe = universes[u];
+						for (int c = 0; c < universe.DMXControllers.Count; c++)
+						{
+							universe.DMXControllers[c].DMXChannels.Sort();
+						}
+					}
+					// *NOW* we can sort the devices by display order
+					devices.Sort();
+				}
+				catch (Exception ex)
+				{
+					int ln = LORUtils.utils.ExceptionLineNumber(ex);
+					string msg = "Error " + ex.ToString() + " on line " + ln.ToString() + " while reading Channels file " + chnFile;
+					if (isWiz)
+					{
+						DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					}
+					errs++;
+
+				}
+			}
+			return errs;
+		}
+
+		public int LoadDevices(string filePath)
+		{
+			int errs = 0;
+			string devName = ""; // for debugging exceptions
+			if (universes.Count > 0)
+			{
+				string chnFile = filePath + "Devices.csv";
+				try
+				{
+					CsvFileReader reader = new CsvFileReader(chnFile);
+					CsvRow row = new CsvRow();
+					// Read and throw away first line which is headers;
+					reader.ReadRow(row);
+					while (reader.ReadRow(row))
+					{
+						try
+						{
+							if (row.Count > 1)
+							{
+								int devID = -1;
+								int.TryParse(row[0], out devID); // Field 0 = Device ID
+								devName = row[1];   // Field 1 = Name
+								int ord = 0;
+								if (row.Count > 2)
+								{
+									int.TryParse(row[2], out ord); // Field 2 = Output Number
+								}
+								DMXDevice device = new DMXDevice(devName, devID, ord);
+								devices.Add(device);
+							}
+						}
+						catch (Exception ex)
+						{
+							int ln = LORUtils.utils.ExceptionLineNumber(ex);
+							string msg = "Error on line " + ln.ToString() + "\r\n";
+							msg += ex.ToString() + " while reading Channel " + devName;
+							if (isWiz)
+							{
+								DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+							}
+							errs++;
+						}
+					}
+					reader.Close();
+				}
+				catch (Exception ex)
+				{
+					int ln = LORUtils.utils.ExceptionLineNumber(ex);
+					string msg = "Error " + ex.ToString() + " on line " + ln.ToString() + " while reading Channels file " + chnFile;
+					if (isWiz)
+					{
+						DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					}
+					errs++;
+				}
+			}
+			int dc = devices.Count;
+			//! No! do not sort [by display order] yet!  Leave sorted by order added which is also by ID until AFTER the channels have been
+			//! loaded, THEN sort by display order
+			//devices.Sort();
+			return errs;
+		}
+
+		public int SaveData(string filePath)
+		{
+			int errs = SaveUniverses(filePath);
+			errs += SaveControllers(filePath);
+			errs += SaveChannels(filePath);
+			return errs;
+		}
+
+		public int SaveUniverses(string filePath)
+		{
+			int errs = 0;
+			string uniName = "";
+			string uniFile = filePath + "Universes.csv";
+			try
+			{
+				CsvFileWriter writer = new CsvFileWriter(uniFile);
+				CsvRow row = new CsvRow();
+				// Create first line which is headers;
+				row.Add("Universe#"); // Field 0
+				row.Add("Name"); // Field 1
+				row.Add("Location"); // Field 2
+				row.Add("Comment"); // Field 3
+				row.Add("Active"); // Field 4
+				row.Add("Size Limit"); // Field 5
+				row.Add("xLights Start#"); // Field 6
+				row.Add("Connection"); // Field 7
+				writer.WriteRow(row);
+
+				universes.Sort();
+				for (int u = 0; u < universes.Count; u++)
+				{
+					try
+					{
+						DMXUniverse universe = universes[u];
+						uniName = universe.Name;
+						row = new CsvRow();
+
+						row.Add(universe.UniverseNumber.ToString());  // Field 0
+						row.Add(universe.Name);  // Field 1
+						row.Add(universe.Location);  // Field 2
+						row.Add(universe.Comment); // Field 3
+						row.Add(universe.Active.ToString());  // Field 4
+						row.Add(universe.SizeLimit.ToString());  // Field 5
+						row.Add(universe.xLightsAddress.ToString()); // Field 6
+						row.Add(universe.Connection);  // Field 7
+
+						writer.WriteRow(row);
+					}
+					catch (Exception ex)
+					{
+						string msg = "Error " + ex.ToString() + " while saving Universe " + uniName;
+						if (isWiz)
+						{
+							DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						}
+						errs++;
+					}
+				}
+				writer.Close();
+			}
+			catch (Exception ex)
+			{
+				string msg = "Error " + ex.ToString() + " while saving Universes file " + uniFile;
+				if (isWiz)
+				{
+					DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+				errs++;
+			}
+			return errs;
+		}
+
+		public int SaveControllers(string filePath)
+		{
+			int errs = 0;
+			string ctlName = ""; // For debugging exceptions
+			string ctlFile = filePath + "Controllers.csv";
+			try
+			{
+				CsvFileWriter writer = new CsvFileWriter(ctlFile);
+				CsvRow row = new CsvRow();
+				// Create first line which is headers;
+				row.Add("Universe"); // Field 0
+				row.Add("Controller"); // Field 1
+				row.Add("Name"); // Field 2
+				row.Add("Location"); // Field 3
+				row.Add("Comment"); // Field 4
+				row.Add("Active"); // Field 5
+				row.Add("Brand"); // Field 6
+				row.Add("Model"); // Field 7
+				row.Add("Channel Count"); // Field 8
+				row.Add("DMX Start"); // Field 9
+				row.Add("Voltage"); // Field 10
+
+				writer.WriteRow(row);
+
+				for (int u = 0; u < universes.Count; u++)
+				{
+					DMXUniverse universe = universes[u];
+					universe.DMXControllers.Sort();
+					for (int c = 0; c < universe.DMXControllers.Count; c++)
+					{
+						try
+						{
+							DMXController controller = universe.DMXControllers[c];
+							ctlName = controller.Name;
+							row = new CsvRow();
+
+							row.Add(controller.DMXUniverse.UniverseNumber.ToString()); // Field 0
+							row.Add(controller.LetterID); // Field 1
+							row.Add(controller.Name); // Field 2
+							row.Add(controller.Location); // Field 3
+							row.Add(controller.Comment); // Field 4
+							row.Add(controller.Active.ToString()); // Field 5
+							row.Add(controller.ControllerBrand); // field 6
+							row.Add(controller.ControllerModel); // Field 7
+							row.Add(controller.OutputCount.ToString()); // Field 8
+							row.Add(controller.DMXStartAddress.ToString()); // Field 9
+							row.Add(controller.Voltage.ToString()); // Field 10
+
+							writer.WriteRow(row);
+						}
+						catch (Exception ex)
+						{
+							string msg = "Error " + ex.ToString() + " while saving Controller " + ctlName;
+							if (isWiz)
+							{
+								DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+							}
+							errs++;
+						}
+					}
+				}
+				writer.Close();
+			}
+			catch (Exception ex)
+			{
+				string msg = "Error " + ex.ToString() + " while saving Controllers file " + ctlFile;
+				if (isWiz)
+				{
+					DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+				errs++;
+			}
+			return errs;
+		}
+
+		public int SaveChannels(string filePath)
+		{
+			int errs = 0;
+			string chnName = ""; // debugging exceptions
+			string chnFile = filePath + "Channels.csv";
+			try
+			{
+				CsvFileWriter writer = new CsvFileWriter(chnFile);
+				CsvRow row = new CsvRow();
+				// Create first line which is headers;
+				row.Add("Universe");		// Field 0
+				row.Add("Controller");	// Field 1
+				row.Add("Output");			// Field 2
+				row.Add("Name");				// Field 3
+				row.Add("Location");		// Field 4
+				row.Add("Comment");			// Field 5
+				row.Add("Active");			// Field 6
+				row.Add("Type");				// Field 7
+				row.Add("Color");				// Field 8
+
+				writer.WriteRow(row);
+
+				AllChannels.Sort();
+				for (int c = 0; c < AllChannels.Count; c++)
+				{
+					try
+					{
+						DMXChannel channel = AllChannels[c];
+						chnName = channel.Name;
+						row = new CsvRow();
+
+						row.Add(channel.DMXUniverse.UniverseNumber.ToString()); // Field 0
+						row.Add(channel.DMXController.LetterID);								// Field 1
+						row.Add(channel.Output.ToString());									// Field 2
+						row.Add(channel.Name);																	// Field 3
+						row.Add(channel.Location);															// Field 4
+						row.Add(channel.Comment);																// Field 5
+						row.Add(channel.Active.ToString());											// Field 6
+						row.Add(channel.DMXDevice.ID.ToString());					// Field 7
+						row.Add(LORUtils.utils.ColorToHex(channel.Color));								// Field 8
+
+						writer.WriteRow(row);
+					}
+					catch (Exception ex)
+					{
+						string msg = "Error " + ex.ToString() + " while saving Channel " + chnName;
+						if (isWiz)
+						{
+							DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						}
+						errs++;
+					}
+				}
+				writer.Close();
+			}
+			catch (Exception ex)
+			{
+				string msg = "Error " + ex.ToString() + " while saving Channels file " + chnFile;
+				if (isWiz)
+				{
+					DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+				errs++;
+			}
+			return errs;
+		}
+
+		private void frmList_Shown(object sender, EventArgs e)
+		{
+			if (!formShown)
+			{
+				year = DateTime.Now.Year;  // Get it and store it so don't have to keep looking it back up
+				dbPath = PathToDB(year);  // Get and save this too
+
+				string uniFile = dbPath + "Universes.csv";
+				if (File.Exists(uniFile))
+				{
+					int errs = LoadData(dbPath);
+				}
+				else
+				{
+					string msg = "Data files not found in folder " + dbPath;
+					msg += ".  If you have never used Channel-O-Rama, create some Universes, Controllers, and Channels.  ";
+					msg += "If you have used Channel-O-Rama in previous years, create a folder for this year's data and ";
+					msg += "copy last year's data to it as a starting point.  If you have already used it this year and ";
+					msg += "think you should have data with Universe, Controllers, and Channels, please check the path ";
+					msg += dbPath + " and make sure it exists, has not been deleted or moved, and that it contains 3 ";
+					msg += "csv datafiles for Universes, Controllers, and Channels.";
+
+					DialogResult dr = MessageBox.Show(this, msg, "No Data", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				}
+
+				if (universes.Count > 0)
+				{
+					BuildTree();
+					btnCompareLOR.Enabled = true;
+					btnComparex.Enabled = true;
+					btnReport.Enabled = true;
+
+				}
+
+				formShown = true;
+			}
+		}
+
+		private void frmList_Resize(object sender, EventArgs e)
+		{
+			int treeHt = this.ClientSize.Height - staStatus.Height - 16;
+			int treeWd = this.ClientSize.Width - btnUniverse.Width - 24;
+			int btnLeft = ClientSize.Width - btnUniverse.Width - 8;
+			int okTop = treeChannelList.Top + treeHt - btnOK.Height;
+			treeChannelList.Height = treeHt;
+			treeChannelList.Width = treeWd;
+			btnOK.Top = okTop;
+			btnUniverse.Left = btnLeft;
+			btnController.Left = btnLeft;
+			btnChannel.Left = btnLeft;
+			btnReport.Left = btnLeft;
+			btnCompareLOR.Left = btnLeft;
+			btnComparex.Left = btnLeft;
+			btnWiz.Left = btnLeft;
+			btnOK.Left = btnLeft;
+		}
+
+		private void BuildTree()
+		{
+			treeChannelList.Nodes.Clear();
+
+			BuildTreeUniverses(universes);
+ 		}
+
+		public void BuildTreeUniverses(List<DMXUniverse> uniList)
+		{
+			string nodeText = "";
+			for (int u = 0; u < uniList.Count; u++)
+			{
+				DMXUniverse univ = uniList[u];
+				//nodeText = univ.UniverseNumber.ToString() + ": " + univ.Name;
+				nodeText = univ.ToString();
+				TreeNode uniNode = treeChannelList.Nodes.Add(nodeText);
+				uniNode.ImageIndex = 0;
+				uniNode.SelectedImageIndex = 0;
+				uniNode.Tag = uniList[u];
+				uniList[u].Tag = uniNode;
+				BuildTreeControllers(uniNode);
+				if (univ.BadName || univ.BadNumber)
+				{
+					uniNode.ForeColor = Color.Red;
+				}
+				else
+				{
+					uniNode.ForeColor = SystemColors.WindowText;
+				}
+
+			}
+		}
+
+		public void BuildTreeControllers(TreeNode uniNode)
+		{
+			string nodeText = "";
+			DMXUniverse universe = (DMXUniverse)uniNode.Tag;
+			for (int ct = 0; ct < universe.DMXControllers.Count; ct++)
+			{
+				DMXController controller = universe.DMXControllers[ct];
+				//nodeText = controller.DMXStartAddress.ToString("000") + "-";
+				//int l = controller.DMXStartAddress + controller.OutputCount - 1;
+				//nodeText += l.ToString("000") + ": ";
+				//nodeText += controller.LetterID + ": " + controller.Name;
+				nodeText = controller.ToString();
+				TreeNode ctlNode = uniNode.Nodes.Add(nodeText);
+				ctlNode.ImageIndex = 1;
+				ctlNode.SelectedImageIndex = 1;
+				ctlNode.Tag = controller;
+				controller.Tag = ctlNode;
+				BuildTreeChannels(ctlNode);
+				if (controller.BadLetter || controller.BadName)
+				{
+					ctlNode.ForeColor = Color.Red;
+				}
+				else
+				{
+					ctlNode.ForeColor = SystemColors.WindowText;
+				}
+
+			}
+		}
+
+		public void BuildTreeChannels(TreeNode ctlNode)
+		{
+			string nodeText = "";
+			DMXController controller = (DMXController)ctlNode.Tag;
+			for (int ch=0; ch < controller.DMXChannels.Count; ch++)
+			{
+				DMXChannel channel = controller.DMXChannels[ch];
+				//nodeText = channel.Output.ToString() + ": " + channel.Name;
+				nodeText = channel.ToString();
+				TreeNode chanNode = ctlNode.Nodes.Add(nodeText);
+				ImageList icons = treeChannelList.ImageList;
+				int iconIndex = LORUtils.utils.ColorIcon(icons, channel.Color);
+				chanNode.ImageIndex = iconIndex;
+				chanNode.SelectedImageIndex = iconIndex;
+				chanNode.Tag = channel;
+				channel.Tag = chanNode;
+				if (channel.BadName || channel.BadOutput)
+				{
+					chanNode.ForeColor = Color.Red;
+				}
+				else
+				{
+					chanNode.ForeColor = SystemColors.WindowText;
+				}
+
+			}
+		}
+
+		public void UpdateUniveseNode(TreeNode node)
+		{
+			if (node != null)
+			{
+				if (node.Tag != null)
+				{
+					if (node.Tag.GetType() == typeof(DMXUniverse))
+					{
+						DMXUniverse univ = (DMXUniverse)node.Tag;
+						//string nodeText = univ.UniverseNumber.ToString() + ": " + univ.Name;
+						string nodeText = univ.ToString();
+						node.Text = nodeText;
+					}
+				}
+			}
+		}
+
+		public void UpdateControllerNode(TreeNode node)
+		{
+			if (node != null)
+			{
+				if (node.Tag != null)
+				{
+					if (node.Tag.GetType() == typeof(DMXController))
+					{
+						DMXController ctlr = (DMXController)node.Tag;
+						//string nodeText = ctlr.DMXStartAddress.ToString("000") + "-";
+						//int l = ctlr.DMXStartAddress + ctlr.OutputCount - 1;
+						//nodeText += l.ToString("000") + ": ";
+						//nodeText += ctlr.LetterID + ": " + ctlr.Name;
+						string nodeText = ctlr.ToString();
+						node.Text = nodeText;
+					}
+				}
+			}
+		}
+
+		public void UpdateChannelNode(TreeNode node)
+		{
+			if (node != null)
+			{
+				if (node.Tag != null)
+				{
+					if (node.Tag.GetType() == typeof(DMXChannel))
+					{
+						DMXChannel channel = (DMXChannel)node.Tag;
+						//string nodeText = channel.Output.ToString() + ": " + channel.Name;
+						string nodeText = channel.ToString();
+						node.Text = nodeText;
+						ImageList icons = treeChannelList.ImageList;
+						int iconIndex = LORUtils.utils.ColorIcon(icons, channel.Color);
+						node.ImageIndex = iconIndex;
+						node.SelectedImageIndex = iconIndex;
+					}
+				}
+			}
+		}
+
+
+		private void treeChannelList_AfterSelect(object sender, TreeViewEventArgs e)
+		{
+			TreeNode node = treeChannelList.SelectedNode;
+			if (node != null)
+			{
+				int ni = node.ImageIndex;
+				bool en = (ni == 0);
+				btnController.Enabled = en;
+				en = (ni == 1);
+				btnChannel.Enabled = en;
+			}
+		}
+
+		private void treeChannelList_DoubleClick(object sender, EventArgs e)
+		{
+			bool needRebuild = false;
+			TreeNode node = treeChannelList.SelectedNode;
+			if (node != null)
+			{
+				int ni = node.ImageIndex;
+				if (ni > 1)
+				{
+					EditChannelNode(node);
+				}
+
+				else
+				{
+					if (ni == 1)
+					{
+						EditControllerNode(node);
+					}
+					else
+					{
+						if (ni == 0)
+						{
+							EditUniverseNode(node);
+						}
+					}
+				}
+			}
+		}
+
+		private void EditUniverseNode(TreeNode node)
+		{
+			bool needSort = false;
+			DMXUniverse universe = (DMXUniverse)node.Tag;
+			universe.Editing = true;
+			DMXUniverse newUni = universe.Clone();
+			int oldUniNum = universe.UniverseNumber;
+			frmUniverse uniForm = new frmUniverse(newUni, universes);
+			uniForm.universes = universes;
+			DialogResult dr = uniForm.ShowDialog(this);
+			if (dr == DialogResult.OK)
+			{
+				if (uniForm.dirty)
+				{
+					MakeDirty(true);
+					universe.Clone(newUni);
+					UpdateUniveseNode(node);
+					// Did the Universe Number change?
+					if (universe.UniverseNumber != oldUniNum)
+					{
+						needSort = true;
+					}
+					if (needSort)
+					{
+						treeChannelList.Sort();
+					}
+				}
+			}
+			if (universe.BadName || universe.BadNumber)
+			{
+				node.ForeColor = Color.Red;
+			}
+			else
+			{
+				node.ForeColor = SystemColors.WindowText;
+			}
+
+			universe.Editing = false;
+			uniForm.Dispose();
+
+		}
+
+		public void EditControllerNode(TreeNode node)
+		{
+			bool needSort = false;
+			DMXController controller = (DMXController)node.Tag;
+			controller.Editing = true;
+			DMXUniverse oldUniv = controller.DMXUniverse;
+			string oldLetter = controller.LetterID;
+			int oldStart = controller.DMXStartAddress;
+			DMXController newCtl = controller.Clone();
+			frmController ctlForm = new frmController(newCtl, universes);
+			ctlForm.universes = universes;
+			DialogResult dr = ctlForm.ShowDialog(this);
+			if (dr == DialogResult.OK)
+			{
+				if (ctlForm.dirty)
+				{
+					MakeDirty(true);
+					// Replace the original with the clone
+					controller.Clone(newCtl); // Copy back
+					UpdateControllerNode(node);
+					// Did the start address change?
+					if (controller.DMXStartAddress != oldStart)
+					{
+						controller.DMXUniverse.DMXControllers.Sort();
+						needSort = true;
+					}
+					// Did the universe change?
+					if (oldUniv.ID != controller.DMXUniverse.ID)
+					{
+						// Find old universe and remove this controller
+						for (int c = 0; c < oldUniv.DMXControllers.Count; c++)
+						{
+							if (controller.DMXUniverse.ID == oldUniv.DMXControllers[c].ID)
+							{
+								oldUniv.DMXControllers.RemoveAt(c);
+								c = oldUniv.DMXControllers.Count; // Force exit of loop
+							}
+						}
+						controller.DMXUniverse.DMXControllers.Add(controller);
+						controller.DMXUniverse.DMXControllers.Sort();
+						needSort = true;
+					}
+					if (needSort)
+					{
+						treeChannelList.Sort();
+					}
+				}
+			}
+			if (controller.BadName || controller.BadLetter)
+			{
+				node.ForeColor = Color.Red;
+			}
+			else
+			{
+				node.ForeColor = SystemColors.WindowText;
+			}
+			controller.Editing = false;
+			ctlForm.Dispose();
+
+
+
+		}
+
+		public void EditChannelNode(TreeNode node)
+		{
+			bool needSort = false;
+			DMXChannel channelToEdit = (DMXChannel)node.Tag;
+			DMXController oldCtlr = channelToEdit.DMXController;
+			int oldOutput = channelToEdit.Output;
+			//DMXChannel channelClone = channelToEdit.Clone();
+			DMXChannel channelClone = new DMXChannel(channelToEdit);
+			channelClone.Editing = true;
+			frmChannel chanForm = new frmChannel(channelClone, universes);
+			//chanForm.AllChannels = AllChannels;
+			//chanForm.universes = universes;
+			//chanForm.devices = devices;
+			try
+			{
+				// For some strange reason I can't figure out---
+				// Closing the form sometimes triggers an exception!
+				DialogResult dr = chanForm.ShowDialog(this);
+				if (dr == DialogResult.OK)
+				{
+					if (chanForm.dirty)
+					{
+						MakeDirty(true);
+						channelToEdit.Clone(channelClone); // Copy back
+						UpdateChannelNode(node);
+						// Did output number change?
+						if (channelToEdit.Output != channelClone.Output)
+						{
+							channelToEdit.DMXController.DMXChannels.Sort();
+							needSort = true;
+						}
+						// Did we change controllers?
+						int newCtlrID = channelToEdit.DMXController.ID;
+						if (oldCtlr.ID !=newCtlrID)
+						{
+							// Find old controller and remove this channelToEdit
+							for (int c = 0; c < oldCtlr.DMXChannels.Count; c++)
+							{
+								if (channelToEdit.ID == oldCtlr.DMXChannels[c].ID)
+								{
+									oldCtlr.DMXChannels.RemoveAt(c);
+									c = oldCtlr.DMXChannels.Count; // Force loop exit
+								}
+							}
+							node.Parent.Nodes.Remove(node);
+							for (int u = 0; u < universes.Count; u++)
+							//foreach(DMXUniverse universe in universes)
+							{
+								DMXUniverse universe = universes[u];
+								for (int c=0; c < universe.DMXControllers.Count; c++)
+								//foreach(DMXController controller in universe.DMXControllers)
+								{
+									DMXController controller = universe.DMXControllers[c];
+									if (channelToEdit.DMXController.ID == controller.ID)
+									{
+										TreeNode newp = (TreeNode)controller.Tag;
+										newp.Nodes.Add(node);
+										// Force exit of both loops
+										c = universe.DMXControllers.Count;
+										u = universes.Count;
+									}
+								}
+							}
+							channelToEdit.DMXController.DMXChannels.Add(channelToEdit);
+							channelToEdit.DMXController.DMXChannels.Sort();
+							needSort = true;
+						}
+						// So... Chan obj properly being moved, Resorting the tree is not reflecting that
+						//Try another technique....
+						if (needSort)
+						{
+							treeChannelList.Sort();
+						}
+					}
+				}
+				if (channelToEdit.BadName || channelToEdit.BadOutput)
+				{
+					node.ForeColor = Color.Red;
+				}
+				else
+				{
+					node.ForeColor = SystemColors.WindowText;
+				}	
+			}
+			catch (Exception ex)
+			{
+				// So when the effing form throws an effing excepttion for some effing reaason when it is effing closed
+				// Consider that a cancel
+				int ln = LORUtils.utils.ExceptionLineNumber(ex);
+				string msg = "Error on line " + ln.ToString() + "\r\n";
+				msg += ex.ToString() + " while exiting Channel editor " + channelToEdit.Name;
+				if (isWiz)
+				{
+					DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+			}
+			channelToEdit.Editing = false;
+			chanForm.Dispose();
+
+		}
+
+		private void btnChannel_Click(object sender, EventArgs e)
+		{
+			if (treeChannelList.SelectedNode != null)
+			{
+				if (treeChannelList.SelectedNode.Tag.GetType() == typeof(DMXController)) 
+				{
+					TreeNode parentNode = treeChannelList.SelectedNode;
+					DMXController parentCtl = (DMXController)treeChannelList.SelectedNode.Tag;
+
+					DMXChannel channel = new DMXChannel();
+					lastID++;
+					channel.ID = lastID;
+					channel.DMXController = parentCtl;
+					channel.Editing = true;
+					DMXController oldCtlr = channel.DMXController;
+					DMXChannel newChan = channel.Clone();
+					frmChannel chanForm = new frmChannel(newChan, universes);
+					//chanForm.AllChannels = AllChannels;
+					//chanForm.universes = universes;
+					//chanForm.devices = devices;
+					DialogResult dr = chanForm.ShowDialog(this);
+					if (dr == DialogResult.OK)
+					{
+						if (chanForm.dirty)
+						{
+							// Replace the original with the clone
+							channel.Clone(newChan);
+							// Did we change controllers?
+							if (oldCtlr.ID != channel.DMXController.ID)
+							{
+								// Find old controller and remove this channel
+								for (int c = 0; c < oldCtlr.DMXChannels.Count; c++)
+								{
+									if (channel.ID == oldCtlr.DMXChannels[c].ID)
+									{
+										oldCtlr.DMXChannels.RemoveAt(c);
+										c = oldCtlr.DMXChannels.Count; // Force loop exit
+									}
+								}
+								channel.DMXController.DMXChannels.Add(channel);
+								parentNode = (TreeNode)channel.DMXController.Tag;
+								channel.DMXController.DMXChannels.Sort();
+							}
+							AllChannels.Add(channel);
+							AllChannels.Sort();
+							TreeNode node = parentNode.Nodes.Add(channel.ToString());
+							node.Tag = channel;
+							node.ImageIndex = LORUtils.utils.ColorIcon(imlTreeIcons, channel.Color);
+							node.SelectedImageIndex = node.ImageIndex;
+							channel.Tag = node;
+							MakeDirty(true);
+
+							//BuildTree();
+							treeChannelList.Sort();
+						}
+						treeChannelList.SelectedNode = parentNode;
+						treeChannelList.Focus();
+						channel.Editing = false;
+						chanForm.Dispose();
+					}
+				}
+			}
+		}
+
+		private void btnController_Click(object sender, EventArgs e)
+		{
+			if (treeChannelList.SelectedNode != null)
+			{
+				if (treeChannelList.SelectedNode.Tag.GetType() == typeof(DMXUniverse))
+				{
+					TreeNode uniNode = treeChannelList.SelectedNode;
+					DMXUniverse parentUni = (DMXUniverse)uniNode.Tag;
+
+					DMXController ctlr = new DMXController();
+					lastID++;
+					ctlr.ID = lastID;
+					ctlr.DMXUniverse = parentUni;
+					ctlr.Editing = true;
+					DMXUniverse oldUniv = ctlr.DMXUniverse;
+					DMXController newCtlr = ctlr.Clone();
+					frmController ctlrForm = new frmController(newCtlr, universes);
+					//ctlrForm.AllChannels = AllChannels;
+					ctlrForm.universes = universes;
+					DialogResult dr = ctlrForm.ShowDialog(this);
+					if (dr == DialogResult.OK)
+					{
+						// Replace the original with the clone
+						ctlr = newCtlr;
+						// Did we change controllers?
+						if (oldUniv.ID != ctlr.DMXUniverse.ID)
+						{
+							// Find old controller and remove this channel
+							for (int u = 0; u < oldUniv.DMXControllers.Count; u++)
+							{
+								if (ctlr.ID == oldUniv.DMXControllers[u].ID)
+								{
+									oldUniv.DMXControllers.RemoveAt(u);
+									u = oldUniv.DMXControllers.Count; // Force loop exit
+								}
+							}
+							ctlr.DMXUniverse.DMXControllers.Add(ctlr);
+							ctlr.DMXUniverse.DMXControllers.Sort();
+						}
+						//BuildTree();
+						treeChannelList.Sort();
+					}
+					treeChannelList.SelectedNode = uniNode;
+					ctlr.Editing = false;
+					ctlrForm.Dispose();
+				}
+			}
+
+		}
+
+		private void btnUniverse_Click(object sender, EventArgs e)
+		{
+			DMXUniverse univ = new DMXUniverse();
+			lastID++;
+			univ.ID = lastID;
+			univ.Editing = true;
+			//DMXController oldCtlr = channel.DMXController;
+			DMXUniverse newUniv = univ.Clone();
+			frmUniverse univForm = new frmUniverse(newUniv, universes);
+			//univForm.AllChannels = AllChannels;
+			univForm.universes = universes;
+			DialogResult dr = univForm.ShowDialog(this);
+			if (dr == DialogResult.OK)
+			{
+				// Replace the original with the clone
+				univ = newUniv;
+				universes.Add(univ);
+				universes.Sort();
+				BuildTree();
+			}
+			univ.Editing = false;
+			univForm.Dispose();
+
+		}
+
+		public void MakeDirty(bool isDirty)
+		{
+			if (isDirty != dirty)
+			{ 
+				if (isDirty)
+				{
+					// anything else we need to do?
+					dirty = isDirty;
+				}
+				else
+				{
+					// anything else we need to do?
+					dirty = isDirty;
+				}
+			}
+		}
+
+
+		private void frmList_Click(object sender, EventArgs e)
+		{
+			int x = 1;
+
+		}
+
+		private void frmList_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			CloseReason cr = e.CloseReason;
+			string rc = cr.ToString();
+
+			if (dirty)
+			{
+				string msg = "Channel information has changed.\r\nSave?";
+				DialogResult dr = MessageBox.Show(this, msg, "Save Changes?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+				if (dr == DialogResult.Cancel)
+				{
+					e.Cancel = true;
+				}
+				if (dr == DialogResult.Yes)
+				{
+					SaveData(dbPath);
+				}
+			}
+			if (!e.Cancel)
+			{
+				SaveFormPosition();
+				GetTheControlsFromTheHeartOfTheSun();
+			}
+		}
+
+		private int ExportToSpreadsheet(string filePath)
+		{
+			int errs = 0;
+			string uniName = "";
+			string ctlName = "";
+			string chnName = ""; // debugging exceptions
+			string sprFile = filePath + "ChannelSpreadsheet.csv";
+			try
+			{
+				CsvFileWriter writer = new CsvFileWriter(sprFile);
+				CsvRow row = new CsvRow();
+				// Create first line which is headers;
+				row.Add("Universe");         // Field 0
+				row.Add("Controller");       // Field 1
+				row.Add("Output");           // Field 2
+				row.Add("DMX Address");      // Field 3
+				row.Add("xLights Address");  // Field 4
+
+				// Is this really the column I wanna put this in?
+				row.Add("Active");           // Field 5
+
+				row.Add("Name");             // Field 6
+				row.Add("Type");						// Field 7
+				row.Add("Color");            // Field 8
+				row.Add("Location");         // Field 9
+				row.Add("Comment");          // Field 10
+
+				writer.WriteRow(row);
+
+				universes.Sort();
+				for (int u = 0; u < universes.Count; u++)
+				{
+					DMXUniverse universe = universes[u];
+					uniName = universe.Name;
+					try
+					{
+						row = new CsvRow();
+						row.Add(universe.UniverseNumber.ToString());       // Field 0 - Universe
+						row.Add("");                                  // Field 1 - Controller
+						row.Add("");                                  // Field 2 - Output
+						row.Add("");                                  // Field 3 - DMX Address
+						row.Add(universe.xLightsAddress.ToString());  // Field 4 - xLights Address
+						row.Add(universe.Active.ToString());               // Field 5 - Active
+						row.Add(universe.Name);                            // Field 6 - Name
+						row.Add(""); // Field 7 - Type
+						row.Add("");                                  // Field 8 - Color
+						row.Add(universe.Location);                        // Field 9 - Location
+						row.Add(universe.Comment);                         // Field 10 - Comment
+						writer.WriteRow(row);
+
+						for (int ct = 0; ct < universe.DMXControllers.Count; ct++)
+						{
+							DMXController controller = universe.DMXControllers[ct];
+							ctlName = controller.Name;
+							try
+							{
+								row = new CsvRow();
+								row.Add(universe.UniverseNumber.ToString());       // Field 0 - Universe
+								row.Add(controller.LetterID);                        // Field 1 - Controller
+								row.Add("");                                  // Field 2 - Output
+								row.Add(controller.DMXStartAddress.ToString());      // Field 3 - DMX Address
+								row.Add(controller.xLightsAddress.ToString());  // Field 4 - xLights Address
+								row.Add(controller.Active.ToString());               // Field 5 - Active
+								row.Add(controller.Name);                            // Field 6 - Name
+								row.Add("");                                  // Field 7 - Type
+								row.Add("");                                  // Field 8 - Color
+								row.Add(controller.Location);                        // Field 9 - Location
+								row.Add(controller.Comment);                         // Field 10 - Comment
+								writer.WriteRow(row);
+
+								for (int cl = 0; cl < controller.DMXChannels.Count; cl++)
+								{
+									DMXChannel channel = controller.DMXChannels[cl];
+									chnName = channel.Name;
+									try
+									{
+										row = new CsvRow();
+										row.Add(channel.UniverseNumber.ToString());  // Field 0 - Universe
+										row.Add(channel.DMXController.LetterID);     // Field 1 - Controller
+										row.Add(channel.Output.ToString());       // Field 2 - Output
+										row.Add(channel.DMXaddress.ToString());      // Field 3 - DMX Address
+										row.Add(channel.xLightsAddress.ToString());  // Field 4 - xLights Address
+										row.Add(channel.Active.ToString());          // Field 5 - Active
+										row.Add(channel.Name);                       // Field 6 - Name
+										row.Add(channel.DMXDevice.Name);							// Field 7 - Type
+										row.Add(LORUtils.utils.ColorToHex(channel.Color));    // Field 8 - Color
+										row.Add(channel.Location);                   // Field 9 - Location
+										row.Add(channel.Comment);                    // Field 10 - comment
+										writer.WriteRow(row);
+									} // End Channel Try
+									catch (Exception ex)
+									{
+
+									} // End Channel Catch
+								} // End Channel Loop
+							} // End Controller Try
+							catch (Exception ex)
+							{
+
+							} // End Controller Catch
+						} // End Controller Loop
+					} // End Universe Try
+					catch (Exception ex)
+					{
+
+					} // End Universe Catch
+				} // End Universe Loop
+				writer.Close();
+				Fyle.LaunchFile(sprFile);
+			} // End Writer Try
+			catch (Exception ex)
+			{
+
+			} // end Writer Catch
+
+			return errs;
+		}
+
+		private void btnReport_Click(object sender, EventArgs e)
+		{
+			ExportToSpreadsheet(dbPath);
+		}
+
+		private void treeChannelList_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			if (treeChannelList.SelectedNode != null)
+			{
+				if (e.KeyChar == (char)Keys.Delete)
+				{
+					// Note: non-success does not mean the code failed, it's pro'ly cuz the user said 'No' to delete
+					bool deleted = DeleteNode(treeChannelList.SelectedNode);
+				}
+				if ((e.KeyChar == (char)Keys.Enter) || (e.KeyChar == (char)Keys.Return))
+				{
+					treeChannelList_DoubleClick(sender, e);
+				}
+			}
+		}
+
+		private bool DeleteNode(TreeNode node)
+		{
+			// Note: non-success does not mean the code failed, it's pro'ly cuz the user said 'No' to delete
+			bool success = false;
+			string msg = "";
+
+			if (node.Tag != null)
+			{
+				if (node.Tag.GetType() == typeof(DMXChannel))
+				{
+					DMXChannel channel = (DMXChannel)node.Tag;
+					msg = "Are you sure you want to delete channel ";
+					msg += channel.Output + ": " + channel.Name + "?";
+					DialogResult dr = MessageBox.Show(this, msg, "Delete Channel?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+					if (dr == DialogResult.Yes)
+					{
+						node.Parent.Nodes.Remove(node);
+						AllChannels.Remove(channel);
+						channel.DMXController.DMXChannels.Remove(channel);
+						MakeDirty(true);
+						success = true;
+					}
+				}
+				else
+				{
+					if (node.Tag.GetType() == typeof(DMXController))
+					{
+						DMXController controller = (DMXController)node.Tag;
+						msg = "Are you sure you want to delete controller ";
+						msg += controller.LetterID + ": " + controller.Name + " which has ";
+						msg += controller.DMXChannels.Count.ToString() + " channels?";
+						DialogResult dr = MessageBox.Show(this, msg, "Delete Controller?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+						if (dr == DialogResult.Yes)
+						{
+							for (int c = 0; c < controller.DMXChannels.Count; c++)
+							{
+								DMXChannel channel = controller.DMXChannels[c];
+								AllChannels.Remove(channel);
+							}
+							node.Parent.Nodes.Remove(node);
+							controller.DMXUniverse.DMXControllers.Remove(controller);
+							MakeDirty(true);
+							success = true;
+						}
+					}
+					else
+					{
+						if (node.Tag.GetType() == typeof(DMXUniverse))
+						{
+							DMXUniverse universe = (DMXUniverse)node.Tag;
+							msg = "Are you really sure you want to delete universe ";
+							msg += universe.UniverseNumber + ": " + universe.Name + " which has ";
+							msg += universe.DMXControllers.Count.ToString() + " controllers and ";
+							int chanCount = 0;
+							for (int c1 = 0; c1 < universe.DMXControllers.Count; c1++)
+							{
+								DMXController controller = universe.DMXControllers[c1];
+								chanCount += controller.DMXChannels.Count;
+							}
+							msg += chanCount.ToString() + " channels?";
+							DialogResult dr = MessageBox.Show(this, msg, "Delete Universe?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+							if ((universe.DMXControllers.Count > 3) || (chanCount > 23))
+							{
+								msg = "That's a lot of controllers (" + universe.DMXControllers.Count.ToString() + ") and ";
+								msg += " a lot of channels (" + chanCount.ToString() + ").";
+								msg += "\r\n\r\nAre you really really sure?";
+								dr = MessageBox.Show(this, msg, "Delete Universe?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+							}
+							if (dr == DialogResult.Yes)
+							{
+								for (int c1 = 0; c1 < universe.DMXControllers.Count; c1++)
+								{
+									DMXController controller = universe.DMXControllers[c1];
+									for (int c2 = 0; c2 < controller.DMXChannels.Count; c2++)
+									{
+										DMXChannel channel = controller.DMXChannels[c2];
+										AllChannels.Remove(channel);
+									} // End loop thru controller's channels
+								} // End loop thru universe's controllers
+								node.Parent.Nodes.Remove(node);
+								universes.Remove(universe);
+								MakeDirty(true);
+								success = true;
+							} // End if user said Yes
+						} // End if selected node was a Universe
+					} // End if selected node was a controller, or not
+				} // End if selected node was a channel, or not
+			} // End if node's .Tag was not null
+			// Note: non-success does not mean the code failed, it's pro'ly cuz the user said 'No' to delete
+			return success;
+		}
+
+		private void treeChannelList_KeyUp(object sender, KeyEventArgs e)
+		{
+			if (treeChannelList.SelectedNode != null)
+			{
+				if (e.KeyCode == Keys.Delete)
+				{
+					// Note: non-success does not mean the code failed, it's pro'ly cuz the user said 'No' to delete
+					bool deleted = DeleteNode(treeChannelList.SelectedNode);
+				}
+				else
+				{
+					if ((e.KeyCode == Keys.Enter) || (e.KeyCode == Keys.Return))
+					{
+						treeChannelList_DoubleClick(sender, e);
+					}
+				}
+			}
+		}
+
+		private int MatchUp(string seqFile)
+		{
+			int ret = 0;
+			int lorCN = 0;
+			int xCNM = 0;
+			int xCNG = 0;
+			Sequence4 lseq = new Sequence4(seqFile);
+
+			/////////////////////////////
+			/// GENERATE REPORT DATA ///
+			///////////////////////////
+
+			// Resort by name
+			DMXChannel.SortByName = true;
+			AllChannels.Sort();
+			int oldLORsort = Membership.sortMode;
+			Membership.sortMode = Membership.SORTbyName;
+			lseq.Channels.Sort();
+			xRGBEffects.SortByName = true;
+			xSeq.xModels.Sort();
+			xSeq.xModelGroups.Sort();
+			List<FuzzyList> fuzzies = new List<FuzzyList>();
+
+			for (int m=0; m< AllChannels.Count; m++)
+			{
+				DMXChannel chanMgr = AllChannels[m];
+				string mgrName = chanMgr.Name.ToLower();
+
+				for (int l=lorCN; l< lseq.Channels.Count; l++)
+				{
+					Channel chanLOR = lseq.Channels[l];
+
+					if (mgrName.CompareTo(chanLOR.Name.ToLower()) == 0)
+					{
+						chanMgr.TagLOR = chanLOR;
+						chanLOR.Tag = chanMgr;
+						chanMgr.ExactLOR = true;
+						chanLOR.MatchExact = true;
+						lorCN = l + 1;
+						l = lseq.Channels.Count; // Force exit of loop
+					}
+				} // LOR channel Loop
+
+				for (int x=xCNM; x< xSeq.xModels.Count; x++)
+				{
+					xModel chanx = xSeq.xModels[x];
+
+					if (mgrName.CompareTo(chanx.Name.ToLower()) == 0)
+					{
+						chanMgr.TagX = chanx;
+						chanx.Tag = chanMgr;
+						chanMgr.ExactX = true;
+						chanx.MatchExact = true;
+						xCNM = x + 1;
+						x = xSeq.xModels.Count; // Force exit of loop
+ 					}
+				} // xModels Loop
+
+				for (int x=xCNG; x< xSeq.xModelGroups.Count; x++)
+				{
+					xModelGroup groupx = xSeq.xModelGroups[x];
+
+					if (mgrName.CompareTo(groupx.Name.ToLower()) == 0)
+					{
+						chanMgr.TagX = groupx;
+						groupx.Tag = chanMgr;
+						chanMgr.ExactX = true;
+						groupx.MatchExact = true;
+						xCNG = x + 1;
+						x = xSeq.xModelGroups.Count; // Force exit of loop
+					}
+				} // End xModelGroups Loop
+			} // End Channel Manager DMX Channels loop looking for Exact Matches
+
+			// Now, let's do it again looking for fuzzy matches
+			for (int m = 0; m < AllChannels.Count; m++)
+			{
+				DMXChannel chanMgr = AllChannels[m];
+				string mgrName = chanMgr.Name.ToLower();
+
+				if (chanMgr.TagLOR == null)
+				{
+					fuzzies.Clear();
+					for (int l = 0; l < lseq.Channels.Count; l++)
+					{
+						Channel chanLOR = lseq.Channels[l];
+						if (chanLOR.Tag == null)
+						{
+							double score = mgrName.YetiLevenshteinSimilarity(chanLOR.Name.ToLower());
+							//if (score > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
+							if (score > 30)
+							{
+								score = mgrName.RankEquality(chanLOR.Name.ToLower());
+								//if (score > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
+								if (score > 40)
+								{
+									FuzzyList fuzzie = new FuzzyList(chanMgr, chanLOR, score);
+									fuzzies.Add(fuzzie);
+								}
+							}
+						} // current LOR channel has no tag and thus no exact matches
+					} // End loop thru LOR channels
+					if (fuzzies.Count > 0)
+					{
+						fuzzies.Sort();
+						chanMgr.TagLOR = fuzzies[0].Item2;
+						Channel chanLor = (Channel)fuzzies[0].Item2;
+						chanLor.Tag = chanMgr;
+					}
+
+					fuzzies.Clear();
+					for (int x = 0; x < xSeq.xModels.Count; x++)
+					{
+						xModel chanx = xSeq.xModels[x];
+						if (chanx.Tag == null)
+						{
+							double score = mgrName.YetiLevenshteinSimilarity(chanx.Name.ToLower());
+							if (score > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
+							{
+								score = mgrName.RankEquality(chanx.Name.ToLower());
+								if (score > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
+								{
+									FuzzyList fuzzie = new FuzzyList(chanMgr, chanx, score);
+									fuzzies.Add(fuzzie);
+								}
+							}
+						} // current LOR channel has no tag and thus no exact matches
+					} // End loop thru LOR channels
+
+					for (int x = 0; x < xSeq.xModelGroups.Count; x++)
+					{
+						xModelGroup groupx = xSeq.xModelGroups[x];
+						if (groupx.Tag == null)
+						{
+							double score = mgrName.YetiLevenshteinSimilarity(groupx.Name.ToLower());
+							//if (score > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
+							if (score > 30)
+							{
+								score = mgrName.RankEquality(groupx.Name.ToLower());
+								//if (score > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
+								if (score > 40)
+								{
+									FuzzyList fuzzie = new FuzzyList(chanMgr, groupx, score);
+									fuzzies.Add(fuzzie);
+								}
+							}
+						} // current LOR channel has no tag and thus no exact matches
+					} // End loop thru LOR channels
+
+					if (fuzzies.Count > 0)
+					{
+						fuzzies.Sort();
+						chanMgr.TagX = fuzzies[0].Item2;
+						xMember chanx = (xMember)fuzzies[0].Item2;
+						chanx.Tag = chanMgr;
+					}
+
+				} // current chanMgr has no tag and thus no exact match
+			} // End second loop[ thru Channel Manager DMXChannels looking for fuzzy matches
+
+
+			///////////////////////
+			///  WRITE REPORT  ///
+			/////////////////////
+
+			string reportFile = dbPath + "MatchReport.txt";
+			StreamWriter writer = new StreamWriter(reportFile);
+			writer.WriteLine("*** Channel Manager Report ***");
+			writer.WriteLine("[Exact Matches to LOR Channels]");
+
+			for (int m = 0; m < AllChannels.Count; m++)
+			{
+				DMXChannel chanMgr = AllChannels[m];
+				if (chanMgr.TagLOR != null)
+				{
+					Type t = chanMgr.TagLOR.GetType();
+					if (t != typeof(Channel))
+					{
+						string xxxx = "Why Not!";
+					}
+
+					Channel chanLor = (Channel)chanMgr.TagLOR;
+					if (chanLor.MatchExact)
+					{
+						StringBuilder lineOut = new StringBuilder("  Exact: ");
+						lineOut.Append(chanMgr.Name);
+						lineOut.Append(" to ");
+						lineOut.Append(chanLor.Name);
+						writer.WriteLine(lineOut);
+						if (chanMgr.UniverseNumber != chanLor.UniverseNumber || chanMgr.DMXaddress != chanLor.DMXAddress)
+						{
+							lineOut.Clear();
+							lineOut.Append("    But the DMX Address does not match! ");
+							lineOut.Append(chanMgr.UniverseNumber.ToString());
+							lineOut.Append("/");
+							lineOut.Append(chanMgr.DMXaddress.ToString());
+							lineOut.Append(" != ");
+							lineOut.Append(chanLor.UniverseNumber.ToString());
+							lineOut.Append("/");
+							lineOut.Append(chanLor.DMXAddress.ToString());
+							writer.WriteLine(lineOut);
+						}
+					}
+				}
+			}
+
+			writer.WriteLine("");
+			writer.WriteLine("[Fuzzy Matches to LOR Channels]");
+			for (int m = 0; m < AllChannels.Count; m++)
+			{
+				DMXChannel chanMgr = AllChannels[m];
+				if (chanMgr.TagLOR != null)
+				{
+					Channel chanLor = (Channel)chanMgr.TagLOR;
+					if (!chanLor.MatchExact)
+					{ 
+						StringBuilder lineOut = new StringBuilder("  Fuzzy: ");
+						lineOut.Append(chanMgr.Name);
+						lineOut.Append(" to ");
+						lineOut.Append(chanLor.Name);
+						writer.WriteLine(lineOut);
+						if (chanMgr.UniverseNumber != chanLor.UniverseNumber || chanMgr.DMXaddress != chanLor.DMXAddress)
+						{
+							lineOut.Clear();
+							lineOut.Append("    But the DMX Address does not match! ");
+							lineOut.Append(chanMgr.UniverseNumber.ToString());
+							lineOut.Append("/");
+							lineOut.Append(chanMgr.DMXaddress.ToString());
+							lineOut.Append(" != ");
+							lineOut.Append(chanLor.UniverseNumber.ToString());
+							lineOut.Append("/");
+							lineOut.Append(chanLor.DMXAddress.ToString());
+							writer.WriteLine(lineOut);
+						}
+					}
+				}
+			}
+
+			writer.WriteLine("");
+			writer.WriteLine("[Managed Channels with NO LOR Match]");
+			for (int m = 0; m < AllChannels.Count; m++)
+			{
+				DMXChannel chanMgr = AllChannels[m];
+				if (chanMgr.TagLOR == null)
+				{
+					StringBuilder lineOut = new StringBuilder("  NoMatch: ");
+					lineOut.Append(chanMgr.Name);
+					writer.WriteLine(lineOut);
+				}
+			}
+
+			writer.WriteLine("");
+			writer.WriteLine("[LOR Channels with NO Managed Match]");
+			for (int c = 0; c < lseq.Channels.Count; c++)
+			{
+				Channel chanLOR = lseq.Channels[c];
+				if (chanLOR.Tag == null)
+				{
+					StringBuilder lineOut = new StringBuilder("  NoMatch: ");
+					lineOut.Append(chanLOR.Name);
+					writer.WriteLine(lineOut);
+				}
+			}
+
+			writer.WriteLine("");
+			writer.WriteLine("");
+			writer.WriteLine("[Exact Matches to xLights Models or Groups]");
+
+			for (int m = 0; m < AllChannels.Count; m++)
+			{
+				DMXChannel chanMgr = AllChannels[m];
+				if (chanMgr.TagX != null)
+				{
+					xMember chanx = (xMember)chanMgr.TagX;
+					if (chanx.MatchExact)
+					{
+						StringBuilder lineOut = new StringBuilder("  Exact: ");
+						lineOut.Append(chanMgr.Name);
+						lineOut.Append(" to ");
+						lineOut.Append(chanx.Name);
+						writer.WriteLine(lineOut);
+						if (chanx.xLightsAddress > 0)
+						{
+							if (chanMgr.xLightsAddress != chanx.xLightsAddress)
+							{
+								lineOut.Clear();
+								lineOut.Append("    But the xLights Channel Address does not match! ");
+								lineOut.Append(chanMgr.xLightsAddress.ToString());
+								lineOut.Append(" != ");
+								lineOut.Append(chanx.xLightsAddress.ToString());
+								writer.WriteLine(lineOut);
+							}
+						}
+					}
+				}
+			}
+
+			writer.WriteLine("");
+			writer.WriteLine("[Fuzzy Matches to xLights Models or Groups]");
+			for (int m = 0; m < AllChannels.Count; m++)
+			{
+				DMXChannel chanMgr = AllChannels[m];
+				if (chanMgr.TagX != null)
+				{
+					xMember chanx = (xMember)chanMgr.TagX;
+					if (!chanx.MatchExact)
+					{
+						StringBuilder lineOut = new StringBuilder("  Fuzzy: ");
+						lineOut.Append(chanMgr.Name);
+						lineOut.Append(" to ");
+						lineOut.Append(chanx.Name);
+						writer.WriteLine(lineOut);
+						if (chanx.xLightsAddress > 0)
+						{
+							if (chanMgr.xLightsAddress != chanx.xLightsAddress)
+							{
+								lineOut.Clear();
+								lineOut.Append("    But the xLights Channel Address does not match! ");
+								lineOut.Append(chanMgr.xLightsAddress.ToString());
+								lineOut.Append(" != ");
+								lineOut.Append(chanx.xLightsAddress.ToString());
+								writer.WriteLine(lineOut);
+							}
+						}
+					}
+				}
+			}
+
+			writer.WriteLine("");
+			writer.WriteLine("[Managed Channels with NO xLights Match]");
+			for (int m = 0; m < AllChannels.Count; m++)
+			{
+				DMXChannel chanMgr = AllChannels[m];
+				if (chanMgr.TagX == null)
+				{
+					StringBuilder lineOut = new StringBuilder("  NoMatch: ");
+					lineOut.Append(chanMgr.Name);
+					writer.WriteLine(lineOut);
+				}
+			}
+
+			writer.WriteLine("");
+			writer.WriteLine("[xLights Models and Groups with NO Managed Match]");
+			for (int x = 0; x < xSeq.xModels.Count; x++)
+			{
+				xModel chanx = xSeq.xModels[x];
+				if (chanx.Tag == null)
+				{
+					StringBuilder lineOut = new StringBuilder("  NoMatch: ");
+					lineOut.Append(chanx.Name);
+					writer.WriteLine(lineOut);
+				}
+			}
+			for (int x = 0; x < xSeq.xModelGroups.Count; x++)
+			{
+				xModelGroup chanx = xSeq.xModelGroups[x];
+				if (chanx.Tag == null)
+				{
+					StringBuilder lineOut = new StringBuilder("  NoMatch: ");
+					lineOut.Append(chanx.Name);
+					writer.WriteLine(lineOut);
+				}
+			}
+
+			writer.WriteLine("");
+			writer.WriteLine("* ( End of Report ) *");
+			writer.Close();
+
+
+
+			// Resort back to default by channel number
+			DMXChannel.SortByName = false;
+			AllChannels.Sort();
+			Membership.sortMode = oldLORsort;
+			lseq.Channels.Sort();
+			xRGBEffects.SortByName = false;
+			xSeq.xModels.Sort();
+			xSeq.xModelGroups.Sort();
+
+			Fyle.LaunchFile(reportFile);
+
+
+			return ret;
+		}
+
+
+
+
+
+
+	}
+
+	public class FuzzyList: IComparable<FuzzyList>
+	{
+		public double Score = 0;
+		public object Item1 = null;
+		public object Item2 = null;
+
+		public FuzzyList(object firstItem, object secondItem, double fuzzyScore)
+		{
+			Item1 = firstItem;
+			Item2 = secondItem;
+			Score = fuzzyScore;
+		}
+
+		public int CompareTo(FuzzyList otherItem)
+		{
+			// Note: Compare other item to this item (instead of normal this item to other) to get a REVERSE sort with highest scores first
+			return otherItem.Score.CompareTo(Score);
+		}
+	}
+
+
+}

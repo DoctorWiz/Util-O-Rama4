@@ -14,7 +14,7 @@ using System.Configuration;
 using System.Threading;
 using Microsoft.Win32;
 using xUtilities;
-using LORUtils;
+using LORUtils; using FileHelper;
 using Musik;
 //using Ini;
 using TagLib;

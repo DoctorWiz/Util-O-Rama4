@@ -208,25 +208,25 @@ namespace LORUtils
 		public int CompareTo(IMember other)
 		{
 			int result = 0;
-			if (parentSequence.Members.sortMode == Membership.SORTbySavedIndex)
+			if (Membership.sortMode == Membership.SORTbySavedIndex)
 			{
 				result = mySavedIndex.CompareTo(other.SavedIndex);
 			}
 			else
 			{
-				if (parentSequence.Members.sortMode == Membership.SORTbyName)
+				if (Membership.sortMode == Membership.SORTbyName)
 				{
 					result = myName.CompareTo(other.Name);
 				}
 				else
 				{
-					if (parentSequence.Members.sortMode == Membership.SORTbyAltSavedIndex)
+					if (Membership.sortMode == Membership.SORTbyAltSavedIndex)
 					{
 						result = myAltSavedIndex.CompareTo(other.AltSavedIndex);
 					}
 					else
 					{
-						if (parentSequence.Members.sortMode == Membership.SORTbyOutput)
+						if (Membership.sortMode == Membership.SORTbyOutput)
 						{
 							Channel ch = (Channel)other;
 							output.ToString().CompareTo(ch.output.ToString());
@@ -613,19 +613,19 @@ namespace LORUtils
 		public int CompareTo(IMember other)
 		{
 			int result = 0;
-			if (parentSequence.Members.sortMode == Membership.SORTbySavedIndex)
+			if (Membership.sortMode == Membership.SORTbySavedIndex)
 			{
 				result = mySavedIndex.CompareTo(other.SavedIndex);
 			}
 			else
 			{
-				if (parentSequence.Members.sortMode == Membership.SORTbyName)
+				if (Membership.sortMode == Membership.SORTbyName)
 				{
 					result = myName.CompareTo(other.Name);
 				}
 				else
 				{
-					if (parentSequence.Members.sortMode == Membership.SORTbyAltSavedIndex)
+					if (Membership.sortMode == Membership.SORTbyAltSavedIndex)
 					{
 						result = myAltSavedIndex.CompareTo(other.AltSavedIndex);
 					}
@@ -908,19 +908,19 @@ namespace LORUtils
 		public int CompareTo(IMember other)
 		{
 			int result = 0;
-			if (parentSequence.Members.sortMode == Membership.SORTbySavedIndex)
+			if (Membership.sortMode == Membership.SORTbySavedIndex)
 			{
 				result = mySavedIndex.CompareTo(other.SavedIndex);
 			}
 			else
 			{
-				if (parentSequence.Members.sortMode == Membership.SORTbyName)
+				if (Membership.sortMode == Membership.SORTbyName)
 				{
 					result = myName.CompareTo(other.Name);
 				}
 				else
 				{
-					if (parentSequence.Members.sortMode == Membership.SORTbyAltSavedIndex)
+					if (Membership.sortMode == Membership.SORTbyAltSavedIndex)
 					{
 						result = myAltSavedIndex.CompareTo(other.AltSavedIndex);
 					}
@@ -1198,19 +1198,19 @@ namespace LORUtils
 		public int CompareTo(IMember other)
 		{
 			int result = 0;
-			if (parentSequence.Members.sortMode == Membership.SORTbySavedIndex)
+			if (Membership.sortMode == Membership.SORTbySavedIndex)
 			{
 				result = SavedIndex.CompareTo(other.SavedIndex);
 			}
 			else
 			{
-				if (parentSequence.Members.sortMode == Membership.SORTbyName)
+				if (Membership.sortMode == Membership.SORTbyName)
 				{
 					result = myName.CompareTo(other.Name);
 				}
 				else
 				{
-					if (parentSequence.Members.sortMode == Membership.SORTbyAltSavedIndex)
+					if (Membership.sortMode == Membership.SORTbyAltSavedIndex)
 					{
 						result = myAltSavedIndex.CompareTo(other.AltSavedIndex);
 					}
@@ -1575,19 +1575,19 @@ namespace LORUtils
 		public int CompareTo(IMember other)
 		{
 			int result = 0;
-			if (parentSequence.Members.sortMode == Membership.SORTbySavedIndex)
+			if (Membership.sortMode == Membership.SORTbySavedIndex)
 			{
 				result = SavedIndex.CompareTo(other.SavedIndex);
 			}
 			else
 			{
-				if (parentSequence.Members.sortMode == Membership.SORTbyName)
+				if (Membership.sortMode == Membership.SORTbyName)
 				{
 					result = myName.CompareTo(other.Name);
 				}
 				else
 				{
-					if (parentSequence.Members.sortMode == Membership.SORTbyAltSavedIndex)
+					if (Membership.sortMode == Membership.SORTbyAltSavedIndex)
 					{
 						result = myAltSavedIndex.CompareTo(other.AltSavedIndex);
 					}

@@ -1,10 +1,10 @@
-﻿using LORUtils;
+﻿using LORUtils; using FileHelper;
 using System;
 using System.IO;
 using System.Windows.Forms;
 using System.Media;
 using System.Drawing;
-using LORUtils;
+using LORUtils; using FileHelper;
 
 namespace StripORama
 {

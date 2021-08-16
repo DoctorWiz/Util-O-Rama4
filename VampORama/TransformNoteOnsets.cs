@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-using LORUtils;
+using LORUtils; using FileHelper;
 using xUtilities;
 
 namespace UtilORama4
@@ -337,7 +337,7 @@ namespace UtilORama4
 			{
 				err = e.HResult;
 				string m = e.Message;
-				if (utils.IsWizard)
+				if (Fyle.isWiz)
 				{
 					System.Diagnostics.Debugger.Break();
 				}

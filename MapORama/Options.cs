@@ -8,10 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using FuzzyString;
-using LORUtils;
+using LORUtils; using FileHelper;
 using System.IO;
 
-namespace MapORama
+namespace UtilORama4
 {
 	public partial class frmOptions : Form
 	{

@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
-using LORUtils;
+using LORUtils; using FileHelper;
 
-namespace InfoRama
+namespace UtilORama4
 {
 	public partial class frmReport : Form
 	{
@@ -39,6 +39,7 @@ namespace InfoRama
 		private Cursor prevCursor = Cursors.Default;
 		private bool busy = false;
 		private FileInfo fileinfo = null;
+		private bool isWiz = Fyle.IsWizard || Fyle.IsAWizard;
 
 
 		#region HTML Tag Constants
@@ -132,7 +133,7 @@ namespace InfoRama
 			string mySubDir = "\\UtilORama\\";
 			tempPath = appDataDir + mySubDir;
 
-			if (utils.IsWizard) btnRename.Visible = true;
+			btnRename.Visible = isWiz;
 
 			if (!Directory.Exists(tempPath))
 			{
@@ -160,7 +161,7 @@ namespace InfoRama
 				if (arg.Substring(1, 2).CompareTo(":\\") == 0) isFile = 1;  // Local File
 				if (arg.Substring(0, 2).CompareTo("\\\\") == 0) isFile = 1; // UNC file
 				if (arg.Substring(4).IndexOf(".") > utils.UNDEFINED) isFile++;  // contains a period
-				if (utils.InvalidCharacterCount(arg) == 0) isFile++;
+				if (Fyle.InvalidCharacterCount(arg) == 0) isFile++;
 				if (isFile == 3)
 				{
 					if (File.Exists(arg))
@@ -646,7 +647,7 @@ namespace InfoRama
 				ReportSummary();
 				ReportFileInfo();
 				ReportSequenceInfo();
-				if (seq.sequenceType == SequenceType.Musical)
+				if (seq.SequenceType == SequenceType.Musical)
 				{
 					ReportMusicInfo();
 				}
@@ -906,16 +907,16 @@ namespace InfoRama
 			AddItem("Created By", info, thisLevel);
 			thisLevel = itemLevel.normal;
 			//AddItem("Last Modified", ConvertDateFormat(seq.info.lastModified), itemLevel.normal);
-			//AddItem("Last Modified", utils.FormatDateTime(seq.info.lastModified), itemLevel.normal);
-			AddItem("Last Modified At", utils.FileModiedAt(fileSequence), itemLevel.normal);
+			//AddItem("Last Modified", Fyle.FormatDateTime(seq.info.lastModified), itemLevel.normal);
+			AddItem("Last Modified At", Fyle.FileModifiedAt(fileSequence), itemLevel.normal);
 			info = seq.info.modifiedBy;
 			if (info.Length < 1) info = "(blank)";
 			AddItem("Last Modified By", info);
 
 
-			AddItem("File Size", utils.FileSizeFormated(fileSequence), itemLevel.normal);
-			AddItem("Sequence Type", seq.sequenceType.ToString(), itemLevel.normal);
-			if (seq.sequenceType == SequenceType.Musical)
+			AddItem("File Size", Fyle.FileSizeFormatted(fileSequence), itemLevel.normal);
+			AddItem("Sequence Type", seq.SequenceType.ToString(), itemLevel.normal);
+			if (seq.SequenceType == SequenceType.Musical)
 			{
 				AddItem("Song Title", seq.info.music.Title, itemLevel.normal);
 				AddItem("By Artist", seq.info.music.Artist, itemLevel.normal);
@@ -963,13 +964,13 @@ namespace InfoRama
 				AddItem("Your default Light-O-Rama Sequence folder is", utils.DefaultSequencesPath, nextLevel);
 			}
 			AddItem("Sequence Created at", ConvertDateFormat(seq.info.createdAt), itemLevel.normal);
-			AddItem("File Created on (O/S)", utils.FormatDateTime(fileinfo.CreationTime), itemLevel.normal);
-			AddItem("File Last Modified on", utils.FormatDateTime(fileinfo.LastWriteTime));
-			AddItem("File Last Accessed On", utils.FormatDateTime(fileinfo.LastAccessTime));
-			string sz = utils.FileSizeFormated(fileSequence, "") + " (" + utils.FileSizeFormated(fileSequence, "B") + ")";
+			AddItem("File Created on (O/S)", Fyle.FormatDateTime(fileinfo.CreationTime), itemLevel.normal);
+			AddItem("File Last Modified on", Fyle.FormatDateTime(fileinfo.LastWriteTime));
+			AddItem("File Last Accessed On", Fyle.FormatDateTime(fileinfo.LastAccessTime));
+			string sz = Fyle.FileSizeFormatted(fileSequence, "") + " (" + Fyle.FileSizeFormatted(fileSequence, "B") + ")";
 			AddItem("File Size", sz, itemLevel.normal);
 			AddItem("Line Count", seq.lineCount.ToString(), itemLevel.normal);
-			if (seq.sequenceType == SequenceType.Musical)
+			if (seq.SequenceType == SequenceType.Musical)
 			{
 				AddItem("Music File Name", Path.GetFileName(seq.info.music.File), itemLevel.normal);
 				filePath = Path.GetDirectoryName(seq.info.music.File);
@@ -1006,11 +1007,11 @@ namespace InfoRama
 			{
 				AddItem("Your default Light-O-Rama Sequence folder is", utils.DefaultSequencesPath, nextLevel);
 			}
-			AddItem("File Created on", utils.FormatDateTime(fileinfo.CreationTime), itemLevel.normal);
-			AddItem("File Last Written On", utils.FormatDateTime(fileinfo.LastWriteTime));
-			AddItem("File Last Accessed On", utils.FormatDateTime(fileinfo.LastAccessTime));
+			AddItem("File Created on", Fyle.FormatDateTime(fileinfo.CreationTime), itemLevel.normal);
+			AddItem("File Last Written On", Fyle.FormatDateTime(fileinfo.LastWriteTime));
+			AddItem("File Last Accessed On", Fyle.FormatDateTime(fileinfo.LastAccessTime));
 			
-			string sz = utils.FileSizeFormated(theFile, "") + " (" + utils.FileSizeFormated(theFile, "B") + ")";
+			string sz = Fyle.FileSizeFormatted(theFile, "") + " (" + Fyle.FileSizeFormatted(theFile, "B") + ")";
 			AddItem("File Size", sz, itemLevel.normal);
 			
 
@@ -1300,7 +1301,7 @@ namespace InfoRama
 			newName += i;
 			newName += " " + y2 + "] ";
 			newName += seq.Channels.Count.ToString() + "ch";
-			newName = utils.ReplaceInvalidFilenameCharacters(newName);
+			newName = Fyle.ReplaceInvalidFilenameCharacters(newName);
 			string msg = "... to '" + newName + "'" + utils.CRLF + utils.CRLF;
 			msg += "(In folder '" + Path.GetDirectoryName(seq.filename) + "')";
 			DialogResult dr = MessageBox.Show(this, msg, "Rename file...", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
@@ -1467,4 +1468,4 @@ namespace InfoRama
         }
 		*/
 	} // end form frmReport
-} // end namespace InfoRama
+} // end namespace UtilORama4
