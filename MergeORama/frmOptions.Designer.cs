@@ -165,7 +165,7 @@
 			this.optMergeTracks.Name = "optMergeTracks";
 			this.optMergeTracks.Size = new System.Drawing.Size(97, 17);
 			this.optMergeTracks.TabIndex = 8;
-			this.optMergeTracks.Text = "Merge LORTrack4(s)";
+			this.optMergeTracks.Text = "Merge Track(s)";
 			this.optMergeTracks.UseVisualStyleBackColor = true;
 			this.optMergeTracks.CheckedChanged += new System.EventHandler(this.optMergeTracks_CheckedChanged);
 			// 
@@ -177,7 +177,7 @@
 			this.optAddTracks.Name = "optAddTracks";
 			this.optAddTracks.Size = new System.Drawing.Size(162, 17);
 			this.optAddTracks.TabIndex = 10;
-			this.optAddTracks.Text = "Add New LORTrack4(s) to the end";
+			this.optAddTracks.Text = "Add New Track(s) to the end";
 			this.optAddTracks.UseVisualStyleBackColor = true;
 			// 
 			// grpEffects
@@ -198,7 +198,7 @@
 			this.optMergeEffects.Name = "optMergeEffects";
 			this.optMergeEffects.Size = new System.Drawing.Size(121, 17);
 			this.optMergeEffects.TabIndex = 21;
-			this.optMergeEffects.Text = "Merge LORSeqInfo4 + Effects";
+			this.optMergeEffects.Text = "Merge Info + Effects";
 			this.optMergeEffects.UseVisualStyleBackColor = true;
 			// 
 			// optInfoOnly
@@ -208,7 +208,7 @@
 			this.optInfoOnly.Name = "optInfoOnly";
 			this.optInfoOnly.Size = new System.Drawing.Size(229, 17);
 			this.optInfoOnly.TabIndex = 20;
-			this.optInfoOnly.Text = "Merge LORTrack4 / Group / Channel LORSeqInfo4 ONLY";
+			this.optInfoOnly.Text = "Merge Track / Group / Channel Info ONLY";
 			this.optInfoOnly.UseVisualStyleBackColor = true;
 			// 
 			// grpGroups

@@ -13,7 +13,6 @@
 *.old
 *.wik
 *.bad
-*.zip
 
 # User-specific files
 *.suo

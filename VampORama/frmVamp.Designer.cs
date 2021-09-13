@@ -1,4 +1,4 @@
-﻿namespace UtilORama4
+﻿namespace VampORama
 {
 	partial class frmVamp
 	{
@@ -33,15 +33,11 @@
 			this.ttip = new System.Windows.Forms.ToolTip(this.components);
 			this.btnLaunchxLights = new System.Windows.Forms.Button();
 			this.btnSequenceEditor = new System.Windows.Forms.Button();
-			this.btnExploreLOR = new System.Windows.Forms.Button();
-			this.btnExploreVamp = new System.Windows.Forms.Button();
 			this.btnExplorexLights = new System.Windows.Forms.Button();
+			this.btnExploreLOR = new System.Windows.Forms.Button();
 			this.btnExploreTemp = new System.Windows.Forms.Button();
 			this.btnCmdTemp = new System.Windows.Forms.Button();
-			this.pnlTrackBeatsX = new System.Windows.Forms.Panel();
-			this.vscStartBeat = new System.Windows.Forms.VScrollBar();
-			this.txtStartBeat = new System.Windows.Forms.TextBox();
-			this.lblTrackBeatsX = new System.Windows.Forms.Label();
+			this.btnExploreVamp = new System.Windows.Forms.Button();
 			this.staStatus = new System.Windows.Forms.StatusStrip();
 			this.pnlHelp = new System.Windows.Forms.ToolStripStatusLabel();
 			this.pnlProgress = new System.Windows.Forms.ToolStripProgressBar();
@@ -65,12 +61,6 @@
 			this.mnuTimingMarks = new System.Windows.Forms.ToolStripMenuItem();
 			this.mnuTranscription = new System.Windows.Forms.ToolStripMenuItem();
 			this.grpTimings = new System.Windows.Forms.GroupBox();
-			this.pnlVamping = new System.Windows.Forms.Panel();
-			this.lblSongName = new System.Windows.Forms.Label();
-			this.lblAnalyzing = new System.Windows.Forms.Label();
-			this.lblWait = new System.Windows.Forms.Label();
-			this.lblVampRed = new System.Windows.Forms.Label();
-			this.grpExplore = new System.Windows.Forms.GroupBox();
 			this.lblNote3Third = new System.Windows.Forms.Label();
 			this.lblNote1Bars = new System.Windows.Forms.Label();
 			this.lblWorkFolder = new System.Windows.Forms.Label();
@@ -107,7 +97,7 @@
 			this.cboMethodTempo = new System.Windows.Forms.ComboBox();
 			this.lblTempoAlign = new System.Windows.Forms.Label();
 			this.cboAlignTempo = new System.Windows.Forms.ComboBox();
-			this.grpPoly2 = new System.Windows.Forms.GroupBox();
+			this.grpTrans = new System.Windows.Forms.GroupBox();
 			this.lblTrans2Plugin = new System.Windows.Forms.Label();
 			this.lblTrans2Labels = new System.Windows.Forms.Label();
 			this.comboBox1 = new System.Windows.Forms.ComboBox();
@@ -125,7 +115,7 @@
 			this.lblKeyPlugin = new System.Windows.Forms.Label();
 			this.cboMethodPitchKey = new System.Windows.Forms.ComboBox();
 			this.lblKeyAlign = new System.Windows.Forms.Label();
-			this.cboAlignPitchKey = new System.Windows.Forms.ComboBox();
+			this.cboAlignPitch = new System.Windows.Forms.ComboBox();
 			this.checkBox4 = new System.Windows.Forms.CheckBox();
 			this.grpSpectrum = new System.Windows.Forms.GroupBox();
 			this.chkSpectrum = new System.Windows.Forms.CheckBox();
@@ -135,14 +125,14 @@
 			this.cboMethodSpectrum = new System.Windows.Forms.ComboBox();
 			this.lblSpectrumAlign = new System.Windows.Forms.Label();
 			this.cboAlignSpectrum = new System.Windows.Forms.ComboBox();
-			this.grpPolyphonic = new System.Windows.Forms.GroupBox();
+			this.grpTranscription = new System.Windows.Forms.GroupBox();
 			this.lblTranscribePlugin = new System.Windows.Forms.Label();
 			this.lblTranscribeLabels = new System.Windows.Forms.Label();
-			this.cboLabelsPolyphonic = new System.Windows.Forms.ComboBox();
-			this.chkPolyphonic = new System.Windows.Forms.CheckBox();
-			this.cboMethodPolyphonic = new System.Windows.Forms.ComboBox();
+			this.cboLabelsTranscription = new System.Windows.Forms.ComboBox();
+			this.chkTranscribe = new System.Windows.Forms.CheckBox();
+			this.cboMethodTranscription = new System.Windows.Forms.ComboBox();
 			this.lblTranscribeAlign = new System.Windows.Forms.Label();
-			this.cboAlignPolyphonic = new System.Windows.Forms.ComboBox();
+			this.cboAlignTranscribe = new System.Windows.Forms.ComboBox();
 			this.chkChromagram = new System.Windows.Forms.CheckBox();
 			this.grpOnsets = new System.Windows.Forms.GroupBox();
 			this.lblStepSize = new System.Windows.Forms.Label();
@@ -184,6 +174,10 @@
 			this.cboMethodBarsBeats = new System.Windows.Forms.ComboBox();
 			this.lblAlignBarsBeats = new System.Windows.Forms.Label();
 			this.cboAlignBarsBeats = new System.Windows.Forms.ComboBox();
+			this.pnlTrackBeatsX = new System.Windows.Forms.Panel();
+			this.vscStartBeat = new System.Windows.Forms.VScrollBar();
+			this.txtStartBeat = new System.Windows.Forms.TextBox();
+			this.lblTrackBeatsX = new System.Windows.Forms.Label();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.swTrackBeat = new JCS.ToggleSwitch();
 			this.lblTrackBeat34 = new System.Windows.Forms.Label();
@@ -192,7 +186,6 @@
 			this.chkChords = new System.Windows.Forms.CheckBox();
 			this.chkFlux = new System.Windows.Forms.CheckBox();
 			this.grpAudio = new System.Windows.Forms.GroupBox();
-			this.lblSongTime = new System.Windows.Forms.Label();
 			this.btnBrowseAudio = new System.Windows.Forms.Button();
 			this.txtFileAudio = new System.Windows.Forms.TextBox();
 			this.lblFileAudio = new System.Windows.Forms.Label();
@@ -209,20 +202,22 @@
 			this.txtSaveNamexL = new System.Windows.Forms.TextBox();
 			this.imlTreeIcons = new System.Windows.Forms.ImageList(this.components);
 			this.grpAnalyze = new System.Windows.Forms.GroupBox();
-			this.lblVampTime = new System.Windows.Forms.Label();
 			this.btnOK = new System.Windows.Forms.Button();
 			this.lblStep3 = new System.Windows.Forms.Label();
+			this.pnlVamping = new System.Windows.Forms.Panel();
+			this.lblSongName = new System.Windows.Forms.Label();
+			this.lblAnalyzing = new System.Windows.Forms.Label();
+			this.lblWait = new System.Windows.Forms.Label();
+			this.lblVampRed = new System.Windows.Forms.Label();
 			this.grpOptions = new System.Windows.Forms.GroupBox();
 			this.lblPickYourPoison = new System.Windows.Forms.Label();
-			this.chkReuse = new System.Windows.Forms.CheckBox();
 			this.picVampire = new System.Windows.Forms.PictureBox();
 			this.lblHelpOnsets = new System.Windows.Forms.Label();
-			this.picPoisonArrow = new System.Windows.Forms.PictureBox();
+			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.lblStep2A = new System.Windows.Forms.Label();
-			this.picSleepy = new System.Windows.Forms.PictureBox();
+			this.chkReuse = new System.Windows.Forms.CheckBox();
 			this.tmrAni = new System.Windows.Forms.Timer(this.components);
 			this.grpSaveLOR = new System.Windows.Forms.GroupBox();
-			this.lblSeqTime = new System.Windows.Forms.Label();
 			this.chkAutolaunch = new System.Windows.Forms.CheckBox();
 			this.picLOR = new System.Windows.Forms.PictureBox();
 			this.panel3 = new System.Windows.Forms.Panel();
@@ -233,37 +228,35 @@
 			this.lblFileSequence = new System.Windows.Forms.Label();
 			this.btnSaveSeq = new System.Windows.Forms.Button();
 			this.txtSeqName = new System.Windows.Forms.TextBox();
-			this.pnlTrackBeatsX.SuspendLayout();
 			this.staStatus.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.grpTimings.SuspendLayout();
-			this.pnlVamping.SuspendLayout();
-			this.grpExplore.SuspendLayout();
 			this.grpPlatform.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
 			this.grpVocals.SuspendLayout();
 			this.grpSegments.SuspendLayout();
 			this.grpTempo.SuspendLayout();
-			this.grpPoly2.SuspendLayout();
+			this.grpTrans.SuspendLayout();
 			this.grpPitchKey.SuspendLayout();
 			this.grpSpectrum.SuspendLayout();
-			this.grpPolyphonic.SuspendLayout();
+			this.grpTranscription.SuspendLayout();
 			this.grpOnsets.SuspendLayout();
 			this.pnlOnsetSensitivity.SuspendLayout();
 			this.grpBarsBeats.SuspendLayout();
 			this.pnlBeatFade.SuspendLayout();
 			this.pnlNotes.SuspendLayout();
+			this.pnlTrackBeatsX.SuspendLayout();
 			this.panel1.SuspendLayout();
 			this.grpAudio.SuspendLayout();
 			this.grpSavex.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picxLights)).BeginInit();
 			this.panel2.SuspendLayout();
 			this.grpAnalyze.SuspendLayout();
+			this.pnlVamping.SuspendLayout();
 			this.grpOptions.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picVampire)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.picPoisonArrow)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.picSleepy)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.grpSaveLOR.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picLOR)).BeginInit();
 			this.panel3.SuspendLayout();
@@ -274,75 +267,66 @@
 			this.btnLaunchxLights.AllowDrop = true;
 			this.btnLaunchxLights.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnLaunchxLights.Image = ((System.Drawing.Image)(resources.GetObject("btnLaunchxLights.Image")));
-			this.btnLaunchxLights.Location = new System.Drawing.Point(96, 16);
+			this.btnLaunchxLights.Location = new System.Drawing.Point(404, 28);
 			this.btnLaunchxLights.Name = "btnLaunchxLights";
 			this.btnLaunchxLights.Size = new System.Drawing.Size(36, 36);
-			this.btnLaunchxLights.TabIndex = 179;
+			this.btnLaunchxLights.TabIndex = 176;
 			this.ttip.SetToolTip(this.btnLaunchxLights, "Launch xLights");
 			this.btnLaunchxLights.UseVisualStyleBackColor = true;
 			this.btnLaunchxLights.Visible = false;
+			this.btnLaunchxLights.Click += new System.EventHandler(this.btnLaunchxLights_Click);
 			// 
 			// btnSequenceEditor
 			// 
 			this.btnSequenceEditor.AllowDrop = true;
 			this.btnSequenceEditor.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnSequenceEditor.Image = ((System.Drawing.Image)(resources.GetObject("btnSequenceEditor.Image")));
-			this.btnSequenceEditor.Location = new System.Drawing.Point(11, 16);
+			this.btnSequenceEditor.Location = new System.Drawing.Point(320, 28);
 			this.btnSequenceEditor.Name = "btnSequenceEditor";
 			this.btnSequenceEditor.Size = new System.Drawing.Size(36, 36);
-			this.btnSequenceEditor.TabIndex = 178;
+			this.btnSequenceEditor.TabIndex = 176;
 			this.ttip.SetToolTip(this.btnSequenceEditor, "Launch Light-O-Rama Sequence Editor");
 			this.btnSequenceEditor.UseVisualStyleBackColor = true;
 			this.btnSequenceEditor.Visible = false;
-			// 
-			// btnExploreLOR
-			// 
-			this.btnExploreLOR.AllowDrop = true;
-			this.btnExploreLOR.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnExploreLOR.Image = ((System.Drawing.Image)(resources.GetObject("btnExploreLOR.Image")));
-			this.btnExploreLOR.Location = new System.Drawing.Point(53, 16);
-			this.btnExploreLOR.Name = "btnExploreLOR";
-			this.btnExploreLOR.Size = new System.Drawing.Size(36, 36);
-			this.btnExploreLOR.TabIndex = 177;
-			this.ttip.SetToolTip(this.btnExploreLOR, "Explore Light-O-Rama Sequences Folder");
-			this.btnExploreLOR.UseVisualStyleBackColor = true;
-			this.btnExploreLOR.Visible = false;
-			// 
-			// btnExploreVamp
-			// 
-			this.btnExploreVamp.AllowDrop = true;
-			this.btnExploreVamp.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnExploreVamp.Image = ((System.Drawing.Image)(resources.GetObject("btnExploreVamp.Image")));
-			this.btnExploreVamp.Location = new System.Drawing.Point(266, 16);
-			this.btnExploreVamp.Name = "btnExploreVamp";
-			this.btnExploreVamp.Size = new System.Drawing.Size(36, 36);
-			this.btnExploreVamp.TabIndex = 183;
-			this.ttip.SetToolTip(this.btnExploreVamp, "Explore the Vamperizer Source Code Folder");
-			this.btnExploreVamp.UseVisualStyleBackColor = true;
-			this.btnExploreVamp.Visible = false;
+			this.btnSequenceEditor.Click += new System.EventHandler(this.btnSequenceEditor_Click);
 			// 
 			// btnExplorexLights
 			// 
 			this.btnExplorexLights.AllowDrop = true;
 			this.btnExplorexLights.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnExplorexLights.Image = ((System.Drawing.Image)(resources.GetObject("btnExplorexLights.Image")));
-			this.btnExplorexLights.Location = new System.Drawing.Point(138, 16);
+			this.btnExplorexLights.Location = new System.Drawing.Point(446, 28);
 			this.btnExplorexLights.Name = "btnExplorexLights";
 			this.btnExplorexLights.Size = new System.Drawing.Size(36, 36);
-			this.btnExplorexLights.TabIndex = 182;
+			this.btnExplorexLights.TabIndex = 175;
 			this.ttip.SetToolTip(this.btnExplorexLights, "Explore xLights Show Folder");
 			this.btnExplorexLights.UseVisualStyleBackColor = true;
 			this.btnExplorexLights.Visible = false;
+			this.btnExplorexLights.Click += new System.EventHandler(this.btnExplorexLights_Click);
+			// 
+			// btnExploreLOR
+			// 
+			this.btnExploreLOR.AllowDrop = true;
+			this.btnExploreLOR.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnExploreLOR.Image = ((System.Drawing.Image)(resources.GetObject("btnExploreLOR.Image")));
+			this.btnExploreLOR.Location = new System.Drawing.Point(362, 28);
+			this.btnExploreLOR.Name = "btnExploreLOR";
+			this.btnExploreLOR.Size = new System.Drawing.Size(36, 36);
+			this.btnExploreLOR.TabIndex = 174;
+			this.ttip.SetToolTip(this.btnExploreLOR, "Explore Light-O-Rama Sequences Folder");
+			this.btnExploreLOR.UseVisualStyleBackColor = true;
+			this.btnExploreLOR.Visible = false;
+			this.btnExploreLOR.Click += new System.EventHandler(this.btnExploreLOR_Click);
 			// 
 			// btnExploreTemp
 			// 
 			this.btnExploreTemp.AllowDrop = true;
 			this.btnExploreTemp.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnExploreTemp.Image = ((System.Drawing.Image)(resources.GetObject("btnExploreTemp.Image")));
-			this.btnExploreTemp.Location = new System.Drawing.Point(222, 16);
+			this.btnExploreTemp.Location = new System.Drawing.Point(530, 28);
 			this.btnExploreTemp.Name = "btnExploreTemp";
 			this.btnExploreTemp.Size = new System.Drawing.Size(36, 36);
-			this.btnExploreTemp.TabIndex = 181;
+			this.btnExploreTemp.TabIndex = 172;
 			this.ttip.SetToolTip(this.btnExploreTemp, "Explore the Temp Working Folder");
 			this.btnExploreTemp.UseVisualStyleBackColor = true;
 			this.btnExploreTemp.Visible = false;
@@ -353,64 +337,28 @@
 			this.btnCmdTemp.AllowDrop = true;
 			this.btnCmdTemp.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnCmdTemp.Image = ((System.Drawing.Image)(resources.GetObject("btnCmdTemp.Image")));
-			this.btnCmdTemp.Location = new System.Drawing.Point(180, 16);
+			this.btnCmdTemp.Location = new System.Drawing.Point(488, 28);
 			this.btnCmdTemp.Name = "btnCmdTemp";
 			this.btnCmdTemp.Size = new System.Drawing.Size(36, 36);
-			this.btnCmdTemp.TabIndex = 180;
+			this.btnCmdTemp.TabIndex = 171;
 			this.ttip.SetToolTip(this.btnCmdTemp, "Open Command Prompt in the Temp Working Directory");
 			this.btnCmdTemp.UseVisualStyleBackColor = true;
 			this.btnCmdTemp.Visible = false;
 			this.btnCmdTemp.Click += new System.EventHandler(this.btnCmdTemp_Click);
 			// 
-			// pnlTrackBeatsX
+			// btnExploreVamp
 			// 
-			this.pnlTrackBeatsX.Controls.Add(this.vscStartBeat);
-			this.pnlTrackBeatsX.Controls.Add(this.txtStartBeat);
-			this.pnlTrackBeatsX.Controls.Add(this.lblTrackBeatsX);
-			this.pnlTrackBeatsX.Location = new System.Drawing.Point(6, 82);
-			this.pnlTrackBeatsX.Name = "pnlTrackBeatsX";
-			this.pnlTrackBeatsX.Size = new System.Drawing.Size(101, 23);
-			this.pnlTrackBeatsX.TabIndex = 140;
-			this.ttip.SetToolTip(this.pnlTrackBeatsX, "Sometimes the very first beat detected is NOT the first beat of the bar.\r\nIf (and" +
-        " only if) this happens, you can correct it here.\r\n");
-			// 
-			// vscStartBeat
-			// 
-			this.vscStartBeat.LargeChange = 1;
-			this.vscStartBeat.Location = new System.Drawing.Point(67, -3);
-			this.vscStartBeat.Maximum = 4;
-			this.vscStartBeat.Minimum = 1;
-			this.vscStartBeat.Name = "vscStartBeat";
-			this.vscStartBeat.Size = new System.Drawing.Size(16, 18);
-			this.vscStartBeat.TabIndex = 28;
-			this.ttip.SetToolTip(this.vscStartBeat, "Sometimes the very first beat detected is NOT the first beat of the bar.\r\nIf (and" +
-        " only if) this happens, you can correct it here.\r\n");
-			this.vscStartBeat.Value = 1;
-			this.vscStartBeat.Scroll += new System.Windows.Forms.ScrollEventHandler(this.vscStartBeat_Scroll_1);
-			// 
-			// txtStartBeat
-			// 
-			this.txtStartBeat.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.txtStartBeat.Location = new System.Drawing.Point(54, 0);
-			this.txtStartBeat.Name = "txtStartBeat";
-			this.txtStartBeat.ReadOnly = true;
-			this.txtStartBeat.Size = new System.Drawing.Size(13, 20);
-			this.txtStartBeat.TabIndex = 7;
-			this.txtStartBeat.Text = "1";
-			// 
-			// lblTrackBeatsX
-			// 
-			this.lblTrackBeatsX.AutoSize = true;
-			this.lblTrackBeatsX.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblTrackBeatsX.ForeColor = System.Drawing.Color.OrangeRed;
-			this.lblTrackBeatsX.Location = new System.Drawing.Point(1, 4);
-			this.lblTrackBeatsX.Name = "lblTrackBeatsX";
-			this.lblTrackBeatsX.Size = new System.Drawing.Size(54, 13);
-			this.lblTrackBeatsX.TabIndex = 6;
-			this.lblTrackBeatsX.Text = "Start Beat";
-			this.ttip.SetToolTip(this.lblTrackBeatsX, "Sometimes the very first beat detected is NOT the first beat of the bar.\r\nIf (and" +
-        " only if) this happens, you can correct it here.");
-			this.lblTrackBeatsX.UseMnemonic = false;
+			this.btnExploreVamp.AllowDrop = true;
+			this.btnExploreVamp.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnExploreVamp.Image = ((System.Drawing.Image)(resources.GetObject("btnExploreVamp.Image")));
+			this.btnExploreVamp.Location = new System.Drawing.Point(574, 28);
+			this.btnExploreVamp.Name = "btnExploreVamp";
+			this.btnExploreVamp.Size = new System.Drawing.Size(36, 36);
+			this.btnExploreVamp.TabIndex = 177;
+			this.ttip.SetToolTip(this.btnExploreVamp, "Explore the Vamperizer Source Code Folder");
+			this.btnExploreVamp.UseVisualStyleBackColor = true;
+			this.btnExploreVamp.Visible = false;
+			this.btnExploreVamp.Click += new System.EventHandler(this.btnExploreVamp_Click);
 			// 
 			// staStatus
 			// 
@@ -588,11 +536,16 @@
 			// 
 			// grpTimings
 			// 
-			this.grpTimings.Controls.Add(this.pnlVamping);
-			this.grpTimings.Controls.Add(this.grpExplore);
 			this.grpTimings.Controls.Add(this.lblNote3Third);
 			this.grpTimings.Controls.Add(this.lblNote1Bars);
+			this.grpTimings.Controls.Add(this.btnExploreVamp);
+			this.grpTimings.Controls.Add(this.btnLaunchxLights);
+			this.grpTimings.Controls.Add(this.btnSequenceEditor);
+			this.grpTimings.Controls.Add(this.btnExplorexLights);
+			this.grpTimings.Controls.Add(this.btnExploreLOR);
 			this.grpTimings.Controls.Add(this.lblWorkFolder);
+			this.grpTimings.Controls.Add(this.btnExploreTemp);
+			this.grpTimings.Controls.Add(this.btnCmdTemp);
 			this.grpTimings.Controls.Add(this.grpPlatform);
 			this.grpTimings.Controls.Add(this.chk24fps);
 			this.grpTimings.Controls.Add(this.btnResetDefaults);
@@ -604,14 +557,14 @@
 			this.grpTimings.Controls.Add(this.grpSegments);
 			this.grpTimings.Controls.Add(this.button3);
 			this.grpTimings.Controls.Add(this.grpTempo);
-			this.grpTimings.Controls.Add(this.grpPoly2);
+			this.grpTimings.Controls.Add(this.grpTrans);
 			this.grpTimings.Controls.Add(this.checkBox2);
 			this.grpTimings.Controls.Add(this.btnTrackSettings);
 			this.grpTimings.Controls.Add(this.checkBox3);
 			this.grpTimings.Controls.Add(this.grpPitchKey);
 			this.grpTimings.Controls.Add(this.checkBox4);
 			this.grpTimings.Controls.Add(this.grpSpectrum);
-			this.grpTimings.Controls.Add(this.grpPolyphonic);
+			this.grpTimings.Controls.Add(this.grpTranscription);
 			this.grpTimings.Controls.Add(this.chkChromagram);
 			this.grpTimings.Controls.Add(this.grpOnsets);
 			this.grpTimings.Controls.Add(this.grpBarsBeats);
@@ -626,81 +579,6 @@
 			this.grpTimings.TabStop = false;
 			this.grpTimings.Text = "      Select Which Timings to Generate";
 			this.grpTimings.Enter += new System.EventHandler(this.grpTimings_Enter);
-			// 
-			// pnlVamping
-			// 
-			this.pnlVamping.Controls.Add(this.lblSongName);
-			this.pnlVamping.Controls.Add(this.lblAnalyzing);
-			this.pnlVamping.Controls.Add(this.lblWait);
-			this.pnlVamping.Controls.Add(this.lblVampRed);
-			this.pnlVamping.Location = new System.Drawing.Point(667, 325);
-			this.pnlVamping.Name = "pnlVamping";
-			this.pnlVamping.Size = new System.Drawing.Size(334, 72);
-			this.pnlVamping.TabIndex = 125;
-			this.pnlVamping.Visible = false;
-			this.pnlVamping.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlVamping_Paint);
-			// 
-			// lblSongName
-			// 
-			this.lblSongName.AutoSize = true;
-			this.lblSongName.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblSongName.ForeColor = System.Drawing.Color.Blue;
-			this.lblSongName.Location = new System.Drawing.Point(5, 33);
-			this.lblSongName.Name = "lblSongName";
-			this.lblSongName.Size = new System.Drawing.Size(216, 18);
-			this.lblSongName.TabIndex = 3;
-			this.lblSongName.Text = "Blue Christmas by Elvis Presley";
-			this.lblSongName.Click += new System.EventHandler(this.lblSongName_Click);
-			// 
-			// lblAnalyzing
-			// 
-			this.lblAnalyzing.AutoSize = true;
-			this.lblAnalyzing.Font = new System.Drawing.Font("Times New Roman", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblAnalyzing.ForeColor = System.Drawing.Color.Red;
-			this.lblAnalyzing.Location = new System.Drawing.Point(5, 7);
-			this.lblAnalyzing.Name = "lblAnalyzing";
-			this.lblAnalyzing.Size = new System.Drawing.Size(189, 24);
-			this.lblAnalyzing.TabIndex = 2;
-			this.lblAnalyzing.Text = "Analyzing your song";
-			// 
-			// lblWait
-			// 
-			this.lblWait.AutoSize = true;
-			this.lblWait.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblWait.ForeColor = System.Drawing.Color.Red;
-			this.lblWait.Location = new System.Drawing.Point(60, 53);
-			this.lblWait.Name = "lblWait";
-			this.lblWait.Size = new System.Drawing.Size(75, 15);
-			this.lblWait.TabIndex = 1;
-			this.lblWait.Text = "Please wait...";
-			// 
-			// lblVampRed
-			// 
-			this.lblVampRed.AutoSize = true;
-			this.lblVampRed.Font = new System.Drawing.Font("Times New Roman", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblVampRed.ForeColor = System.Drawing.Color.Red;
-			this.lblVampRed.Location = new System.Drawing.Point(3, 5);
-			this.lblVampRed.Name = "lblVampRed";
-			this.lblVampRed.Size = new System.Drawing.Size(62, 24);
-			this.lblVampRed.TabIndex = 0;
-			this.lblVampRed.Text = "Vamp";
-			this.lblVampRed.Visible = false;
-			// 
-			// grpExplore
-			// 
-			this.grpExplore.Controls.Add(this.btnExploreVamp);
-			this.grpExplore.Controls.Add(this.btnExplorexLights);
-			this.grpExplore.Controls.Add(this.btnExploreTemp);
-			this.grpExplore.Controls.Add(this.btnCmdTemp);
-			this.grpExplore.Controls.Add(this.btnLaunchxLights);
-			this.grpExplore.Controls.Add(this.btnSequenceEditor);
-			this.grpExplore.Controls.Add(this.btnExploreLOR);
-			this.grpExplore.Location = new System.Drawing.Point(316, 12);
-			this.grpExplore.Name = "grpExplore";
-			this.grpExplore.Size = new System.Drawing.Size(314, 56);
-			this.grpExplore.TabIndex = 179;
-			this.grpExplore.TabStop = false;
-			this.grpExplore.Text = " Explore... ";
 			// 
 			// lblNote3Third
 			// 
@@ -1167,23 +1045,22 @@
 			this.cboAlignTempo.Size = new System.Drawing.Size(135, 21);
 			this.cboAlignTempo.TabIndex = 141;
 			// 
-			// grpPoly2
+			// grpTrans
 			// 
-			this.grpPoly2.Controls.Add(this.lblTrans2Plugin);
-			this.grpPoly2.Controls.Add(this.lblTrans2Labels);
-			this.grpPoly2.Controls.Add(this.comboBox1);
-			this.grpPoly2.Controls.Add(this.checkBox1);
-			this.grpPoly2.Controls.Add(this.comboBox2);
-			this.grpPoly2.Controls.Add(this.lblTrans2Align);
-			this.grpPoly2.Controls.Add(this.cboAlignFoo);
-			this.grpPoly2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.grpPoly2.Location = new System.Drawing.Point(316, 77);
-			this.grpPoly2.Name = "grpPoly2";
-			this.grpPoly2.Size = new System.Drawing.Size(147, 346);
-			this.grpPoly2.TabIndex = 166;
-			this.grpPoly2.TabStop = false;
-			this.grpPoly2.Text = "   Polyphonic Transcription";
-			this.grpPoly2.Visible = false;
+			this.grpTrans.Controls.Add(this.lblTrans2Plugin);
+			this.grpTrans.Controls.Add(this.lblTrans2Labels);
+			this.grpTrans.Controls.Add(this.comboBox1);
+			this.grpTrans.Controls.Add(this.checkBox1);
+			this.grpTrans.Controls.Add(this.comboBox2);
+			this.grpTrans.Controls.Add(this.lblTrans2Align);
+			this.grpTrans.Controls.Add(this.cboAlignFoo);
+			this.grpTrans.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.grpTrans.Location = new System.Drawing.Point(316, 77);
+			this.grpTrans.Name = "grpTrans";
+			this.grpTrans.Size = new System.Drawing.Size(147, 346);
+			this.grpTrans.TabIndex = 166;
+			this.grpTrans.TabStop = false;
+			this.grpTrans.Text = "   Transcription";
 			// 
 			// lblTrans2Plugin
 			// 
@@ -1323,14 +1200,14 @@
 			this.grpPitchKey.Controls.Add(this.lblKeyPlugin);
 			this.grpPitchKey.Controls.Add(this.cboMethodPitchKey);
 			this.grpPitchKey.Controls.Add(this.lblKeyAlign);
-			this.grpPitchKey.Controls.Add(this.cboAlignPitchKey);
+			this.grpPitchKey.Controls.Add(this.cboAlignPitch);
 			this.grpPitchKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.grpPitchKey.Location = new System.Drawing.Point(161, 517);
 			this.grpPitchKey.Name = "grpPitchKey";
 			this.grpPitchKey.Size = new System.Drawing.Size(147, 150);
 			this.grpPitchKey.TabIndex = 140;
 			this.grpPitchKey.TabStop = false;
-			this.grpPitchKey.Text = "   Pitch && Key";
+			this.grpPitchKey.Text = "   Key";
 			// 
 			// chkPitchKey
 			// 
@@ -1401,13 +1278,13 @@
 			this.lblKeyAlign.TabIndex = 142;
 			this.lblKeyAlign.Text = "Align To:";
 			// 
-			// cboAlignPitchKey
+			// cboAlignPitch
 			// 
-			this.cboAlignPitchKey.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cboAlignPitchKey.DropDownWidth = 180;
-			this.cboAlignPitchKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.cboAlignPitchKey.FormattingEnabled = true;
-			this.cboAlignPitchKey.Items.AddRange(new object[] {
+			this.cboAlignPitch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.cboAlignPitch.DropDownWidth = 180;
+			this.cboAlignPitch.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboAlignPitch.FormattingEnabled = true;
+			this.cboAlignPitch.Items.AddRange(new object[] {
             "None",
             "25ms 40fps",
             "50ms 20fps",
@@ -1416,10 +1293,10 @@
             "Half Beats / Eighth Notes",
             "Quarter Beats / Sixteenth Notes",
             "Note Onsets"});
-			this.cboAlignPitchKey.Location = new System.Drawing.Point(6, 120);
-			this.cboAlignPitchKey.Name = "cboAlignPitchKey";
-			this.cboAlignPitchKey.Size = new System.Drawing.Size(135, 21);
-			this.cboAlignPitchKey.TabIndex = 141;
+			this.cboAlignPitch.Location = new System.Drawing.Point(6, 120);
+			this.cboAlignPitch.Name = "cboAlignPitch";
+			this.cboAlignPitch.Size = new System.Drawing.Size(135, 21);
+			this.cboAlignPitch.TabIndex = 141;
 			// 
 			// checkBox4
 			// 
@@ -1547,22 +1424,22 @@
 			this.cboAlignSpectrum.Size = new System.Drawing.Size(135, 21);
 			this.cboAlignSpectrum.TabIndex = 141;
 			// 
-			// grpPolyphonic
+			// grpTranscription
 			// 
-			this.grpPolyphonic.Controls.Add(this.lblTranscribePlugin);
-			this.grpPolyphonic.Controls.Add(this.lblTranscribeLabels);
-			this.grpPolyphonic.Controls.Add(this.cboLabelsPolyphonic);
-			this.grpPolyphonic.Controls.Add(this.chkPolyphonic);
-			this.grpPolyphonic.Controls.Add(this.cboMethodPolyphonic);
-			this.grpPolyphonic.Controls.Add(this.lblTranscribeAlign);
-			this.grpPolyphonic.Controls.Add(this.cboAlignPolyphonic);
-			this.grpPolyphonic.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.grpPolyphonic.Location = new System.Drawing.Point(7, 517);
-			this.grpPolyphonic.Name = "grpPolyphonic";
-			this.grpPolyphonic.Size = new System.Drawing.Size(147, 150);
-			this.grpPolyphonic.TabIndex = 138;
-			this.grpPolyphonic.TabStop = false;
-			this.grpPolyphonic.Text = "   Polyphonic Transcription";
+			this.grpTranscription.Controls.Add(this.lblTranscribePlugin);
+			this.grpTranscription.Controls.Add(this.lblTranscribeLabels);
+			this.grpTranscription.Controls.Add(this.cboLabelsTranscription);
+			this.grpTranscription.Controls.Add(this.chkTranscribe);
+			this.grpTranscription.Controls.Add(this.cboMethodTranscription);
+			this.grpTranscription.Controls.Add(this.lblTranscribeAlign);
+			this.grpTranscription.Controls.Add(this.cboAlignTranscribe);
+			this.grpTranscription.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.grpTranscription.Location = new System.Drawing.Point(7, 517);
+			this.grpTranscription.Name = "grpTranscription";
+			this.grpTranscription.Size = new System.Drawing.Size(147, 150);
+			this.grpTranscription.TabIndex = 138;
+			this.grpTranscription.TabStop = false;
+			this.grpTranscription.Text = "   Transcription";
 			// 
 			// lblTranscribePlugin
 			// 
@@ -1584,46 +1461,46 @@
 			this.lblTranscribeLabels.TabIndex = 147;
 			this.lblTranscribeLabels.Text = "Labels:";
 			// 
-			// cboLabelsPolyphonic
+			// cboLabelsTranscription
 			// 
-			this.cboLabelsPolyphonic.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cboLabelsPolyphonic.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.cboLabelsPolyphonic.FormattingEnabled = true;
-			this.cboLabelsPolyphonic.Items.AddRange(new object[] {
+			this.cboLabelsTranscription.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.cboLabelsTranscription.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboLabelsTranscription.FormattingEnabled = true;
+			this.cboLabelsTranscription.Items.AddRange(new object[] {
             "MIDI Note Numbers",
             "Note Names"});
-			this.cboLabelsPolyphonic.Location = new System.Drawing.Point(6, 76);
-			this.cboLabelsPolyphonic.Name = "cboLabelsPolyphonic";
-			this.cboLabelsPolyphonic.Size = new System.Drawing.Size(135, 21);
-			this.cboLabelsPolyphonic.TabIndex = 146;
+			this.cboLabelsTranscription.Location = new System.Drawing.Point(6, 76);
+			this.cboLabelsTranscription.Name = "cboLabelsTranscription";
+			this.cboLabelsTranscription.Size = new System.Drawing.Size(135, 21);
+			this.cboLabelsTranscription.TabIndex = 146;
 			// 
-			// chkPolyphonic
+			// chkTranscribe
 			// 
-			this.chkPolyphonic.AutoSize = true;
-			this.chkPolyphonic.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.chkPolyphonic.Location = new System.Drawing.Point(0, 0);
-			this.chkPolyphonic.Name = "chkPolyphonic";
-			this.chkPolyphonic.Size = new System.Drawing.Size(15, 14);
-			this.chkPolyphonic.TabIndex = 145;
-			this.chkPolyphonic.Tag = "10";
-			this.chkPolyphonic.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-			this.chkPolyphonic.UseVisualStyleBackColor = true;
+			this.chkTranscribe.AutoSize = true;
+			this.chkTranscribe.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.chkTranscribe.Location = new System.Drawing.Point(0, 0);
+			this.chkTranscribe.Name = "chkTranscribe";
+			this.chkTranscribe.Size = new System.Drawing.Size(15, 14);
+			this.chkTranscribe.TabIndex = 145;
+			this.chkTranscribe.Tag = "10";
+			this.chkTranscribe.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+			this.chkTranscribe.UseVisualStyleBackColor = true;
 			// 
-			// cboMethodPolyphonic
+			// cboMethodTranscription
 			// 
-			this.cboMethodPolyphonic.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cboMethodPolyphonic.DropDownWidth = 200;
-			this.cboMethodPolyphonic.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.cboMethodPolyphonic.FormattingEnabled = true;
-			this.cboMethodPolyphonic.Items.AddRange(new object[] {
+			this.cboMethodTranscription.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.cboMethodTranscription.DropDownWidth = 200;
+			this.cboMethodTranscription.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboMethodTranscription.FormattingEnabled = true;
+			this.cboMethodTranscription.Items.AddRange(new object[] {
             "Queen Mary Polyphonic Transcription",
             "Silvet Note Transcription",
             "Alicante Polyphonic Transcription",
             "Aubio Note Tracker"});
-			this.cboMethodPolyphonic.Location = new System.Drawing.Point(6, 32);
-			this.cboMethodPolyphonic.Name = "cboMethodPolyphonic";
-			this.cboMethodPolyphonic.Size = new System.Drawing.Size(135, 21);
-			this.cboMethodPolyphonic.TabIndex = 143;
+			this.cboMethodTranscription.Location = new System.Drawing.Point(6, 32);
+			this.cboMethodTranscription.Name = "cboMethodTranscription";
+			this.cboMethodTranscription.Size = new System.Drawing.Size(135, 21);
+			this.cboMethodTranscription.TabIndex = 143;
 			// 
 			// lblTranscribeAlign
 			// 
@@ -1635,13 +1512,13 @@
 			this.lblTranscribeAlign.TabIndex = 142;
 			this.lblTranscribeAlign.Text = "Align To:";
 			// 
-			// cboAlignPolyphonic
+			// cboAlignTranscribe
 			// 
-			this.cboAlignPolyphonic.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cboAlignPolyphonic.DropDownWidth = 180;
-			this.cboAlignPolyphonic.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.cboAlignPolyphonic.FormattingEnabled = true;
-			this.cboAlignPolyphonic.Items.AddRange(new object[] {
+			this.cboAlignTranscribe.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.cboAlignTranscribe.DropDownWidth = 180;
+			this.cboAlignTranscribe.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboAlignTranscribe.FormattingEnabled = true;
+			this.cboAlignTranscribe.Items.AddRange(new object[] {
             "None",
             "25ms 40fps",
             "50ms 20fps",
@@ -1649,10 +1526,10 @@
             "Half Beats / Eighth Notes",
             "Quarter Beats / Sixteenth Notes",
             "Note Onsets"});
-			this.cboAlignPolyphonic.Location = new System.Drawing.Point(6, 120);
-			this.cboAlignPolyphonic.Name = "cboAlignPolyphonic";
-			this.cboAlignPolyphonic.Size = new System.Drawing.Size(135, 21);
-			this.cboAlignPolyphonic.TabIndex = 141;
+			this.cboAlignTranscribe.Location = new System.Drawing.Point(6, 120);
+			this.cboAlignTranscribe.Name = "cboAlignTranscribe";
+			this.cboAlignTranscribe.Size = new System.Drawing.Size(135, 21);
+			this.cboAlignTranscribe.TabIndex = 141;
 			// 
 			// chkChromagram
 			// 
@@ -1846,6 +1723,7 @@
 			// 
 			this.cboOnsetsPlugin.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cboOnsetsPlugin.DropDownWidth = 200;
+			//this.cboOnsetsPlugin.Enabled = false;
 			this.cboOnsetsPlugin.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.cboOnsetsPlugin.FormattingEnabled = true;
 			this.cboOnsetsPlugin.Items.AddRange(new object[] {
@@ -1942,7 +1820,6 @@
 			this.lblBarsRampFade.Size = new System.Drawing.Size(62, 13);
 			this.lblBarsRampFade.TabIndex = 128;
 			this.lblBarsRampFade.Text = "Ramp-Fade";
-			this.lblBarsRampFade.Click += new System.EventHandler(this.lblBarsRampFade_Click);
 			// 
 			// lblBarsOnOff
 			// 
@@ -1953,7 +1830,6 @@
 			this.lblBarsOnOff.Size = new System.Drawing.Size(38, 13);
 			this.lblBarsOnOff.TabIndex = 127;
 			this.lblBarsOnOff.Text = "On-Off";
-			this.lblBarsOnOff.Click += new System.EventHandler(this.lblBarsOnOff_Click);
 			// 
 			// chkBarsBeats
 			// 
@@ -2188,6 +2064,49 @@
 			this.cboAlignBarsBeats.Size = new System.Drawing.Size(135, 21);
 			this.cboAlignBarsBeats.TabIndex = 141;
 			// 
+			// pnlTrackBeatsX
+			// 
+			this.pnlTrackBeatsX.Controls.Add(this.vscStartBeat);
+			this.pnlTrackBeatsX.Controls.Add(this.txtStartBeat);
+			this.pnlTrackBeatsX.Controls.Add(this.lblTrackBeatsX);
+			this.pnlTrackBeatsX.Location = new System.Drawing.Point(6, 82);
+			this.pnlTrackBeatsX.Name = "pnlTrackBeatsX";
+			this.pnlTrackBeatsX.Size = new System.Drawing.Size(101, 23);
+			this.pnlTrackBeatsX.TabIndex = 140;
+			// 
+			// vscStartBeat
+			// 
+			this.vscStartBeat.LargeChange = 1;
+			this.vscStartBeat.Location = new System.Drawing.Point(67, -3);
+			this.vscStartBeat.Maximum = 4;
+			this.vscStartBeat.Minimum = 1;
+			this.vscStartBeat.Name = "vscStartBeat";
+			this.vscStartBeat.Size = new System.Drawing.Size(16, 18);
+			this.vscStartBeat.TabIndex = 28;
+			this.vscStartBeat.Value = 1;
+			this.vscStartBeat.Scroll += new System.Windows.Forms.ScrollEventHandler(this.vscStartBeat_Scroll_1);
+			// 
+			// txtStartBeat
+			// 
+			this.txtStartBeat.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.txtStartBeat.Location = new System.Drawing.Point(54, 0);
+			this.txtStartBeat.Name = "txtStartBeat";
+			this.txtStartBeat.ReadOnly = true;
+			this.txtStartBeat.Size = new System.Drawing.Size(13, 20);
+			this.txtStartBeat.TabIndex = 7;
+			this.txtStartBeat.Text = "1";
+			// 
+			// lblTrackBeatsX
+			// 
+			this.lblTrackBeatsX.AutoSize = true;
+			this.lblTrackBeatsX.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblTrackBeatsX.Location = new System.Drawing.Point(1, 4);
+			this.lblTrackBeatsX.Name = "lblTrackBeatsX";
+			this.lblTrackBeatsX.Size = new System.Drawing.Size(54, 13);
+			this.lblTrackBeatsX.TabIndex = 6;
+			this.lblTrackBeatsX.Text = "Start Beat";
+			this.lblTrackBeatsX.UseMnemonic = false;
+			// 
 			// panel1
 			// 
 			this.panel1.Controls.Add(this.swTrackBeat);
@@ -2207,19 +2126,16 @@
 			this.swTrackBeat.Size = new System.Drawing.Size(32, 16);
 			this.swTrackBeat.Style = JCS.ToggleSwitch.ToggleSwitchStyle.OSX;
 			this.swTrackBeat.TabIndex = 132;
-			this.swTrackBeat.CheckedChanged += new JCS.ToggleSwitch.CheckedChangedDelegate(this.swTrackBeat_CheckedChanged_1);
 			// 
 			// lblTrackBeat34
 			// 
 			this.lblTrackBeat34.AutoSize = true;
 			this.lblTrackBeat34.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblTrackBeat34.ForeColor = System.Drawing.Color.OrangeRed;
 			this.lblTrackBeat34.Location = new System.Drawing.Point(80, 2);
 			this.lblTrackBeat34.Name = "lblTrackBeat34";
 			this.lblTrackBeat34.Size = new System.Drawing.Size(46, 13);
 			this.lblTrackBeat34.TabIndex = 128;
 			this.lblTrackBeat34.Text = "3/4 time";
-			this.lblTrackBeat34.Click += new System.EventHandler(this.lblTrackBeat34_Click);
 			// 
 			// lblTrackBeat44
 			// 
@@ -2230,7 +2146,6 @@
 			this.lblTrackBeat44.Size = new System.Drawing.Size(46, 13);
 			this.lblTrackBeat44.TabIndex = 127;
 			this.lblTrackBeat44.Text = "4/4 time";
-			this.lblTrackBeat44.Click += new System.EventHandler(this.lblTrackBeat44_Click);
 			// 
 			// lblStep2B
 			// 
@@ -2275,7 +2190,6 @@
 			// 
 			// grpAudio
 			// 
-			this.grpAudio.Controls.Add(this.lblSongTime);
 			this.grpAudio.Controls.Add(this.btnBrowseAudio);
 			this.grpAudio.Controls.Add(this.txtFileAudio);
 			this.grpAudio.Controls.Add(this.lblFileAudio);
@@ -2287,18 +2201,6 @@
 			this.grpAudio.TabIndex = 122;
 			this.grpAudio.TabStop = false;
 			this.grpAudio.Text = "      Select Audio File";
-			// 
-			// lblSongTime
-			// 
-			this.lblSongTime.AutoSize = true;
-			this.lblSongTime.Font = new System.Drawing.Font("DejaVu Sans Mono", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblSongTime.ForeColor = System.Drawing.Color.DarkOliveGreen;
-			this.lblSongTime.Location = new System.Drawing.Point(238, 12);
-			this.lblSongTime.Name = "lblSongTime";
-			this.lblSongTime.Size = new System.Drawing.Size(40, 10);
-			this.lblSongTime.TabIndex = 163;
-			this.lblSongTime.Text = "0:00.00";
-			this.lblSongTime.Visible = false;
 			// 
 			// btnBrowseAudio
 			// 
@@ -2319,7 +2221,6 @@
 			this.txtFileAudio.ReadOnly = true;
 			this.txtFileAudio.Size = new System.Drawing.Size(219, 20);
 			this.txtFileAudio.TabIndex = 123;
-			this.txtFileAudio.TextChanged += new System.EventHandler(this.txtFileAudio_TextChanged);
 			this.txtFileAudio.Leave += new System.EventHandler(this.txtFileAudio_Leave);
 			// 
 			// lblFileAudio
@@ -2460,17 +2361,16 @@
 			// 
 			this.imlTreeIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imlTreeIcons.ImageStream")));
 			this.imlTreeIcons.TransparentColor = System.Drawing.Color.Transparent;
-			this.imlTreeIcons.Images.SetKeyName(0, "LORTrack4");
-			this.imlTreeIcons.Images.SetKeyName(1, "LORChannelGroup4");
-			this.imlTreeIcons.Images.SetKeyName(2, "LORRGBChannel4");
-			this.imlTreeIcons.Images.SetKeyName(3, "LORChannel4");
+			this.imlTreeIcons.Images.SetKeyName(0, "Track");
+			this.imlTreeIcons.Images.SetKeyName(1, "ChannelGroup");
+			this.imlTreeIcons.Images.SetKeyName(2, "RGBchannel");
+			this.imlTreeIcons.Images.SetKeyName(3, "Channel");
 			this.imlTreeIcons.Images.SetKeyName(4, "RedCh");
 			this.imlTreeIcons.Images.SetKeyName(5, "GrnCh");
 			this.imlTreeIcons.Images.SetKeyName(6, "BluCh");
 			// 
 			// grpAnalyze
 			// 
-			this.grpAnalyze.Controls.Add(this.lblVampTime);
 			this.grpAnalyze.Controls.Add(this.btnOK);
 			this.grpAnalyze.Controls.Add(this.lblStep3);
 			this.grpAnalyze.Enabled = false;
@@ -2480,18 +2380,6 @@
 			this.grpAnalyze.TabIndex = 126;
 			this.grpAnalyze.TabStop = false;
 			this.grpAnalyze.Text = "      Analyze the Audio File";
-			// 
-			// lblVampTime
-			// 
-			this.lblVampTime.AutoSize = true;
-			this.lblVampTime.Font = new System.Drawing.Font("DejaVu Sans Mono", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblVampTime.ForeColor = System.Drawing.Color.DarkOliveGreen;
-			this.lblVampTime.Location = new System.Drawing.Point(238, 19);
-			this.lblVampTime.Name = "lblVampTime";
-			this.lblVampTime.Size = new System.Drawing.Size(40, 10);
-			this.lblVampTime.TabIndex = 164;
-			this.lblVampTime.Text = "0:00.00";
-			this.lblVampTime.Visible = false;
 			// 
 			// btnOK
 			// 
@@ -2517,15 +2405,72 @@
 			this.lblStep3.TabIndex = 122;
 			this.lblStep3.Text = "3";
 			// 
+			// pnlVamping
+			// 
+			this.pnlVamping.Controls.Add(this.lblSongName);
+			this.pnlVamping.Controls.Add(this.lblAnalyzing);
+			this.pnlVamping.Controls.Add(this.lblWait);
+			this.pnlVamping.Controls.Add(this.lblVampRed);
+			this.pnlVamping.Location = new System.Drawing.Point(12, 226);
+			this.pnlVamping.Name = "pnlVamping";
+			this.pnlVamping.Size = new System.Drawing.Size(334, 72);
+			this.pnlVamping.TabIndex = 125;
+			this.pnlVamping.Visible = false;
+			this.pnlVamping.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlVamping_Paint);
+			// 
+			// lblSongName
+			// 
+			this.lblSongName.AutoSize = true;
+			this.lblSongName.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblSongName.ForeColor = System.Drawing.Color.Blue;
+			this.lblSongName.Location = new System.Drawing.Point(5, 33);
+			this.lblSongName.Name = "lblSongName";
+			this.lblSongName.Size = new System.Drawing.Size(216, 18);
+			this.lblSongName.TabIndex = 3;
+			this.lblSongName.Text = "Blue Christmas by Elvis Presley";
+			this.lblSongName.Click += new System.EventHandler(this.lblSongName_Click);
+			// 
+			// lblAnalyzing
+			// 
+			this.lblAnalyzing.AutoSize = true;
+			this.lblAnalyzing.Font = new System.Drawing.Font("Times New Roman", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblAnalyzing.ForeColor = System.Drawing.Color.Red;
+			this.lblAnalyzing.Location = new System.Drawing.Point(5, 7);
+			this.lblAnalyzing.Name = "lblAnalyzing";
+			this.lblAnalyzing.Size = new System.Drawing.Size(189, 24);
+			this.lblAnalyzing.TabIndex = 2;
+			this.lblAnalyzing.Text = "Analyzing your song";
+			// 
+			// lblWait
+			// 
+			this.lblWait.AutoSize = true;
+			this.lblWait.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblWait.ForeColor = System.Drawing.Color.Red;
+			this.lblWait.Location = new System.Drawing.Point(60, 53);
+			this.lblWait.Name = "lblWait";
+			this.lblWait.Size = new System.Drawing.Size(75, 15);
+			this.lblWait.TabIndex = 1;
+			this.lblWait.Text = "Please wait...";
+			// 
+			// lblVampRed
+			// 
+			this.lblVampRed.AutoSize = true;
+			this.lblVampRed.Font = new System.Drawing.Font("Times New Roman", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblVampRed.ForeColor = System.Drawing.Color.Red;
+			this.lblVampRed.Location = new System.Drawing.Point(3, 5);
+			this.lblVampRed.Name = "lblVampRed";
+			this.lblVampRed.Size = new System.Drawing.Size(62, 24);
+			this.lblVampRed.TabIndex = 0;
+			this.lblVampRed.Text = "Vamp";
+			this.lblVampRed.Visible = false;
+			// 
 			// grpOptions
 			// 
 			this.grpOptions.Controls.Add(this.lblPickYourPoison);
-			this.grpOptions.Controls.Add(this.chkReuse);
 			this.grpOptions.Controls.Add(this.picVampire);
 			this.grpOptions.Controls.Add(this.lblHelpOnsets);
-			this.grpOptions.Controls.Add(this.picPoisonArrow);
+			this.grpOptions.Controls.Add(this.pictureBox1);
 			this.grpOptions.Controls.Add(this.lblStep2A);
-			this.grpOptions.Controls.Add(this.picSleepy);
 			this.grpOptions.Enabled = false;
 			this.grpOptions.Location = new System.Drawing.Point(12, 89);
 			this.grpOptions.Name = "grpOptions";
@@ -2545,24 +2490,10 @@
 			this.lblPickYourPoison.TabIndex = 130;
 			this.lblPickYourPoison.Text = "Pick Your Poison";
 			// 
-			// chkReuse
-			// 
-			this.chkReuse.AutoSize = true;
-			this.chkReuse.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.chkReuse.ForeColor = System.Drawing.Color.DeepPink;
-			this.chkReuse.Location = new System.Drawing.Point(106, 266);
-			this.chkReuse.Name = "chkReuse";
-			this.chkReuse.Size = new System.Drawing.Size(81, 17);
-			this.chkReuse.TabIndex = 135;
-			this.chkReuse.Text = "Re-use files";
-			this.chkReuse.UseVisualStyleBackColor = true;
-			this.chkReuse.Visible = false;
-			this.chkReuse.CheckedChanged += new System.EventHandler(this.chkReuse_CheckedChanged);
-			// 
 			// picVampire
 			// 
 			this.picVampire.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("picVampire.BackgroundImage")));
-			this.picVampire.Location = new System.Drawing.Point(22, 45);
+			this.picVampire.Location = new System.Drawing.Point(22, 44);
 			this.picVampire.Name = "picVampire";
 			this.picVampire.Size = new System.Drawing.Size(128, 192);
 			this.picVampire.TabIndex = 136;
@@ -2573,21 +2504,21 @@
 			this.lblHelpOnsets.AutoSize = true;
 			this.lblHelpOnsets.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Italic | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.lblHelpOnsets.ForeColor = System.Drawing.SystemColors.HotTrack;
-			this.lblHelpOnsets.Location = new System.Drawing.Point(237, 266);
+			this.lblHelpOnsets.Location = new System.Drawing.Point(226, 214);
 			this.lblHelpOnsets.Name = "lblHelpOnsets";
 			this.lblHelpOnsets.Size = new System.Drawing.Size(38, 13);
 			this.lblHelpOnsets.TabIndex = 156;
 			this.lblHelpOnsets.Text = "Help...";
 			this.lblHelpOnsets.Click += new System.EventHandler(this.lblHelpOnsets_Click);
 			// 
-			// picPoisonArrow
+			// pictureBox1
 			// 
-			this.picPoisonArrow.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("picPoisonArrow.BackgroundImage")));
-			this.picPoisonArrow.Location = new System.Drawing.Point(217, 99);
-			this.picPoisonArrow.Name = "picPoisonArrow";
-			this.picPoisonArrow.Size = new System.Drawing.Size(64, 32);
-			this.picPoisonArrow.TabIndex = 131;
-			this.picPoisonArrow.TabStop = false;
+			this.pictureBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.BackgroundImage")));
+			this.pictureBox1.Location = new System.Drawing.Point(217, 99);
+			this.pictureBox1.Name = "pictureBox1";
+			this.pictureBox1.Size = new System.Drawing.Size(64, 32);
+			this.pictureBox1.TabIndex = 131;
+			this.pictureBox1.TabStop = false;
 			// 
 			// lblStep2A
 			// 
@@ -2600,15 +2531,19 @@
 			this.lblStep2A.TabIndex = 122;
 			this.lblStep2A.Text = "2";
 			// 
-			// picSleepy
+			// chkReuse
 			// 
-			this.picSleepy.Image = ((System.Drawing.Image)(resources.GetObject("picSleepy.Image")));
-			this.picSleepy.Location = new System.Drawing.Point(3, 16);
-			this.picSleepy.Name = "picSleepy";
-			this.picSleepy.Size = new System.Drawing.Size(330, 248);
-			this.picSleepy.TabIndex = 157;
-			this.picSleepy.TabStop = false;
-			this.picSleepy.Visible = false;
+			this.chkReuse.AutoSize = true;
+			this.chkReuse.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.chkReuse.ForeColor = System.Drawing.Color.DeepPink;
+			this.chkReuse.Location = new System.Drawing.Point(119, 338);
+			this.chkReuse.Name = "chkReuse";
+			this.chkReuse.Size = new System.Drawing.Size(81, 17);
+			this.chkReuse.TabIndex = 135;
+			this.chkReuse.Text = "Re-use files";
+			this.chkReuse.UseVisualStyleBackColor = true;
+			this.chkReuse.Visible = false;
+			this.chkReuse.CheckedChanged += new System.EventHandler(this.chkReuse_CheckedChanged);
 			// 
 			// tmrAni
 			// 
@@ -2616,7 +2551,6 @@
 			// 
 			// grpSaveLOR
 			// 
-			this.grpSaveLOR.Controls.Add(this.lblSeqTime);
 			this.grpSaveLOR.Controls.Add(this.chkAutolaunch);
 			this.grpSaveLOR.Controls.Add(this.picLOR);
 			this.grpSaveLOR.Controls.Add(this.panel3);
@@ -2632,18 +2566,6 @@
 			this.grpSaveLOR.TabIndex = 136;
 			this.grpSaveLOR.TabStop = false;
 			this.grpSaveLOR.Text = "          Save                                Sequence";
-			// 
-			// lblSeqTime
-			// 
-			this.lblSeqTime.AutoSize = true;
-			this.lblSeqTime.Font = new System.Drawing.Font("DejaVu Sans Mono", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblSeqTime.ForeColor = System.Drawing.Color.DarkOliveGreen;
-			this.lblSeqTime.Location = new System.Drawing.Point(238, 54);
-			this.lblSeqTime.Name = "lblSeqTime";
-			this.lblSeqTime.Size = new System.Drawing.Size(40, 10);
-			this.lblSeqTime.TabIndex = 165;
-			this.lblSeqTime.Text = "0:00.00";
-			this.lblSeqTime.Visible = false;
 			// 
 			// chkAutolaunch
 			// 
@@ -2760,9 +2682,11 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1147, 724);
 			this.Controls.Add(this.grpSaveLOR);
+			this.Controls.Add(this.chkReuse);
 			this.Controls.Add(this.grpAnalyze);
 			this.Controls.Add(this.grpSavex);
 			this.Controls.Add(this.grpAudio);
+			this.Controls.Add(this.pnlVamping);
 			this.Controls.Add(this.grpTimings);
 			this.Controls.Add(this.staStatus);
 			this.Controls.Add(this.grpOptions);
@@ -2779,17 +2703,12 @@
 			this.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
 			this.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
 			this.Paint += new System.Windows.Forms.PaintEventHandler(this.frmVamp_Paint);
-			this.pnlTrackBeatsX.ResumeLayout(false);
-			this.pnlTrackBeatsX.PerformLayout();
 			this.staStatus.ResumeLayout(false);
 			this.staStatus.PerformLayout();
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
 			this.grpTimings.ResumeLayout(false);
 			this.grpTimings.PerformLayout();
-			this.pnlVamping.ResumeLayout(false);
-			this.pnlVamping.PerformLayout();
-			this.grpExplore.ResumeLayout(false);
 			this.grpPlatform.ResumeLayout(false);
 			this.grpPlatform.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
@@ -2800,14 +2719,14 @@
 			this.grpSegments.PerformLayout();
 			this.grpTempo.ResumeLayout(false);
 			this.grpTempo.PerformLayout();
-			this.grpPoly2.ResumeLayout(false);
-			this.grpPoly2.PerformLayout();
+			this.grpTrans.ResumeLayout(false);
+			this.grpTrans.PerformLayout();
 			this.grpPitchKey.ResumeLayout(false);
 			this.grpPitchKey.PerformLayout();
 			this.grpSpectrum.ResumeLayout(false);
 			this.grpSpectrum.PerformLayout();
-			this.grpPolyphonic.ResumeLayout(false);
-			this.grpPolyphonic.PerformLayout();
+			this.grpTranscription.ResumeLayout(false);
+			this.grpTranscription.PerformLayout();
 			this.grpOnsets.ResumeLayout(false);
 			this.grpOnsets.PerformLayout();
 			this.pnlOnsetSensitivity.ResumeLayout(false);
@@ -2818,6 +2737,8 @@
 			this.pnlBeatFade.PerformLayout();
 			this.pnlNotes.ResumeLayout(false);
 			this.pnlNotes.PerformLayout();
+			this.pnlTrackBeatsX.ResumeLayout(false);
+			this.pnlTrackBeatsX.PerformLayout();
 			this.panel1.ResumeLayout(false);
 			this.panel1.PerformLayout();
 			this.grpAudio.ResumeLayout(false);
@@ -2829,11 +2750,12 @@
 			this.panel2.PerformLayout();
 			this.grpAnalyze.ResumeLayout(false);
 			this.grpAnalyze.PerformLayout();
+			this.pnlVamping.ResumeLayout(false);
+			this.pnlVamping.PerformLayout();
 			this.grpOptions.ResumeLayout(false);
 			this.grpOptions.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picVampire)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.picPoisonArrow)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.picSleepy)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			this.grpSaveLOR.ResumeLayout(false);
 			this.grpSaveLOR.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picLOR)).EndInit();
@@ -2899,13 +2821,13 @@
 		private System.Windows.Forms.ComboBox cboMethodSpectrum;
 		private System.Windows.Forms.Label lblSpectrumAlign;
 		private System.Windows.Forms.ComboBox cboAlignSpectrum;
-		private System.Windows.Forms.GroupBox grpPolyphonic;
+		private System.Windows.Forms.GroupBox grpTranscription;
 		private System.Windows.Forms.Label lblTranscribeLabels;
-		private System.Windows.Forms.ComboBox cboLabelsPolyphonic;
-		private System.Windows.Forms.CheckBox chkPolyphonic;
-		private System.Windows.Forms.ComboBox cboMethodPolyphonic;
+		private System.Windows.Forms.ComboBox cboLabelsTranscription;
+		private System.Windows.Forms.CheckBox chkTranscribe;
+		private System.Windows.Forms.ComboBox cboMethodTranscription;
 		private System.Windows.Forms.Label lblTranscribeAlign;
-		private System.Windows.Forms.ComboBox cboAlignPolyphonic;
+		private System.Windows.Forms.ComboBox cboAlignTranscribe;
 		private System.Windows.Forms.GroupBox grpOnsets;
 		private System.Windows.Forms.Label lblDetectOnsets;
 		private System.Windows.Forms.ComboBox cboOnsetsDetect;
@@ -2963,10 +2885,10 @@
 		private System.Windows.Forms.Label lblKeyPlugin;
 		private System.Windows.Forms.ComboBox cboMethodPitchKey;
 		private System.Windows.Forms.Label lblKeyAlign;
-		private System.Windows.Forms.ComboBox cboAlignPitchKey;
+		private System.Windows.Forms.ComboBox cboAlignPitch;
 		private System.Windows.Forms.CheckBox chkSpectrum;
 		private System.Windows.Forms.GroupBox grpOptions;
-		private System.Windows.Forms.PictureBox picPoisonArrow;
+		private System.Windows.Forms.PictureBox pictureBox1;
 		private System.Windows.Forms.Label lblPickYourPoison;
 		private System.Windows.Forms.Label lblStep2A;
 		private System.Windows.Forms.CheckBox chkWhiteBarBeats;
@@ -3008,7 +2930,7 @@
 		private System.Windows.Forms.CheckBox chk15fps;
 		private System.Windows.Forms.Label lblTrans2Options;
 		private System.Windows.Forms.Button button3;
-		private System.Windows.Forms.GroupBox grpPoly2;
+		private System.Windows.Forms.GroupBox grpTrans;
 		private System.Windows.Forms.Label lblTrans2Plugin;
 		private System.Windows.Forms.Label lblTrans2Labels;
 		private System.Windows.Forms.ComboBox comboBox1;
@@ -3031,23 +2953,18 @@
 		private JCS.ToggleSwitch swRamps;
 		private System.Windows.Forms.Label lblBarsRampFade;
 		private System.Windows.Forms.Label lblBarsOnOff;
+		private System.Windows.Forms.Button btnExploreTemp;
+		private System.Windows.Forms.Button btnCmdTemp;
 		private System.Windows.Forms.Label lblWorkFolder;
+		private System.Windows.Forms.Button btnExplorexLights;
+		private System.Windows.Forms.Button btnExploreLOR;
+		private System.Windows.Forms.Button btnLaunchxLights;
+		private System.Windows.Forms.Button btnSequenceEditor;
+		private System.Windows.Forms.Button btnExploreVamp;
 		private System.Windows.Forms.Label lblBeats2Half;
 		private System.Windows.Forms.Label lblBeats1Full;
 		private System.Windows.Forms.Label lblBeats4Quarter;
 		private System.Windows.Forms.Label lblBeats0Bars;
-		private System.Windows.Forms.GroupBox grpExplore;
-		private System.Windows.Forms.Button btnExploreVamp;
-		private System.Windows.Forms.Button btnExplorexLights;
-		private System.Windows.Forms.Button btnExploreTemp;
-		private System.Windows.Forms.Button btnCmdTemp;
-		private System.Windows.Forms.Button btnLaunchxLights;
-		private System.Windows.Forms.Button btnSequenceEditor;
-		private System.Windows.Forms.Button btnExploreLOR;
-		private System.Windows.Forms.Label lblSongTime;
-		private System.Windows.Forms.Label lblVampTime;
-		private System.Windows.Forms.Label lblSeqTime;
-		private System.Windows.Forms.PictureBox picSleepy;
 	}
 }
 

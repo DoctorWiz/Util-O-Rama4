@@ -1,4 +1,4 @@
-﻿namespace UtilORama4
+﻿namespace ListORama
 {
 	partial class About
 	{

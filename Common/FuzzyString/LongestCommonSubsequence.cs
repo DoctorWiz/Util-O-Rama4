@@ -4,7 +4,6 @@ namespace FuzzyString
 {
 	public static partial class FuzzyFunctions
 	{
-		
 		public static string LongestCommonSubsequence(this string source, string target)
 		{
 			int[,] C = LongestCommonSubsequenceLengthTable(source, target);
@@ -68,6 +67,5 @@ namespace FuzzyString
 				}
 			}
 		}
-		
 	} // end public partial class FuzzyFunctions
 } // end namespace FuzzyString

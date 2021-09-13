@@ -7,12 +7,12 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace UtilORama4
+namespace InfoRama
 {
 	partial class frmAbout : Form
 	{
 
-		string applicationName = "LORSeqInfo4-Rama";
+		string applicationName = "Info-Rama";
 
 		public frmAbout()
 		{

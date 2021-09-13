@@ -1,4 +1,4 @@
-﻿namespace UtilORama4
+﻿namespace RGBORama
 {
 	partial class About
 	{

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 
-namespace UtilORama4
+namespace VampORama
 {
 	public partial class frmSettings : Form
 	{
@@ -458,9 +458,9 @@ namespace UtilORama4
 		{
 			string selTabName = tabCategory.SelectedTab.Text;
 			string selSubTabName = tabSubcategory.SelectedTab.Text;
-			if (selSubTabName == TABKEYbeats)
+			if (selSubTabName.CompareTo(TABKEYbeats) == 0)
 			{
-				if (selTabName == TABKEYtimess)
+				if (selTabName.CompareTo(TABKEYtimess) == 0)
 				{
 					SetShowMode(SHOWtimesBeats);
 				}
@@ -471,9 +471,9 @@ namespace UtilORama4
 			}
 			else
 			{
-				if (selSubTabName == TABKEYonsets)
+				if (selSubTabName.CompareTo(TABKEYonsets) == 0)
 				{
-					if (selTabName == TABKEYtimess)
+					if (selTabName.CompareTo(TABKEYtimess) == 0)
 					{
 						SetShowMode(SHOWtrackBeats);
 					}
@@ -481,13 +481,13 @@ namespace UtilORama4
 				}
 				else
 				{
-					if (selSubTabName == TABKEYpoly)
+					if (selSubTabName.CompareTo(TABKEYpoly) == 0)
 					{
 						SetShowMode(SHOWPoly);
 					}
 					else
 					{
-						if (selSubTabName == TABKEYspectro)
+						if (selSubTabName.CompareTo(TABKEYspectro) == 0)
 						{
 							SetShowMode(SHOWspectro);
 						}

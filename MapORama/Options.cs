@@ -8,10 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using FuzzyString;
-using LORUtils4; using FileHelper;
+using LORUtils;
 using System.IO;
 
-namespace UtilORama4
+namespace MapORama
 {
 	public partial class frmOptions : Form
 	{
@@ -210,7 +210,7 @@ namespace UtilORama4
 
 		private void SetPreCombo(long theAlgorithm)
 		{
-			int idx = lutils.UNDEFINED;
+			int idx = utils.UNDEFINED;
 			switch (theAlgorithm)
 			{
 				case FuzzyFunctions.USE_CHAPMANLENGTHDEVIATION:

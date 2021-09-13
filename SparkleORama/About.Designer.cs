@@ -1,4 +1,4 @@
-﻿namespace UtilORama4
+﻿namespace MapORama
 {
 	partial class About
 	{

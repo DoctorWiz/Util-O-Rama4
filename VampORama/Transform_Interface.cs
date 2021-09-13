@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LORUtils4; using FileHelper;
+using LORUtils;
 
-namespace UtilORama4
+namespace VampORama
 {
-	public interface ITransform //: IComparable<iLORMember4>
+	public interface ITransform //: IComparable<IMember>
 	{
 		string[] AvailablePluginNames
 		{
@@ -41,19 +41,11 @@ namespace UtilORama4
 
 		//string AnnotateSong(string songFile, int pluginIndex);
 
-		//int xTimingsToxLights(xTimings timings, string baseFileName);
+		int xTimingsToxLights(xTimings timings, string baseFileName);
 
-		//int xTimingsToLORtimings(xTimings timings, LORSequence4 sequence);
+		int xTimingsToLORtimings(xTimings timings, Sequence4 sequence);
 
-		//int xTimingsToLORChannels(xTimings timings, LORSequence4 sequence);
-
-		int ResultsToxTimings(string resultsFile, vamps.AlignmentType alignmentType, vamps.LabelTypes labelType);
-
-		int xTimingsToxLights(string baseFileName);
-
-		int xTimingsToLORtimings();
-
-		int xTimingsToLORChannels();
+		int xTimingsToLORChannels(xTimings timings, Sequence4 sequence);
 
 	}
 }

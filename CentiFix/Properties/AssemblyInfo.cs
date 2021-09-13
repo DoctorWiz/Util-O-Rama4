@@ -1,5 +1,4 @@
-﻿using System.Resources;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -9,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("CentiFix")]
 [assembly: AssemblyDescription("Checks and corrects the number of Centiseconds in a Sequence")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Doctor 🧙 Wizard and W⚡zlights Software")]
+[assembly: AssemblyCompany("W⚡zster")]
 [assembly: AssemblyProduct("CentiFix")]
-[assembly: AssemblyCopyright("Copyright © 2021+ by Doctor 🧙 Wizard and W⚡zlights Software")]
+[assembly: AssemblyCopyright("Copyright ©  2019+ by Doctor 🧙 Wizard and W⚡zster Software")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -21,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("91adb515-7311-4bc4-8877-a16d2ded4536")]
+[assembly: Guid("91adb515-4361-4bc4-7311-a16d2ded4536")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -33,6 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("4.0.0.0")]
-[assembly: AssemblyFileVersion("4.0.0.0")]
-[assembly: NeutralResourcesLanguage("ebu-KE")]
+[assembly: AssemblyVersion("0.1.1.0")]
+[assembly: AssemblyFileVersion("0.1.1.0")]

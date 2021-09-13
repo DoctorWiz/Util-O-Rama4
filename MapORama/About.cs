@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LORUtils4;
-using FileHelper;
+using LORUtils;
 
-namespace UtilORama4
+namespace MapORama
 {
 	partial class About : Form
 	{
@@ -21,7 +19,7 @@ namespace UtilORama4
 		{
 			InitializeComponent();
 
-			applicationName = Fyle.AssemblyTitle;
+			applicationName = utils.AssemblyTitle;
 
 			this.Text = String.Format("About {0}", applicationName);
 			this.labelProductName.Text = applicationName;

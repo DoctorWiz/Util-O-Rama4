@@ -8,7 +8,7 @@ using System.Configuration;
 using System.Windows.Forms;
 using System.Diagnostics;
 
-namespace UtilORama4
+namespace VampORama
 
 {
 	// Most-Recently-Used

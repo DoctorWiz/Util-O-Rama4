@@ -7,9 +7,9 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using xUtilities;
-using LORUtils4; using FileHelper;
+using LORUtils;
 
-namespace UtilORama4
+namespace VampORama
 {
 	partial class frmAbout : Form
 	{
@@ -25,7 +25,7 @@ namespace UtilORama4
 			//applicationName = AssemblyTitle;
 			string fooo = xUtils.ShowDirectory;
 			if (fooo.Length > 3) xLightsInstalled = true;
-			fooo = lutils.DefaultSequencesPath;
+			fooo = utils.DefaultSequencesPath;
 			if (fooo.Length > 3) lightORamaInstalled = true;
 			if (xLightsInstalled && !lightORamaInstalled) // xLights Only
 			{

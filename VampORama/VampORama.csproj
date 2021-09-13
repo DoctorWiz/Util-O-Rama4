@@ -7,9 +7,9 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{D0CB347F-95A1-4A9E-BD42-D9474B0A28A5}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>UtilORama4</RootNamespace>
-    <AssemblyName>Vamp-O-Rama</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <RootNamespace>VampORama</RootNamespace>
+    <AssemblyName>VampORama</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <IsWebBootstrapper>true</IsWebBootstrapper>
@@ -59,8 +59,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>OrangeNoteBulb.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>DFEA86D9CB3FA985769C66E2F25E93D7E92C1ABB</ManifestCertificateThumbprint>
@@ -75,7 +74,8 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>UtilORama4.Program</StartupObject>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -83,9 +83,6 @@
     </Reference>
     <Reference Include="PostSharp, Version=6.2.13.0, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
       <HintPath>packages\PostSharp.Redist.6.2.13\lib\net45\PostSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
-      <HintPath>packages\Serilog.2.10.0\lib\net46\Serilog.dll</HintPath>
     </Reference>
     <Reference Include="Syncfusion.Core.WinForms, Version=18.1460.0.42, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
     <Reference Include="Syncfusion.DataSource.WinForms, Version=18.1460.0.42, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
@@ -96,9 +93,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />
-    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.DirectoryServices.AccountManagement" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -108,92 +103,34 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="TagLibSharp">
-      <HintPath>packages\TagLibSharp.2.2.0\lib\net45\TagLibSharp.dll</HintPath>
+    <Reference Include="taglib-sharp">
+      <HintPath>..\..\TagLib-Sharp 2.0.4.0\bin\Release\taglib-sharp.dll</HintPath>
     </Reference>
     <Reference Include="ToggleSwitch">
       <HintPath>..\..\ToggleSwitch\ToggleSwitch\bin\Release\ToggleSwitch.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\COMMON\csv.cs">
-      <Link>csv.cs</Link>
-    </Compile>
-    <Compile Include="..\..\COMMON\FileHelper.cs">
-      <Link>FileHelper.cs</Link>
-    </Compile>
     <Compile Include="..\..\UtilORama4\Common\Sequence4\LORUtils.cs">
       <Link>LORUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\UtilORama4\Common\Sequence4\SeqEnums.cs">
+      <Link>SeqEnums.cs</Link>
+    </Compile>
+    <Compile Include="..\..\UtilORama4\Common\Sequence4\SeqMember.cs">
+      <Link>SeqMember.cs</Link>
+    </Compile>
+    <Compile Include="..\..\UtilORama4\Common\Sequence4\SeqSubs.cs">
+      <Link>SeqSubs.cs</Link>
+    </Compile>
+    <Compile Include="..\..\UtilORama4\Common\Sequence4\Sequence4.cs">
+      <Link>Sequence4.cs</Link>
     </Compile>
     <Compile Include="..\..\xUtils\Common\xTimings.cs">
       <Link>xTimings.cs</Link>
     </Compile>
     <Compile Include="..\..\xUtils\Common\xUtils.cs">
       <Link>xUtils.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\SeqChannel.cs">
-      <Link>SeqChannel.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\SeqChannelGroup.cs">
-      <Link>SeqChannelGroup.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\SeqCosmicDevice.cs">
-      <Link>SeqCosmicDevice.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\SeqEnums.cs">
-      <Link>SeqEnums.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\SeqMemberBase.cs">
-      <Link>SeqMemberBase.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\SeqMemberInterface.cs">
-      <Link>SeqMemberInterface.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\SeqMembership.cs">
-      <Link>SeqMembership.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\SeqRGBChannel.cs">
-      <Link>SeqRGBChannel.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\SeqSubs.cs">
-      <Link>SeqSubs.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\SeqTimingGrid.cs">
-      <Link>SeqTimingGrid.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\SeqTrack.cs">
-      <Link>SeqTrack.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\Sequence4.cs">
-      <Link>Sequence4.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\Visualization4.cs">
-      <Link>Visualization4.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\VizChannel.cs">
-      <Link>VizChannel.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\VizDrawObject.cs">
-      <Link>VizDrawObject.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\VizGroup.cs">
-      <Link>VizGroup.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
     </Compile>
     <Compile Include="Annotator.cs" />
     <Compile Include="frmOutputLog.cs">
@@ -202,20 +139,14 @@
     <Compile Include="frmOutputLog.Designer.cs">
       <DependentUpon>frmOutputLog.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmSplash.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmSplash.Designer.cs">
-      <DependentUpon>frmSplash.cs</DependentUpon>
-    </Compile>
     <Compile Include="MoreCtrls.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MusicalNotation.cs" />
     <Compile Include="Nuvamp.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="SeqFunctions.cs" />
+    <Compile Include="TransformBarBeats.cs" />
     <Compile Include="frmAbout.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -257,23 +188,14 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings.cs" />
     <Compile Include="SongFields.cs" />
-    <Compile Include="TransformBarBeats.cs">
-      <DependentUpon>Annotator.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TransformNoteOnsets.cs">
-      <DependentUpon>Annotator.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TransformPolyphonic.cs">
-      <DependentUpon>Annotator.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Transform_Interface.cs">
-      <DependentUpon>Annotator.cs</DependentUpon>
-    </Compile>
+    <Compile Include="TransformNoteOnsets.cs" />
     <Compile Include="VampConstants.cs" />
-    <Compile Include="OLDvamp.cs">
+    <Compile Include="Vamp.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Transform_Interface.cs" />
     <EmbeddedResource Include="frmAbout.resx">
       <DependentUpon>frmAbout.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -284,9 +206,6 @@
     <EmbeddedResource Include="frmSettings.resx">
       <DependentUpon>frmSettings.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmSplash.resx">
-      <DependentUpon>frmSplash.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmVamp.resx">
       <DependentUpon>frmVamp.cs</DependentUpon>
@@ -317,6 +236,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="OrangeNoteBulb.ico" />
+    <Content Include="Tune-O-Rama.ico" />
+  </ItemGroup>
+  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4.5.2 %28x86 and x64%29</ProductName>
@@ -327,9 +250,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="localshows.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 
-namespace UtilORama4
+namespace VampORama
 {
 	public partial class frmOutputLog : Form
 	{

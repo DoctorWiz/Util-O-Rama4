@@ -1,4 +1,4 @@
-﻿namespace UtilORama4
+﻿namespace VampORama
 {
 	partial class frmAbout
 	{

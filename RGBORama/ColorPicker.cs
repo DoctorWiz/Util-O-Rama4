@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace UtilORama4
+namespace WindowsFormsApp1
 {
 	public partial class frmColorPicker : Form
 	{

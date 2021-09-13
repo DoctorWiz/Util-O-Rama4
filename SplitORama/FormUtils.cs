@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.IO;
 
-namespace UtilORama4
+namespace SplitORama
 {
 	class FormUtils
 	{

@@ -8,23 +8,20 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Runtime.InteropServices;
-using System.DirectoryServices;
 using Microsoft.Win32;
-
-
 
 //using FuzzyString;
 
 namespace xUtils
 {
-	public class xutils
+	public class utils
 	{
 		public const int UNDEFINED = -1;
-		//public const string ICONtrack = "LORTrack4";
-		//public const string ICONchannelGroup = "LORChannelGroup4";
-		//public const string ICONcosmicDevice = "LORCosmic";
+		//public const string ICONtrack = "Track";
+		//public const string ICONchannelGroup = "ChannelGroup";
+		//public const string ICONcosmicDevice = "CosmicDevice";
 		//public const string ICONchannel = "channel";
-		//public const string ICONrgbChannel = "LORRGBChannel4";
+		//public const string ICONrgbChannel = "RGBchannel";
 		//public const string ICONredChannel = "redChannel";
 		//public const string ICONgrnChannel = "grnChannel";
 		//public const string ICONbluChannel = "bluChannel";
@@ -34,7 +31,7 @@ namespace xUtils
 
 
 		public const string LOG_Error = "Error";
-		public const string LOG_Info = "LORSeqInfo4";
+		public const string LOG_Info = "Info";
 		public const string LOG_Debug = "Debug";
 		private const string FORMAT_DATETIME = "MM/dd/yyyy hh:mm:ss tt";
 		private const string FORMAT_FILESIZE = "###,###,###,###,##0";
@@ -54,9 +51,9 @@ namespace xUtils
 		//public const string FILE_CFG = "All Sequences *.las, *.lms, *.lcc|*.las;*.lms;*.lcc";
 		//public const string FILE_LMS = "Musical Sequence *.lms|*.lms";
 		//public const string FILE_LAS = "Animated Sequence *.las|*.las";
-		//public const string FILE_LCC = "LORChannel4 Configuration *.lcc|*.lcc";
+		//public const string FILE_LCC = "Channel Configuration *.lcc|*.lcc";
 		//public const string FILE_LEE = "Visualization *.lee|*.lee";
-		//public const string FILE_CHMAP = "LORChannel4 Map *.ChMap|*.ChMap";
+		//public const string FILE_CHMAP = "Channel Map *.ChMap|*.ChMap";
 		//public const string FILE_ALL = "All Files *.*|*.*";
 		//public const string FILT_OPEN_ANY = FILE_SEQ + "|" + FILE_LMS + "|" + FILE_LAS;
 		//public const string FILT_OPEN_CFG = FILE_CFG + "|" + FILE_LMS + "|" + FILE_LAS + "|" + FILE_LCC;
@@ -527,9 +524,7 @@ namespace xUtils
 			get
 			{
 				bool ret = false;
-				//string usr = System.DirectoryServices.AccountManagement.UserPrincipal.Current.DisplayName;
-				string usr = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-
+				string usr = System.DirectoryServices.AccountManagement.UserPrincipal.Current.DisplayName;
 				usr = usr.ToLower();
 				int i = usr.IndexOf("wizard");
 				if (i >= 0) ret = true;
@@ -585,24 +580,24 @@ namespace xUtils
 			return ret;
 		}
 
-		public static string FileSizeFormatted(string filename)
+		public static string FileSizeFormated(string filename)
 		{
 			long sz = GetFileSize(filename);
-			return FileSizeFormatted(sz, "");
+			return FileSizeFormated(sz, "");
 		}
 
-		public static string FileSizeFormatted(string filename, string thousands)
+		public static string FileSizeFormated(string filename, string thousands)
 		{
 			long sz = GetFileSize(filename);
-			return FileSizeFormatted(sz, thousands);
+			return FileSizeFormated(sz, thousands);
 		}
 
-		public static string FileSizeFormatted(long filesize)
+		public static string FileSizeFormated(long filesize)
 		{
-			return FileSizeFormatted(filesize, "");
+			return FileSizeFormated(filesize, "");
 		}
 
-		public static string FileSizeFormatted(long filesize, string thousands)
+		public static string FileSizeFormated(long filesize, string thousands)
 		{
 			string thou = thousands.ToUpper();
 			string ret = "0";
@@ -790,7 +785,7 @@ namespace xUtils
 			}
 			else
 			{
-				return xutils.UNDEFINED;
+				return utils.UNDEFINED;
 			}
 		}
 
@@ -803,16 +798,7 @@ namespace xUtils
 			fooo = lineIn.Substring(pos1 + keyWord.Length + 2);
 			pos2 = fooo.IndexOf("\"");
 			fooo = fooo.Substring(0, pos2);
-			int vo = -1;
-			int.TryParse(fooo, out vo);
-			if (vo == -1)
-			{
-				if (IsWizard)
-				{
-					System.Diagnostics.Debugger.Break();
-				}
-			}
-			valueOut = vo;
+			valueOut = Convert.ToInt32(fooo);
 			return valueOut;
 		}
 
@@ -872,52 +858,6 @@ namespace xUtils
 			return stateOut;
 		}
 
-		public static int GetAddress(string address, List<xModel> allModels)
-		{
-			int addr = -1;
-			if (address.Length < 6)
-			{
-				bool itWorked = int.TryParse(address, out addr);
-			}
-			else
-			{
-				int isemi = address.IndexOf(';');
-				int ioffset = address.IndexOf(':');
-				string temp1 = address.Substring(ioffset+1);
-				int offset = 1;
-				bool itWorked = int.TryParse(temp1, out offset);
-				int ilen = ioffset - isemi -1;
-				string modelName = address.Substring(isemi +1, ilen);
-				string modAddr = "";
-				for (int m = 0; m < allModels.Count; m++)
-				{
-					xModel model = allModels[m];
-					if (modelName.CompareTo(model.Name) == 0) ;
-					{
-						if (model.xLightsAddress < 1)
-						{
-							// Recurse!
-							int a2 = xutils.GetAddress(model.StartChannel, allModels);
-							if (a2 >0)
-							{
-								model.xLightsAddress = a2;
-							}
-						}
-						// Got it yet?
-						if (model.xLightsAddress > 0)
-						{
-							addr = model.xLightsAddress + offset;
-						}
-						m = allModels.Count; // Exit loop
-					}
-				}
-			}
-
-
-
-			return addr;
-		}
-
 		public static string SetKey(string fieldName, string value)
 		{
 			StringBuilder ret = new StringBuilder();
@@ -963,9 +903,9 @@ namespace xUtils
 			{
 				ret.Append(LEVEL1);
 			}
-			ret.Append(xutils.FINTBL);
+			ret.Append(utils.FINTBL);
 			ret.Append(tableName);
-			ret.Append(xutils.ENDTBL);
+			ret.Append(utils.ENDTBL);
 			return ret.ToString();
 		}
 
@@ -1177,15 +1117,15 @@ namespace xUtils
 						{
 							string sec = rest.Substring(0, posPer);
 							string cs = rest.Substring(posPer + 1);
-							int mn = xutils.UNDEFINED;
+							int mn = utils.UNDEFINED;
 							int.TryParse(min, out mn);
 							if ((mn >=0) && (mn<61))
 							{
-								int sc = xutils.UNDEFINED;
+								int sc = utils.UNDEFINED;
 								int.TryParse(sec, out sc);
 								if ((sc >=0 ) && (sc<60))
 								{
-									int c = xutils.UNDEFINED;
+									int c = utils.UNDEFINED;
 									int.TryParse(cs, out c);
 									if ((c >=0) && (c<1000))
 									{
@@ -1238,70 +1178,5 @@ namespace xUtils
 			} // End get ShowDirectory
 		}
 
-		public static Bitmap RenderTimings(xTimings timeTrack, int startMilliseconds, int endMilliseconds, int width, int height)
-		{
-			// Create a temporary working bitmap
-			Bitmap bmp = new Bitmap(width, height);
-			// get the graphics handle from it
-			Graphics gr = Graphics.FromImage(bmp);
-			// Paint the entire 'background' black
-			gr.FillRectangle(Brushes.Black, 0, 0, width - 1, height - 1);
-			Color c = Color.FromArgb(64, 64, 64);
-			Pen p = new Pen(c, 1);
-			Brush br = new SolidBrush(c);
-			int totalMS = endMilliseconds - startMilliseconds;
-			float q = (totalMS) / width;
-			int div = 15000;
-			if (totalMS < 30000) div = 1000;
-			if (totalMS > 300000) div = 30000;
-			// Dark gray tick marks every 30 seconds
-			int n30 = totalMS / div;
-			for (int cx=startMilliseconds; cx < endMilliseconds; cx+=div)
-			{
-				float xf = (cx - startMilliseconds) / q;
-				int x = (int)Math.Round(xf, 0);
-				gr.DrawLine(p, x, 0, x, height);
-			}
-			
-			c = Color.White;
-			p = new Pen(c, 1);
-			br = new SolidBrush(c);
-						//Debug.WriteLine(""); Debug.WriteLine("");
-			if (timeTrack.effects.Count > 0)
-			{
-				
-				for (int i = 0; i < timeTrack.effects.Count; i++)
-				{
-					int xs = 0;
-					int xe = width - 1;
-					int ts = timeTrack.effects[i].starttime;
-					int te = timeTrack.effects[i].endtime;
-					if (ts==te)
-					{
-						int nnnn = 2;
-					}
-					if ((ts >= startMilliseconds) && (ts <= endMilliseconds))
-					{
-						float xfs = (ts - startMilliseconds) / q;
-						xs = (int)Math.Round(xfs, 0);
-						//gr.DrawLine(p, xs, height - 1, xs, height);
-						gr.DrawLine(p, xs, 3, xs, height-5);
-					} // End timing start in range
-					if ((te >= startMilliseconds) && (te <= endMilliseconds))
-					{
-						float xfe = (te - startMilliseconds) / q;
-						xe = (int)Math.Round(xfe, 0);
-						//gr.DrawLine(p, xe, height - 1, xe, height);
-						gr.DrawLine(p, xe, 3, xe, height-5);
-					} // End timing end in range
-					int y = height / 2;
-					gr.DrawLine(p, xs, y, xe, y);
-				} // End loop thru timings
-			} // End grid has timings
-
-			return bmp;
-		}
-
-
-	} // end class lutils
-} // end namespace xUtils
+	} // end class utils
+} // end namespace LORUtils

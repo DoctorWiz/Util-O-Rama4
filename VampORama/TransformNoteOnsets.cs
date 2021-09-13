@@ -4,21 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-using LORUtils4; using FileHelper;
+using LORUtils;
 using xUtilities;
 
-namespace UtilORama4
+namespace VampORama
 {
-	static class VampNoteOnsets //: ITransform
+	class NoteOnsets : ITransform
 	{
-		public const string transformName = "Note Onsets";
 		public const int PLUGINqmOnset = 0;
 		public const int PLUGINqmTranscribe = 1;
 		public const int PLUGINOnsetDS = 2;
 		public const int PLUGINSilvet = 3;
 		public const int PLUGINaubioOnset = 4;
 		public const int PLUGINaubioTracker = 5;
-		public static int lastPluginUsed = PLUGINqmOnset;
+		public int lastPluginUsed = PLUGINqmOnset;
 
 		public const int METHOD1frequency = 0;
 		public const int METHOD1spectral = 1;
@@ -35,9 +34,13 @@ namespace UtilORama4
 		public const int METHOD2modKulback = 6;
 		public const int METHOD2flux = 7;
 
-		public static xTimings xOnsets = Annotator.xOnsets;
+		public xTimings xOnsets = new xTimings("Note Onsets");
+		public int BeatsPerBar = 4;
+		public int FirstBeat = 1;
+		public bool ReuseResults = false;
+		public xTimings alignTimes = null;
 
-		public static readonly string[] availablePluginNames = {	"Queen Mary Note Onset Detector",
+		public readonly string[] availablePluginNames = {	"Queen Mary Note Onset Detector",
 																											"Queen Mary Polyphonic Transcription",
 																											"OnsetDS Onset Detector",
 																											"Silvet Note Transcription",
@@ -46,14 +49,14 @@ namespace UtilORama4
 		//																											"#Alicante Note Onset Detector",
 		//																										"#Alicante Polyphonic Transcription" };
 
-		public static readonly string[] availablePluginCodes = {"vamp:qm-vamp-plugins:qm-onsetdetector:onsets",
+		public readonly string[] availablePluginCodes = {"vamp:qm-vamp-plugins:qm-onsetdetector:onsets",
 																											"vamp:qm-vamp-plugins:qm-transcription:transcription",
 																											"vamp:vamp-onsetsds:onsetsds:onsets",
 																											"vamp:silvet:silvet:onsets",
 																											"vamp:vamp-aubio:aubioonset:onsets",
 																											"vamp:vamp-aubio:aubionotes:notes" };
 
-		public static readonly string[] filesAvailableConfigs = {"vamp_qm-vamp-plugins_qm-onsetdetector_onsets.n3",
+		public readonly string[] filesAvailableConfigs = {"vamp_qm-vamp-plugins_qm-onsetdetector_onsets.n3",
 																											"vamp_qm-vamp-plugins_qm-transcription_transcription.n3",
 																											"vamp_vamp-onsetsds_onsetsds_onsets.n3",
 																											"vamp_silvet_silvet_onsets.n3",
@@ -64,10 +67,24 @@ namespace UtilORama4
 																								"Note Names",
 																								"Midi Note Numbers" };
 
-	//private SequenceFunctions SequenceFunctions = new SequenceFunctions();
-		//
+	private SequenceFunctions seqFunct = new SequenceFunctions();
 
-		public static int UsePlugin
+		public NoteOnsets()
+		{
+			// Constructor
+
+		}
+
+		public string[] AvailablePluginNames
+		{
+			get
+			{
+				return availablePluginNames;
+			}
+		}
+
+
+		public int UsePlugin
 		{
 			set
 			{
@@ -91,12 +108,19 @@ namespace UtilORama4
 		//}
 		public enum DetectionMethods { ComplexDomain = 0, SpectralDifference = 1, PhaseDeviation = 2, BroadbandEnergyRise = 3 };
 
-		private static readonly vamps.AlignmentType[] allowableAlignments = { vamps.AlignmentType.None, vamps.AlignmentType.FPS20, vamps.AlignmentType.FPS40 };
+		private readonly vamps.AlignmentType[] allowableAlignments = { vamps.AlignmentType.None, vamps.AlignmentType.FPS20, vamps.AlignmentType.FPS40 };
 
+		public vamps.AlignmentType[] AllowableAlignments
+		{
+			get
+			{
+				return allowableAlignments;
+			}
+		}
 
-		private static vamps.AlignmentType alignmentType = vamps.AlignmentType.None;
+		private vamps.AlignmentType alignmentType = vamps.AlignmentType.None;
 
-		private static vamps.AlignmentType AlignmentType
+		private vamps.AlignmentType AlignmentType
 		{
 			set
 			{
@@ -118,34 +142,42 @@ namespace UtilORama4
 		}
 
 
-		private static readonly vamps.LabelTypes[] allowableLabels = { vamps.LabelTypes.None };
+		private readonly vamps.LabelTypes[] allowableLabels = { vamps.LabelTypes.None };
 
+		public vamps.LabelTypes[] AllowableLabels
+		{
+			get
+			{
+				return allowableLabels;
+			}
+		}
 
-		public static xTimings Timings
+		public xTimings Timings
 		{
 			get
 			{
 				return xOnsets;
 			}
 		}
-		public static Annotator.TransformTypes TransformationType
+		public int TransformationType
 		{
 			get
 			{
-				return Annotator.TransformTypes.NoteOnsets;
+				return 2;
 			}
 		}
 
-		public static string TransformationName
+		public string TransformationName
 		{
 			get
 			{
-				return transformName;
+				return "Note Onsets";
 			}
 		}
 
 
-		public static int PrepareToVamp(string fileSong, int pluginIndex, int detectionMethod = METHOD1domain)
+		public int PrepareToVamp(string fileSong, int pluginIndex, int beatsPerBar, int stepSize,
+								int detectionMethod = METHOD1domain, bool reuse = false, bool whiten = true)
 		{
 			// Song file should have already been copied to the temp folder and named song.mp3
 			// Annotator will use the same folder the song is in for it's files
@@ -164,6 +196,8 @@ namespace UtilORama4
 			//string fileConfigTo = ""; // tempPath;
 			string vampFile = "";
 			//string rezults = "";
+			BeatsPerBar = beatsPerBar;
+			ReuseResults = reuse;
 			StreamReader reader;
 			StreamWriter writer;
 
@@ -190,7 +224,7 @@ namespace UtilORama4
 							lineIn = reader.ReadLine();
 							if (lineCount == 7)
 							{
-								lineIn = lineIn.Replace("512", Annotator.StepSize.ToString());
+								lineIn = lineIn.Replace("512", stepSize.ToString());
 							}
 							writer.WriteLine(lineIn);
 						}
@@ -208,7 +242,7 @@ namespace UtilORama4
 							lineIn = reader.ReadLine();
 							if (lineCount == 7)
 							{
-								lineIn = lineIn.Replace("441", Annotator.StepSize.ToString());
+								lineIn = lineIn.Replace("441", stepSize.ToString());
 							}
 							writer.WriteLine(lineIn);
 						}
@@ -225,7 +259,7 @@ namespace UtilORama4
 							lineIn = reader.ReadLine();
 							if (lineCount == 7)
 							{
-								lineIn = lineIn.Replace("1024", Annotator.StepSize.ToString());
+								lineIn = lineIn.Replace("1024", stepSize.ToString());
 							}
 							writer.WriteLine(lineIn);
 						}
@@ -242,7 +276,7 @@ namespace UtilORama4
 							lineIn = reader.ReadLine();
 							if (lineCount == 7)
 							{
-								lineIn = lineIn.Replace("1024", Annotator.StepSize.ToString());
+								lineIn = lineIn.Replace("1024", stepSize.ToString());
 							}
 							writer.WriteLine(lineIn);
 						}
@@ -259,7 +293,7 @@ namespace UtilORama4
 							lineIn = reader.ReadLine();
 							if (lineCount == 7)
 							{
-								lineIn = lineIn.Replace("256", Annotator.StepSize.ToString());
+								lineIn = lineIn.Replace("256", stepSize.ToString());
 							}
 							if (lineCount == 16)
 							{
@@ -283,7 +317,7 @@ namespace UtilORama4
 							lineIn = reader.ReadLine();
 							if (lineCount == 7)
 							{
-								lineIn = lineIn.Replace("256", Annotator.StepSize.ToString());
+								lineIn = lineIn.Replace("256", stepSize.ToString());
 							}
 							if (lineCount == 28)
 							{
@@ -303,7 +337,7 @@ namespace UtilORama4
 			{
 				err = e.HResult;
 				string m = e.Message;
-				if (Fyle.DebugMode)
+				if (utils.IsWizard)
 				{
 					System.Diagnostics.Debugger.Break();
 				}
@@ -318,9 +352,36 @@ namespace UtilORama4
 			return err;
 		}
 
+		private int fps = 40;
+		private int msPF = 25;
+		public int FramesPerSecond
+		{
+			set
+			{
+				fps = value;
+				if (fps < 10) fps = 10;
+				if (fps > 100) fps = 100;
+				msPF = 1000 / fps;
+			}
+			get
+			{
+				return fps;
+			}
+		}
+
+		public int MillisecondsPerFrame
+		{
+			set
+			{
+				msPF = value;
+				if (msPF < 10) msPF = 10;
+				if (msPF > 100) msPF = 100;
+				fps = 1000 / msPF;
+			}
+		}
 
 		// Required by ITransform inteface, wrapper to true ResultsToxTimings procedure requiring more parameters
-		public static int ResultsToxTimings(string resultsFile, vamps.AlignmentType alignmentType, vamps.LabelTypes labelType)
+		public int ResultsToxTimings(string resultsFile, vamps.AlignmentType alignmentType, vamps.LabelTypes labelType)
 		{
 			return ResultsToxTimings(resultsFile, alignmentType, labelType);
 		}
@@ -328,16 +389,16 @@ namespace UtilORama4
 
 		// The true ResultsToxTimings procedure requiring more parameters, (not compliant with ITransform inteface)
 
-		public static int ResultsToxTimings(string resultsFile, vamps.AlignmentType alignmentType, vamps.LabelTypes labelType, DetectionMethods detectMethod = DetectionMethods.ComplexDomain)
+		public int ResultsToxTimings(string resultsFile, vamps.AlignmentType alignmentType, vamps.LabelTypes labelType, DetectionMethods detectMethod = DetectionMethods.ComplexDomain)
 		{
 			int err = 0;
 			bool redo = true;
 
 			if (xOnsets == null)
 			{
-				xOnsets = new xTimings(transformName);
+				xOnsets = new xTimings("Note Onsets");
 			}
-			if ((xOnsets.effects.Count > 0) && (!Annotator.ReuseResults))
+			if ((xOnsets.effects.Count > 0) && (!ReuseResults))
 			{
 				xOnsets.effects.Clear();
 			}
@@ -354,34 +415,51 @@ namespace UtilORama4
 				int beatLength = 0;
 				int ppos = 0;
 				int millisecs = 0;
+				int subBeat = 0;
+				int subSubBeat = 0;
+				int subSubSubBeat = 0;
+				int theTime = 0;
+				int milliLen = 0;
+				string noteNum = "";
 				int midiNum = -1;
 				string label = "1";
-				int milliLen = 0;
-				string noteNum = "0";
-				//string[] parts;
 
 				int countLines = 0;
 				int countBars = 1;
-				int countBeats = Annotator.FirstBeat;
+				int countBeats = FirstBeat;
+				int countHalves = 1;
+				int countThirds = 1;
+				int countQuarters = 1;
+				int maxBeats = BeatsPerBar;
+				int maxHalves = BeatsPerBar * 2;
+				int maxThirds = BeatsPerBar * 3;
+				int maxQuarters = BeatsPerBar * 4;
 
-				//int align = SequenceFunctions.GetAlignment(cboAlignBarsBeats.Text);
+				//int align = seqFunct.GetAlignment(cboAlignBarsBeats.Text);
 
+				fps = 1000;
+				msPF = 1;
 				switch (alignmentType)
 				{
 					case vamps.AlignmentType.FPS10:
-						Annotator.FPS = 10;
+						fps = 10;
+						msPF = 100;
 						break;
 					case vamps.AlignmentType.FPS20:
-						Annotator.FPS = 20;
+						fps = 20;
+						msPF = 50;
 						break;
 					case vamps.AlignmentType.FPS30:
-						Annotator.FPS = 30;
+						fps = 30;
+						msPF = 33;
 						break;
 					case vamps.AlignmentType.FPS40:
-						Annotator.FPS = 40;
+						fps = 40;
+						msPF = 25;
 						break;
 					case vamps.AlignmentType.FPS60:
-						Annotator.FPS = 60;
+						fps = 60;
+						msPF = 17;
 						break;
 					case vamps.AlignmentType.BeatsFull:
 						Annotator.xAlignTo = Annotator.xBeatsFull;
@@ -439,7 +517,7 @@ namespace UtilORama4
 								midiNum = Int32.Parse(noteNum);
 								if (midiNum > 0)
 								{
-									//label = SequenceFunctions.noteNamesUnicode[midiNum];
+									//label = SequenceFunctions.noteNames[midiNum];
 								}
 							}
 						}
@@ -492,7 +570,7 @@ namespace UtilORama4
 								midiNum = Int32.Parse(noteNum);
 								if (midiNum > 0)
 								{
-									//label = SequenceFunctions.noteNamesUnicode[midiNum];
+									//label = SequenceFunctions.noteNames[midiNum];
 								}
 							}
 						}
@@ -507,52 +585,45 @@ namespace UtilORama4
 		} // end Beats
 
 
-		public static int xTimingsToLORtimings()
+		public int xTimingsToLORtimings(xTimings timings, Sequence4 sequence)
 		{
 			// Ignore the timings passed in, and use the ones already cached for Bars and Beats
 			// (Other transforms will use the one passed in)
 			
-			//SequenceFunctions.Sequence = sequence;
+			seqFunct.Sequence = sequence;
 			int errs = 0;
 
 			if (xOnsets != null)
 			{
 				if (xOnsets.effects.Count > 0)
 				{
-					LORTimings4 gridOnsets = Annotator.Sequence.FindTimingGrid(transformName, true);
-					SequenceFunctions.ImportTimingGrid(gridOnsets, xOnsets);
-					// Save a reference to the Note Onsets timing grid
-					Annotator.GridOnsets = gridOnsets;
-					// If the Vamp Track's timing grid is currently set to Full Beats or is null
-					//   switch it to Note Onsets.  (if anything else, leave it unchanged)
-					if (Annotator.VampTrack.timingGrid == null)
-					{ Annotator.VampTrack.timingGrid = gridOnsets; }
-					else
-					{
-						string tname = Annotator.VampTrack.timingGrid.Name;
-						if (tname == VampBarBeats.beatsFullName)
-						{ Annotator.VampTrack.timingGrid = gridOnsets; }
-					}
+					TimingGrid barGrid = seqFunct.GetGrid("Note Onsets", true);
+					seqFunct.ImportTimingGrid(barGrid, xOnsets);
 				}
 			}
 
 			return errs;
 		}
 
-		public static int xTimingsToLORChannels()
+		public int xTimingsToLORChannels(xTimings timings, Sequence4 sequence)
+		{
+			return xTimingsToLORChannels(timings, sequence, 1, false);
+		}
+
+		public int xTimingsToLORChannels(xTimings timings, Sequence4 sequence, int firstBeat, bool ramps)
 		{
 			int errs = 0;
 
-			//LORTrack4 vampTrack = SequenceFunctions.GetTrack("Vamp-O-Rama");
-			LORChannelGroup4 beatGroup = Annotator.Sequence.FindChannelGroup(transformName, Annotator.VampTrack.Members, true);
+			Track vampTrack = seqFunct.GetTrack("Vamp-O-Rama");
+			ChannelGroup beatGroup = seqFunct.GetGroup("Bars and Beats", vampTrack);
 			if (xOnsets != null)
 			{
 				if (xOnsets.effects.Count > 0)
 				{
-					if (Annotator.UseRamps)
+					if (ramps)
 					{
-						LORChannel4 chan = Annotator.Sequence.FindChannel(transformName, beatGroup.Members, true, true);
-						SequenceFunctions.ImportNoteChannel(chan, xOnsets);
+						Channel barCh = seqFunct.GetChannel("Bars", beatGroup.Members);
+						seqFunct.ImportBeatChannel(barCh, xOnsets, 1, firstBeat, ramps);
 					}
 				}
 			}
@@ -560,7 +631,7 @@ namespace UtilORama4
 			return errs;
 		}
 
-		public static int xTimingsToxLights(string baseFileName)
+		public int xTimingsToxLights(xTimings timings, string baseFileName)
 		{
 			int errs = 0;
 

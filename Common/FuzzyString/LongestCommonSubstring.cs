@@ -5,7 +5,6 @@ namespace FuzzyString
 {
 	public static partial class FuzzyFunctions
 	{
-		
 		public static string LongestCommonSubstring(this string source, string target)
 		{
 			if (String.IsNullOrEmpty(source) || String.IsNullOrEmpty(target)) { return null; }
@@ -58,6 +57,6 @@ namespace FuzzyString
 			double biggest = Math.Max(source.Length, target.Length);
 			return distance / biggest;
 		}
-		
+
 	} // end public partial class FuzzyFunctions
 } // end namespace FuzzyString

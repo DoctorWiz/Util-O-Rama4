@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace UtilORama4
+namespace MergeORama
 {
 	public partial class frmOptions : Form
 	{

@@ -1,4 +1,4 @@
-﻿namespace UtilORama4
+﻿namespace InfoRama
 {
 	partial class frmAbout
 	{

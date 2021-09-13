@@ -62,7 +62,6 @@ namespace FuzzyString
 		/// <returns>The computed n-gram distance in the range [0, 1]</returns>
 		/// <exception cref="ArgumentNullException">If s0 or source is null.</exception>
 
-    /*
 		public static double NGramSimilarity(this string source, string target)
 		{
 			double score = NGramDistance(source, target);
@@ -192,7 +191,6 @@ namespace FuzzyString
     return p[sl] / Math.Max(tl, sl);
     } // end NGramDistance
 
-    */
 
 	} // end public partial class FuzzyFunctions
 } // end namespace FuzzyString

@@ -8,14 +8,15 @@ using System.Text;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LORUtils4; using FileHelper;
+using LORUtils;
 
-namespace UtilORama4
-{ 	public partial class Form1 : Form
+namespace TreeDupliFix
+{
+	public partial class Form1 : Form
 	{
-		LORSequence4 seq = null;
-		LORRGBChannel4[] rgbChans1 = null;
-		LORRGBChannel4[] rgbChans2 = null;
+		Sequence4 seq = null;
+		RGBchannel[] rgbChans1 = null;
+		RGBchannel[] rgbChans2 = null;
 		string fileName = "";
 
 
@@ -26,9 +27,9 @@ namespace UtilORama4
 
 		private void btnBrowseOpen_Click(object sender, EventArgs e)
 		{
-			dlgOpen.InitialDirectory = lutils.DefaultChannelConfigsPath;
-			dlgOpen.Filter = lutils.FILT_OPEN_ANY;
-			dlgOpen.DefaultExt = lutils.EXT_LAS;
+			dlgOpen.InitialDirectory = utils.DefaultChannelConfigsPath;
+			dlgOpen.Filter = utils.FILT_OPEN_ANY;
+			dlgOpen.DefaultExt = utils.EXT_LAS;
 			dlgOpen.Title = "Select sequence file to be fixed";
 			DialogResult dr = dlgOpen.ShowDialog();
 			if (dr == DialogResult.OK)
@@ -44,7 +45,7 @@ namespace UtilORama4
 
 		void FixFile(string theFile)
 		{
-			seq = new LORSequence4(theFile);
+			seq = new Sequence4(theFile);
 			rgbChans1 = null;
 			rgbChans2 = null;
 			Array.Resize(ref rgbChans1, 301);
@@ -67,7 +68,7 @@ namespace UtilORama4
 			}
 			for (int i = 0; i < seq.RGBchannels.Count; i++)
 			{
-				LORRGBChannel4 rgb = seq.RGBchannels[i];
+				RGBchannel rgb = seq.RGBchannels[i];
 				rgb.Selected = true;
 				if (rgb.Name.Substring(0, 11).CompareTo("Tree Pixel ") == 0)
 				{
@@ -88,7 +89,7 @@ namespace UtilORama4
 			}
 			for (int i = 0; i < seq.ChannelGroups.Count; i++)
 			{
-				LORChannelGroup4 cg = seq.ChannelGroups[i];
+				ChannelGroup cg = seq.ChannelGroups[i];
 				cg.Selected = true;
 				if (cg.Name.Length > 20)
 				{
@@ -100,15 +101,15 @@ namespace UtilORama4
 			}
 		} // End FixFile
 
-		void FixGroup(LORChannelGroup4 gr)
+		void FixGroup(ChannelGroup gr)
 		{
 			for (int j=0; j< gr.Members.Items.Count; j++)
 			{
-				if (gr.Members.Items[j].MemberType == LORMemberType4.ChannelGroup)
+				if (gr.Members.Items[j].MemberType == MemberType.ChannelGroup)
 				{
-					FixGroup((LORChannelGroup4)gr.Members.Items[j]);  // Recurse!
+					FixGroup((ChannelGroup)gr.Members.Items[j]);  // Recurse!
 				}
-				if (gr.Members.Items[j].MemberType == LORMemberType4.RGBChannel)
+				if (gr.Members.Items[j].MemberType == MemberType.RGBchannel)
 				{
 					int gsi = gr.Members.Items[j].SavedIndex;
 					for (int k=0; k< 300; k++)
@@ -121,15 +122,15 @@ namespace UtilORama4
 								k = 300; // force exit from loop
 							} // End Saved Index Match
 						} // End Element not null
-					} // End rgbChans For LORLoop4
-				} // End if Member is LORRGBChannel4
-			} // End Group Items For LORLoop4
+					} // End rgbChans For Loop
+				} // End if Member is RGBchannel
+			} // End Group Items For Loop
 		} // End FixGroup
 
 		private void btnSaveAs_Click(object sender, EventArgs e)
 		{
 			dlgSave.InitialDirectory = Path.GetDirectoryName(fileName);
-			dlgSave.Filter = lutils.FILT_SAVE_EITHER;
+			dlgSave.Filter = utils.FILT_SAVE_EITHER;
 			dlgSave.DefaultExt = Path.GetExtension(fileName);
 			dlgSave.FileName = Path.GetFileNameWithoutExtension(fileName) + " Fixed";
 			dlgSave.Title = "Save Fixed File As...";

@@ -1,4 +1,4 @@
-﻿namespace UtilORama4
+﻿namespace VampORama
 {
 	partial class frmSettings
 	{
@@ -260,7 +260,7 @@
 			this.grpTrackPoly.Size = new System.Drawing.Size(340, 240);
 			this.grpTrackPoly.TabIndex = 19;
 			this.grpTrackPoly.TabStop = false;
-			this.grpTrackPoly.Text = " LORTrack4 && Channels - Polyphonic Transcription";
+			this.grpTrackPoly.Text = " Track && Channels - Polyphonic Transcription";
 			this.grpTrackPoly.Visible = false;
 			// 
 			// lblEffect
@@ -270,7 +270,7 @@
 			this.lblEffect.Name = "lblEffect";
 			this.lblEffect.Size = new System.Drawing.Size(35, 13);
 			this.lblEffect.TabIndex = 128;
-			this.lblEffect.Text = "LOREffect4";
+			this.lblEffect.Text = "Effect";
 			// 
 			// pnlRamps
 			// 
@@ -523,7 +523,7 @@
 			this.grpTrackBeats.Size = new System.Drawing.Size(340, 260);
 			this.grpTrackBeats.TabIndex = 23;
 			this.grpTrackBeats.TabStop = false;
-			this.grpTrackBeats.Text = " LORTrack4 && Channels - Beats ";
+			this.grpTrackBeats.Text = " Track && Channels - Beats ";
 			this.grpTrackBeats.Visible = false;
 			// 
 			// pnlTrackBeatsX
@@ -573,7 +573,7 @@
 			this.label11.Name = "label11";
 			this.label11.Size = new System.Drawing.Size(35, 13);
 			this.label11.TabIndex = 133;
-			this.label11.Text = "LOREffect4";
+			this.label11.Text = "Effect";
 			// 
 			// panel3
 			// 
@@ -687,7 +687,7 @@
 			this.grpTrackSpectro.Size = new System.Drawing.Size(340, 260);
 			this.grpTrackSpectro.TabIndex = 25;
 			this.grpTrackSpectro.TabStop = false;
-			this.grpTrackSpectro.Text = " LORTrack4 && Channels- Spectrogram ";
+			this.grpTrackSpectro.Text = " Track && Channels- Spectrogram ";
 			this.grpTrackSpectro.Visible = false;
 			// 
 			// chkSpectroOctaveGrouping

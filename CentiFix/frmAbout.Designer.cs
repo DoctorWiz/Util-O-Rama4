@@ -1,4 +1,4 @@
-﻿namespace UtilORama4
+﻿namespace CentiFix
 {
 	partial class frmAbout
 	{

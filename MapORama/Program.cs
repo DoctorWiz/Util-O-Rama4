@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LORUtils4; using FileHelper;
+using LORUtils;
 
-namespace UtilORama4
+namespace MapORama
 {
 	static class Program
 	{
@@ -23,8 +23,8 @@ namespace UtilORama4
 
 	public class MapInfo
 	{
-		public iLORMember4 Source = null;
-		public iLORMember4 Master = null;
+		public IMember Source = null;
+		public IMember Master = null;
 	}
 
 }

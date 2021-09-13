@@ -34,7 +34,7 @@
 			this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.Unitverse = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.Network = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.LORChannel4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.Channel = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.Color = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
 			this.SuspendLayout();
@@ -48,7 +48,7 @@
             this.Type,
             this.Unitverse,
             this.Network,
-            this.LORChannel4,
+            this.Channel,
             this.Color});
 			this.dataGridView1.Location = new System.Drawing.Point(59, 75);
 			this.dataGridView1.Name = "dataGridView1";
@@ -80,10 +80,10 @@
 			this.Network.HeaderText = "Network";
 			this.Network.Name = "Network";
 			// 
-			// LORChannel4
+			// Channel
 			// 
-			this.LORChannel4.HeaderText = "LORChannel4";
-			this.LORChannel4.Name = "LORChannel4";
+			this.Channel.HeaderText = "Channel";
+			this.Channel.Name = "Channel";
 			// 
 			// Color
 			// 
@@ -111,7 +111,7 @@
 		private System.Windows.Forms.DataGridViewTextBoxColumn Type;
 		private System.Windows.Forms.DataGridViewTextBoxColumn Unitverse;
 		private System.Windows.Forms.DataGridViewTextBoxColumn Network;
-		private System.Windows.Forms.DataGridViewTextBoxColumn LORChannel4;
+		private System.Windows.Forms.DataGridViewTextBoxColumn Channel;
 		private System.Windows.Forms.DataGridViewTextBoxColumn Color;
 	}
 }

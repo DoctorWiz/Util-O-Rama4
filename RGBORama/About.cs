@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace UtilORama4
+namespace RGBORama
 {
 	partial class About : Form
 	{

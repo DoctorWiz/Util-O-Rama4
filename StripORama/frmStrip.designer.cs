@@ -278,7 +278,7 @@
 			this.label12.Name = "label12";
 			this.label12.Size = new System.Drawing.Size(71, 13);
 			this.label12.TabIndex = 28;
-			this.label12.Text = "Start LORChannel4";
+			this.label12.Text = "Start Channel";
 			// 
 			// numUniverse3
 			// 
@@ -494,7 +494,7 @@
 			this.label10.Name = "label10";
 			this.label10.Size = new System.Drawing.Size(71, 13);
 			this.label10.TabIndex = 24;
-			this.label10.Text = "Start LORChannel4";
+			this.label10.Text = "Start Channel";
 			// 
 			// numUniverse2
 			// 
@@ -716,7 +716,7 @@
 			this.label9.Name = "label9";
 			this.label9.Size = new System.Drawing.Size(35, 13);
 			this.label9.TabIndex = 22;
-			this.label9.Text = "LORTrack4";
+			this.label9.Text = "Track";
 			// 
 			// txtStartCh1
 			// 
@@ -735,7 +735,7 @@
 			this.label8.Name = "label8";
 			this.label8.Size = new System.Drawing.Size(71, 13);
 			this.label8.TabIndex = 20;
-			this.label8.Text = "Start LORChannel4";
+			this.label8.Text = "Start Channel";
 			// 
 			// numUniverse1
 			// 
@@ -961,7 +961,7 @@
 			this.label23.Name = "label23";
 			this.label23.Size = new System.Drawing.Size(71, 13);
 			this.label23.TabIndex = 28;
-			this.label23.Text = "Start LORChannel4";
+			this.label23.Text = "Start Channel";
 			// 
 			// numUniverse4
 			// 
