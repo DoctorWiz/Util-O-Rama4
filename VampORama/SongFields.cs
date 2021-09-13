@@ -11,13 +11,15 @@ namespace Musik
 		public string Album;
 		public string Year;
 		public uint DiscNo;      // Disc Number
-		public uint Track;       // Track No. (May not be #, may be string in format ##/## (Track x of count))
+		public uint Track;       // LORTrack4 No. (May not be #, may be string in format ##/## (LORTrack4 x of count))
 		public string Artist;      // Audio Artist
 		public string Composer;
 		public string Title;
 		public string Genre;
 		public string Comment;
-		public System.TimeSpan Duration;       // in Milliseconds
+		public System.TimeSpan Duration;
+		public int Milliseconds;
+		public int Centiseconds;
 		public double Bitrate;
 		public bool VBR;           // true if VBR, false if CBR
 		public long Size;           // in Bytes
@@ -203,7 +205,7 @@ namespace Musik
 					break;
 
 				case (int)AudioField.Title:
-					sOut = "Track Title";
+					sOut = "LORTrack4 Title";
 					break;
 
 				case (int)AudioField.Genre:

@@ -97,7 +97,7 @@ namespace UtilORama4 {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error: Old Channel not mapped to New Channel..
+        ///   Looks up a localized string similar to Error: Old Channel not mapped to New LORChannel4..
         /// </summary>
         internal static string MSG_NoMap {
             get {
@@ -106,7 +106,7 @@ namespace UtilORama4 {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error: Old Channel mapped to New Channel, but not vise-versa..
+        ///   Looks up a localized string similar to Error: Old Channel mapped to New LORChannel4, but not vise-versa..
         /// </summary>
         internal static string MSG_OneWay {
             get {
@@ -142,7 +142,7 @@ namespace UtilORama4 {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Channel Configs (*.lcc)|*.lcc|Musical Sequences (*.lms)|*.lms|Animated Sequences (*.las)|*.las.
+        ///   Looks up a localized string similar to LORChannel4 Configs (*.lcc)|*.lcc|Musical Sequences (*.lms)|*.lms|Animated Sequences (*.las)|*.las.
         /// </summary>
         internal static string OpenDialogFilter_Master {
             get {

@@ -41,7 +41,7 @@ namespace xUtils
 			set;
 		}
 
-		bool MatchExact
+		bool ExactMatch
 		{
 			get;
 			set;
@@ -74,23 +74,31 @@ namespace xUtils
 
 	} // End Interface xMember
 
-
+	public class xSequence
+	{
+		public List<xModel> AllModels = xModel.AllModels;
+		public List<xPixels> AllPixels = xPixels.AllPixels;
+		public List<xModelGroup> AllModelGroups = xModelGroup.AllModelGroups;
+		public List<xRGBModel> AllRGBModels = xRGBModel.AllRGBModels;
+		public string FileName = "";
+	}
 
 /// <summary>
 /// Model: StringType = Single Color
 /// </summary>
 	public class xModel : xMember, IComparable<xMember>
 	{
-		private string myName = "";
-		private Color myColor = Color.Black;
-		private bool isSelected = false;
-		private bool matchExact = false;
-		private object tagItem = null;
-		private int universeNumber = 0;
-		private int dmxAddress = 0;
-		private int xLights_Address = 0;
+		protected string myName = "";
+		protected Color myColor = Color.Black;
+		protected bool isSelected = false;
+		protected bool matchExact = false;
+		protected object tagItem = null;
+		protected int universeNumber = 0;
+		protected int myDMXAddress = 0;
+		public string StartChannel = "";
+		protected int xLights_Address = 0;
 		private xModelTypes myType = xModelTypes.Unknown;
-		
+		public static List<xModel> AllModels = new List<xModel>();
 
 		public xModel(string theName)
 		{
@@ -101,7 +109,7 @@ namespace xUtils
 		{
 			myName = theName;
 			myType = theType;
-			xLightsAddress = theAddress;
+			xLights_Address = theAddress;
 		}
 		public string Name
 		{
@@ -170,7 +178,7 @@ namespace xUtils
 			}
 		}
 
-		public bool MatchExact
+		public bool ExactMatch
 		{
 			get
 			{
@@ -209,17 +217,30 @@ namespace xUtils
 		{
 			get
 			{
-				return dmxAddress;
+				return myDMXAddress;
 			}
 			set
 			{
-				dmxAddress = value;
+				myDMXAddress = value;
 			}
 		}
 		public int xLightsAddress
 		{
 			get
 			{
+				if (xLights_Address < 1)
+				{
+					if (StartChannel.Length > 0)
+					{
+						int a = xutils.GetAddress(StartChannel, AllModels);
+						if (a != xLights_Address)
+						{
+							xLights_Address = a;
+						}
+					}
+				}
+				
+				
 				return xLights_Address;
 			}
 			set
@@ -235,15 +256,16 @@ namespace xUtils
 	/// </summary>
 	public class xRGBModel : xMember, IComparable<xMember>
 	{
-		private string myName = "";
-		//private Color myColor = Color.Black;
-		private bool isSelected = false;
-		private bool matchExact = false;
-		private object tagItem = null;
-		private int universeNumber = 0;
-		private int dmxAddress = 0;
-		private int xLights_Address = 0;
+		protected string myName = "";
+		//protected Color myColor = Color.Black;
+		protected bool isSelected = false;
+		protected bool matchExact = false;
+		protected object tagItem = null;
+		protected int universeNumber = 0;
+		protected int myDMXAddress = 0;
+		protected int xLights_Address = 0;
 		private xModelTypes myType = xModelTypes.Unknown;
+		public static List<xRGBModel> AllRGBModels = new List<xRGBModel>();
 
 		public xRGBModel(string theName)
 		{
@@ -313,7 +335,7 @@ namespace xUtils
 			}
 		}
 
-		public bool MatchExact
+		public bool ExactMatch
 		{
 			get
 			{
@@ -351,11 +373,11 @@ namespace xUtils
 		{
 			get
 			{
-				return dmxAddress;
+				return myDMXAddress;
 			}
 			set
 			{
-				dmxAddress = value;
+				myDMXAddress = value;
 			}
 		}
 		public int xLightsAddress
@@ -378,15 +400,16 @@ namespace xUtils
 	/// </summary>
 	public class xPixels : xMember, IComparable<xMember>
 	{
-		private string myName = "";
-		//private Color myColor = Color.Black;
-		private bool isSelected = false;
-		private bool matchExact = false;
-		private object tagItem = null;
-		private int universeNumber = 0;
-		private int dmxAddress = 0;
-		private int xLights_Address = 0;
+		protected string myName = "";
+		//protected Color myColor = Color.Black;
+		protected bool isSelected = false;
+		protected bool matchExact = false;
+		protected object tagItem = null;
+		protected int universeNumber = 0;
+		protected int myDMXAddress = 0;
+		protected int xLights_Address = 0;
 		private xModelTypes myType = xModelTypes.Unknown;
+		public static List<xPixels> AllPixels = new List<xPixels>();
 
 
 		public xPixels(string theName)
@@ -456,7 +479,7 @@ namespace xUtils
 			}
 		}
 
-		public bool MatchExact
+		public bool ExactMatch
 		{
 			get
 			{
@@ -495,11 +518,11 @@ namespace xUtils
 		{
 			get
 			{
-				return dmxAddress;
+				return myDMXAddress;
 			}
 			set
 			{
-				dmxAddress = value;
+				myDMXAddress = value;
 			}
 		}
 		public int xLightsAddress
@@ -521,16 +544,17 @@ namespace xUtils
 	/// </summary>
 	public class xModelGroup : xMember, IComparable<xMember>
 {
-		private string myName = "";
-		//private Color myColor = Color.Black;
-		private bool isSelected = false;
-		private bool matchExact = false;
-		private object tagItem = null;
+		protected string myName = "";
+		//protected Color myColor = Color.Black;
+		protected bool isSelected = false;
+		protected bool matchExact = false;
+		protected object tagItem = null;
 		public List<xMember> xMembers = new List<xMember>();
-		private int universeNumber = 0;
-		private int dmxAddress = 0;
-		private int xLights_Address = 0;
+		protected int universeNumber = 0;
+		protected int myDMXAddress = 0;
+		protected int xLights_Address = 0;
 		private xModelTypes myType = xModelTypes.Unknown;
+		public static List<xModelGroup> AllModelGroups = new List<xModelGroup>();
 
 		public xModelGroup(string theName)
 		{
@@ -599,7 +623,7 @@ namespace xUtils
 			}
 		}
 
-		public bool MatchExact
+		public bool ExactMatch
 		{
 			get
 			{
@@ -638,11 +662,11 @@ namespace xUtils
 		{
 			get
 			{
-				return dmxAddress;
+				return myDMXAddress;
 			}
 			set
 			{
-				dmxAddress = value;
+				myDMXAddress = value;
 			}
 		}
 		public int xLightsAddress

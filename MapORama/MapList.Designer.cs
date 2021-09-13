@@ -60,12 +60,12 @@
 			// 
 			// hedSource
 			// 
-			this.hedSource.Text = "Source Channel";
+			this.hedSource.Text = "Source LORChannel4";
 			this.hedSource.Width = 319;
 			// 
 			// hedMaster
 			// 
-			this.hedMaster.Text = "Destination Channel";
+			this.hedMaster.Text = "Destination LORChannel4";
 			this.hedMaster.Width = 321;
 			// 
 			// button1
@@ -95,10 +95,10 @@
 			// 
 			this.imlTreeIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imlTreeIcons.ImageStream")));
 			this.imlTreeIcons.TransparentColor = System.Drawing.Color.Transparent;
-			this.imlTreeIcons.Images.SetKeyName(0, "Track");
-			this.imlTreeIcons.Images.SetKeyName(1, "ChannelGroup");
-			this.imlTreeIcons.Images.SetKeyName(2, "RGBchannel");
-			this.imlTreeIcons.Images.SetKeyName(3, "Channel");
+			this.imlTreeIcons.Images.SetKeyName(0, "LORTrack4");
+			this.imlTreeIcons.Images.SetKeyName(1, "LORChannelGroup4");
+			this.imlTreeIcons.Images.SetKeyName(2, "LORRGBChannel4");
+			this.imlTreeIcons.Images.SetKeyName(3, "LORChannel4");
 			this.imlTreeIcons.Images.SetKeyName(4, "RedCh");
 			this.imlTreeIcons.Images.SetKeyName(5, "GrnCh");
 			this.imlTreeIcons.Images.SetKeyName(6, "BluCh");
@@ -138,7 +138,7 @@
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "frmMapList";
-			this.Text = "Channel Mapping Summary";
+			this.Text = "LORChannel4 Mapping Summary";
 			this.Load += new System.EventHandler(this.frmMapList_Load);
 			this.Paint += new System.Windows.Forms.PaintEventHandler(this.frmMapList_Paint);
 			this.ResumeLayout(false);

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LORUtils; using FileHelper;
+using LORUtils4; using FileHelper;
 
 namespace UtilORama4
 {

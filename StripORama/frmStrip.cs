@@ -1,10 +1,10 @@
-﻿using LORUtils; using FileHelper;
+﻿using LORUtils4; using FileHelper;
 using System;
 using System.IO;
 using System.Windows.Forms;
 using System.Media;
 using System.Drawing;
-using LORUtils; using FileHelper;
+using LORUtils4; using FileHelper;
 
 namespace StripORama
 {
@@ -16,7 +16,7 @@ namespace StripORama
 		private int[] unitChs;
 		private int chCount = 0;
 		private int changesMade = 0;
-		private Sequence4 seq;
+		private LORSequence4 seq;
 
 		private string stripName = "";
 		private int stripNum = 1;
@@ -110,7 +110,7 @@ namespace StripORama
 			}
 			else
 			{
-				openFileDialog.InitialDirectory = utils.DefaultSequencesPath;
+				openFileDialog.InitialDirectory = lutils.DefaultSequencesPath;
 				openFileDialog.FileName = "";
 			}
 
@@ -294,7 +294,7 @@ namespace StripORama
 			Properties.Settings.Default.FormLeft = this.Left;
 			Properties.Settings.Default.FormTop = this.Top;
 
-			Properties.Settings.Default.Track = Int16.Parse(txtTrack.Text);
+			Properties.Settings.Default.LORTrack4 = Int16.Parse(txtTrack.Text);
 
 			Properties.Settings.Default.Make1 = chkMake1.Checked;
 			Properties.Settings.Default.Universe1 = Convert.ToInt16(numUniverse1.Value);
@@ -356,7 +356,7 @@ namespace StripORama
 			this.Left = Properties.Settings.Default.FormLeft;
 			this.Top = Properties.Settings.Default.FormTop;
 
-			txtTrack.Text = Properties.Settings.Default.Track.ToString();
+			txtTrack.Text = Properties.Settings.Default.LORTrack4.ToString();
 
 			chkMake1.Checked = Properties.Settings.Default.Make1;
 			numUniverse1.Value = Properties.Settings.Default.Universe1;
@@ -429,7 +429,7 @@ namespace StripORama
 			string lineIn; // line to be written out, gets modified if necessary
 			while ((lineIn = reader.ReadLine()) != null)
 			{
-				savedIndex = utils.getKeyValue(lineIn, "SavedIndex");
+				savedIndex = lutils.getKeyValue(lineIn, "SavedIndex");
 				if (savedIndex > biggestIndex) biggestIndex = savedIndex;
 			}
 			reader.Close();
@@ -453,7 +453,7 @@ namespace StripORama
 			groupCount = 0;
 			groupNumber = 1;
 
-			seq = new Sequence4();
+			seq = new LORSequence4();
 			if (File.Exists(lastFile))
 			{
 				seq.ReadSequenceFile(lastFile);
@@ -622,11 +622,11 @@ namespace StripORama
 			if (chIncr < 0) uch = stripCount * 3 - 2;
 			int trkNum = Int16.Parse(txtTrack.Text) - 1;
 			string chName;
-			Channel redChannel = new Channel("(R)");  // Just placeholders
-			Channel grnChannel = new Channel("(G)");
-			Channel bluChannel = new Channel("(B)");
-			//RGBchannel RGB_Channel = new RGBchannel("RGB");
-			//ChannelGroup pixelGroup = new ChannelGroup();
+			LORChannel4 redChannel = new LORChannel4("(R)");  // Just placeholders
+			LORChannel4 grnChannel = new LORChannel4("(G)");
+			LORChannel4 bluChannel = new LORChannel4("(B)");
+			//LORRGBChannel4 RGB_Channel = new LORRGBChannel4("RGB");
+			//LORChannelGroup4 pixelGroup = new LORChannelGroup4();
 			int chx;
 			//groupCount = 0;
 			int stripKeywdel = stripStart;
@@ -663,7 +663,7 @@ namespace StripORama
 				chName += " / S" + stripNum.ToString() + "." + stripStart.ToString("000") + "-" + stripEnd.ToString("000");
 				chName += " / U" + universeNum.ToString() + "." + stripStart.ToString("000") + "-" + dmxCount.ToString("000") + ")";
 			}
-			ChannelGroup stripGroup = seq.CreateChannelGroup(chName);
+			LORChannelGroup4 stripGroup = seq.CreateChannelGroup(chName);
 
 			///////////////////////////////////////////////////////////
 			// MAKE AN INITIAL CHANNEL GROUP FOR THE PIXEL GROUPING //
@@ -713,7 +713,7 @@ namespace StripORama
 			chName += " Keywdels " + pixNumFirst.ToString("000") + "-" + pixNumLast.ToString("000");
 			chName += " / S" + stripNum.ToString() + "." + stripNumFirst.ToString("000") + "-" + stripNumLast.ToString("000");
 			chName += " / U" + universeNum.ToString() + "." + dmxChFirst.ToString("000") + "-" + dmxChLast.ToString("000") + ")";
-			ChannelGroup pixelGroup = seq.CreateChannelGroup(chName);
+			LORChannelGroup4 pixelGroup = seq.CreateChannelGroup(chName);
 			stripGroup.AddItem(pixelGroup);
 
 
@@ -822,15 +822,15 @@ namespace StripORama
 					RGBLastDMXchannel = uch;
 					uch++;
 				}
-				redChannel.output.deviceType = DeviceType.DMX;
+				redChannel.output.deviceType = LORDeviceType4.DMX;
 				redChannel.output.network = universeNum;
-				redChannel.color = utils.LORCOLOR_RED;
-				grnChannel.output.deviceType = DeviceType.DMX;
+				redChannel.color = lutils.LORCOLOR_RED;
+				grnChannel.output.deviceType = LORDeviceType4.DMX;
 				grnChannel.output.network = universeNum;
-				grnChannel.color = utils.LORCOLOR_GRN;
-				bluChannel.output.deviceType = DeviceType.DMX;
+				grnChannel.color = lutils.LORCOLOR_GRN;
+				bluChannel.output.deviceType = LORDeviceType4.DMX;
 				bluChannel.output.network = universeNum;
-				bluChannel.color = utils.LORCOLOR_BLU;
+				bluChannel.color = lutils.LORCOLOR_BLU;
 
 
 				//dmxChLast = uch - 1;
@@ -839,7 +839,7 @@ namespace StripORama
 				chName = prfx + "Keywdel " + pixelNum.ToString("000");
 				chName += " / S" + stripNum.ToString() + "." + stripKeywdel.ToString("000");
 				chName += " / U" + universeNum.ToString() + "." + RGBFirstDMXchannel.ToString("000") + "-" + RGBLastDMXchannel.ToString("000");
-				RGBchannel RGB_Channel = seq.CreateRGBchannel(chName);
+				LORRGBChannel4 RGB_Channel = seq.CreateRGBchannel(chName);
 				RGB_Channel.redChannel = redChannel;
 				RGB_Channel.grnChannel = grnChannel;
 				RGB_Channel.bluChannel = bluChannel;
@@ -905,7 +905,7 @@ namespace StripORama
 						stripNumFirst += (groupSize * chIncr);
 						stripNumLast += (groupSize * chIncr);
 
-						//pixelGroup = new ChannelGroup();
+						//pixelGroup = new LORChannelGroup4();
 						groupCount = 0; // Reset
 
 					}
@@ -968,7 +968,7 @@ namespace StripORama
 				groupCount = 0;
 			}
 
-			// Add the Strip to the Track
+			// Add the Strip to the LORTrack4
 			seq.Tracks[trkNum].AddItem(stripGroup);
 
 		} // end void AddStrip();

@@ -28,11 +28,18 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmFuzzy));
 			this.txtString1 = new System.Windows.Forms.TextBox();
 			this.txtString2 = new System.Windows.Forms.TextBox();
 			this.cmdTest = new System.Windows.Forms.Button();
 			this.grpAlgorithms = new System.Windows.Forms.GroupBox();
-			this.btnClear = new System.Windows.Forms.Button();
+			this.chkSorensenDice = new System.Windows.Forms.CheckBox();
+			this.chkJaccard = new System.Windows.Forms.CheckBox();
+			this.label4 = new System.Windows.Forms.Label();
+			this.label3 = new System.Windows.Forms.Label();
+			this.label2 = new System.Windows.Forms.Label();
+			this.label1 = new System.Windows.Forms.Label();
+			this.chkJaroSimilarity = new System.Windows.Forms.CheckBox();
 			this.lblTimeSorensenDice = new System.Windows.Forms.Label();
 			this.lblTimeSift = new System.Windows.Forms.Label();
 			this.lblTimeOverlapCoefficient = new System.Windows.Forms.Label();
@@ -124,13 +131,7 @@
 			this.lblScoreJaroSimilarity = new System.Windows.Forms.Label();
 			this.lblScoreJaccard = new System.Windows.Forms.Label();
 			this.lblScoreNGram = new System.Windows.Forms.Label();
-			this.chkJaroSimilarity = new System.Windows.Forms.CheckBox();
-			this.label1 = new System.Windows.Forms.Label();
-			this.label2 = new System.Windows.Forms.Label();
-			this.label3 = new System.Windows.Forms.Label();
-			this.label4 = new System.Windows.Forms.Label();
-			this.chkJaccard = new System.Windows.Forms.CheckBox();
-			this.chkSorensenDice = new System.Windows.Forms.CheckBox();
+			this.btnClear = new System.Windows.Forms.Button();
 			this.btnSuper = new System.Windows.Forms.Button();
 			this.lblAnalysis = new System.Windows.Forms.Label();
 			this.btnAvg = new System.Windows.Forms.Button();
@@ -151,7 +152,7 @@
 			this.txtString2.Name = "txtString2";
 			this.txtString2.Size = new System.Drawing.Size(210, 20);
 			this.txtString2.TabIndex = 1;
-			this.txtString2.Text = "Fred Pendelton";
+			this.txtString2.Text = "John Pendelton";
 			// 
 			// cmdTest
 			// 
@@ -271,15 +272,79 @@
 			this.grpAlgorithms.TabStop = false;
 			this.grpAlgorithms.Text = " Algorithms ";
 			// 
-			// btnClear
+			// chkSorensenDice
 			// 
-			this.btnClear.Location = new System.Drawing.Point(191, 83);
-			this.btnClear.Name = "btnClear";
-			this.btnClear.Size = new System.Drawing.Size(55, 21);
-			this.btnClear.TabIndex = 45;
-			this.btnClear.Text = "Clear";
-			this.btnClear.UseVisualStyleBackColor = true;
-			this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+			this.chkSorensenDice.AutoSize = true;
+			this.chkSorensenDice.Location = new System.Drawing.Point(11, 479);
+			this.chkSorensenDice.Name = "chkSorensenDice";
+			this.chkSorensenDice.Size = new System.Drawing.Size(15, 14);
+			this.chkSorensenDice.TabIndex = 144;
+			this.chkSorensenDice.Tag = "64";
+			this.chkSorensenDice.UseVisualStyleBackColor = true;
+			// 
+			// chkJaccard
+			// 
+			this.chkJaccard.AutoSize = true;
+			this.chkJaccard.Location = new System.Drawing.Point(11, 139);
+			this.chkJaccard.Name = "chkJaccard";
+			this.chkJaccard.Size = new System.Drawing.Size(15, 14);
+			this.chkJaccard.TabIndex = 143;
+			this.chkJaccard.Tag = "64";
+			this.chkJaccard.UseVisualStyleBackColor = true;
+			// 
+			// label4
+			// 
+			this.label4.AutoSize = true;
+			this.label4.Font = new System.Drawing.Font("DejaVu Sans Mono", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label4.Location = new System.Drawing.Point(191, 19);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(105, 13);
+			this.label4.TabIndex = 142;
+			this.label4.Text = "Algorithm Name";
+			this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.Font = new System.Drawing.Font("DejaVu Sans Mono", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label3.Location = new System.Drawing.Point(113, 19);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(42, 13);
+			this.label3.TabIndex = 141;
+			this.label3.Text = "Score";
+			this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Font = new System.Drawing.Font("DejaVu Sans Mono", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label2.Location = new System.Drawing.Point(42, 19);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(35, 13);
+			this.label2.TabIndex = 140;
+			this.label2.Text = "Time";
+			this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Font = new System.Drawing.Font("DejaVu Sans Mono", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label1.Location = new System.Drawing.Point(8, 19);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(28, 13);
+			this.label1.TabIndex = 139;
+			this.label1.Text = "Run";
+			this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// chkJaroSimilarity
+			// 
+			this.chkJaroSimilarity.AutoSize = true;
+			this.chkJaroSimilarity.Location = new System.Drawing.Point(11, 159);
+			this.chkJaroSimilarity.Name = "chkJaroSimilarity";
+			this.chkJaroSimilarity.Size = new System.Drawing.Size(15, 14);
+			this.chkJaroSimilarity.TabIndex = 138;
+			this.chkJaroSimilarity.Tag = "64";
+			this.chkJaroSimilarity.UseVisualStyleBackColor = true;
 			// 
 			// lblTimeSorensenDice
 			// 
@@ -1193,79 +1258,15 @@
 			this.lblScoreNGram.Text = "0000.0000";
 			this.lblScoreNGram.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// chkJaroSimilarity
+			// btnClear
 			// 
-			this.chkJaroSimilarity.AutoSize = true;
-			this.chkJaroSimilarity.Location = new System.Drawing.Point(11, 159);
-			this.chkJaroSimilarity.Name = "chkJaroSimilarity";
-			this.chkJaroSimilarity.Size = new System.Drawing.Size(15, 14);
-			this.chkJaroSimilarity.TabIndex = 138;
-			this.chkJaroSimilarity.Tag = "64";
-			this.chkJaroSimilarity.UseVisualStyleBackColor = true;
-			// 
-			// label1
-			// 
-			this.label1.AutoSize = true;
-			this.label1.Font = new System.Drawing.Font("DejaVu Sans Mono", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label1.Location = new System.Drawing.Point(8, 19);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(28, 13);
-			this.label1.TabIndex = 139;
-			this.label1.Text = "Run";
-			this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// label2
-			// 
-			this.label2.AutoSize = true;
-			this.label2.Font = new System.Drawing.Font("DejaVu Sans Mono", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label2.Location = new System.Drawing.Point(42, 19);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(35, 13);
-			this.label2.TabIndex = 140;
-			this.label2.Text = "Time";
-			this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// label3
-			// 
-			this.label3.AutoSize = true;
-			this.label3.Font = new System.Drawing.Font("DejaVu Sans Mono", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label3.Location = new System.Drawing.Point(113, 19);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(42, 13);
-			this.label3.TabIndex = 141;
-			this.label3.Text = "Score";
-			this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// label4
-			// 
-			this.label4.AutoSize = true;
-			this.label4.Font = new System.Drawing.Font("DejaVu Sans Mono", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label4.Location = new System.Drawing.Point(191, 19);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(105, 13);
-			this.label4.TabIndex = 142;
-			this.label4.Text = "Algorithm Name";
-			this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// chkJaccard
-			// 
-			this.chkJaccard.AutoSize = true;
-			this.chkJaccard.Location = new System.Drawing.Point(11, 139);
-			this.chkJaccard.Name = "chkJaccard";
-			this.chkJaccard.Size = new System.Drawing.Size(15, 14);
-			this.chkJaccard.TabIndex = 143;
-			this.chkJaccard.Tag = "64";
-			this.chkJaccard.UseVisualStyleBackColor = true;
-			// 
-			// chkSorensenDice
-			// 
-			this.chkSorensenDice.AutoSize = true;
-			this.chkSorensenDice.Location = new System.Drawing.Point(11, 479);
-			this.chkSorensenDice.Name = "chkSorensenDice";
-			this.chkSorensenDice.Size = new System.Drawing.Size(15, 14);
-			this.chkSorensenDice.TabIndex = 144;
-			this.chkSorensenDice.Tag = "64";
-			this.chkSorensenDice.UseVisualStyleBackColor = true;
+			this.btnClear.Location = new System.Drawing.Point(191, 83);
+			this.btnClear.Name = "btnClear";
+			this.btnClear.Size = new System.Drawing.Size(55, 21);
+			this.btnClear.TabIndex = 45;
+			this.btnClear.Text = "Clear";
+			this.btnClear.UseVisualStyleBackColor = true;
+			this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
 			// 
 			// btnSuper
 			// 
@@ -1312,6 +1313,7 @@
 			this.Controls.Add(this.txtString2);
 			this.Controls.Add(this.txtString1);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
 			this.Name = "frmFuzzy";
 			this.Text = "Fuzzy Test";

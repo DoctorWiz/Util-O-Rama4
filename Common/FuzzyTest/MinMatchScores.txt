@@ -1,13 +1,13 @@
 **Algorithm Chapman Length Deviation
 Min Correct Score was 0.7083
 **Algorithm Chapman Mean Length
-Min Correct Score was 0.8542
+Min Correct Score was 0.8684
 **Algorithm Cosine Similarity
 Min Correct Score was 0.4082
 **Algorithm Padded Hamming
 Min Correct Score was 0.7059
 **Algorithm Hamming-Wizmo
-Min Correct Score was 0.4000
+Min Correct Score was 0.5000
 **Algorithm Jaccard Similarity
 Min Correct Score was 0.5833
 **Algorithm Jaro Similarity
@@ -23,13 +23,13 @@ Min Correct Score was 0.4167
 **Algorithm Yeti-Levenshtein
 Min Correct Score was 0.4167
 **Algorithm Weighted Levenshtein
-Min Correct Score was 0.8000
+Min Correct Score was 0.4167
 **Algorithm Longest Common Subsequence
-Min Correct Score was 0.8000
+Min Correct Score was 0.4167
 **Algorithm Longest Common Substring
-Min Correct Score was 0.8000
+Min Correct Score was 0.4167
 **Algorithm Metric Similarity
-Min Correct Score was 0.9778
+Min Correct Score was 0.4167
 **Algorithm Needleman-Wunsch
 Min Correct Score was 0.6667
 **Algorithm 

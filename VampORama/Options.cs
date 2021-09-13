@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LORUtils; using FileHelper;
+using LORUtils4; using FileHelper;
 using xUtilities;
 
 namespace UtilORama4
@@ -58,9 +58,9 @@ namespace UtilORama4
 
 		private void txtStartTime_Validating(object sender, CancelEventArgs e)
 		{
-			int cst = utils.DecodeTime(txtStartTime.Text);
+			int cst = lutils.DecodeTime(txtStartTime.Text);
 			if ((cst < 0) || (cst > maxTime)) e.Cancel = true;
-			int cet = utils.DecodeTime(txtEndTime.Text);
+			int cet = lutils.DecodeTime(txtEndTime.Text);
 			if (cst < cet) e.Cancel = true;
 			if (e.Cancel)
 			{
@@ -74,21 +74,21 @@ namespace UtilORama4
 
 		private void txtStartTime_Validated(object sender, EventArgs e)
 		{
-			int cst = utils.DecodeTime(txtStartTime.Text);
-			txtStartTime.Text = utils.FormatTime(cst);
+			int cst = lutils.DecodeTime(txtStartTime.Text);
+			txtStartTime.Text = lutils.FormatTime(cst);
 		}
 
 		private void txtEndTime_Validated(object sender, EventArgs e)
 		{
-			int cet = utils.DecodeTime(txtEndTime.Text);
-			txtEndTime.Text = utils.FormatTime(cet);
+			int cet = lutils.DecodeTime(txtEndTime.Text);
+			txtEndTime.Text = lutils.FormatTime(cet);
 		}
 
 		private void txtEndTime_Validating(object sender, CancelEventArgs e)
 		{
-			int cet = utils.DecodeTime(txtEndTime.Text);
+			int cet = lutils.DecodeTime(txtEndTime.Text);
 			if ((cet < 0) || (cet > maxTime)) e.Cancel = true;
-			int cst = utils.DecodeTime(txtStartTime.Text);
+			int cst = lutils.DecodeTime(txtStartTime.Text);
 			if (cst < cet) e.Cancel = true;
 			if (e.Cancel)
 			{

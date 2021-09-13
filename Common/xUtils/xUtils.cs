@@ -17,14 +17,14 @@ using Microsoft.Win32;
 
 namespace xUtils
 {
-	public class utils
+	public class xutils
 	{
 		public const int UNDEFINED = -1;
-		//public const string ICONtrack = "Track";
-		//public const string ICONchannelGroup = "ChannelGroup";
-		//public const string ICONcosmicDevice = "CosmicDevice";
+		//public const string ICONtrack = "LORTrack4";
+		//public const string ICONchannelGroup = "LORChannelGroup4";
+		//public const string ICONcosmicDevice = "LORCosmic";
 		//public const string ICONchannel = "channel";
-		//public const string ICONrgbChannel = "RGBchannel";
+		//public const string ICONrgbChannel = "LORRGBChannel4";
 		//public const string ICONredChannel = "redChannel";
 		//public const string ICONgrnChannel = "grnChannel";
 		//public const string ICONbluChannel = "bluChannel";
@@ -34,7 +34,7 @@ namespace xUtils
 
 
 		public const string LOG_Error = "Error";
-		public const string LOG_Info = "Info";
+		public const string LOG_Info = "LORSeqInfo4";
 		public const string LOG_Debug = "Debug";
 		private const string FORMAT_DATETIME = "MM/dd/yyyy hh:mm:ss tt";
 		private const string FORMAT_FILESIZE = "###,###,###,###,##0";
@@ -54,9 +54,9 @@ namespace xUtils
 		//public const string FILE_CFG = "All Sequences *.las, *.lms, *.lcc|*.las;*.lms;*.lcc";
 		//public const string FILE_LMS = "Musical Sequence *.lms|*.lms";
 		//public const string FILE_LAS = "Animated Sequence *.las|*.las";
-		//public const string FILE_LCC = "Channel Configuration *.lcc|*.lcc";
+		//public const string FILE_LCC = "LORChannel4 Configuration *.lcc|*.lcc";
 		//public const string FILE_LEE = "Visualization *.lee|*.lee";
-		//public const string FILE_CHMAP = "Channel Map *.ChMap|*.ChMap";
+		//public const string FILE_CHMAP = "LORChannel4 Map *.ChMap|*.ChMap";
 		//public const string FILE_ALL = "All Files *.*|*.*";
 		//public const string FILT_OPEN_ANY = FILE_SEQ + "|" + FILE_LMS + "|" + FILE_LAS;
 		//public const string FILT_OPEN_CFG = FILE_CFG + "|" + FILE_LMS + "|" + FILE_LAS + "|" + FILE_LCC;
@@ -790,7 +790,7 @@ namespace xUtils
 			}
 			else
 			{
-				return utils.UNDEFINED;
+				return xutils.UNDEFINED;
 			}
 		}
 
@@ -872,6 +872,52 @@ namespace xUtils
 			return stateOut;
 		}
 
+		public static int GetAddress(string address, List<xModel> allModels)
+		{
+			int addr = -1;
+			if (address.Length < 6)
+			{
+				bool itWorked = int.TryParse(address, out addr);
+			}
+			else
+			{
+				int isemi = address.IndexOf(';');
+				int ioffset = address.IndexOf(':');
+				string temp1 = address.Substring(ioffset+1);
+				int offset = 1;
+				bool itWorked = int.TryParse(temp1, out offset);
+				int ilen = ioffset - isemi -1;
+				string modelName = address.Substring(isemi +1, ilen);
+				string modAddr = "";
+				for (int m = 0; m < allModels.Count; m++)
+				{
+					xModel model = allModels[m];
+					if (modelName.CompareTo(model.Name) == 0) ;
+					{
+						if (model.xLightsAddress < 1)
+						{
+							// Recurse!
+							int a2 = xutils.GetAddress(model.StartChannel, allModels);
+							if (a2 >0)
+							{
+								model.xLightsAddress = a2;
+							}
+						}
+						// Got it yet?
+						if (model.xLightsAddress > 0)
+						{
+							addr = model.xLightsAddress + offset;
+						}
+						m = allModels.Count; // Exit loop
+					}
+				}
+			}
+
+
+
+			return addr;
+		}
+
 		public static string SetKey(string fieldName, string value)
 		{
 			StringBuilder ret = new StringBuilder();
@@ -917,9 +963,9 @@ namespace xUtils
 			{
 				ret.Append(LEVEL1);
 			}
-			ret.Append(utils.FINTBL);
+			ret.Append(xutils.FINTBL);
 			ret.Append(tableName);
-			ret.Append(utils.ENDTBL);
+			ret.Append(xutils.ENDTBL);
 			return ret.ToString();
 		}
 
@@ -1131,15 +1177,15 @@ namespace xUtils
 						{
 							string sec = rest.Substring(0, posPer);
 							string cs = rest.Substring(posPer + 1);
-							int mn = utils.UNDEFINED;
+							int mn = xutils.UNDEFINED;
 							int.TryParse(min, out mn);
 							if ((mn >=0) && (mn<61))
 							{
-								int sc = utils.UNDEFINED;
+								int sc = xutils.UNDEFINED;
 								int.TryParse(sec, out sc);
 								if ((sc >=0 ) && (sc<60))
 								{
-									int c = utils.UNDEFINED;
+									int c = xutils.UNDEFINED;
 									int.TryParse(cs, out c);
 									if ((c >=0) && (c<1000))
 									{
@@ -1257,5 +1303,5 @@ namespace xUtils
 		}
 
 
-	} // end class utils
+	} // end class lutils
 } // end namespace xUtils

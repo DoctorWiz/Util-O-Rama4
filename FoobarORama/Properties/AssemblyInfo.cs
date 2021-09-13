@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Foobar-O-Rama")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Valid-O-Rama")]
+[assembly: AssemblyDescription("Validates LOR S4 Files (Created or modified outside of Showtime)")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Foobar-O-Rama")]
+[assembly: AssemblyCompany("W⚡zlights Software")]
+[assembly: AssemblyProduct("Valid-O-Rama")]
 [assembly: AssemblyCopyright("Copyright © 2021+ by Doctor 🧙 Wizard and W⚡zlights Software")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

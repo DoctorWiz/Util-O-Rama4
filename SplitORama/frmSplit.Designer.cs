@@ -107,12 +107,12 @@
 			this.treChannels.BackColor = System.Drawing.Color.White;
 			this.treChannels.ForeColor = System.Drawing.Color.Black;
 			this.treChannels.FullRowSelect = true;
-			this.treChannels.ImageKey = "Channel.ico";
+			this.treChannels.ImageKey = "LORChannel4.ico";
 			this.treChannels.ImageList = this.imlTreeIcons;
 			this.treChannels.LineColor = System.Drawing.Color.Gray;
 			this.treChannels.Location = new System.Drawing.Point(12, 134);
 			this.treChannels.Name = "treChannels";
-			this.treChannels.SelectedImageKey = "Channel.ico";
+			this.treChannels.SelectedImageKey = "LORChannel4.ico";
 			this.treChannels.Size = new System.Drawing.Size(300, 298);
 			this.treChannels.TabIndex = 7;
 			this.treChannels.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.treChannels_DrawNode);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LORUtils; using FileHelper;
+using LORUtils4; using FileHelper;
 using System.Drawing;
 
 namespace ListORama
@@ -17,10 +17,10 @@ namespace ListORama
 
 	class SeqChannelItem : IComparable<SeqChannelItem>
 	{
-		public int foundOrder = utils.UNDEFINED;
+		public int foundOrder = lutils.UNDEFINED;
 		//public string name = "";
 		//public int savedIndex = -1;
-		//public DeviceType type = DeviceType.None;
+		//public LORDeviceType4 type = LORDeviceType4.None;
 		//public int network = 0;
 		//public int unit = 0;
 		//public int channel = 0;
@@ -28,7 +28,7 @@ namespace ListORama
 		//public Color netColor = Color.Black;
 		//public string colorName = "";
 		public string sortString = "";
-		public Channel theChannel;
+		public LORChannel4 theChannel;
 		public bool isKeywd = false;
 
 
@@ -45,14 +45,14 @@ namespace ListORama
 				lineOut += "SavedIndex,";
 				lineOut += "Type,";
 				lineOut += "Controller,";
-				lineOut += "Channel,";
+				lineOut += "LORChannel4,";
 				lineOut += "0xColor,";
 				lineOut += "ColorName";
 				return lineOut;
 		}
 		public override string ToString()
 		{
-			string ret = utils.XMLifyName(theChannel.Name);
+			string ret = lutils.XMLifyName(theChannel.Name);
 			int p = theChannel.Name.IndexOf(',');
 			if (p>= 0) ret = "\"" + ret + "\"";
 				
@@ -67,25 +67,25 @@ namespace ListORama
 			}
 			ret += foundOrder.ToString();
 			ret += theChannel.SavedIndex.ToString() + ",";
-			DeviceType devType = theChannel.output.deviceType;
-			ret += SeqEnums.DeviceName(devType) + ",";
-			if (devType == DeviceType.LOR)
+			LORDeviceType4 devType = theChannel.output.deviceType;
+			ret += LORSeqEnums4.DeviceName(devType) + ",";
+			if (devType == LORDeviceType4.LOR)
 			{
 				ret += theChannel.output.unit.ToString() + "," + theChannel.output.channel.ToString() + ",";
 			}
-			if (devType == DeviceType.DMX)
+			if (devType == LORDeviceType4.DMX)
 			{
 				ret += theChannel.output.network.ToString() + "," + theChannel.output.channel.ToString() + ",";
 			}
-			if (devType == DeviceType.Digital)
+			if (devType == LORDeviceType4.Digital)
 			{
 				ret += theChannel.output.network.ToString() + "," + theChannel.output.channel.ToString() + ",";
 			}
-			if (devType == DeviceType.None)
+			if (devType == LORDeviceType4.None)
 			{
 				ret += ",,";
 			}
-			ret += utils.Color_LORtoHTML(theChannel.color) + ",";
+			ret += lutils.Color_LORtoHTML(theChannel.color) + ",";
 			ret += NearestColor.FindNearestColorName(theChannel.Color); // + ",";
 			return ret;
 		}
@@ -104,7 +104,7 @@ namespace ListORama
 				return theChannel.SavedIndex;
 			}
 		}
-		public DeviceType deviceType
+		public LORDeviceType4 deviceType
 		{
 			get
 			{
@@ -164,15 +164,15 @@ namespace ListORama
 
 	class SeqRGBItem : IComparable<SeqRGBItem>
 	{
-		public int foundOrder = utils.UNDEFINED;
+		public int foundOrder = lutils.UNDEFINED;
 		//public string name = "";
 		//public int savedIndex = -1;
-		//public DeviceType type = DeviceType.None;
+		//public LORDeviceType4 type = LORDeviceType4.None;
 		//public int network = 0;
 		//public int unit = 0;
 		//public int channel = 0;
 		public string sortString = "";
-		public RGBchannel theRGBchannel;
+		public LORRGBChannel4 theRGBchannel;
 		public bool isKeywd = false;
 
 		public int CompareTo(SeqRGBItem otherItem)
@@ -188,12 +188,12 @@ namespace ListORama
 			lineOut += "SavedIndex,";
 			lineOut += "Type,";
 			lineOut += "Controller,";
-			lineOut += "Channel";
+			lineOut += "LORChannel4";
 			return lineOut;
 		}
 		public override string ToString()
 		{
-			string ret = utils.XMLifyName(theRGBchannel.Name);
+			string ret = lutils.XMLifyName(theRGBchannel.Name);
 			int p = theRGBchannel.Name.IndexOf(',');
 			if (p >= 0) ret = "\"" + ret + "\"";
 
@@ -208,21 +208,21 @@ namespace ListORama
 			}
 			ret += foundOrder.ToString();
 			ret += theRGBchannel.SavedIndex.ToString() + ",";
-			DeviceType devType = theRGBchannel.redChannel.output.deviceType;
-			ret += SeqEnums.DeviceName(devType) + ",";
-			if (devType == DeviceType.LOR)
+			LORDeviceType4 devType = theRGBchannel.redChannel.output.deviceType;
+			ret += LORSeqEnums4.DeviceName(devType) + ",";
+			if (devType == LORDeviceType4.LOR)
 			{
 				ret += theRGBchannel.redChannel.output.unit.ToString() + "," + theRGBchannel.redChannel.output.channel.ToString();
 			}
-			if (devType == DeviceType.DMX)
+			if (devType == LORDeviceType4.DMX)
 			{
 				ret += theRGBchannel.redChannel.output.network.ToString() + "," + theRGBchannel.redChannel.output.channel.ToString();
 			}
-			if (devType == DeviceType.Digital)
+			if (devType == LORDeviceType4.Digital)
 			{
 				ret += theRGBchannel.redChannel.output.network.ToString() + "," + theRGBchannel.redChannel.output.channel.ToString();
 			}
-			if (devType == DeviceType.None)
+			if (devType == LORDeviceType4.None)
 			{
 				ret += ",";
 			}
@@ -243,7 +243,7 @@ namespace ListORama
 				return theRGBchannel.SavedIndex;
 			}
 		}
-		public DeviceType deviceType
+		public LORDeviceType4 deviceType
 		{
 			get
 			{
@@ -282,15 +282,15 @@ namespace ListORama
 
 	class SeqGroupItem : IComparable<SeqGroupItem>
 	{
-		public int foundOrder = utils.UNDEFINED;
+		public int foundOrder = lutils.UNDEFINED;
 		//public string name = "";
 		//public int savedIndex = -1;
-		//public DeviceType type = DeviceType.None;
+		//public LORDeviceType4 type = LORDeviceType4.None;
 		//public int network = 0;
 		//public int unit = 0;
 		//public int channel = 0;
 		public string sortString = "";
-		public ChannelGroup theGroup;
+		public LORChannelGroup4 theGroup;
 		public bool isKeywd = false;
 
 		public int CompareTo(SeqGroupItem otherItem)
@@ -309,7 +309,7 @@ namespace ListORama
 		}
 		public override string ToString()
 		{
-			string ret = utils.XMLifyName(theGroup.Name);
+			string ret = lutils.XMLifyName(theGroup.Name);
 			int p = theGroup.Name.IndexOf(',');
 			if (p >= 0) ret = "\"" + ret + "\"";
 
@@ -353,9 +353,9 @@ namespace ListORama
 
 	class VizChannelItem : IComparable<VizChannelItem>
 	{
-		public int foundOrder = utils.UNDEFINED;
+		public int foundOrder = lutils.UNDEFINED;
 		public string sortString = "";
-		public VizChannel theChannel;
+		public LORVizChannel4 theChannel;
 		public bool isKeywd = false;
 		private static string COMMA = ",";
 
@@ -376,7 +376,7 @@ namespace ListORama
 			sb.Append("Network,");
 			sb.Append("Circuit,");
 			sb.Append("Universe,");
-			sb.Append("Channel,");
+			sb.Append("LORChannel4,");
 			sb.Append("LOR Color,");
 			sb.Append("Web Color,");
 			sb.Append("Color Name");
@@ -387,26 +387,26 @@ namespace ListORama
 		{
 			StringBuilder sb = new StringBuilder();
 
-			sb.Append("Channel,");
+			sb.Append("LORChannel4,");
 			sb.Append(theChannel.SavedIndex.ToString() + COMMA);
-			sb.Append(utils.XMLifyName(theChannel.Name) + COMMA);
+			sb.Append(lutils.XMLifyName(theChannel.Name) + COMMA);
 			sb.Append(COMMA); // Centiseconds
-			sb.Append(SeqEnums.DeviceName(theChannel.output.deviceType) + COMMA);
-			if (theChannel.output.deviceType == DeviceType.LOR)
+			sb.Append(LORSeqEnums4.DeviceName(theChannel.output.deviceType) + COMMA);
+			if (theChannel.output.deviceType == LORDeviceType4.LOR)
 			{
 				sb.Append(theChannel.output.unit.ToString() + COMMA);
 				sb.Append(theChannel.output.networkName + COMMA);
 				sb.Append(theChannel.output.circuit.ToString() + COMMA);
 				sb.Append(COMMA + COMMA);
 			}
-			if (theChannel.output.deviceType == DeviceType.DMX)
+			if (theChannel.output.deviceType == LORDeviceType4.DMX)
 			{
 				sb.Append(COMMA + COMMA + COMMA);
-				sb.Append(theChannel.output.universe.ToString() + COMMA);
-				sb.Append(theChannel.output.channel.ToString() + COMMA);
+				sb.Append(theChannel.output.UniverseNumber.ToString() + COMMA);
+				sb.Append(theChannel.output.DMXAddress.ToString() + COMMA);
 			}
 			sb.Append(theChannel.color.ToString() + COMMA);
-			sb.Append("#" + utils.Color_LORtoHTML(theChannel.color) + COMMA);
+			sb.Append("#" + lutils.Color_LORtoHTML(theChannel.color) + COMMA);
 			sb.Append(NearestColor.FindNearestColorName(theChannel.color));
 
 			string ret = sb.ToString();
@@ -427,7 +427,7 @@ namespace ListORama
 				return theChannel.SavedIndex;
 			}
 		}
-		public DeviceType deviceType
+		public LORDeviceType4 deviceType
 		{
 			get
 			{

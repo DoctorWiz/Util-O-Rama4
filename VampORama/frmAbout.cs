@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using xUtilities;
-using LORUtils; using FileHelper;
+using LORUtils4; using FileHelper;
 
 namespace UtilORama4
 {
@@ -25,7 +25,7 @@ namespace UtilORama4
 			//applicationName = AssemblyTitle;
 			string fooo = xUtils.ShowDirectory;
 			if (fooo.Length > 3) xLightsInstalled = true;
-			fooo = utils.DefaultSequencesPath;
+			fooo = lutils.DefaultSequencesPath;
 			if (fooo.Length > 3) lightORamaInstalled = true;
 			if (xLightsInstalled && !lightORamaInstalled) // xLights Only
 			{

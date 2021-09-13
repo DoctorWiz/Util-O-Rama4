@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Media;
 using ReadWriteCsv;
-using LORUtils;
+using LORUtils4;
 using FileHelper;
 using xUtils;
 using FuzzyString;
@@ -24,15 +24,16 @@ namespace UtilORama4
 		private static Properties.Settings heartOfTheSun = Properties.Settings.Default;
 		private const string helpPage = "http://wizlights.com/utilorama/channelorama";
 		private List<DMXUniverse> universes = new List<DMXUniverse>();
-		
+
 		//private List<DMXChannel> AllChannels = new List<DMXChannel>();
 		// Just creating a convenient reference to the static list in the DMXUniverse class
 		private List<DMXChannel> AllChannels = DMXUniverse.AllChannels;
-		
+
 		//public List<DMXDevice> devices = new List<DMXDevice>();
 		// Just creating a convenient reference to the static list in the DMXChannel class
 		public List<DMXDevice> devices = DMXChannel.Devices;
-		
+		private const string myTitle = "Chan-O-Rama  Channel Manager";
+
 		private string lastFile = "";
 		private bool formShown = false;
 		private string dbPath = "";
@@ -42,6 +43,7 @@ namespace UtilORama4
 		private bool isWiz = Fyle.IsWizard || Fyle.IsAWizard;
 
 		private xRGBEffects xSeq = null;
+		private LORVisualization4 lViz = null;
 
 		public frmList()
 		{
@@ -56,10 +58,19 @@ namespace UtilORama4
 			///////////////////////////
 
 			string seqFile = "W:\\Documents\\Christmas\\2021\\Light-O-Rama\\Wizlights\\Sequences\\Wizlights 2021 !Master Channel List (cf21a).las";
+			string vizFile = "W:\\Documents\\Christmas\\2021\\Light-O-Rama\\Wizlights\\Visualizations\\Wizlights 2021.lee";
 
 
 			xSeq = new xRGBEffects();
-			MatchUp(seqFile);
+			lViz = new LORVisualization4(vizFile);
+
+			int ccc = lViz.VizChannels.Count;
+			int ddd = lViz.VizDrawObjects.Count;
+			int ggg = lViz.VizItemGroups.Count;
+
+
+			//MatchUp(seqFile);
+			MatchUp(seqFile, true);
 
 		}
 
@@ -227,8 +238,8 @@ namespace UtilORama4
 
 		private void GetTheControlsFromTheHeartOfTheSun()
 		{
-			
-			
+
+
 			btnWiz.Visible = isWiz;
 		}
 
@@ -387,7 +398,7 @@ namespace UtilORama4
 							controller.OutputCount = i;
 
 							i = 1;
-							int.TryParse(row[9], out i);   // Field 9 DMX Start Channel
+							int.TryParse(row[9], out i);   // Field 9 DMX Start LORChannel4
 							controller.DMXStartAddress = i;
 
 							i = 120;
@@ -449,7 +460,7 @@ namespace UtilORama4
 			int errs = 0;
 			string chanName = ""; // for debugging exceptions
 			if (universes.Count > 0)
-			{ 
+			{
 				string chnFile = filePath + "Channels.csv";
 				try
 				{
@@ -464,20 +475,20 @@ namespace UtilORama4
 							DMXChannel channel = new DMXChannel();
 							int uniNum = 1;
 							int.TryParse(row[0], out uniNum); // Field 0 = Universe Number
-							
-							string ctlrLetter = row[1];				// Field 1 = Controller Letter
+
+							string ctlrLetter = row[1];       // Field 1 = Controller Letter
 
 							int i = 1;
 							int.TryParse(row[2], out i);
-							channel.Output = i;								// Field 2 = Output Number
+							channel.LOROutput4 = i;               // Field 2 = LOROutput4 Number
 
-							channel.Name = row[3];								// Field 3 = Name
-							chanName = channel.Name;							// For debugging exceptions
-							channel.Location = row[4];						// Field 4 = Location
-							channel.Comment = row[5];							// Field 5 = Comment
+							channel.Name = row[3];                // Field 3 = Name
+							chanName = channel.Name;              // For debugging exceptions
+							channel.Location = row[4];            // Field 4 = Location
+							channel.Comment = row[5];             // Field 5 = Comment
 
 							bool b = true;
-							bool.TryParse(row[6], out b);			// Field 6 = Active
+							bool.TryParse(row[6], out b);     // Field 6 = Active
 							channel.Active = b;
 
 							int devID = -1;
@@ -501,7 +512,7 @@ namespace UtilORama4
 							}
 
 							string colhex = row[8];           // Field 8 = Color
-							if (chanName.Substring(0,5).CompareTo("Eaves") == 0)
+							if (chanName.Substring(0, 5).CompareTo("Eaves") == 0)
 							{
 								if (isWiz)
 								{
@@ -509,7 +520,7 @@ namespace UtilORama4
 								}
 							}
 							//Color color = System.Drawing.ColorTranslator.FromHtml(colhex);
-							Color color = LORUtils.utils.HexToColor(colhex);
+							Color color = LORUtils4.lutils.HexToColor(colhex);
 							channel.Color = color;
 
 							AllChannels.Add(channel);
@@ -539,7 +550,7 @@ namespace UtilORama4
 						}
 						catch (Exception ex)
 						{
-							int ln = LORUtils.utils.ExceptionLineNumber(ex);
+							int ln = LORUtils4.lutils.ExceptionLineNumber(ex);
 							string msg = "Error on line " + ln.ToString() + "\r\n";
 							msg += ex.ToString() + " while reading Channel " + chanName;
 							if (isWiz)
@@ -563,7 +574,7 @@ namespace UtilORama4
 				}
 				catch (Exception ex)
 				{
-					int ln = LORUtils.utils.ExceptionLineNumber(ex);
+					int ln = LORUtils4.lutils.ExceptionLineNumber(ex);
 					string msg = "Error " + ex.ToString() + " on line " + ln.ToString() + " while reading Channels file " + chnFile;
 					if (isWiz)
 					{
@@ -601,7 +612,7 @@ namespace UtilORama4
 								int ord = 0;
 								if (row.Count > 2)
 								{
-									int.TryParse(row[2], out ord); // Field 2 = Output Number
+									int.TryParse(row[2], out ord); // Field 2 = LOROutput4 Number
 								}
 								DMXDevice device = new DMXDevice(devName, devID, ord);
 								devices.Add(device);
@@ -609,7 +620,7 @@ namespace UtilORama4
 						}
 						catch (Exception ex)
 						{
-							int ln = LORUtils.utils.ExceptionLineNumber(ex);
+							int ln = LORUtils4.lutils.ExceptionLineNumber(ex);
 							string msg = "Error on line " + ln.ToString() + "\r\n";
 							msg += ex.ToString() + " while reading Channel " + devName;
 							if (isWiz)
@@ -623,7 +634,7 @@ namespace UtilORama4
 				}
 				catch (Exception ex)
 				{
-					int ln = LORUtils.utils.ExceptionLineNumber(ex);
+					int ln = LORUtils4.lutils.ExceptionLineNumber(ex);
 					string msg = "Error " + ex.ToString() + " on line " + ln.ToString() + " while reading Channels file " + chnFile;
 					if (isWiz)
 					{
@@ -644,6 +655,7 @@ namespace UtilORama4
 			int errs = SaveUniverses(filePath);
 			errs += SaveControllers(filePath);
 			errs += SaveChannels(filePath);
+			MakeDirty(false);
 			return errs;
 		}
 
@@ -729,7 +741,7 @@ namespace UtilORama4
 				row.Add("Active"); // Field 5
 				row.Add("Brand"); // Field 6
 				row.Add("Model"); // Field 7
-				row.Add("Channel Count"); // Field 8
+				row.Add("LORChannel4 Count"); // Field 8
 				row.Add("DMX Start"); // Field 9
 				row.Add("Voltage"); // Field 10
 
@@ -796,15 +808,15 @@ namespace UtilORama4
 				CsvFileWriter writer = new CsvFileWriter(chnFile);
 				CsvRow row = new CsvRow();
 				// Create first line which is headers;
-				row.Add("Universe");		// Field 0
-				row.Add("Controller");	// Field 1
-				row.Add("Output");			// Field 2
-				row.Add("Name");				// Field 3
-				row.Add("Location");		// Field 4
-				row.Add("Comment");			// Field 5
-				row.Add("Active");			// Field 6
-				row.Add("Type");				// Field 7
-				row.Add("Color");				// Field 8
+				row.Add("Universe");    // Field 0
+				row.Add("Controller");  // Field 1
+				row.Add("LOROutput4");      // Field 2
+				row.Add("Name");        // Field 3
+				row.Add("Location");    // Field 4
+				row.Add("Comment");     // Field 5
+				row.Add("Active");      // Field 6
+				row.Add("Type");        // Field 7
+				row.Add("Color");       // Field 8
 
 				writer.WriteRow(row);
 
@@ -818,14 +830,14 @@ namespace UtilORama4
 						row = new CsvRow();
 
 						row.Add(channel.DMXUniverse.UniverseNumber.ToString()); // Field 0
-						row.Add(channel.DMXController.LetterID);								// Field 1
-						row.Add(channel.Output.ToString());									// Field 2
-						row.Add(channel.Name);																	// Field 3
-						row.Add(channel.Location);															// Field 4
-						row.Add(channel.Comment);																// Field 5
-						row.Add(channel.Active.ToString());											// Field 6
-						row.Add(channel.DMXDevice.ID.ToString());					// Field 7
-						row.Add(LORUtils.utils.ColorToHex(channel.Color));								// Field 8
+						row.Add(channel.DMXController.LetterID);                // Field 1
+						row.Add(channel.LOROutput4.ToString());                 // Field 2
+						row.Add(channel.Name);                                  // Field 3
+						row.Add(channel.Location);                              // Field 4
+						row.Add(channel.Comment);                               // Field 5
+						row.Add(channel.Active.ToString());                     // Field 6
+						row.Add(channel.DMXDevice.ID.ToString());         // Field 7
+						row.Add(LORUtils4.lutils.ColorToHex(channel.Color));                // Field 8
 
 						writer.WriteRow(row);
 					}
@@ -868,8 +880,8 @@ namespace UtilORama4
 				else
 				{
 					string msg = "Data files not found in folder " + dbPath;
-					msg += ".  If you have never used Channel-O-Rama, create some Universes, Controllers, and Channels.  ";
-					msg += "If you have used Channel-O-Rama in previous years, create a folder for this year's data and ";
+					msg += ".  If you have never used LORChannel4-O-Rama, create some Universes, Controllers, and Channels.  ";
+					msg += "If you have used LORChannel4-O-Rama in previous years, create a folder for this year's data and ";
 					msg += "copy last year's data to it as a starting point.  If you have already used it this year and ";
 					msg += "think you should have data with Universe, Controllers, and Channels, please check the path ";
 					msg += dbPath + " and make sure it exists, has not been deleted or moved, and that it contains 3 ";
@@ -904,10 +916,14 @@ namespace UtilORama4
 			btnController.Left = btnLeft;
 			btnChannel.Left = btnLeft;
 			btnReport.Left = btnLeft;
+			btnFind.Left = btnLeft;
+			btnSave.Left = btnLeft;
 			btnCompareLOR.Left = btnLeft;
 			btnComparex.Left = btnLeft;
 			btnWiz.Left = btnLeft;
 			btnOK.Left = btnLeft;
+			int y = treeChannelList.Top + treeChannelList.Height - btnSave.Height;
+			btnSave.Top = y;
 		}
 
 		private void BuildTree()
@@ -915,7 +931,7 @@ namespace UtilORama4
 			treeChannelList.Nodes.Clear();
 
 			BuildTreeUniverses(universes);
- 		}
+		}
 
 		public void BuildTreeUniverses(List<DMXUniverse> uniList)
 		{
@@ -977,14 +993,14 @@ namespace UtilORama4
 		{
 			string nodeText = "";
 			DMXController controller = (DMXController)ctlNode.Tag;
-			for (int ch=0; ch < controller.DMXChannels.Count; ch++)
+			for (int ch = 0; ch < controller.DMXChannels.Count; ch++)
 			{
 				DMXChannel channel = controller.DMXChannels[ch];
-				//nodeText = channel.Output.ToString() + ": " + channel.Name;
+				//nodeText = channel.LOROutput4.ToString() + ": " + channel.Name;
 				nodeText = channel.ToString();
 				TreeNode chanNode = ctlNode.Nodes.Add(nodeText);
 				ImageList icons = treeChannelList.ImageList;
-				int iconIndex = LORUtils.utils.ColorIcon(icons, channel.Color);
+				int iconIndex = LORUtils4.lutils.ColorIcon(icons, channel.Color);
 				chanNode.ImageIndex = iconIndex;
 				chanNode.SelectedImageIndex = iconIndex;
 				chanNode.Tag = channel;
@@ -1047,11 +1063,11 @@ namespace UtilORama4
 					if (node.Tag.GetType() == typeof(DMXChannel))
 					{
 						DMXChannel channel = (DMXChannel)node.Tag;
-						//string nodeText = channel.Output.ToString() + ": " + channel.Name;
+						//string nodeText = channel.LOROutput4.ToString() + ": " + channel.Name;
 						string nodeText = channel.ToString();
 						node.Text = nodeText;
 						ImageList icons = treeChannelList.ImageList;
-						int iconIndex = LORUtils.utils.ColorIcon(icons, channel.Color);
+						int iconIndex = LORUtils4.lutils.ColorIcon(icons, channel.Color);
 						node.ImageIndex = iconIndex;
 						node.SelectedImageIndex = iconIndex;
 					}
@@ -1212,7 +1228,9 @@ namespace UtilORama4
 			bool needSort = false;
 			DMXChannel channelToEdit = (DMXChannel)node.Tag;
 			DMXController oldCtlr = channelToEdit.DMXController;
-			int oldOutput = channelToEdit.Output;
+			//int oldOutput = channelToEdit.LOROutput4;
+			//int oldUnivNum = channelToEdit.UniverseNumber;
+			//int oldDMXaddr = channelToEdit.DMXAddress;
 			//DMXChannel channelClone = channelToEdit.Clone();
 			DMXChannel channelClone = new DMXChannel(channelToEdit);
 			channelClone.Editing = true;
@@ -1233,14 +1251,18 @@ namespace UtilORama4
 						channelToEdit.Clone(channelClone); // Copy back
 						UpdateChannelNode(node);
 						// Did output number change?
-						if (channelToEdit.Output != channelClone.Output)
+						//if (channelToEdit.LOROutput4 != channelClone.LOROutput4)
+						if ((channelToEdit.UniverseNumber != channelClone.UniverseNumber) ||
+								(channelToEdit.DMXAddress != channelClone.DMXAddress) ||
+								(channelToEdit.xLightsAddress != channelClone.xLightsAddress))
 						{
 							channelToEdit.DMXController.DMXChannels.Sort();
+							//node.Parent.Nodes.Sort(); // No Sort Function on Node Collection
 							needSort = true;
 						}
 						// Did we change controllers?
 						int newCtlrID = channelToEdit.DMXController.ID;
-						if (oldCtlr.ID !=newCtlrID)
+						if (oldCtlr.ID != newCtlrID)
 						{
 							// Find old controller and remove this channelToEdit
 							for (int c = 0; c < oldCtlr.DMXChannels.Count; c++)
@@ -1256,7 +1278,7 @@ namespace UtilORama4
 							//foreach(DMXUniverse universe in universes)
 							{
 								DMXUniverse universe = universes[u];
-								for (int c=0; c < universe.DMXControllers.Count; c++)
+								for (int c = 0; c < universe.DMXControllers.Count; c++)
 								//foreach(DMXController controller in universe.DMXControllers)
 								{
 									DMXController controller = universe.DMXControllers[c];
@@ -1289,13 +1311,13 @@ namespace UtilORama4
 				else
 				{
 					node.ForeColor = SystemColors.WindowText;
-				}	
+				}
 			}
 			catch (Exception ex)
 			{
 				// So when the effing form throws an effing excepttion for some effing reaason when it is effing closed
 				// Consider that a cancel
-				int ln = LORUtils.utils.ExceptionLineNumber(ex);
+				int ln = LORUtils4.lutils.ExceptionLineNumber(ex);
 				string msg = "Error on line " + ln.ToString() + "\r\n";
 				msg += ex.ToString() + " while exiting Channel editor " + channelToEdit.Name;
 				if (isWiz)
@@ -1312,7 +1334,7 @@ namespace UtilORama4
 		{
 			if (treeChannelList.SelectedNode != null)
 			{
-				if (treeChannelList.SelectedNode.Tag.GetType() == typeof(DMXController)) 
+				if (treeChannelList.SelectedNode.Tag.GetType() == typeof(DMXController))
 				{
 					TreeNode parentNode = treeChannelList.SelectedNode;
 					DMXController parentCtl = (DMXController)treeChannelList.SelectedNode.Tag;
@@ -1355,7 +1377,7 @@ namespace UtilORama4
 							AllChannels.Sort();
 							TreeNode node = parentNode.Nodes.Add(channel.ToString());
 							node.Tag = channel;
-							node.ImageIndex = LORUtils.utils.ColorIcon(imlTreeIcons, channel.Color);
+							node.ImageIndex = LORUtils4.lutils.ColorIcon(imlTreeIcons, channel.Color);
 							node.SelectedImageIndex = node.ImageIndex;
 							channel.Tag = node;
 							MakeDirty(true);
@@ -1450,16 +1472,20 @@ namespace UtilORama4
 		public void MakeDirty(bool isDirty)
 		{
 			if (isDirty != dirty)
-			{ 
+			{
 				if (isDirty)
 				{
 					// anything else we need to do?
 					dirty = isDirty;
+					btnSave.Enabled = true;
+					this.Text = myTitle + " *";
 				}
 				else
 				{
 					// anything else we need to do?
 					dirty = isDirty;
+					btnSave.Enabled = false;
+					this.Text = myTitle;
 				}
 			}
 		}
@@ -1478,7 +1504,7 @@ namespace UtilORama4
 
 			if (dirty)
 			{
-				string msg = "Channel information has changed.\r\nSave?";
+				string msg = "LORChannel4 information has changed.\r\nSave?";
 				DialogResult dr = MessageBox.Show(this, msg, "Save Changes?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 				if (dr == DialogResult.Cancel)
 				{
@@ -1510,7 +1536,7 @@ namespace UtilORama4
 				// Create first line which is headers;
 				row.Add("Universe");         // Field 0
 				row.Add("Controller");       // Field 1
-				row.Add("Output");           // Field 2
+				row.Add("LOROutput4");           // Field 2
 				row.Add("DMX Address");      // Field 3
 				row.Add("xLights Address");  // Field 4
 
@@ -1518,7 +1544,7 @@ namespace UtilORama4
 				row.Add("Active");           // Field 5
 
 				row.Add("Name");             // Field 6
-				row.Add("Type");						// Field 7
+				row.Add("Type");            // Field 7
 				row.Add("Color");            // Field 8
 				row.Add("Location");         // Field 9
 				row.Add("Comment");          // Field 10
@@ -1535,7 +1561,7 @@ namespace UtilORama4
 						row = new CsvRow();
 						row.Add(universe.UniverseNumber.ToString());       // Field 0 - Universe
 						row.Add("");                                  // Field 1 - Controller
-						row.Add("");                                  // Field 2 - Output
+						row.Add("");                                  // Field 2 - LOROutput4
 						row.Add("");                                  // Field 3 - DMX Address
 						row.Add(universe.xLightsAddress.ToString());  // Field 4 - xLights Address
 						row.Add(universe.Active.ToString());               // Field 5 - Active
@@ -1555,7 +1581,7 @@ namespace UtilORama4
 								row = new CsvRow();
 								row.Add(universe.UniverseNumber.ToString());       // Field 0 - Universe
 								row.Add(controller.LetterID);                        // Field 1 - Controller
-								row.Add("");                                  // Field 2 - Output
+								row.Add("");                                  // Field 2 - LOROutput4
 								row.Add(controller.DMXStartAddress.ToString());      // Field 3 - DMX Address
 								row.Add(controller.xLightsAddress.ToString());  // Field 4 - xLights Address
 								row.Add(controller.Active.ToString());               // Field 5 - Active
@@ -1575,13 +1601,13 @@ namespace UtilORama4
 										row = new CsvRow();
 										row.Add(channel.UniverseNumber.ToString());  // Field 0 - Universe
 										row.Add(channel.DMXController.LetterID);     // Field 1 - Controller
-										row.Add(channel.Output.ToString());       // Field 2 - Output
-										row.Add(channel.DMXaddress.ToString());      // Field 3 - DMX Address
+										row.Add(channel.LOROutput4.ToString());       // Field 2 - LOROutput4
+										row.Add(channel.DMXAddress.ToString());      // Field 3 - DMX Address
 										row.Add(channel.xLightsAddress.ToString());  // Field 4 - xLights Address
 										row.Add(channel.Active.ToString());          // Field 5 - Active
 										row.Add(channel.Name);                       // Field 6 - Name
-										row.Add(channel.DMXDevice.Name);							// Field 7 - Type
-										row.Add(LORUtils.utils.ColorToHex(channel.Color));    // Field 8 - Color
+										row.Add(channel.DMXDevice.Name);              // Field 7 - Type
+										row.Add(LORUtils4.lutils.ColorToHex(channel.Color));    // Field 8 - Color
 										row.Add(channel.Location);                   // Field 9 - Location
 										row.Add(channel.Comment);                    // Field 10 - comment
 										writer.WriteRow(row);
@@ -1590,19 +1616,19 @@ namespace UtilORama4
 									{
 
 									} // End Channel Catch
-								} // End Channel Loop
+								} // End Channel LORLoop4
 							} // End Controller Try
 							catch (Exception ex)
 							{
 
 							} // End Controller Catch
-						} // End Controller Loop
+						} // End Controller LORLoop4
 					} // End Universe Try
 					catch (Exception ex)
 					{
 
 					} // End Universe Catch
-				} // End Universe Loop
+				} // End Universe LORLoop4
 				writer.Close();
 				Fyle.LaunchFile(sprFile);
 			} // End Writer Try
@@ -1632,6 +1658,13 @@ namespace UtilORama4
 				{
 					treeChannelList_DoubleClick(sender, e);
 				}
+				if ((e.KeyChar == 99) || (e.KeyChar == (char)Keys.Space))
+				{
+					IDMXThingy d = (IDMXThingy) treeChannelList.SelectedNode.Tag;
+					string theName = d.Name;
+					Clipboard.SetText(theName);
+					Fyle.MakeNoise(Fyle.Noises.Pop);
+				}
 			}
 		}
 
@@ -1647,8 +1680,8 @@ namespace UtilORama4
 				{
 					DMXChannel channel = (DMXChannel)node.Tag;
 					msg = "Are you sure you want to delete channel ";
-					msg += channel.Output + ": " + channel.Name + "?";
-					DialogResult dr = MessageBox.Show(this, msg, "Delete Channel?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+					msg += channel.LOROutput4 + ": " + channel.Name + "?";
+					DialogResult dr = MessageBox.Show(this, msg, "Delete LORChannel4?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
 					if (dr == DialogResult.Yes)
 					{
 						node.Parent.Nodes.Remove(node);
@@ -1723,7 +1756,7 @@ namespace UtilORama4
 					} // End if selected node was a controller, or not
 				} // End if selected node was a channel, or not
 			} // End if node's .Tag was not null
-			// Note: non-success does not mean the code failed, it's pro'ly cuz the user said 'No' to delete
+				// Note: non-success does not mean the code failed, it's pro'ly cuz the user said 'No' to delete
 			return success;
 		}
 
@@ -1746,65 +1779,146 @@ namespace UtilORama4
 			}
 		}
 
-		private int MatchUp(string seqFile)
+		private int MatchUp(string seqFile, bool sortByName)
 		{
 			int ret = 0;
 			int lorCN = 0;
+			int vizCN = 0;
 			int xCNM = 0;
 			int xCNG = 0;
-			Sequence4 lseq = new Sequence4(seqFile);
+			LORSequence4 lseq = new LORSequence4(seqFile);
 
 			/////////////////////////////
 			/// GENERATE REPORT DATA ///
 			///////////////////////////
 
 			// Resort by name
-			DMXChannel.SortByName = true;
+			//DMXChannel.SortByName = true;
+			DMXChannel.SortByName = sortByName;
 			AllChannels.Sort();
-			int oldLORsort = Membership.sortMode;
-			Membership.sortMode = Membership.SORTbyName;
+			int oldLORsort = LORMembership4.sortMode;
+			if (sortByName)
+			{
+				LORMembership4.sortMode = LORMembership4.SORTbyName;
+			}
+			else
+			{
+				LORMembership4.sortMode = LORMembership4.SORTbyOutput;
+			}
 			lseq.Channels.Sort();
-			xRGBEffects.SortByName = true;
-			xSeq.xModels.Sort();
+			//xRGBEffects.SortByName = true;
+			xRGBEffects.SortByName = sortByName;
+			xModel.AllModels.Sort();
 			xSeq.xModelGroups.Sort();
 			List<FuzzyList> fuzzies = new List<FuzzyList>();
+			lViz.VizChannels.Sort();
 
-			for (int m=0; m< AllChannels.Count; m++)
+			string matchReportFile = "W:\\Documents\\SourceCode\\Windows\\UtilORama4\\ChannelORama\\!Temp!\\FuzzyReport.txt";
+			StreamWriter matchWriter = new StreamWriter(matchReportFile);
+
+
+
+
+			////////////////////////////////
+			///  **  EXACT MATCHES  **  ///
+			//////////////////////////////
+
+			///////////////////////////////////////////////////////
+			/// Match Managed Channels Exactly to LOR Channels ///
+			/////////////////////////////////////////////////////
+			for (int m = 0; m < AllChannels.Count; m++)
 			{
 				DMXChannel chanMgr = AllChannels[m];
 				string mgrName = chanMgr.Name.ToLower();
 
-				for (int l=lorCN; l< lseq.Channels.Count; l++)
+				for (int l = lorCN; l < lseq.Channels.Count; l++)
 				{
-					Channel chanLOR = lseq.Channels[l];
+					LORChannel4 chanLOR = lseq.Channels[l];
 
 					if (mgrName.CompareTo(chanLOR.Name.ToLower()) == 0)
 					{
 						chanMgr.TagLOR = chanLOR;
 						chanLOR.Tag = chanMgr;
 						chanMgr.ExactLOR = true;
-						chanLOR.MatchExact = true;
+						chanLOR.ExactMatch = true;
 						lorCN = l + 1;
 						l = lseq.Channels.Count; // Force exit of loop
 					}
-				} // LOR channel Loop
+				} // LOR channel LORLoop4
 
-				for (int x=xCNM; x< xSeq.xModels.Count; x++)
+				///////////////////////////////////////////////////////
+				/// Match Managed Channels Exactly to Viz Channels ///
+				/////////////////////////////////////////////////////
+				for (int v = vizCN; v < lViz.VizChannels.Count; v++)
 				{
-					xModel chanx = xSeq.xModels[x];
+					LORVizChannel4 chanViz = lViz.VizChannels[v];
+					if (mgrName.CompareTo(chanViz.Name.ToLower()) == 0)
+					{
+						chanMgr.TagViz = chanViz;
+						chanViz.Tag = chanMgr;
+						chanMgr.ExactViz = true;
+						chanViz.ExactMatch = true;
+						vizCN = v + 1;
+						v = lViz.VizChannels.Count; // Exit loop
+					}
+				} // VizChannel Loop
+
+				////////////////////////////////////////////////////////
+				/// Match Managed Channels Exactly to VizItemGroups ///
+				//////////////////////////////////////////////////////
+				for (int v = vizCN; v < lViz.VizItemGroups.Count; v++)
+				{
+					LORVizItemGroup4 grpViz = lViz.VizItemGroups[v];
+					if (mgrName.CompareTo(grpViz.Name.ToLower()) == 0)
+					{
+						chanMgr.TagViz = grpViz;
+						grpViz.Tag = chanMgr;
+						chanMgr.ExactViz = true;
+						grpViz.ExactMatch = true;
+						vizCN = v + 1;
+						v = lViz.VizItemGroups.Count; // Exit loop
+					}
+				} // VizItemGroups Loop
+
+				/////////////////////////////////////////////////////////
+				/// Match Managed Channels Exactly to VizDrawObjects ///
+				///////////////////////////////////////////////////////
+				for (int v = vizCN; v < lViz.VizDrawObjects.Count; v++)
+				{
+					LORVizDrawObject4 drobViz = lViz.VizDrawObjects[v];
+					if (mgrName.CompareTo(drobViz.Name.ToLower()) == 0)
+					{
+						chanMgr.TagViz = drobViz;
+						drobViz.Tag = chanMgr;
+						chanMgr.ExactViz = true;
+						drobViz.ExactMatch = true;
+						vizCN = v + 1;
+						v = lViz.VizDrawObjects.Count; // Exit loop
+					}
+				} // VizDrawObjects Loop
+
+				//////////////////////////////////////////////////
+				/// Match Managed Channels Exactly to xModels ///
+				////////////////////////////////////////////////
+				for (int x = xCNM; x < xModel.AllModels.Count; x++)
+				{
+					xModel chanx = xModel.AllModels[x];
 
 					if (mgrName.CompareTo(chanx.Name.ToLower()) == 0)
 					{
 						chanMgr.TagX = chanx;
 						chanx.Tag = chanMgr;
 						chanMgr.ExactX = true;
-						chanx.MatchExact = true;
+						chanx.ExactMatch = true;
 						xCNM = x + 1;
-						x = xSeq.xModels.Count; // Force exit of loop
- 					}
-				} // xModels Loop
+						x = xModel.AllModels.Count; // Force exit of loop
+					}
+				} // xModels LORLoop4
 
-				for (int x=xCNG; x< xSeq.xModelGroups.Count; x++)
+				///////////////////////////////////////////////////////
+				/// Match Managed Channels Exactly to xModelGroups ///
+				/////////////////////////////////////////////////////
+				for (int x = xCNG; x < xSeq.xModelGroups.Count; x++)
 				{
 					xModelGroup groupx = xSeq.xModelGroups[x];
 
@@ -1813,13 +1927,20 @@ namespace UtilORama4
 						chanMgr.TagX = groupx;
 						groupx.Tag = chanMgr;
 						chanMgr.ExactX = true;
-						groupx.MatchExact = true;
+						groupx.ExactMatch = true;
 						xCNG = x + 1;
 						x = xSeq.xModelGroups.Count; // Force exit of loop
 					}
-				} // End xModelGroups Loop
+				} // End xModelGroups LORLoop4
 			} // End Channel Manager DMX Channels loop looking for Exact Matches
 
+			////////////////////////////////
+			///  **  FUZZY MATCHES  **  ///
+			//////////////////////////////
+
+			/////////////////////////////////////////////////////
+			/// Fuzzy Match Managed Channels to LOR Channels ///
+			///////////////////////////////////////////////////
 			// Now, let's do it again looking for fuzzy matches
 			for (int m = 0; m < AllChannels.Count; m++)
 			{
@@ -1831,16 +1952,17 @@ namespace UtilORama4
 					fuzzies.Clear();
 					for (int l = 0; l < lseq.Channels.Count; l++)
 					{
-						Channel chanLOR = lseq.Channels[l];
+						LORChannel4 chanLOR = lseq.Channels[l];
 						if (chanLOR.Tag == null)
 						{
 							double score = mgrName.YetiLevenshteinSimilarity(chanLOR.Name.ToLower());
+							ReportMatch(matchWriter, score, mgrName, chanLOR.Name);
 							//if (score > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
-							if (score > 30)
+							if (score > .30D)
 							{
 								score = mgrName.RankEquality(chanLOR.Name.ToLower());
 								//if (score > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
-								if (score > 40)
+								if (score > .40D)
 								{
 									FuzzyList fuzzie = new FuzzyList(chanMgr, chanLOR, score);
 									fuzzies.Add(fuzzie);
@@ -1851,42 +1973,126 @@ namespace UtilORama4
 					if (fuzzies.Count > 0)
 					{
 						fuzzies.Sort();
-						chanMgr.TagLOR = fuzzies[0].Item2;
-						Channel chanLor = (Channel)fuzzies[0].Item2;
+						chanMgr.TagLOR = (iLORMember4)fuzzies[0].Item2;
+						LORChannel4 chanLor = (LORChannel4)fuzzies[0].Item2;
 						chanLor.Tag = chanMgr;
 					}
+				}
 
+				/////////////////////////////////////////////////////
+				/// Fuzzy Match Managed Channels to Viz Channels ///
+				///////////////////////////////////////////////////
+				if (chanMgr.TagViz == null)
+				{
 					fuzzies.Clear();
-					for (int x = 0; x < xSeq.xModels.Count; x++)
+					for (int v = 0; v < lViz.VizChannels.Count; v++)
 					{
-						xModel chanx = xSeq.xModels[x];
+						LORVizChannel4 chanViz = lViz.VizChannels[v];
+						if (chanViz.Tag == null)
+						{
+							double score = mgrName.YetiLevenshteinSimilarity(chanViz.Name.ToLower());
+							ReportMatch(matchWriter, score, mgrName, chanViz.Name);
+							//if (score > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
+							if (score > .30D)
+							{
+								score = mgrName.RankEquality(chanViz.Name.ToLower());
+								//if (score > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
+								if (score > .40D)
+								{
+									FuzzyList fuzzie = new FuzzyList(chanMgr, chanViz, score);
+									fuzzies.Add(fuzzie);
+								}
+							}
+						} // current Viz channel has no tag and thus no exact matches
+					} // End loop thru Viz channels
+
+					for (int v = 0; v < lViz.VizDrawObjects.Count; v++)
+					{
+						LORVizDrawObject4 chanViz = lViz.VizDrawObjects[v];
+						if (chanViz.Tag == null)
+						{
+							double score = mgrName.YetiLevenshteinSimilarity(chanViz.Name.ToLower());
+							ReportMatch(matchWriter, score, mgrName, chanViz.Name);
+							//if (score > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
+							if (score > .30D)
+							{
+								score = mgrName.RankEquality(chanViz.Name.ToLower());
+								//if (score > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
+								if (score > .40D)
+								{
+									FuzzyList fuzzie = new FuzzyList(chanMgr, chanViz, score);
+									fuzzies.Add(fuzzie);
+								}
+							}
+						} // current Viz channel has no tag and thus no exact matches
+					} // End loop thru Viz channels
+
+
+
+					if (fuzzies.Count > 0)
+					{
+						fuzzies.Sort();
+						chanMgr.TagViz = (iLORMember4)fuzzies[0].Item2;
+						iLORMember4 chanViz = (iLORMember4)fuzzies[0].Item2;
+						chanViz.Tag = chanMgr;
+					}
+				}
+
+				////////////////////////////////////////////////
+				/// Fuzzy Match Managed Channels to xModels ///
+				//////////////////////////////////////////////
+				if (chanMgr.TagViz == null)
+				{
+					fuzzies.Clear();
+					int attemptCount = 0;
+					for (int x = 0; x < xModel.AllModels.Count; x++)
+					{
+						xModel chanx = xModel.AllModels[x];
 						if (chanx.Tag == null)
 						{
-							double score = mgrName.YetiLevenshteinSimilarity(chanx.Name.ToLower());
-							if (score > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
+							attemptCount++;
+							//double score = mgrName.YetiLevenshteinSimilarity(chanx.Name.ToLower());
+							double score = mgrName.RankEquality(chanx.Name.ToLower(), FuzzyFunctions.USE_SUGGESTED_PREMATCH);
+							ReportMatch(matchWriter, score, mgrName, chanx.Name);
+							if (score > 0D)
 							{
-								score = mgrName.RankEquality(chanx.Name.ToLower());
-								if (score > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
+								// Hey! We Got Something!!
+								if (isWiz)
+								{
+									//System.Diagnostics.Debugger.Break();
+								}
+							}
+
+							if (score > .30D)
+							{
+								//score = mgrName.RankEquality(chanx.Name.ToLower());
+								score = mgrName.RankEquality(chanx.Name.ToLower(), FuzzyFunctions.USE_SUGGESTED_FINALMATCH);
+								if (score > .40D)
 								{
 									FuzzyList fuzzie = new FuzzyList(chanMgr, chanx, score);
 									fuzzies.Add(fuzzie);
 								}
 							}
+							int nn = attemptCount;
 						} // current LOR channel has no tag and thus no exact matches
 					} // End loop thru LOR channels
 
+					/////////////////////////////////////////////////////////
+					/// Fuzzy Match Managed Channels to LOR xModelGroups ///
+					///////////////////////////////////////////////////////
 					for (int x = 0; x < xSeq.xModelGroups.Count; x++)
 					{
 						xModelGroup groupx = xSeq.xModelGroups[x];
 						if (groupx.Tag == null)
 						{
 							double score = mgrName.YetiLevenshteinSimilarity(groupx.Name.ToLower());
+							ReportMatch(matchWriter, score, mgrName, groupx.Name);
 							//if (score > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
-							if (score > 30)
+							if (score > .30D)
 							{
 								score = mgrName.RankEquality(groupx.Name.ToLower());
 								//if (score > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
-								if (score > 40)
+								if (score > .40D)
 								{
 									FuzzyList fuzzie = new FuzzyList(chanMgr, groupx, score);
 									fuzzies.Add(fuzzie);
@@ -1898,7 +2104,7 @@ namespace UtilORama4
 					if (fuzzies.Count > 0)
 					{
 						fuzzies.Sort();
-						chanMgr.TagX = fuzzies[0].Item2;
+						chanMgr.TagX = (xMember)fuzzies[0].Item2;
 						xMember chanx = (xMember)fuzzies[0].Item2;
 						chanx.Tag = chanMgr;
 					}
@@ -1907,11 +2113,24 @@ namespace UtilORama4
 			} // End second loop[ thru Channel Manager DMXChannels looking for fuzzy matches
 
 
+			matchWriter.Close();
+			Fyle.LaunchFile(matchReportFile);
+
+
+
 			///////////////////////
 			///  WRITE REPORT  ///
 			/////////////////////
 
-			string reportFile = dbPath + "MatchReport.txt";
+			string reportFile = dbPath + "MatchReport";
+			if (sortByName)
+			{
+				reportFile += "_ByName.txt";
+			}
+			else
+			{
+				reportFile += "_ByAddress.txt";
+			}
 			StreamWriter writer = new StreamWriter(reportFile);
 			writer.WriteLine("*** Channel Manager Report ***");
 			writer.WriteLine("[Exact Matches to LOR Channels]");
@@ -1922,26 +2141,26 @@ namespace UtilORama4
 				if (chanMgr.TagLOR != null)
 				{
 					Type t = chanMgr.TagLOR.GetType();
-					if (t != typeof(Channel))
+					if (t != typeof(LORChannel4))
 					{
 						string xxxx = "Why Not!";
 					}
 
-					Channel chanLor = (Channel)chanMgr.TagLOR;
-					if (chanLor.MatchExact)
+					LORChannel4 chanLor = (LORChannel4)chanMgr.TagLOR;
+					if (chanLor.ExactMatch)
 					{
 						StringBuilder lineOut = new StringBuilder("  Exact: ");
 						lineOut.Append(chanMgr.Name);
 						lineOut.Append(" to ");
 						lineOut.Append(chanLor.Name);
 						writer.WriteLine(lineOut);
-						if (chanMgr.UniverseNumber != chanLor.UniverseNumber || chanMgr.DMXaddress != chanLor.DMXAddress)
+						if (chanMgr.UniverseNumber != chanLor.UniverseNumber || chanMgr.DMXAddress != chanLor.DMXAddress)
 						{
 							lineOut.Clear();
 							lineOut.Append("    But the DMX Address does not match! ");
 							lineOut.Append(chanMgr.UniverseNumber.ToString());
 							lineOut.Append("/");
-							lineOut.Append(chanMgr.DMXaddress.ToString());
+							lineOut.Append(chanMgr.DMXAddress.ToString());
 							lineOut.Append(" != ");
 							lineOut.Append(chanLor.UniverseNumber.ToString());
 							lineOut.Append("/");
@@ -1959,21 +2178,21 @@ namespace UtilORama4
 				DMXChannel chanMgr = AllChannels[m];
 				if (chanMgr.TagLOR != null)
 				{
-					Channel chanLor = (Channel)chanMgr.TagLOR;
-					if (!chanLor.MatchExact)
-					{ 
+					LORChannel4 chanLor = (LORChannel4)chanMgr.TagLOR;
+					if (!chanLor.ExactMatch)
+					{
 						StringBuilder lineOut = new StringBuilder("  Fuzzy: ");
 						lineOut.Append(chanMgr.Name);
 						lineOut.Append(" to ");
 						lineOut.Append(chanLor.Name);
 						writer.WriteLine(lineOut);
-						if (chanMgr.UniverseNumber != chanLor.UniverseNumber || chanMgr.DMXaddress != chanLor.DMXAddress)
+						if (chanMgr.UniverseNumber != chanLor.UniverseNumber || chanMgr.DMXAddress != chanLor.DMXAddress)
 						{
 							lineOut.Clear();
 							lineOut.Append("    But the DMX Address does not match! ");
 							lineOut.Append(chanMgr.UniverseNumber.ToString());
 							lineOut.Append("/");
-							lineOut.Append(chanMgr.DMXaddress.ToString());
+							lineOut.Append(chanMgr.DMXAddress.ToString());
 							lineOut.Append(" != ");
 							lineOut.Append(chanLor.UniverseNumber.ToString());
 							lineOut.Append("/");
@@ -2001,7 +2220,7 @@ namespace UtilORama4
 			writer.WriteLine("[LOR Channels with NO Managed Match]");
 			for (int c = 0; c < lseq.Channels.Count; c++)
 			{
-				Channel chanLOR = lseq.Channels[c];
+				LORChannel4 chanLOR = lseq.Channels[c];
 				if (chanLOR.Tag == null)
 				{
 					StringBuilder lineOut = new StringBuilder("  NoMatch: ");
@@ -2009,6 +2228,138 @@ namespace UtilORama4
 					writer.WriteLine(lineOut);
 				}
 			}
+
+
+
+
+			writer.WriteLine("");
+			writer.WriteLine("");
+			writer.WriteLine("[Exact Matches to Viz Channels or Groups]");
+
+			for (int m = 0; m < AllChannels.Count; m++)
+			{
+				DMXChannel chanMgr = AllChannels[m];
+				if (chanMgr.TagViz != null)
+				{
+					iLORMember4 chanViz = (iLORMember4)chanMgr.TagViz;
+					if (chanViz.ExactMatch)
+					{
+						StringBuilder lineOut = new StringBuilder("  Exact: ");
+						lineOut.Append(chanMgr.Name);
+						lineOut.Append(" to ");
+						lineOut.Append(chanViz.Name);
+						writer.WriteLine(lineOut);
+						if (chanViz.DMXAddress > 0)
+						{
+							if ((chanMgr.DMXAddress != chanViz.DMXAddress) || (chanMgr.UniverseNumber != chanViz.UniverseNumber))
+							{
+								lineOut.Clear();
+								lineOut.Append("    But the Viz Channel Address does not match! ");
+								lineOut.Append(chanMgr.UniverseNumber.ToString());
+								lineOut.Append("/");
+								lineOut.Append(chanMgr.DMXAddress.ToString());
+								lineOut.Append(" != ");
+								lineOut.Append(chanViz.UniverseNumber.ToString());
+								lineOut.Append("/");
+								lineOut.Append(chanViz.DMXAddress.ToString());
+								writer.WriteLine(lineOut);
+							}
+						}
+					}
+				}
+			}
+
+			writer.WriteLine("");
+			writer.WriteLine("[Fuzzy Matches to Viz Channels or Groups]");
+			for (int m = 0; m < AllChannels.Count; m++)
+			{
+				DMXChannel chanMgr = AllChannels[m];
+				if (chanMgr.TagViz != null)
+				{
+					iLORMember4 chanViz = (iLORMember4)chanMgr.TagViz;
+					if (!chanViz.ExactMatch)
+					{
+						StringBuilder lineOut = new StringBuilder("  Fuzzy: ");
+						lineOut.Append(chanMgr.Name);
+						lineOut.Append(" to ");
+						lineOut.Append(chanViz.Name);
+						writer.WriteLine(lineOut);
+						if (chanViz.DMXAddress > 0)
+						{
+							if ((chanMgr.DMXAddress != chanViz.DMXAddress) || (chanMgr.UniverseNumber != chanViz.UniverseNumber))
+							{
+								lineOut.Clear();
+								lineOut.Append("    But the Viz Channel Address does not match! ");
+								lineOut.Append(chanMgr.UniverseNumber.ToString());
+								lineOut.Append("/");
+								lineOut.Append(chanMgr.DMXAddress.ToString());
+								lineOut.Append(" != ");
+								lineOut.Append(chanViz.UniverseNumber.ToString());
+								lineOut.Append("/");
+								lineOut.Append(chanViz.DMXAddress.ToString());
+								writer.WriteLine(lineOut);
+							}
+						}
+					}
+				}
+			}
+
+			writer.WriteLine("");
+			writer.WriteLine("[Managed Channels with NO Viz Channel or Group Match]");
+			for (int m = 0; m < AllChannels.Count; m++)
+			{
+				DMXChannel chanMgr = AllChannels[m];
+				if (chanMgr.TagViz == null)
+				{
+					StringBuilder lineOut = new StringBuilder("  NoMatch: ");
+					lineOut.Append(chanMgr.Name);
+					writer.WriteLine(lineOut);
+				}
+			}
+
+			writer.WriteLine("");
+			writer.WriteLine("[Viz Channels and Groups with NO Managed Match]");
+			for (int v = 0; v < lViz.VizChannels.Count; v++)
+			{
+				iLORMember4 chanViz = lViz.VizChannels[v];
+				if (chanViz.Tag == null)
+				{
+					StringBuilder lineOut = new StringBuilder("  NoMatch Channel: ");
+					lineOut.Append(chanViz.Name);
+					writer.WriteLine(lineOut);
+				}
+			}
+			for (int v = 0; v < lViz.VizItemGroups.Count; v++)
+			{
+				iLORMember4 chanViz = lViz.VizItemGroups[v];
+				if (chanViz.Tag == null)
+				{
+					StringBuilder lineOut = new StringBuilder("  NoMatch Group: ");
+					lineOut.Append(chanViz.Name);
+					writer.WriteLine(lineOut);
+				}
+			}
+			for (int v = 0; v < lViz.VizDrawObjects.Count; v++)
+			{
+				iLORMember4 chanViz = lViz.VizDrawObjects[v];
+				if (chanViz.Tag == null)
+				{
+					StringBuilder lineOut = new StringBuilder("  NoMatch DrOb: ");
+					lineOut.Append(chanViz.Name);
+					writer.WriteLine(lineOut);
+				}
+			}
+
+
+
+
+
+
+
+
+
+
+
 
 			writer.WriteLine("");
 			writer.WriteLine("");
@@ -2020,7 +2371,7 @@ namespace UtilORama4
 				if (chanMgr.TagX != null)
 				{
 					xMember chanx = (xMember)chanMgr.TagX;
-					if (chanx.MatchExact)
+					if (chanx.ExactMatch)
 					{
 						StringBuilder lineOut = new StringBuilder("  Exact: ");
 						lineOut.Append(chanMgr.Name);
@@ -2051,7 +2402,7 @@ namespace UtilORama4
 				if (chanMgr.TagX != null)
 				{
 					xMember chanx = (xMember)chanMgr.TagX;
-					if (!chanx.MatchExact)
+					if (!chanx.ExactMatch)
 					{
 						StringBuilder lineOut = new StringBuilder("  Fuzzy: ");
 						lineOut.Append(chanMgr.Name);
@@ -2081,7 +2432,7 @@ namespace UtilORama4
 				DMXChannel chanMgr = AllChannels[m];
 				if (chanMgr.TagX == null)
 				{
-					StringBuilder lineOut = new StringBuilder("  NoMatch: ");
+					StringBuilder lineOut = new StringBuilder("  NoMatch Channel: ");
 					lineOut.Append(chanMgr.Name);
 					writer.WriteLine(lineOut);
 				}
@@ -2089,12 +2440,12 @@ namespace UtilORama4
 
 			writer.WriteLine("");
 			writer.WriteLine("[xLights Models and Groups with NO Managed Match]");
-			for (int x = 0; x < xSeq.xModels.Count; x++)
+			for (int x = 0; x < xModel.AllModels.Count; x++)
 			{
-				xModel chanx = xSeq.xModels[x];
+				xModel chanx = xModel.AllModels[x];
 				if (chanx.Tag == null)
 				{
-					StringBuilder lineOut = new StringBuilder("  NoMatch: ");
+					StringBuilder lineOut = new StringBuilder("  NoMatch Group: ");
 					lineOut.Append(chanx.Name);
 					writer.WriteLine(lineOut);
 				}
@@ -2119,10 +2470,10 @@ namespace UtilORama4
 			// Resort back to default by channel number
 			DMXChannel.SortByName = false;
 			AllChannels.Sort();
-			Membership.sortMode = oldLORsort;
+			LORMembership4.sortMode = oldLORsort;
 			lseq.Channels.Sort();
 			xRGBEffects.SortByName = false;
-			xSeq.xModels.Sort();
+			xModel.AllModels.Sort();
 			xSeq.xModelGroups.Sort();
 
 			Fyle.LaunchFile(reportFile);
@@ -2131,12 +2482,25 @@ namespace UtilORama4
 			return ret;
 		}
 
+		private void ReportMatch(StreamWriter writer, double score, string name1, string name2)
+		{
+			StringBuilder sb = new StringBuilder();
+			string scr = score.ToString("0.0000");
+			sb.Append(scr);
+			sb.Append(" = ");
+			string n1 = name1.PadRight(33);
+			sb.Append(n1);
+			sb.Append(" --> ");
+			sb.Append(name2.ToLower());
+			writer.WriteLine(sb);
+		}
 
+		private void btnSave_Click(object sender, EventArgs e)
+		{
+			SaveData(dbPath);
+		}
+	} // End Class frmList
 
-
-
-
-	}
 
 	public class FuzzyList: IComparable<FuzzyList>
 	{

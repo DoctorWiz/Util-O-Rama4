@@ -222,10 +222,10 @@
 			// 
 			this.imlTreeIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imlTreeIcons.ImageStream")));
 			this.imlTreeIcons.TransparentColor = System.Drawing.Color.Transparent;
-			this.imlTreeIcons.Images.SetKeyName(0, "Track");
-			this.imlTreeIcons.Images.SetKeyName(1, "ChannelGroup");
-			this.imlTreeIcons.Images.SetKeyName(2, "RGBchannel");
-			this.imlTreeIcons.Images.SetKeyName(3, "Channel");
+			this.imlTreeIcons.Images.SetKeyName(0, "LORTrack4");
+			this.imlTreeIcons.Images.SetKeyName(1, "LORChannelGroup4");
+			this.imlTreeIcons.Images.SetKeyName(2, "LORRGBChannel4");
+			this.imlTreeIcons.Images.SetKeyName(3, "LORChannel4");
 			this.imlTreeIcons.Images.SetKeyName(4, "RedCh");
 			this.imlTreeIcons.Images.SetKeyName(5, "GrnCh");
 			this.imlTreeIcons.Images.SetKeyName(6, "BluCh");
@@ -512,6 +512,7 @@
 			this.lblSourceFile.Size = new System.Drawing.Size(112, 13);
 			this.lblSourceFile.TabIndex = 21;
 			this.lblSourceFile.Text = "Source Sequence File";
+			this.lblSourceFile.Click += new System.EventHandler(this.lblSourceFile_Click);
 			this.lblSourceFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
 			this.lblSourceFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
 			// 
@@ -536,6 +537,7 @@
 			this.txtSourceFile.Name = "txtSourceFile";
 			this.txtSourceFile.Size = new System.Drawing.Size(300, 20);
 			this.txtSourceFile.TabIndex = 19;
+			this.txtSourceFile.TextChanged += new System.EventHandler(this.txtSourceFile_TextChanged);
 			this.txtSourceFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
 			this.txtSourceFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
 			// 

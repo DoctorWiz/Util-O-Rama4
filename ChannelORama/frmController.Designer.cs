@@ -144,7 +144,7 @@ namespace UtilORama4
 			this.lblLastDMX.Name = "lblLastDMX";
 			this.lblLastDMX.Size = new System.Drawing.Size(114, 13);
 			this.lblLastDMX.TabIndex = 19;
-			this.lblLastDMX.Text = "Last DMX Channel: 16";
+			this.lblLastDMX.Text = "Last DMX LORChannel4: 16";
 			// 
 			// lblStart
 			// 

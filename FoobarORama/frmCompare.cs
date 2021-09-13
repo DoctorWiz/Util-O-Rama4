@@ -9,7 +9,7 @@ using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LORUtils; using FileHelper;
+using LORUtils4; using FileHelper;
 using xUtils;
 
 namespace UtilORama4
@@ -20,10 +20,10 @@ namespace UtilORama4
 		private const string helpPage = "http://wizlights.com/utilorama/thingorama";
 
 
-		Sequence4 seq = null;
-		List<Channel> channelList = new List<Channel>();
-		List<RGBchannel> RGBList = new List<RGBchannel>();
-		List<ChannelGroup> groupList = new List<ChannelGroup>();
+		LORSequence4 seq = null;
+		List<LORChannel4> channelList = new List<LORChannel4>();
+		List<LORRGBChannel4> RGBList = new List<LORRGBChannel4>();
+		List<LORChannelGroup4> groupList = new List<LORChannelGroup4>();
 
 		public frmBlank()
 		{

@@ -46,7 +46,7 @@ namespace UtilORama4
 			this.numOutput = new System.Windows.Forms.NumericUpDown();
 			this.lblOutput = new System.Windows.Forms.Label();
 			this.lblUniverse = new System.Windows.Forms.Label();
-			this.lblDMXaddress = new System.Windows.Forms.Label();
+			this.lblDMXAddress = new System.Windows.Forms.Label();
 			this.lblxLighsAddress = new System.Windows.Forms.Label();
 			this.chkActive = new System.Windows.Forms.CheckBox();
 			this.lblModel = new System.Windows.Forms.Label();
@@ -232,15 +232,15 @@ namespace UtilORama4
 			this.lblUniverse.Text = "Universe: 1";
 			this.tipTool.SetToolTip(this.lblUniverse, "The DMX Universe this controller and this channel are connected to.");
 			// 
-			// lblDMXaddress
+			// lblDMXAddress
 			// 
-			this.lblDMXaddress.AutoSize = true;
-			this.lblDMXaddress.Location = new System.Drawing.Point(80, 168);
-			this.lblDMXaddress.Name = "lblDMXaddress";
-			this.lblDMXaddress.Size = new System.Drawing.Size(84, 13);
-			this.lblDMXaddress.TabIndex = 15;
-			this.lblDMXaddress.Text = "DMX Address: 1";
-			this.tipTool.SetToolTip(this.lblDMXaddress, "The DMX address of this channel in this DMX Universe.");
+			this.lblDMXAddress.AutoSize = true;
+			this.lblDMXAddress.Location = new System.Drawing.Point(80, 168);
+			this.lblDMXAddress.Name = "lblDMXAddress";
+			this.lblDMXAddress.Size = new System.Drawing.Size(84, 13);
+			this.lblDMXAddress.TabIndex = 15;
+			this.lblDMXAddress.Text = "DMX Address: 1";
+			this.tipTool.SetToolTip(this.lblDMXAddress, "The DMX address of this channel in this DMX Universe.");
 			// 
 			// lblxLighsAddress
 			// 
@@ -346,7 +346,7 @@ namespace UtilORama4
 			this.Controls.Add(this.lblModel);
 			this.Controls.Add(this.chkActive);
 			this.Controls.Add(this.lblxLighsAddress);
-			this.Controls.Add(this.lblDMXaddress);
+			this.Controls.Add(this.lblDMXAddress);
 			this.Controls.Add(this.lblUniverse);
 			this.Controls.Add(this.lblOutput);
 			this.Controls.Add(this.numOutput);
@@ -397,7 +397,7 @@ namespace UtilORama4
 		private System.Windows.Forms.NumericUpDown numOutput;
 		private System.Windows.Forms.Label lblOutput;
 		private System.Windows.Forms.Label lblUniverse;
-		private System.Windows.Forms.Label lblDMXaddress;
+		private System.Windows.Forms.Label lblDMXAddress;
 		private System.Windows.Forms.Label lblxLighsAddress;
 		private System.Windows.Forms.CheckBox chkActive;
 		private System.Windows.Forms.ToolTip tipTool;

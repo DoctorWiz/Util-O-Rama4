@@ -1,4 +1,0 @@
-Unzip LOR!Common.zip to Documents\Visual Studio\Projects\LOR\!Common
-Unzip LORUniverseMaker.zip to Documents\Visual Studio\Projects\LOR\UniverseMaker
-Open the UniverseMaker project in Visual Studio (Which has a reference to the Sequence class in !Common)
-

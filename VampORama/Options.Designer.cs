@@ -111,7 +111,7 @@
 			this.grpTrackBeats.Size = new System.Drawing.Size(549, 256);
 			this.grpTrackBeats.TabIndex = 24;
 			this.grpTrackBeats.TabStop = false;
-			this.grpTrackBeats.Text = " Track && Channels - Beats ";
+			this.grpTrackBeats.Text = " LORTrack4 && Channels - Beats ";
 			this.grpTrackBeats.Visible = false;
 			// 
 			// panel2
@@ -596,7 +596,7 @@
 			this.label11.Name = "label11";
 			this.label11.Size = new System.Drawing.Size(35, 13);
 			this.label11.TabIndex = 133;
-			this.label11.Text = "Effect";
+			this.label11.Text = "LOREffect4";
 			// 
 			// btnOK
 			// 

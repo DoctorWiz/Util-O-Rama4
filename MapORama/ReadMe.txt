@@ -1,4 +1,4 @@
-﻿Channel Remapper
+﻿LORChannel4 Remapper
 
 Remaps Light-O-Rama channels from one sequence to another.
 

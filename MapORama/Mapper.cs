@@ -11,7 +11,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
 using Microsoft.Win32;
-using LORUtils; using FileHelper;
+using LORUtils4; using FileHelper;
 using FuzzyString;
 using Syncfusion.Windows.Forms.Tools;
 
@@ -31,7 +31,7 @@ namespace UtilORama4
 		private void InitForm()
 		{
 			bool valid = false;
-			SeqFolder = utils.DefaultSequencesPath;
+			SeqFolder = lutils.DefaultSequencesPath;
 			logHomeDir = Fyle.GetAppTempFolder();
 
 			masterFile = Properties.Settings.Default.LastMasterFile;
@@ -39,10 +39,10 @@ namespace UtilORama4
 			{
 				valid = Fyle.IsValidPath(masterFile, true);
 			}
-			if (!valid) masterFile = utils.DefaultChannelConfigsPath;
+			if (!valid) masterFile = lutils.DefaultChannelConfigsPath;
 			if (!File.Exists(masterFile))
 			{
-				masterFile = utils.DefaultChannelConfigsPath;
+				masterFile = lutils.DefaultChannelConfigsPath;
 				Properties.Settings.Default.LastMasterFile = masterFile;
 			}
 
@@ -52,10 +52,10 @@ namespace UtilORama4
 			{
 				valid = Fyle.IsValidPath(sourceFile, true);
 			}
-			if (!valid) sourceFile = utils.DefaultSequencesPath;
+			if (!valid) sourceFile = lutils.DefaultSequencesPath;
 			if (!File.Exists(sourceFile))
 			{
-				sourceFile = utils.DefaultSequencesPath;
+				sourceFile = lutils.DefaultSequencesPath;
 				Properties.Settings.Default.LastSourceFile = sourceFile;
 			}
 
@@ -65,10 +65,10 @@ namespace UtilORama4
 			{
 				valid = Fyle.IsValidPath(mapFile, true);
 			}
-			if (!valid) mapFile = utils.DefaultChannelConfigsPath;
+			if (!valid) mapFile = lutils.DefaultChannelConfigsPath;
 			if (!File.Exists(mapFile))
 			{
-				mapFile = utils.DefaultChannelConfigsPath;
+				mapFile = lutils.DefaultChannelConfigsPath;
 			}
 
 			valid = false;
@@ -77,10 +77,10 @@ namespace UtilORama4
 			{
 				valid = Fyle.IsValidPath(saveFile, true);
 			}
-			if (!valid) saveFile = utils.DefaultSequencesPath;
+			if (!valid) saveFile = lutils.DefaultSequencesPath;
 			if (!File.Exists(saveFile))
 			{
-				saveFile = utils.DefaultSequencesPath;
+				saveFile = lutils.DefaultSequencesPath;
 			}
 
 			sourceOnRight = Properties.Settings.Default.SourceOnRight;
@@ -315,7 +315,7 @@ namespace UtilORama4
 					{
 						//seqSource.ReadSequenceFile(sourceFile);
 						LoadSourceFile(sourceFile);
-						//utils.TreeFillChannels(treeSource, seqSource, sourceNodesBySI, false, false);
+						//lutils.TreeFillChannels(treeSource, seqSource, sourceNodesBySI, false, false);
 						// Is a master also already loaded?
 					}
 				} // end last sequence file exists
@@ -469,9 +469,9 @@ namespace UtilORama4
 		private void btnEaves_Click(object sender, EventArgs e)
 		{
 
-			//RGBchannel oef = (RGBchannel)seqSource.Members.Find("Strip 1 Pixel 150 [U2.448-450]", MemberType.RGBchannel, false);
-			RGBchannel se = (RGBchannel)seqSource.Members.Find("Eave Pixel 001 / S1.170 / U2.508-510", MemberType.RGBchannel, false);
-			RGBchannel me = (RGBchannel)seqMaster.Members.Find("Eave Pixel 001 / S1.170 / U2.508-510", MemberType.RGBchannel, false);
+			//LORRGBChannel4 oef = (LORRGBChannel4)seqSource.Members.Find("Strip 1 Pixel 150 [U2.448-450]", LORMemberType4.RGBChannel, false);
+			LORRGBChannel4 se = (LORRGBChannel4)seqSource.Members.Find("Eave Pixel 001 / S1.170 / U2.508-510", LORMemberType4.RGBChannel, false);
+			LORRGBChannel4 me = (LORRGBChannel4)seqMaster.Members.Find("Eave Pixel 001 / S1.170 / U2.508-510", LORMemberType4.RGBChannel, false);
 
 			int masIdx = me.Index;
 			int srcIdx = se.Index; // = oef.Index;
@@ -488,8 +488,8 @@ namespace UtilORama4
 			}
 
 
-			se = (RGBchannel)seqSource.Members.Find("Eave Pixel 172 / S2.002 / U3.004-006", MemberType.RGBchannel, false);
-			RGBchannel mf = (RGBchannel)seqMaster.Members.Find("Fence Pixel 01-01 [U11.496-498]", MemberType.RGBchannel, false);
+			se = (LORRGBChannel4)seqSource.Members.Find("Eave Pixel 172 / S2.002 / U3.004-006", LORMemberType4.RGBChannel, false);
+			LORRGBChannel4 mf = (LORRGBChannel4)seqMaster.Members.Find("Fence Pixel 01-01 [U11.496-498]", LORMemberType4.RGBChannel, false);
 
 			srcIdx = se.Index; // + 171;
 			masIdx = mf.Index;
@@ -579,6 +579,16 @@ namespace UtilORama4
 		}
 
 		private void treeMaster_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void txtSourceFile_TextChanged(object sender, EventArgs e)
+		{
+
+		}
+
+		private void lblSourceFile_Click(object sender, EventArgs e)
 		{
 
 		}

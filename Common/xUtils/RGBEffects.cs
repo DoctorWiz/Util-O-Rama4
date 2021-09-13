@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 using System.IO;
 using System.Drawing;
-using xUtils;
+using LORUtils4;
 using FileHelper;
 
 namespace xUtils
@@ -19,7 +19,7 @@ namespace xUtils
 	public class xRGBEffects
 	{
 
-		public List<xModel> xModels = new List<xModel>();
+		//public List<xModel> xModels = new List<xModel>();
 		public List<xRGBModel> xRGBmodels = new List<xRGBModel>();
 		public List<xPixels> xPixels = new List<xPixels>();
 		public List<xModelGroup> xModelGroups = new List<xModelGroup>();
@@ -29,7 +29,7 @@ namespace xUtils
 
 		public xRGBEffects()
 		{
-			string theFile = xUtils.utils.ShowDirectory;
+			string theFile = xutils.ShowDirectory;
 			if (Directory.Exists(theFile))
 			{
 				theFile += "\\xlights_rgbeffects.xml";
@@ -156,23 +156,31 @@ namespace xUtils
 						if (section == xSections.Models)
 						{
 
-							string modelType = utils.getKeyWord(lineIn, "DisplayAs");
-							string modelName = utils.getKeyWord(lineIn, "name");
+							string modelType = lutils.getKeyWord(lineIn, "DisplayAs");
+							string modelName = lutils.getKeyWord(lineIn, "name");
 							
 							if (modelName.IndexOf("Bushes") >= 0)
 							{
 								string ItsABush = modelName;
 							}
 							
-							int xAddress = utils.getKeyValue(lineIn, "StartChannel");
+							//int xAddress = lutils.getKeyValue(lineIn, "StartChannel");
+							string startAddress = xutils.getKeyWord(lineIn, "StartChannel");
 							string mtl = modelType.ToLower();
-							string stringType = utils.getKeyWord(lineIn, "StringType");
+							string stringType = lutils.getKeyWord(lineIn, "StringType");
 							string stl = stringType.ToLower();
 							xModelTypes xType = xModelTypes.Unknown;
 							xPixels pixels = new xPixels("");
 							xModel model = new xModel("");
 
 							xMember member = null;
+
+							int xAddress = -1;
+							if (startAddress.Length > 0)
+							{
+								xAddress = xutils.GetAddress(startAddress, xModel.AllModels);
+							}
+
 
 							if (mtl.Length > 3)
 							{
@@ -236,7 +244,7 @@ namespace xUtils
 								if (stringType.IndexOf("Single Color") == 0)
 								{
 									model = new xModel(modelName, xType, xAddress);
-									xModels.Add(model);
+									xModel.AllModels.Add(model);
 									member = model;
 									//TODO Get Color
 								}
@@ -253,7 +261,7 @@ namespace xUtils
 										if (stringType.IndexOf("Strobes") == 0)
 										{
 											model = new xModel(modelName, xType, xAddress);
-											xModels.Add(model);
+											xModel.AllModels.Add(model);
 											member = model;
 											//TODO Get Color
 										}
@@ -262,7 +270,7 @@ namespace xUtils
 											if (stringType.IndexOf("3 Channel RGB") == 0)
 											{
 												model = new xModel(modelName, xType, xAddress);
-												xModels.Add(model);
+												xModel.AllModels.Add(model);
 												member = model;
 												//TODO Get Color
 											}
@@ -273,33 +281,33 @@ namespace xUtils
 													string foo2 = stringType;
 													System.Diagnostics.Debugger.Break();
 												}
-											} // End 3-Channel RGB
+											} // End 3-LORChannel4 RGB
 										} // End Strobes
 									} // End RGB Nodes
 								} // End Single Color
 							} // End StringType Length
 						} // End ParseModels
-						int qqm = xModels.Count;
+						int qqm = xModel.AllModels.Count;
 
 						if (section == xSections.ModelGroups)
 						{
-							string modelName = utils.getKeyWord(lineIn, "name");
+							string modelName = lutils.getKeyWord(lineIn, "name");
 							if (modelName.Length > 0)
 							{
-								string groupMembers = utils.getKeyWord(lineIn, "models");
+								string groupMembers = lutils.getKeyWord(lineIn, "models");
 								xModelGroup group = new xModelGroup(modelName);
 								string[] membrz = groupMembers.Split(',');
 								foreach (string membr in membrz)
 								{
 									bool found = false;
-									for (int m = 0; m < xModels.Count; m++)
+									for (int m = 0; m < xModel.AllModels.Count; m++)
 									{
-										xModel model = xModels[m];
+										xModel model = xModel.AllModels[m];
 										if (membr.CompareTo(model.Name) == 0)
 										{
 											group.xMembers.Add(model);
 											found = true;
-											m = xModels.Count; // Exit loop
+											m = xModel.AllModels.Count; // Exit loop
 										}
 									}
 									if (!found)
@@ -335,8 +343,22 @@ namespace xUtils
 					lineCount++;
 				} // End While Not End-of-Stream
 				reader.Close();
-				int qqqqm = xModels.Count;
+				int qqqqm = xModel.AllModels.Count;
 				int qqqqg = xModelGroups.Count;
+
+				// Try go get any missing start addresses
+				for (int m=0; m<xModel.AllModels.Count; m++)
+				{
+					xModel model = xModel.AllModels[m];
+					if (model.xLightsAddress < 1)
+					{
+						if (model.StartChannel.Length > 5)
+						{
+							int a = xutils.GetAddress(model.StartChannel, xModel.AllModels);
+							model.xLightsAddress = a;
+						}
+					}
+				}
 
 			} // End Try
 			catch (Exception ex1)

@@ -6,12 +6,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Channel-O-Rama")]
-[assembly: AssemblyDescription("Channel Database")]
+[assembly: AssemblyTitle("Chan-O-Rama")]
+[assembly: AssemblyDescription("DMX Channel Database for Light-O-Rama S4 and xLights")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Wizlights Software")]
-[assembly: AssemblyProduct("Channel-O-Rama")]
-[assembly: AssemblyCopyright("Copyright © 2021+ Doctor Wizard and Wizlights Software")]
+[assembly: AssemblyProduct("Chan-O-Rama")]
+[assembly: AssemblyCopyright("Copyright © 2021+ by Doctor 🧙 Wizard and W⚡zlights Software")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

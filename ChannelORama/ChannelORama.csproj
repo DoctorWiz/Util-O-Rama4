@@ -7,7 +7,7 @@
     <ProjectGuid>{625B1D42-4E48-4DD5-AD91-F83C26D07BBB}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>UtilORama4</RootNamespace>
-    <AssemblyName>Channel-O-Rama</AssemblyName>
+    <AssemblyName>Chan-O-Rama</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -102,6 +102,9 @@
     </Compile>
     <Compile Include="..\Common\Sequence4\Visualization4.cs">
       <Link>Visualization4.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\VizGroup.cs">
+      <Link>VizGroup.cs</Link>
     </Compile>
     <Compile Include="..\Common\Sequence4\VizMembers.cs">
       <Link>VizMembers.cs</Link>

@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using LORUtils; using FileHelper;
+using LORUtils4; using FileHelper;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -10,9 +10,9 @@ using LORUtils; using FileHelper;
 [assembly: AssemblyTitle("Map-O-Rama")]
 [assembly: AssemblyDescription("Remaps channels in Light-O-Rama Sequence Files")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Copyright ©  2021+ by Doctor 🧙 Wizard and W⚡zster Software")]
+[assembly: AssemblyCompany("Copyright © 2021+ by Doctor 🧙 Wizard and W⚡zster Software")]
 [assembly: AssemblyProduct("Map-O-Rama")]
-[assembly: AssemblyCopyright("Copyright ©  2021+ by Doctor 🧙 Wizard and W⚡zster Software")]
+[assembly: AssemblyCopyright("Copyright © 2021+ by Doctor 🧙 Wizard and W⚡zster Software")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LORUtils; using FileHelper;
+using LORUtils4; using FileHelper;
 
 namespace UtilORama4
 {
@@ -311,7 +311,7 @@ namespace UtilORama4
 			StringBuilder txt = new StringBuilder();
 			for (int c=0; c< controller.DMXChannels.Count; c++)
 			{
-				txt.Append(controller.DMXChannels[c].Output.ToString());
+				txt.Append(controller.DMXChannels[c].LOROutput4.ToString());
 				txt.Append(": ");
 				txt.Append(controller.DMXChannels[c].Name);
 				txt.Append("\r\n");

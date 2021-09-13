@@ -15,7 +15,7 @@ namespace xUtils
 		private int _endtime = 999999999;
 		private static int lastEnd = 0;
 
-		private static string TABLE_Effect = "Effect";
+		private static string TABLE_Effect = "LOREffect4";
 		private static string FIELD_label = "label";
 		private static string FIELD_start = "starttime";
 		private static string FIELD_end = "endtime";
@@ -164,7 +164,7 @@ namespace xUtils
 		public string LineOut()
 		{
 			StringBuilder ret = new StringBuilder();
-			//    <Effect 
+			//    <LOREffect4 
 			ret.Append(LEVEL2);
 			ret.Append(RECORD_start);
 			ret.Append(TABLE_Effect);
@@ -218,7 +218,7 @@ namespace xUtils
 		private readonly static string FIELD_label = "label";
 		private readonly static string FIELD_source = "SourceVersion";
 		private readonly static string TABLE_layers = "EffectLayer";
-		private readonly static string TABLE_effect = "Effect";
+		private readonly static string TABLE_effect = "LOREffect4";
 		private readonly static string LEVEL0 = "";
 		private readonly static string LEVEL1 = "  ";
 		private readonly static string LEVEL2 = "    ";
@@ -305,7 +305,7 @@ namespace xUtils
 		{
 			get
 			{
-				int ret = utils.UNDEFINED;
+				int ret = xutils.UNDEFINED;
 				if (effects.Count > 0)
 				{
 					ret = effects[effects.Count - 1].endtime;
@@ -318,7 +318,7 @@ namespace xUtils
 		{
 			get
 			{
-				int ret = utils.UNDEFINED;
+				int ret = xutils.UNDEFINED;
 				if (effects.Count > 0)
 				{
 					ret = effects[0].starttime;
@@ -414,7 +414,7 @@ namespace xUtils
 				lineOut.Append(FIELD_name);
 				lineOut.Append(VALUE_start);
 				string name = timeTracks[0].timingName;
-				name = LORUtils.utils.XMLifyName(name);
+				name = LORUtils4.lutils.XMLifyName(name);
 				lineOut.Append(name);
 				lineOut.Append(VALUE_end);
 				lineOut.Append(SPC);
@@ -456,7 +456,7 @@ namespace xUtils
 			} // End lyric tracks
 			else
 			{
-				// Single Timing Track
+				// Single Timing LORTrack4
 				if (timeTracks.Length == 1)
 				{
 					// <timing name="Whatever" SourceVersion="2021.20">
@@ -465,7 +465,7 @@ namespace xUtils
 					lineOut.Append(FIELD_name);
 					lineOut.Append(VALUE_start);
 					string name = timeTracks[0].timingName;
-					name = LORUtils.utils.XMLifyName(name);
+					name = LORUtils4.lutils.XMLifyName(name);
 					lineOut.Append(name);
 					lineOut.Append(VALUE_end);
 					lineOut.Append(SPC);
@@ -520,7 +520,7 @@ namespace xUtils
 						lineOut.Append(FIELD_name);
 						lineOut.Append(VALUE_start);
 						string name = timeTracks[0].timingName;
-						name = LORUtils.utils.XMLifyName(name);
+						name = LORUtils4.lutils.XMLifyName(name);
 						lineOut.Append(name);
 						lineOut.Append(VALUE_end);
 						lineOut.Append(SPC);
@@ -600,7 +600,7 @@ namespace xUtils
 				//  label="foo" 
 				ret.Append(xTimings.FIELD_label);
 				ret.Append(xTimings.VALUE_start);
-				string lbl = LORUtils.utils.XMLifyName(label);
+				string lbl = LORUtils4.lutils.XMLifyName(label);
 				ret.Append(lbl);
 				ret.Append(xTimings.VALUE_end);
 				ret.Append(xTimings.SPC);
@@ -660,8 +660,8 @@ namespace xUtils
 							if (i >= 0)
 							{
 								// Get the name
-								name = xUtils.utils.getKeyWord(lineIn, "name");
-								name = LORUtils.utils.HumanizeName(name);
+								name = xutils.getKeyWord(lineIn, "name");
+								name = LORUtils4.lutils.HumanizeName(name);
 							}
 							//while ((lineIn = reader.ReadLine()) != null)
 							while (!reader.EndOfStream)
@@ -679,8 +679,8 @@ namespace xUtils
 									if (i >= 0)
 									{
 										// Get the name
-										name = xUtils.utils.getKeyWord(lineIn, "name");
-										name = LORUtils.utils.HumanizeName(name);
+										name = xutils.getKeyWord(lineIn, "name");
+										name = LORUtils4.lutils.HumanizeName(name);
 									}
 									else
 									{
@@ -703,7 +703,7 @@ namespace xUtils
 							//	int i2 = lineIn.IndexOf("<timing name=");
 							//	if (i2 > 0)
 							//	{
-							//		name = xUtils.utils.getKeyWord(lineIn, "name");
+							//		name = xutils.getKeyWord(lineIn, "name");
 							//	}
 							//}
 						}
@@ -746,13 +746,13 @@ namespace xUtils
 					}
 					else
 					{
-						i = lineIn.IndexOf("<Effect label=");
+						i = lineIn.IndexOf("<LOREffect4 label=");
 						if (i>=0)
 						{
-							string label = utils.getKeyWord(lineIn, FIELD_label);
-							label = LORUtils.utils.HumanizeName(label);
-							int start = utils.getKeyValue(lineIn, FIELD_start);
-							int end = utils.getKeyValue(lineIn, FIELD_end);
+							string label = xutils.getKeyWord(lineIn, FIELD_label);
+							label = LORUtils4.lutils.HumanizeName(label);
+							int start = xutils.getKeyValue(lineIn, FIELD_start);
+							int end = xutils.getKeyValue(lineIn, FIELD_end);
 							if (end >= start)
 							{
 								if (timings == null)

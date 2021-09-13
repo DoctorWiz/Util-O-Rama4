@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using xUtilities;
-using LORUtils; using FileHelper;
+using LORUtils4; using FileHelper;
 
 namespace UtilORama4
 {
@@ -18,7 +18,7 @@ namespace UtilORama4
 		{
 			InitializeComponent();
 			string xooo = xUtils.ShowDirectory;
-			string looo = utils.DefaultSequencesPath;
+			string looo = lutils.DefaultSequencesPath;
 			if ((xooo.Length > 3) && (looo.Length<3))
 			{
 				this.linkProgram.Text = "C:\\Program Files\\xUtils\\Vamperizer";

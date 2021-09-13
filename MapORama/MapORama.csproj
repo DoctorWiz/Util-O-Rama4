@@ -53,7 +53,7 @@
     <ApplicationIcon>Map-O-Rama.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>MapORama.Program</StartupObject>
+    <StartupObject>UtilORama4.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>8A2B0B4AC60BE0471C355A38CFF45F4FBC0050F6</ManifestCertificateThumbprint>
@@ -80,26 +80,69 @@
     <Compile Include="..\Common\Sequence4\LORUtils.cs">
       <Link>LORUtils.cs</Link>
     </Compile>
+    <Compile Include="..\Common\Sequence4\SeqChannel.cs">
+      <Link>SeqChannel.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqChannelGroup.cs">
+      <Link>SeqChannelGroup.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqCosmicDevice.cs">
+      <Link>SeqCosmicDevice.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
     <Compile Include="..\Common\Sequence4\SeqEnums.cs">
       <Link>SeqEnums.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
     </Compile>
-    <Compile Include="..\Common\Sequence4\SeqMember.cs">
-      <Link>SeqMember.cs</Link>
+    <Compile Include="..\Common\Sequence4\SeqMemberBase.cs">
+      <Link>SeqMemberBase.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
     </Compile>
-    <Compile Include="..\Common\Sequence4\SeqSubs.cs">
-      <Link>SeqSubs.cs</Link>
+    <Compile Include="..\Common\Sequence4\SeqMemberInterface.cs">
+      <Link>SeqMemberInterface.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqMembership.cs">
+      <Link>SeqMembership.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqRGBChannel.cs">
+      <Link>SeqRGBChannel.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqTimingGrid.cs">
+      <Link>SeqTimingGrid.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqTrack.cs">
+      <Link>SeqTrack.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
     </Compile>
     <Compile Include="..\Common\Sequence4\Sequence4.cs">
       <Link>Sequence4.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
     </Compile>
     <Compile Include="..\Common\Sequence4\SFTreeUtils.cs">
       <Link>SFTreeUtils.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
     </Compile>
     <Compile Include="..\Common\Sequence4\Visualization4.cs">
       <Link>Visualization4.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
     </Compile>
-    <Compile Include="..\Common\Sequence4\VizMembers.cs">
-      <Link>VizMembers.cs</Link>
+    <Compile Include="..\Common\Sequence4\VizChannel.cs">
+      <Link>VizChannel.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\VizDrawObject.cs">
+      <Link>VizDrawObject.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\VizGroup.cs">
+      <Link>VizGroup.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
     </Compile>
     <Compile Include="About.cs">
       <SubType>Form</SubType>
@@ -107,6 +150,7 @@
     <Compile Include="About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
+    <Compile Include="SeqSubs.cs" />
     <EmbeddedResource Include="About.resx">
       <DependentUpon>About.cs</DependentUpon>
       <SubType>Designer</SubType>

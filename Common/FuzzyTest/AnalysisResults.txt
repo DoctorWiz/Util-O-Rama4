@@ -23,7 +23,7 @@
 *   Best match to 'Neon Peace Sign' was 'Neon Peez Sign' with a score of 0.9333
 *   Best match to 'Red Rope Light' was 'Redish Rope Light' with a score of 0.8235
 *   Best match to 'Blue Rope Lights' was 'Blue-Rope light 2' with a score of 0.9412
- --   20 of 24 Correct in 28932 ticks with average score of 0.9034 and worst matching score of 0.7083
+ --   20 of 24 Correct in 27785 ticks with average score of 0.9034 and worst matching score of 0.7083
 **Algorithm Chapman Mean Length
 *   Best match to 'Big Stars' was 'Big stars' with a score of 1.0000
   X Best match to 'Tomato Tree A1' was 'Tomato Tree B5' with a score of 1.0000
@@ -49,7 +49,7 @@
 *   Best match to 'Neon Peace Sign' was 'Neon Peez Sign' with a score of 0.9667
 *   Best match to 'Red Rope Light' was 'Redish Rope Light' with a score of 0.9118
 *   Best match to 'Blue Rope Lights' was 'Blue-Rope light 2' with a score of 0.9706
- --   19 of 24 Correct in 9622 ticks with average score of 0.9569 and worst matching score of 0.8684
+ --   19 of 24 Correct in 10790 ticks with average score of 0.9569 and worst matching score of 0.8684
 **Algorithm Cosine Similarity
 *   Best match to 'Big Stars' was 'Big stars' with a score of 0.5000
 *   Best match to 'Tomato Tree A1' was 'Tomato Tree A-1' with a score of 0.6667
@@ -75,7 +75,7 @@
 *   Best match to 'Neon Peace Sign' was 'Neon Peez Sign' with a score of 0.6667
 *   Best match to 'Red Rope Light' was 'Redish Rope Light' with a score of 0.6667
   X Best match to 'Blue Rope Lights' was 'Big stars' with a score of 0.0000
- --   17 of 24 Correct in 35057 ticks with average score of 0.5911 and worst matching score of 0.4082
+ --   17 of 24 Correct in 33602 ticks with average score of 0.5911 and worst matching score of 0.4082
 **Algorithm Padded Hamming
 *   Best match to 'Big Stars' was 'Big stars' with a score of 0.8889
   X Best match to 'Tomato Tree A1' was 'Tomato Tree B5' with a score of 0.8571
@@ -101,7 +101,7 @@
   X Best match to 'Neon Peace Sign' was 'Big stars' with a score of 0.0000
   X Best match to 'Red Rope Light' was 'Big stars' with a score of 0.0000
   X Best match to 'Blue Rope Lights' was 'Big stars' with a score of 0.0000
- --   8 of 24 Correct in 31400 ticks with average score of 0.8715 and worst matching score of 0.7059
+ --   8 of 24 Correct in 31034 ticks with average score of 0.8715 and worst matching score of 0.7059
 **Algorithm Hamming-Wizmo
 *   Best match to 'Big Stars' was 'Big stars' with a score of 0.5000
 *   Best match to 'Tomato Tree A1' was 'Tomato Tree A-1' with a score of 0.5000
@@ -127,7 +127,7 @@
 *   Best match to 'Neon Peace Sign' was 'Neon Peez Sign' with a score of 0.5000
   X Best match to 'Red Rope Light' was 'Red-Roof Outline' with a score of 0.5000
   X Best match to 'Blue Rope Lights' was 'Blue Roof Outlines' with a score of 0.5000
- --   11 of 24 Correct in 30694 ticks with average score of 0.5000 and worst matching score of 0.5000
+ --   11 of 24 Correct in 8023 ticks with average score of 0.5000 and worst matching score of 0.5000
 **Algorithm Jaccard Similarity
 *   Best match to 'Big Stars' was 'Big stars' with a score of 0.8889
 *   Best match to 'Tomato Tree A1' was 'Tomato Tree A-1' with a score of 0.9091
@@ -153,7 +153,7 @@
 *   Best match to 'Neon Peace Sign' was 'Neon Peez Sign' with a score of 0.7500
 *   Best match to 'Red Rope Light' was 'Redish Rope Light' with a score of 0.9167
 *   Best match to 'Blue Rope Lights' was 'Blue-Rope light 2' with a score of 0.7500
- --   24 of 24 Correct in 25040 ticks with average score of 0.8647 and worst matching score of 0.5833
+ --   24 of 24 Correct in 35955 ticks with average score of 0.8647 and worst matching score of 0.5833
 **Algorithm Jaro Similarity
 *   Best match to 'Big Stars' was 'Big stars' with a score of 0.8426
 *   Best match to 'Tomato Tree A1' was 'Tomato Tree A-1' with a score of 0.9778
@@ -179,7 +179,7 @@
 *   Best match to 'Neon Peace Sign' was 'Neon Peez Sign' with a score of 0.9317
 *   Best match to 'Red Rope Light' was 'Redish Rope Light' with a score of 0.8221
 *   Best match to 'Blue Rope Lights' was 'Blue-Rope light 2' with a score of 0.7805
- --   23 of 24 Correct in 18088 ticks with average score of 0.9232 and worst matching score of 0.7805
+ --   23 of 24 Correct in 18332 ticks with average score of 0.9232 and worst matching score of 0.7805
 **Algorithm Jaro-Winkler
 *   Best match to 'Big Stars' was 'Big stars' with a score of 0.9056
 *   Best match to 'Tomato Tree A1' was 'Tomato Tree A-1' with a score of 0.9867
@@ -205,7 +205,7 @@
 *   Best match to 'Neon Peace Sign' was 'Neon Peez Sign' with a score of 0.9590
 *   Best match to 'Red Rope Light' was 'Redish Rope Light' with a score of 0.8755
 *   Best match to 'Blue Rope Lights' was 'Blue-Rope light 2' with a score of 0.8683
- --   23 of 24 Correct in 17467 ticks with average score of 0.9487 and worst matching score of 0.8683
+ --   23 of 24 Correct in 17205 ticks with average score of 0.9487 and worst matching score of 0.8683
 **Algorithm Levenshtein Similarity
 *   Best match to 'Big Stars' was 'Big stars' with a score of 0.8889
 *   Best match to 'Tomato Tree A1' was 'Tomato Tree A-1' with a score of 0.9286
@@ -231,7 +231,7 @@
 *   Best match to 'Neon Peace Sign' was 'Neon Peez Sign' with a score of 0.7857
 *   Best match to 'Red Rope Light' was 'Redish Rope Light' with a score of 0.7857
 *   Best match to 'Blue Rope Lights' was 'Blue-Rope light 2' with a score of 0.7500
- --   24 of 24 Correct in 26937 ticks with average score of 0.8245 and worst matching score of 0.4167
+ --   24 of 24 Correct in 28964 ticks with average score of 0.8245 and worst matching score of 0.4167
 **Algorithm Normalized Levenshtein
 *   Best match to 'Big Stars' was 'Big stars' with a score of 0.8889
 *   Best match to 'Tomato Tree A1' was 'Tomato Tree A-1' with a score of 1.0000
@@ -257,7 +257,7 @@
 *   Best match to 'Neon Peace Sign' was 'Neon Peez Sign' with a score of 0.8571
 *   Best match to 'Red Rope Light' was 'Redish Rope Light' with a score of 1.0000
 *   Best match to 'Blue Rope Lights' was 'Blue-Rope light 2' with a score of 0.8125
- --   23 of 24 Correct in 24886 ticks with average score of 0.9557 and worst matching score of 0.8125
+ --   23 of 24 Correct in 25528 ticks with average score of 0.9557 and worst matching score of 0.8125
 **Algorithm Damerau-Levenshtein
 *   Best match to 'Big Stars' was 'Big stars' with a score of 0.8889
 *   Best match to 'Tomato Tree A1' was 'Tomato Tree A-1' with a score of 0.9286
@@ -283,7 +283,7 @@
 *   Best match to 'Neon Peace Sign' was 'Neon Peez Sign' with a score of 0.7857
 *   Best match to 'Red Rope Light' was 'Redish Rope Light' with a score of 0.7857
 *   Best match to 'Blue Rope Lights' was 'Blue-Rope light 2' with a score of 0.7500
- --   24 of 24 Correct in 26713 ticks with average score of 0.8245 and worst matching score of 0.4167
+ --   24 of 24 Correct in 26521 ticks with average score of 0.8245 and worst matching score of 0.4167
 **Algorithm Yeti-Levenshtein
 *   Best match to 'Big Stars' was 'Big stars' with a score of 0.8889
 *   Best match to 'Tomato Tree A1' was 'Tomato Tree A-1' with a score of 0.9286
@@ -309,7 +309,7 @@
 *   Best match to 'Neon Peace Sign' was 'Neon Peez Sign' with a score of 0.7857
 *   Best match to 'Red Rope Light' was 'Redish Rope Light' with a score of 0.7857
 *   Best match to 'Blue Rope Lights' was 'Blue-Rope light 2' with a score of 0.7500
- --   24 of 24 Correct in 7982 ticks with average score of 0.8245 and worst matching score of 0.4167
+ --   24 of 24 Correct in 7991 ticks with average score of 0.8245 and worst matching score of 0.4167
 **Algorithm Weighted Levenshtein
 *   Best match to 'Big Stars' was 'Big stars' with a score of 0.8889
 *   Best match to 'Tomato Tree A1' was 'Tomato Tree A-1' with a score of 0.9286
@@ -335,7 +335,7 @@
 *   Best match to 'Neon Peace Sign' was 'Neon Peez Sign' with a score of 0.7857
 *   Best match to 'Red Rope Light' was 'Redish Rope Light' with a score of 0.7857
 *   Best match to 'Blue Rope Lights' was 'Blue-Rope light 2' with a score of 0.7500
- --   24 of 24 Correct in 211235 ticks with average score of 0.8245 and worst matching score of 0.4167
+ --   24 of 24 Correct in 210917 ticks with average score of 0.8245 and worst matching score of 0.4167
 **Algorithm Longest Common Subsequence
 *   Best match to 'Big Stars' was 'Big stars' with a score of 0.8889
 *   Best match to 'Tomato Tree A1' was 'Tomato Tree A-1' with a score of 0.9286
@@ -361,7 +361,7 @@
 *   Best match to 'Neon Peace Sign' was 'Neon Peez Sign' with a score of 0.7857
 *   Best match to 'Red Rope Light' was 'Redish Rope Light' with a score of 0.7857
 *   Best match to 'Blue Rope Lights' was 'Blue-Rope light 2' with a score of 0.7500
- --   24 of 24 Correct in 40863 ticks with average score of 0.8245 and worst matching score of 0.4167
+ --   24 of 24 Correct in 46556 ticks with average score of 0.8245 and worst matching score of 0.4167
 **Algorithm Longest Common Substring
 *   Best match to 'Big Stars' was 'Big stars' with a score of 0.8889
 *   Best match to 'Tomato Tree A1' was 'Tomato Tree A-1' with a score of 0.9286
@@ -387,7 +387,7 @@
 *   Best match to 'Neon Peace Sign' was 'Neon Peez Sign' with a score of 0.7857
 *   Best match to 'Red Rope Light' was 'Redish Rope Light' with a score of 0.7857
 *   Best match to 'Blue Rope Lights' was 'Blue-Rope light 2' with a score of 0.7500
- --   24 of 24 Correct in 26317 ticks with average score of 0.8245 and worst matching score of 0.4167
+ --   24 of 24 Correct in 27778 ticks with average score of 0.8245 and worst matching score of 0.4167
 **Algorithm Metric Similarity
 *   Best match to 'Big Stars' was 'Big stars' with a score of 0.8889
 *   Best match to 'Tomato Tree A1' was 'Tomato Tree A-1' with a score of 0.9286
@@ -413,7 +413,7 @@
 *   Best match to 'Neon Peace Sign' was 'Neon Peez Sign' with a score of 0.7857
 *   Best match to 'Red Rope Light' was 'Redish Rope Light' with a score of 0.7857
 *   Best match to 'Blue Rope Lights' was 'Blue-Rope light 2' with a score of 0.7500
- --   24 of 24 Correct in 38211 ticks with average score of 0.8245 and worst matching score of 0.4167
+ --   24 of 24 Correct in 46001 ticks with average score of 0.8245 and worst matching score of 0.4167
 **Algorithm Needleman-Wunsch
 *   Best match to 'Big Stars' was 'Big stars' with a score of 0.9444
 *   Best match to 'Tomato Tree A1' was 'Tomato Tree A-1' with a score of 0.9333
@@ -439,7 +439,7 @@
 *   Best match to 'Neon Peace Sign' was 'Neon Peez Sign' with a score of 0.8667
 *   Best match to 'Red Rope Light' was 'Redish Rope Light' with a score of 0.8235
 *   Best match to 'Blue Rope Lights' was 'Blue-Rope light 2' with a score of 0.8529
- --   22 of 24 Correct in 81799 ticks with average score of 0.8924 and worst matching score of 0.6667
+ --   22 of 24 Correct in 74466 ticks with average score of 0.8924 and worst matching score of 0.6667
 **Algorithm 
 *   Best match to 'Big Stars' was 'Big stars' with a score of 0.0000
   X Best match to 'Tomato Tree A1' was 'Big stars' with a score of 0.0000
@@ -465,7 +465,7 @@
   X Best match to 'Neon Peace Sign' was 'Big stars' with a score of 0.0000
   X Best match to 'Red Rope Light' was 'Big stars' with a score of 0.0000
   X Best match to 'Blue Rope Lights' was 'Big stars' with a score of 0.0000
- --   1 of 24 Correct in 516 ticks with average score of 0.0000 and worst matching score of 0.0000
+ --   1 of 24 Correct in 481 ticks with average score of 0.0000 and worst matching score of 0.0000
 **Algorithm Q-Gram Similarity
 *   Best match to 'Big Stars' was 'Big stars' with a score of 1.0000
   X Best match to 'Tomato Tree A1' was 'Tomato Tree B5' with a score of 1.0000
@@ -491,7 +491,7 @@
 *   Best match to 'Neon Peace Sign' was 'Neon Peez Sign' with a score of 0.9286
 *   Best match to 'Red Rope Light' was 'Redish Rope Light' with a score of 0.7857
 *   Best match to 'Blue Rope Lights' was 'Blue-Rope light 2' with a score of 0.9375
- --   19 of 24 Correct in 36802 ticks with average score of 0.8966 and worst matching score of 0.6429
+ --   19 of 24 Correct in 37551 ticks with average score of 0.8966 and worst matching score of 0.6429
 **Algorithm Optimal String Alignment
 *   Best match to 'Big Stars' was 'Big stars' with a score of 0.8889
 *   Best match to 'Tomato Tree A1' was 'Tomato Tree A-1' with a score of 0.9286
@@ -517,7 +517,7 @@
 *   Best match to 'Neon Peace Sign' was 'Neon Peez Sign' with a score of 0.7857
 *   Best match to 'Red Rope Light' was 'Redish Rope Light' with a score of 0.7857
 *   Best match to 'Blue Rope Lights' was 'Blue-Rope light 2' with a score of 0.7500
- --   24 of 24 Correct in 36427 ticks with average score of 0.8245 and worst matching score of 0.4167
+ --   24 of 24 Correct in 42715 ticks with average score of 0.8245 and worst matching score of 0.4167
 **Algorithm Overlap Coefficient
 *   Best match to 'Big Stars' was 'Big stars' with a score of 0.5000
 *   Best match to 'Tomato Tree A1' was 'Tomato Tree A-1' with a score of 0.6667
@@ -543,7 +543,7 @@
 *   Best match to 'Neon Peace Sign' was 'Neon Peez Sign' with a score of 0.6667
 *   Best match to 'Red Rope Light' was 'Redish Rope Light' with a score of 0.6667
   X Best match to 'Blue Rope Lights' was 'Big stars' with a score of 0.0000
- --   18 of 24 Correct in 12728 ticks with average score of 0.6389 and worst matching score of 0.5000
+ --   18 of 24 Correct in 12075 ticks with average score of 0.6389 and worst matching score of 0.5000
 **Algorithm Sift Similarity
 *   Best match to 'Big Stars' was 'Big stars' with a score of 0.8889
 *   Best match to 'Tomato Tree A1' was 'Tomato Tree A-1' with a score of 0.9286
@@ -569,7 +569,7 @@
 *   Best match to 'Neon Peace Sign' was 'Neon Peez Sign' with a score of 0.8571
 *   Best match to 'Red Rope Light' was 'Redish Rope Light' with a score of 0.7857
 *   Best match to 'Blue Rope Lights' was 'Blue-Rope light 2' with a score of 0.7500
- --   24 of 24 Correct in 17145 ticks with average score of 0.8368 and worst matching score of 0.5882
+ --   24 of 24 Correct in 17136 ticks with average score of 0.8368 and worst matching score of 0.5882
 **Algorithm Sorensen-Dice
 *   Best match to 'Big Stars' was 'Big stars' with a score of 0.7500
 *   Best match to 'Tomato Tree A1' was 'Tomato Tree A-1' with a score of 0.8889
@@ -595,4 +595,4 @@
 *   Best match to 'Neon Peace Sign' was 'Neon Peez Sign' with a score of 0.7407
 *   Best match to 'Red Rope Light' was 'Redish Rope Light' with a score of 0.8276
   X Best match to 'Blue Rope Lights' was 'Redish Rope Light' with a score of 0.6667
- --   23 of 24 Correct in 16748 ticks with average score of 0.8612 and worst matching score of 0.6897
+ --   23 of 24 Correct in 17497 ticks with average score of 0.8612 and worst matching score of 0.6897

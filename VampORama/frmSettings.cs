@@ -458,9 +458,9 @@ namespace UtilORama4
 		{
 			string selTabName = tabCategory.SelectedTab.Text;
 			string selSubTabName = tabSubcategory.SelectedTab.Text;
-			if (selSubTabName.CompareTo(TABKEYbeats) == 0)
+			if (selSubTabName == TABKEYbeats)
 			{
-				if (selTabName.CompareTo(TABKEYtimess) == 0)
+				if (selTabName == TABKEYtimess)
 				{
 					SetShowMode(SHOWtimesBeats);
 				}
@@ -471,9 +471,9 @@ namespace UtilORama4
 			}
 			else
 			{
-				if (selSubTabName.CompareTo(TABKEYonsets) == 0)
+				if (selSubTabName == TABKEYonsets)
 				{
-					if (selTabName.CompareTo(TABKEYtimess) == 0)
+					if (selTabName == TABKEYtimess)
 					{
 						SetShowMode(SHOWtrackBeats);
 					}
@@ -481,13 +481,13 @@ namespace UtilORama4
 				}
 				else
 				{
-					if (selSubTabName.CompareTo(TABKEYpoly) == 0)
+					if (selSubTabName == TABKEYpoly)
 					{
 						SetShowMode(SHOWPoly);
 					}
 					else
 					{
-						if (selSubTabName.CompareTo(TABKEYspectro) == 0)
+						if (selSubTabName == TABKEYspectro)
 						{
 							SetShowMode(SHOWspectro);
 						}

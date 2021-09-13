@@ -37,7 +37,7 @@ namespace UtilORama4
 		bool Dirty { get; set; }
 		object Tag { get; set; }
 		int xLightsAddress { get; }
-		bool MatchExact { get; set; }
+		bool ExactMatch { get; set; }
 
 	}
 
@@ -61,18 +61,18 @@ namespace UtilORama4
 		protected bool isEditing = false;
 		protected bool isDirty = false;
 		protected object myTag = null;
-		protected bool exactMatch = false;
+		protected bool matchesExactly = false;  // Used to distinguish exact name matches from fuzzy name matches
 		public List<DMXController> DMXControllers = new List<DMXController>();
 		public static List<DMXChannel> AllChannels = new List<DMXChannel>();
 
-		public DMXChannel DMXChannelAt(int DMXaddress)
+		public DMXChannel DMXChannelAt(int DMXAddress)
 		{
 			DMXChannel ret = null;
 			for (int ctl=0; ctl< DMXControllers.Count; ctl++)
 			{
 				for (int chn=0; chn < DMXControllers[ctl].DMXChannels.Count; chn++)
 				{
-					if (DMXaddress == DMXControllers[ctl].DMXChannels[chn].DMXaddress)
+					if (DMXAddress == DMXControllers[ctl].DMXChannels[chn].DMXAddress)
 					{
 						ret = DMXControllers[ctl].DMXChannels[chn];
 						chn = DMXControllers[ctl].DMXChannels.Count;
@@ -160,7 +160,7 @@ namespace UtilORama4
 		public bool BadName { get { return nameIsBad; } }
 		public object Tag { get { return myTag; } set { myTag = value; } }
 		public int xLightsAddress { get { return myxLightsAddress; } set { myxLightsAddress = value; } }
-		public bool MatchExact { get { return exactMatch; } set { exactMatch = value; } }
+		public bool ExactMatch { get { return matchesExactly; } set { matchesExactly = value; } }
 
 		public int UniverseNumber
 		{
@@ -236,7 +236,7 @@ namespace UtilORama4
 			newUni.BadNumber						= BadNumber;
 			//newUni.isDirty = isDirty;
 			newUni.myTag = myTag;
-			newUni.exactMatch = exactMatch;
+			newUni.matchesExactly = matchesExactly;
 			return newUni;
 		}
 
@@ -257,7 +257,7 @@ namespace UtilORama4
 			BadNumber						= otherUniverse.BadNumber;
 			//isDirty = otherUniverse.isDirty;
 			myTag = otherUniverse.myTag;
-			exactMatch = otherUniverse.exactMatch;
+			matchesExactly = otherUniverse.matchesExactly;
 		}
 
 		public bool Equals(DMXUniverse otherUniverse)

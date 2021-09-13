@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LORUtils; using FileHelper;
+using LORUtils4; using FileHelper;
 
 namespace UtilORama4
 {
@@ -23,8 +23,8 @@ namespace UtilORama4
 
 	public class MapInfo
 	{
-		public IMember Source = null;
-		public IMember Master = null;
+		public iLORMember4 Source = null;
+		public iLORMember4 Master = null;
 	}
 
 }

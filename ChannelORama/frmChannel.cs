@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LORUtils; using FileHelper;
+using LORUtils4; using FileHelper;
 
 
 namespace UtilORama4
@@ -124,7 +124,7 @@ namespace UtilORama4
 					}
 				}
 			}
-			numOutput.Value = chan.Output;
+			numOutput.Value = chan.LOROutput4;
 			if (chan.DMXController != null)
 			{
 				for (int i=0; i< cboController.Items.Count; i++)
@@ -138,7 +138,7 @@ namespace UtilORama4
 				}
 				lblModel.Text = chan.DMXController.ControllerBrand + ": " + chan.DMXController.ControllerModel;
 				lblUniverse.Text = "Universe " + chan.DMXController.DMXUniverse.ToString();
-				lblDMXaddress.Text = "DMX Address: " + chan.DMXaddress.ToString();
+				lblDMXAddress.Text = "DMX Address: " + chan.DMXAddress.ToString();
 				lblxLighsAddress.Text = "xLights Address: " + chan.xLightsAddress.ToString();
 			}
 		}
@@ -222,13 +222,13 @@ namespace UtilORama4
 				{
 					if (!AllChannels[c].Editing)
 					{
-						if (AllChannels[c].DMXaddress == channel.DMXaddress)
+						if (AllChannels[c].DMXAddress == channel.DMXAddress)
 						{
 							if (AllChannels[c].DMXUniverse.UniverseNumber == channel.DMXUniverse.UniverseNumber)
 							{
 								valid = false;
-								string msg = channel.Name + " ID:" + channel.ID + " DMX:" + channel.DMXaddress + " = ";
-								msg += AllChannels[c].Name + " ID: " + AllChannels[c].ID + " DMX:" + AllChannels[c].DMXaddress;
+								string msg = channel.Name + " ID:" + channel.ID + " DMX:" + channel.DMXAddress + " = ";
+								msg += AllChannels[c].Name + " ID: " + AllChannels[c].ID + " DMX:" + AllChannels[c].DMXAddress;
 								duplicates += AllChannels[c].ToString() + "\r\n";
 								//c = AllChannels.Count;
 							}
@@ -325,7 +325,7 @@ namespace UtilORama4
 				{
 					btnColor.BackColor = color;
 					btnColor.Image = null;
-					//cname = utils.NearestColorName(color);
+					//cname = lutils.NearestColorName(color);
 
 				}
 			}
@@ -353,10 +353,10 @@ namespace UtilORama4
 			{
 				if (!channel.DMXController.DMXChannels[c].Editing)
 				{
-					if (numOutput.Value == channel.DMXController.DMXChannels[c].Output) ;
+					if (numOutput.Value == channel.DMXController.DMXChannels[c].LOROutput4) ;
 					{
 						channel.badOutput = true;
-						tipText = "Output " + numOutput.Value.ToString() + " is already being used by channel ";
+						tipText = "LOROutput4 " + numOutput.Value.ToString() + " is already being used by channel ";
 						tipText += channel.DMXController.DMXChannels[c].Name;
 						tipText += " on controller " + channel.DMXController.LetterID + ": " + channel.DMXController.Name;
 						tipTool.SetToolTip(numOutput, tipText);
@@ -382,13 +382,13 @@ namespace UtilORama4
 				{
 					if (!loading)
 					{
-						this.Text = "Channel: " + channel.Name + " (Modified)";
+						this.Text = "LORChannel4: " + channel.Name + " (Modified)";
 						dirty = isDirty;
 					}
 				}
 				else
 				{
-					this.Text = "Channel: " + channel.Name;
+					this.Text = "LORChannel4: " + channel.Name;
 					dirty = isDirty;
 				}
 			}
@@ -405,9 +405,9 @@ namespace UtilORama4
 				// Did it really even change?
 				// Cast from decimal type used by NumUpDown control to int
 				int newVal = (int)numOutput.Value;
-				if (channel.Output != newVal)
+				if (channel.LOROutput4 != newVal)
 				{
-					channel.Output = newVal;
+					channel.LOROutput4 = newVal;
 					OutputChange();
 				}
 			}
@@ -422,7 +422,7 @@ namespace UtilORama4
 			tipText = "Select the output # on this controller that this channel is connected to.";
 			tipTool.SetToolTip(numOutput, tipText);
 			tipTool.SetToolTip(lblOutput, tipText);
-			channel.Output = (int)numOutput.Value;
+			channel.LOROutput4 = (int)numOutput.Value;
 			if (channel.BadOutput)
 			{
 				tipText = "Warning: This channel shares the same address as\r\n" + duplicates;

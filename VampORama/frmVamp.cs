@@ -14,7 +14,7 @@ using System.Configuration;
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using LORUtils;
+using LORUtils4;
 using FileHelper;
 using xUtilities;
 using Musik;
@@ -70,7 +70,7 @@ namespace UtilORama4
 
 		//private MRU mruAudio = new MRU();
 
-		//private Sequence4 seq = new Sequence4();
+		//private LORSequence4 seq = new LORSequence4();
 		private bool dirtyTimes = false;
 		private const string helpPageV = "http://wizlights.com/xUtils/Vamperizer";
 		private const string helpPageL = "http://wizlights.com/utilorama/vamporama";
@@ -88,6 +88,8 @@ namespace UtilORama4
 		private string cmdSelectionsFile = "";
 		private byte useSaveFormat = SAVEmixedDisplay;
 		private int curStep = 0;
+		public bool busy = true;
+		public bool vamping = false;
 
 		public bool lightORamaInstalled = false;
 		public bool xLightsInstalled = false;
@@ -102,7 +104,7 @@ namespace UtilORama4
 
 		//private string annotatorProgram = "C:\\PortableApps\\SonicAnnotator\\sonic-annotator.exe";
 		private int rlevel = 0;
-		bool isWiz = Fyle.IsWizard || Fyle.IsAWizard;
+		bool debugMode = Fyle.DebugMode;
 
 		//private bool doAutoSave = false;
 		//private bool doAutoLaunch = true;
@@ -123,10 +125,10 @@ namespace UtilORama4
 		//private bool doKey = true;
 		//private bool doSpeech = true;
 		//private bool useChanCfg = false;
-		//private int firstCobjIdx = utils.UNDEFINED;
-		//private int firstCsavedIndex = utils.UNDEFINED;
-		//private Channel[] noteChannels = null;
-		//private ChannelGroup[] octaveGroups = null;
+		//private int firstCobjIdx = lutils.UNDEFINED;
+		//private int firstCsavedIndex = lutils.UNDEFINED;
+		//private LORChannel4[] noteChannels = null;
+		//private LORChannelGroup4[] octaveGroups = null;
 
 		private double panelX = 300;
 		private double panelY = 300;
@@ -142,7 +144,7 @@ namespace UtilORama4
 
 		private frmOutputLog logWindow = null;
 
-
+		private string myTitle = "Vamp-O-Rama";
 
 
 		//public frmConsole consoleWindow;
@@ -180,20 +182,30 @@ namespace UtilORama4
 
 		private void InitForm()
 		{
-			string mySubDir = "UtilORama\\";
-			//string appFolder = "VampORama";
 			ImBusy(true);
+			
+			string[] args = Environment.GetCommandLineArgs();
+			for (int i = 0; i < args.Length; i++)
+			{
+				string lc = args[i].ToLower();
+				if (lc.IndexOf("debug") >= 0)
+				{
+					Fyle.DebugMode = true;
+				}
+			}
+			string mySubDir = "UtilORama\\";
 			RestoreFormPosition();
 
 			string sfoo = xUtils.ShowDirectory;
 			if (sfoo.Length > 3) xLightsInstalled = true;
-			sfoo = utils.DefaultSequencesPath;
+			sfoo = lutils.DefaultSequencesPath;
 			if (sfoo.Length > 3) lightORamaInstalled = true;
 			if (xLightsInstalled && !lightORamaInstalled)
 			{
 				vampMode = true;
-				applicationName = "Vamperizer";
+				myTitle = "Vamperizer";
 				mySubDir = "xUtils\\";
+				applicationName = myTitle;
 				//appFolder = "Vamperizer";
 			}
 
@@ -207,7 +219,7 @@ namespace UtilORama4
 				int moveBy = grpBarsBeats.Top - grpPlatform.Top;
 				grpBarsBeats.Top -= moveBy;
 				grpOnsets.Top -= moveBy;
-				grpTranscription.Top -= moveBy;
+				grpPolyphonic.Top -= moveBy;
 				grpPitchKey.Top -= moveBy;
 				grpSegments.Top -= moveBy;
 				grpSpectrum.Top -= moveBy;
@@ -220,7 +232,7 @@ namespace UtilORama4
 			grpSaveLOR.Visible = lightORamaInstalled;
 			grpSavex.Visible = xLightsInstalled;
 
-			this.Text = applicationName;
+			this.Text = myTitle;
 			string appFolder = applicationName;
 			appFolder = appFolder.Replace("-", "");
 			mySubDir = mySubDir + appFolder + "\\";
@@ -229,21 +241,25 @@ namespace UtilORama4
 			pathWork = baseDir + mySubDir;
 			if (!Directory.Exists(pathWork)) Directory.CreateDirectory(pathWork);
 
-			if (isWiz)
+			if (debugMode)
 			{
-				chkReuse.Visible = true;
 				chkReuse.Checked = heartOfTheSun.reuseFiles;
-				lblWorkFolder.Visible = true;
-				btnCmdTemp.Visible = true;
-				btnExploreTemp.Visible = true;
-				btnExploreVamp.Visible = true;
 			}
+			chkReuse.Visible = debugMode;
+			lblWorkFolder.Visible = debugMode;
+			btnCmdTemp.Visible = debugMode;
+			btnExploreTemp.Visible = debugMode;
+			btnExploreVamp.Visible = debugMode;
+			lblSongTime.Visible = debugMode;
 
 			chaos = new Random();
 			panelX = (this.ClientSize.Width - pnlVamping.Width) / 2;
 			panelY = (this.ClientSize.Height - pnlVamping.Height) / 2;
 			panelAddX = chaos.NextDouble() * 2 + .5D;
 			panelAddY = chaos.NextDouble() * 2 + .5D;
+
+			FillCombos();
+
 
 
 			//myBackgroundWorker = new BackgroundWorker();
@@ -278,6 +294,21 @@ namespace UtilORama4
 			}
 			pathAudio = f;
 
+			if (System.IO.File.Exists(fileAudioLast))
+			{
+				//audioData = ReadAudioFile(fileAudioLast);
+				fileAudioWork = PrepAudioFile(fileAudioLast);
+				string songInfo = audioData.Title + " by " + audioData.Artist;
+				this.Text = myTitle + " - " + songInfo;
+				lblSongTime.Text = FormatSongTime(audioData.Duration);
+			}
+
+
+
+
+
+
+
 			//mruTimings = new MRU(heartOfTheSun, "Timings", 10);
 			//mruTimings.ReadFromConfig();
 			//mruTimings.Validate();
@@ -288,9 +319,12 @@ namespace UtilORama4
 			}
 			pathTimingsLast = f;
 
-			GetTheControlsFromTheHeartOfTheSun();
+			GetTheControlsForTheHeartOfTheSun();
 
-			int errs = xUtils.ClearTempDir(pathWork);
+			if (!chkReuse.Checked)
+			{
+				int errs = xUtils.ClearTempDir(pathWork);
+			}
 
 			ProcessCommandLine();
 			if (batch_fileCount > 1)
@@ -330,9 +364,9 @@ namespace UtilORama4
 					//string fileTimingsLast = heartOfTheSun.fileTimingsLast;
 					//if (System.IO.File.Exists(fileTimingsLast))
 					//{
-					//seq.ReadSequenceFile(fileSeqLast);
+					//Annotator.Sequence.ReadSequenceFile(fileSeqLast);
 					//fileCurrent = fileSeqLast;
-					//utils.FillChannels(treChannels, seq, siNodes);
+					//lutils.FillChannels(treChannels, seq, siNodes);
 					//txtSequenceFile.Text = xUtils.ShortenLongPath(fileCurrent, 80);
 					//}
 					//string pathLast = Path.GetDirectoryName(fileTimingsLast);
@@ -345,9 +379,9 @@ namespace UtilORama4
 				else
 				{
 					// 1 and only 1 file specified on command line
-					//seq.ReadSequenceFile(batch_fileList[0]);
+					//Annotator.Sequence.ReadSequenceFile(batch_fileList[0]);
 					//fileSeqLast = batch_fileList[0];
-					//utils.FillChannels(treChannels, seq, siNodes);
+					//lutils.FillChannels(treChannels, seq, siNodes);
 					//heartOfTheSun.fileTimingsLast = fileSeqLast;
 					//heartOfTheSun.Save();
 				}
@@ -365,7 +399,7 @@ namespace UtilORama4
 				{
 					txtFileAudio.Text = ShortenPath(fileAudioLast, 100);
 					grpAnalyze.Enabled = true;
-					this.Text = applicationName + " - " + Path.GetFileName(fileAudioLast);
+					//this.Text = myTitle + " - " + Path.GetFileName(fileAudioLast);
 					//grpOptions.Enabled = true;
 					SelectStep(2);
 					gotit = true;
@@ -376,16 +410,44 @@ namespace UtilORama4
 				btnBrowseAudio.PerformClick();
 			}
 
-
+			
 
 			ImBusy(false);
 
 		}
 
+		public void FillCombos()
+		{
+
+
+
+
+			//Polyphonic Transcription
+			cboMethodPolyphonic.Items.Clear();
+			foreach(string plugName in VampPolyphonic.availablePluginNames)
+			{
+				cboMethodPolyphonic.Items.Add(plugName);
+			}
+			cboLabelsPolyphonic.Items.Clear();
+			foreach(string labelName in VampPolyphonic.availableLabels)
+			{
+				cboLabelsPolyphonic.Items.Add(labelName);
+			}
+			cboAlignPolyphonic.Items.Clear();
+			foreach(vamps.AlignmentType alType in VampPolyphonic.allowableAlignments)
+			{
+				cboAlignPolyphonic.Items.Add(vamps.AlignmentName(alType));
+			}
+
+
+		}
+
+
+
 		///////////////////////////////////////////////////////////////////////////////////
 		/// Restore the saved last state of the form controls from Properties.Settings ///
 		/////////////////////////////////////////////////////////////////////////////////
-		private void GetTheControlsFromTheHeartOfTheSun()
+		private void GetTheControlsForTheHeartOfTheSun()
 		{
 			SetTheControlsToDefaults();
 			bool foo = false;
@@ -394,7 +456,8 @@ namespace UtilORama4
 			timeSignature = heartOfTheSun.timeSignature;
 			if (timeSignature == 3) swTrackBeat.Checked = true; else swTrackBeat.Checked = false;
 			startBeat = heartOfTheSun.startBeat;
-			vscStartBeat.Value = startBeat;
+			txtStartBeat.Text = startBeat.ToString();
+			vscStartBeat.Value = (5 - startBeat);
 			SetCombo(cboDetectBarBeats, heartOfTheSun.detectBars);
 			chkWhiteBarBeats.Checked = heartOfTheSun.whiteBarsBeats;
 			chkBars.Checked = heartOfTheSun.doBars;
@@ -414,10 +477,10 @@ namespace UtilORama4
 			SetCombo(cboStepSize, heartOfTheSun.stepSize);
 			swRamps.Checked = heartOfTheSun.Ramps;
 
-			SetCombo(cboMethodTranscription, heartOfTheSun.methodTranscribe);
-			chkTranscribe.Checked = heartOfTheSun.doTranscribe;
-			SetCombo(cboLabelsTranscription, heartOfTheSun.labelTranscribe);
-			SetCombo(cboAlignTranscribe, heartOfTheSun.alignTranscribe);
+			SetCombo(cboMethodPolyphonic, heartOfTheSun.methodTranscribe);
+			chkPolyphonic.Checked = heartOfTheSun.doTranscribe;
+			SetCombo(cboLabelsPolyphonic, heartOfTheSun.labelTranscribe);
+			SetCombo(cboAlignPolyphonic, heartOfTheSun.alignTranscribe);
 
 			SetCombo(cboMethodSpectrum, heartOfTheSun.methodSpectrum);
 			chkSpectrum.Checked = heartOfTheSun.doSpectrum;
@@ -427,7 +490,7 @@ namespace UtilORama4
 			SetCombo(cboMethodPitchKey, heartOfTheSun.methodPitchKey);
 			chkPitchKey.Checked = heartOfTheSun.doPitchKey;
 			SetCombo(cboLabelsPitchKey, heartOfTheSun.labelPitchKey);
-			SetCombo(cboAlignPitch, heartOfTheSun.alignPitchKey);
+			SetCombo(cboAlignPitchKey, heartOfTheSun.alignPitchKey);
 
 			SetCombo(cboMethodTempo, heartOfTheSun.methodTempo);
 			chkTempo.Checked = heartOfTheSun.doTempo;
@@ -462,13 +525,16 @@ namespace UtilORama4
 		/// Save the current state of the form controls into Properties.Settings ///
 		///       (Heart of the Sun = Properties.Settings)											///
 		//////////////////////////////////////////////////////////////////////////
-		private void SetTheControlsForTheHeartOfTheSun()
+		private void SetTheControlsForTheHeartOfTheSun() //! And a huge nod to Pink Floyd!
 		{
 			Properties.Settings heartOfTheSun = Properties.Settings.Default;
 
 			heartOfTheSun.methodBarsBeats = cboMethodBarsBeats.Text;
-			heartOfTheSun.timeSignature = timeSignature;
-			heartOfTheSun.startBeat = startBeat;
+			if (swTrackBeat.Checked)
+			{ heartOfTheSun.timeSignature = 3; }
+			else
+			{ heartOfTheSun.timeSignature = 4; }
+			heartOfTheSun.startBeat = Int32.Parse(txtStartBeat.Text); // startBeat;
 			heartOfTheSun.detectBars = cboDetectBarBeats.Text;
 			heartOfTheSun.whiteBarsBeats = chkWhiteBarBeats.Checked;
 			heartOfTheSun.doBars = chkBars.Checked;
@@ -488,10 +554,10 @@ namespace UtilORama4
 			heartOfTheSun.alignOnsets = cboAlignOnsets.Text;
 			heartOfTheSun.stepSize = cboStepSize.Text;
 
-			heartOfTheSun.methodTranscribe = cboMethodTranscription.Text;
-			heartOfTheSun.doTranscribe = chkTranscribe.Checked;
-			heartOfTheSun.labelTranscribe = cboLabelsTranscription.Text;
-			heartOfTheSun.alignTranscribe = cboAlignTranscribe.Text;
+			heartOfTheSun.methodTranscribe = cboMethodPolyphonic.Text;
+			heartOfTheSun.doTranscribe = chkPolyphonic.Checked;
+			heartOfTheSun.labelTranscribe = cboLabelsPolyphonic.Text;
+			heartOfTheSun.alignTranscribe = cboAlignPolyphonic.Text;
 
 			heartOfTheSun.methodSpectrum = cboMethodSpectrum.Text;
 			heartOfTheSun.doSpectrum = chkSpectrum.Checked;
@@ -501,7 +567,7 @@ namespace UtilORama4
 			heartOfTheSun.methodPitchKey = cboMethodPitchKey.Text;
 			heartOfTheSun.doPitchKey = chkPitchKey.Checked;
 			heartOfTheSun.labelPitchKey = cboLabelsPitchKey.Text;
-			heartOfTheSun.alignPitchKey = cboAlignPitch.Text;
+			heartOfTheSun.alignPitchKey = cboAlignPitchKey.Text;
 
 			heartOfTheSun.methodTempo = cboMethodTempo.Text;
 			heartOfTheSun.doTempo = chkTempo.Checked;
@@ -735,6 +801,18 @@ namespace UtilORama4
 			MessageBox.Show(this, msg, "Batch Mode", MessageBoxButtons.OK, MessageBoxIcon.Information);
 		} // end ProcessFileBatch
 
+		private void ImVamping(bool amVamping)
+		{
+			picSleepy.Visible = amVamping;
+			pnlVamping.Visible = amVamping;
+			picVampire.Visible = !amVamping;
+			lblPickYourPoison.Visible = !amVamping;
+			picPoisonArrow.Visible = !amVamping;
+			vamping = amVamping;
+
+			ImBusy(amVamping);
+		}
+
 		private void ImBusy(bool isBusy)
 		{
 			try
@@ -754,6 +832,7 @@ namespace UtilORama4
 			}
 			catch
 			{ }
+			busy = isBusy;
 		} // end ImBusy
 
 		private DialogResult AskSaveTimings()
@@ -1127,68 +1206,137 @@ namespace UtilORama4
 
 		private Musik.AudioInfo ReadAudioFile(string vFilename)
 		{
-			Musik.AudioInfo oSI = new Musik.AudioInfo();
-			try
+			audioData = new Musik.AudioInfo(); // Reset/Clear old info
+			TagLib.File MP3file = null;
+			if (!System.IO.File.Exists(vFilename))
 			{
-				// WARNING: Library will not accept unicode in filename
-				//TODO: Try to fix unicode filename problem
-				TagLib.File oA_MP3 = TagLib.File.Create(vFilename);
-				oSI = ReadAudioTags(vFilename, oA_MP3);
-				return oSI;
-			} // END try
-			catch (TagLib.CorruptFileException oEx)
+				Fyle.BUG("Why are you trying to read tags from an audio file that doesn't exist:\r\n" + vFilename);
+			}
+			else
 			{
-				//LogError(msErrorFile, vFilename);
-				//LogError(msErrorFile, oEx.Message);
-				//LogError(msErrorFile, "");
+				try
+				{
+					MP3file = TagLib.File.Create(@vFilename, ReadStyle.Average);
+					Application.DoEvents();
+				}
+				catch (Exception ex1)
+				{ }
 
-				string sMsg = "Corrupt File:" + vFilename + "\n" + oEx.Message;
-				MessageBox.Show(sMsg, "Bad File", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				try
+				{
+					// WARNING: Library will not accept unicode in filename
+					//TODO: Try to fix unicode filename problem
 
-				return BlankAudio(vFilename);
-			} // END catch (TagLib.CorruptFileException oEx)
-			catch (Exception oEx)
-			{
-				//LogError(msErrorFile, vFilename);
-				//LogError(msErrorFile, oEx.Message);
-				//LogError(msErrorFile, "");
+					audioData = ReadAudioTags(vFilename, MP3file);
+					
+					TimeSpan audioTime = audioData.Duration;
+					int ms = audioTime.Minutes * 60000;
+					ms += audioTime.Seconds * 1000;
+					ms += audioTime.Milliseconds;
+					if (ms < 100)
+					{
+						//Fyle.BUG("TagLib Failed to read the song's duration!\r\n(And probably the other metadata as well)");
+						Fyle.MakeNoise(Fyle.Noises.SamCurseF);
+					}
+					//milliseconds = ms;
+					audioData.Milliseconds = ms;
+					audioData.Centiseconds = (int)Math.Round(ms / 10D);
+					Annotator.songTimeMS = ms;
 
-				string sMsg = "Error Reading File:" + vFilename + "\n" + oEx.Message;
-				MessageBox.Show(sMsg, "File Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					// Fill in blank or missing tag info
+					// Artist and Album Artist
+					if (audioData.Artist == null) audioData.Artist = "";
+					if (audioData.AlbumArtist == null) audioData.AlbumArtist = "";
+					if (audioData.Artist.Length < 2)
+					{
+						if (audioData.AlbumArtist.Length > 1)
+						{
+							audioData.Artist = audioData.AlbumArtist;
+						}
+						else
+						{
+							audioData.Artist = "[Unknown Artist]";
+						}
+					}
+					if (audioData.AlbumArtist.Length < 2) audioData.AlbumArtist = audioData.Artist;
 
-				return BlankAudio(vFilename);
-			} // END catch (Exception oEx)
+
+					// Title, Album, other fields
+					if (audioData.Title == null) audioData.Title = "";
+					if (audioData.Title.Length < 2) audioData.Title = "[Unknown Title]";
+
+					if (audioData.Album == null) audioData.Album = "";
+					if (audioData.Album.Length < 2) audioData.Album = "[Unknown Album]";
+
+					if (audioData.Comment == null) audioData.Comment = "";
+					if (audioData.Composer == null) audioData.Composer = "";
+					if (audioData.Bitrate == null) audioData.Bitrate = 0;
+					if (audioData.DiscNo == null) audioData.DiscNo = 0;
+					if (audioData.Genre == null) audioData.Genre = "";
+					if (audioData.Track == null) audioData.Track = 0;
+					if (audioData.VBR == null) audioData.VBR = false;
+					if (audioData.Year == null) audioData.Year = "";
+
+				} // END try
+				catch (TagLib.CorruptFileException oEx)
+				{
+					//LogError(msErrorFile, vFilename);
+					//LogError(msErrorFile, oEx.Message);
+					//LogError(msErrorFile, "");
+
+					string sMsg = "Corrupt File:" + vFilename + "\n" + oEx.Message;
+					MessageBox.Show(sMsg, "Bad File", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+				} // END catch (TagLib.CorruptFileException oEx)
+				catch (Exception oEx)
+				{
+					//LogError(msErrorFile, vFilename);
+					//LogError(msErrorFile, oEx.Message);
+					//LogError(msErrorFile, "");
+
+					string sMsg = "Error Reading File:" + vFilename + "\n" + oEx.Message;
+					MessageBox.Show(sMsg, "File Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+				} // END catch (Exception oEx)
+			}
+			return audioData;
 		} // END private AudioInfo ReadAudioFile(string vFilename)
 
-		private Musik.AudioInfo ReadAudioTags(string vsFilename, TagLib.File voA_MP3)
+		private Musik.AudioInfo ReadAudioTags(string vsFilename, TagLib.File fileMP3)
 		{
+			if (fileMP3 == null)
+			{
+				Fyle.BUG("TagLib failed to read the friggin' file tags!");
+			}
+			
+			
 			FileInfo oFile = new FileInfo(vsFilename);
 			Musik.AudioInfo tAudio = new Musik.AudioInfo();
 			//int dRate = 0;
 			int iRate = 0;
 
-			tAudio.Duration = voA_MP3.Properties.Duration;
+			tAudio.Duration = fileMP3.Properties.Duration;
 			tAudio.Path = oFile.DirectoryName;
 			tAudio.Filename = oFile.Name;
 			tAudio.Type = oFile.Extension.ToLower();
-			tAudio.AlbumArtist = NullStringFix(voA_MP3.Tag.FirstAlbumArtist);
-			tAudio.Album = NullStringFix(voA_MP3.Tag.Album);
-			tAudio.Artist = NullStringFix(voA_MP3.Tag.FirstPerformer);
-			tAudio.Composer = NullStringFix(voA_MP3.Tag.FirstComposer);
-			tAudio.Title = NullStringFix(voA_MP3.Tag.Title);
-			tAudio.Year = voA_MP3.Tag.Year.ToString();
-			tAudio.Genre = NullStringFix(voA_MP3.Tag.FirstGenre);
-			tAudio.Comment = NullStringFix(voA_MP3.Tag.Comment);
-			//tAudio.Bitrate = voA_MP3.Properties.AudioBitrate;
+			tAudio.AlbumArtist = NullStringFix(fileMP3.Tag.FirstAlbumArtist);
+			tAudio.Album = NullStringFix(fileMP3.Tag.Album);
+			tAudio.Artist = NullStringFix(fileMP3.Tag.FirstPerformer);
+			tAudio.Composer = NullStringFix(fileMP3.Tag.FirstComposer);
+			tAudio.Title = NullStringFix(fileMP3.Tag.Title);
+			tAudio.Year = fileMP3.Tag.Year.ToString();
+			tAudio.Genre = NullStringFix(fileMP3.Tag.FirstGenre);
+			tAudio.Comment = NullStringFix(fileMP3.Tag.Comment);
+			//tAudio.Bitrate = fileMP3.Properties.AudioBitrate;
 			tAudio.Size = oFile.Length;
-			tAudio.DiscNo = voA_MP3.Tag.Disc;
-			tAudio.Track = voA_MP3.Tag.Track;
+			tAudio.DiscNo = fileMP3.Tag.Disc;
+			tAudio.Track = fileMP3.Tag.Track;
 
 			//tAudio.VBR = oA_MP3.Properties.Codecs.
 			tAudio.Modified = oFile.LastWriteTime;
 
 
-			iRate = voA_MP3.Properties.AudioBitrate;
+			iRate = fileMP3.Properties.AudioBitrate;
 			tAudio.Bitrate = iRate;
 
 			tAudio.Valid = true;
@@ -1263,7 +1411,7 @@ namespace UtilORama4
 				}
 				else
 				{
-					string tryDir = utils.DefaultAudioPath;
+					string tryDir = lutils.DefaultAudioPath;
 					if (Directory.Exists(tryDir))
 					{
 						initDir = tryDir;
@@ -1293,6 +1441,12 @@ namespace UtilORama4
 					grpTimings.Enabled = true;
 					//grpOptions.Enabled = true;
 					grpAnalyze.Enabled = true;
+					//fileAudioWork = ReadAudioFile(fileAudioLast);
+					audioData = ReadAudioFile(fileAudioLast);
+					string songInfo = audioData.Title + " by " + audioData.Artist;
+					this.Text = myTitle + " - " + songInfo;
+					lblSongTime.Text = FormatSongTime(Annotator.TotalMilliseconds);
+					
 				} // end if (result = DialogResult.OK)
 
 
@@ -1304,6 +1458,25 @@ namespace UtilORama4
 
 		} // end BrowseAudio_Click
 
+		public string FormatSongTime(int milliseconds)
+		{
+			int ms = milliseconds;
+			int min = ms / 60000;
+			 ms -= min * 60000;
+			int sec = ms / 1000;
+			ms -= sec * 1000;
+			int cs = (int)Math.Round(ms / 10D);
+			string time = min.ToString() + ":" + sec.ToString("00") + "." + cs.ToString("00");
+			return time;
+		}
+
+		public string FormatSongTime(TimeSpan duration)
+		{
+			string timeOut = duration.Minutes.ToString() + ":";
+			timeOut += duration.Seconds.ToString("00") + ".";
+			timeOut += duration.Milliseconds.ToString("00");
+			return timeOut;
+		}
 		private string MusicFilter()
 		{
 			const string AIF = "*.aif;*.aifc;*.aiff";
@@ -1632,49 +1805,98 @@ namespace UtilORama4
 
 		private void btnOK_Click(object sender, EventArgs e)
 		{
+			bool success = RunAnalysis();
+		}
+
+		private bool RunAnalysis()
+		{
+			bool success = false;
+
+			if (swTrackBeat.Checked) Annotator.BeatsPerBar = 3; else Annotator.BeatsPerBar = 4;
+			Annotator.FirstBeat = Int32.Parse(txtStartBeat.Text);
+
 			SelectStep(STEP_AnalyzeAudio);
 			string musicFile = fileAudioLast;
 
 			if (System.IO.File.Exists(fileAudioLast))
 			{
-				ImBusy(true);
-				Fyle.MakeNoise(Fyle.Noises.DrumRoll);
+				ImVamping(true);
 				// Remember all current user settings, options, selections, etc. on the main form
 				SetTheControlsForTheHeartOfTheSun();
 
-				// Clean up temp folder from previous run
-				//! REMARKED OUT FOR TESTING DEBUGGING, LEAVE FILES
-				//int errs = ClearTempDir();
-				//! UNREMARK AFTER TESTING!
-				//Vamperize(fileAudioLast);
-				outLog.Clear();
-				outputChanged = false;
-				
-				if (logWindow == null)
+				// First, do we need to re-prep the audio file?
+				bool rePrepAudio = false; // create flag, default false
+				if (!chkReuse.Checked) rePrepAudio = true;
+				if (fileAudioWork.Length > 4)
 				{
-					logWindow = new frmOutputLog(this);
+					if (!System.IO.File.Exists(fileAudioWork)) rePrepAudio = true;
 				}
-				if (logWindow.IsDisposed)
+				if (rePrepAudio)
 				{
-					logWindow = new frmOutputLog(this);
+					PrepAudioFile(fileAudioLast);
 				}
-				logWindow.Show(this);
-				logWindow.LogText = "";
-				PrepareToAnnotate();
-				AnnotateSelectedVamps();
 
+				// Next, do we need to re-prep the vamp results
+				bool reRunVamps = false; // reset flag
+				if (!chkReuse.Checked) reRunVamps = true;
+				string barBeatsResults = pathWork + VampBarBeats.ResultsFile;
+				if (!System.IO.File.Exists(barBeatsResults)) reRunVamps = true;
+				if (reRunVamps)
+				{
+					Fyle.MakeNoise(Fyle.Noises.DrumRoll);
+					// Clean up temp folder from previous run
+					//! REMARKED OUT FOR TESTING DEBUGGING, LEAVE FILES
+					if (!chkReuse.Checked)
+					{
+						//int errs = xUtils.ClearTempDir(pathWork);
+					}
+					//! UNREMARK AFTER TESTING!
+					//Vamperize(fileAudioLast);
+					outLog.Clear();
+					outputChanged = false;
+
+					if (logWindow == null)
+					{
+						logWindow = new frmOutputLog(this);
+					}
+					if (logWindow.IsDisposed)
+					{
+						logWindow = new frmOutputLog(this);
+					}
+					logWindow.Show(this);
+					logWindow.LogText = "";
+					//PrepareToAnnotate();
+					RunSelectedVamps();
+
+				}
+
+				// Finally, do we need to re-prep the annotations
+				bool rePrepTimes = false; // reset flag
+				if (Annotator.xBars.effects.Count < 1) rePrepTimes = true;
+				if (!chkReuse.Checked) rePrepTimes = true;
+				rePrepTimes = true; //! Manual Override for debugging!
+				if (rePrepTimes)
+				{ 
+					ProcessSelectedVamps();
+					Fyle.MakeNoise(Fyle.Noises.TaDa);
+					success = true; // TODO make sure it really was successfull
+				}
+				success = true;
 
 				SelectStep(STEP_SaveTimings);
-				logWindow.Done = true;
-				Fyle.MakeNoise(Fyle.Noises.TaDa);
 
-				while (!logWindow.IsDisposed)
+				if (reRunVamps)
 				{
-					Application.DoEvents();
+					// Did we run SonicAnnotator above, and thus opened the output window?
+					// Don't need to wait on it any longer
+					logWindow.Done = true;
+					while (!logWindow.IsDisposed)
+					{
+						Application.DoEvents();
+					}
 				}
 
-
-				ImBusy(false);
+				ImVamping(false);
 			}
 			else
 			{
@@ -1683,7 +1905,7 @@ namespace UtilORama4
 				MessageBox.Show(this, msg, "File Not Found", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
 			}
-
+			return success;
 		}
 
 		private void txtSaveName_TextChanged(object sender, EventArgs e)
@@ -2022,23 +2244,20 @@ namespace UtilORama4
 			//if (doBarsBeats)
 			if (chkBarsBeats.Checked)
 			{
-				if (transBarBeats != null)
+				if (VampBarBeats.xBars != null)
 				{
-					if (transBarBeats.xBars != null)
+					if (VampBarBeats.xBars.effects.Count > 0)
 					{
-						if (transBarBeats.xBars.effects.Count > 0)
-						{
-							//WriteTimingFile4(transBarBeats.xBars, fileName);
-							//WriteTimingFile5(transBarBeats.xBars, fileName);
-							writeCount += 3;
-						}
+						//WriteTimingFile4(transBarBeats.xBars, fileName);
+						//WriteTimingFile5(transBarBeats.xBars, fileName);
+						writeCount += 3;
 					}
 				}
 				if (chkBeatsFull.Checked)
 				{
-					if (transBarBeats.xBeatsFull != null)
+					if (VampBarBeats.xBeatsFull != null)
 					{
-						if (transBarBeats.xBeatsFull.effects.Count > 0)
+						if (VampBarBeats.xBeatsFull.effects.Count > 0)
 						{
 							//WriteTimingFile4(transBarBeats.xBeatsFull, fileName);
 							//WriteTimingFile5(transBarBeats.xBeatsFull, fileName);
@@ -2048,9 +2267,9 @@ namespace UtilORama4
 				}
 				if (chkBeatsHalf.Checked)
 				{
-					if (transBarBeats.xBeatsHalf != null)
+					if (VampBarBeats.xBeatsHalf != null)
 					{
-						if (transBarBeats.xBeatsHalf.effects.Count > 0)
+						if (VampBarBeats.xBeatsHalf.effects.Count > 0)
 						{
 							//WriteTimingFile4(transBarBeats.xBeatsHalf, fileName);
 							//WriteTimingFile5(transBarBeats.xBeatsHalf, fileName);
@@ -2060,9 +2279,9 @@ namespace UtilORama4
 				}
 				if (chkBeatsThird.Checked)
 				{
-					if (transBarBeats.xBeatsThird != null)
+					if (VampBarBeats.xBeatsThird != null)
 					{
-						if (transBarBeats.xBeatsThird.effects.Count > 0)
+						if (VampBarBeats.xBeatsThird.effects.Count > 0)
 						{
 							//WriteTimingFile4(transBarBeats.xBeatsThird, fileName);
 							//WriteTimingFile5(transBarBeats.xBeatsThird, fileName);
@@ -2072,9 +2291,9 @@ namespace UtilORama4
 				}
 				if (chkBeatsQuarter.Checked)
 				{
-					if (transBarBeats.xBeatsQuarter != null)
+					if (VampBarBeats.xBeatsQuarter != null)
 					{
-						if (transBarBeats.xBeatsQuarter.effects.Count > 0)
+						if (VampBarBeats.xBeatsQuarter.effects.Count > 0)
 						{
 							//WriteTimingFile4(transBarBeats.xBeatsQuarter, fileName);
 							//WriteTimingFile5(transBarBeats.xBeatsQuarter, fileName);
@@ -2083,36 +2302,34 @@ namespace UtilORama4
 					}
 				}
 			}
-			if (transOnsets != null)
+			if (chkNoteOnsets.Checked)
 			{
-				if (chkNoteOnsets.Checked)
+				if (VampNoteOnsets.xOnsets != null)
 				{
-					if (transOnsets.xOnsets != null)
+					if (VampNoteOnsets.xOnsets.effects.Count > 0)
 					{
-						if (transOnsets.xOnsets.effects.Count > 0)
-						{
-							//WriteTimingFile4(transOnsets.xOnsets, fileName);
-							//WriteTimingFile5(transOnsets.xOnsets, fileName);
-							writeCount += 3;
-						}
+						//WriteTimingFile4(transOnsets.xOnsets, fileName);
+						//WriteTimingFile5(transOnsets.xOnsets, fileName);
+						writeCount += 3;
 					}
 				}
 			}
 
-			/*
-			if (chkTranscribe.Checked)
+			//! POLYPHONIC TRANSCRIPTION
+			if (chkPolyphonic.Checked)
 			{
-				if (transOnsets.xTranscription != null)
+				if (VampPolyphonic.xPolyphonic != null)
 				{
-					if (xTimes.xTranscription.effects.Count > 0)
+					if (VampPolyphonic.xPolyphonic.effects.Count > 0)
 					{
-						WriteTimingFileX(xTimes.xTranscription, fileName);
-						WriteTimingFile4(xTimes.xTranscription, fileName);
-						WriteTimingFile5(xTimes.xTranscription, fileName);
+						WriteTimingFile4(VampPolyphonic.xPolyphonic, fileName);
 						writeCount+=3;
 					}
 				}
 			}
+
+
+			/*
 			if (chkPitchKey.Checked)
 			{
 				if (xTimes.xKey != null)
@@ -2165,7 +2382,7 @@ namespace UtilORama4
 			writer.WriteLine(lineOut);
 			WriteTimingFileX(timings, writer);
 
-			expFile = expPath + expBase + " - " + timings.timingName + ".xtiming";
+			expFile = expPath + expBase + " - " + timings.Name + ".xtiming";
 			if (System.IO.File.Exists(expFile))
 			{
 				// If already exists, delete it
@@ -2173,7 +2390,7 @@ namespace UtilORama4
 				System.IO.File.Delete(expFile);
 			}
 			// Copy the tempfile to the new file name and delete the old temp file
-			err = utils.SafeCopy(timingsTemp, expFile);
+			err = lutils.SafeCopy(timingsTemp, expFile);
 			System.IO.File.Delete(timingsTemp);
 		}
 		*/
@@ -2197,7 +2414,7 @@ namespace UtilORama4
 		//string lineOut = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 		//writer.WriteLine(lineOut);
 		//	}
-	pnlStatus.Text = "Writing " + timings.timingName + "...";
+	pnlStatus.Text = "Writing " + timings.Name + "...";
 			staStatus.Refresh();
 			// Create a temporary streamwriter file
 			
@@ -2220,7 +2437,7 @@ namespace UtilORama4
 			string expBase = Path.GetFileNameWithoutExtension(fileName);
 			string expFile = "x.x";
 
-			pnlStatus.Text = "Writing " + timings.timingName + "...";
+			pnlStatus.Text = "Writing " + timings.Name + "...";
 			staStatus.Refresh();
 			// Create a temporary streamwriter file
 			timingsTemp = tempDir + Path.GetRandomFileName();
@@ -2233,7 +2450,7 @@ namespace UtilORama4
 			//lineOut = "  <TimingGrids>";
 			//writer.WriteLine(lineOut);
 			//lineOut = "    <TimingGridFree name=\"";
-			//lineOut += timings.timingName + "\">";
+			//lineOut += timings.Name + "\">";
 			//writer.WriteLine(lineOut);
 
 			// Write this xTiming to an export file
@@ -2241,7 +2458,7 @@ namespace UtilORama4
 			writer.WriteLine(xDat);
 
 			writer.Close();
-			expFile = expPath + expBase + " - " + timings.timingName + ".lor4xml";
+			expFile = expPath + expBase + " - " + timings.Name + ".lor4xml";
 			if (System.IO.File.Exists(expFile))
 			{
 				// If already exists, delete it
@@ -2265,7 +2482,7 @@ namespace UtilORama4
 			string expBase = Path.GetFileNameWithoutExtension(fileName);
 			string expFile = "x.x";
 
-			pnlStatus.Text = "Writing " + timings.timingName + "...";
+			pnlStatus.Text = "Writing " + timings.Name + "...";
 			staStatus.Refresh();
 			// Create a temporary streamwriter file
 			timingsTemp = tempDir + Path.GetRandomFileName();
@@ -2277,7 +2494,7 @@ namespace UtilORama4
 			writer.WriteLine(xDat);
 
 			writer.Close();
-			expFile = expPath + expBase + " - " + timings.timingName + ".lortime";
+			expFile = expPath + expBase + " - " + timings.Name + ".lortime";
 			if (System.IO.File.Exists(expFile))
 			{
 				// If already exists, delete it
@@ -2299,7 +2516,8 @@ namespace UtilORama4
 
 		private void vscStartBeat_Scroll_1(object sender, ScrollEventArgs e)
 		{
-			txtStartBeat.Text = vscStartBeat.Value.ToString();
+			//txtStartBeat.Text = vscStartBeat.Value.ToString();
+			txtStartBeat.Text = (5 - vscStartBeat.Value).ToString(); ;
 		}
 
 		private void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
@@ -2330,12 +2548,12 @@ namespace UtilORama4
 			bool b = false;
 			switch (plugin)
 			{
-				case BarBeats.PLUGINqmBarAndBeat:
+				case VampBarBeats.PLUGINqmBarAndBeat:
 					lblDetectBarBeats.Enabled = false;
 					cboDetectBarBeats.Enabled = false;
 					chkWhiteBarBeats.Enabled = false;
 					break;
-				case BarBeats.PLUGINqmTempo:
+				case VampBarBeats.PLUGINqmTempo:
 					lblDetectBarBeats.Enabled = true;
 					cboDetectBarBeats.Enabled = true;
 					cboDetectBarBeats.Items.Clear();
@@ -2346,12 +2564,12 @@ namespace UtilORama4
 					cboDetectBarBeats.Items.Add("Broadband Energy Rise (Percussion mixed with other)");
 					chkWhiteBarBeats.Enabled = true;
 					break;
-				case BarBeats.PLUGINbeatRoot:
+				case VampBarBeats.PLUGINbeatRoot:
 					lblDetectBarBeats.Enabled = false;
 					cboDetectBarBeats.Enabled = false;
 					chkWhiteBarBeats.Enabled = false;
 					break;
-				case BarBeats.PLUGINaubio:
+				case VampBarBeats.PLUGINaubio:
 					lblDetectBarBeats.Enabled = true;
 					cboDetectBarBeats.Enabled = true;
 					cboDetectBarBeats.Items.Clear();
@@ -2403,10 +2621,10 @@ namespace UtilORama4
 			cboOnsetsLabels.SelectedIndex = 0;
 			cboAlignOnsets.SelectedIndex = 5; // Quarter Beats Sixteenth Notes
 
-			cboMethodTranscription.SelectedIndex = 0;
-			chkTranscribe.Checked = true;
-			cboLabelsTranscription.SelectedIndex = 0;
-			cboAlignTranscribe.SelectedIndex = 6; // Note Onsets
+			cboMethodPolyphonic.SelectedIndex = 0;
+			chkPolyphonic.Checked = true;
+			cboLabelsPolyphonic.SelectedIndex = 0;
+			cboAlignPolyphonic.SelectedIndex = 6; // Note Onsets
 
 			cboMethodSpectrum.SelectedIndex = 0;
 			chkSpectrum.Checked = false;
@@ -2416,7 +2634,7 @@ namespace UtilORama4
 			cboMethodPitchKey.SelectedIndex = 0;
 			chkPitchKey.Checked = true;
 			cboLabelsPitchKey.SelectedIndex = 1;
-			cboAlignPitch.SelectedIndex = 3; // Bars
+			cboAlignPitchKey.SelectedIndex = 3; // Bars
 
 			cboMethodTempo.SelectedIndex = 0;
 			chkTempo.Checked = false;
@@ -2535,17 +2753,18 @@ namespace UtilORama4
 
 		private void btnSaveSeq_Click(object sender, EventArgs e)
 		{
+			bool success = false;
 			ImBusy(true);
 			if (optSeqNew.Checked)
 			{
-				SaveAsNewSequence();
+				success = SaveAsNewSequence();
 			}
 			if (optSeqAppend.Checked)
 			{
-				SaveInExistingSequence();
+				success = SaveInExistingSequence();
 			}
 			dirtyTimes = false;
-			Fyle.MakeNoise(Fyle.Noises.Gong);
+			//Fyle.MakeNoise(Fyle.Noises.Gong);
 			ImBusy(false);
 		}
 
@@ -2554,17 +2773,24 @@ namespace UtilORama4
 			bool OK = false;
 			try
 			{
-				string txt = txtFileAudio.Text;
-				if (txt.Length > 3)
+				if (audioData.Title == "")
 				{
-					if (System.IO.File.Exists(txt))
+					string txt = txtFileAudio.Text;
+					if (txt.Length > 3)
 					{
-						audioData = ReadAudioFile(txt);
-						string tit = audioData.Title;
-						if (tit.Length > 3)
+						if (System.IO.File.Exists(txt))
 						{
-							OK = true;
-							fileAudioWork = txt;
+							fileAudioLast = txt;
+							audioData = ReadAudioFile(fileAudioLast);
+							string songInfo = audioData.Title + " by " + audioData.Artist;
+							this.Text = myTitle + " - " + songInfo;
+							lblSongTime.Text = FormatSongTime(Annotator.TotalMilliseconds);
+							string tit = audioData.Title;
+							if (tit.Length > 3)
+							{
+								OK = true;
+								fileAudioWork = txt;
+							}
 						}
 					}
 				}
@@ -2616,12 +2842,12 @@ namespace UtilORama4
 
 		private void chkLOR_CheckedChanged(object sender, EventArgs e)
 		{
-			string f = utils.DefaultSequencesPath;
+			string f = lutils.DefaultSequencesPath;
 			if (f.Length > 3)
 			{
 				btnExploreLOR.Visible = chkLOR.Checked;
 			}
-			f = utils.SequenceEditor;
+			f = lutils.SequenceEditor;
 			if (f.Length > 3)
 			{
 				btnSequenceEditor.Visible = chkLOR.Checked;
@@ -2646,7 +2872,7 @@ namespace UtilORama4
 		{
 			Process explore = new Process();
 			explore.StartInfo.FileName = "explorer.exe";
-			explore.StartInfo.Arguments = utils.DefaultSequencesPath;
+			explore.StartInfo.Arguments = lutils.DefaultSequencesPath;
 			explore.Start();
 
 		}
@@ -2663,7 +2889,7 @@ namespace UtilORama4
 		private void btnSequenceEditor_Click(object sender, EventArgs e)
 		{
 			Process app = new Process();
-			string exe = utils.SequenceEditor;
+			string exe = lutils.SequenceEditor;
 			if (exe.Length > 10)
 			{
 				app.StartInfo.FileName = exe;
@@ -2752,9 +2978,9 @@ namespace UtilORama4
 			int plugin = cboOnsetsPlugin.SelectedIndex;
 			switch (plugin)
 			{
-				case NoteOnsets.PLUGINqmOnset:
+				case VampNoteOnsets.PLUGINqmOnset:
 					cboOnsetsLabels.Items.Clear();
-					cboOnsetsLabels.Items.Add(NoteOnsets.availableLabels[0]);
+					cboOnsetsLabels.Items.Add(VampNoteOnsets.availableLabels[0]);
 					chkOnsetsWhite.Enabled = true;
 					pnlOnsetSensitivity.Enabled = true;
 					cboOnsetsDetect.Items.Clear();
@@ -2765,37 +2991,37 @@ namespace UtilORama4
 					cboOnsetsDetect.Items.Add("Broadband Energy Rise (Percussion mixed with other)");
 					cboOnsetsDetect.Enabled = true;
 					break;
-				case NoteOnsets.PLUGINqmTranscribe:
+				case VampNoteOnsets.PLUGINqmTranscribe:
 					cboOnsetsLabels.Items.Clear();
-					cboOnsetsLabels.Items.Add(NoteOnsets.availableLabels[0]);
-					cboOnsetsLabels.Items.Add(NoteOnsets.availableLabels[1]);
-					cboOnsetsLabels.Items.Add(NoteOnsets.availableLabels[2]);
+					cboOnsetsLabels.Items.Add(VampNoteOnsets.availableLabels[0]);
+					cboOnsetsLabels.Items.Add(VampNoteOnsets.availableLabels[1]);
+					cboOnsetsLabels.Items.Add(VampNoteOnsets.availableLabels[2]);
 					chkOnsetsWhite.Enabled = false;
 					pnlOnsetSensitivity.Enabled = false;
 					cboOnsetsDetect.Enabled = false;
 					break;
-				case NoteOnsets.PLUGINOnsetDS:
+				case VampNoteOnsets.PLUGINOnsetDS:
 					chkOnsetsWhite.Enabled = false;
 					pnlOnsetSensitivity.Enabled = false;
 					cboOnsetsDetect.Enabled = false;
 					cboOnsetsLabels.Items.Clear();
-					cboOnsetsLabels.Items.Add(NoteOnsets.availableLabels[0]);
+					cboOnsetsLabels.Items.Add(VampNoteOnsets.availableLabels[0]);
 					break;
-				case NoteOnsets.PLUGINSilvet:
+				case VampNoteOnsets.PLUGINSilvet:
 					chkOnsetsWhite.Enabled = false;
 					pnlOnsetSensitivity.Enabled = false;
 					cboOnsetsDetect.Enabled = false;
 					cboOnsetsLabels.Items.Clear();
-					cboOnsetsLabels.Items.Add(NoteOnsets.availableLabels[0]);
+					cboOnsetsLabels.Items.Add(VampNoteOnsets.availableLabels[0]);
 					break;
-				case NoteOnsets.PLUGINaubioOnset:
+				case VampNoteOnsets.PLUGINaubioOnset:
 					chkOnsetsWhite.Enabled = false;
 					pnlOnsetSensitivity.Enabled = false;
 					cboOnsetsDetect.Enabled = false;
 					cboOnsetsLabels.Items.Clear();
-					cboOnsetsLabels.Items.Add(NoteOnsets.availableLabels[0]);
+					cboOnsetsLabels.Items.Add(VampNoteOnsets.availableLabels[0]);
 					break;
-				case NoteOnsets.PLUGINaubioTracker:
+				case VampNoteOnsets.PLUGINaubioTracker:
 					chkOnsetsWhite.Enabled = false;
 					pnlOnsetSensitivity.Enabled = false;
 					cboOnsetsDetect.Items.Add("Energy Based");
@@ -2817,6 +3043,36 @@ namespace UtilORama4
 		private void cboDetectBarBeats_SelectedIndexChanged(object sender, EventArgs e)
 		{
 
+		}
+
+		private void swTrackBeat_CheckedChanged_1(object sender, EventArgs e)
+		{
+
+		}
+
+		private void txtFileAudio_TextChanged(object sender, EventArgs e)
+		{
+
+		}
+
+		private void lblTrackBeat34_Click(object sender, EventArgs e)
+		{
+			swTrackBeat.Checked = true;
+		}
+
+		private void lblTrackBeat44_Click(object sender, EventArgs e)
+		{
+			swTrackBeat.Checked = false;
+		}
+
+		private void lblBarsRampFade_Click(object sender, EventArgs e)
+		{
+			swRamps.Checked = true;
+		}
+
+		private void lblBarsOnOff_Click(object sender, EventArgs e)
+		{
+			swRamps.Checked = false;
 		}
 	}
 

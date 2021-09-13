@@ -351,7 +351,7 @@ namespace UtilORama4
 			this.optChannel.Name = "optChannel";
 			this.optChannel.Size = new System.Drawing.Size(64, 17);
 			this.optChannel.TabIndex = 16;
-			this.optChannel.Text = "Channel";
+			this.optChannel.Text = "LORChannel4";
 			this.optChannel.UseVisualStyleBackColor = true;
 			this.optChannel.CheckedChanged += new System.EventHandler(this.optChannel_CheckedChanged);
 			// 

@@ -47,6 +47,8 @@ namespace UtilORama4
 			this.btnComparex = new System.Windows.Forms.Button();
 			this.btnFind = new System.Windows.Forms.Button();
 			this.btnWiz = new System.Windows.Forms.Button();
+			this.btnSave = new System.Windows.Forms.Button();
+			this.toolTips = new System.Windows.Forms.ToolTip(this.components);
 			this.staStatus.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picAboutIcon)).BeginInit();
 			this.SuspendLayout();
@@ -61,7 +63,7 @@ namespace UtilORama4
 			this.staStatus.Location = new System.Drawing.Point(0, 451);
 			this.staStatus.Name = "staStatus";
 			this.staStatus.Size = new System.Drawing.Size(489, 24);
-			this.staStatus.TabIndex = 9;
+			this.staStatus.TabIndex = 8;
 			// 
 			// pnlHelp
 			// 
@@ -75,6 +77,7 @@ namespace UtilORama4
 			this.pnlHelp.Name = "pnlHelp";
 			this.pnlHelp.Size = new System.Drawing.Size(45, 19);
 			this.pnlHelp.Text = "Help...";
+			this.pnlHelp.ToolTipText = "Get Help using Chan-O-Rama Channel Manager";
 			this.pnlHelp.Click += new System.EventHandler(this.pnlHelp_Click);
 			// 
 			// pnlStatus
@@ -98,6 +101,7 @@ namespace UtilORama4
 			this.pnlAbout.Name = "pnlAbout";
 			this.pnlAbout.Size = new System.Drawing.Size(52, 19);
 			this.pnlAbout.Text = "About...";
+			this.pnlAbout.ToolTipText = "About Chan-O-Rama Channel Manager\r\nVersion, Copyright, License, More...";
 			this.pnlAbout.Click += new System.EventHandler(this.pnlAbout_Click);
 			// 
 			// btnOK
@@ -106,7 +110,7 @@ namespace UtilORama4
 			this.btnOK.Location = new System.Drawing.Point(393, 424);
 			this.btnOK.Name = "btnOK";
 			this.btnOK.Size = new System.Drawing.Size(75, 23);
-			this.btnOK.TabIndex = 0;
+			this.btnOK.TabIndex = 11;
 			this.btnOK.Text = "OK";
 			this.btnOK.UseVisualStyleBackColor = true;
 			this.btnOK.Visible = false;
@@ -131,7 +135,7 @@ namespace UtilORama4
 			this.treeChannelList.SelectedImageIndex = 0;
 			this.treeChannelList.Size = new System.Drawing.Size(375, 406);
 			this.treeChannelList.StateImageList = this.imlTreeIcons;
-			this.treeChannelList.TabIndex = 1;
+			this.treeChannelList.TabIndex = 0;
 			this.treeChannelList.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeChannelList_AfterSelect);
 			this.treeChannelList.DoubleClick += new System.EventHandler(this.treeChannelList_DoubleClick);
 			this.treeChannelList.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.treeChannelList_KeyPress);
@@ -155,64 +159,81 @@ namespace UtilORama4
 			// 
 			// btnUniverse
 			// 
+			this.btnUniverse.Image = ((System.Drawing.Image)(resources.GetObject("btnUniverse.Image")));
+			this.btnUniverse.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
 			this.btnUniverse.Location = new System.Drawing.Point(405, 12);
 			this.btnUniverse.Name = "btnUniverse";
 			this.btnUniverse.Size = new System.Drawing.Size(75, 40);
-			this.btnUniverse.TabIndex = 2;
+			this.btnUniverse.TabIndex = 1;
 			this.btnUniverse.Text = "Add\r\nUniverse\r\n";
+			this.btnUniverse.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.toolTips.SetToolTip(this.btnUniverse, "Add a new Universe");
 			this.btnUniverse.UseVisualStyleBackColor = true;
 			this.btnUniverse.Click += new System.EventHandler(this.btnUniverse_Click);
 			// 
 			// btnController
 			// 
 			this.btnController.Enabled = false;
+			this.btnController.Image = ((System.Drawing.Image)(resources.GetObject("btnController.Image")));
+			this.btnController.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
 			this.btnController.Location = new System.Drawing.Point(393, 58);
 			this.btnController.Name = "btnController";
 			this.btnController.Size = new System.Drawing.Size(75, 40);
-			this.btnController.TabIndex = 3;
+			this.btnController.TabIndex = 2;
 			this.btnController.Text = "Add\r\nController";
+			this.btnController.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.toolTips.SetToolTip(this.btnController, "Add a new Controller to the current Universe");
 			this.btnController.UseVisualStyleBackColor = true;
 			this.btnController.Click += new System.EventHandler(this.btnController_Click);
 			// 
 			// btnChannel
 			// 
 			this.btnChannel.Enabled = false;
+			this.btnChannel.Image = ((System.Drawing.Image)(resources.GetObject("btnChannel.Image")));
+			this.btnChannel.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
 			this.btnChannel.Location = new System.Drawing.Point(393, 104);
 			this.btnChannel.Name = "btnChannel";
 			this.btnChannel.Size = new System.Drawing.Size(75, 40);
-			this.btnChannel.TabIndex = 4;
+			this.btnChannel.TabIndex = 3;
 			this.btnChannel.Text = "Add\r\nChannel\r\n";
+			this.btnChannel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.toolTips.SetToolTip(this.btnChannel, "Add a new Channel to the current Controller");
 			this.btnChannel.UseVisualStyleBackColor = true;
 			this.btnChannel.Click += new System.EventHandler(this.btnChannel_Click);
 			// 
 			// btnReport
 			// 
 			this.btnReport.Enabled = false;
-			this.btnReport.Location = new System.Drawing.Point(393, 150);
+			this.btnReport.Image = ((System.Drawing.Image)(resources.GetObject("btnReport.Image")));
+			this.btnReport.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.btnReport.Location = new System.Drawing.Point(393, 196);
 			this.btnReport.Name = "btnReport";
 			this.btnReport.Size = new System.Drawing.Size(75, 40);
 			this.btnReport.TabIndex = 5;
 			this.btnReport.Text = "Export\r\nCSV";
+			this.btnReport.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.toolTips.SetToolTip(this.btnReport, "Export everything to a .CSV Spreadsheet");
 			this.btnReport.UseVisualStyleBackColor = true;
 			this.btnReport.Click += new System.EventHandler(this.btnReport_Click);
 			// 
 			// btnCompareLOR
 			// 
 			this.btnCompareLOR.Enabled = false;
-			this.btnCompareLOR.Location = new System.Drawing.Point(393, 196);
+			this.btnCompareLOR.Location = new System.Drawing.Point(438, 264);
 			this.btnCompareLOR.Name = "btnCompareLOR";
 			this.btnCompareLOR.Size = new System.Drawing.Size(75, 40);
-			this.btnCompareLOR.TabIndex = 6;
+			this.btnCompareLOR.TabIndex = 9;
 			this.btnCompareLOR.Text = "Compare\r\nLOR Seq\r\n";
 			this.btnCompareLOR.UseVisualStyleBackColor = true;
+			this.btnCompareLOR.Visible = false;
 			// 
 			// btnComparex
 			// 
 			this.btnComparex.Enabled = false;
-			this.btnComparex.Location = new System.Drawing.Point(393, 242);
+			this.btnComparex.Location = new System.Drawing.Point(438, 288);
 			this.btnComparex.Name = "btnComparex";
 			this.btnComparex.Size = new System.Drawing.Size(75, 40);
-			this.btnComparex.TabIndex = 7;
+			this.btnComparex.TabIndex = 10;
 			this.btnComparex.Text = "Compare\r\nxLights\r\n";
 			this.btnComparex.UseVisualStyleBackColor = true;
 			this.btnComparex.Visible = false;
@@ -220,24 +241,44 @@ namespace UtilORama4
 			// btnFind
 			// 
 			this.btnFind.Enabled = false;
-			this.btnFind.Location = new System.Drawing.Point(393, 288);
+			this.btnFind.Image = ((System.Drawing.Image)(resources.GetObject("btnFind.Image")));
+			this.btnFind.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.btnFind.Location = new System.Drawing.Point(393, 150);
 			this.btnFind.Name = "btnFind";
 			this.btnFind.Size = new System.Drawing.Size(75, 40);
-			this.btnFind.TabIndex = 8;
+			this.btnFind.TabIndex = 4;
 			this.btnFind.Text = "Find...";
+			this.btnFind.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.toolTips.SetToolTip(this.btnFind, "Find a Channel...");
 			this.btnFind.UseVisualStyleBackColor = true;
-			this.btnFind.Visible = false;
 			// 
 			// btnWiz
 			// 
 			this.btnWiz.Image = ((System.Drawing.Image)(resources.GetObject("btnWiz.Image")));
-			this.btnWiz.Location = new System.Drawing.Point(393, 334);
+			this.btnWiz.Location = new System.Drawing.Point(393, 242);
 			this.btnWiz.Name = "btnWiz";
 			this.btnWiz.Size = new System.Drawing.Size(75, 40);
-			this.btnWiz.TabIndex = 69;
+			this.btnWiz.TabIndex = 6;
+			this.toolTips.SetToolTip(this.btnWiz, "Channel Comparison Wizard\r\n\r\nCompare Managed Channels to:\r\n    Light-O-Rama Showt" +
+        "ime S4 Channels\r\n    Light-O-Rama Visualizer Channels & Groups\r\n    xLights Mode" +
+        "ls and Groups");
 			this.btnWiz.UseVisualStyleBackColor = true;
 			this.btnWiz.Visible = false;
 			this.btnWiz.Click += new System.EventHandler(this.btnWiz_Click);
+			// 
+			// btnSave
+			// 
+			this.btnSave.Image = ((System.Drawing.Image)(resources.GetObject("btnSave.Image")));
+			this.btnSave.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.btnSave.Location = new System.Drawing.Point(393, 378);
+			this.btnSave.Name = "btnSave";
+			this.btnSave.Size = new System.Drawing.Size(75, 40);
+			this.btnSave.TabIndex = 7;
+			this.btnSave.Text = "Save";
+			this.btnSave.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.toolTips.SetToolTip(this.btnSave, "Save Everything!");
+			this.btnSave.UseVisualStyleBackColor = true;
+			this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
 			// 
 			// frmList
 			// 
@@ -245,6 +286,7 @@ namespace UtilORama4
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(489, 475);
+			this.Controls.Add(this.btnSave);
 			this.Controls.Add(this.btnWiz);
 			this.Controls.Add(this.btnFind);
 			this.Controls.Add(this.btnComparex);
@@ -262,7 +304,7 @@ namespace UtilORama4
 			this.MaximumSize = new System.Drawing.Size(800, 950);
 			this.MinimumSize = new System.Drawing.Size(350, 400);
 			this.Name = "frmList";
-			this.Text = "Channel-O-Rama";
+			this.Text = "Chan-O-Rama  Channel Manager";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmList_FormClosing);
 			this.Load += new System.EventHandler(this.frmList_Load);
 			this.Shown += new System.EventHandler(this.frmList_Shown);
@@ -294,6 +336,8 @@ namespace UtilORama4
 		private System.Windows.Forms.Button btnComparex;
 		private System.Windows.Forms.Button btnFind;
 		private System.Windows.Forms.Button btnWiz;
+		private System.Windows.Forms.Button btnSave;
+		private System.Windows.Forms.ToolTip toolTips;
 	}
 }
 

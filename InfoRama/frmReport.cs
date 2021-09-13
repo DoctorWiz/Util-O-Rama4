@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
-using LORUtils; using FileHelper;
+using LORUtils4; using FileHelper;
 
 namespace UtilORama4
 {
@@ -17,10 +17,10 @@ namespace UtilORama4
 	{
 		private string fileSequence = "";
 		private string fileReport = "";
-		private Sequence4 seq = new Sequence4();
-		private string applicationName = "Info-Rama";
+		private LORSequence4 seq = new LORSequence4();
+		private string applicationName = "LORSeqInfo4-Rama";
 		private string tempPath = "C:\\Windows\\Temp\\";  // Gets overwritten with X:\\Username\\AppData\\Roaming\\Util-O-Rama\\Split-O-Rama\\
-		private string thisEXE = "Info-Rama.exe";
+		private string thisEXE = "LORSeqInfo4-Rama.exe";
 		private string[] commandArgs = null;
 		private bool firstShown = false;
 		const char DELIM1 = '⬖';
@@ -160,7 +160,7 @@ namespace UtilORama4
 				byte isFile = 0;
 				if (arg.Substring(1, 2).CompareTo(":\\") == 0) isFile = 1;  // Local File
 				if (arg.Substring(0, 2).CompareTo("\\\\") == 0) isFile = 1; // UNC file
-				if (arg.Substring(4).IndexOf(".") > utils.UNDEFINED) isFile++;  // contains a period
+				if (arg.Substring(4).IndexOf(".") > lutils.UNDEFINED) isFile++;  // contains a period
 				if (Fyle.InvalidCharacterCount(arg) == 0) isFile++;
 				if (isFile == 3)
 				{
@@ -390,12 +390,12 @@ namespace UtilORama4
 			StreamReader reader = new StreamReader(defaultStylesTemplate);
 			writer = new StreamWriter(reportFilename);
 
-			int pos = utils.UNDEFINED;
+			int pos = lutils.UNDEFINED;
 			while (keepGoing && (lineIn = reader.ReadLine()) != null)
 			{
 				writer.WriteLine(lineIn); lineCount++;
 				pos = lineIn.IndexOf("</style>");
-				if (pos > utils.UNDEFINED)
+				if (pos > lutils.UNDEFINED)
 				{
 					keepGoing = false;
 				}
@@ -558,7 +558,7 @@ namespace UtilORama4
 			ImBusy(true);
 			string errInfo = "";
 			fileReport = reportFilename;
-			string title = "Info&#45;Rama Report";
+			string title = "LORSeqInfo4&#45;Rama Report";
 			string subtitle = "for \"" + Path.GetFileName(sequenceFilename) + "\"";
 			ReportHeader(reportFilename, title, subtitle);
 
@@ -568,7 +568,7 @@ namespace UtilORama4
 			}
 			catch
 			{
-				// Can't get File Info??  fileinfo will remain null
+				// Can't get File LORSeqInfo4??  fileinfo will remain null
 			}
 
 			int err = seq.ReadSequenceFile(sequenceFilename);
@@ -577,27 +577,27 @@ namespace UtilORama4
 			{
 				// Can't Open
 				errInfo = "The sequence file contains some unrecognized, unsupported, or invalid ";
-				errInfo += "data.  The information collected by Info-Rama about this sequence may ";
+				errInfo += "data.  The information collected by LORSeqInfo4-Rama about this sequence may ";
 				errInfo += "be incomplete and/or inaccurate.  If you continue to see this error for ";
 				errInfo += "multiple different sequence files, please contact Doctor Wizard at ";
 				errInfo += "<a href= \"mailto:support.utilorama@wizster.com?subject=Util-O-Rama Report\">support.utilorama@wizster.com</a>";
 				errInfo += " for assistance.";
 				errInfo += "The most recent error code is <i>" + seq.info.LastError.errMsg + "</i>.";
 			}
-			if (err == Sequence4.ERROR_CantOpen)
+			if (err == LORSequence4.ERROR_CantOpen)
 			{
 				// Can't Open
-				errInfo = "The file cannot be opened by Info-Rama.  Since selecting it, the file ";
+				errInfo = "The file cannot be opened by LORSeqInfo4-Rama.  Since selecting it, the file ";
 				errInfo += "may have been deleted, renamed, or moved, or you may not have the ";
 				errInfo += "necessary security permissions to access it.";
 			}
-			if (err == Sequence4.ERROR_NotXML)
+			if (err == LORSequence4.ERROR_NotXML)
 			{
 				// Not XML
 				errInfo = "The file is not in XML format and does not appear to be a valid Light-O-Rama sequence. ";
-				errInfo += "Info-Rama is unable to read this file or provide any further details about it.";
+				errInfo += "LORSeqInfo4-Rama is unable to read this file or provide any further details about it.";
 			}
-			if (err == Sequence4.ERROR_NotSequence)
+			if (err == LORSequence4.ERROR_NotSequence)
 			{
 				// Not a Sequence
 				errInfo = "The file is in XML format, but is not a valid Light-O-Rama sequence or visualizer file. ";
@@ -605,28 +605,28 @@ namespace UtilORama4
 				errInfo += "about the sequence, but does not.  The second line is:<br><i>";
 				errInfo += "'" + seq.info.infoLine + "'</i>";
 			}
-			if (err == Sequence4.ERROR_EncryptedDemo)
+			if (err == LORSequence4.ERROR_EncryptedDemo)
 			{
 				// Encrypted Demo
 				errInfo = "The file was saved by a Demo version of Light-O-Rama Showtime and is ";
 				errInfo += "encrypted.  Information about the sequence cannot be decoded by ";
-				errInfo += "Info-Rama.  Please open the sequence in a licensed copy of Light-O-Rama ";
+				errInfo += "LORSeqInfo4-Rama.  Please open the sequence in a licensed copy of Light-O-Rama ";
 				errInfo += "Showtime and re-save it in a non-encrypted and non-compressed format.";
 			}
-			if (err == Sequence4.ERROR_Compressed)
+			if (err == LORSequence4.ERROR_Compressed)
 			{
 				// Compressed
 				errInfo = "The file has been saved in compressed format. ";
 				errInfo += "Information about the sequence cannot be decoded by ";
-				errInfo += "Info-Rama.  Please open the sequence in a licensed copy of Light-O-Rama ";
+				errInfo += "LORSeqInfo4-Rama.  Please open the sequence in a licensed copy of Light-O-Rama ";
 				errInfo += "Showtime and re-save it in a non-compressed and non-encrypted format.";
 			}
-			if (err == Sequence4.ERROR_UnsupportedVersion)
+			if (err == LORSequence4.ERROR_UnsupportedVersion)
 			{
 				// Unsupported Version
 				errInfo = "The file version is unrecognized and unsupported by this release of ";
-				errInfo += "Info-Rama.  The file version is <b>" + seq.info.saveFileVersion.ToString() + "</b>. ";
-				errInfo += "This release of Info-Rama recognizes and supportes file versions 11 thru 14 ";
+				errInfo += "LORSeqInfo4-Rama.  The file version is <b>" + seq.info.saveFileVersion.ToString() + "</b>. ";
+				errInfo += "This release of LORSeqInfo4-Rama recognizes and supportes file versions 11 thru 14 ";
 				errInfo += "which corresponds to Light-O-Rama Showtime versions 2.0 thru 4.4.";
 				errInfo += "Please open the sequence in a supported and licenced version of Light-O-Rama Showtime ";
 				errInfo += "and re-save it from that version in a non-compressed and not-encrypted format.";
@@ -647,7 +647,7 @@ namespace UtilORama4
 				ReportSummary();
 				ReportFileInfo();
 				ReportSequenceInfo();
-				if (seq.SequenceType == SequenceType.Musical)
+				if (seq.LORSequenceType4 == LORSequenceType4.Musical)
 				{
 					ReportMusicInfo();
 				}
@@ -664,7 +664,7 @@ namespace UtilORama4
 			//Process.Start(reportFilename);
 			webReport.Navigate(reportFilename);
 			btnSaveReport.Enabled = true;
-			this.Text = "Info-Rama - " + Path.GetFileName(sequenceFilename);
+			this.Text = "LORSeqInfo4-Rama - " + Path.GetFileName(sequenceFilename);
 			btnBrowseSeq.Text = "Analyze another Sequence...";
 
 			ImBusy(false);
@@ -675,14 +675,14 @@ namespace UtilORama4
 		{
 			string footerInfo = "<p style=\"color:DarkBlue;\">";
 			footerInfo += "<font size=\"2\"><center>";
-			footerInfo += "Info&#45;Rama Report for \"" + HTMLizeFilename(sequenceFilename) + "\"";
+			footerInfo += "LORSeqInfo4&#45;Rama Report for \"" + HTMLizeFilename(sequenceFilename) + "\"";
 			footerInfo += " created at " + MyFavoriteDateFormat(DateTime.Now) + BREAK;
-			footerInfo += "<a href = \"http://wizlights.com/util-o-rama/ifno-o-rama\">Info&#45;Rama</a> is member of the ";
+			footerInfo += "<a href = \"http://wizlights.com/util-o-rama/ifno-o-rama\">LORSeqInfo4&#45;Rama</a> is member of the ";
 			footerInfo += "<a href = \"http://wizlights.com/util-o-rama\">Util&#45;O&#45;Rama</a> Suite for editing ";
 			footerInfo += "<a href = \"http://www1.lightorama.com/\">Light&#45;O&#45;Rama</a> Sequences." + BREAK;
 			footerInfo += "These utilities are released as freeware for the	benefit of the Light&#45;O&#45;Rama	community" + BREAK;
 			footerInfo += "Source code is available on GitHub under a General Public License(GPL)" + BREAK;
-			footerInfo += "Util&#45;O&#45;Rama and Info&#45;Rama are &copy; copyright &#45;2018-19 by <a href = \"http://drwiz.net\">Doctor Wizard</a>";
+			footerInfo += "Util&#45;O&#45;Rama and LORSeqInfo4&#45;Rama are &copy; copyright &#45;2018-19 by <a href = \"http://drwiz.net\">Doctor Wizard</a>";
 			footerInfo += " and <a href = \"http://wizster.com\">W⚡zster Software.</a>" + BREAK;
 			footerInfo += "The Util&#45;O&#45;Rama Suite is not a product of, nor officially endorsed in any way by the Light&#45;O&#45;Rama company.";
 			footerInfo += "  This is purely the work of Dr. Wizard and W⚡zster.";
@@ -696,11 +696,11 @@ namespace UtilORama4
 		private string HTMLizeFilename(string name)
 		{
 			string ret = "";
-			int pos1 = utils.UNDEFINED;
+			int pos1 = lutils.UNDEFINED;
 			int pos2 = 0;
 
 			pos1 = name.IndexOf('&', pos2);
-			while (pos1 > utils.UNDEFINED)
+			while (pos1 > lutils.UNDEFINED)
 			{
 				ret += name.Substring(pos2, pos1 - pos2) + "&amp;";
 				pos2 = pos1 + 1;
@@ -711,10 +711,10 @@ namespace UtilORama4
 			name = ret;
 			ret = "";
 
-			pos1 = utils.UNDEFINED;
+			pos1 = lutils.UNDEFINED;
 			pos2 = 0;
 			pos1 = name.IndexOf('\\', pos2);
-			while (pos1 > utils.UNDEFINED)
+			while (pos1 > lutils.UNDEFINED)
 			{
 				ret += name.Substring(pos2, pos1 - pos2) + "&#92;";
 				pos2 = pos1 + 1;
@@ -915,16 +915,16 @@ namespace UtilORama4
 
 
 			AddItem("File Size", Fyle.FileSizeFormatted(fileSequence), itemLevel.normal);
-			AddItem("Sequence Type", seq.SequenceType.ToString(), itemLevel.normal);
-			if (seq.SequenceType == SequenceType.Musical)
+			AddItem("Sequence Type", seq.LORSequenceType4.ToString(), itemLevel.normal);
+			if (seq.LORSequenceType4 == LORSequenceType4.Musical)
 			{
 				AddItem("Song Title", seq.info.music.Title, itemLevel.normal);
 				AddItem("By Artist", seq.info.music.Artist, itemLevel.normal);
 			}
 			//AddItem("Length", FormattedLength(), itemLevel.normal);
-			Track tk0 = seq.Tracks[0];
+			LORTrack4 tk0 = seq.Tracks[0];
 			int centi = tk0.Centiseconds;
-			AddItem("Length", utils.FormatTime(centi));
+			AddItem("Length", lutils.FormatTime(centi));
 			int v = seq.info.saveFileVersion - 10;
 			if (v == 4) thisLevel = itemLevel.normal; else thisLevel = itemLevel.error;
 			AddItem("Version", v.ToString(), thisLevel);
@@ -938,7 +938,7 @@ namespace UtilORama4
 			AddItem("Regular Channels", cc.ToString(), thisLevel);
 			thisLevel = itemLevel.normal; // Reset Default
 			AddItem("RGB Channels", rc.ToString(), itemLevel.normal);
-			AddItem("Channel Groups", seq.ChannelGroups.Count.ToString());
+			AddItem("LORChannel4 Groups", seq.ChannelGroups.Count.ToString());
 			AddItem("Tracks", seq.Tracks.Count.ToString(), itemLevel.normal);
 			AddItem("Timing Grids", seq.TimingGrids.Count.ToString(), itemLevel.normal);
 			AddItem("Last SavedIndex", seq.Members.HighestSavedIndex.ToString(), itemLevel.normal);
@@ -952,7 +952,7 @@ namespace UtilORama4
 			AddItem("Sequence File Name", Path.GetFileName(seq.filename), itemLevel.normal);
 			string filePath = Path.GetDirectoryName(seq.filename);
 			itemLevel nextLevel = itemLevel.normal;
-			if (utils.DefaultSequencesPath.ToLower().CompareTo(filePath.ToLower()) != 0) nextLevel = itemLevel.warning;
+			if (lutils.DefaultSequencesPath.ToLower().CompareTo(filePath.ToLower()) != 0) nextLevel = itemLevel.warning;
 			//TODO: Handle clipboard and channel config files correctly
 			AddItem("In Folder", filePath, nextLevel);
 			if (nextLevel == itemLevel.normal)
@@ -961,7 +961,7 @@ namespace UtilORama4
 			}
 			else
 			{
-				AddItem("Your default Light-O-Rama Sequence folder is", utils.DefaultSequencesPath, nextLevel);
+				AddItem("Your default Light-O-Rama Sequence folder is", lutils.DefaultSequencesPath, nextLevel);
 			}
 			AddItem("Sequence Created at", ConvertDateFormat(seq.info.createdAt), itemLevel.normal);
 			AddItem("File Created on (O/S)", Fyle.FormatDateTime(fileinfo.CreationTime), itemLevel.normal);
@@ -970,12 +970,12 @@ namespace UtilORama4
 			string sz = Fyle.FileSizeFormatted(fileSequence, "") + " (" + Fyle.FileSizeFormatted(fileSequence, "B") + ")";
 			AddItem("File Size", sz, itemLevel.normal);
 			AddItem("Line Count", seq.lineCount.ToString(), itemLevel.normal);
-			if (seq.SequenceType == SequenceType.Musical)
+			if (seq.LORSequenceType4 == LORSequenceType4.Musical)
 			{
-				AddItem("Music File Name", Path.GetFileName(seq.info.music.File), itemLevel.normal);
+				AddItem("LORMusic4 File Name", Path.GetFileName(seq.info.music.File), itemLevel.normal);
 				filePath = Path.GetDirectoryName(seq.info.music.File);
 				nextLevel = itemLevel.normal;
-				if (utils.DefaultAudioPath.ToLower().CompareTo(filePath.ToLower()) != 0) nextLevel = itemLevel.warning;
+				if (lutils.DefaultAudioPath.ToLower().CompareTo(filePath.ToLower()) != 0) nextLevel = itemLevel.warning;
 				AddItem("In Folder", filePath, nextLevel);
 				if (nextLevel == itemLevel.normal)
 				{
@@ -983,7 +983,7 @@ namespace UtilORama4
 				}
 				else
 				{
-					AddItem("Your default Light-O-Rama Audio folder is", utils.DefaultAudioPath, nextLevel);
+					AddItem("Your default Light-O-Rama Audio folder is", lutils.DefaultAudioPath, nextLevel);
 				}
 			}
 
@@ -996,7 +996,7 @@ namespace UtilORama4
 			AddItem("File Name", Path.GetFileName(theFile), itemLevel.normal);
 			string filePath = Path.GetDirectoryName(theFile);
 			itemLevel nextLevel = itemLevel.normal;
-			if (utils.DefaultSequencesPath.ToLower().CompareTo(filePath.ToLower()) != 0) nextLevel = itemLevel.warning;
+			if (lutils.DefaultSequencesPath.ToLower().CompareTo(filePath.ToLower()) != 0) nextLevel = itemLevel.warning;
 			//TODO: Handle clipboard and channel config files correctly
 			AddItem("In Folder", filePath, nextLevel);
 			if (nextLevel == itemLevel.normal)
@@ -1005,7 +1005,7 @@ namespace UtilORama4
 			}
 			else
 			{
-				AddItem("Your default Light-O-Rama Sequence folder is", utils.DefaultSequencesPath, nextLevel);
+				AddItem("Your default Light-O-Rama Sequence folder is", lutils.DefaultSequencesPath, nextLevel);
 			}
 			AddItem("File Created on", Fyle.FormatDateTime(fileinfo.CreationTime), itemLevel.normal);
 			AddItem("File Last Written On", Fyle.FormatDateTime(fileinfo.LastWriteTime));
@@ -1027,7 +1027,7 @@ namespace UtilORama4
 
 		private void ReportMusicInfo()
 		{
-			AddSection("Music Information");
+			AddSection("LORMusic4 Information");
 
 			AddInfo("(this report section is still being developed)", itemLevel.warning);
 		} // end MusicInfo
@@ -1195,7 +1195,7 @@ namespace UtilORama4
 
 		private void btnBrowseSeq_Click(object sender, EventArgs e)
 		{
-			string initDir = utils.DefaultSequencesPath;
+			string initDir = lutils.DefaultSequencesPath;
 			string initFile = "";
 
 			dlgOpenFile.Filter = "Sequence Files *.las, *.lms|*.las;*.lms|Musical Sequences *.lms|*.lms|Animated Sequences *.las|*.las";
@@ -1252,7 +1252,7 @@ namespace UtilORama4
 
 		private void Event_DragEnter(object sender, DragEventArgs e)
 		{
-			e.Effect = DragDropEffects.Copy;
+			e.LOREffect4 = DragDropEffects.Copy;
 			prevCursor = this.Cursor;
 			this.Cursor = Cursors.Cross;
 			processDrop = true;
@@ -1277,7 +1277,7 @@ namespace UtilORama4
 			i = seq.info.music.Artist;
 			if (i.Length < 1) i = "(Unknown)";
 			newName += i;
-			string t = utils.FormatTime(seq.Tracks[0].Centiseconds);
+			string t = lutils.FormatTime(seq.Tracks[0].Centiseconds);
 			if (seq.Tracks[0].Centiseconds > 5999)
 			{
 				t = t.Replace(':', '.');
@@ -1302,7 +1302,7 @@ namespace UtilORama4
 			newName += " " + y2 + "] ";
 			newName += seq.Channels.Count.ToString() + "ch";
 			newName = Fyle.ReplaceInvalidFilenameCharacters(newName);
-			string msg = "... to '" + newName + "'" + utils.CRLF + utils.CRLF;
+			string msg = "... to '" + newName + "'" + lutils.CRLF + lutils.CRLF;
 			msg += "(In folder '" + Path.GetDirectoryName(seq.filename) + "')";
 			DialogResult dr = MessageBox.Show(this, msg, "Rename file...", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 			if (dr == DialogResult.Yes)
@@ -1315,10 +1315,10 @@ namespace UtilORama4
 				catch (Exception ex)
 				{
 
-					string rmsg = "ERROR: Cannot Rename File" + utils.CRLF;
-					rmsg += seq.filename + utils.CRLF;
-					rmsg += "       to" + utils.CRLF;
-					rmsg += newFile + utils.CRLF + utils.CRLF;
+					string rmsg = "ERROR: Cannot Rename File" + lutils.CRLF;
+					rmsg += seq.filename + lutils.CRLF;
+					rmsg += "       to" + lutils.CRLF;
+					rmsg += newFile + lutils.CRLF + lutils.CRLF;
 					rmsg += ex.Message;
 					DialogResult rdr = MessageBox.Show(this, rmsg, "Error renaming file", MessageBoxButtons.OK, MessageBoxIcon.Stop);
 

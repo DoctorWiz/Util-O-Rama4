@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
-using LORUtils; using FileHelper;
+using LORUtils4;
+using xUtils;
+using FileHelper;
 
 namespace UtilORama4
 {
@@ -35,12 +37,14 @@ namespace UtilORama4
 		protected bool nameIsBad = true;
 		public bool BadOutput = true;
 		protected object myTag = null;
-		public object TagLOR = null;
-		public object TagX = null;
+		public iLORMember4 TagLOR = null;
+		public xMember TagX = null;
+		public iLORMember4 TagViz = null;
 		public bool ExactLOR = false;
 		public bool ExactX = false;
+		public bool ExactViz = false;
 		public static bool SortByName = false;
-		protected bool exactMatch = false;
+		protected bool matchesExactly = false;  // Used to distinguish exact name matches from fuzzy name matches
 
 
 		public DMXChannel()
@@ -62,14 +66,14 @@ namespace UtilORama4
 			isActive = otherChannel.isActive;
 			Color = otherChannel.Color;
 			DMXController = otherChannel.DMXController;
-			Output = otherChannel.myOutput;
+			LOROutput4 = otherChannel.myOutput;
 			DMXDevice = otherChannel.DMXDevice;
 			isEditing = otherChannel.isEditing;
 			//nameIsBad				= otherChannel.nameIsBad;
 			//isDirty = otherChannel.isDirty;
 			//BadOutput			= otherChannel.BadOutput;
 			myTag = otherChannel.myTag;
-			exactMatch = otherChannel.exactMatch;
+			matchesExactly = otherChannel.matchesExactly;
 		}
 
 		public string Name
@@ -130,7 +134,7 @@ namespace UtilORama4
 			}
 		}
 
-		public int Output
+		public int LOROutput4
 		{
 			get
 			{
@@ -139,7 +143,7 @@ namespace UtilORama4
 				{
 					DMXChannel chn = DMXUniverse.AllChannels[c];
 					//if (chn.myOutput == myOutput)
-					if (chn.DMXaddress == DMXaddress)
+					if (chn.DMXAddress == DMXAddress)
 					{
 						if (chn.UniverseNumber == UniverseNumber)
 						{
@@ -167,7 +171,7 @@ namespace UtilORama4
 					{
 						DMXChannel chn = DMXUniverse.AllChannels[c];
 						//if (chn.myOutput == value)
-						if (chn.DMXaddress == DMXaddress)
+						if (chn.DMXAddress == DMXAddress)
 						{
 							if (chn.UniverseNumber == UniverseNumber)
 							{
@@ -207,7 +211,7 @@ namespace UtilORama4
 		public bool Dirty { get { return isDirty; } set { isDirty = value; } }
 		public bool BadName { get { return nameIsBad; } }
 		public object Tag { get { return myTag; } set { myTag = value; } }
-		public bool MatchExact { get { return exactMatch; } set { exactMatch = value; } }
+		public bool ExactMatch { get { return matchesExactly; } set { matchesExactly = value; } }
 
 		public int UniverseNumber
 		{
@@ -222,15 +226,15 @@ namespace UtilORama4
 			}
 		}
 
-		public Int32 ColorLOR
+		public UInt32 ColorLOR
 		{
 			get
 			{
-				return utils.Color_NettoLOR(Color);
+				return lutils.Color_NettoLOR(Color);
 			}
 			set
 			{
-				Color = utils.Color_LORtoNet(value);
+				Color = lutils.Color_LORtoNet(value);
 			}
 		}
 
@@ -254,7 +258,7 @@ namespace UtilORama4
 			}
 		}
 
-		public int DMXaddress
+		public int DMXAddress
 		{
 			get
 			{
@@ -275,7 +279,7 @@ namespace UtilORama4
 				int ret = 0;
 				if (DMXController != null)
 				{
-					ret = DMXController.xLightsAddress + Output - 1;
+					ret = DMXController.xLightsAddress + LOROutput4 - 1;
 				}
 				return ret;
 
@@ -299,7 +303,7 @@ namespace UtilORama4
 		}
 		public override string ToString()
 		{
-			string ret = Output.ToString("00") + ": " + Name;
+			string ret = LOROutput4.ToString("00") + ": " + Name;
 			return ret;
 		}
 
@@ -332,14 +336,14 @@ namespace UtilORama4
 			newChan.isActive				= isActive;
 			newChan.Color					= Color;
 			newChan.DMXController = DMXController;
-			newChan.Output			= myOutput;
+			newChan.LOROutput4			= myOutput;
 			newChan.DMXDevice = DMXDevice;
 			newChan.isEditing				= isEditing;
 			//newChan.nameIsBad				= nameIsBad;
 			//newChan.BadOutput			= BadOutput;
 			//newChan.isDirty = isDirty;
 			newChan.myTag = myTag;
-			newChan.exactMatch = exactMatch;
+			newChan.matchesExactly = matchesExactly;
 
 			return newChan;
 		}
@@ -353,14 +357,14 @@ namespace UtilORama4
 			isActive = otherChannel.isActive;
 			Color = otherChannel.Color;
 			DMXController = otherChannel.DMXController;
-			Output = otherChannel.myOutput;
+			LOROutput4 = otherChannel.myOutput;
 			DMXDevice = otherChannel.DMXDevice;
 			isEditing = otherChannel.isEditing;
 			//nameIsBad				= otherChannel.nameIsBad;
 			//isDirty = otherChannel.isDirty;
 			//BadOutput			= otherChannel.BadOutput;
 			myTag = otherChannel.myTag;
-			exactMatch = otherChannel.exactMatch;
+			matchesExactly = otherChannel.matchesExactly;
 		}
 
 		public bool Equals(DMXChannel otherChannel)

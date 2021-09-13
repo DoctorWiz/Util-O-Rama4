@@ -9,7 +9,7 @@ using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LORUtils; using FileHelper;
+using LORUtils4; using FileHelper;
 using xUtils;
 using FuzzyString;
 
@@ -21,10 +21,10 @@ namespace UtilORama4
 		private static Properties.Settings heartOfTheSun = Properties.Settings.Default;
 		private const string helpPage = "http://wizlights.com/utilorama/blankorama";
 
-		Sequence4 sequence = null;
-		public List<Channel> channelList = new List<Channel>();
-		public List<RGBchannel> RGBList = new List<RGBchannel>();
-		public List<ChannelGroup> groupList = new List<ChannelGroup>();
+		LORSequence4 sequence = null;
+		public List<LORChannel4> channelList = new List<LORChannel4>();
+		public List<LORRGBChannel4> RGBList = new List<LORRGBChannel4>();
+		public List<LORChannelGroup4> groupList = new List<LORChannelGroup4>();
 
 		public List<Model> xModelList = new List<Model>();
 		public List<RGBmodel> xRGBList = new List<RGBmodel>();
@@ -262,7 +262,7 @@ namespace UtilORama4
 
 		}
 
-		private int CompileLORlists(Sequence4 seq)
+		private int CompileLORlists(LORSequence4 seq)
 		{
 			bool match = false;
 			int count = 0;
@@ -270,7 +270,7 @@ namespace UtilORama4
 			// [Regular] Channels (Non-RGB)
 			if (seq.Channels.Count > 0)
 			{
-				channelList = new List<Channel>(); // Clear/Reset
+				channelList = new List<LORChannel4>(); // Clear/Reset
 				channelList.Add(seq.Channels[0]);
 				for (int i = 1; i<seq.Channels.Count; i++)
 				{
@@ -294,7 +294,7 @@ namespace UtilORama4
 			// RGB Channels
 			if (seq.RGBchannels.Count > 0)
 			{
-				RGBList = new List<RGBchannel>(); // Clear/Reset
+				RGBList = new List<LORRGBChannel4>(); // Clear/Reset
 				RGBList.Add(seq.RGBchannels[0]);
 				for (int i = 1; i < seq.RGBchannels.Count; i++)
 				{
@@ -318,7 +318,7 @@ namespace UtilORama4
 			// Channel Groups
 			if (seq.ChannelGroups.Count > 0)
 			{
-				groupList = new List<ChannelGroup>(); // Clear/Reset
+				groupList = new List<LORChannelGroup4>(); // Clear/Reset
 				groupList.Add(seq.ChannelGroups[0]);
 				for (int i = 1; i < seq.ChannelGroups.Count; i++)
 				{
@@ -358,18 +358,18 @@ namespace UtilORama4
 				int ip = lineIn.IndexOf(" name=\"");
 				if (ip >= 0)
 				{
-					theName = xUtils.utils.getKeyWord(lineIn, "name");
+					theName = xutils.getKeyWord(lineIn, "name");
 
 					ip = lineIn.IndexOf("<model ");
 					if (ip >= 0)
 					{
 						// If it's a model...
-						// Is it a Single Color Channel?
+						// Is it a Single Color LORChannel4?
 						ip = lineIn.IndexOf("StringType=\"Single Color");
 						if (ip >= 0)
 						{
 							mbrType = xMemberType.Model; // Default
-							string st = xUtils.utils.getKeyWord(lineIn, "StringType");
+							string st = xutils.getKeyWord(lineIn, "StringType");
 							//TODO Get its color!
 							Model xch = new Model(theName);
 							xModelList.Add(xch);
@@ -428,7 +428,7 @@ namespace UtilORama4
 		{
 			bool stopLooking = false;
 			// Start with xLights show directory
-			string initDir = xUtils.utils.ShowDirectory;
+			string initDir = xutils.ShowDirectory;
 			if (Directory.Exists(initDir))
 			{
 				//
@@ -437,7 +437,7 @@ namespace UtilORama4
 			{
 				// Can't find xLights show directory, lets try elsewhere
 				// Check LOR directory
-				initDir = LORUtils.utils.DefaultSequencesPath;
+				initDir = LORUtils4.lutils.DefaultSequencesPath;
 				if (Directory.Exists(initDir))
 				{
 					// Its there, does it have a Timings subdirectory
@@ -466,7 +466,7 @@ namespace UtilORama4
 			if (!Directory.Exists(initDir))
 			{
 				// Last Gasp, go the for the user's documents folder
-				initDir = LORUtils.Fyle.DefaultDocumentsPath;
+				initDir = LORUtils4.Fyle.DefaultDocumentsPath;
 			}
 
 			string initFile = "";
@@ -498,7 +498,7 @@ namespace UtilORama4
 		{
 			bool stopLooking = false;
 			// Start with LOR Showtime directory
-			string initDir = LORUtils.utils.DefaultSequencesPath;
+			string initDir = LORUtils4.lutils.DefaultSequencesPath;
 			if (Directory.Exists(initDir))
 			{
 				// If it exists, see if it has a Sequences subdirectory
@@ -513,7 +513,7 @@ namespace UtilORama4
 			{
 				// Can't find LOR Showtime directory, lets try elsewhere
 				// Check xLights show folder
-				initDir = xUtils.utils.ShowDirectory;
+				initDir = xutils.ShowDirectory;
 				if (Directory.Exists(initDir))
 				{
 					// Its there, does it have a Timings subdirectory
@@ -538,12 +538,12 @@ namespace UtilORama4
 			if (!Directory.Exists(initDir))
 			{
 				// Last Gasp, go the for the user's documents folder
-				initDir = LORUtils.Fyle.DefaultDocumentsPath;
+				initDir = LORUtils4.Fyle.DefaultDocumentsPath;
 			}
 
 			string initFile = "";
 			string filt = "All Sequences (*.las, *.lms, *.lcc)|*.las;*.lms;*.lcc|Musical Sequences only (*.lms)|*.lms";
-			filt += "|Animated Sequences only (*.las)|*.las|Channel Configurations only(*.lcc)|*.lcc";
+			filt += "|Animated Sequences only (*.las)|*.las|LORChannel4 Configurations only(*.lcc)|*.lcc";
 			filt += "|All Files (*.*)|*.*";
 
 			dlgFileOpen.Filter = filt;
@@ -561,7 +561,7 @@ namespace UtilORama4
 				ImBusy(true);
 				txtLORfile.Text = dlgFileOpen.FileName;
 				heartOfTheSun.Sequence = dlgFileOpen.FileName;
-				sequence = new Sequence4(dlgFileOpen.FileName);
+				sequence = new LORSequence4(dlgFileOpen.FileName);
 				CompileLORlists(sequence);
 				string stat = channelList.Count.ToString() + " Channels, ";
 				stat += RGBList.Count.ToString() + " RGB Channels, and ";
@@ -878,7 +878,7 @@ namespace UtilORama4
 			if (!Directory.Exists(initDir))
 			{
 				// Last Gasp, go the for the user's documents folder
-				initDir = LORUtils.Fyle.DefaultDocumentsPath;
+				initDir = LORUtils4.Fyle.DefaultDocumentsPath;
 			}
 
 			string seqName = Path.GetFileNameWithoutExtension(txtLORfile.Text);
@@ -920,14 +920,14 @@ namespace UtilORama4
 			StreamWriter writer = new StreamWriter(fileName);
 			if (LORfirst)
 			{
-				lineOut.Append("LOR Channel, Match, xLights Model, Color");
+				lineOut.Append("LOR LORChannel4, Match, xLights Model, Color");
 				writer.WriteLine(lineOut.ToString());
 				lineCount++;
 				
 				for (int l=0; l< channelList.Count; l++)
 				{
 					lineOut.Clear();
-					Channel lc = channelList[l];
+					LORChannel4 lc = channelList[l];
 					lineOut.Append(CSVsafeName(lc.Name));
 					lineOut.Append(',');
 					if (lc.Selected)
@@ -949,7 +949,7 @@ namespace UtilORama4
 					{
 						lineOut.Append("None,,");
 					}
-					string clr = "#" + LORUtils.utils.Color_LORtoHTML(lc.color); 
+					string clr = "#" + LORUtils4.lutils.Color_LORtoHTML(lc.color); 
 					lineOut.Append(clr);
 					writer.WriteLine(lineOut.ToString());
 					lineCount++;
@@ -971,14 +971,14 @@ namespace UtilORama4
 				writer.WriteLine("");
 				lineCount++;
 				lineOut.Clear();
-				lineOut.Append("LOR RGB Channel, Match, xLights Model");
+				lineOut.Append("LOR RGB LORChannel4, Match, xLights Model");
 				writer.WriteLine(lineOut.ToString());
 				lineCount++;
 
 				for (int l = 0; l < RGBList.Count; l++)
 				{
 					lineOut.Clear();
-					RGBchannel lc = RGBList[l];
+					LORRGBChannel4 lc = RGBList[l];
 					lineOut.Append(CSVsafeName(lc.Name));
 					lineOut.Append(',');
 					if (lc.Selected)
@@ -1025,7 +1025,7 @@ namespace UtilORama4
 				for (int l = 0; l < groupList.Count; l++)
 				{
 					lineOut.Clear();
-					ChannelGroup lc = groupList[l];
+					LORChannelGroup4 lc = groupList[l];
 					lineOut.Append(CSVsafeName(lc.Name));
 					lineOut.Append(',');
 					if (lc.Selected)

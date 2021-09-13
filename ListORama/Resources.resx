@@ -139,15 +139,15 @@
     <value>Tracks can only be mapped to other tracks, and ONLY if they have the exact same number of regular channels, RGB channels, and channel groups, and in the exact same order.</value>
   </data>
   <data name="OpenDialogFilter_Master" xml:space="preserve">
-    <value>Channel Configs (*.lcc)|*.lcc|Musical Sequences (*.lms)|*.lms|Animated Sequences (*.las)|*.las</value>
+    <value>LORChannel4 Configs (*.lcc)|*.lcc|Musical Sequences (*.lms)|*.lms|Animated Sequences (*.las)|*.las</value>
   </data>
   <data name="OpenDialogFilter_Source" xml:space="preserve">
     <value>Musical Sequences (*.lms)|*.lms|Animated Sequences (*.las)|*.las</value>
   </data>
   <data name="MSG_NoMap" xml:space="preserve">
-    <value>Error: Old Channel not mapped to New Channel.</value>
+    <value>Error: Old Channel not mapped to New LORChannel4.</value>
   </data>
   <data name="MSG_OneWay" xml:space="preserve">
-    <value>Error: Old Channel mapped to New Channel, but not vise-versa.</value>
+    <value>Error: Old Channel mapped to New LORChannel4, but not vise-versa.</value>
   </data>
 </root>

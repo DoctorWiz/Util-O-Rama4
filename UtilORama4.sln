@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfoRama", "InfoRama\InfoRa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StringORama", "StringORama\StringORama.csproj", "{8F8923F1-2EA0-4F83-B046-4C8B50C0C99D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoobarORama", "FoobarORama\FoobarORama.csproj", "{25B963FD-2957-4617-8903-2351236FC377}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValidORama", "FoobarORama\ValidORama.csproj", "{25B963FD-2957-4617-8903-2351236FC377}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ListORama", "ListORama\ListORama.csproj", "{4DAE48A6-6B4B-41B9-A46F-3B0AAF1C0B42}"
 EndProject

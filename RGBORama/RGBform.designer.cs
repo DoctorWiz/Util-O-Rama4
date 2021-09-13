@@ -605,7 +605,7 @@
 			this.groupBox1.Size = new System.Drawing.Size(494, 73);
 			this.groupBox1.TabIndex = 31;
 			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = " Step 6: Output File ";
+			this.groupBox1.Text = " Step 6: LOROutput4 File ";
 			// 
 			// btnBrowseOutput
 			// 

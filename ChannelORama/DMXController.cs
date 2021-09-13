@@ -27,7 +27,7 @@ namespace UtilORama4
 		protected bool nameIsBad = false;
 		public bool BadLetter = false;
 		protected object myTag = null;
-		protected bool exactMatch = false;
+		protected bool matchesExactly = false;  // Used to distinguish exact name matches from fuzzy name matches
 
 		public List<DMXChannel> DMXChannels = new List<DMXChannel>();
 		public DMXUniverse DMXUniverse = new DMXUniverse();
@@ -46,7 +46,7 @@ namespace UtilORama4
 		}
 		
 		
-		public DMXChannel DMXChannelAt(int DMXaddress)
+		public DMXChannel DMXChannelAt(int DMXAddress)
 		{
 			DMXChannel ret = null;
 
@@ -128,7 +128,7 @@ namespace UtilORama4
 		public bool Dirty { get { return isDirty; } set { isDirty = value; } }
 		public bool BadName { get { return nameIsBad; } }
 		public object Tag { get { return myTag; } set { myTag = value; } }
-		public bool MatchExact { get { return exactMatch; } set { exactMatch = value; } }
+		public bool ExactMatch { get { return matchesExactly; } set { matchesExactly = value; } }
 
 		public string LetterID
 		{
@@ -254,7 +254,7 @@ namespace UtilORama4
 			//newCtl.nameIsBad					= nameIsBad;
 			//newCtl.isDirty = isDirty;
 			newCtl.myTag = myTag;
-			newCtl.exactMatch = exactMatch;
+			newCtl.matchesExactly = matchesExactly;
 
 			return newCtl;
 		}
@@ -279,7 +279,7 @@ namespace UtilORama4
 			//nameIsBad					= otherController.nameIsBad;
 			//isDirty = otherController.isDirty;
 			myTag = otherController.myTag;
-			exactMatch = otherController.exactMatch;
+			matchesExactly = otherController.matchesExactly;
 		}
 
 		public bool Equals(DMXController otherController)

@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Info-Rama")]
+[assembly: AssemblyTitle("LORSeqInfo4-Rama")]
 [assembly: AssemblyDescription("Checks integrity of Light-O-Rama sequence files and displays information about them")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Doctor 🧙 Wizard and W⚡zlights Software")]
-[assembly: AssemblyProduct("Info-Rama")]
+[assembly: AssemblyProduct("LORSeqInfo4-Rama")]
 [assembly: AssemblyCopyright("Copyright © 2021+ by Doctor 🧙 Wizard and W⚡zlights Software")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

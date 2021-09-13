@@ -12,7 +12,7 @@ namespace UtilORama4
 	partial class frmAbout : Form
 	{
 
-		string applicationName = "Info-Rama";
+		string applicationName = "LORSeqInfo4-Rama";
 
 		public frmAbout()
 		{

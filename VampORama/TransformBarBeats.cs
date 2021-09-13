@@ -5,74 +5,68 @@ using System.Text;
 //using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-using LORUtils; using FileHelper;
+using LORUtils4; using FileHelper;
 using xUtilities;
 
 namespace UtilORama4
 {
-	public class BarBeats : ITransform
+	public static class VampBarBeats //: ITransform
 	{
+		public const string transformName = "Bars and Beats";
+		public const string barsName = "Bars (Whole notes, (4 Quarter notes))";
+		public const string beatsFullName = "Beats-Full (Quarter notes)";
+		public const string beatsHalfName = "Beats-Half (Eighth notes)";
+		public const string beatsThirdName = "Beats-Third (Twelth notes)";
+		public const string beatsQuarterName = "Beats-Quarter (Sixteenth notes)";
+		public const string framesName = "Frames";
+
+
+
 		public const int PLUGINqmBarAndBeat = 0;
 		public const int PLUGINqmTempo = 1;
 		public const int PLUGINbeatRoot = 2;
 		//public const int PLUGINporto = 3;
 		public const int PLUGINaubio = 3;
-		public xTimings xBars = new xTimings("Bars" + " (Whole notes, (4 Quarter notes))");
-		public xTimings xBeatsFull = new xTimings("Beats-Full (Quarter notes)");
-		public xTimings xBeatsHalf = new xTimings("Beats-Half (Eighth notes)");
-		public xTimings xBeatsThird = new xTimings("Beats-Third (Twelth notes)");
-		public xTimings xBeatsQuarter = new xTimings("Beats-Quarter (Sixteenth notes)");
-		public xTimings xFrames = new xTimings("Frames");
-		public int BeatsPerBar = 4;
-		public int FirstBeat = 1;
-		public bool ReuseResults = false;
-		public int totalCentiseconds = 0;
-		public int totalMilliseconds = 0;
+		public static xTimings xBars = Annotator.xBars; // new xTimings(barsName);
+		public static xTimings xBeatsFull = Annotator.xBeatsFull; // new xTimings(beatsFullName);
+		public static xTimings xBeatsHalf = Annotator.xBeatsHalf; // new xTimings(beatsHalfName);
+		public static xTimings xBeatsThird = Annotator.xBeatsThird; // new xTimings(beatsThirdName);
+		public static xTimings xBeatsQuarter = Annotator.xBeatsQuarter; // new xTimings(beatsQuarterName);
+		public static xTimings xFrames = Annotator.xFrames; // new xTimings(framesName);
+																												//public static int BeatsPerBar = 4;
+																												//public static int FirstBeat = 1;
+																												//public bool ReuseResults = false;
+																												//public int totalCentiseconds = 0;
+																												//public int totalMilliseconds = 0;
+		public static string ResultsFile = "song_vamp_qm-vamp-plugins_qm-barbeattracker_beats.csv";
 
 		//private Annotator myAnnotator = null;
 
-		public readonly string[] availablePluginNames = {	"Queen Mary Bar and Beat Tracker",
+		public static readonly string[] availablePluginNames = {	"Queen Mary Bar and Beat Tracker",
 																											"Queen Mary Tempo and Beat Tracker",
 																											"BeatRoot Beat Tracker",
 																											// Does not work with latest Sonic Annotator, and 32-bit only (for older Annotator)
 																											//"Porto Beat Tracker",
 																											"Aubio Beat Tracker"};
 
-		public readonly string[] availablePluginCodes = {"vamp:qm-vamp-plugins:qm-barbeattracker:beats",
+		public static readonly string[] availablePluginCodes = {"vamp:qm-vamp-plugins:qm-barbeattracker:beats",
 																											"vamp:qm-vamp-plugins:qm-tempotracker:beats",
 																											"vamp:beatroot-vamp:beatroot:beats",
 																											//"vamp:mvamp-ibt:marsyas_ibt:beat_times",
 																											"vamp:vamp-aubio:aubiotempo:beats" };
 
-		public readonly string[] filesAvailableConfigs = {"vamp_qm-vamp-plugins_qm-barbeattracker_beats.n3",
+		public static readonly string[] filesAvailableConfigs = {"vamp_qm-vamp-plugins_qm-barbeattracker_beats.n3",
 																											"vamp_qm-vamp-plugins_qm-tempotracker_output_beats.n3",
 																											"vamp_beatroot-vamp_beatroot_beats.n3",
 																											//"mvamp-ibt_marsyas_ibt_beat_times.n3",
 																											"vamp_vamp-aubio_aubiotempo_beats.n3" };
 
-		public readonly string[] availableLabels = { "Numbers" };
+		public static readonly string[] availableLabels = { vamps.LABELNAMEnone, vamps.LABELNAMEnumbers };
 
-		private string fileConfigBase = "vamp_qm-vamp-plugins_qm-barbeattracker_beats";
+		private static string fileConfigBase = "vamp_qm-vamp-plugins_qm-barbeattracker_beats";
+		private static int pluginIndex = 0;
 
-	private SequenceFunctions seqFunct = new SequenceFunctions();
-
-		public BarBeats()
-		{
-			// Constructor
-
-		}
-
-		public string[] AvailablePluginNames
-		{
-			get
-			{
-				return availablePluginNames;
-			}
-		}
-
-		private int pluginIndex = 0;
-
-		public int UsePlugin
+		public static int UsePlugin
 		{
 			set
 			{
@@ -101,14 +95,14 @@ namespace UtilORama4
 
 		public enum DetectionMethods { ComplexDomain = 0, SpectralDifference = 1, PhaseDeviation = 2, BroadbandEnergyRise = 3 };
 
-		public readonly string[] DetectionMethodNames = {"'Complex Domain' (Strings/Mixed: Piano, Guitar)",
+		public static readonly string[] DetectionMethodNames = {"'Complex Domain' (Strings/Mixed: Piano, Guitar)",
 																				"'Spectral Difference' (Percussion: Drums, Chimes)",
 																				"'Phase Deviation' (Wind: Flute, Sax, Trumpet)",
 																				"'Broadband Energy Rise' (Percussion mixed with other)"};
 
-		private DetectionMethods detectionMethod = BarBeats.DetectionMethods.ComplexDomain;
+		private static DetectionMethods detectionMethod = VampBarBeats.DetectionMethods.ComplexDomain;
 
-		public DetectionMethods DetectionMethod
+		public static DetectionMethods DetectionMethod
 		{
 			set
 			{
@@ -121,19 +115,12 @@ namespace UtilORama4
 		}
 
 
-		private readonly vamps.AlignmentType[] allowableAlignments = { vamps.AlignmentType.None, vamps.AlignmentType.FPS20, vamps.AlignmentType.FPS40 };
+		private static readonly vamps.AlignmentType[] allowableAlignments = { vamps.AlignmentType.None, vamps.AlignmentType.FPS20, vamps.AlignmentType.FPS40 };
 
-		public vamps.AlignmentType[] AllowableAlignments
-		{
-			get
-			{
-				return allowableAlignments;
-			}
-		}
 
-		private vamps.AlignmentType alignmentType = vamps.AlignmentType.None;
+		private static vamps.AlignmentType alignmentType = vamps.AlignmentType.None;
 
-		private vamps.AlignmentType AlignmentType
+		private static vamps.AlignmentType AlignmentType
 		{
 			set
 			{
@@ -155,41 +142,33 @@ namespace UtilORama4
 		}
 
 
-		private readonly vamps.LabelTypes[] allowableLabels = { vamps.LabelTypes.None };
+		private static readonly vamps.LabelTypes[] allowableLabels = { vamps.LabelTypes.None, vamps.LabelTypes.Numbers };
 
-		public vamps.LabelTypes[] AllowableLabels
-		{
-			get
-			{
-				return allowableLabels;
-			}
-		}
-
-		public xTimings Timings
+		public static xTimings Timings
 		{
 			get
 			{
 				return xBars;
 			}
 		}
-		public int TransformationType
+		public static Annotator.TransformTypes TransformationType
 		{
 			get
 			{
-				return 1;
+				return Annotator.TransformTypes.BarsAndBeats;
 			}
 		}
 
-		public string TransformationName
+		public static string TransformationName
 		{
 			get
 			{
-				return "Bars and Beats";
+				return transformName;
 			}
 		}
 
-		public int PrepareToVamp(string fileSong, int pluginIndex, int beatsPerBar, int stepSize, 
-								int detectionMethod = METHODdomain, bool reuse = false, bool whiten = true)
+		//public static int PrepareToVamp(string fileSong, int pluginIndex, int detectionMethod = METHODdomain)
+		public static int PrepareVampConfig(int pluginIndex, int detectionMethod = METHODdomain)
 		{
 			// Song file should have already been copied to the temp folder and named song.mp3
 			// Annotator will use the same folder the song is in for it's files
@@ -199,17 +178,15 @@ namespace UtilORama4
 			string fileConfig = filesAvailableConfigs[pluginIndex];
 			//string vampParams = availablePluginCodes[pluginIndex];
 			string pathConfigs = AppDomain.CurrentDomain.BaseDirectory + "VampConfigs\\";
-			string pathWork = Path.GetDirectoryName(fileSong) + "\\";
+			//string pathWork = Path.GetDirectoryName(fileSong) + "\\";
 	
 			int lineCount = 0;
 			string lineIn = "";
-			BeatsPerBar = beatsPerBar;
-			ReuseResults = reuse;
 			StreamReader reader;
 			StreamWriter writer;
 
 			string fileConfigFrom = pathConfigs + fileConfig;
-			string fileConfigTo = pathWork + fileConfig;
+			string fileConfigTo = Annotator.WorkPath + fileConfig;
 
 			try
 			{
@@ -225,11 +202,11 @@ namespace UtilORama4
 							lineIn = reader.ReadLine();
 							if (lineCount == 7)
 							{
-								lineIn = lineIn.Replace("557", stepSize.ToString());
+								lineIn = lineIn.Replace("557", Annotator.StepSize.ToString());
 							}
 							if (lineCount == 16)
 							{
-								if (beatsPerBar == 3)
+								if (Annotator.BeatsPerBar == 3)
 								{
 									lineIn = lineIn.Replace('4', '3');
 								}
@@ -250,7 +227,7 @@ namespace UtilORama4
 							lineIn = reader.ReadLine();
 							if (lineCount == 7)
 							{
-								lineIn = lineIn.Replace("557", stepSize.ToString());
+								lineIn = lineIn.Replace("557", Annotator.StepSize.ToString());
 							}
 							if (lineCount == 20)
 							{
@@ -261,7 +238,7 @@ namespace UtilORama4
 							}
 							if (lineCount == 32)
 							{
-								if (whiten)
+								if (Annotator.Whiten)
 								{
 									lineIn = lineIn.Replace('0', '1');
 								}
@@ -281,7 +258,7 @@ namespace UtilORama4
 							lineIn = reader.ReadLine();
 							if (lineCount == 7)
 							{
-								lineIn = lineIn.Replace("441", stepSize.ToString());
+								lineIn = lineIn.Replace("441", Annotator.StepSize.ToString());
 							}
 							writer.WriteLine(lineIn);
 						}
@@ -290,7 +267,7 @@ namespace UtilORama4
 						break;
 					//case PLUGINporto:
 					// Porto Beat Tracker
-					//err = utils.SafeCopy(fileConfigFrom, fileConfigTo);
+					//err = lutils.SafeCopy(fileConfigFrom, fileConfigTo);
 					//break;
 					case PLUGINaubio:
 						// Aubio Beat Tracker
@@ -302,7 +279,7 @@ namespace UtilORama4
 							lineIn = reader.ReadLine();
 							if (lineCount == 7)
 							{
-								lineIn = lineIn.Replace("512", stepSize.ToString());
+								lineIn = lineIn.Replace("512", Annotator.StepSize.ToString());
 							}
 							if (lineCount == 12)
 							{
@@ -321,7 +298,7 @@ namespace UtilORama4
 			catch (Exception e)
 			{
 				err = e.HResult;
-				if (Fyle.isWiz)
+				if (Fyle.DebugMode)
 				{
 					string msg = e.Message;
 					string ermsg = "Error: " + msg;
@@ -342,39 +319,12 @@ namespace UtilORama4
 			return err;
 		}
 
-		private int fps = 40;
-		private int msPF = 25;
-		public int FramesPerSecond
-		{
-			set
-			{
-				fps = value;
-				if (fps < 10) fps = 10;
-				if (fps > 100) fps = 100;
-				msPF = 1000 / fps;
-			}
-			get
-			{
-				return fps;
-			}
-		}
-
-		public int MillisecondsPerFrame
-		{
-			set
-			{
-				msPF = value;
-				if (msPF < 10) msPF = 10;
-				if (msPF > 100) msPF = 100;
-				fps = 1000 / msPF;
-			}
-		}
 
 		// Required by ITransform inteface, wrapper to true ResultsToxTimings procedure requiring more parameters
-		public int ResultsToxTimings(string resultsFile, vamps.AlignmentType alignmentType, vamps.LabelTypes labelType)
+		public static int ResultsToxTimings(string resultsFile, vamps.AlignmentType alignmentType, vamps.LabelTypes labelType)
 		{
 			int err = 0;
-			if ((xBars == null) || (xBars.effects.Count < 2) || (!ReuseResults))
+			if ((xBars == null) || (xBars.effects.Count < 2) || (!Annotator.ReuseResults))
 			{
 				int onsetCount = 0;
 				string lineIn = "";
@@ -390,36 +340,36 @@ namespace UtilORama4
 
 				int countLines = 0;
 				int countBars = 1;
-				int countBeats = FirstBeat;
+				int countBeats = Annotator.FirstBeat;
 				int countHalves = 1;
 				int countThirds = 1;
 				int countQuarters = 1;
-				int maxBeats = BeatsPerBar;
-				int maxHalves = BeatsPerBar * 2;
-				int maxThirds = BeatsPerBar * 3;
-				int maxQuarters = BeatsPerBar * 4;
+				int maxBeats = Annotator.BeatsPerBar;
+				int maxHalves = Annotator.BeatsPerBar * 2;
+				int maxThirds = Annotator.BeatsPerBar * 3;
+				int maxQuarters = Annotator.BeatsPerBar * 4;
 
-				//int align = seqFunct.GetAlignment(cboAlignBarsBeats.Text);
+				//int align = SequenceFunctions.GetAlignment(cboAlignBarsBeats.Text);
 
 				if (alignmentType == vamps.AlignmentType.FPS20)
 				{
-					fps = 20;
-					msPF = 50;
+					Annotator.FPS = 20;
+					//Annotator.msPF = 50;
 				}
 				else
 				{
 					if (alignmentType == vamps.AlignmentType.FPS40)
 					{
-						fps = 40;
-						msPF = 25;
+						Annotator.FPS = 40;
+						//Annotator.msPF = 25;
 					}
 					else
 					{
 						// if (alignmentType == vamps.AlignmentType.None)
 						// or if alignmentType == anything else (which would be invalid!)
 						//{
-							fps = 1000;
-							msPF = 1;
+							Annotator.FPS = 1000;
+							//msPF = 1;
 						//}
 
 					}
@@ -441,11 +391,12 @@ namespace UtilORama4
 				}
 				reader.Close();
 
-				xBars = new xTimings("Bars" + " (Whole notes, (" + BeatsPerBar.ToString() + " Quarter notes))");
-				xBeatsFull = new xTimings("Beats-Full (Quarter notes)");
-				xBeatsHalf = new xTimings("Beats-Half (Eighth notes)");
-				xBeatsThird = new xTimings("Beats-Third (Twelth notes)");
-				xBeatsQuarter = new xTimings("Beats-Quarter (Sixteenth notes)");
+				xBars					= new xTimings("Bars" + " (Whole notes, (" + Annotator.BeatsPerBar.ToString() + " Quarter notes))");
+				xBeatsFull		= new xTimings(beatsFullName);
+				xBeatsHalf		= new xTimings(beatsHalfName);
+				xBeatsThird		= new xTimings(beatsThirdName);
+				xBeatsQuarter = new xTimings(beatsQuarterName);
+				xFrames				= new xTimings("Frames");
 
 				// Pass 2, read data into arrays
 				reader = new StreamReader(resultsFile);
@@ -461,7 +412,7 @@ namespace UtilORama4
 						string[] parts = lineIn.Split(',');
 
 						millisecs = xUtils.ParseMilliseconds(parts[0]);
-						millisecs = xUtils.RoundTimeTo(millisecs, msPF);
+						millisecs = xUtils.RoundTimeTo(millisecs, Annotator.msPF);
 						lastBeat = millisecs;
 						lastBar = millisecs;
 					} // end line contains a period
@@ -477,7 +428,7 @@ namespace UtilORama4
 
 						millisecs = xUtils.ParseMilliseconds(parts[0]);
 						// FULL BEATS - QUARTER NOTES
-						millisecs = xUtils.RoundTimeTo(millisecs, msPF);
+						millisecs = xUtils.RoundTimeTo(millisecs, Annotator.msPF);
 						beatLength = millisecs - lastBeat;
 						xBeatsFull.Add(countBeats.ToString(), lastBeat, millisecs,countBeats);
 						countBeats++;
@@ -493,7 +444,7 @@ namespace UtilORama4
 
 						// HALF BEATS - EIGHTH NOTES
 						subBeat = lastBeat + (beatLength / 2);
-						subBeat = xUtils.RoundTimeTo(subBeat, msPF);
+						subBeat = xUtils.RoundTimeTo(subBeat, Annotator.msPF);
 						xBeatsHalf.Add(countHalves.ToString(), lastBeat, subBeat,countHalves);
 						countHalves++;
 
@@ -503,12 +454,12 @@ namespace UtilORama4
 
 						// THIRD BEATS - TWELTH NOTES
 						subBeat = lastBeat + (beatLength / 3);
-						subBeat = xUtils.RoundTimeTo(subBeat, msPF);
+						subBeat = xUtils.RoundTimeTo(subBeat, Annotator.msPF);
 						xBeatsThird.Add(countThirds.ToString(), lastBeat, subBeat, countThirds);
 						countThirds++;
 
 						subSubBeat = lastBeat + (beatLength * 2 / 3);
-						subSubBeat = xUtils.RoundTimeTo(subSubBeat, msPF);
+						subSubBeat = xUtils.RoundTimeTo(subSubBeat, Annotator.msPF);
 						xBeatsThird.Add(countThirds.ToString(), subBeat, subSubBeat, countThirds);
 						countThirds++;
 
@@ -518,17 +469,17 @@ namespace UtilORama4
 
 						// QUARTER BEATS - SIXTEENTH NOTES
 						subBeat = lastBeat + (beatLength / 4);
-						subBeat = xUtils.RoundTimeTo(subBeat, msPF);
+						subBeat = xUtils.RoundTimeTo(subBeat, Annotator.msPF);
 						xBeatsQuarter.Add(countQuarters.ToString(), lastBeat, subBeat, countQuarters);
 						countQuarters++;
 
 						subSubBeat = lastBeat + (beatLength / 2);
-						subSubBeat = xUtils.RoundTimeTo(subSubBeat, msPF);
+						subSubBeat = xUtils.RoundTimeTo(subSubBeat, Annotator.msPF);
 						xBeatsQuarter.Add(countQuarters.ToString(), subBeat, subSubBeat, countQuarters);
 						countQuarters++;
 
 						subSubSubBeat = lastBeat + (beatLength * 3 / 4);
-						subSubSubBeat = xUtils.RoundTimeTo(subSubSubBeat, msPF);
+						subSubSubBeat = xUtils.RoundTimeTo(subSubSubBeat, Annotator.msPF);
 						xBeatsQuarter.Add(countQuarters.ToString(), subSubBeat, subSubSubBeat, countQuarters);
 						countQuarters++;
 
@@ -544,15 +495,15 @@ namespace UtilORama4
 				} // end while loop more lines remaining
 
 				reader.Close();
-				totalMilliseconds = lastBeat;
-				totalCentiseconds = lastBeat / 10;
+				Annotator.TotalMilliseconds = lastBeat;
+				Annotator.TotalCentiseconds = lastBeat / 10;
 				//int t = xBars.effects[0].starttime;
 				int t = 0;
 				int f = 1;
 				if (alignmentType == vamps.AlignmentType.FPS10)
 				{
-					xFrames.timingName = "Frames 10FPS, 10cs";
-					while (t <= totalMilliseconds)
+					xFrames.Name = "Frames 10FPS, 10cs";
+					while (t <= Annotator.TotalMilliseconds)
 					{
 						if (t>0)
 						{
@@ -565,8 +516,8 @@ namespace UtilORama4
 				}
 				if (alignmentType == vamps.AlignmentType.FPS20)
 				{
-					xFrames.timingName = "Frames 20FPS, 5cs";
-					while (t <= totalMilliseconds)
+					xFrames.Name = "Frames 20FPS, 5cs";
+					while (t <= Annotator.TotalMilliseconds)
 					{
 						if (t > 0)
 						{
@@ -578,8 +529,8 @@ namespace UtilORama4
 				}
 				if (alignmentType == vamps.AlignmentType.FPS30)
 				{
-					xFrames.timingName = "Frames 30FPS, 3.33cs";
-					while (t <= totalMilliseconds)
+					xFrames.Name = "Frames 30FPS, 3.33cs";
+					while (t <= Annotator.TotalMilliseconds)
 					{
 						if (t > 0)
 						{
@@ -595,8 +546,8 @@ namespace UtilORama4
 				}
 				if (alignmentType == vamps.AlignmentType.FPS40)
 				{
-					xFrames.timingName = "Frames 40FPS, 2.5cs";
-					while (t < totalMilliseconds)
+					xFrames.Name = "Frames 40FPS, 2.5cs";
+					while (t < Annotator.TotalMilliseconds)
 					{
 						if (t > 0)
 						{
@@ -608,8 +559,8 @@ namespace UtilORama4
 				}
 				if (alignmentType == vamps.AlignmentType.FPS60)
 				{
-					xFrames.timingName = "Frames 60FPS, 1.667cs";
-					while (t <= totalMilliseconds)
+					xFrames.Name = "Frames 60FPS, 1.667cs";
+					while (t <= Annotator.TotalMilliseconds)
 					{
 						if (t > 0)
 						{
@@ -632,29 +583,77 @@ namespace UtilORama4
 
 
 			}
+			// Temp, for debugging while stepping thru code
+			int bc = xBars.effects.Count;
+			int bf = xBeatsFull.effects.Count;
+
+
 			Annotator.xBars = xBars;
 			Annotator.xBeatsFull = xBeatsFull;
 			Annotator.xBeatsHalf = xBeatsHalf;
 			Annotator.xBeatsThird = xBeatsThird;
 			Annotator.xBeatsQuarter = xBeatsQuarter;
+			Annotator.xFrames = xFrames;
 			return err;
 		} // end Beats
 
+		public static int xTimingsToLORtimings()
+		{
+			int errs = 0;
+			xTimingToLORtimings(xBars);
+			Annotator.GridBeats = xTimingToLORtimings(xBeatsFull);
+			if (Annotator.VampTrack.timingGrid == null) Annotator.VampTrack.timingGrid = Annotator.GridBeats;
+			xTimingToLORtimings(xBeatsHalf);
+			xTimingToLORtimings(xBeatsThird);
+			xTimingToLORtimings(xBeatsQuarter);
+			//errs += xTimingToLORtimings(xFrames);
+			Annotator.Sequence.CentiFix();
+			return errs;
+		}
 
-		public int xTimingsToLORtimings(xTimings timings, Sequence4 sequence)
+		public static LORTimings4 xTimingToLORtimings(xTimings timings)
+		{
+			LORTimings4 beatGrid = null;
+			int errs = 0;
+			string theName = timings.Name;
+			if (timings != null)
+			{
+				if (timings.effects.Count > 0)
+				{
+					int tec = timings.effects.Count;
+					beatGrid = Annotator.Sequence.FindTimingGrid(theName, true);
+					errs = SequenceFunctions.ImportTimingGrid(beatGrid, timings);
+					if (tec != beatGrid.timings.Count)
+					{
+						string msg = "Warning:\r\nxTimings '" + theName + "' has ";
+						msg += timings.effects.Count.ToString() + " effects, but\r\n";
+						msg += "Timing Grid '" + theName + "' has ";
+						msg += beatGrid.timings.Count.ToString() + " effects.\r\n";
+						msg += "   (This may be because of tightly close timings)";
+						Fyle.BUG(msg);
+					}
+				}
+			}
+			return beatGrid;
+		}
+
+
+
+
+		private static int OLD_xTimingsToLORtimings(xTimings timings, LORSequence4 sequence)
 		{
 			// Ignore the timings passed in, and use the ones already cached for Bars and Beats
 			// (Other transforms will use the one passed in)
 			
-			seqFunct.Sequence = sequence;
+			//SequenceFunctions.Sequence = sequence;
 			int errs = 0;
 
 			if (xBars != null)
 			{
 				if (xBars.effects.Count > 0)
 				{
-					TimingGrid barGrid = seqFunct.GetGrid("Bars", true);
-					seqFunct.ImportTimingGrid(barGrid, xBars);
+					LORTimings4 gridBars = sequence.FindTimingGrid(xBars.Name, true);
+					SequenceFunctions.ImportTimingGrid(gridBars, xBars);
 				}
 			}
 			//if (chkBeatsFull.Checked)
@@ -664,8 +663,13 @@ namespace UtilORama4
 				{
 					if (xBeatsFull.effects.Count > 0)
 					{
-						TimingGrid barGrid = seqFunct.GetGrid("Beats-Full", true);
-						seqFunct.ImportTimingGrid(barGrid, xBeatsFull);
+						LORTimings4 gridBeats = sequence.FindTimingGrid(beatsFullName, true);
+						SequenceFunctions.ImportTimingGrid(gridBeats, xBeatsFull);
+						Annotator.GridBeats = gridBeats;
+						if (Annotator.VampTrack.timingGrid == null)
+						{
+							Annotator.VampTrack.timingGrid = gridBeats;
+						}
 					}
 				}
 			}
@@ -676,8 +680,8 @@ namespace UtilORama4
 				{
 					if (xBeatsHalf.effects.Count > 0)
 					{
-						TimingGrid barGrid = seqFunct.GetGrid("Beats-Half", true);
-						seqFunct.ImportTimingGrid(barGrid, xBeatsHalf);
+						LORTimings4 gridHalf = sequence.FindTimingGrid(beatsHalfName, true);
+						SequenceFunctions.ImportTimingGrid(gridHalf, xBeatsHalf);
 					}
 				}
 			}
@@ -688,8 +692,8 @@ namespace UtilORama4
 				{
 					if (xBeatsThird.effects.Count > 0)
 					{
-						TimingGrid barGrid = seqFunct.GetGrid("Beats-Third", true);
-						seqFunct.ImportTimingGrid(barGrid, xBeatsThird);
+						LORTimings4 gridThird = sequence.FindTimingGrid(beatsThirdName, true);
+						SequenceFunctions.ImportTimingGrid(gridThird, xBeatsThird);
 					}
 				}
 			}
@@ -700,8 +704,8 @@ namespace UtilORama4
 				{
 					if (xBeatsQuarter.effects.Count > 0)
 					{
-						TimingGrid barGrid = seqFunct.GetGrid("Beats-Quarter", true);
-						seqFunct.ImportTimingGrid(barGrid, xBeatsQuarter);
+						LORTimings4 gridQuarter = sequence.FindTimingGrid(beatsQuarterName, true);
+						SequenceFunctions.ImportTimingGrid(gridQuarter, xBeatsQuarter);
 					}
 				}
 			}
@@ -709,98 +713,149 @@ namespace UtilORama4
 			{
 				if (xFrames.effects.Count > 0)
 				{
-					TimingGrid barFrame = seqFunct.GetGrid(xFrames.timingName, true);
-					seqFunct.ImportTimingGrid(barFrame, xFrames);
+					LORTimings4 barFrame = sequence.FindTimingGrid(xFrames.Name, true);
+					SequenceFunctions.ImportTimingGrid(barFrame, xFrames);
 				}
 			}
 
 			return errs;
 		}
 
-		public int xTimingsToLORChannels(xTimings timings, Sequence4 sequence)
+		public static int xTimingsToLORChannels()
 		{
-			return xTimingsToLORChannels(timings, sequence, 1, false);
-		}
-
-		public int xTimingsToLORChannels(xTimings timings, Sequence4 sequence, int firstBeat, bool ramps)
-		{
+			// NOTE: Exports all 5 (bars, full beats, half beats, thirds, quarters)
 			int errs = 0;
-
-			Track vampTrack = seqFunct.GetTrack("Vamp-O-Rama", true);
-			ChannelGroup beatGroup = seqFunct.GetGroup("Bars and Beats", vampTrack);
-			if (xBars != null)
+			if (Annotator.UseRamps)
 			{
-				if (xBars.effects.Count > 0)
-				{
-					//if (ramps)
-					//{
-					Channel barCh = seqFunct.GetChannel("Bars", beatGroup.Members);
-					//seqFunct.ImportBeatChannel(barCh, xBars, 1, firstBeat, ramps);
-					//seqFunct.ImportBeatChannel(barCh, xBars, 1, firstBeat, true);
-					seqFunct.ImportBeatChannel(barCh, xBars, 1, firstBeat, ramps);
-					//////}
-					//}
-				}
+				errs += xTimingToLORChannels(xBars);
+				errs += xTimingToLORChannels(xBeatsFull);
+				errs += xTimingToLORChannels(xBeatsHalf);
+				errs += xTimingToLORChannels(xBeatsThird);
+				errs += xTimingToLORChannels(xBeatsQuarter);
 			}
-			//if (chkBeatsFull.Checked)
-			if (true)
+			else
 			{
-				if (xBeatsFull != null)
-				{
-					if (xBeatsFull.effects.Count > 0)
-					{
-						Channel beatCh = seqFunct.GetChannel("Beats-Full", beatGroup.Members);
-						seqFunct.ImportBeatChannel(beatCh, xBeatsFull, BeatsPerBar, firstBeat, ramps);
-					}
-				}
+				// Actually Bars
+				errs += xTimingToLORChannels(xBeatsQuarter, xBars.Name, Annotator.BeatsPerBar * 4);
+				// Actually Full Beats
+				errs += xTimingToLORChannels(xBeatsQuarter, xBeatsFull.Name, Annotator.BeatsPerBar);
+				// Actually Half Beats
+				errs += xTimingToLORChannels(xBeatsQuarter, xBeatsHalf.Name, 2);
+				// Third Beats
+				errs += xTimingToLORChannels(xBeatsThird);
+				// Finally, Quarter Beats
+				errs += xTimingToLORChannels(xBeatsQuarter);
 			}
-			//if (chkBeatsHalf.Checked)
-			if (true)
-			{
-				if (xBeatsHalf != null)
-				{
-					if (xBeatsHalf.effects.Count > 0)
-					{
-						Channel beatCh = seqFunct.GetChannel("Beats-Half", beatGroup.Members);
-						seqFunct.ImportBeatChannel(beatCh, xBeatsHalf, BeatsPerBar * 2, firstBeat, ramps);
-					}
-				}
-			}
-			//if (chkBeatsThird.Checked)
-			if (true)
-			{
-				if (xBeatsThird != null)
-				{
-					if (xBeatsThird.effects.Count > 0)
-					{
-						Channel beatCh = seqFunct.GetChannel("Beats-Third", beatGroup.Members);
-						seqFunct.ImportBeatChannel(beatCh, xBeatsThird, BeatsPerBar * 3, firstBeat, ramps);
-					}
-				}
-			}
-			//if (chkBeatsQuarter.Checked)
-			if (true)
-			{
-				if (xBeatsQuarter != null)
-				{
-					if (xBeatsQuarter.effects.Count > 0)
-					{
-						Channel beatCh = seqFunct.GetChannel("Beats-Quarter", beatGroup.Members);
-						seqFunct.ImportBeatChannel(beatCh, xBeatsQuarter, BeatsPerBar * 4, firstBeat, ramps);
-					}
-				}
-			}
-
+			
 			return errs;
 		}
 
-		public int xTimingsToxLights(xTimings timings, string baseFileName)
+
+		public static int xTimingToLORChannels(xTimings timings, string beatName = "", int divider = 1) // Note lack of an s
 		{
+			// NOTE: Exports a single timing
 			int errs = 0;
-
+			if (timings != null)
+			{
+				if (timings.effects.Count > 0)
+				{
+					if (beatName == "") beatName = timings.Name;
+					int tec = timings.effects.Count;
+					//int bpb = Annotator.BeatsPerBar;
+					string tname = timings.Name.Substring(6, 4);
+					LORChannelGroup4 beatGroup = Annotator.Sequence.FindChannelGroup("Bars and Beats", Annotator.VampTrack.Members, true);
+					LORChannel4 chan = Annotator.Sequence.FindChannel(beatName, beatGroup.Members, true, true);
+					errs = SequenceFunctions.ImportBeatChannel(chan, timings, divider);
+				}
+			}
 
 			return errs;
 		}
+
+
+
+
+
+
+
+		/*
+				public xTimings xBars = new xTimings("Bars" + " (Whole notes, (4 Quarter notes))");
+public xTimings xBeatsFull = new xTimings("Beats-Full (Quarter notes)");
+public xTimings xBeatsHalf = new xTimings("Beats-Half (Eighth notes)");
+public xTimings xBeatsThird = new xTimings("Beats-Third (Twelth notes)");
+public xTimings xBeatsQuarter = new xTimings("Beats-Quarter (Sixteenth notes)");
+public xTimings xFrames = new xTimings("Frames");
+
+
+
+		//LORTrack4 vampTrack = sequence.FindTrack("Vamp-O-Rama", true);
+		LORChannelGroup4 beatGroup = sequence.FindChannelGroup("Bars and Beats", Annotator.VampTrack.Members, true);
+		if (xBars != null)
+		{
+			if (xBars.effects.Count > 0)
+			{
+				//if (ramps)
+				//{
+				LORChannel4 barCh = sequence.FindChannel("Bars", beatGroup.Members, true, true);
+				//SequenceFunctions.ImportBeatChannel(barCh, xBars, 1, firstBeat, ramps);
+				//SequenceFunctions.ImportBeatChannel(barCh, xBars, 1, firstBeat, true);
+				SequenceFunctions.ImportBeatChannel(barCh, xBars, 1, firstBeat, ramps);
+				//////}
+				//}
+			}
+		}
+		//if (chkBeatsFull.Checked)
+		if (true)
+		{
+			if (xBeatsFull != null)
+			{
+				if (xBeatsFull.effects.Count > 0)
+				{
+					LORChannel4 beatCh = sequence.FindChannel("Beats-Full", beatGroup.Members, true, true);
+					SequenceFunctions.ImportBeatChannel(beatCh, xBeatsFull, BeatsPerBar, firstBeat, ramps);
+				}
+			}
+		}
+		//if (chkBeatsHalf.Checked)
+		if (true)
+		{
+			if (xBeatsHalf != null)
+			{
+				if (xBeatsHalf.effects.Count > 0)
+				{
+					LORChannel4 beatCh = sequence.FindChannel("Beats-Half", beatGroup.Members, true, true);
+					SequenceFunctions.ImportBeatChannel(beatCh, xBeatsHalf, BeatsPerBar * 2, firstBeat, ramps);
+				}
+			}
+		}
+		//if (chkBeatsThird.Checked)
+		if (true)
+		{
+			if (xBeatsThird != null)
+			{
+				if (xBeatsThird.effects.Count > 0)
+				{
+					LORChannel4 beatCh = sequence.FindChannel("Beats-Third", beatGroup.Members, true, true);
+					SequenceFunctions.ImportBeatChannel(beatCh, xBeatsThird, BeatsPerBar * 3, firstBeat, ramps);
+				}
+			}
+		}
+		//if (chkBeatsQuarter.Checked)
+		if (true)
+		{
+			if (xBeatsQuarter != null)
+			{
+				if (xBeatsQuarter.effects.Count > 0)
+				{
+					LORChannel4 beatCh = sequence.FindChannel("Beats-Quarter", beatGroup.Members, true, true);
+					SequenceFunctions.ImportBeatChannel(beatCh, xBeatsQuarter, BeatsPerBar * 4, firstBeat, ramps);
+				}
+			}
+		}
+
+		return errs;
+	}
+		*/
 
 	}
 }
