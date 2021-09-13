@@ -13,6 +13,9 @@
 *.old
 *.wik
 *.bad
+*.zip
+*.gz
+*.rar
 
 # User-specific files
 *.suo
