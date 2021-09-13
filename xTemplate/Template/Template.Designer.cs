@@ -45,8 +45,6 @@
 			this.lblSourceFile = new System.Windows.Forms.Label();
 			this.btnBrowseSource = new System.Windows.Forms.Button();
 			this.txtSourceFile = new System.Windows.Forms.TextBox();
-			this.prgBarInner = new Syncfusion.Windows.Forms.Tools.ProgressBarAdv();
-			this.prgBarOuter = new Syncfusion.Windows.Forms.Tools.ProgressBarAdv();
 			this.dlgSaveFile = new System.Windows.Forms.SaveFileDialog();
 			this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -86,8 +84,6 @@
 			this.pnlAbout = new System.Windows.Forms.ToolStripStatusLabel();
 			this.pnlAll.SuspendLayout();
 			this.pnlMessage.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.prgBarInner)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.prgBarOuter)).BeginInit();
 			this.menuStrip1.SuspendLayout();
 			this.staStatus.SuspendLayout();
 			this.SuspendLayout();
@@ -106,8 +102,6 @@
 			this.pnlAll.Controls.Add(this.lblSourceFile);
 			this.pnlAll.Controls.Add(this.btnBrowseSource);
 			this.pnlAll.Controls.Add(this.txtSourceFile);
-			this.pnlAll.Controls.Add(this.prgBarInner);
-			this.pnlAll.Controls.Add(this.prgBarOuter);
 			this.pnlAll.Location = new System.Drawing.Point(0, 26);
 			this.pnlAll.Name = "pnlAll";
 			this.pnlAll.Size = new System.Drawing.Size(762, 674);
@@ -288,71 +282,6 @@
 			this.txtSourceFile.TextChanged += new System.EventHandler(this.txtSourceFile_TextChanged);
 			this.txtSourceFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
 			this.txtSourceFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
-			// 
-			// prgBarInner
-			// 
-			this.prgBarInner.BackGradientEndColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(211)))), ((int)(((byte)(212)))));
-			this.prgBarInner.BackGradientStartColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(211)))), ((int)(((byte)(212)))));
-			this.prgBarInner.BackMultipleColors = new System.Drawing.Color[] {
-        System.Drawing.Color.Empty};
-			this.prgBarInner.BackSegments = false;
-			this.prgBarInner.BackTubeEndColor = System.Drawing.Color.White;
-			this.prgBarInner.BackTubeStartColor = System.Drawing.Color.LightGray;
-			this.prgBarInner.Border3DStyle = System.Windows.Forms.Border3DStyle.Flat;
-			this.prgBarInner.BorderColor = System.Drawing.Color.Transparent;
-			this.prgBarInner.BorderSingle = System.Windows.Forms.ButtonBorderStyle.None;
-			this.prgBarInner.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.prgBarInner.CustomText = null;
-			this.prgBarInner.CustomWaitingRender = false;
-			this.prgBarInner.FontColor = System.Drawing.Color.White;
-			this.prgBarInner.ForeColor = System.Drawing.Color.Lime;
-			this.prgBarInner.ForegroundImage = null;
-			this.prgBarInner.GradientEndColor = System.Drawing.Color.Lime;
-			this.prgBarInner.GradientStartColor = System.Drawing.Color.Red;
-			this.prgBarInner.Location = new System.Drawing.Point(2, 566);
-			this.prgBarInner.MultipleColors = new System.Drawing.Color[] {
-        System.Drawing.Color.Empty};
-			this.prgBarInner.Name = "prgBarInner";
-			this.prgBarInner.SegmentWidth = 12;
-			this.prgBarInner.Size = new System.Drawing.Size(762, 20);
-			this.prgBarInner.TabIndex = 46;
-			this.prgBarInner.Text = "progressBarAdv2";
-			this.prgBarInner.TextStyle = Syncfusion.Windows.Forms.Tools.ProgressBarTextStyles.Custom;
-			this.prgBarInner.ThemesEnabled = false;
-			this.prgBarInner.TubeEndColor = System.Drawing.Color.Black;
-			this.prgBarInner.TubeStartColor = System.Drawing.Color.Red;
-			this.prgBarInner.Visible = false;
-			this.prgBarInner.WaitingGradientWidth = 400;
-			// 
-			// prgBarOuter
-			// 
-			this.prgBarOuter.BackGradientEndColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(211)))), ((int)(((byte)(212)))));
-			this.prgBarOuter.BackGradientStartColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(211)))), ((int)(((byte)(212)))));
-			this.prgBarOuter.BackMultipleColors = new System.Drawing.Color[] {
-        System.Drawing.Color.Empty};
-			this.prgBarOuter.BackSegments = false;
-			this.prgBarOuter.BackTubeEndColor = System.Drawing.Color.White;
-			this.prgBarOuter.BackTubeStartColor = System.Drawing.Color.LightGray;
-			this.prgBarOuter.CustomText = null;
-			this.prgBarOuter.CustomWaitingRender = false;
-			this.prgBarOuter.FontColor = System.Drawing.Color.White;
-			this.prgBarOuter.ForeColor = System.Drawing.Color.DarkGreen;
-			this.prgBarOuter.ForegroundImage = null;
-			this.prgBarOuter.GradientEndColor = System.Drawing.Color.Red;
-			this.prgBarOuter.GradientStartColor = System.Drawing.Color.Lime;
-			this.prgBarOuter.Location = new System.Drawing.Point(0, 557);
-			this.prgBarOuter.MultipleColors = new System.Drawing.Color[] {
-        System.Drawing.Color.Empty};
-			this.prgBarOuter.Name = "prgBarOuter";
-			this.prgBarOuter.SegmentWidth = 12;
-			this.prgBarOuter.Size = new System.Drawing.Size(762, 40);
-			this.prgBarOuter.TabIndex = 44;
-			this.prgBarOuter.Text = "progressBarAdv1";
-			this.prgBarOuter.ThemesEnabled = false;
-			this.prgBarOuter.TubeEndColor = System.Drawing.Color.Black;
-			this.prgBarOuter.TubeStartColor = System.Drawing.Color.Red;
-			this.prgBarOuter.Visible = false;
-			this.prgBarOuter.WaitingGradientWidth = 400;
 			// 
 			// dlgOpenFile
 			// 
@@ -679,8 +608,6 @@
 			this.pnlAll.ResumeLayout(false);
 			this.pnlAll.PerformLayout();
 			this.pnlMessage.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.prgBarInner)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.prgBarOuter)).EndInit();
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
 			this.staStatus.ResumeLayout(false);
@@ -744,8 +671,6 @@
 		private System.Windows.Forms.ToolStripMenuItem mnuSummary;
 		private System.Windows.Forms.Panel pnlMessage;
 		private System.Windows.Forms.Label lblMessage;
-		private Syncfusion.Windows.Forms.Tools.ProgressBarAdv prgBarInner;
-		private Syncfusion.Windows.Forms.Tools.ProgressBarAdv prgBarOuter;
 	}
 }
 
