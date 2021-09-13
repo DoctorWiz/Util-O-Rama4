@@ -7,20 +7,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LORUtils;
+using LORUtils4; using FileHelper;
 using System.Diagnostics;
 
-namespace MapORama
+namespace UtilORama4
 {
 	public partial class frmMapList : Form
 	{
-		public bool sortBySource = true;		// Otherwise sort by New Sequence4
+		public bool sortBySource = true;		// Otherwise sort by New LORSequence4
 		public bool sortAlpha = false;  // Otherwise sort by Display Order
 		private int lastCol = 0;
-		public Sequence4 seqSource;
-		public Sequence4 seqMaster;
-		public IMember[] mapMastToSrc = null;  // Array indexed by Master.SavedIndex, elements contain Source.SaveIndex
-		public List<IMember>[] mapSrcToMast = null; // Array indexed by Source.SavedIindex, elements are Lists of Master.SavedIndex-es
+		public LORSequence4 seqSource;
+		public LORSequence4 seqMaster;
+		public iLORMember4[] mapMastToSrc = null;  // Array indexed by Master.SavedIndex, elements contain Source.SaveIndex
+		public List<iLORMember4>[] mapSrcToMast = null; // Array indexed by Source.SavedIindex, elements are Lists of Master.SavedIndex-es
 
 		private const char DELIM_Map = (char)164;  // ¤
 		private const string NOTMAPPED = "\t(Not Mapped)";
@@ -31,10 +31,10 @@ namespace MapORama
 		private bool sourceOnRight = false;
 
 
-		private const string MAPSUM = "Channel Mapping Summary - ";
+		private const string MAPSUM = "LORChannel4 Mapping Summary - ";
 
 
-		public frmMapList(Sequence4 sourceSequence, Sequence4 masterSequence, List<IMember>[] srcToMastMap, IMember[] mastToSrcMap, ImageList icons)
+		public frmMapList(LORSequence4 sourceSequence, LORSequence4 masterSequence, List<iLORMember4>[] srcToMastMap, iLORMember4[] mastToSrcMap, ImageList icons)
 		{
 			InitializeComponent();
 
@@ -113,22 +113,22 @@ namespace MapORama
 		public void FillBySourceAlpha()
 		{
 
-			//utils.ClearOutputWindow();
+			//lutils.ClearOutputWindow();
 			//Console.WriteLine();
 			//Console.WriteLine("***** FILL BY SOURCE ALPHA ******");
 			//Console.WriteLine();
 			//Console.WriteLine();
 
 			//for (int i = 0; i < seqSource.Members.byName.Count; i++)
-			foreach(IMember sourceMember in seqSource.Members.byName.Values)
+			foreach(iLORMember4 sourceMember in seqSource.Members.byName.Values)
 			{
-				//IMember sourceMember = seqSource.Members.byName[i];
-				RGBchild rchild = RGBchild.None;
-				MemberType tt = sourceMember.MemberType;
+				//iLORMember4 sourceMember = seqSource.Members.byName[i];
+				LORRGBChild4 rchild = LORRGBChild4.None;
+				LORMemberType4 tt = sourceMember.MemberType;
 
-				if (tt == MemberType.Channel)
+				if (tt == LORMemberType4.Channel)
 				{
-					Channel ch = (Channel)seqSource.Members.bySavedIndex[sourceMember.SavedIndex];
+					LORChannel4 ch = (LORChannel4)seqSource.Members.bySavedIndex[sourceMember.SavedIndex];
 					rchild = ch.rgbChild;
 				}
 					//string n = sourceMember.Name;
@@ -136,13 +136,13 @@ namespace MapORama
 					//Console.Write(sourceMember.SavedIndex);
 					//Console.Write("\t");
 
-					//IMember s2 = seqSource.Members.bySavedIndex[sourceMember.SavedIndex];
+					//iLORMember4 s2 = seqSource.Members.bySavedIndex[sourceMember.SavedIndex];
 					//string n2 = s2.Name;
 					//Console.Write(n2 + "\t");
 					//Console.Write(s2.SavedIndex);
 					//Console.Write("\t");
 
-				if (rchild == RGBchild.None)
+				if (rchild == LORRGBChild4.None)
 				{ 
 					if (mapSrcToMast[sourceMember.SavedIndex].Count == 0)
 					{
@@ -155,7 +155,7 @@ namespace MapORama
 					{
 						for (int j = 0; j < mapSrcToMast[sourceMember.SavedIndex].Count; j++)
 						{
-							IMember masterMember = mapSrcToMast[sourceMember.SavedIndex][j];
+							iLORMember4 masterMember = mapSrcToMast[sourceMember.SavedIndex][j];
 							AddMapping(masterMember, sourceMember, 0, 0);
 						} // end loop thru mappings
 					} // end mapped or not
@@ -165,18 +165,18 @@ namespace MapORama
 			if (chkUnmapped.Checked)
 			{
 				//for (int i = 0; i < seqMaster.Members.byName.Count; i++)
-				foreach (IMember masterMember in seqMaster.Members.byName.Values)
+				foreach (iLORMember4 masterMember in seqMaster.Members.byName.Values)
 				{
 					//int mSI = seqMaster.Members.byName[i].SavedIndex;
 					if (mapMastToSrc[masterMember.SavedIndex] == null)
 					{
-						RGBchild rchild = RGBchild.None;
-						if (masterMember.MemberType == MemberType.Channel)
+						LORRGBChild4 rchild = LORRGBChild4.None;
+						if (masterMember.MemberType == LORMemberType4.Channel)
 						{
-							Channel ch = (Channel)masterMember;
+							LORChannel4 ch = (LORChannel4)masterMember;
 							rchild = ch.rgbChild;
 						}
-						if (rchild == RGBchild.None)
+						if (rchild == LORRGBChild4.None)
 						{
 							AddMapping(masterMember, null, 0, 0);
 						}
@@ -190,21 +190,21 @@ namespace MapORama
 			int[] savedIndexes = null;
 			int[] levels = null;
 
-			int c = utils.DisplayOrderBuildLists(seqSource, ref savedIndexes, ref levels, false, false);
+			int c = lutils.DisplayOrderBuildLists(seqSource, ref savedIndexes, ref levels, false, false);
 
 			for (int i = 0; i < savedIndexes.Length; i++)
 			{
-				IMember sourceMember = seqSource.Members.bySavedIndex[savedIndexes[i]];
-				RGBchild rchild = RGBchild.None;
-				MemberType sourceType = sourceMember.MemberType;
+				iLORMember4 sourceMember = seqSource.Members.bySavedIndex[savedIndexes[i]];
+				LORRGBChild4 rchild = LORRGBChild4.None;
+				LORMemberType4 sourceType = sourceMember.MemberType;
 
-				if (sourceType == MemberType.Channel)
+				if (sourceType == LORMemberType4.Channel)
 				{
-					Channel ch = (Channel)sourceMember;
+					LORChannel4 ch = (LORChannel4)sourceMember;
 					rchild = ch.rgbChild;
 				}
 
-				if (rchild == RGBchild.None)
+				if (rchild == LORRGBChild4.None)
 				{
 					if (mapSrcToMast[savedIndexes[i]].Count == 0)
 					{
@@ -217,7 +217,7 @@ namespace MapORama
 					{
 						for (int j = 0; j < mapSrcToMast[savedIndexes[i]].Count; j++)
 						{
-							IMember masterMember = mapSrcToMast[savedIndexes[i]][j];
+							iLORMember4 masterMember = mapSrcToMast[savedIndexes[i]][j];
 							AddMapping(masterMember, sourceMember, levels[i], 0);
 						} // end loop thru mapped list
 					} // end mapped or not
@@ -226,24 +226,35 @@ namespace MapORama
 
 			if (chkUnmapped.Checked)
 			{
-				c = utils.DisplayOrderBuildLists(seqMaster, ref savedIndexes, ref levels, false, false);
+				c = lutils.DisplayOrderBuildLists(seqMaster, ref savedIndexes, ref levels, false, false);
 				for (int i = 0; i < savedIndexes.Length; i++)
 				{
-					IMember masterMember = seqMaster.Members.bySavedIndex[savedIndexes[i]];
+					iLORMember4 masterMember = seqMaster.Members.bySavedIndex[savedIndexes[i]];
 					int masterSI = masterMember.SavedIndex;
-					if (mapMastToSrc[masterSI] == null)
+					if (masterSI < mapMastToSrc.Length)
 					{
-						RGBchild rchild = RGBchild.None;
-						if (masterMember.MemberType == MemberType.Channel)
+						if (mapMastToSrc[masterSI] == null)
 						{
-							Channel ch = (Channel)masterMember;
-							rchild = ch.rgbChild;
-						}
-						if (rchild == RGBchild.None)
+							LORRGBChild4 rchild = LORRGBChild4.None;
+							if (masterMember.MemberType == LORMemberType4.Channel)
+							{
+								LORChannel4 ch = (LORChannel4)masterMember;
+								rchild = ch.rgbChild;
+							}
+							if (rchild == LORRGBChild4.None)
+							{
+								AddMapping(masterMember, null, 0, 0);
+							}
+						} // end if unmapped
+					}
+					else
+					{
+						// Why is the index out of range?!?!
+						if (Fyle.isWiz)
 						{
-							AddMapping(masterMember, null, 0, 0);
+							System.Diagnostics.Debugger.Break();
 						}
-					} // end if unmapped
+					}
 				} // end loop thru master by display order saved indexes
 			} // end show unmapped
 		} // end FillBySourceDispOrder
@@ -251,19 +262,19 @@ namespace MapORama
 		public void FillByMasterAlpha()
 		{
 			//for (int i = 0; i < seqMaster.Members.byName.Count; i++)
-			foreach(IMember masterMember in seqMaster.Members.byName.Values)
+			foreach(iLORMember4 masterMember in seqMaster.Members.byName.Values)
 			{
-				//IMember masterMember = seqMaster.Members.byName[i];
-				RGBchild rchild = RGBchild.None;
-				MemberType tt = masterMember.MemberType;
+				//iLORMember4 masterMember = seqMaster.Members.byName[i];
+				LORRGBChild4 rchild = LORRGBChild4.None;
+				LORMemberType4 tt = masterMember.MemberType;
 
-				if (tt == MemberType.Channel)
+				if (tt == LORMemberType4.Channel)
 				{
-					Channel ch = (Channel)seqMaster.Members.bySavedIndex[masterMember.SavedIndex];
+					LORChannel4 ch = (LORChannel4)seqMaster.Members.bySavedIndex[masterMember.SavedIndex];
 					rchild = ch.rgbChild;
 				}
 
-				if (rchild == RGBchild.None)
+				if (rchild == LORRGBChild4.None)
 				{
 					string n = masterMember.Name;
 					//Console.WriteLine(n);
@@ -276,7 +287,7 @@ namespace MapORama
 					}
 					else
 					{
-						IMember sourceMember = mapMastToSrc[masterMember.SavedIndex];
+						iLORMember4 sourceMember = mapMastToSrc[masterMember.SavedIndex];
 						AddMapping(masterMember, sourceMember, 0, 0);
 					} // end mapped or not
 				} // end not RGB child
@@ -285,18 +296,18 @@ namespace MapORama
 			if (chkUnmapped.Checked)
 			{
 				//for (int i = 0; i < seqSource.Members.byName.Count; i++)
-				foreach (IMember sourceMember in seqSource.Members.byName.Values)
+				foreach (iLORMember4 sourceMember in seqSource.Members.byName.Values)
 				{
 					int sourceSI = sourceMember.SavedIndex;
 					if (mapSrcToMast[sourceSI].Count == 0)
 					{
-						RGBchild rchild = RGBchild.None;
-						if (sourceMember.MemberType == MemberType.Channel)
+						LORRGBChild4 rchild = LORRGBChild4.None;
+						if (sourceMember.MemberType == LORMemberType4.Channel)
 						{
-							Channel ch = (Channel)sourceMember;
+							LORChannel4 ch = (LORChannel4)sourceMember;
 							rchild = ch.rgbChild;
 						}
-						if (rchild == RGBchild.None)
+						if (rchild == LORRGBChild4.None)
 						{
 							AddMapping(null, sourceMember, 0, 0);
 						} // end if not rgb child
@@ -310,22 +321,22 @@ namespace MapORama
 			int[] savedIndexes = null;
 			int[] levels = null;
 
-			int c = utils.DisplayOrderBuildLists(seqMaster, ref savedIndexes, ref levels, false, false);
+			int c = lutils.DisplayOrderBuildLists(seqMaster, ref savedIndexes, ref levels, false, false);
 
 			for (int i = 0; i < savedIndexes.Length; i++)
 			{
-				IMember masterMember = seqMaster.Members.bySavedIndex[savedIndexes[i]];
+				iLORMember4 masterMember = seqMaster.Members.bySavedIndex[savedIndexes[i]];
 				int masterSI = masterMember.SavedIndex;
-				RGBchild rchild = RGBchild.None;
-				MemberType masterType = masterMember.MemberType;
+				LORRGBChild4 rchild = LORRGBChild4.None;
+				LORMemberType4 masterType = masterMember.MemberType;
 
-				if (masterType == MemberType.Channel)
+				if (masterType == LORMemberType4.Channel)
 				{
-					Channel ch = (Channel)masterMember;
+					LORChannel4 ch = (LORChannel4)masterMember;
 					rchild = ch.rgbChild;
 				}
 
-				if (rchild == RGBchild.None)
+				if (rchild == LORRGBChild4.None)
 				{
 					if (mapMastToSrc[masterSI] == null)
 					{
@@ -335,7 +346,7 @@ namespace MapORama
 						}
 						else
 						{
-							IMember sourceMember = mapMastToSrc[masterSI];
+							iLORMember4 sourceMember = mapMastToSrc[masterSI];
 							AddMapping(masterMember, sourceMember,  0, levels[i]);
 						}
 					} // end if mappings (or not)
@@ -343,20 +354,20 @@ namespace MapORama
 			} // end for loop thru display order saved indexes
 			if (chkUnmapped.Checked)
 			{
-				c = utils.DisplayOrderBuildLists(seqSource, ref savedIndexes, ref levels, false, false);
+				c = lutils.DisplayOrderBuildLists(seqSource, ref savedIndexes, ref levels, false, false);
 				for (int i = 0; i < savedIndexes.Length; i++)
 				{
 					int sourceSI = savedIndexes[i];
-					IMember sourceMember = seqSource.Members.bySavedIndex[sourceSI];
+					iLORMember4 sourceMember = seqSource.Members.bySavedIndex[sourceSI];
 					if (mapSrcToMast[sourceSI].Count == 0)
 					{
-						RGBchild rchild = RGBchild.None;
-						if (sourceMember.MemberType == MemberType.Channel)
+						LORRGBChild4 rchild = LORRGBChild4.None;
+						if (sourceMember.MemberType == LORMemberType4.Channel)
 						{
-							Channel ch = (Channel)sourceMember;
+							LORChannel4 ch = (LORChannel4)sourceMember;
 							rchild = ch.rgbChild;
 						}
-						if (rchild == RGBchild.None)
+						if (rchild == LORRGBChild4.None)
 						{
 							AddMapping(null, sourceMember, levels[i], 0);
 						} // end if not RGB child
@@ -365,12 +376,12 @@ namespace MapORama
 			} // end include unmapped
 		} // end FillByMasterDispOrder
 
-		public void AddMapping(IMember masterMember, IMember sourceMember, int levelS, int levelM)
+		public void AddMapping(iLORMember4 masterMember, iLORMember4 sourceMember, int levelS, int levelM)
 		{
 			string[] lvi = { "", "" };
 			string s = "";
 			string k = "";
-			int iconIndex = utils.UNDEFINED;
+			int iconIndex = lutils.UNDEFINED;
 			for (int i = 0; i < levelS; i++) 
 			{
 				s += "  ";
@@ -402,28 +413,28 @@ namespace MapORama
 			if (masterMember == null)
 			{
 				m += "  (Unmapped)";
-				MemberType o = sourceMember.MemberType;
-				if (o == MemberType.Track) k = utils.ICONtrack;
-				if (o == MemberType.RGBchannel) k = utils.ICONrgbChannel;
-				if (o == MemberType.ChannelGroup) k = utils.ICONchannelGroup;
-				if (o == MemberType.Channel)
+				LORMemberType4 o = sourceMember.MemberType;
+				if (o == LORMemberType4.Track) k = lutils.ICONtrack;
+				if (o == LORMemberType4.RGBChannel) k = lutils.ICONrgbChannel;
+				if (o == LORMemberType4.ChannelGroup) k = lutils.ICONchannelGroup;
+				if (o == LORMemberType4.Channel)
 				{
-					Channel ch = (Channel)sourceMember;
-					iconIndex = utils.ColorIcon(imlTreeIcons, ch.color);
+					LORChannel4 ch = (LORChannel4)sourceMember;
+					iconIndex = lutils.ColorIcon(imlTreeIcons, ch.color);
 				}
 			}
 			else
 			{
 				string n = masterMember.Name;
 				m += n;
-				MemberType o = masterMember.MemberType;
-				if (o == MemberType.Track) k = utils.ICONtrack;
-				if (o == MemberType.RGBchannel) k = utils.ICONrgbChannel;
-				if (o == MemberType.ChannelGroup) k = utils.ICONchannelGroup;
-				if (o == MemberType.Channel)
+				LORMemberType4 o = masterMember.MemberType;
+				if (o == LORMemberType4.Track) k = lutils.ICONtrack;
+				if (o == LORMemberType4.RGBChannel) k = lutils.ICONrgbChannel;
+				if (o == LORMemberType4.ChannelGroup) k = lutils.ICONchannelGroup;
+				if (o == LORMemberType4.Channel)
 				{
-					Channel ch = (Channel)masterMember;
-					iconIndex = utils.ColorIcon(imlTreeIcons, ch.color);
+					LORChannel4 ch = (LORChannel4)masterMember;
+					iconIndex = lutils.ColorIcon(imlTreeIcons, ch.color);
 				}
 			}
 			if (sourceOnRight)
@@ -559,13 +570,13 @@ namespace MapORama
 		{
 			if (sourceNowOnRight)
 			{
-				lstMap.Columns[0].Text = "Destination Channel";
-				lstMap.Columns[1].Text = "Source Channel";
+				lstMap.Columns[0].Text = "Destination LORChannel4";
+				lstMap.Columns[1].Text = "Source LORChannel4";
 			}
 			else
 			{
-				lstMap.Columns[0].Text = "Source Channel";
-				lstMap.Columns[1].Text = "Destination Channel";
+				lstMap.Columns[0].Text = "Source LORChannel4";
+				lstMap.Columns[1].Text = "Destination LORChannel4";
 			}
 			sourceOnRight = sourceNowOnRight;
 			//BuildList();
@@ -576,6 +587,6 @@ namespace MapORama
 
 
 	} // end public partial class frmMapList : Form
-} // end namespace MapORama
+} // end namespace UtilORama4
  
 	

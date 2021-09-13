@@ -1,5 +1,5 @@
 ﻿
-namespace VampORama
+namespace UtilORama4
 {
 	partial class frmOutputLog
 	{

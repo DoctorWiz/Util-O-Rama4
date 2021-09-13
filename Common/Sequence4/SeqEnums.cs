@@ -1,55 +1,68 @@
-﻿using System;
+﻿//!////////////////////////////////////////////////////////////////////////////////////////////////////
+//!                                                                                                ///
+//?  SeqEnums: LORSequence4 related Enumerators                                                   ///
+//?  Including: LORDeviceType4 - Controllers such as LOR, DMX, Cosmic, etc.                      ///
+//?					LOREffectType4 - Intensity, Shimmer, Twinkle, Fade-Up, etc.                        ///
+//?					LORTimingGridType4 - Freeform or Fixed.                                           ///
+//?					LORRGBChild4 - Red, Green, Blue.                                                 ///
+//?					LORSequenceType4 - Musical, Animation, Visualization                            ///
+//?					LORMemberType4 - Channel, RGB Channel, Channel Group, Track, Timing Grid, etc. ///
+//!                                                                                        ///
+//!//////////////////////////////////////////////////////////////////////////////////////////
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LORUtils
+namespace LORUtils4
 {
-	public enum DeviceType
-	{ None=utils.UNDEFINED, LOR=1, DMX=7, Digital=3, CosmicDevice=2, Dasher=4 };
+	public enum LORDeviceType4
+	{ None=lutils.UNDEFINED, LOR=1, DMX=7, Digital=3, LORCosmic4=2, Dasher=4 };
 
-	//public enum EffectType { None=utils.UNDEFINED, Intensity=1, Shimmer, Twinkle, DMX }
-	public enum EffectType { None = utils.UNDEFINED, Intensity = 1, Shimmer, Twinkle, DMX, Constant, FadeUp, FadeDown }
+	//public enum LOREffectType4 { None=lutils.UNDEFINED, Intensity=1, Shimmer, Twinkle, DMX }
+	public enum LOREffectType4 { None = lutils.UNDEFINED, Intensity = 1, Shimmer, Twinkle, DMX, Constant, FadeUp, FadeDown }
 
 	//internal enum timingGridType
-	public enum TimingGridType
-	{ None=utils.UNDEFINED, Freeform=1, FixedGrid };
+	public enum LORTimingGridType4
+	{ None=lutils.UNDEFINED, Freeform=1, FixedGrid };
 
-	//internal enum MemberType
-//	public enum MemberType
-//	{ None=utils.UNDEFINED, Channel=1, RGBchannel=2, ChannelGroup=4, Track=8, TimingGrid=16, Items=7, FullTrack=15; RGBonly=14, RegularOnly=13, All=31, Sequence=32 }
-	public enum RGBchild
-	{ None=utils.UNDEFINED, Red=1, Green, Blue }
+	//internal enum LORMemberType4
+//	public enum LORMemberType4
+//	{ None=lutils.UNDEFINED, LORChannel4=1, LORRGBChannel4=2, LORChannelGroup4=4, LORTrack4=8, LORTimings4=16, Items=7, FullTrack=15; RGBonly=14, RegularOnly=13, All=31, Sequence=32 }
+	public enum LORRGBChild4
+	{ None=lutils.UNDEFINED, Red=1, Green, Blue }
 
-	public enum SequenceType
-	{ Undefined=utils.UNDEFINED, Animated=1, Musical, Clipboard, ChannelConfig, Visualizer }
+	public enum LORSequenceType4
+	{ Undefined=lutils.UNDEFINED, Animated=1, Musical, Clipboard, ChannelConfig, Visualizer }
 
 	public enum MatchType
 	{ Unmatched=0, Source=-1, Destination=1}
 
-	public enum MemberType
+	public enum LORMemberType4
 	{
 		// * MEMBER TYPES *
 		None =					0,
-		Channel =				SeqEnums.MEMBER_Channel,
-		RGBchannel =		SeqEnums.MEMBER_RGBchannel,
-		ChannelGroup =	SeqEnums.MEMBER_ChannelGroup,
-		CosmicDevice =  SeqEnums.MEMBER_CosmicDevice,
-		Track =					SeqEnums.MEMBER_Track,
-		TimingGrid =		SeqEnums.MEMBER_TimingGrid,
-		Sequence =			SeqEnums.MEMBER_Sequence,
-		RegularOnly =		SeqEnums.MEMBER_Channel & SeqEnums.MEMBER_ChannelGroup & SeqEnums.MEMBER_Track,
-		RGBonly =				SeqEnums.MEMBER_RGBchannel & SeqEnums.MEMBER_ChannelGroup & SeqEnums.MEMBER_Track,
-		GroupsOnly =		SeqEnums.MEMBER_ChannelGroup & SeqEnums.MEMBER_Track,
-		Items =					SeqEnums.MEMBER_Channel & SeqEnums.MEMBER_RGBchannel & SeqEnums.MEMBER_ChannelGroup,
-		FullTrack =			SeqEnums.MEMBER_Channel & SeqEnums.MEMBER_RGBchannel & SeqEnums.MEMBER_ChannelGroup & SeqEnums.MEMBER_Track,
-		VizChannel =		SeqEnums.MEMBER_VizChannel,
-		VizObject =			SeqEnums.MEMBER_VizObject
+		Channel =				LORSeqEnums4.MEMBER_Channel,
+		RGBChannel =		LORSeqEnums4.MEMBER_RGBchannel,
+		ChannelGroup =	LORSeqEnums4.MEMBER_ChannelGroup,
+		Cosmic =				LORSeqEnums4.MEMBER_CosmicDevice,
+		Track =					LORSeqEnums4.MEMBER_Track,
+		Timings =				LORSeqEnums4.MEMBER_TimingGrid,
+		Sequence =			LORSeqEnums4.MEMBER_Sequence,
+		RegularOnly =		LORSeqEnums4.MEMBER_Channel & LORSeqEnums4.MEMBER_ChannelGroup & LORSeqEnums4.MEMBER_Track,
+		RGBonly =				LORSeqEnums4.MEMBER_RGBchannel & LORSeqEnums4.MEMBER_ChannelGroup & LORSeqEnums4.MEMBER_Track,
+		GroupsOnly =		LORSeqEnums4.MEMBER_ChannelGroup & LORSeqEnums4.MEMBER_Track,
+		Items =					LORSeqEnums4.MEMBER_Channel & LORSeqEnums4.MEMBER_RGBchannel & LORSeqEnums4.MEMBER_ChannelGroup,
+		FullTrack =			LORSeqEnums4.MEMBER_Channel & LORSeqEnums4.MEMBER_RGBchannel & LORSeqEnums4.MEMBER_ChannelGroup & LORSeqEnums4.MEMBER_Track,
+		Visualization	= LORSeqEnums4.MEMBER_Vizualization,
+		VizChannel4 =		LORSeqEnums4.MEMBER_VizChannel,
+		VizObject =			LORSeqEnums4.MEMBER_VizDrawObject
 
 	}
 
-	public static class SeqEnums
+	public static class LORSeqEnums4
 	{
 		// * MEMBER TYPES *
 		public const int MEMBER_Channel = 1;
@@ -59,8 +72,9 @@ namespace LORUtils
 		public const int MEMBER_Track = 16;
 		public const int MEMBER_TimingGrid = 32;
 		public const int MEMBER_Sequence = 64;
-		public const int MEMBER_VizChannel = 256;
-		public const int MEMBER_VizObject = 512;
+		public const int MEMBER_Vizualization = 256;
+		public const int MEMBER_VizChannel = 512;
+		public const int MEMBER_VizDrawObject = 1024;
 
 		public const string DEVICElor = "LOR";
 		public const string DEVICEdmx = "DMX Universe";
@@ -82,55 +96,55 @@ namespace LORUtils
 
 		public const string OBJnone = "None";
 		public const string OBJchannel = "Channel";
-		public const string OBJrgbChannel = "RGBchannel";
+		public const string OBJrgbChannel = "RGBChannel";
 		public const string OBJchannelGroup = "ChannelGroup";
 		public const string OBJtrack = "Track";
-		public const string OBJtimingGrid = "TimingGrid";
+		public const string OBJtimingGrid = "Timings";
 		public const string OBJsequence = "Sequence";
 		public const string OBJall = "All";
 		public const string OBJitems = "Items";
 
 
-		public static DeviceType enumDevice(string deviceName)
+		public static LORDeviceType4 EnumDevice(string deviceName)
 		{
-			DeviceType valueOut = DeviceType.None;
+			LORDeviceType4 valueOut = LORDeviceType4.None;
 
 			if (deviceName == DEVICElor)
 			{
-				valueOut = DeviceType.LOR;
+				valueOut = LORDeviceType4.LOR;
 			}
 			else if (deviceName == "1") // Visualizer
 			{
-				valueOut = DeviceType.LOR;
+				valueOut = LORDeviceType4.LOR;
 			}
 			else if (deviceName == DEVICEdmx)
 			{
-				valueOut = DeviceType.DMX;
+				valueOut = LORDeviceType4.DMX;
 			}
 			else if (deviceName == "7") // Visualizer
 			{
-				valueOut = DeviceType.DMX;
+				valueOut = LORDeviceType4.DMX;
 			}
 			else if (deviceName == DEVICEdigital)
 			{
-				valueOut = DeviceType.Digital;
+				valueOut = LORDeviceType4.Digital;
 			}
 			else if (deviceName == DEVICEdasher)
 			{
-				valueOut = DeviceType.Dasher;
+				valueOut = LORDeviceType4.Dasher;
 			}
 			else if (deviceName == DEVICEcosmic)
 			{
-				valueOut = DeviceType.CosmicDevice;
+				valueOut = LORDeviceType4.LORCosmic4;
 			}
 			else if (deviceName == "")
 			{
-				valueOut = DeviceType.None;
+				valueOut = LORDeviceType4.None;
 			}
 			else
 			{
 				// TODO: throw exception here!
-				valueOut = DeviceType.None;
+				valueOut = LORDeviceType4.None;
 				string sMsg = "Unrecognized Device Type: ";
 				sMsg += deviceName;
 				//DialogResult dr = MessageBox.Show(sMsg, "Unrecognized Keyword", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -140,30 +154,30 @@ namespace LORUtils
 			return valueOut;
 		}
 
-		public static EffectType enumEffectType(string effectName)
+		public static LOREffectType4 EnumEffectType(string effectName)
 		{
-			EffectType valueOut = EffectType.None;
+			LOREffectType4 valueOut = LOREffectType4.None;
 
 			if (effectName == EFFECTintensity)
 			{
-				valueOut = EffectType.Intensity;
+				valueOut = LOREffectType4.Intensity;
 			}
 			else if (effectName == EFFECTshimmer)
 			{
-				valueOut = EffectType.Shimmer;
+				valueOut = LOREffectType4.Shimmer;
 			}
 			else if (effectName == EFFECTtwinkle)
 			{
-				valueOut = EffectType.Twinkle;
+				valueOut = LOREffectType4.Twinkle;
 			}
 			else if (effectName == EFFECTdmx)
 			{
-				valueOut = EffectType.DMX;
+				valueOut = LOREffectType4.DMX;
 			}
 			else
 			{
 				// TODO: throw exception here
-				valueOut = EffectType.None;
+				valueOut = LOREffectType4.None;
 				string sMsg = "Unrecognized Effect Name: ";
 				sMsg += effectName;
 				//DialogResult dr = MessageBox.Show(sMsg, "Unrecognized Keyword", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -172,22 +186,22 @@ namespace LORUtils
 			return valueOut;
 		}
 
-		public static TimingGridType enumGridType(string typeName)
+		public static LORTimingGridType4 EnumGridType(string typeName)
 		{
-			TimingGridType valueOut = TimingGridType.None;
+			LORTimingGridType4 valueOut = LORTimingGridType4.None;
 
 			if (typeName == GRIDfreeform)
 			{
-				valueOut = TimingGridType.Freeform;
+				valueOut = LORTimingGridType4.Freeform;
 			}
 			else if (typeName == "fixed")
 			{
-				valueOut = TimingGridType.FixedGrid;
+				valueOut = LORTimingGridType4.FixedGrid;
 			}
 			else
 			{
 				// TODO: throw exception here
-				valueOut = TimingGridType.None;
+				valueOut = LORTimingGridType4.None;
 				string sMsg = "Unrecognized Timing Grid Type: ";
 				sMsg += typeName;
 				//DialogResult dr = MessageBox.Show(sMsg, "Unrecognized Keyword", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -196,60 +210,60 @@ namespace LORUtils
 			return valueOut;
 		}
 
-		public static MemberType enumMemberType(string typeName)
+		public static LORMemberType4 EnumMemberType(string typeName)
 		{
 			// Only supported the 5 needed for Identity owners
-			MemberType valueOut = MemberType.None;
+			LORMemberType4 valueOut = LORMemberType4.None;
 			if (typeName == OBJchannel)
 			{
-				valueOut = MemberType.Channel;
+				valueOut = LORMemberType4.Channel;
 			}
 			else if (typeName == OBJrgbChannel)
 			{
-				valueOut = MemberType.RGBchannel;
+				valueOut = LORMemberType4.RGBChannel;
 			}
 			else if (typeName == OBJchannelGroup)
 			{
-				valueOut = MemberType.ChannelGroup;
+				valueOut = LORMemberType4.ChannelGroup;
 			}
 			else if (typeName == OBJtrack)
 			{
-				valueOut = MemberType.Track;
+				valueOut = LORMemberType4.Track;
 			}
 			else if (typeName == OBJtimingGrid)
 			{
-				valueOut = MemberType.TimingGrid;
+				valueOut = LORMemberType4.Timings;
 			}
 			return valueOut;
 		}
 
 
-		public static string DeviceName(DeviceType devType)
+		public static string DeviceName(LORDeviceType4 devType)
 		{
 			string valueOut = "";
 			switch (devType)
 			{
-				case DeviceType.LOR:
+				case LORDeviceType4.LOR:
 					valueOut = DEVICElor;
 					break;
 
-				case DeviceType.DMX:
+				case LORDeviceType4.DMX:
 					valueOut = DEVICEdmx;
 					break;
 
-				case DeviceType.None:
+				case LORDeviceType4.None:
 					valueOut = DEVICEnone;
 					break;
 
-				case DeviceType.Digital:
+				case LORDeviceType4.Digital:
 					valueOut = DEVICEdigital;
 					break;
 
-				case DeviceType.CosmicDevice:
+				case LORDeviceType4.LORCosmic4:
 					valueOut = DEVICEcosmic;
 					break;
 
-				case DeviceType.Dasher:
+				case LORDeviceType4.Dasher:
 					valueOut = DEVICEdasher;
 					break;
 
@@ -267,80 +281,108 @@ namespace LORUtils
 			return valueOut;
 		}
 
-		public static string EffectTypeName(EffectType effType)
+		public static string EffectTypeName(LOREffectType4 effType)
 		{
+			// Note: This is the human friendly version
+			// For the versio used for outputing to sequenc files, see 'EffectName' below
 			string valueOut = "";
 			switch (effType)
 			{
-				case EffectType.Intensity:
+				case LOREffectType4.Intensity:
 					valueOut = EFFECTintensity;
 					break;
 
-				case EffectType.Shimmer:
+				case LOREffectType4.Shimmer:
 					valueOut = EFFECTshimmer;
 					break;
 
-				case EffectType.Twinkle:
+				case LOREffectType4.Twinkle:
 					valueOut = EFFECTtwinkle;
 					break;
 
-				case EffectType.DMX:
+				case LOREffectType4.DMX:
 					valueOut = EFFECTdmx;
 					break;
 
-				case EffectType.Constant:
+				case LOREffectType4.Constant:
 					valueOut = EFFECTconstant;
 					break;
 
-				case EffectType.FadeUp:
+				case LOREffectType4.FadeUp:
 					valueOut = EFFECTfadeUp;
 					break;
 
-				case EffectType.FadeDown:
+				case LOREffectType4.FadeDown:
 					valueOut = EFFECTfadeDown;
 					break;
 			}
 			return valueOut;
 		}
 
-		public static string TimingName(TimingGridType grdType)
+		public static string EffectName(LOREffectType4 effType)
+		{
+			// Note: This is the versio used for outputing to sequence files.
+			// For the human friendly version, see 'EffectTypeName' above
+			
+			// Use this as default unless overridden below
+			string valueOut = EFFECTintensity;
+			switch (effType)
+			{
+				case LOREffectType4.Shimmer:
+					valueOut = EFFECTshimmer;
+					break;
+
+				case LOREffectType4.Twinkle:
+					valueOut = EFFECTtwinkle;
+					break;
+
+				case LOREffectType4.DMX:
+					valueOut = EFFECTdmx;
+					break;
+			}
+			return valueOut;
+		}
+
+
+
+		public static string TimingName(LORTimingGridType4 grdType)
 		{
 			string valueOut = "";
 			switch (grdType)
 			{
-				case TimingGridType.Freeform:
+				case LORTimingGridType4.Freeform:
 					valueOut = GRIDfreeform;
 					break;
 
-				case TimingGridType.FixedGrid:
+				case LORTimingGridType4.FixedGrid:
 					valueOut = GRIDfixed;
 					break;
 			}
 			return valueOut;
 		}
 
-		public static string MemberName(MemberType memberType)
+		public static string MemberName(LORMemberType4 memberType)
 		{
 			// Only doing the 5 needed for Members
 			string valueOut = "";
 			switch (memberType)
 			{
-				case MemberType.Channel:
+				case LORMemberType4.Channel:
 					valueOut = OBJchannel;
 					break;
-				case MemberType.RGBchannel:
+				case LORMemberType4.RGBChannel:
 					valueOut = OBJrgbChannel;
 					break;
-				case MemberType.ChannelGroup:
+				case LORMemberType4.ChannelGroup:
 					valueOut = OBJchannelGroup;
 					break;
-				case MemberType.Track:
+				case LORMemberType4.Track:
 					valueOut = OBJtrack;
 					break;
-				case MemberType.TimingGrid:
+				case LORMemberType4.Timings:
 					valueOut = OBJtimingGrid;
 					break;
-				case MemberType.Sequence:
+				case LORMemberType4.Sequence:
 					valueOut = OBJsequence;
 					break;
 			}
@@ -351,8 +393,8 @@ namespace LORUtils
 
 
 
-	} // end clas SeqEnums
+	} // end clas LORSeqEnums4
 
 
 
-} // end namespace LORUtils
+} // end namespace LORUtils4

@@ -28,9 +28,9 @@ using TagLib.Asf;
 using TagLib.MusePack;
 using TagLib.NonContainer;
 using System.Diagnostics.Eventing.Reader;
-using LORUtils;
+using LORUtils4; using FileHelper;
 
-namespace VampORama
+namespace UtilORama4
 {
 	public static class Annotator
 	{
@@ -40,21 +40,81 @@ namespace VampORama
 		//public Transpose transposer = new Transpose();
 		public static string annotatorProgram = "C:\\PortableApps\\SonicAnnotator\\sonic-annotator.exe";
 
-		public static BarBeats BarBeatsTransformer = null; // Initialized in constructor
+		//public static VampBarBeats BarBeatsTransformer = null; // Initialized in constructor
 
-		public static xTimings xBars = null;
-		public static xTimings xBeatsFull = null;
-		public static xTimings xBeatsHalf = null;
-		public static xTimings xBeatsThird = null;
-		public static xTimings xBeatsQuarter = null;
-		public static xTimings xOnsets = null;
+		public static xTimings xBars = new xTimings(VampBarBeats.barsName);
+		public static xTimings xBeatsFull = new xTimings(VampBarBeats.beatsFullName);
+		public static xTimings xBeatsHalf = new xTimings(VampBarBeats.beatsHalfName);
+		public static xTimings xBeatsThird = new xTimings(VampBarBeats.beatsThirdName);
+		public static xTimings xBeatsQuarter = new xTimings(VampBarBeats.beatsQuarterName);
+		public static xTimings xFrames = new xTimings("Frames");
+		public static xTimings xOnsets = new xTimings(VampNoteOnsets.transformName);
 		public static xTimings xAlignTo = null;
 		public static int songTimeMS = 0;
+		public static int BeatsPerBar = 4;
+		public static int FirstBeat = 1;
+		public static bool UseRamps = false;
+		public static bool ReuseResults = false;
+		public static bool Whiten = false;
+		public static int StepSize = 512;
+		private static int totalMilliseconds = 0;
+		private static int highestTime = 0;
+		//public static int TotalCentiseconds = 0;
+		private static int fps = 40;
+		//private static int mspf = 25;
 
 		public static int alignIdx = 0;
+		//private static bool Fyle.DebugMode = Fyle.IsWizard || Fyle.IsAWizard;
+		//public static LORTrack4 VampTrack = null;
 
-		
+		public static LORSequence4 Sequence = null;
+		public const string VAMPTRACKname = "Vamp-O-Rama";
+		public static LORTrack4 VampTrack = null;
+		public static LORTimings4 GridBeats = null;
+		public static LORTimings4 GridOnsets = null;
+		private static LORChannel4[] noteChannels = null;
+		public static string WorkPath = "C:\\Windows\\Temp\\";
 
+		public enum TransformTypes { BarsAndBeats, NoteOnsets, PolyphonicTranscription, PitchAndKey, Tempo, Chromagram, Spectrogram, Segments};
+
+		static Annotator()
+		{
+			int x = 5;
+		}
+
+		static void Clear()
+		{
+			xBars = new xTimings(VampBarBeats.barsName);
+			xBeatsFull = new xTimings(VampBarBeats.beatsFullName);
+			xBeatsHalf = new xTimings(VampBarBeats.beatsHalfName);
+			xBeatsThird = new xTimings(VampBarBeats.beatsThirdName);
+			xBeatsQuarter = new xTimings(VampBarBeats.beatsQuarterName);
+			xFrames = new xTimings("Frames");
+			xOnsets = new xTimings(VampNoteOnsets.transformName);
+			xAlignTo = null;
+			songTimeMS = 0;
+			BeatsPerBar = 4;
+			FirstBeat = 1;
+			UseRamps = false;
+			ReuseResults = false;
+			Whiten = false;
+			StepSize = 512;
+			totalMilliseconds = 0;
+			highestTime = 0;
+			fps = 40;
+			alignIdx = 0;
+			LORSequence4 Sequence = null;
+			VampTrack = null;
+			noteChannels = null;
+		}
+
+
+		public static void Init(LORSequence4 sequence)
+		{
+			Clear();
+			Sequence = sequence;
+			VampTrack = Sequence.FindTrack(VAMPTRACKname,true);
+		}
 
 		public static string OLDAnnotateSong(string fileSong, string vampParams, string fileConfig, bool reuse = false)
 		{
@@ -78,7 +138,7 @@ namespace VampORama
 
 					if (dr == DialogResult.Yes)
 					{
-						if (utils.IsWizard) Clipboard.SetText(emsg);
+						if (Fyle.DebugMode) Clipboard.SetText(emsg);
 					}
 					if (dr != DialogResult.Cancel)
 					{
@@ -94,7 +154,7 @@ namespace VampORama
 						runthis = "/c " + runthis; // + " 2>output.txt";
 
 						string vampCommandLast = runthis;
-							if (utils.IsWizard) Clipboard.SetText(runthis);
+							if (Fyle.DebugMode) Clipboard.SetText(runthis);
 
 							Process cmdProc = new Process();
 							ProcessStartInfo procInfo = new ProcessStartInfo();
@@ -136,7 +196,7 @@ namespace VampORama
 						else
 						{
 						// NO RESULTS FILE!	
-						if (utils.IsWizard)
+						if (Fyle.DebugMode)
 						{
 							System.Diagnostics.Debugger.Break();
 						}
@@ -145,7 +205,7 @@ namespace VampORama
 			}
 			catch (Exception e)
 			{
-				if (utils.IsWizard)
+				if (Fyle.DebugMode)
 				{
 					string msg = e.Message;
 					System.Diagnostics.Debugger.Break();
@@ -177,7 +237,7 @@ namespace VampORama
 
 				if (dr == DialogResult.Yes)
 				{
-					if (utils.IsWizard) Clipboard.SetText(emsg);
+					if (Fyle.DebugMode) Clipboard.SetText(emsg);
 				}
 				if (dr != DialogResult.Cancel)
 				{
@@ -192,7 +252,7 @@ namespace VampORama
 						string runthis = annotatorProgram + " " + annotatorArguments;
 						//runthis += " 2>output.txt";
 						string vampCommandLast = runthis;
-						if (utils.IsWizard) Clipboard.SetText(runthis);
+						if (Fyle.DebugMode) Clipboard.SetText(runthis);
 
 						Process cmdProc = new Process();
 						ProcessStartInfo procInfo = new ProcessStartInfo();
@@ -211,7 +271,7 @@ namespace VampORama
 					else
 					{
 						// NO RESULTS FILE!	
-						if (utils.IsWizard)
+						if (Fyle.DebugMode)
 						{
 							System.Diagnostics.Debugger.Break();
 						}
@@ -220,7 +280,7 @@ namespace VampORama
 			}
 			catch (Exception e)
 			{
-				if (utils.IsWizard)
+				if (Fyle.DebugMode)
 				{
 					string msg = e.Message;
 					System.Diagnostics.Debugger.Break();
@@ -372,7 +432,7 @@ namespace VampORama
 					}
 				}
 			}
-			if (utils.IsWizard)
+			if (Fyle.DebugMode)
 			{
 				string msg = "Start time " + startTime.ToString() + " aligned to " + matchTime.ToString();
 				Console.WriteLine(msg);
@@ -387,6 +447,102 @@ namespace VampORama
 			return matchTime;
 		}
 
+		public static int FPS
+		{
+			// Frames-Per-Second
+			set
+			{
+				fps = value;
+				if (fps < 10) fps = 10;
+				if (fps > 100) fps = 100;
+				//mspf = 1000 / fps;
+			}
+			get
+			{
+				return fps;
+			}
+		}
+
+		public static int msPF
+		{
+			// Milliseconds-Per-Frame
+			set
+			{
+				int mspf = value;
+				if (mspf < 10) mspf = 10;
+				if (mspf > 100) mspf = 100;
+				fps = 1000 / mspf;
+			}
+			get
+			{
+				return (int)Math.Round(1000D / fps);
+			}
+		}
+
+		public static int csPF
+		{
+			// Milliseconds-Per-Frame
+			set
+			{
+				int mspf = value;
+				if (mspf < 10) mspf = 10;
+				if (mspf > 100) mspf = 100;
+				fps = 100 / mspf;
+			}
+			get
+			{
+				return (int)Math.Round(100D / fps);
+			}
+		}
+
+
+
+		public static int TotalMilliseconds
+		{
+			get { return TotalCentiseconds * 10; }
+			set { TotalCentiseconds = (int)Math.Round(value / 10D); }
+		}
+
+		public static int TotalCentiseconds
+		{
+			get
+			{
+				if (Sequence == null)
+				{
+					return (int)Math.Round(totalMilliseconds / 10D);
+				}
+				else
+				{
+					return Sequence.Centiseconds;
+				}
+			}
+			set
+			{
+				totalMilliseconds = value * 10;
+				if (Sequence != null)
+				{
+					if ((value > lutils.MINCentiseconds) && (value < lutils.MAXCentiseconds))
+					{
+						Sequence.CentiFix(value);
+					}
+				}
+			}
+		}
+
+		public static int HighTime
+		{
+			get { return highestTime; }
+			set
+			{
+				highestTime = Math.Max(value, highestTime);
+				totalMilliseconds = Math.Max(highestTime, totalMilliseconds);
+				if (Sequence != null)
+				{
+					int cs = (int)Math.Round(totalMilliseconds / 10D);
+					Sequence.Centiseconds = Math.Max(Sequence.Centiseconds, cs);
+				}
+			}
+		}
 
 		/*
 
@@ -679,7 +835,7 @@ namespace VampORama
 			//ClearLastRun(); // Not yet, keep 'em for diagnostics
 
 
-			//MessageBox.Show(seq.summary());
+			//MessageBox.Show(Annotator.Sequence.summary());
 
 			fileAudioLast = audioFileName;
 			/*

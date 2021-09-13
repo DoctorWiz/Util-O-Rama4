@@ -1,4 +1,4 @@
-﻿namespace TreeDupliFix
+﻿namespace UtilORama4
 {
 	partial class Form1
 	{

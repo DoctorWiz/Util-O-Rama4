@@ -4,314 +4,354 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
-using LORUtils;
+using LORUtils4;
+using FileHelper;
 
-namespace VampORama
+namespace UtilORama4
 {
-	public class SequenceFunctions
+	public static class SequenceFunctions
 	{
-		public readonly static string[] noteNames = {"C0","C♯0-D♭0","D0","D♯0-E♭0","E0","F0","F♯0-G♭0","G0","G♯0-A♭0","A0","A♯0-B♭0","B0",
-													"C1","C♯1-D♭1","D1","D♯1-E♭1","E1","F1","F♯1-G♭1","G1","G♯1-A♭1","A1","A♯1-B♭1","B1",
-													"C2","C♯2-D♭2","D2","D♯2-E♭2","E2","F2","F♯2-G♭2","Low_G","Low_G♯-A♭","Low_A","Low_A♯-B♭","Low_B",
-													"Low_C","Low_C♯-D♭","Low_D","Low_D♯-E♭","Low_E","Low_F","Low_F♯-G♭","Bass_G","Bass_G♯-A♭","Bass_A","Bass_A♯-B♭","Bass_B",
-													"Bass_C","Bass_C♯-D♭","Bass_D","Bass_D♯-E♭","Bass_E","Bass_F","Bass_F♯-G♭","Middle_G","Middle_G♯-A♭","Middle_A","Middle_A♯-B♭","Middle_B",
-													"Middle_C","Middle_C♯-D♭","Middle_D","Middle_D♯-Eb","Middle_E","Middle_F","Treble_F♯-G♭","Treble_G","Treble_G♯-A♭","Treble_A","Treble_A♯-B♭","Treble_B",
-													"Treble_C","Treble_C♯-D♭","Treble_D","Treble_D♯-E♭","Treble_E","Treble_F","High_F♯-G♭","High_G","High_G♯-A♭","High_A","High_A♯-B♭","High_B",
-													"High_C","High_C♯-D♭","High_D","High_D♯-E♭","High_E","High_F","F♯7-G♭7","G7","G♯7-A♭7","A7","A♯7-B♭7","B7",
-													"C8","C♯8-D♭8","D8","D♯8-E♭8","E8","F8","F♯8-G♭8","G8","G♯8-A♭8","A8","A♯8-B♭8","B8",
-													"C9","C♯9-D♭9","D9","D♯9-E♭9","E9","F9","F♯9-G♭9","G9","G♯9-A♭9","A9","A♯9-B♭9","B9",
-													"C10","C♯10-D♭10","D10","D♯10-E♭10","E10","F10","F♯10-G♭10","G10"};
+		//private static LORChannelGroup4 octaveGroups = null;
+		private static int firstCobjIdx = lutils.UNDEFINED;
+		private static int firstCsavedIndex = lutils.UNDEFINED;
 
-		//													C		 C♯-D♭        D    D♯-E♭        E        F    F♯-G♭        G    G♯-A♭        A    A♯-B♭        B
-		public readonly static string[] noteFreqs = { "16.35", "17.32", "18.35", "19.45", "20.60", "21.83", "23.12", "24.50", "25.96", "27.50", "29.14", "30.87",
-													 "32.70", "34.65", "36.71", "38.89", "41.20", "43.65", "46.25", "49.00", "51.91", "55.00", "58.27", "61.74",
-													 "65.41", "69.30", "73.42", "77.78", "82.41", "87.31", "92.50", "98.00","103.83","110.00","116.54","123.47",
-													"130.81","138.59","146.83","155.56","164.81","174.61","185.00","196.00","207.65","220.00","233.08","246.94",
-													"261.63","277.18","293.66","311.13","329.63","349.23","369.99","392.00","415.30","440.00","466.16","493.88",
-													"523.25","554.37","587.33","622.25","659.25","698.46","739.99","783.99","830.61","880,00","932.33","987.77",
-													"1046.5","1108.7","1174.7","1244.5","1318.5","1396.9","1480.0","1568.0","1661.2","1760.0","1864.7","1975.3",
-													"2093.0","2217.5","2349.3","2489.0","2637.0","2793.8","2960.0","3136.0","3322.4","3520.0","3729.3","3951.1",
-													"4186.0","4434.2","4698.6","4978.0","5274.0","5587.6","5919.9","6271.9","6644.9","7040.0","7458.6","7902.1",
-														"8372",  "8870",  "9397",  "9956", "10548", "11175", "11840", "12544", "13290", "14080", "14917", "15804",
-													 "16744", "17740", "18795", "19912", "21096", "22351", "23680", "25088", "26579", "28160", "29834", "31608" };
-
-		public readonly static string[] octaveFreqs = { "0-31", "31-63", "63-127", "127-253", "253-507", "507-1015", "1015-2034", "2035-4068", "4068-8137", "8137-16274", "16274-32000", "Err", "Err" };
-
-		public readonly static string[] octaveNamesA = { "CCCCCC 128'", "CCCCC 64'", "CCCC 32'", "CCC 16'", "CC 8'", "C4'", "c1 2'", "c2 1'", "c3 1/2'", "c4 1/4'", "c5 1/8'", "c6 1/16'", "Err", "Err" };
-		public readonly static string[] octaveNamesB = { "Sub-Sub-Sub Contra", "Sub-Sub Contra", "Sub-Contra", "Contra", "Great", "Small", "1-Line", "2-Line", "3-Line", "4-Line", "5-Line", "6-Line", "Err", "Err" };
-
-		public readonly static string[] chromaNames = { "C", "C♯-D♭", "D", "D♯-E♭", "E", "F", "F♯-G♭", "G", "G♯-A♭", "A", "A♯-B♭", "B" };
-		public readonly static string[] keyNames = { "", "C major", "C♯ major", "D major", "D♯ major", "E major", "F major", "F♯ major", "G major", "G♯ major", "A major", "A♯ major", "B major",
-															"C minor", "C♯ minor", "D minor", "D♯ minor", "E minor", "F minor", "F♯ minor", "G minor", "G♯ minor", "A minor", "A♯ minor", "B minor" };
-
-
-		public Sequence4 Sequence = null;
-
-		private Channel[] noteChannels = null;
-		private ChannelGroup octaveGroups = null;
-		private int firstCobjIdx = utils.UNDEFINED;
-		private int firstCsavedIndex = utils.UNDEFINED;
+		// Note: these are LOR colors which are 24-bit int in BGR order
+		public static int[] NoteColors = {255, 32767, 65535, 65407, 65280, 8388573, 16776960, 16744192,
+																			16711680, 16711807, 16711935, 8323327 };
+		// Colors are 0 = 0xFF0000; Red, 1 = 0xFF7F00; Orange, 2 = 0xFFFF00; Yellow, 3 = 0x7FFF00; Yellow-Green, 4 = 0x00FF00; Green,
+		// 5 = 0x00FF7F; Green-Cyan, 6 = 0x00FFFF; Cyan, 7 = 0x007FFF; Cyan-Blue, 8 = 0x0000FF; Blue, 9 = 0x7F00FF; Blu-Magenta,
+		// 10 = 0xFF00FF; Magenta, and 11 = 0xFF007F; Magenta-Red
 
 
 
-		public Track GetTrack(string trackName, bool createIfNotFound = false)
+	static SequenceFunctions()
 		{
-			// Gets existing track specified by Name if it already exists
-			// Creates it if it does not
-			Track ret = Sequence.FindTrack(trackName, createIfNotFound);
-			if (ret == null)
-			{
-				if (createIfNotFound)
-				{
-					ret = Sequence.CreateTrack(trackName);
-					ret.Centiseconds = Sequence.Centiseconds;
-				}
-				//Sequence.AddTrack(ret);
-			}
-			return ret;
-		}
 
-		public TimingGrid GetGrid(string gridName, bool createIfNotFound = true)
-		{
-			// Gets existing track specified by Name if it already exists
-			// Creates it if it does not
-			TimingGrid ret = Sequence.FindTimingGrid(gridName, createIfNotFound);
-			//TimingGrid ret = Sequence.TimingGrids.Find(gridName, MemberType.TimingGrid, true);
-			if (ret == null)
-			{
-				if (createIfNotFound)
-				{
-					// ERROR! Should not ever get here
-					System.Diagnostics.Debugger.Break();
-					//ret = Sequence.CreateTimingGrid(gridName);
-					//ret.Centiseconds = centiseconds;
-					//Sequence.AddTimingGrid(ret);
-				}
-			}
-			else
-			{
-				// Clear any existing timings from a previous run
-				if (ret.timings.Count > 0)
-				{
-					ret.timings = new List<int>();
-				}
-			}
-			return ret;
 		}
 
 
-		public ChannelGroup GetGroup(string groupName, IMember parent)
-		{
-			// Gets existing group specified by Name if it already exists in the track or group
-			// Creates it if it does not
-			// Can't use 'Find' functions because we only want to look in this one particular track or group
-
-			// Make dummy item list
-			Membership Children = new Membership(Sequence);
-			// Get the parent
-			MemberType parentType = parent.MemberType;
-			// if parent is a group
-			if (parent.MemberType == MemberType.ChannelGroup)
-			{
-				// Get it's items saved index list
-				Children = ((ChannelGroup)parent).Members;
-			}
-			else // not a group
-			{
-				// if parent is a track
-				if (parent.MemberType == MemberType.Track)
-				{
-					Children = ((Track)parent).Members;
-				}
-				else // not a track either
-				{
-					string emsg = "WTF? Parent is not group or track, but should be!";
-				} // end if track, or not
-			} // end if group, or not
-
-			// Create blank/null return object
-			ChannelGroup ret = null;
-			int gidx = 0; // loop counter
-										// loop while we still have no group, and we haven't reached to end of the list
-			while ((ret == null) && (gidx < Children.Count))
-			{
-				// Get each item's ID
-				//int SI = Children.Items[gidx].SavedIndex;
-				IMember part = Children.Items[gidx];
-				if (part.MemberType == MemberType.ChannelGroup)
-				{
-					ChannelGroup group = (ChannelGroup)part;
-					if (part.Name == groupName)
-					{
-						ret = group;
-						gidx = Children.Count;
-					}
-				}
-				gidx++;
-			}
-
-			if (ret == null)
-			{
-				//int si = Sequence.Members.HighestSavedIndex + 1;
-				ret = Sequence.CreateChannelGroup(groupName);
-				ret.Centiseconds = Sequence.Centiseconds;
-				//Sequence.AddChannelGroup(ret);
-				//ID = Sequence.Members.bySavedIndex[parentSI];
-				if (parent.MemberType == MemberType.Track)
-				{
-					((Track)parent).Members.Add(ret);
-				}
-				if (parent.MemberType == MemberType.ChannelGroup)
-				{
-					((ChannelGroup)parent).Members.Add(ret);
-				}
-			}
-
-			return ret;
-		}
-
-		public Channel GetChannel(string channelName, Membership parentSubItems)
-		{
-			// Gets existing channel specified by Name if it already exists in the group
-			// Creates it if it does not
-			Channel ret = null;
-			IMember part = null;
-			int gidx = 0;
-			while ((ret == null) && (gidx < parentSubItems.Count))
-			{
-				part = parentSubItems.Items[gidx];
-				if (part.MemberType == MemberType.Channel)
-				{
-					if (part.Name == channelName)
-					{
-						ret = (Channel)part;
-						// Clear any existing effects from a previous run
-						if (ret.effects.Count > 0)
-						{
-							ret.effects = new List<Effect>();
-						}
-					}
-				}
-				gidx++;
-			}
-
-			if (ret == null)
-			{
-				//int si = Sequence.Members.HighestSavedIndex + 1;
-				ret = Sequence.CreateChannel(channelName);
-				ret.Centiseconds = Sequence.Centiseconds;
-				parentSubItems.Add(ret);
-			}
-
-			return ret;
-		}
-
-		public void CreatePolyChannels(IMember parent, string prefix, bool useGroups)
-		{
-			string dmsg = "";
-			//Channel chan;
-			int octave = 0;
-			int lastOctave = 0;
-			Membership parentSubs = new Membership(Sequence);
-			ChannelGroup grp = new ChannelGroup("null");
-			if (useGroups)
-			{
-				grp = GetGroup(prefix + octaveNamesA[octave], parent);
-				parentSubs = grp.Members;
-				//grp.identity.Centiseconds = Sequence.totalCentiseconds;
-			}
-			else
-			{
-				if (parent.MemberType == MemberType.Track)
-				{
-					parentSubs = ((Track)parent).Members;
-				}
-				else
-				{
-					// useGroups is false, so the parent should be a track, but it's not!
-					System.Diagnostics.Debugger.Break();
-				}
-			}
-			Array.Resize(ref noteChannels, noteNames.Length);
-			for (int n = 0; n < noteNames.Length; n++)
-			{
-				if (useGroups)
-				{
-					octave = n / 12;
-					if (octave != lastOctave)
-					{
-						// add group from last octave
-						//AddChildToParent(grp, parent);
-						// then create new octave group
-						grp = GetGroup(prefix + octaveNamesA[octave], parent);
-						//grp.identity.Centiseconds = Sequence.totalCentiseconds;
-						lastOctave = octave;
-						parentSubs = grp.Members;
-						dmsg = "Adding Group '" + grp.Name + "' SI:" + grp.SavedIndex;
-						dmsg += " Octave #" + octave.ToString();
-						dmsg += " to Parent '" + parent.Name + "' SI:" + parent.SavedIndex;
-						Debug.WriteLine(dmsg);
-					}
-				}
-				Channel chan = GetChannel(prefix + noteNames[n], parentSubs);
-				chan.color = NoteColor(n);
-				//chan.identity.Centiseconds = Sequence.totalCentiseconds;
-				noteChannels[n] = chan;
-				//grp.Add(chan);
-				dmsg = "Adding Channel '" + chan.Name + "' SI:" + chan.SavedIndex;
-				dmsg += " Note #" + n.ToString();
-				dmsg += " to Parent '" + parentSubs.owner.Name + "' SI:" + parentSubs.owner.SavedIndex;
-				//Debug.WriteLine(dmsg);
-				Debug.WriteLine(dmsg);
-
-
-				if (n == 0)
-				{
-					firstCobjIdx = Sequence.Channels.Count - 1;
-					firstCsavedIndex = chan.SavedIndex;
-				}
-			}
-			if (useGroups)
-			{
-				//AddChildToParent(grp, parent);
-			}
-			Sequence.Members.ReIndex();
-
-
-
-		}
-
-		public int ImportTimingGrid(TimingGrid beatGrid, xTimings xEffects)
+		public static int ImportTimingGrid(LORTimings4 beatGrid, xTimings xEffects)
 		{
 			int errs = 0;
 			int lastStart = -1;
+			string gName = beatGrid.Name;
+			string xName = xEffects.Name;
 
 			// If grid already has timings (from a previous run) clear them, start over fresh
 			if (beatGrid.timings.Count > 0)
 			{
 				beatGrid.timings.Clear();
 			}
-			beatGrid.TimingGridType = TimingGridType.Freeform;
+			int tc = xEffects.effects.Count;
+			beatGrid.LORTimingGridType4 = LORTimingGridType4.Freeform;
 			for (int q = 0; q < xEffects.effects.Count; q++)
 			{
 				xEffect xef = xEffects.effects[q];
 				int t = ms2cs(xef.starttime);
+
+				if (t > Annotator.Sequence.Centiseconds)  Annotator.Sequence.Centiseconds  = t;
+				if (t > Annotator.VampTrack.Centiseconds) Annotator.VampTrack.Centiseconds = t;
+					
 				if (t > lastStart)
 				{
-					if (t < Sequence.Centiseconds)
+					if (t <= Annotator.Sequence.Centiseconds)
 					{
 						beatGrid.AddTiming(t);
 					}
 				}
 				lastStart = t;
 			}
+			if (tc != beatGrid.timings.Count)
+			{
+				string msg = "Warning:\r\nxTimings '" + xName + "' has ";
+				msg += tc.ToString() + " effects, but\r\n";
+				msg += "Timing Grid '" + gName + "' has ";
+				msg += beatGrid.timings.Count.ToString() + " effects.\r\n";
+				msg += "   (This may be because of tightly close timings)";
+				Fyle.BUG(msg);
+			}
 			return errs;
 		}
 
-		public int ImportBeatChannel(Channel beatCh, xTimings xEffects, int barDivs, int firstBeat, bool ramps)
+		public static int LessEfficient_ImportBeatChannel(LORChannel4 beatCh, xTimings xEffects, int divider)
 		{
 			int errs = 0;
 			// Detect if we are doing 'Bars' channel for special handling
+			xEffect xef = null;
+			LOREffect4 lef = null;
+			bool bars = false;
+			int st = 0;
+			int et = 0;
+			int eh = 0;
+			int len = 0;
+			int b = beatCh.Name.IndexOf("Bars");
+			if (b >= 0) bars = true;
+			int halfBar = 10;
+			bool cancel = false;
+
+			// If channel already has effects (from a previous run) clear them, start over fresh
+			if (beatCh.effects.Count > 0)
+			{
+				beatCh.effects.Clear();
+			}
+			if (Annotator.UseRamps)
+			{
+				// Ramps are very simple, just add a fade-down effect for each effect
+				for (int q = 0; q < xEffects.effects.Count; q++)
+				{
+					xef = xEffects.effects[q];
+					st = ms2cs(xef.starttime);
+					et = ms2cs(xef.endtime);
+					lef = new LOREffect4(LOREffectType4.FadeDown, st, et, 100, 0);
+					beatCh.AddEffect(lef);
+				}
+			}
+			else // On-Off, NOT ramps
+			{
+				int q = 0;
+				int efc = xEffects.effects.Count;
+				while (q < efc)
+				{
+					cancel = false; // reset
+					xef = xEffects.effects[q];
+					st = ms2cs(xef.starttime);
+					if (divider == 1)
+					{
+						// Quarter and Third Beats (Sixteenth and twelth notes)
+						eh = ms2cs(xef.endtime);
+						len = eh - st;
+						et = st + (len / 2);
+					} // End divider = 1;
+					else
+					{
+						if (divider == 2)
+						{
+							// Half Beats (Eighth notes)
+
+							// If not starting on the first beat
+							if ((Annotator.FirstBeat == 2) || (Annotator.FirstBeat == 4))
+							{
+								// Start from the NEXT beat, if it exists
+								if ((q + 1) < efc)
+								{
+									xef = xEffects.effects[q + 1];
+									st = ms2cs(xef.starttime);
+									// End is the START of the NEXT beat, if it exists
+									if ((q + 2) < efc)
+									{
+										xef = xEffects.effects[q + 2];
+										et = ms2cs(xef.starttime);
+									}
+									else
+									{
+										// If no more beats, end time is the end of the sequence
+										et = Annotator.Sequence.Centiseconds;
+									}
+								}
+								else
+								{ cancel = true; }
+							}
+							else // Starting on the first beat (as normal)
+							{
+								// End time is the START of the next beat, if it exists
+								if ((q + 1) < efc)
+								{
+									xef = xEffects.effects[q + 1];
+									et = ms2cs(xef.starttime);
+								}
+								else
+								{
+									// If no more beats, end time is the end of the sequence
+									et = Annotator.Sequence.Centiseconds;
+								}
+							}
+						}
+						else // divider != 2
+						{
+							if (divider == 4)
+							{
+								// Full Beats (Quarter notes)
+
+								// If not starting from the first beat
+								int offset = Annotator.FirstBeat - 1;
+								// Start from the first beat, if it exists
+								if ((q + offset) < efc)
+								{
+									xef = xEffects.effects[q + 1];
+									st = ms2cs(xef.starttime);
+									// End is the START of the 2 beats later, if it exists
+									if ((q + offset + 2) < efc)
+									{
+										xef = xEffects.effects[q + 2];
+										et = ms2cs(xef.starttime);
+									}
+									else
+									{
+										// If note enough additional beats, end time is the end of the sequence
+										et = Annotator.Sequence.Centiseconds;
+									}
+								}
+								else
+								{ cancel = true; }
+							}
+							else // Divider != 1, 2, or 4 - must be bars
+							{
+								// Bars (Beats-Per-Bar number of Quarter notes (could be 3 or 4)
+
+								// If not starting from the first beat
+								int offset = ((Annotator.FirstBeat - 1) * Annotator.BeatsPerBar);
+								// Start from the first beat, if it exists
+								if ((q + offset) < efc)
+								{
+									xef = xEffects.effects[q + 1];
+									st = ms2cs(xef.starttime);
+									// End is the START of 6 (3/4 time) or 8 (4/4 time) later
+									if ((q + offset + 2) < efc)
+									{
+										xef = xEffects.effects[Annotator.BeatsPerBar * 2];
+										et = ms2cs(xef.starttime);
+									}
+									else
+									{
+										// If note enough additional beats, end time is the end of the sequence
+										et = Annotator.Sequence.Centiseconds;
+									}
+								}
+								else
+								{ cancel = true; }
+							} // End divider = 4 (or not)
+						} // End divider = 2 (or not)
+					} // End divider = 1 (or not)
+					if (!cancel)
+					{
+						lef = new LOREffect4(LOREffectType4.Intensity, st, et, 100);
+						beatCh.effects.Add(lef);
+					} // End if not cancelled
+					q += divider;
+				} // End while q < effects count
+			} // end ramps or on-off
+				//return errs;
+			return beatCh.effects.Count;
+		}
+
+		public static int ImportBeatChannel(LORChannel4 beatCh, xTimings xEffects, int divider)
+		{
+			//int errs = 0;
+			// Detect if we are doing 'Bars' channel for special handling
+			xEffect xef = null;
+			LOREffect4 lorEffect = null;
+			//bool bars = false;
+			int effectStart = 0;
+			int effectEnd = 0;
+			//int eh = 0;
+			//int len = 0;
+			//int b = beatCh.Name.IndexOf("Bars");
+			//if (b >= 0) bars = true;
+			//int halfBar = 10;
+			//bool cancel = false;
+
+			// If channel already has effects (from a previous run) clear them, start over fresh
+			if (beatCh.effects.Count > 0)
+			{
+				beatCh.effects.Clear();
+			}
+			if (Annotator.UseRamps)
+			{
+				// Ramps are very simple, just add a fade-down effect for each effect
+				for (int q = 0; q < xEffects.effects.Count; q++)
+				{
+					xef = xEffects.effects[q];
+					effectStart = ms2cs(xef.starttime);
+					effectEnd = ms2cs(xef.endtime);
+					lorEffect = new LOREffect4(LOREffectType4.FadeDown, effectStart, effectEnd, 100, 0);
+					beatCh.AddEffect(lorEffect);
+				}
+			}
+			else // On-Off, NOT ramps
+			{
+				int div = divider - 1;
+				int ofs = Annotator.FirstBeat - 1;
+				int j = ofs * divider;
+				// Index of effect to get start time
+				int effectIndexStart = j * div;
+				int effectCount = xEffects.effects.Count;
+				while (effectIndexStart < effectCount)
+				{
+					xef = xEffects.effects[effectIndexStart];
+					effectStart = ms2cs(xef.starttime);
+					if (divider < 2)
+					{
+						int xEnd = ms2cs(xef.endtime);
+						int len = xEnd - effectStart;
+						effectEnd = effectStart + (len / 2);
+					}
+					else
+					{
+						int effectIndexEnd = effectIndexStart + (divider / 2);
+						if ((effectIndexEnd) < effectCount)
+						{
+							xef = xEffects.effects[effectIndexEnd];
+							effectEnd = ms2cs(xef.starttime);
+						}
+						else
+						{
+							// If note enough additional beats, end time is the end of the sequence
+							effectEnd = Annotator.Sequence.Centiseconds;
+						}
+					}
+					lorEffect = new LOREffect4(LOREffectType4.Intensity, effectStart, effectEnd, 100);
+					beatCh.effects.Add(lorEffect);
+					effectIndexStart += divider;
+				} // End while effectIndexStart < effect count
+			} // End while q < effects count
+			return beatCh.effects.Count;
+		}
+
+
+
+		public static int ImportNoteChannel(LORChannel4 noteCh, xTimings xEffects)
+		{
+			int errs = 0;
+			// Detect if we are doing 'Bars' channel for special handling
+			xEffect xef = null;
+			LOREffect4 lef = null;
+			bool bars = false;
+			int st = 0;
+			int et = 0;
+
+			// If channel already has effects (from a previous run) clear them, start over fresh
+			if (noteCh.effects.Count > 0)
+			{
+				noteCh.effects.Clear();
+			}
+				for (int q = 0; q < xEffects.effects.Count; q++)
+				{
+					xef = xEffects.effects[q];
+					st = ms2cs(xef.starttime);
+					et = ms2cs(xef.endtime);
+				if (Annotator.UseRamps)
+				{
+					// Ramps are very simple, just add a fade-down effect for each effect
+					lef = new LOREffect4(LOREffectType4.FadeDown, st, et, 100, 0);
+				}
+				else
+				{
+					lef = new LOREffect4(LOREffectType4.Intensity, st, et, 100);
+				}
+				noteCh.AddEffect(lef);
+			}
+			return noteCh.effects.Count;
+		}
+		
+
+
+
+		public static int OLD2_ImportBeatChannel(LORChannel4 beatCh, xTimings xEffects, int barDivs, int firstBeat, bool ramps)
+		{
+			int errs = 0;
+			// Detect if we are doing 'Bars' channel for special handling
+			xEffect xef = null;
+			LOREffect4 lef = null;
 			bool bars = false;
 			int b = beatCh.Name.IndexOf("Bars");
 			if (b >= 0) bars = true;
@@ -325,21 +365,12 @@ namespace VampORama
 			//int lb = barDivs - 1;
 			for (int q = 0; q < xEffects.effects.Count; q++)
 			{
+				xef = xEffects.effects[q];
+				int st = ms2cs(xef.starttime);
+				int et = ms2cs(xef.endtime);
 				if (ramps)
 				{
-					xEffect xef = xEffects.effects[q];
-					Effect lef = new Effect();
-					lef.EffectType = EffectType.Intensity;
-					lef.startIntensity = 100;
-					lef.endIntensity = 0;
-					lef.startCentisecond = ms2cs(xef.starttime);
-					// Note: No special handling required for bars if using ramps
-					lef.endCentisecond = ms2cs(xef.endtime);
-					//if (q < (xEffects.effects.Count - 1))
-					//{
-						// Alternative
-					//	lef.endCentisecond = ms2cs(xEffects.effects[q + 1].starttime);
-					//}
+					lef = new LOREffect4(LOREffectType4.FadeDown, st, et, 100, 0);
 					beatCh.AddEffect(lef);
 				}
 				else // On-Off, NOT ramps
@@ -347,24 +378,30 @@ namespace VampORama
 					int n = ((q + 1) % barDivs);
 					if ((n == firstBeat) || bars)
 					{
-						xEffect xef = xEffects.effects[q];
-						Effect lef = new Effect();
-						lef.EffectType = EffectType.Intensity;
+						xef = xEffects.effects[q];
+						st = ms2cs(xef.starttime);
+						et = ms2cs(xef.endtime);
+						if (et > Annotator.Sequence.Centiseconds) Annotator.Sequence.Centiseconds = et;
+						if (et > Annotator.VampTrack.Centiseconds) Annotator.VampTrack.Centiseconds = et;
+						if (et > beatCh.Centiseconds) beatCh.Centiseconds = et;
+
+						lef = new LOREffect4();
+						lef.EffectType = LOREffectType4.Intensity;
 						lef.Intensity = 100;
-						lef.startCentisecond = ms2cs(xef.starttime);
+						lef.startCentisecond = st;
 						// If processing 'Bars' channel without Ramps, special handling is required
 						if (bars)
 						{
 							// Calculate a half bar for the end time
-							halfBar = ms2cs(xef.endtime);
-							halfBar -= lef.startCentisecond;
+							halfBar = et;
+							halfBar -= st;
 							halfBar /= 2;
 							//halfBar = ms2cs(halfBar);
-							lef.endCentisecond = (lef.startCentisecond + halfBar);
+							lef.endCentisecond = (st + halfBar);
 						}
 						else
 						{
-							lef.endCentisecond = ms2cs(xef.endtime);
+							lef.endCentisecond = et;
 						}
 						//if (q < (xEffects.effects.Count - 1))
 						//{
@@ -373,6 +410,7 @@ namespace VampORama
 						//}
 						beatCh.AddEffect(lef);
 					}
+					
 				}
 			} // end for loop
 			return errs;
@@ -380,47 +418,52 @@ namespace VampORama
 
 		public static int ms2cs(int ms)
 		{
-			double c = (ms / 10);
-			int cs = (int)Math.Round(c);
-			return cs;
+			//double c = (ms / 10);
+			//int cs = (int)Math.Round(c);
+			return (int)Math.Round(ms / 10D);
 		}
 
 		public static int ms2cs(double ms)
 		{
-			double c = (ms / 10);
-			int cs = (int)Math.Round(c);
-			return cs;
+			//double c = (ms / 10);
+			//int cs = (int)Math.Round(c);
+			return (int)Math.Round(ms / 10D);
 		}
 
 		public static int ms2cs(TimeSpan ms)
 		{
-			double c = (ms.TotalMilliseconds / 10);
-			int cs = (int)Math.Round(c);
-			return cs;
+			//double c = (ms.TotalMilliseconds / 10);
+			//int cs = (int)Math.Round(c);
+			return (int)Math.Round(ms.TotalMilliseconds / 10D);
 		}
 
-		public static void AddChildToParent(IMember child, IMember parent)
+		public static void AddChildToParent(iLORMember4 child, iLORMember4 parent)
 		{
 			// Tests for, and works with either a track or a channel group as the parent
-			if (parent.MemberType == MemberType.Track)
+			if (parent.MemberType == LORMemberType4.Track)
 			{
-				Track trk = (Track)parent;
+				LORTrack4 trk = (LORTrack4)parent;
 				trk.Members.Add(child);
 			}
-			if (parent.MemberType == MemberType.ChannelGroup)
+			if (parent.MemberType == LORMemberType4.ChannelGroup)
 			{
-				ChannelGroup grp = (ChannelGroup)parent;
+				LORChannelGroup4 grp = (LORChannelGroup4)parent;
 				grp.Members.Add(child);
 			}
 
 
 		}
 
-		public static Int32 NoteColor(int note)
+		public static int GetNoteColor(int noteNum)
+		{
+			return NoteColors[noteNum];
+		}
+
+		public static int NoteColor_BAD(int noteNum)
 		{
 			// Returned value is LOR color, NOT Web or .Net color!
 			int hexClr = 0;
-			int q = note % 12;
+			int q = noteNum % 12;
 			switch (q)
 			{
 				case 0:
@@ -460,20 +503,160 @@ namespace VampORama
 					hexClr = 8323327; // 0xFF007F;
 					break;
 			}
-
-			//int lorClr = RGBtoLOR(hexClr);
-			//Debug.Write(note);
-			//Debug.Write(" ");
-			//Debug.Write(hexClr.ToString("X6"));
-			//Debug.Write(" ");
-			//Debug.WriteLine(lorClr.ToString());
-
-
-			//return lorClr;
 			return hexClr;
 		}
 
 
+		/*
+				public static LORChannel4[] CreatePolyChannels()  // iLORMember4 parent, string prefix, bool useGroups)
+		//public LORChannelGroup4 CreatePolyChannels(iLORMember4 parent, string prefix, bool useGroups)
+		{
+			// Returns an array of Channels of (empty) channels for Polyphonic Transcription
+
+			string prefix = "Note ";
+			string dmsg = "";
+			//LORChannel4 chan;
+			int octave = 0;
+			int lastOctave = 0;
+			//LORMembership4 parentSubs = new LORMembership4(Sequence);
+			//LORChannelGroup4 grp = new LORChannelGroup4("null");
+			LORChannel4[] polyChannels = null;
+			Array.Resize(ref polyChannels, MusicalNotation.noteNamesUnicode.Length);
+			//if (useGroups)
+			//{
+			//	grp = GetGroup(prefix + MusicalNotation.octaveNamesA[octave], parent);
+			//	parentSubs = grp.Members;
+				//grp.identity.Centiseconds = Sequence.totalCentiseconds;
+			//}
+			//else
+			//{
+			//	if (parent.MemberType == LORMemberType4.Track)
+			//	{
+			//		parentSubs = ((LORTrack4)parent).Members;
+			//	}
+			//	else
+			//	{
+			//		// useGroups is false, so the parent should be a track, but it's not!
+			//		System.Diagnostics.Debugger.Break();
+			//	}
+			//}
+			//Array.Resize(ref noteChannels, MusicalNotation.noteNamesUnicode.Length);
+			for (int n = 0; n < MusicalNotation.noteNamesUnicode.Length; n++)
+			{
+				//if (useGroups)
+				//{
+				//	octave = n / 12;
+				//	if (octave != lastOctave)
+				//	{
+				//		// add group from last octave
+				//		//AddChildToParent(grp, parent);
+				//		// then create new octave group
+				//		grp = GetGroup(prefix + MusicalNotation.octaveNamesA[octave], parent);
+				//		//grp.identity.Centiseconds = Sequence.totalCentiseconds;
+				//		lastOctave = octave;
+				//		parentSubs = grp.Members;
+				//		dmsg = "Adding Group '" + grp.Name + "' SI:" + grp.SavedIndex;
+				//		dmsg += " Octave #" + octave.ToString();
+				//		dmsg += " to Parent '" + parent.Name + "' SI:" + parent.SavedIndex;
+				//		Debug.WriteLine(dmsg);
+				//	}
+				//}
+				//LORChannel4 chan = GetChannel(prefix + MusicalNotation.noteNamesUnicode[n], parentSubs);
+				LORChannel4 chan = new LORChannel4(prefix + MusicalNotation.noteNamesUnicode[n]);
+				chan.color = NoteColor(n);
+				//chan.identity.Centiseconds = Sequence.totalCentiseconds;
+				noteChannels[n] = chan;
+				//grp.Add(chan);
+				dmsg = "Adding Channel '" + chan.Name + "' SI:" + chan.SavedIndex;
+				dmsg += " Note #" + n.ToString();
+				//dmsg += " to Parent '" + parentSubs.Owner.Name + "' SI:" + parentSubs.Owner.SavedIndex;
+				//Debug.WriteLine(dmsg);
+				Debug.WriteLine(dmsg);
+
+
+				if (n == 0)
+				{
+					firstCobjIdx = Sequence.Channels.Count - 1;
+					firstCsavedIndex = chan.SavedIndex;
+				}
+			}
+			//if (useGroups)
+			//{
+			//AddChildToParent(grp, parent);
+			//}
+			//Sequence.Members.ReIndex();
+
+			return polyChannels;
+
+		}
+
+		public static LORChannelGroup4[] CreatePolyOctaveGroups()
+		{
+			string prefix = "Octave ";
+			LORChannelGroup4[] polyGroups = null;
+			Array.Resize(ref polyGroups, MusicalNotation.octaveNamesA.Length);
+			for (int n = 0; n < MusicalNotation.noteNamesUnicode.Length; n++)
+			{
+				LORChannelGroup4 grp = new LORChannelGroup4(prefix + MusicalNotation.octaveNamesA[n]);
+			}
+			return polyGroups;
+		}
+
+		public static LORChannelGroup4 PutNonEmptyPolyChannelsIntoPolyOctaveGroups(LORChannel4[] polyChannels, LORChannelGroup4[] polyGroups)
+		{
+			// Returns the parent group holding non-empty subgroups holding non-empty channels ...
+			//  ... if there is no errors!
+			//    Still returns the parent group if there are errors, but it will be empty
+			//     furthermore, the group name will indicate the error
+			int err = 0;
+			LORChannelGroup4 parentGroup = new LORChannelGroup4("Polyphonic Transcription");
+			int keepCount = 0;
+			if (polyChannels.Length != 128)
+			{
+				err = 1;
+				parentGroup.ChangeName("Err 1: Not 128 Note Channels");
+			}
+			else
+			{
+				if (polyGroups.Length < 12)
+				{
+					err = 2;
+					parentGroup.ChangeName("Err 2: Not enough Octave Groups");
+				}
+				else
+				{
+					for (int n=0; n<128; n++)
+					{
+						int g = n / 12;
+						if (polyChannels[n].effects.Count > 0)
+						{
+							polyGroups[g].Members.Add(polyChannels[n]);
+							keepCount++;
+						}
+					}
+					if (keepCount == 0)
+					{
+						err = 3;
+						parentGroup.ChangeName("Err 3: Note Channels are all empty");
+					}
+					else
+					{
+						for (int g = 0; g < 12; g++)
+						{
+							if (polyGroups[g].Members.Count > 0)
+							{
+								parentGroup.Members.Add(polyGroups[g]);
+							}								
+						}
+					}
+				}
+			}
+			return parentGroup;
+		}
+
+
+ 
+		*/
 
 	}
 }

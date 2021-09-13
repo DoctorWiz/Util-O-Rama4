@@ -11,16 +11,17 @@ using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
 using Microsoft.Win32;
-using LORUtils;
+using LORUtils4; using FileHelper;
 using FuzzyString;
 using Syncfusion.Windows.Forms.Tools;
 
-namespace MapORama
+namespace UtilORama4
 {
 	public partial class frmRemapper : Form
 	{
 		private bool firstShown = false;
-		private Control currentToolTipControl = null; 
+		private Control currentToolTipControl = null;
+		private bool isWiz = Fyle.IsWizard || Fyle.IsAWizard;
 
 		public frmRemapper()
 		{
@@ -30,18 +31,18 @@ namespace MapORama
 		private void InitForm()
 		{
 			bool valid = false;
-			SeqFolder = utils.DefaultSequencesPath;
-			logHomeDir = utils.GetAppTempFolder();
+			SeqFolder = lutils.DefaultSequencesPath;
+			logHomeDir = Fyle.GetAppTempFolder();
 
 			masterFile = Properties.Settings.Default.LastMasterFile;
 			if (masterFile.Length > 6)
 			{
-				valid = utils.IsValidPath(masterFile, true);
+				valid = Fyle.IsValidPath(masterFile, true);
 			}
-			if (!valid) masterFile = utils.DefaultChannelConfigsPath;
+			if (!valid) masterFile = lutils.DefaultChannelConfigsPath;
 			if (!File.Exists(masterFile))
 			{
-				masterFile = utils.DefaultChannelConfigsPath;
+				masterFile = lutils.DefaultChannelConfigsPath;
 				Properties.Settings.Default.LastMasterFile = masterFile;
 			}
 
@@ -49,12 +50,12 @@ namespace MapORama
 			sourceFile = Properties.Settings.Default.LastSourceFile;
 			if (sourceFile.Length > 6)
 			{
-				valid = utils.IsValidPath(sourceFile, true);
+				valid = Fyle.IsValidPath(sourceFile, true);
 			}
-			if (!valid) sourceFile = utils.DefaultSequencesPath;
+			if (!valid) sourceFile = lutils.DefaultSequencesPath;
 			if (!File.Exists(sourceFile))
 			{
-				sourceFile = utils.DefaultSequencesPath;
+				sourceFile = lutils.DefaultSequencesPath;
 				Properties.Settings.Default.LastSourceFile = sourceFile;
 			}
 
@@ -62,24 +63,24 @@ namespace MapORama
 			mapFile = Properties.Settings.Default.LastMapFile;
 			if (mapFile.Length > 6)
 			{
-				valid = utils.IsValidPath(mapFile, true);
+				valid = Fyle.IsValidPath(mapFile, true);
 			}
-			if (!valid) mapFile = utils.DefaultChannelConfigsPath;
+			if (!valid) mapFile = lutils.DefaultChannelConfigsPath;
 			if (!File.Exists(mapFile))
 			{
-				mapFile = utils.DefaultChannelConfigsPath;
+				mapFile = lutils.DefaultChannelConfigsPath;
 			}
 
 			valid = false;
 			saveFile = Properties.Settings.Default.LastSaveFile;
 			if (saveFile.Length > 6)
 			{
-				valid = utils.IsValidPath(saveFile, true);
+				valid = Fyle.IsValidPath(saveFile, true);
 			}
-			if (!valid) saveFile = utils.DefaultSequencesPath;
+			if (!valid) saveFile = lutils.DefaultSequencesPath;
 			if (!File.Exists(saveFile))
 			{
-				saveFile = utils.DefaultSequencesPath;
+				saveFile = lutils.DefaultSequencesPath;
 			}
 
 			sourceOnRight = Properties.Settings.Default.SourceOnRight;
@@ -89,7 +90,7 @@ namespace MapORama
 			Properties.Settings.Default.Save();
 
 			chkAutoLaunch.Checked = Properties.Settings.Default.AutoLaunch;
-			btnEaves.Visible = utils.IsWizard;
+			btnEaves.Visible = isWiz;
 
 			RestoreFormPosition();
 
@@ -314,7 +315,7 @@ namespace MapORama
 					{
 						//seqSource.ReadSequenceFile(sourceFile);
 						LoadSourceFile(sourceFile);
-						//utils.TreeFillChannels(treeSource, seqSource, sourceNodesBySI, false, false);
+						//lutils.TreeFillChannels(treeSource, seqSource, sourceNodesBySI, false, false);
 						// Is a master also already loaded?
 					}
 				} // end last sequence file exists
@@ -383,8 +384,8 @@ namespace MapORama
 		private void pnlAbout_Click(object sender, EventArgs e)
 		{
 			ImBusy(true);
-			Form aboutBox = new About();
-			aboutBox.ShowDialog(this);
+			//Form aboutBox = new About();
+			//aboutBox.ShowDialog(this);
 			ImBusy(false);
 		}
 
@@ -468,9 +469,9 @@ namespace MapORama
 		private void btnEaves_Click(object sender, EventArgs e)
 		{
 
-			//RGBchannel oef = (RGBchannel)seqSource.Members.Find("Strip 1 Pixel 150 [U2.448-450]", MemberType.RGBchannel, false);
-			RGBchannel se = (RGBchannel)seqSource.Members.Find("Eave Pixel 001 / S1.170 / U2.508-510", MemberType.RGBchannel, false);
-			RGBchannel me = (RGBchannel)seqMaster.Members.Find("Eave Pixel 001 / S1.170 / U2.508-510", MemberType.RGBchannel, false);
+			//LORRGBChannel4 oef = (LORRGBChannel4)seqSource.Members.Find("Strip 1 Pixel 150 [U2.448-450]", LORMemberType4.RGBChannel, false);
+			LORRGBChannel4 se = (LORRGBChannel4)seqSource.Members.Find("Eave Pixel 001 / S1.170 / U2.508-510", LORMemberType4.RGBChannel, false);
+			LORRGBChannel4 me = (LORRGBChannel4)seqMaster.Members.Find("Eave Pixel 001 / S1.170 / U2.508-510", LORMemberType4.RGBChannel, false);
 
 			int masIdx = me.Index;
 			int srcIdx = se.Index; // = oef.Index;
@@ -487,8 +488,8 @@ namespace MapORama
 			}
 
 
-			se = (RGBchannel)seqSource.Members.Find("Eave Pixel 172 / S2.002 / U3.004-006", MemberType.RGBchannel, false);
-			RGBchannel mf = (RGBchannel)seqMaster.Members.Find("Fence Pixel 01-01 [U11.496-498]", MemberType.RGBchannel, false);
+			se = (LORRGBChannel4)seqSource.Members.Find("Eave Pixel 172 / S2.002 / U3.004-006", LORMemberType4.RGBChannel, false);
+			LORRGBChannel4 mf = (LORRGBChannel4)seqMaster.Members.Find("Fence Pixel 01-01 [U11.496-498]", LORMemberType4.RGBChannel, false);
 
 			srcIdx = se.Index; // + 171;
 			masIdx = mf.Index;
@@ -576,5 +577,20 @@ namespace MapORama
 				}
 			}
 		}
+
+		private void treeMaster_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void txtSourceFile_TextChanged(object sender, EventArgs e)
+		{
+
+		}
+
+		private void lblSourceFile_Click(object sender, EventArgs e)
+		{
+
+		}
 	}
-}// end namespace MapORama
+}// end namespace UtilORama4

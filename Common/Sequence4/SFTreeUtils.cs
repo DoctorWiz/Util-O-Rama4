@@ -11,16 +11,16 @@ using System.Threading;
 using System.Runtime.InteropServices;
 using Microsoft.Win32;
 using Syncfusion.Windows.Forms.Tools;
-using LORUtils;
+using LORUtils4; using FileHelper;
 
 
-namespace LORUtils
+namespace LORUtils4
 {
 
 	public class TreeUtils
 	{
 
-		public static int nodeIndex = utils.UNDEFINED;
+		public static int nodeIndex = lutils.UNDEFINED;
 		public static readonly int[] ICONtrack = new int[] { 0 };
 		public static readonly int[] ICONchannelGroup = new int[] { 1 };
 		public static readonly int[] ICONrgbChannel = new int[] { 2 };
@@ -30,7 +30,7 @@ namespace LORUtils
 		public static readonly int[] ICONcosmicDevice = new int[] { 7 };
 
 		#region TreeStuff
-		public static void TreeFillChannels(TreeViewAdv tree, Sequence4 seq, ref List<TreeNodeAdv>[] nodesBySI, bool selectedOnly, bool includeRGBchildren)
+		public static void TreeFillChannels(TreeViewAdv tree, LORSequence4 seq, ref List<TreeNodeAdv>[] nodesBySI, bool selectedOnly, bool includeRGBchildren)
 		{
 			int listSize = seq.Members.HighestSavedIndex + seq.Tracks.Count + seq.TimingGrids.Count + 1;
 			//Array.Resize(ref nodesBySI, listSize);
@@ -38,11 +38,11 @@ namespace LORUtils
 			{
 				Array.Resize(ref nodesBySI, listSize);
 			}
-			int t = SeqEnums.MEMBER_Channel | SeqEnums.MEMBER_RGBchannel | SeqEnums.MEMBER_ChannelGroup | SeqEnums.MEMBER_Track;
+			int t = LORSeqEnums4.MEMBER_Channel | LORSeqEnums4.MEMBER_RGBchannel | LORSeqEnums4.MEMBER_ChannelGroup | LORSeqEnums4.MEMBER_Track;
 			TreeFillChannels(tree, seq, ref nodesBySI, selectedOnly, includeRGBchildren, t);
 		}
 
-		public static void TreeFillChannels(TreeViewAdv tree, Sequence4 seq, ref List<TreeNodeAdv>[] nodesBySI, bool selectedOnly, bool includeRGBchildren, int memberTypes)
+		public static void TreeFillChannels(TreeViewAdv tree, LORSequence4 seq, ref List<TreeNodeAdv>[] nodesBySI, bool selectedOnly, bool includeRGBchildren, int memberTypes)
 		{
 			//TODO: 'Selected' not implemented yet
 
@@ -61,7 +61,7 @@ namespace LORUtils
 
 
 			//const string ERRproc = " in TreeFillChannels(";
-			//const string ERRtrk = "), in Track #";
+			//const string ERRtrk = "), in LORTrack4 #";
 			//const string ERRitem = ", Items #";
 			//const string ERRline = ", Line #";
 
@@ -77,13 +77,13 @@ namespace LORUtils
 
 			for (int t = 0; t < seq.Tracks.Count; t++)
 			{
-				Track trk = seq.Tracks[t];
+				LORTrack4 trk = seq.Tracks[t];
 				TreeNodeAdv trackNode = TreeAddTrack(seq, tree.Nodes, trk, ref nodesBySI, selectedOnly, includeRGBchildren, memberTypes);
 			}
 			int xx = 42;
 		}
 
-		private static TreeNodeAdv TreeAddTrack(Sequence4 seq, TreeNodeAdvCollection baseNodes, Track track, ref List<TreeNodeAdv>[] nodesBySI, bool selectedOnly,
+		private static TreeNodeAdv TreeAddTrack(LORSequence4 seq, TreeNodeAdvCollection baseNodes, LORTrack4 track, ref List<TreeNodeAdv>[] nodesBySI, bool selectedOnly,
 			bool includeRGBchildren, int memberTypes)
 		{
 			List<TreeNodeAdv> nodeList;
@@ -95,9 +95,9 @@ namespace LORUtils
 
 			string nodeText = "";
 			bool inclChan = false;
-			if ((memberTypes & SeqEnums.MEMBER_Channel) > 0) inclChan = true;
+			if ((memberTypes & LORSeqEnums4.MEMBER_Channel) > 0) inclChan = true;
 			bool inclRGB = false;
-			if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0) inclRGB = true;
+			if ((memberTypes & LORSeqEnums4.MEMBER_RGBchannel) > 0) inclRGB = true;
 
 			// TEMPORARY, FOR DEBUGGING
 			// int tcount = 0;
@@ -108,7 +108,7 @@ namespace LORUtils
 
 			//try
 			//{
-			//Track track = seq.Tracks[trackNumber];
+			//LORTrack4 track = seq.Tracks[trackNumber];
 			nodeText = track.Name;
 			//TreeNodeAdv trackNode = baseNodes.Add(nodeText);
 			TreeNodeAdv trackNode = new TreeNodeAdv(nodeText);
@@ -122,7 +122,7 @@ namespace LORUtils
 			// But we will assign one for tracking and matching purposes
 			//track.SavedIndex = seq.Members.HighestSavedIndex + t + 1;
 
-			//if ((memberTypes & SeqEnums.MEMBER_Track) > 0)
+			//if ((memberTypes & LORSeqEnums4.MEMBER_Track) > 0)
 			//{
 			baseNodes = trackNode.Nodes;
 			nodeIndex++;
@@ -148,13 +148,13 @@ namespace LORUtils
 			{
 				//try
 				//{
-				IMember member = track.Members.Items[ti];
+				iLORMember4 member = track.Members.Items[ti];
 				int si = member.SavedIndex;
 				if (member != null)
 				{
-					if (member.MemberType == MemberType.ChannelGroup)
+					if (member.MemberType == LORMemberType4.ChannelGroup)
 					{
-						ChannelGroup memGrp = (ChannelGroup)member;
+						LORChannelGroup4 memGrp = (LORChannelGroup4)member;
 						int inclCount = memGrp.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 						if (inclCount > 0)
 						{
@@ -167,9 +167,9 @@ namespace LORUtils
 							//nodesBySI[si].Add(groupNode);
 						}
 					}
-					if (member.MemberType == MemberType.CosmicDevice)
+					if (member.MemberType == LORMemberType4.Cosmic)
 					{
-						CosmicDevice memDev = (CosmicDevice)member;
+						LORCosmic4 memDev = (LORCosmic4)member;
 						int inclCount = memDev.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 						if (inclCount > 0)
 						{
@@ -182,9 +182,9 @@ namespace LORUtils
 							//nodesBySI[si].Add(groupNode);
 						}
 					}
-					if (member.MemberType == MemberType.RGBchannel)
+					if (member.MemberType == LORMemberType4.RGBChannel)
 					{
-						RGBchannel memRGB = (RGBchannel)member;
+						LORRGBChannel4 memRGB = (LORRGBChannel4)member;
 						TreeNodeAdv rgbNode = TreeAddRGBchannel(seq, baseNodes, memRGB, ref nodesBySI, selectedOnly, includeRGBchildren);
 						//AddNode(nodesBySI[si], rgbNode);
 						//nodesBySI[si].Add(rgbNode);
@@ -193,9 +193,9 @@ namespace LORUtils
 						qlist.Add(rgbNode);
 						rcount++;
 					}
-					if (member.MemberType == MemberType.Channel)
+					if (member.MemberType == LORMemberType4.Channel)
 					{
-						Channel memCh = (Channel)member;
+						LORChannel4 memCh = (LORChannel4)member;
 						TreeNodeAdv channelNode = TreeAddChannel(seq, baseNodes, memCh, selectedOnly);
 						//AddNode(nodesBySI[si], channelNode);
 						//nodesBySI[si].Add(channelNode);
@@ -218,7 +218,7 @@ namespace LORUtils
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
 					}
 					catch (System.InvalidCastException ex)
 					{
@@ -230,7 +230,7 @@ namespace LORUtils
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
 					}
 					catch (Exception ex)
 					{
@@ -242,7 +242,7 @@ namespace LORUtils
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
 					}
 					*/
 				#endregion
@@ -261,7 +261,7 @@ namespace LORUtils
 					#if DEBUG
 						System.Diagnostics.Debugger.Break();
 					#endif
-					utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+					Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
 				}
 				catch (System.InvalidCastException ex)
 				{
@@ -273,7 +273,7 @@ namespace LORUtils
 					#if DEBUG
 						System.Diagnostics.Debugger.Break();
 					#endif
-					utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+					Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
 				}
 				catch (Exception ex)
 				{
@@ -285,7 +285,7 @@ namespace LORUtils
 					#if DEBUG
 						System.Diagnostics.Debugger.Break();
 					#endif
-					utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+					Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
 				}
 				*/
 			#endregion
@@ -298,7 +298,7 @@ namespace LORUtils
 		} // end fillOldChannels
 
 
-		private static TreeNodeAdv TreeAddGroup(Sequence4 seq, TreeNodeAdvCollection baseNodes, ChannelGroup group, ref List<TreeNodeAdv>[] nodesBySI, bool selectedOnly,
+		private static TreeNodeAdv TreeAddGroup(LORSequence4 seq, TreeNodeAdvCollection baseNodes, LORChannelGroup4 group, ref List<TreeNodeAdv>[] nodesBySI, bool selectedOnly,
 			bool includeRGBchildren, int memberTypes)
 		{
 			TreeNodeAdv groupNode = null;
@@ -313,7 +313,7 @@ namespace LORUtils
 			if (nodesBySI[groupSI] != null)
 			{
 				// Include groups in the TreeView?
-				if ((memberTypes & SeqEnums.MEMBER_ChannelGroup) > 0)
+				if ((memberTypes & LORSeqEnums4.MEMBER_ChannelGroup) > 0)
 				{
 					string nodeText = group.Name;
 					groupNode = new TreeNodeAdv(nodeText);
@@ -348,15 +348,15 @@ namespace LORUtils
 				{
 					//try
 					//{
-					IMember member = group.Members.Items[gi];
+					iLORMember4 member = group.Members.Items[gi];
 					int si = member.SavedIndex;
-					if (member.MemberType == MemberType.ChannelGroup)
+					if (member.MemberType == LORMemberType4.ChannelGroup)
 					{
-						ChannelGroup memGrp = (ChannelGroup)member;
+						LORChannelGroup4 memGrp = (LORChannelGroup4)member;
 						bool inclChan = false;
-						if ((memberTypes & SeqEnums.MEMBER_Channel) > 0) inclChan = true;
+						if ((memberTypes & LORSeqEnums4.MEMBER_Channel) > 0) inclChan = true;
 						bool inclRGB = false;
-						if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0) inclRGB = true;
+						if ((memberTypes & LORSeqEnums4.MEMBER_RGBchannel) > 0) inclRGB = true;
 						int inclCount = memGrp.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 						if (inclCount > 0)
 						{
@@ -366,13 +366,13 @@ namespace LORUtils
 						}
 						int cosCount = memGrp.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 					}
-					if (member.MemberType == MemberType.CosmicDevice)
+					if (member.MemberType == LORMemberType4.Cosmic)
 					{
-						CosmicDevice memDev = (CosmicDevice)member;
+						LORCosmic4 memDev = (LORCosmic4)member;
 						bool inclChan = false;
-						if ((memberTypes & SeqEnums.MEMBER_Channel) > 0) inclChan = true;
+						if ((memberTypes & LORSeqEnums4.MEMBER_Channel) > 0) inclChan = true;
 						bool inclRGB = false;
-						if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0) inclRGB = true;
+						if ((memberTypes & LORSeqEnums4.MEMBER_RGBchannel) > 0) inclRGB = true;
 						int inclCount = memDev.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 						if (inclCount > 0)
 						{
@@ -382,20 +382,20 @@ namespace LORUtils
 						}
 						int cosCount = memDev.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 					}
-					if (member.MemberType == MemberType.Channel)
+					if (member.MemberType == LORMemberType4.Channel)
 					{
-						if ((memberTypes & SeqEnums.MEMBER_Channel) > 0)
+						if ((memberTypes & LORSeqEnums4.MEMBER_Channel) > 0)
 						{
-							Channel memCh = (Channel)member;
+							LORChannel4 memCh = (LORChannel4)member;
 							TreeNodeAdv channelNode = TreeAddChannel(seq, baseNodes, memCh, selectedOnly);
 							nodesBySI[si].Add(channelNode);
 						}
 					}
-					if (member.MemberType == MemberType.RGBchannel)
+					if (member.MemberType == LORMemberType4.RGBChannel)
 					{
-						if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0)
+						if ((memberTypes & LORSeqEnums4.MEMBER_RGBchannel) > 0)
 						{
-							RGBchannel memRGB = (RGBchannel)member;
+							LORRGBChannel4 memRGB = (LORRGBChannel4)member;
 							TreeNodeAdv rgbChannelNode = TreeAddRGBchannel(seq, baseNodes, memRGB, ref nodesBySI, selectedOnly, includeRGBchildren);
 							nodesBySI[si].Add(rgbChannelNode);
 						}
@@ -413,7 +413,7 @@ namespace LORUtils
 				#if DEBUG
 					Debugger.Break();
 				#endif
-				utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+				Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
 			} // end catch
 			*/
 					#endregion
@@ -423,7 +423,7 @@ namespace LORUtils
 			return groupNode;
 		} // end TreeAddGroup
 
-		private static TreeNodeAdv TreeAddCosmic(Sequence4 seq, TreeNodeAdvCollection baseNodes, CosmicDevice device, ref List<TreeNodeAdv>[] nodesBySI, bool selectedOnly,
+		private static TreeNodeAdv TreeAddCosmic(LORSequence4 seq, TreeNodeAdvCollection baseNodes, LORCosmic4 device, ref List<TreeNodeAdv>[] nodesBySI, bool selectedOnly,
 			bool includeRGBchildren, int memberTypes)
 		{
 			int deviceSI = device.SavedIndex;
@@ -436,18 +436,18 @@ namespace LORUtils
 			if (nodesBySI[deviceSI] != null)
 			{
 				//ChanInfo nodeTag = new ChanInfo();
-				//nodeTag.MemberType = MemberType.ChannelGroup;
+				//nodeTag.MemberType = LORMemberType4.ChannelGroup;
 				//nodeTag.objIndex = groupIndex;
 				//nodeTag.SavedIndex = theGroup.SavedIndex;
 				//nodeTag.nodeIndex = nodeIndex;
 
-				//ChannelGroup theGroup = seq.ChannelGroups[groupIndex];
-				//CosmicDevice device = (CosmicDevice)seq.Members.bySavedIndex[deviceSI];
+				//LORChannelGroup4 theGroup = seq.ChannelGroups[groupIndex];
+				//LORCosmic4 device = (LORCosmic4)seq.Members.bySavedIndex[deviceSI];
 
-				//IMember groupID = theGroup;
+				//iLORMember4 groupID = theGroup;
 
 				// Include groups in the TreeView?
-				if ((memberTypes & SeqEnums.MEMBER_CosmicDevice) > 0)
+				if ((memberTypes & LORSeqEnums4.MEMBER_CosmicDevice) > 0)
 				{
 					string nodeText = device.Name;
 					deviceNode = new TreeNodeAdv(nodeText);
@@ -472,15 +472,15 @@ namespace LORUtils
 				{
 					//try
 					//{
-					IMember member = device.Members.Items[gi];
+					iLORMember4 member = device.Members.Items[gi];
 					int si = member.SavedIndex;
-					if (member.MemberType == MemberType.ChannelGroup)
+					if (member.MemberType == LORMemberType4.ChannelGroup)
 					{
-						ChannelGroup memGrp = (ChannelGroup)member;
+						LORChannelGroup4 memGrp = (LORChannelGroup4)member;
 						bool inclChan = false;
-						if ((memberTypes & SeqEnums.MEMBER_Channel) > 0) inclChan = true;
+						if ((memberTypes & LORSeqEnums4.MEMBER_Channel) > 0) inclChan = true;
 						bool inclRGB = false;
-						if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0) inclRGB = true;
+						if ((memberTypes & LORSeqEnums4.MEMBER_RGBchannel) > 0) inclRGB = true;
 						int inclCount = memGrp.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 						if (inclCount > 0)
 						{
@@ -490,13 +490,13 @@ namespace LORUtils
 						}
 						int cosCount = memGrp.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 					}
-					if (member.MemberType == MemberType.CosmicDevice)
+					if (member.MemberType == LORMemberType4.Cosmic)
 					{
-						CosmicDevice memDev = (CosmicDevice)member;
+						LORCosmic4 memDev = (LORCosmic4)member;
 						bool inclChan = false;
-						if ((memberTypes & SeqEnums.MEMBER_Channel) > 0) inclChan = true;
+						if ((memberTypes & LORSeqEnums4.MEMBER_Channel) > 0) inclChan = true;
 						bool inclRGB = false;
-						if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0) inclRGB = true;
+						if ((memberTypes & LORSeqEnums4.MEMBER_RGBchannel) > 0) inclRGB = true;
 						int inclCount = memDev.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 						if (inclCount > 0)
 						{
@@ -506,20 +506,20 @@ namespace LORUtils
 						}
 						int cosCount = memDev.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 					}
-					if (member.MemberType == MemberType.Channel)
+					if (member.MemberType == LORMemberType4.Channel)
 					{
-						if ((memberTypes & SeqEnums.MEMBER_Channel) > 0)
+						if ((memberTypes & LORSeqEnums4.MEMBER_Channel) > 0)
 						{
-							Channel chanMem = (Channel)member;
+							LORChannel4 chanMem = (LORChannel4)member;
 							TreeNodeAdv channelNode = TreeAddChannel(seq, baseNodes, chanMem, selectedOnly);
 							nodesBySI[si].Add(channelNode);
 						}
 					}
-					if (member.MemberType == MemberType.RGBchannel)
+					if (member.MemberType == LORMemberType4.RGBChannel)
 					{
-						if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0)
+						if ((memberTypes & LORSeqEnums4.MEMBER_RGBchannel) > 0)
 						{
-							RGBchannel memRGB = (RGBchannel)member;
+							LORRGBChannel4 memRGB = (LORRGBChannel4)member;
 							TreeNodeAdv rgbChannelNode = TreeAddRGBchannel(seq, baseNodes, memRGB, ref nodesBySI, selectedOnly, includeRGBchildren);
 							nodesBySI[si].Add(rgbChannelNode);
 						}
@@ -537,7 +537,7 @@ namespace LORUtils
 				#if DEBUG
 					Debugger.Break();
 				#endif
-				utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+				Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
 			} // end catch
 			*/
 					#endregion
@@ -564,15 +564,15 @@ namespace LORUtils
 			*/
 		}
 
-		private static TreeNodeAdv TreeAddChannel(Sequence4 seq, TreeNodeAdvCollection baseNodes, Channel channel, bool selectedOnly)
+		private static TreeNodeAdv TreeAddChannel(LORSequence4 seq, TreeNodeAdvCollection baseNodes, LORChannel4 channel, bool selectedOnly)
 		{
-			//Channel channel = (Channel)seq.Members.bySavedIndex[channelSI];
+			//LORChannel4 channel = (LORChannel4)seq.Members.bySavedIndex[channelSI];
 			int channelSI = channel.SavedIndex;
 			string nodeText = channel.Name;
 			TreeNodeAdv channelNode = new TreeNodeAdv(nodeText);
 			baseNodes.Add(channelNode);
 			List<TreeNodeAdv> nodeList;
-			//IMember nodeTag = channel;
+			//iLORMember4 nodeTag = channel;
 			nodeIndex++;
 			channelNode.Tag = channel;
 			if (channel.Tag == null)
@@ -585,8 +585,8 @@ namespace LORUtils
 				nodeList = (List<TreeNodeAdv>)channel.Tag;
 			}
 			nodeList.Add(channelNode);
-			//channelNode.ImageIndex = imlTreeIcons.Images.IndexOfKey("Channel");
-			//channelNode.SelectedImageIndex = imlTreeIcons.Images.IndexOfKey("Channel");
+			//channelNode.ImageIndex = imlTreeIcons.Images.IndexOfKey("LORChannel4");
+			//channelNode.SelectedImageIndex = imlTreeIcons.Images.IndexOfKey("LORChannel4");
 			//channelNode.ImageKey = ICONchannel;
 			//channelNode.SelectedImageKey = ICONchannel;
 
@@ -602,7 +602,7 @@ namespace LORUtils
 			return channelNode;
 		}
 
-		private static TreeNodeAdv TreeAddRGBchannel(Sequence4 seq, TreeNodeAdvCollection baseNodes, RGBchannel rgbChannel, ref List<TreeNodeAdv>[] nodesBySI, bool selectedOnly, bool includeRGBchildren)
+		private static TreeNodeAdv TreeAddRGBchannel(LORSequence4 seq, TreeNodeAdvCollection baseNodes, LORRGBChannel4 rgbChannel, ref List<TreeNodeAdv>[] nodesBySI, bool selectedOnly, bool includeRGBchildren)
 		{
 			TreeNodeAdv channelNode = null;
 			List<TreeNodeAdv> nodeList;
@@ -614,14 +614,14 @@ namespace LORUtils
 			}
 			if (nodesBySI[RGBsi] != null)
 			{
-				IMember mbrR = seq.Members.bySavedIndex[RGBsi];
-				if (mbrR.MemberType == MemberType.RGBchannel)
+				iLORMember4 mbrR = seq.Members.bySavedIndex[RGBsi];
+				if (mbrR.MemberType == LORMemberType4.RGBChannel)
 				{
-					//RGBchannel rgbChannel = (RGBchannel)mbrR;
+					//LORRGBChannel4 rgbChannel = (LORRGBChannel4)mbrR;
 					string nodeText = rgbChannel.Name;
 					channelNode = new TreeNodeAdv(nodeText);
 					baseNodes.Add(channelNode);
-					//IMember nodeTag = rgbChannel;
+					//iLORMember4 nodeTag = rgbChannel;
 					nodeIndex++;
 					channelNode.Tag = rgbChannel;
 					channelNode.LeftImageIndices = ICONrgbChannel;

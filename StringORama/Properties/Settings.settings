@@ -5,7 +5,7 @@
     <Setting Name="lastFile" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="Track" Type="System.Int32" Scope="User">
+    <Setting Name="LORTrack4" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
     <Setting Name="FenceStartCh" Type="System.Int32" Scope="User">

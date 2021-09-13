@@ -10,14 +10,15 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
 using System.Media;
-using LORUtils;
+using LORUtils4;
+using FileHelper;
 
-namespace CentiFix
+namespace UtilORama4
 {
 	public partial class frmCenti : Form
 	{
 		private string fileSequence = "";
-		private Sequence4 seq = new Sequence4();
+		private LORSequence4 seq = new LORSequence4();
 		private string applicationName = "CentiFix";
 		private string tempPath = "C:\\Windows\\Temp\\";  // Gets overwritten with X:\\Username\\AppData\\Roaming\\Util-O-Rama\\Split-O-Rama\\
 		private string thisEXE = "CentiFix.exe";
@@ -37,7 +38,7 @@ namespace CentiFix
 		private Cursor prevCursor = Cursors.Default;
 		private bool busy = false;
 		private FileInfo fileinfo = null;
-		private int highEnd = utils.UNDEFINED;
+		private int highEnd = lutils.UNDEFINED;
 
 
 
@@ -80,8 +81,8 @@ namespace CentiFix
 				byte isFile = 0;
 				if (arg.Substring(1, 2).CompareTo(":\\") == 0) isFile = 1;  // Local File
 				if (arg.Substring(0, 2).CompareTo("\\\\") == 0) isFile = 1; // UNC file
-				if (arg.Substring(4).IndexOf(".") > utils.UNDEFINED) isFile++;  // contains a period
-				if (utils.InvalidCharacterCount(arg) == 0) isFile++;
+				if (arg.Substring(4).IndexOf(".") > lutils.UNDEFINED) isFile++;  // contains a period
+				if (Fyle.InvalidCharacterCount(arg) == 0) isFile++;
 				if (isFile == 3)
 				{
 					if (File.Exists(arg))
@@ -563,7 +564,7 @@ namespace CentiFix
 
 		private void btnBrowseSeq_Click(object sender, EventArgs e)
 		{
-			string initDir = utils.DefaultSequencesPath;
+			string initDir = lutils.DefaultSequencesPath;
 			string lf = Properties.Settings.Default.fileLast;
 			string id = Path.GetDirectoryName(lf);
 			if (Directory.Exists(id))
@@ -594,10 +595,10 @@ namespace CentiFix
 				fileSequence = thisFile;
 				this.Text = "CentiFix - " + Path.GetFileName(thisFile);
 				highEnd = CentiScann(false);
-				string msg = "Last Effect ends at ";
+				string msg = "Last LOREffect4 ends at ";
 				if (highEnd < 360000)
 				{
-					msg += utils.Time_CentisecondsToMinutes(highEnd);
+					msg += lutils.Time_CentisecondsToMinutes(highEnd);
 				}
 				msg += "  (" + highEnd.ToString() + " Centiseconds)";
 				lblLastEnd.Text = msg;
@@ -605,13 +606,13 @@ namespace CentiFix
 				msg = "Current Sequence Length is ";
 				if (curCS < 360000)
 				{
-					msg += utils.Time_CentisecondsToMinutes(curCS);
+					msg += lutils.Time_CentisecondsToMinutes(curCS);
 				}
 				msg += "  (" + curCS.ToString() + " Centiseconds)";
 				lblCurCS.Text = msg;
 				txtNewCS.Text = highEnd.ToString();
 				//txtNewCS.Enabled = true;
-				txtNewLength.Text = utils.Time_CentisecondsToMinutes(highEnd);
+				txtNewLength.Text = lutils.Time_CentisecondsToMinutes(highEnd);
 				//txtNewLength.Enabled = true;
 				ActivateLabels(true);
 				//btnSave.Enabled = true;
@@ -666,7 +667,7 @@ namespace CentiFix
 			i = seq.info.music.Artist;
 			if (i.Length < 1) i = "(Unknown)";
 			newName += i;
-			string t = utils.FormatTime(seq.Tracks[0].Centiseconds);
+			string t = lutils.FormatTime(seq.Tracks[0].Centiseconds);
 			if (seq.Tracks[0].Centiseconds > 5999)
 			{
 				t = t.Replace(':', '.');
@@ -690,8 +691,8 @@ namespace CentiFix
 			newName += i;
 			newName += " " + y2 + "] ";
 			newName += seq.Channels.Count.ToString() + "ch";
-			newName = utils.ReplaceInvalidFilenameCharacters(newName);
-			string msg = "... to '" + newName + "'" + utils.CRLF + utils.CRLF;
+			newName = Fyle.ReplaceInvalidFilenameCharacters(newName);
+			string msg = "... to '" + newName + "'" + lutils.CRLF + lutils.CRLF;
 			msg += "(In folder '" + Path.GetDirectoryName(seq.filename) + "')";
 			DialogResult dr = MessageBox.Show(this, msg, "Rename file...", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 			if (dr == DialogResult.Yes)
@@ -704,10 +705,10 @@ namespace CentiFix
 				catch (Exception ex)
 				{
 
-					string rmsg = "ERROR: Cannot Rename File" + utils.CRLF;
-					rmsg += seq.filename + utils.CRLF;
-					rmsg += "       to" + utils.CRLF;
-					rmsg += newFile + utils.CRLF + utils.CRLF;
+					string rmsg = "ERROR: Cannot Rename File" + lutils.CRLF;
+					rmsg += seq.filename + lutils.CRLF;
+					rmsg += "       to" + lutils.CRLF;
+					rmsg += newFile + lutils.CRLF + lutils.CRLF;
 					rmsg += ex.Message;
 					DialogResult rdr = MessageBox.Show(this, rmsg, "Error renaming file", MessageBoxButtons.OK, MessageBoxIcon.Stop);
 
@@ -719,17 +720,17 @@ namespace CentiFix
 		private void CentiFixx(int newCentiseconds)
 		{
 			/*seq.Centiseconds = newCentiseconds;
-			foreach (IMember member in seq.Members)
+			foreach (iLORMember4 member in seq.Members)
 			{
 				member.Centiseconds = newCentiseconds;
 			}
-			foreach (Channel ch in seq.Channels)
+			foreach (LORChannel4 ch in seq.Channels)
 			{
-				foreach (Effect ef in ch.effects)
+				foreach (LOREffect4 ef in ch.effects)
 				{
 					if (ef.startCentisecond >= newCentiseconds)
 					{
-						// Remove the Effect
+						// Remove the LOREffect4
 					}
 					else
 					{
@@ -746,10 +747,10 @@ namespace CentiFix
 
 		private int CentiScann(bool everything)
 		{
-			int hi = utils.UNDEFINED;
+			int hi = lutils.UNDEFINED;
 			if (everything)
 			{
-				foreach (IMember mbr in seq.Members)
+				foreach (iLORMember4 mbr in seq.Members)
 				{
 					hi = Math.Max(hi, mbr.Centiseconds);
 				}
@@ -757,9 +758,9 @@ namespace CentiFix
 			}
 			else
 			{
-				foreach (Channel ch in seq.Channels)
+				foreach (LORChannel4 ch in seq.Channels)
 				{
-					foreach (Effect ef in ch.effects)
+					foreach (LOREffect4 ef in ch.effects)
 					{
 						hi = Math.Max(hi, ef.endCentisecond);
 					}
@@ -773,7 +774,7 @@ namespace CentiFix
 
 		private void btnSave_Click(object sender, EventArgs e)
 		{
-			int newCS = utils.UNDEFINED;
+			int newCS = lutils.UNDEFINED;
 			int.TryParse(txtNewCS.Text, out newCS);
 			if ((newCS > 100) && (newCS < 360000))
 			{
@@ -833,12 +834,12 @@ namespace CentiFix
 
 		private void txtNewCS_TextChanged(object sender, EventArgs e)
 		{
-			int newCS = utils.UNDEFINED;
+			int newCS = lutils.UNDEFINED;
 			int.TryParse(txtNewCS.Text, out newCS);
 			if ((newCS > 100) && (newCS < 360000))
 			{
 				txtNewCS.ForeColor = SystemColors.ControlText;
-				txtNewLength.Text = utils.Time_CentisecondsToMinutes(newCS);
+				txtNewLength.Text = lutils.Time_CentisecondsToMinutes(newCS);
 				btnSave.Enabled = true;
 			}
 			else
@@ -850,7 +851,7 @@ namespace CentiFix
 
 		private void txtNewCS_Validating(object sender, CancelEventArgs e)
 		{
-			int newCS = utils.UNDEFINED;
+			int newCS = lutils.UNDEFINED;
 			int.TryParse(txtNewCS.Text, out newCS);
 			if ((newCS > 100) && (newCS < 360000))
 			{
@@ -866,7 +867,7 @@ namespace CentiFix
 
 		private void txtNewLength_Validating(object sender, CancelEventArgs e)
 		{
-			int newCS = utils.Time_MinutesToCentiseconds(txtNewLength.Text);
+			int newCS = lutils.Time_MinutesToCentiseconds(txtNewLength.Text);
 			if ((newCS > 100) && (newCS < 360000))
 			{
 				// OK, Do nothing
@@ -881,7 +882,7 @@ namespace CentiFix
 
 		private void txtNewLength_TextChanged(object sender, EventArgs e)
 		{
-			int newCS = utils.Time_MinutesToCentiseconds(txtNewLength.Text);
+			int newCS = lutils.Time_MinutesToCentiseconds(txtNewLength.Text);
 			if ((newCS > 100) && (newCS < 360000))
 			{
 				txtNewLength.ForeColor = SystemColors.ControlText;

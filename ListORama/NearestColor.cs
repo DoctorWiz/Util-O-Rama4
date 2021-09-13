@@ -7,7 +7,7 @@ using System.Drawing;
 using System.Windows.Forms;  //!Temp
 using System.Diagnostics; //!Temp
 
-namespace LORUtils
+namespace LORUtils4
 {
 	class NearestColor
 	{
@@ -108,7 +108,7 @@ namespace LORUtils
 
 		public static string FindNearestColorName(int LORcolor)
 		{
-			Color c = utils.Color_LORtoNet(LORcolor);
+			Color c = lutils.Color_LORtoNet(LORcolor);
 			int idx = FindNearestColorIndex(c);
 			return ColorNames[idx];
 		}

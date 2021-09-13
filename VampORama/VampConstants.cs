@@ -14,34 +14,35 @@ using System.Configuration;
 using Microsoft.Win32;
 using xUtilities;
 using Musik;
+using FileHelper;
 
-namespace VampORama
+namespace UtilORama4
 {
 	public static class vamps
 	{
 
-		static readonly int ALGORbarBeats = 1;
-		static readonly int ALGORqmBeats = 2;
-		static readonly int ALGORbeatRoot = 3;
-		static readonly int ALGORportoBeat = 4;
-		static readonly int ALGORaubioBeat = 5;
+		static readonly int ALGORbarBeats			= 1;
+		static readonly int ALGORqmBeats			= 2;
+		static readonly int ALGORbeatRoot			= 3;
+		static readonly int ALGORportoBeat		= 4;
+		static readonly int ALGORaubioBeat		= 5;
 
-		static readonly int ALGORnoteOnset = 6;
-		static readonly int ALGORonsetDS = 7;
-		static readonly int ALGORsilvetOnset = 8;
-		static readonly int ALGORaubioOnset = 9;
-		static readonly int ALGORaubioPoly = 10;
+		static readonly int ALGORnoteOnset		= 6;
+		static readonly int ALGORonsetDS			= 7;
+		static readonly int ALGORsilvetOnset	= 8;
+		static readonly int ALGORaubioOnset		= 9;
+		static readonly int ALGORaubioPoly		= 10;
 
-		static readonly int ALGORqmPoly = 11;
-		static readonly int ALGORconstq = 12;
-		static readonly int ALGORchroma = 13;
-		static readonly int ALGORsegments = 14;
-		static readonly int ALGORspectro = 15;
+		static readonly int ALGORqmPoly				= 11;
+		static readonly int ALGORconstq				= 12;
+		static readonly int ALGORchroma				= 13;
+		static readonly int ALGORsegments			= 14;
+		static readonly int ALGORspectro			= 15;
 
-		static readonly int ALGORkey = 16;
-		static readonly int ALGORmelody = 17;
-		static readonly int ALGORvocals = 18;
-		static readonly int ALGORtempo = 19;
+		static readonly int ALGORkey					= 16;
+		static readonly int ALGORmelody				= 17;
+		static readonly int ALGORvocals				= 18;
+		static readonly int ALGORtempo				= 19;
 
 /* Moved to the corresponding transformation class
 		static readonly string VAMPbarBeats = "vamp:qm-vamp-plugins:qm-barbeattracker:beats";
@@ -56,76 +57,76 @@ namespace VampORama
 		static readonly string VAMPaubioPoly = "vamp:vamp-aubio:aubionotes:notes";
 		static readonly string VAMPqmPoly = "vamp:qm-vamp-plugins:qm-transcription:transcription";
 */
-		static readonly string VAMPconstq = "vamp:qm-vamp-plugins:qm-constantq:constantq";
-		static readonly string VAMPchroma = "vamp:qm-vamp-plugins:qm-chromagram:chromagram";
-		static readonly string VAMPsegmenter = "vamp:qm-vamp-plugins:qm-segmenter:segmentation";
+		static readonly string VAMPconstq			= "vamp:qm-vamp-plugins:qm-constantq:constantq";
+		static readonly string VAMPchroma			= "vamp:qm-vamp-plugins:qm-chromagram:chromagram";
+		static readonly string VAMPsegmenter	= "vamp:qm-vamp-plugins:qm-segmenter:segmentation";
 		static readonly string VAMPsegmentino = "vamp:segmentino:segmentino:segmentation";
-		static readonly string VAMPspectro = "vamp:qm-vamp-plugins:qm-adaptivespectrogram";
-		static readonly string VAMPkey = "vamp:qm-vamp-plugins:qm-keydetector:key";
-		static readonly string VAMPmelody = "vamp:mtg-melodia:melodia:melody";
-		static readonly string VAMPvocals = "vamp:bbc-vamp-plugins:bbc-speechmusic-segmenter:segmentation";
-		static readonly string VAMPtempo = "vamp:blahblahblah";
-		static readonly string VAMPtonal = "vamp:qm-vamp-plugins:qm-tonalchange:tcfunction";
-		static readonly string VAMPpitch = "vamp:cepstral-pitchtracker:cepstral-pitchtracker:notes";
-		static readonly string VAMPfundFreq = "vamp:vamp-libxtract:f0:f0";
-		static readonly string VAMPpYIN = "vamp:blahblahblah";
+		static readonly string VAMPspectro		= "vamp:qm-vamp-plugins:qm-adaptivespectrogram";
+		static readonly string VAMPkey				= "vamp:qm-vamp-plugins:qm-keydetector:key";
+		static readonly string VAMPmelody			= "vamp:mtg-melodia:melodia:melody";
+		static readonly string VAMPvocals			= "vamp:bbc-vamp-plugins:bbc-speechmusic-segmenter:segmentation";
+		static readonly string VAMPtempo			= "vamp:blahblahblah";
+		static readonly string VAMPtonal			= "vamp:qm-vamp-plugins:qm-tonalchange:tcfunction";
+		static readonly string VAMPpitch			= "vamp:cepstral-pitchtracker:cepstral-pitchtracker:notes";
+		static readonly string VAMPfundFreq		= "vamp:vamp-libxtract:f0:f0";
+		static readonly string VAMPpYIN				= "vamp:blahblahblah";
 		static readonly string VAMPaubioPitch = "vamp:vamp-aubio:aubiopitch:frequency";
 
-		static readonly string FILEbarBeats = "qm-barbeattracker.n3";
-		static readonly string FILEqmBeats = "qm-tempotracker_output_beats.n3";
-		static readonly string FILEbeatRoot = "vamp_beatroot_beats.n3";
-		static readonly string FILEportoBeat = "mvamp-ibt_marsyas_ibt_beat_times.n3";
-		static readonly string FILEaubioBeat = "vamp-aubio_aubiotempo_beats.n3";
-		static readonly string FILEnoteOnset = "qm-onsetdetector.n3";
-		static readonly string FILEonsetDS = "onsetsds_onsetsds_onsets.n3";
-		static readonly string FILEsilvetOnset = "silvet_silvet_onsets.n3";
-		static readonly string FILEaubioOnset = "aubio_aubioonset_onsets.n3";
-		static readonly string FILEaubioPoly = "aubio_aubionotes_notes.n3";
-		static readonly string FILEqmPoly = "qm-transcription.n3";
-		static readonly string FILEconstq = "qm-constantq.n3";
-		static readonly string FILEchroma = "qm-chromagram.n3";
-		static readonly string FILEsegments = "qm-segmenter.n3";
-		static readonly string FILEspectro = "qm-adaptivespectrogram.n3";
-		static readonly string FILEkey = "qm-keydetector.n3";
-		static readonly string FILEmelody = "mtg-melodia.n3";
-		static readonly string FILEvocals = "bbc-speech.n3";
-		static readonly string FILEtempo = "qm-tempophoo.n3";
+		static readonly string FILEbarBeats			= "qm-barbeattracker.n3";
+		static readonly string FILEqmBeats			= "qm-tempotracker_output_beats.n3";
+		static readonly string FILEbeatRoot			= "vamp_beatroot_beats.n3";
+		static readonly string FILEportoBeat		= "mvamp-ibt_marsyas_ibt_beat_times.n3";
+		static readonly string FILEaubioBeat		= "vamp-aubio_aubiotempo_beats.n3";
+		static readonly string FILEnoteOnset		= "qm-onsetdetector.n3";
+		static readonly string FILEonsetDS			= "onsetsds_onsetsds_onsets.n3";
+		static readonly string FILEsilvetOnset	= "silvet_silvet_onsets.n3";
+		static readonly string FILEaubioOnset		= "aubio_aubioonset_onsets.n3";
+		static readonly string FILEaubioPoly		= "aubio_aubionotes_notes.n3";
+		static readonly string FILEqmPoly				= "qm-transcription.n3";
+		static readonly string FILEconstq				= "qm-constantq.n3";
+		static readonly string FILEchroma				= "qm-chromagram.n3";
+		static readonly string FILEsegments			= "qm-segmenter.n3";
+		static readonly string FILEspectro			= "qm-adaptivespectrogram.n3";
+		static readonly string FILEkey					= "qm-keydetector.n3";
+		static readonly string FILEmelody				= "mtg-melodia.n3";
+		static readonly string FILEvocals				= "bbc-speech.n3";
+		static readonly string FILEtempo				= "qm-tempophoo.n3";
 
 
-		private const int LISTbars = 0;
-		private const int LISTbeatsFull = 1;
-		private const int LISTbeatsHalf = 2;
-		private const int LISTbeatsThird = 3;
-		private const int LISTbeatsQuarter = 4;
-		private const int LISTnotes = 5;
-		private const int LISTpitch = 6;
-		private const int LISTsegments = 7;
-		private const int LISTchroma = 8;
-		private const int LISTtempo = 9;
-		private const int LISTpoly = 10;
-		private const int LISTconstQ = 11;
-		private const int LISTflux = 12;
-		private const int LISTchords = 13;
-		private const int LISTvocals = 14;
-		private const int LISTcount = 15;
+		private const int LISTbars					= 0;
+		private const int LISTbeatsFull			= 1;
+		private const int LISTbeatsHalf			= 2;
+		private const int LISTbeatsThird		= 3;
+		private const int LISTbeatsQuarter	= 4;
+		private const int LISTnotes					= 5;
+		private const int LISTpitch					= 6;
+		private const int LISTsegments			= 7;
+		private const int LISTchroma				= 8;
+		private const int LISTtempo					= 9;
+		private const int LISTpoly					= 10;
+		private const int LISTconstQ				= 11;
+		private const int LISTflux					= 12;
+		private const int LISTchords				= 13;
+		private const int LISTvocals				= 14;
+		private const int LISTcount					= 15;
 
-		private const int ALIGNnone = 0;
-		private const int ALIGNbar = 2;
-		private const int ALIGNbeatFull = 3;
-		private const int ALIGNbeatHalf = 4;
-		private const int ALIGNbeatThird = 5;
-		private const int ALIGNbeatQuarter = 6;
-		private const int ALIGNonset = 7;
-		private const int ALIGNfps25 = 25;
-		private const int ALIGNfps50 = 50;
+		private const int ALIGNnone					= 0;
+		private const int ALIGNbar					= 2;
+		private const int ALIGNbeatFull			= 3;
+		private const int ALIGNbeatHalf			= 4;
+		private const int ALIGNbeatThird		= 5;
+		private const int ALIGNbeatQuarter	= 6;
+		private const int ALIGNonset				= 7;
+		private const int ALIGNfps25				= 25;
+		private const int ALIGNfps50				= 50;
 
-		public const string ALIGNNAMEnone = "None";
-		public const string ALIGNNAMEbars = "Bars: Whole Notes";
-		public const string ALIGNNAMEbeatsFull = "Full Beats: Quarter Notes";
-		public const string ALIGNNAMEbeatsHalf = "Half Beats: Eighth Notes";
-		public const string ALIGNNAMEbeatsThird = "Third Beats: 12X 16ths";
+		public const string ALIGNNAMEnone					= "None";
+		public const string ALIGNNAMEbars					= "Bars: Whole Notes";
+		public const string ALIGNNAMEbeatsFull		= "Full Beats: Quarter Notes";
+		public const string ALIGNNAMEbeatsHalf		= "Half Beats: Eighth Notes";
+		public const string ALIGNNAMEbeatsThird		= "Third Beats: 12X 16ths";
 		public const string ALIGNNAMEbeatsQuarter = "Quarter Beats: Sixteenth Notes";
-		public const string ALIGNNAMEnoteOnsets = "Note Onsets";
+		public const string ALIGNNAMEnoteOnsets		= "Note Onsets";
 
 		public const string ALIGNNAMEfps40x = "40 FPS, 25 ms";
 		public const string ALIGNNAMEfps20x = "20 FPS, 50 ms";
@@ -141,9 +142,37 @@ namespace VampORama
 		public enum AlignmentType { None = 1, Bars = 2, BeatsFull = 3, BeatsHalf = 4, BeatsThird = 5, BeatsQuarter = 6,
 																NoteOnsets = 7, FPS10 = 10, FPS20 = 20, FPS30 = 30, FPS40 = 40, FPS60 = 60, FPScustom = 100 };
 
-		public enum LabelTypes { None, KeyNames, KeyNumbers, NoteNames, MIDINoteNumbers, Frequency, Numbers, Letters };
-		public readonly static string[] LabelTypeNames = { "None", "Key Names", "Key Numbers", "Note Names",
-						"MIDI Note Numbers", "Frequency", "Numbers", "Letters" };
+		public enum LabelTypes { None, KeyNamesAscii, KeyNamesUnicode, KeyNumbers, NoteNamesAscii, NoteNamesUnicode, MIDINoteNumbers, Frequency, Numbers, Letters };
+
+		public const int LABELnone							= 0;
+		public const int LABELkeyNameAscii			= 1;
+		public const int LABELkeyNameUnicode		= 2;
+		public const int LABELkeyNumbers				= 3;
+		public const int LABELnoteNamesAscii		= 4;
+		public const int LABELnoteNamesUnicode	= 5;
+		public const int LABELmidiNoteNumbers		= 6;
+		public const int LABELfrequency					= 7;
+		public const int LABELnumbers						= 8;
+		public const int LABELletters						= 9;
+
+		public const string LABELNAMEnone							= "None";
+		public const string LABELNAMEkeyNameAscii			= "Key Name in ASCII";
+		public const string LABELNAMEkeyNameUnicode		= "Key Name in Unicode";
+		public const string LABELNAMEkeyNumbers				= "Key Number";
+		public const string LABELNAMEnoteNamesAscii		= "Note Name in ASCII";
+		public const string LABELNAMEnoteNamesUnicode = "Note Name in Unicode";
+		public const string LABELNAMEmidiNoteNumbers	= "MIDI Note Number";
+		public const string LABELNAMEfrequency				= "Frequency in Hz";
+		public const string LABELNAMEnumbers					= "Number";
+		public const string LABELNAMEletters					= "Letter";
+
+		public readonly static string[] LabelNames = {LABELNAMEnone, LABELNAMEkeyNameAscii, LABELNAMEkeyNameUnicode, LABELNAMEkeyNumbers,
+																	LABELNAMEnoteNamesAscii, LABELNAMEnoteNamesUnicode, LABELNAMEmidiNoteNumbers,
+																	LABELNAMEfrequency, LABELNAMEnumbers, LABELNAMEletters };
+
+
+		//public readonly static string[] LabelTypeNames = { "None", "Key Names Ascii", "Key Names Unicode", "Key Numbers", "Note Names Ascii",
+		//												"Note Names Unicode",	"MIDI Note Numbers", "Frequency", "Numbers", "Letters" };
 
 
 
@@ -217,88 +246,93 @@ namespace VampORama
 		{
 			// Init return value with default/failsafe
 			AlignmentType at = AlignmentType.None;
-
-			if (typeName.CompareTo(ALIGNNAMEfps40x) == 0)
+			
+			if (typeName == ALIGNNAMEfps40x)
 			{
 				at = AlignmentType.FPS40;
 			}
 			else
 			{
-				if (typeName.CompareTo(ALIGNNAMEfps20x) == 0)
+				if (typeName == ALIGNNAMEfps20x)
 				{
 					at = AlignmentType.FPS20;
 				}
 				else
 				{
-					if (typeName.CompareTo(ALIGNNAMEbars) == 0)
+					if (typeName == ALIGNNAMEbars)
 					{
 						at = AlignmentType.Bars;
 					}
 					else
 					{
-						if (typeName.CompareTo(ALIGNNAMEbars) == 0)
+						if (typeName == ALIGNNAMEbars)
 						{
 							at = AlignmentType.Bars;
 						}
 						else
 						{
-							if (typeName.CompareTo(ALIGNNAMEbeatsFull) == 0)
+							if (typeName == ALIGNNAMEbeatsFull)
 							{
 								at = AlignmentType.BeatsFull;
 							}
 							else
 							{
-								if (typeName.CompareTo(ALIGNNAMEbeatsQuarter) == 0)
+								if (typeName == ALIGNNAMEbeatsQuarter)
 								{
 									at = AlignmentType.BeatsQuarter;
 								}
 								else
 								{
-									if (typeName.CompareTo(ALIGNNAMEnoteOnsets) == 0)
+									if (typeName == ALIGNNAMEnoteOnsets)
 									{
 										at = AlignmentType.NoteOnsets;
 									}
 									else
 									{
-										if (typeName.CompareTo(ALIGNNAMEbeatsHalf) == 0)
+										if (typeName == ALIGNNAMEbeatsHalf)
 										{
 											at = AlignmentType.BeatsHalf;
 										}
 										else
 										{
-											if (typeName.CompareTo(ALIGNNAMEbeatsThird) == 0)
+											if (typeName == ALIGNNAMEbeatsThird)
 											{
 												at = AlignmentType.BeatsThird;
 											}
 											else
 											{
-												if (typeName.CompareTo(ALIGNNAMEfps10l) == 0)
+												if (typeName == ALIGNNAMEfps10l)
 												{
 													at = AlignmentType.FPS10;
 												}
 												else
 												{
-													if (typeName.CompareTo(ALIGNNAMEfps20l) == 0)
+													if (typeName == ALIGNNAMEfps20l)
 													{
 														at = AlignmentType.FPS20;
 													}
 													else
 													{
-														if (typeName.CompareTo(ALIGNNAMEfps30l) == 0)
+														if (typeName == ALIGNNAMEfps30l)
 														{
 															at = AlignmentType.FPS30;
 														}
 														else
 														{
-															if (typeName.CompareTo(ALIGNNAMEfps60l) == 0)
+															if (typeName == ALIGNNAMEfps60l)
 															{
 																at = AlignmentType.FPS60;
 															}
 															else
 															{
-																if (typeName.CompareTo(ALIGNNAMEcustom) == 0)
+																if (typeName == ALIGNNAMEcustom)
 																{
 																	at = AlignmentType.FPScustom;
+																}
+																else
+																{
+																	string msg = "Alignment Type '" + typeName + "' not recognized!";
+																	Fyle.BUG(msg);
 																}
 															}
 														}
@@ -315,7 +349,95 @@ namespace VampORama
 			}
 			return at;
 		}
-	
+
+		public static LabelTypes GetLabelTypeFromName(string labelName)
+		{
+			// public enum LabelTypes { None, KeyNamesAscii, KeyNamesUnicode, KeyNumbers, NoteNamesAscii, NoteNamesUnicode, MIDINoteNumbers, Frequency, Numbers, Letters };
+			// public readonly static string[] LabelTypeNames = { "None", "Key Names Ascii", "Key Names Unicode", "Key Numbers", "Note Names Ascii",
+			//											"Note Names Unicode", "MIDI Note Numbers", "Frequency", "Numbers", "Letters" };
+
+			// Init return value with default/failsafe
+			LabelTypes lt = LabelTypes.None;
+
+			if (labelName == LABELNAMEnone)
+			{
+			lt = LabelTypes.None;
+			}
+			else
+			{
+			if (labelName == LABELNAMEkeyNameAscii)
+				{
+				lt = LabelTypes.KeyNamesAscii;
+				}
+				else
+				{
+					if (labelName == LABELNAMEkeyNameUnicode)
+					{
+					lt = LabelTypes.KeyNamesUnicode; 
+					}
+					else
+					{
+						if (labelName == LABELNAMEkeyNumbers)
+						{
+						lt = LabelTypes.KeyNumbers;
+						}
+						else
+						{
+							if (labelName == LABELNAMEnoteNamesAscii)
+							{
+							lt = LabelTypes.NoteNamesAscii;
+							}
+							else
+							{
+								if (labelName == LABELNAMEnoteNamesUnicode)
+								{
+								lt = LabelTypes.NoteNamesUnicode;
+								}
+								else
+								{
+									if (labelName == LABELNAMEmidiNoteNumbers)
+									{
+									lt = LabelTypes.MIDINoteNumbers;
+									}
+									else
+									{
+										if (labelName == LABELNAMEfrequency)
+										{
+										lt = LabelTypes.Frequency;
+										}
+										else
+										{
+										if (labelName == LABELNAMEnumbers)
+											{
+											lt = LabelTypes.Numbers;
+											}
+											else
+											{
+												if (labelName == LABELNAMEletters)
+												{
+													lt = LabelTypes.Letters;
+												}
+												else
+												{
+													string msg = "Label Type '" + labelName + "' not recognized!";
+													Fyle.BUG(msg);
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			return lt;
+		}
+
+
+
+
+
 	}
-	
+
 }

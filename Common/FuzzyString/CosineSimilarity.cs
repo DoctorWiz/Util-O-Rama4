@@ -6,7 +6,8 @@ namespace FuzzyString
 {
   public partial class FuzzyFunctions // CosineSimilarity : AbstractStringMetric
   {
-    public static double CosineSimilarity2(this string source, string target)
+    
+    public static double CosineSimilarity(this string source, string target)
     {
 			TokeniserUtilities<string> _tokenUtilities = new TokeniserUtilities<string>();
 			if (source != null && target != null && _tokenUtilities.CreateMergedSet(_tokeniser.Tokenize(source), _tokeniser.Tokenize(target)).Count > 0)
@@ -18,8 +19,9 @@ namespace FuzzyString
 
     public static double UnnormalisedCosineSimilarity(string source, string target)
     {
-      return source.CosineSimilarity2(target);
+      return source.CosineSimilarity(target);
     }
+    
 
 	} // end public partial class FuzzyFunctions
 } // end namespace FuzzyString

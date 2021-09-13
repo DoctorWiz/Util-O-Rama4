@@ -1,16 +1,17 @@
-﻿using System.Reflection;
+﻿using System.Resources;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Info-Rama")]
+[assembly: AssemblyTitle("LORSeqInfo4-Rama")]
 [assembly: AssemblyDescription("Checks integrity of Light-O-Rama sequence files and displays information about them")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("W⚡zster")]
-[assembly: AssemblyProduct("Info-Rama")]
-[assembly: AssemblyCopyright("Copyright ©  2019+ by Doctor 🧙 Wizard and W⚡zster Software")]
+[assembly: AssemblyCompany("Doctor 🧙 Wizard and W⚡zlights Software")]
+[assembly: AssemblyProduct("LORSeqInfo4-Rama")]
+[assembly: AssemblyCopyright("Copyright © 2021+ by Doctor 🧙 Wizard and W⚡zlights Software")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +21,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("91adb515-4361-4bc4-8bee-a16d2ded4536")]
+[assembly: Guid("91adb515-7311-4bc4-8bee-a16d2ded4536")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -32,5 +33,6 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.1.1.0")]
-[assembly: AssemblyFileVersion("0.1.1.0")]
+[assembly: AssemblyVersion("4.0.0.0")]
+[assembly: AssemblyFileVersion("4.0.0.0")]
+[assembly: NeutralResourcesLanguage("en-US")]

@@ -9,26 +9,30 @@ using System.Text;
 using System.Reflection;
 using System.Threading;
 using System.Runtime.InteropServices;
+using System.DirectoryServices;
 using Microsoft.Win32;
+using FileHelper;
 //using FuzzyString;
 
-namespace LORUtils
+namespace LORUtils4
 {
-	public class utils
+	public static class lutils
 	{
 		#region Constants
+		public const string COPYRIGHT = "Copyright © 2021+ by Doctor 🧙 Wizard and W⚡zlights Software";
 		public const int UNDEFINED = -1;
 		public const string ICONtrack = "Track";
 		public const string ICONchannelGroup = "ChannelGroup";
-		public const string ICONcosmicDevice = "CosmicDevice";
+		public const string ICONcosmicDevice = "Cosmic";
 		//public const string ICONchannel = "channel";
-		public const string ICONrgbChannel = "RGBchannel";
+		public const string ICONrgbChannel = "RGBChannel";
 		//public const string ICONredChannel = "redChannel";
 		//public const string ICONgrnChannel = "grnChannel";
 		//public const string ICONbluChannel = "bluChannel";
 		public const string ICONredChannel = "FF0000";
 		public const string ICONgrnChannel = "00FF00";
 		public const string ICONbluChannel = "0000FF";
+		public const string ICONwhtChannel = "FFFFFF";
 		// Note: LOR colors not in the same order as .Net or Web colors, Red and Blue are reversed
 		public const Int32 LORCOLOR_RED = 255;      // 0x0000FF
 		public const Int32 LORCOLOR_GRN = 65280;    // 0x00FF00
@@ -39,13 +43,18 @@ namespace LORUtils
 		public const int ADDshimmer = 0x200;
 		public const int ADDtwinkle = 0x400;
 
-
+		// Trigger warnings in debug mode if centiseconds is set above or below normal values
+		//   Warnings triggered only in debug mode, and are non-fatal
+		// Warn if over 30 minutes in length, or under 0.98 seconds
+		//                                mins * secs * cs
+		public const int MAXCentiseconds = (30 * 60 * 100); // 30 minutes
+		public const int MINCentiseconds = 98;             // 0.98 seconds
 
 		public const string LOG_Error = "Error";
-		public const string LOG_Info = "Info";
+		public const string LOG_Info = "SeqInfo";
 		public const string LOG_Debug = "Debug";
-		private const string FORMAT_DATETIME = "MM/dd/yyyy hh:mm:ss tt";
-		private const string FORMAT_FILESIZE = "###,###,###,###,##0";
+		//private const string FORMAT_DATETIME = "MM/dd/yyyy hh:mm:ss tt";
+		//private const string FORMAT_FILESIZE = "###,###,###,###,##0";
 
 		public static int nodeIndex = UNDEFINED;
 
@@ -119,28 +128,44 @@ namespace LORUtils
 		private const string ROOT = "C:\\";
 		private const string LOR_REGKEY = "HKEY_CURRENT_USER\\SOFTWARE\\Light-O-Rama\\Shared";
 		private const string LOR_DIR = "Light-O-Rama\\";
-		private static string noisePath = Path.GetDirectoryName(Application.ExecutablePath) + "\\Noises\\";
+		//private static string noisePath = Path.GetDirectoryName(Application.ExecutablePath) + "\\Noises\\";
+		//private static bool gotWiz = false;
+		//private static bool isWiz = false;
 
-		public enum Noises
-		{
-			None, Activate, Boing, Bonnggg, Brain, Crap, Crash, Dammit, Doh, DrumRoll, Excellent, Gong, Kalimbra, Log, Medievel,
-			Pop, ScaleUp, SamCurseC, SamCurseF, SystemWorks, TaDa, ThatsThat, Wheee, Wizard, WooHoo, WrongButton
-		};
-
+		private static Dictionary<int, String> colorMap = new Dictionary<int, String>();
 		#endregion // Constants
+
+		/* Moved to FileHelper.Fyle
+			public enum Noises
+			{
+				None, Activate, Boing, Bonnggg, Brain, Crap, Crash, Dammit, Doh, DrumRoll, Excellent, Gong, Kalimbra, Log, Medievel,
+				Pop, ScaleUp, SamCurseC, SamCurseF, SystemWorks, TaDa, ThatsThat, Wheee, Wizard, WooHoo, WrongButton, Click
+			}
+
 		public static bool IsWizard
 		{
 			get
 			{
-				bool ret = false;
-				string usr = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-				usr = usr.ToLower();
-				int i = usr.IndexOf("wizard");
-				if (i >= 0) ret = true;
-				return ret;
+				if (gotWiz) // Already figured it out?
+				{
+					return isWiz;
+				}
+				else
+				{
+					bool ret = false;
+					string usr = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+					usr = usr.ToLower();
+					int i = usr.IndexOf("wizard");
+					if (i >= 0) ret = true;
+					isWiz = ret;
+					gotWiz = true; // Only figure this out ONCE
+					return ret;
+				}
 			}
 		}
+		*/
 
+		/* Moved to FileHelper.Fyle
 		public static string WindowsUsername
 		{
 			get
@@ -149,10 +174,11 @@ namespace LORUtils
 				return usr;
 			}
 		}
+		*/
 
 
 		#region TreeStuff
-		public static void TreeFillChannels(TreeView tree, Sequence4 seq, ref List<TreeNode>[] nodesBySI, bool selectedOnly, bool includeRGBchildren)
+		public static void TreeFillChannels(TreeView tree, LORSequence4 seq, ref List<TreeNode>[] nodesBySI, bool selectedOnly, bool includeRGBchildren)
 		{
 			int listSize = seq.Members.HighestSavedIndex + seq.Tracks.Count + seq.TimingGrids.Count + 1;
 			//Array.Resize(ref nodesBySI, listSize);
@@ -160,11 +186,11 @@ namespace LORUtils
 			{
 				Array.Resize(ref nodesBySI, listSize);
 			}
-			int t = SeqEnums.MEMBER_Channel | SeqEnums.MEMBER_RGBchannel | SeqEnums.MEMBER_ChannelGroup | SeqEnums.MEMBER_Track;
+			int t = LORSeqEnums4.MEMBER_Channel | LORSeqEnums4.MEMBER_RGBchannel | LORSeqEnums4.MEMBER_ChannelGroup | LORSeqEnums4.MEMBER_Track;
 			TreeFillChannels(tree, seq, ref nodesBySI, selectedOnly, includeRGBchildren, t);
 		}
 
-		public static void TreeFillChannels(TreeView tree, Sequence4 seq, ref List<TreeNode>[] nodesBySI, bool selectedOnly, bool includeRGBchildren, int memberTypes)
+		public static void TreeFillChannels(TreeView tree, LORSequence4 seq, ref List<TreeNode>[] nodesBySI, bool selectedOnly, bool includeRGBchildren, int memberTypes)
 		{
 			//TODO: 'Selected' not implemented yet
 
@@ -183,7 +209,7 @@ namespace LORUtils
 
 
 			//const string ERRproc = " in TreeFillChannels(";
-			//const string ERRtrk = "), in Track #";
+			//const string ERRtrk = "), in LORTrack4 #";
 			//const string ERRitem = ", Items #";
 			//const string ERRline = ", Line #";
 
@@ -199,13 +225,13 @@ namespace LORUtils
 
 			for (int t = 0; t < seq.Tracks.Count; t++)
 			{
-				Track trk = seq.Tracks[t];
+				LORTrack4 trk = seq.Tracks[t];
 				TreeNode trackNode = TreeAddTrack(seq, tree.Nodes, trk, ref nodesBySI, selectedOnly, includeRGBchildren, memberTypes);
 			}
 			int xx = 42;
 		}
 
-		private static TreeNode TreeAddTrack(Sequence4 seq, TreeNodeCollection baseNodes, Track track, ref List<TreeNode>[] nodesBySI, bool selectedOnly,
+		private static TreeNode TreeAddTrack(LORSequence4 seq, TreeNodeCollection baseNodes, LORTrack4 track, ref List<TreeNode>[] nodesBySI, bool selectedOnly,
 			bool includeRGBchildren, int memberTypes)
 		{
 			List<TreeNode> nodeList;
@@ -217,9 +243,9 @@ namespace LORUtils
 
 			string nodeText = "";
 			bool inclChan = false;
-			if ((memberTypes & SeqEnums.MEMBER_Channel) > 0) inclChan = true;
+			if ((memberTypes & LORSeqEnums4.MEMBER_Channel) > 0) inclChan = true;
 			bool inclRGB = false;
-			if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0) inclRGB = true;
+			if ((memberTypes & LORSeqEnums4.MEMBER_RGBchannel) > 0) inclRGB = true;
 
 			// TEMPORARY, FOR DEBUGGING
 			// int tcount = 0;
@@ -230,7 +256,7 @@ namespace LORUtils
 
 			//try
 			//{
-			//Track track = seq.Tracks[trackNumber];
+			//LORTrack4 track = seq.Tracks[trackNumber];
 			nodeText = track.Name;
 			TreeNode trackNode = baseNodes.Add(nodeText);
 			List<TreeNode> qlist;
@@ -242,7 +268,7 @@ namespace LORUtils
 			// But we will assign one for tracking and matching purposes
 			//track.SavedIndex = seq.Members.HighestSavedIndex + t + 1;
 
-			//if ((memberTypes & SeqEnums.MEMBER_Track) > 0)
+			//if ((memberTypes & LORSeqEnums4.MEMBER_Track) > 0)
 			//{
 			baseNodes = trackNode.Nodes;
 			nodeIndex++;
@@ -267,13 +293,13 @@ namespace LORUtils
 			{
 				//try
 				//{
-				IMember member = track.Members.Items[ti];
+				iLORMember4 member = track.Members.Items[ti];
 				int si = member.SavedIndex;
 				if (member != null)
 				{
-					if (member.MemberType == MemberType.ChannelGroup)
+					if (member.MemberType == LORMemberType4.ChannelGroup)
 					{
-						ChannelGroup memGrp = (ChannelGroup)member;
+						LORChannelGroup4 memGrp = (LORChannelGroup4)member;
 						int inclCount = memGrp.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 						if (inclCount > 0)
 						{
@@ -286,9 +312,9 @@ namespace LORUtils
 							//nodesBySI[si].Add(groupNode);
 						}
 					}
-					if (member.MemberType == MemberType.CosmicDevice)
+					if (member.MemberType == LORMemberType4.Cosmic)
 					{
-						CosmicDevice memDev = (CosmicDevice)member;
+						LORCosmic4 memDev = (LORCosmic4)member;
 						int inclCount = memDev.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 						if (inclCount > 0)
 						{
@@ -301,9 +327,9 @@ namespace LORUtils
 							//nodesBySI[si].Add(groupNode);
 						}
 					}
-					if (member.MemberType == MemberType.RGBchannel)
+					if (member.MemberType == LORMemberType4.RGBChannel)
 					{
-						RGBchannel memRGB = (RGBchannel)member;
+						LORRGBChannel4 memRGB = (LORRGBChannel4)member;
 						TreeNode rgbNode = TreeAddRGBchannel(seq, baseNodes, memRGB, ref nodesBySI, selectedOnly, includeRGBchildren);
 						//AddNode(nodesBySI[si], rgbNode);
 						//nodesBySI[si].Add(rgbNode);
@@ -312,9 +338,9 @@ namespace LORUtils
 						qlist.Add(rgbNode);
 						rcount++;
 					}
-					if (member.MemberType == MemberType.Channel)
+					if (member.MemberType == LORMemberType4.Channel)
 					{
-						Channel memCh = (Channel)member;
+						LORChannel4 memCh = (LORChannel4)member;
 						TreeNode channelNode = TreeAddChannel(seq, baseNodes, memCh, selectedOnly);
 						//AddNode(nodesBySI[si], channelNode);
 						//nodesBySI[si].Add(channelNode);
@@ -337,7 +363,7 @@ namespace LORUtils
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
 					}
 					catch (System.InvalidCastException ex)
 					{
@@ -349,7 +375,7 @@ namespace LORUtils
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
 					}
 					catch (Exception ex)
 					{
@@ -361,7 +387,7 @@ namespace LORUtils
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
 					}
 					*/
 				#endregion
@@ -380,7 +406,7 @@ namespace LORUtils
 					#if DEBUG
 						System.Diagnostics.Debugger.Break();
 					#endif
-					utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+					Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
 				}
 				catch (System.InvalidCastException ex)
 				{
@@ -392,7 +418,7 @@ namespace LORUtils
 					#if DEBUG
 						System.Diagnostics.Debugger.Break();
 					#endif
-					utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+					Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
 				}
 				catch (Exception ex)
 				{
@@ -404,7 +430,7 @@ namespace LORUtils
 					#if DEBUG
 						System.Diagnostics.Debugger.Break();
 					#endif
-					utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+					Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
 				}
 				*/
 			#endregion
@@ -417,7 +443,7 @@ namespace LORUtils
 		} // end fillOldChannels
 
 
-		private static TreeNode TreeAddGroup(Sequence4 seq, TreeNodeCollection baseNodes, ChannelGroup group, ref List<TreeNode>[] nodesBySI, bool selectedOnly,
+		private static TreeNode TreeAddGroup(LORSequence4 seq, TreeNodeCollection baseNodes, LORChannelGroup4 group, ref List<TreeNode>[] nodesBySI, bool selectedOnly,
 			bool includeRGBchildren, int memberTypes)
 		{
 			TreeNode groupNode = null;
@@ -432,7 +458,7 @@ namespace LORUtils
 			if (nodesBySI[groupSI] != null)
 			{
 				// Include groups in the TreeView?
-				if ((memberTypes & SeqEnums.MEMBER_ChannelGroup) > 0)
+				if ((memberTypes & LORSeqEnums4.MEMBER_ChannelGroup) > 0)
 				{
 					string nodeText = group.Name;
 					groupNode = baseNodes.Add(nodeText);
@@ -466,15 +492,15 @@ namespace LORUtils
 				{
 					//try
 					//{
-					IMember member = group.Members.Items[gi];
+					iLORMember4 member = group.Members.Items[gi];
 					int si = member.SavedIndex;
-					if (member.MemberType == MemberType.ChannelGroup)
+					if (member.MemberType == LORMemberType4.ChannelGroup)
 					{
-						ChannelGroup memGrp = (ChannelGroup)member;
+						LORChannelGroup4 memGrp = (LORChannelGroup4)member;
 						bool inclChan = false;
-						if ((memberTypes & SeqEnums.MEMBER_Channel) > 0) inclChan = true;
+						if ((memberTypes & LORSeqEnums4.MEMBER_Channel) > 0) inclChan = true;
 						bool inclRGB = false;
-						if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0) inclRGB = true;
+						if ((memberTypes & LORSeqEnums4.MEMBER_RGBchannel) > 0) inclRGB = true;
 						int inclCount = memGrp.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 						if (inclCount > 0)
 						{
@@ -484,13 +510,13 @@ namespace LORUtils
 						}
 						int cosCount = memGrp.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 					}
-					if (member.MemberType == MemberType.CosmicDevice)
+					if (member.MemberType == LORMemberType4.Cosmic)
 					{
-						CosmicDevice memDev = (CosmicDevice)member;
+						LORCosmic4 memDev = (LORCosmic4)member;
 						bool inclChan = false;
-						if ((memberTypes & SeqEnums.MEMBER_Channel) > 0) inclChan = true;
+						if ((memberTypes & LORSeqEnums4.MEMBER_Channel) > 0) inclChan = true;
 						bool inclRGB = false;
-						if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0) inclRGB = true;
+						if ((memberTypes & LORSeqEnums4.MEMBER_RGBchannel) > 0) inclRGB = true;
 						int inclCount = memDev.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 						if (inclCount > 0)
 						{
@@ -500,20 +526,20 @@ namespace LORUtils
 						}
 						int cosCount = memDev.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 					}
-					if (member.MemberType == MemberType.Channel)
+					if (member.MemberType == LORMemberType4.Channel)
 					{
-						if ((memberTypes & SeqEnums.MEMBER_Channel) > 0)
+						if ((memberTypes & LORSeqEnums4.MEMBER_Channel) > 0)
 						{
-							Channel memCh = (Channel)member;
+							LORChannel4 memCh = (LORChannel4)member;
 							TreeNode channelNode = TreeAddChannel(seq, baseNodes, memCh, selectedOnly);
 							nodesBySI[si].Add(channelNode);
 						}
 					}
-					if (member.MemberType == MemberType.RGBchannel)
+					if (member.MemberType == LORMemberType4.RGBChannel)
 					{
-						if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0)
+						if ((memberTypes & LORSeqEnums4.MEMBER_RGBchannel) > 0)
 						{
-							RGBchannel memRGB = (RGBchannel)member;
+							LORRGBChannel4 memRGB = (LORRGBChannel4)member;
 							TreeNode rgbChannelNode = TreeAddRGBchannel(seq, baseNodes, memRGB, ref nodesBySI, selectedOnly, includeRGBchildren);
 							nodesBySI[si].Add(rgbChannelNode);
 						}
@@ -531,7 +557,7 @@ namespace LORUtils
 				#if DEBUG
 					Debugger.Break();
 				#endif
-				utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+				Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
 			} // end catch
 			*/
 					#endregion
@@ -541,7 +567,7 @@ namespace LORUtils
 			return groupNode;
 		} // end TreeAddGroup
 
-		private static TreeNode TreeAddCosmic(Sequence4 seq, TreeNodeCollection baseNodes, CosmicDevice device, ref List<TreeNode>[] nodesBySI, bool selectedOnly,
+		private static TreeNode TreeAddCosmic(LORSequence4 seq, TreeNodeCollection baseNodes, LORCosmic4 device, ref List<TreeNode>[] nodesBySI, bool selectedOnly,
 			bool includeRGBchildren, int memberTypes)
 		{
 			int deviceSI = device.SavedIndex;
@@ -554,18 +580,18 @@ namespace LORUtils
 			if (nodesBySI[deviceSI] != null)
 			{
 				//ChanInfo nodeTag = new ChanInfo();
-				//nodeTag.MemberType = MemberType.ChannelGroup;
+				//nodeTag.MemberType = LORMemberType4.ChannelGroup;
 				//nodeTag.objIndex = groupIndex;
 				//nodeTag.SavedIndex = theGroup.SavedIndex;
 				//nodeTag.nodeIndex = nodeIndex;
 
-				//ChannelGroup theGroup = seq.ChannelGroups[groupIndex];
-				//CosmicDevice device = (CosmicDevice)seq.Members.bySavedIndex[deviceSI];
+				//LORChannelGroup4 theGroup = seq.ChannelGroups[groupIndex];
+				//LORCosmic4 device = (LORCosmic4)seq.Members.bySavedIndex[deviceSI];
 
-				//IMember groupID = theGroup;
+				//iLORMember4 groupID = theGroup;
 
 				// Include groups in the TreeView?
-				if ((memberTypes & SeqEnums.MEMBER_CosmicDevice) > 0)
+				if ((memberTypes & LORSeqEnums4.MEMBER_CosmicDevice) > 0)
 				{
 					string nodeText = device.Name;
 					deviceNode = baseNodes.Add(nodeText);
@@ -589,15 +615,15 @@ namespace LORUtils
 				{
 					//try
 					//{
-					IMember member = device.Members.Items[gi];
+					iLORMember4 member = device.Members.Items[gi];
 					int si = member.SavedIndex;
-					if (member.MemberType == MemberType.ChannelGroup)
+					if (member.MemberType == LORMemberType4.ChannelGroup)
 					{
-						ChannelGroup memGrp = (ChannelGroup)member;
+						LORChannelGroup4 memGrp = (LORChannelGroup4)member;
 						bool inclChan = false;
-						if ((memberTypes & SeqEnums.MEMBER_Channel) > 0) inclChan = true;
+						if ((memberTypes & LORSeqEnums4.MEMBER_Channel) > 0) inclChan = true;
 						bool inclRGB = false;
-						if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0) inclRGB = true;
+						if ((memberTypes & LORSeqEnums4.MEMBER_RGBchannel) > 0) inclRGB = true;
 						int inclCount = memGrp.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 						if (inclCount > 0)
 						{
@@ -607,13 +633,13 @@ namespace LORUtils
 						}
 						int cosCount = memGrp.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 					}
-					if (member.MemberType == MemberType.CosmicDevice)
+					if (member.MemberType == LORMemberType4.Cosmic)
 					{
-						CosmicDevice memDev = (CosmicDevice)member;
+						LORCosmic4 memDev = (LORCosmic4)member;
 						bool inclChan = false;
-						if ((memberTypes & SeqEnums.MEMBER_Channel) > 0) inclChan = true;
+						if ((memberTypes & LORSeqEnums4.MEMBER_Channel) > 0) inclChan = true;
 						bool inclRGB = false;
-						if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0) inclRGB = true;
+						if ((memberTypes & LORSeqEnums4.MEMBER_RGBchannel) > 0) inclRGB = true;
 						int inclCount = memDev.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 						if (inclCount > 0)
 						{
@@ -623,20 +649,20 @@ namespace LORUtils
 						}
 						int cosCount = memDev.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 					}
-					if (member.MemberType == MemberType.Channel)
+					if (member.MemberType == LORMemberType4.Channel)
 					{
-						if ((memberTypes & SeqEnums.MEMBER_Channel) > 0)
+						if ((memberTypes & LORSeqEnums4.MEMBER_Channel) > 0)
 						{
-							Channel chanMem = (Channel)member;
+							LORChannel4 chanMem = (LORChannel4)member;
 							TreeNode channelNode = TreeAddChannel(seq, baseNodes, chanMem, selectedOnly);
 							nodesBySI[si].Add(channelNode);
 						}
 					}
-					if (member.MemberType == MemberType.RGBchannel)
+					if (member.MemberType == LORMemberType4.RGBChannel)
 					{
-						if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0)
+						if ((memberTypes & LORSeqEnums4.MEMBER_RGBchannel) > 0)
 						{
-							RGBchannel memRGB = (RGBchannel)member;
+							LORRGBChannel4 memRGB = (LORRGBChannel4)member;
 							TreeNode rgbChannelNode = TreeAddRGBchannel(seq, baseNodes, memRGB, ref nodesBySI, selectedOnly, includeRGBchildren);
 							nodesBySI[si].Add(rgbChannelNode);
 						}
@@ -654,7 +680,7 @@ namespace LORUtils
 				#if DEBUG
 					Debugger.Break();
 				#endif
-				utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+				Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
 			} // end catch
 			*/
 					#endregion
@@ -681,14 +707,14 @@ namespace LORUtils
 			*/
 		}
 
-		private static TreeNode TreeAddChannel(Sequence4 seq, TreeNodeCollection baseNodes, Channel channel, bool selectedOnly)
+		private static TreeNode TreeAddChannel(LORSequence4 seq, TreeNodeCollection baseNodes, LORChannel4 channel, bool selectedOnly)
 		{
-			//Channel channel = (Channel)seq.Members.bySavedIndex[channelSI];
+			//LORChannel4 channel = (LORChannel4)seq.Members.bySavedIndex[channelSI];
 			int channelSI = channel.SavedIndex;
 			string nodeText = channel.Name;
 			TreeNode channelNode = baseNodes.Add(nodeText);
 			List<TreeNode> nodeList;
-			//IMember nodeTag = channel;
+			//iLORMember4 nodeTag = channel;
 			nodeIndex++;
 			channelNode.Tag = channel;
 			if (channel.Tag == null)
@@ -701,8 +727,8 @@ namespace LORUtils
 				nodeList = (List<TreeNode>)channel.Tag;
 			}
 			nodeList.Add(channelNode);
-			//channelNode.ImageIndex = imlTreeIcons.Images.IndexOfKey("Channel");
-			//channelNode.SelectedImageIndex = imlTreeIcons.Images.IndexOfKey("Channel");
+			//channelNode.ImageIndex = imlTreeIcons.Images.IndexOfKey("LORChannel4");
+			//channelNode.SelectedImageIndex = imlTreeIcons.Images.IndexOfKey("LORChannel4");
 			//channelNode.ImageKey = ICONchannel;
 			//channelNode.SelectedImageKey = ICONchannel;
 
@@ -717,7 +743,7 @@ namespace LORUtils
 			return channelNode;
 		}
 
-		private static TreeNode TreeAddRGBchannel(Sequence4 seq, TreeNodeCollection baseNodes, RGBchannel rgbChannel, ref List<TreeNode>[] nodesBySI, bool selectedOnly, bool includeRGBchildren)
+		private static TreeNode TreeAddRGBchannel(LORSequence4 seq, TreeNodeCollection baseNodes, LORRGBChannel4 rgbChannel, ref List<TreeNode>[] nodesBySI, bool selectedOnly, bool includeRGBchildren)
 		{
 			TreeNode channelNode = null;
 			List<TreeNode> nodeList;
@@ -729,13 +755,13 @@ namespace LORUtils
 			}
 			if (nodesBySI[RGBsi] != null)
 			{
-				IMember mbrR = seq.Members.bySavedIndex[RGBsi];
-				if (mbrR.MemberType == MemberType.RGBchannel)
+				iLORMember4 mbrR = seq.Members.bySavedIndex[RGBsi];
+				if (mbrR.MemberType == LORMemberType4.RGBChannel)
 				{
-					//RGBchannel rgbChannel = (RGBchannel)mbrR;
+					//LORRGBChannel4 rgbChannel = (LORRGBChannel4)mbrR;
 					string nodeText = rgbChannel.Name;
 					channelNode = baseNodes.Add(nodeText);
-					//IMember nodeTag = rgbChannel;
+					//iLORMember4 nodeTag = rgbChannel;
 					nodeIndex++;
 					channelNode.Tag = rgbChannel;
 					channelNode.ImageKey = ICONrgbChannel;
@@ -835,24 +861,59 @@ namespace LORUtils
 			return channelNode;
 		}
 
-
-		public static int ColorIcon(ImageList icons, Int32 colorVal)
+		public static Int32 ColorInt(Color theColor)
 		{
+			return theColor.ToArgb();
+		}
+		
+		public static string ColorToHex(Color color)
+			// Returns 7 characters in typical web color format starting with a #
+		{
+			return "#" + color.R.ToString("X2") + color.G.ToString("X2") + color.B.ToString("X2");
+		}
+
+		public static Color HexToColor(string hexCode)
+		{
+			Color c = Color.White;
+			// Eliminate any characters before the last 6
+			// This gets rid of "#" or "0x" or even "0x??" or "#??" if alpha is specified
+			if (hexCode.Length > 5)
+			{
+				// Yes, this looks absurdly complicated.
+				// I could combine most of this into one longer line of code but it wouldn't speed it
+				// up because it basically breaks down to this anyway.
+				// Might as well go for the obvious understandable way.
+				hexCode = hexCode.Substring(hexCode.Length - 6, 6);
+				string rs = hexCode.Substring(0, 2);
+				string gs = hexCode.Substring(2, 2);
+				string gb = hexCode.Substring(4, 2);
+				int r = Convert.ToInt32(rs, 16);
+				int g = Convert.ToInt32(gs, 16);
+				int b = Convert.ToInt32(gb, 16);
+				c = Color.FromArgb(r, g, b);
+			}
+			return c;
+		}
+
+		public static int ColorIcon(ImageList icons, int LORcolorVal)
+		{
+			return ColorIcon(icons, Color_LORtoNet(LORcolorVal));
+		}
+
+		public static int ColorIcon(ImageList icons, Color color)
+		{ 
 			int ret = -1;
-			string tempID = colorVal.ToString("X6");
 			// LOR's Color Format is in BGR format, so have to reverse the Red and the Blue
-			string colorID = tempID.Substring(4, 2) + tempID.Substring(2, 2) + tempID.Substring(0, 2);
+			string colorID = ColorToHex(color);
 			ret = icons.Images.IndexOfKey(colorID);
 			if (ret < 0)
 			{
-				// Convert rearranged hex value a real color
-				Color theColor = System.Drawing.ColorTranslator.FromHtml("#" + colorID);
 				// Create a temporary working bitmap
 				Bitmap bmp = new Bitmap(16, 16);
 				// get the graphics handle from it
 				Graphics gr = Graphics.FromImage(bmp);
 				// A colored solid brush to fill the middle
-				SolidBrush b = new SolidBrush(theColor);
+				SolidBrush b = new SolidBrush(color);
 				// define a rectangle for the middle
 				Rectangle r = new Rectangle(2, 2, 12, 12);
 				// Fill the middle rectangle with color
@@ -879,66 +940,74 @@ namespace LORUtils
 			// Return the numeric index of the new image
 			return ret;
 		}
+
+		public static string ColorName(Color color)
+		{
+			string name = "";
+			
+			foreach (Color c in Enum.GetValues(typeof(KnownColor)))
+			{
+				if (c == color)
+				{
+					name = c.Name;
+				}
+			}
+			return name;
+		}
+
+		public static string NearestColorName(Color color)
+		{
+			string name = "";
+			//TODO Fix 'Specified Cast is not valid' error!!
+			/*
+			if (color != null)
+			{
+				Int32 myARGB = color.ToArgb();
+				int myR = (myARGB >> 0) & 255;
+				int myG = (myARGB >> 8) & 255;
+				int myB = (myARGB >> 16) & 255;
+
+				Color match = Color.Black;
+				Int32 diff = 9999999;
+				foreach (Color c in Enum.GetValues(typeof(KnownColor)))
+				{
+					Int32 cARGB = c.ToArgb();
+					int cR = (cARGB >> 0) & 255;
+					int cG = (cARGB >> 8) & 255;
+					int cB = (cARGB >> 16) & 255;
+					int d = Math.Abs(myR - cR);
+					d += Math.Abs(myG - cG);
+					d += Math.Abs(myB - cB);
+					if (d < diff)
+					{
+						match = c;
+						diff = d;
+						name = c.Name;
+					}
+				}
+			}
+			*/
+			return name;
+		}
+
 		#endregion // Tree Stuff
 
-		#region Sounds
-
-		private static string NotifyGenericSound
-		{
-			get
-			{
-				const string keyName = "HKEY_CURRENT_USER\\AppEvents\\Schemes\\Apps\\.Default\\Notification.Default";
-				string sound = (string)Registry.GetValue(keyName, null, "");
-				return sound;
-			} // End get the Notify.Generic Sound filename
-		}
-
-		public static void PlayNotifyGenericSound()
-		{
-			string sound = NotifyGenericSound;
-			if (sound.Length > 6)
-			{
-				if (File.Exists(sound))
-				{
-					SoundPlayer player = new SoundPlayer(sound);
-					player.Play();
-				}
-			}
-		}
-
-		private static string MenuClickSound
-		{
-			get
-			{
-				const string keyName = "HKEY_CURRENT_USER\\AppEvents\\Schemes\\Apps\\.Default\\MenuCommand";
-				string sound = (string)Registry.GetValue(keyName, null, "");
-				return sound;
-			} // End get the Notify.Generic Sound filename
-		}
-
-		public static void PlayMenuClickSound()
-		{
-			string sound = MenuClickSound;
-			if (sound.Length > 6)
-			{
-				if (File.Exists(sound))
-				{
-					SoundPlayer player = new SoundPlayer(sound);
-					player.Play();
-				}
-			}
-		}
-
-		#endregion // Sounds
 
 		#region Get and Set XML Tagged Fields
 		public static string HumanizeName(string XMLizedName)
 		{
 			// Takes a name from XML and converts symbols back to the real thing
 			string ret = XMLizedName;
-			ret = ret.Replace("&quot", "\"");
-			ret = ret.Replace("&lt", "<");
-			ret = ret.Replace("&gt", ">");
+			ret = ret.Replace("&quot;", "\"");
+			ret = ret.Replace("&lt;", "<");
+			ret = ret.Replace("&gt;", ">");
+			ret = ret.Replace("&#34;", "\"");
+			ret = ret.Replace("&#38;", "&");
+			ret = ret.Replace("&#39;", "'");
+			ret = ret.Replace("&#60;", "<");
+			ret = ret.Replace("&#62;", ">");
+			ret = ret.Replace("&#9837;", "♭");
+			ret = ret.Replace("&#9839;", "♯");
 			return ret;
 		}
 
@@ -947,9 +1016,13 @@ namespace LORUtils
 			// Takes a human friendly name, possibly with illegal symbols in it
 			// And replaces the illegal symbols with codes to make it XML friendly
 			string ret = HumanizedName;
-			ret = ret.Replace("\"", "&quot");
-			ret = ret.Replace("<", "&lt");
-			ret = ret.Replace(">", "&gt");
+			ret = ret.Replace("\"", "&#34;");
+			ret = ret.Replace("<", "&#60;");
+			ret = ret.Replace(">", "&#62;");
+			ret = ret.Replace("&", "&#38;");
+			ret = ret.Replace("'", "&#39;");
+			ret = ret.Replace("♭", "&#9837;");
+			ret = ret.Replace("♯", "&#9839;");
 			return ret;
 		}
 
@@ -975,20 +1048,29 @@ namespace LORUtils
 			}
 			else
 			{
-				return utils.UNDEFINED;
+				return lutils.UNDEFINED;
 			}
 		}
 
-		public static Int32 getKeyValue(int pos1, string lineIn, string keyWord)
+		public static int getKeyValue(int pos1, string lineIn, string keyWord)
 		{
-			Int32 valueOut = UNDEFINED;
+			int valueOut = UNDEFINED;
 			int pos2 = UNDEFINED;
 			string fooo = "";
 
 			fooo = lineIn.Substring(pos1 + keyWord.Length + 2);
 			pos2 = fooo.IndexOf("\"");
 			fooo = fooo.Substring(0, pos2);
-			valueOut = Convert.ToInt32(fooo);
+			//valueOut = Convert.ToInt32(fooo);
+			bool itWorked = int.TryParse(fooo, out valueOut);
+			if (!itWorked)
+			{
+				if (Fyle.DebugMode)
+				{
+					System.Diagnostics.Debugger.Break();
+				}
+			}
+
 			return valueOut;
 		}
 
@@ -1042,9 +1124,9 @@ namespace LORUtils
 			fooo = lineIn.Substring(pos1 + keyWord.Length + 2);
 			pos2 = fooo.IndexOf("\"");
 			fooo = fooo.Substring(0, pos2).ToLower();
-			if (fooo.CompareTo("true") == 0) stateOut = true;
-			if (fooo.CompareTo("yes") == 0) stateOut = true;
-			if (fooo.CompareTo("1") == 0) stateOut = true;
+			if (fooo == "true") stateOut = true;
+			if (fooo == "yes") stateOut = true;
+			if (fooo == "1") stateOut = true;
 			return stateOut;
 		}
 
@@ -1093,16 +1175,16 @@ namespace LORUtils
 			{
 				ret.Append(LEVEL1);
 			}
-			ret.Append(utils.FINTBL);
+			ret.Append(lutils.FINTBL);
 			ret.Append(tableName);
-			ret.Append(utils.ENDTBL);
+			ret.Append(lutils.ENDTBL);
 			return ret.ToString();
 		}
 
 		#endregion // Get and Set Tagged XML Fields
 
 		#region DisplayOrder
-		public static int DisplayOrderBuildLists(Sequence4 seq, ref int[] savedIndexes, ref int[] levels, bool selectedOnly, bool includeRGBchildren)
+		public static int DisplayOrderBuildLists(LORSequence4 seq, ref int[] savedIndexes, ref int[] levels, bool selectedOnly, bool includeRGBchildren)
 		{
 			//TODO: 'Selected' not implemented yet
 
@@ -1133,14 +1215,14 @@ namespace LORUtils
 			// int ccount = 0;
 
 			//const string ERRproc = " in TreeFillChannels(";
-			// const string ERRtrk = "), in Track #";
+			// const string ERRtrk = "), in LORTrack4 #";
 			// const string ERRitem = ", Items #";
 			// const string ERRline = ", Line #";
 
 			for (int t = 0; t < seq.Tracks.Count; t++)
 			{
 				level = 0;
-				Track theTrack = seq.Tracks[t];
+				LORTrack4 theTrack = seq.Tracks[t];
 				if (!selectedOnly || theTrack.Selected)
 				{
 					DisplayOrderBuildTrack(seq, seq.Tracks[t], level, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
@@ -1165,7 +1247,7 @@ namespace LORUtils
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
 					}
 					catch (System.InvalidCastException ex)
 					{
@@ -1177,7 +1259,7 @@ namespace LORUtils
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
 					}
 					catch (Exception ex)
 					{
@@ -1189,7 +1271,7 @@ namespace LORUtils
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
 					}
 					*/
 				#endregion
@@ -1210,37 +1292,37 @@ namespace LORUtils
 			return c;
 		} // end fillOldChannels
 
-		public static int DisplayOrderBuildTrack(Sequence4 seq, Track theTrack, int level, ref int count, ref int[] savedIndexes, ref int[] levels, bool selectedOnly, bool includeRGBchildren)
+		public static int DisplayOrderBuildTrack(LORSequence4 seq, LORTrack4 theTrack, int level, ref int count, ref int[] savedIndexes, ref int[] levels, bool selectedOnly, bool includeRGBchildren)
 		{
 			int c = 0;
 			for (int ti = 0; ti < theTrack.Members.Count; ti++)
 			{
-				IMember member = theTrack.Members.Items[ti];
+				iLORMember4 member = theTrack.Members.Items[ti];
 				if (member != null)
 				{
 					int si = member.SavedIndex;
-					if (member.MemberType == MemberType.ChannelGroup)
+					if (member.MemberType == LORMemberType4.ChannelGroup)
 					{
-						c += DisplayOrderBuildGroup(seq, (ChannelGroup)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
+						c += DisplayOrderBuildGroup(seq, (LORChannelGroup4)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
 					}
-					if (member.MemberType == MemberType.CosmicDevice)
+					if (member.MemberType == LORMemberType4.Cosmic)
 					{
-						c += DisplayOrderBuildCosmic(seq, (CosmicDevice)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
+						c += DisplayOrderBuildCosmic(seq, (LORCosmic4)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
 					}
-					if (member.MemberType == MemberType.RGBchannel)
+					if (member.MemberType == LORMemberType4.RGBChannel)
 					{
-						c += DisplayOrderBuildRGBchannel(seq, (RGBchannel)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
+						c += DisplayOrderBuildRGBchannel(seq, (LORRGBChannel4)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
 					}
-					if (member.MemberType == MemberType.Channel)
+					if (member.MemberType == LORMemberType4.Channel)
 					{
-						c += DisplayOrderBuildChannel(seq, (Channel)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly);
+						c += DisplayOrderBuildChannel(seq, (LORChannel4)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly);
 					}
 				} // end not null
 			}
 			return c;
 		}
 
-		public static int DisplayOrderBuildGroup(Sequence4 seq, ChannelGroup theGroup, int level, ref int count, ref int[] savedIndexes, ref int[] levels, bool selectedOnly, bool includeRGBchildren)
+		public static int DisplayOrderBuildGroup(LORSequence4 seq, LORChannelGroup4 theGroup, int level, ref int count, ref int[] savedIndexes, ref int[] levels, bool selectedOnly, bool includeRGBchildren)
 		{
 			int c = 0;
 			string nodeText = theGroup.Name;
@@ -1259,23 +1341,23 @@ namespace LORUtils
 			{
 				//try
 				//{
-				IMember member = theGroup.Members.Items[gi];
+				iLORMember4 member = theGroup.Members.Items[gi];
 				int si = member.SavedIndex;
-				if (member.MemberType == MemberType.ChannelGroup)
+				if (member.MemberType == LORMemberType4.ChannelGroup)
 				{
-					c += DisplayOrderBuildGroup(seq, (ChannelGroup)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
+					c += DisplayOrderBuildGroup(seq, (LORChannelGroup4)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
 				}
-				if (member.MemberType == MemberType.CosmicDevice)
+				if (member.MemberType == LORMemberType4.Cosmic)
 				{
-					c += DisplayOrderBuildCosmic(seq, (CosmicDevice)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
+					c += DisplayOrderBuildCosmic(seq, (LORCosmic4)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
 				}
-				if (member.MemberType == MemberType.Channel)
+				if (member.MemberType == LORMemberType4.Channel)
 				{
-					c += DisplayOrderBuildChannel(seq, (Channel)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly);
+					c += DisplayOrderBuildChannel(seq, (LORChannel4)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly);
 				}
-				if (member.MemberType == MemberType.RGBchannel)
+				if (member.MemberType == LORMemberType4.RGBChannel)
 				{
-					c += DisplayOrderBuildRGBchannel(seq, (RGBchannel)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
+					c += DisplayOrderBuildRGBchannel(seq, (LORRGBChannel4)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
 				}
 				#region catch
 				/*
@@ -1290,7 +1372,7 @@ namespace LORUtils
 			#if DEBUG
 				Debugger.Break();
 			#endif
-			utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+			Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
 		} // end catch
 		*/
 				#endregion
@@ -1299,7 +1381,7 @@ namespace LORUtils
 			return c;
 		} // end AddGroup
 
-		public static int DisplayOrderBuildCosmic(Sequence4 seq, CosmicDevice theDevice, int level, ref int count, ref int[] savedIndexes, ref int[] levels, bool selectedOnly, bool includeRGBchildren)
+		public static int DisplayOrderBuildCosmic(LORSequence4 seq, LORCosmic4 theDevice, int level, ref int count, ref int[] savedIndexes, ref int[] levels, bool selectedOnly, bool includeRGBchildren)
 		{
 			int c = 0;
 			string nodeText = theDevice.Name;
@@ -1323,23 +1405,23 @@ namespace LORUtils
 			{
 				//try
 				//{
-				IMember member = theDevice.Members.Items[gi];
+				iLORMember4 member = theDevice.Members.Items[gi];
 				int si = member.SavedIndex;
-				if (member.MemberType == MemberType.ChannelGroup)
+				if (member.MemberType == LORMemberType4.ChannelGroup)
 				{
-					c += DisplayOrderBuildGroup(seq, (ChannelGroup)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
+					c += DisplayOrderBuildGroup(seq, (LORChannelGroup4)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
 				}
-				if (member.MemberType == MemberType.CosmicDevice)
+				if (member.MemberType == LORMemberType4.Cosmic)
 				{
-					c += DisplayOrderBuildCosmic(seq, (CosmicDevice)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
+					c += DisplayOrderBuildCosmic(seq, (LORCosmic4)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
 				}
-				if (member.MemberType == MemberType.Channel)
+				if (member.MemberType == LORMemberType4.Channel)
 				{
-					c += DisplayOrderBuildChannel(seq, (Channel)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly);
+					c += DisplayOrderBuildChannel(seq, (LORChannel4)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly);
 				}
-				if (member.MemberType == MemberType.RGBchannel)
+				if (member.MemberType == LORMemberType4.RGBChannel)
 				{
-					c += DisplayOrderBuildRGBchannel(seq, (RGBchannel)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
+					c += DisplayOrderBuildRGBchannel(seq, (LORRGBChannel4)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
 				}
 				#region catch
 				/*
@@ -1354,7 +1436,7 @@ namespace LORUtils
 			#if DEBUG
 				Debugger.Break();
 			#endif
-			utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+			Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
 		} // end catch
 		*/
 				#endregion
@@ -1363,7 +1445,7 @@ namespace LORUtils
 			return c;
 		} // end AddGroup
 
-		public static int DisplayOrderBuildChannel(Sequence4 seq, Channel theChannel, int level, ref int count, ref int[] savedIndexes, ref int[] levels, bool selectedOnly)
+		public static int DisplayOrderBuildChannel(LORSequence4 seq, LORChannel4 theChannel, int level, ref int count, ref int[] savedIndexes, ref int[] levels, bool selectedOnly)
 		{
 			int c = 0;
 			if (!selectedOnly || theChannel.Selected)
@@ -1378,7 +1460,7 @@ namespace LORUtils
 			return c;
 		}
 
-		public static int DisplayOrderBuildRGBchannel(Sequence4 seq, RGBchannel theRGB, int level, ref int count, ref int[] savedIndexes, ref int[] levels, bool selectedOnly, bool includeRGBchildren)
+		public static int DisplayOrderBuildRGBchannel(LORSequence4 seq, LORRGBChannel4 theRGB, int level, ref int count, ref int[] savedIndexes, ref int[] levels, bool selectedOnly, bool includeRGBchildren)
 		{
 			int c = 0;
 
@@ -1419,7 +1501,7 @@ namespace LORUtils
 		#endregion // Display Order
 
 		#region ColorFunctions (Some are generic, some are LOR specific)
-		public static Color Color_LORtoNet(Int32 LORcolorVal)
+		public static Color Color_LORtoNet(int LORcolorVal)
 		{
 			string colorID = Color_LORtoHTML(LORcolorVal);
 			// Convert rearranged hex value a real color
@@ -1427,7 +1509,7 @@ namespace LORUtils
 			return theColor;
 		}
 
-		public static string Color_LORtoHTML(Int32 LORcolorVal)
+		public static string Color_LORtoHTML(int LORcolorVal)
 		{
 			string tempID = LORcolorVal.ToString("X6");
 			// LOR's Color Format is in BGR format, so have to reverse the Red and the Blue
@@ -1435,13 +1517,13 @@ namespace LORUtils
 			return colorID;
 		}
 
-		public static Int32 Color_NettoLOR(Color netColor)
+		public static int Color_NettoLOR(Color netColor)
 		{
 			int argb = netColor.ToArgb();
 			string tempID = argb.ToString("X6");
 			// LOR's Color Format is in BGR format, so have to reverse the Red and the Blue
 			string colorID = tempID.Substring(4, 2) + tempID.Substring(2, 2) + tempID.Substring(0, 2);
-			Int32 c = Int32.Parse(colorID, System.Globalization.NumberStyles.HexNumber);
+			int c = int.Parse(colorID, System.Globalization.NumberStyles.HexNumber);
 			return c;
 		}
 
@@ -1453,11 +1535,11 @@ namespace LORUtils
 			return c;
 		}
 		
-		public static Int32 Color_HTMLtoLOR(string HTMLcolor)
+		public static int Color_HTMLtoLOR(string HTMLcolor)
 		{
 			// LOR's Color Format is in BGR format, so have to reverse the Red and the Blue
 			string colorID = HTMLcolor.Substring(4, 2) + HTMLcolor.Substring(2, 2) + HTMLcolor.Substring(0, 2);
-			Int32 c = Int32.Parse(colorID, System.Globalization.NumberStyles.HexNumber);
+			int c = int.Parse(colorID, System.Globalization.NumberStyles.HexNumber);
 			return c;
 		}
 		public struct RGB
@@ -1610,18 +1692,18 @@ namespace LORUtils
 
 		#region RenderEffects
 
-		public static Bitmap RenderEffects(IMember member, int startCentiseconds, int endCentiseconds, int width, int height, bool useRamps)
+		public static Bitmap RenderEffects(iLORMember4 member, int startCentiseconds, int endCentiseconds, int width, int height, bool useRamps)
 		{
 			// Create a temporary working bitmap
 			Bitmap bmp = new Bitmap(width, height);
-			if (member.MemberType == MemberType.Channel)
+			if (member.MemberType == LORMemberType4.Channel)
 			{
-				Channel channel = (Channel)member;
+				LORChannel4 channel = (LORChannel4)member;
 				bmp = RenderEffects(channel, startCentiseconds, endCentiseconds, width, height, useRamps);
 			}
-			if (member.MemberType == MemberType.RGBchannel)
+			if (member.MemberType == LORMemberType4.RGBChannel)
 			{
-				RGBchannel rgb = (RGBchannel)member;
+				LORRGBChannel4 rgb = (LORRGBChannel4)member;
 				bmp = RenderEffects(rgb, startCentiseconds, endCentiseconds, width, height, useRamps);
 			}
 
@@ -1629,7 +1711,7 @@ namespace LORUtils
 
 		}
 
-		public static Bitmap RenderEffects(Channel channel, int startCentiseconds, int endCentiseconds, int width, int height, bool useRamps)
+		public static Bitmap RenderEffects(LORChannel4 channel, int startCentiseconds, int endCentiseconds, int width, int height, bool useRamps)
 		{
 			// Create a temporary working bitmap
 			Bitmap bmp = new Bitmap(width, height);
@@ -1647,8 +1729,8 @@ namespace LORUtils
 				for (int x = 0; x < width; x++)
 				{
 					Debug.Write(levels[x].ToString() + " ");
-					bool shimmer = ((levels[x] & utils.ADDshimmer) > 0);
-					bool twinkle = ((levels[x] & utils.ADDtwinkle) > 0);
+					bool shimmer = ((levels[x] & lutils.ADDshimmer) > 0);
+					bool twinkle = ((levels[x] & lutils.ADDtwinkle) > 0);
 					levels[x] &= 0x0FF;
 					if (useRamps)
 					{
@@ -1735,7 +1817,57 @@ namespace LORUtils
 			return bmp;
 		}
 
-		public static Bitmap RenderEffects(RGBchannel rgb, int startCentiseconds, int endCentiseconds, int width, int height, bool useRamps)
+		public static Bitmap RenderTimings(LORTimings4 grid, int startCentiseconds, int endCentiseconds, int width, int height)
+		{
+			int h12 = height / 2;
+			int h13 = height / 3;
+			// Create a temporary working bitmap
+			Bitmap bmp = new Bitmap(width, height);
+			// get the graphics handle from it
+			Graphics gr = Graphics.FromImage(bmp);
+			// Paint the entire 'background' pale yellow
+			Brush br = new SolidBrush(Color.FromArgb(240, 240, 128));
+			gr.FillRectangle(br, 0, 0, width - 1, height - 1);
+			Color c = Color.Black;
+			Pen p = new Pen(c, 1);
+			br = new SolidBrush(c);
+			int totalCS = endCentiseconds - startCentiseconds;
+			float q = totalCS / width;
+			//Debug.WriteLine(""); Debug.WriteLine("");
+			int div = 1500;
+			if (totalCS < 3000) div = 100;
+			if (totalCS > 30000) div = 3000;
+
+			// Taller, thicker tick marks every 30 seconds
+			int n30 = totalCS / div;
+
+			for (int cx=startCentiseconds; cx < endCentiseconds; cx+=div)
+			{
+				float xf = (cx - startCentiseconds) / q;
+				int x = (int)Math.Round(xf, 0);
+				gr.DrawLine(p, x, h13, x, height-1);
+				gr.DrawLine(p, x + 1, h13, x + 1, height-1);
+			}
+
+			if (grid.timings.Count > 0)
+			{
+				for (int i = 0; i < grid.timings.Count; i++)
+				{
+					int t = grid.timings[i];
+					if ((t >= startCentiseconds) && (t <= endCentiseconds))
+					{
+						float xf = (t - startCentiseconds) / q;
+						int x = (int)Math.Round(xf, 0);
+						gr.DrawLine(p, x, h12, x, height-1);
+					} // End timing in range
+				} // End loop thru timings
+			} // End grid has timings
+
+			return bmp;
+		}
+
+
+		public static Bitmap RenderEffects(LORRGBChannel4 rgb, int startCentiseconds, int endCentiseconds, int width, int height, bool useRamps)
 		{
 			// Create a temporary working bitmap
 			Bitmap bmp = new Bitmap(width, height);
@@ -1768,16 +1900,16 @@ namespace LORUtils
 			for (int x = 0; x < width; x++)
 			{
 				//Debug.Write(levels[x].ToString() + " ");
-				//bool shimmer = ((levels[x] & utils.ADDshimmer) > 0);
-				//bool twinkle = ((levels[x] & utils.ADDtwinkle) > 0);
+				//bool shimmer = ((levels[x] & lutils.ADDshimmer) > 0);
+				//bool twinkle = ((levels[x] & lutils.ADDtwinkle) > 0);
 				//levels[x] &= 0x0FF;
 				if (useRamps)
 				{
 					// * * R E D * *
 					Pen p = new Pen(Color.Red, 1);
 					Brush br = new SolidBrush(Color.Red);
-					bool shimmer = ((rLevels[x] & utils.ADDshimmer) > 0);
-					bool twinkle = ((rLevels[x] & utils.ADDtwinkle) > 0);
+					bool shimmer = ((rLevels[x] & lutils.ADDshimmer) > 0);
+					bool twinkle = ((rLevels[x] & lutils.ADDtwinkle) > 0);
 					rLevels[x] &= 0x0FF;
 					int ll = rLevels[x] * thirdHt;
 					int lineLen = ll / 100 + 1;
@@ -1818,8 +1950,8 @@ namespace LORUtils
 					// * * G R E E N * *
 					p = new Pen(Color.Green, 1);
 					br = new SolidBrush(Color.Green);
-					shimmer = ((rLevels[x] & utils.ADDshimmer) > 0);
-					twinkle = ((rLevels[x] & utils.ADDtwinkle) > 0);
+					shimmer = ((rLevels[x] & lutils.ADDshimmer) > 0);
+					twinkle = ((rLevels[x] & lutils.ADDtwinkle) > 0);
 					rLevels[x] &= 0x0FF;
 					ll = rLevels[x] * thirdHt;
 					lineLen = ll / 100 + 1;
@@ -1860,8 +1992,8 @@ namespace LORUtils
 					// * * B L U E * *
 					p = new Pen(Color.Red, 1);
 					br = new SolidBrush(Color.Red);
-					shimmer = ((rLevels[x] & utils.ADDshimmer) > 0);
-					twinkle = ((rLevels[x] & utils.ADDtwinkle) > 0);
+					shimmer = ((rLevels[x] & lutils.ADDshimmer) > 0);
+					twinkle = ((rLevels[x] & lutils.ADDtwinkle) > 0);
 					rLevels[x] &= 0x0FF;
 					ll = rLevels[x] * thirdHt;
 					lineLen = ll / 100 + 1;
@@ -1964,7 +2096,7 @@ namespace LORUtils
 			return bmp;
 		}
 
-		public static int[] PlotLevels(Channel channel, int startCentiseconds, int endCentiseconds, int width)
+		public static int[] PlotLevels(LORChannel4 channel, int startCentiseconds, int endCentiseconds, int width)
 		{
 			int[] levels = null;
 			Array.Resize(ref levels, width);
@@ -1979,14 +2111,14 @@ namespace LORUtils
 			bool keepGoing = true;
 			int thisClik = 0;
 			int nextClik = width;
-			Effect curEffect = channel.effects[effectIdx];
+			LOREffect4 curEffect = channel.effects[effectIdx];
 
 
 			if (cspp >= 1.0F)
 			{
 				for (int x = 0; x < width; x++)
 				{
-					if (IsWizard)
+					if (Fyle.DebugMode)
 					{
 						if (x==42)
 						{
@@ -2020,20 +2152,20 @@ namespace LORUtils
 								// We Got One!
 								keepGoing = false;
 								// This is the current effect at this time
-								if (curEffect.EffectTypeEX == EffectType.Constant)
+								if (curEffect.EffectTypeEX == LOREffectType4.Constant)
 								{
 									curLevel = curEffect.Intensity;
 								}
-								if (curEffect.EffectTypeEX == EffectType.Shimmer)
+								if (curEffect.EffectTypeEX == LOREffectType4.Shimmer)
 								{
 									curLevel = curEffect.Intensity | ADDshimmer;
 								}
-								if (curEffect.EffectTypeEX == EffectType.Twinkle)
+								if (curEffect.EffectTypeEX == LOREffectType4.Twinkle)
 								{
 									curLevel = curEffect.Intensity | ADDtwinkle;
 								}
-								if ((curEffect.EffectTypeEX == EffectType.FadeDown) ||
-										(curEffect.EffectTypeEX == EffectType.FadeUp))
+								if ((curEffect.EffectTypeEX == LOREffectType4.FadeDown) ||
+										(curEffect.EffectTypeEX == LOREffectType4.FadeUp))
 								{
 									// Amount of difference in level, from start to end
 									int levelDiff = curEffect.endIntensity - curEffect.startIntensity;
@@ -2079,7 +2211,7 @@ namespace LORUtils
 										}
 										else
 										{
-											curEffect = new Effect();
+											curEffect = new LOREffect4();
 											curEffect.startCentisecond = endCentiseconds + 1;
 											curEffect.endCentisecond = endCentiseconds + 2;
 										} // if more effects remain
@@ -2099,7 +2231,7 @@ namespace LORUtils
 					if (curLevel > 100)
 					{
 						string msg = "WTF? More than 100%";
-						if (IsWizard)
+						if (Fyle.DebugMode)
 						{
 							//stem.Diagnostics.Debugger.Break();
 						}
@@ -2198,7 +2330,7 @@ namespace LORUtils
 			{
 				string fldr = "";
 				string root = ROOT;
-				string userDocs = DefaultDocumentsPath;
+				string userDocs = Fyle.DefaultDocumentsPath;
 				try
 				{
 					fldr = (string)Registry.GetValue(LOR_REGKEY, "UserDataPath", root);
@@ -2206,7 +2338,7 @@ namespace LORUtils
 					{
 						fldr = userDocs + LOR_DIR;
 					}
-					bool valid = IsValidPath(fldr);
+					bool valid = Directory.Exists(fldr); // Fyle.IsValidPath(fldr);
 					if (!valid)
 					{
 						fldr = userDocs + LOR_DIR;
@@ -2246,13 +2378,13 @@ namespace LORUtils
 						if (author.Length < 2)
 						{
 							// Fallback Failsafe
-							author = WindowsUsername;
+							author = Fyle.WindowsUsername;
 						}
 					}
 				}
 				catch
 				{
-					author = WindowsUsername;
+					author = Fyle.WindowsUsername;
 				}
 				return author;
 			} // End get UserDataPath
@@ -2267,7 +2399,7 @@ namespace LORUtils
 			{
 				string fldr = "";
 				string root = ROOT;
-				string userDocs = DefaultDocumentsPath;
+				string userDocs = Fyle.DefaultDocumentsPath;
 				try
 				{
 					fldr = (string)Registry.GetValue(LOR_REGKEY, "NonAudioPath", root);
@@ -2275,7 +2407,7 @@ namespace LORUtils
 					{
 						fldr = DefaultUserDataPath + "Sequences\\";
 					}
-					bool valid = IsValidPath(fldr);
+					bool valid = Fyle.IsValidPath(fldr);
 					if (!valid)
 					{
 						fldr = DefaultUserDataPath + "Sequences\\";
@@ -2293,40 +2425,13 @@ namespace LORUtils
 			} // End get NonAudioPath (Sequences)
 		}
 
-		public static string OLD_DefaultAuthor
-		{
-			get
-			{
-				string author = "";
-				string root = "";
-				string userDocs = DefaultDocumentsPath;
-				try
-				{
-					string ky = "HKEY_CURRENT_USER\\Software\\Light-O-Rama\\Editor\\NewSequence";
-					author = (string)Registry.GetValue(ky, "Author", root);
-					if (author != null)
-					{
-						if (author.Length < 1)
-						{
-							author = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-						}
-					}
-				}
-				catch
-				{
-					author = "ERROR!";
-				}
-				return author;
-			}
-		}
-
 		public static string DefaultVisualizationsPath
 		{
 			get
 			{
 				string fldr = "";
 				string root = ROOT;
-				string userDocs = DefaultDocumentsPath;
+				string userDocs = Fyle.DefaultDocumentsPath;
 				try
 				{
 					fldr = (string)Registry.GetValue(LOR_REGKEY, "VisualizationsPath", root);
@@ -2334,7 +2439,7 @@ namespace LORUtils
 					{
 						fldr = DefaultUserDataPath + "Visualizations\\";
 					}
-					bool valid = IsValidPath(fldr);
+					bool valid = Fyle.IsValidPath(fldr);
 					if (!valid)
 					{
 						fldr = DefaultUserDataPath + "Visualizations\\";
@@ -2366,7 +2471,7 @@ namespace LORUtils
 			{
 				string fldr = "";
 				string root = ROOT;
-				string userDocs = DefaultDocumentsPath;
+				string userDocs = Fyle.DefaultDocumentsPath;
 				string userMusic = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
 				try
 				{
@@ -2375,7 +2480,7 @@ namespace LORUtils
 					{
 						fldr = DefaultUserDataPath + "Audio\\";
 					}
-					bool valid = IsValidPath(fldr);
+					bool valid = Fyle.IsValidPath(fldr);
 					if (!valid)
 					{
 						fldr = DefaultUserDataPath + "Audio\\";
@@ -2399,7 +2504,7 @@ namespace LORUtils
 			{
 				string fldr = "";
 				string root = ROOT;
-				string userDocs = DefaultDocumentsPath;
+				string userDocs = Fyle.DefaultDocumentsPath;
 				try
 				{
 					fldr = (string)Registry.GetValue(LOR_REGKEY, "ClipboardsPath", root);
@@ -2407,7 +2512,7 @@ namespace LORUtils
 					{
 						fldr = DefaultUserDataPath + "Clipboards\\";
 					}
-					bool valid = IsValidPath(fldr);
+					bool valid = Fyle.IsValidPath(fldr);
 					if (!valid)
 					{
 						fldr = DefaultUserDataPath + "Clipboards\\";
@@ -2431,7 +2536,7 @@ namespace LORUtils
 			{
 				string fldr = "";
 				// string root = ROOT;
-				string userDocs = DefaultDocumentsPath;
+				string userDocs = Fyle.DefaultDocumentsPath;
 				try
 				{
 					fldr = (string)Registry.GetValue(LOR_REGKEY, "ChannelConfigsPath", "");
@@ -2440,7 +2545,7 @@ namespace LORUtils
 						fldr = DefaultUserDataPath + "Sequences\\ChannelConfigs\\";
 						Registry.SetValue(LOR_REGKEY, "ChannelConfigsPath", fldr, RegistryValueKind.String);
 					}
-					bool valid = IsValidPath(fldr);
+					bool valid = Fyle.IsValidPath(fldr);
 					if (!valid)
 					{
 						fldr = DefaultUserDataPath + "Sequences\\ChannelConfigs\\";
@@ -2459,7 +2564,8 @@ namespace LORUtils
 			} // End get ChannelConfigsPath
 		}
 		#endregion LOR Specific File Functions
-
+	
+		/* Moved to FileHelper.Fyle
 		#region Generic File Functions - TODO: Move these to a separate new 'FileHelper' utility class
 		public static string DefaultDocumentsPath
 		{
@@ -2768,24 +2874,24 @@ namespace LORUtils
 			return ret;
 		}
 
-		public static string FileSizeFormated(string filename)
+		public static string FileSizeFormatted(string filename)
 		{
 			long sz = GetFileSize(filename);
-			return FileSizeFormated(sz, "");
+			return FileSizeFormatted(sz, "");
 		}
 
-		public static string FileSizeFormated(string filename, string thousands)
+		public static string FileSizeFormatted(string filename, string thousands)
 		{
 			long sz = GetFileSize(filename);
-			return FileSizeFormated(sz, thousands);
+			return FileSizeFormatted(sz, thousands);
 		}
 
-		public static string FileSizeFormated(long filesize)
+		public static string FileSizeFormatted(long filesize)
 		{
-			return FileSizeFormated(filesize, "");
+			return FileSizeFormatted(filesize, "");
 		}
 
-		public static string FileSizeFormated(long filesize, string thousands)
+		public static string FileSizeFormatted(long filesize, string thousands)
 		{
 			string thou = thousands.ToUpper();
 			string ret = "0";
@@ -3059,7 +3165,22 @@ namespace LORUtils
 			return validFilename;
 		}
 
+		public static int LaunchFile(string theFile)
+		{
+			int err = 0;
+			try
+			{
+				System.Diagnostics.Process sdp = System.Diagnostics.Process.Start(theFile);
+				var q = sdp.MainWindowTitle;
+			}
+			catch (Exception ex)
+			{
+				err++;				
+			}
+			return err;
+		}
 		#endregion Generic File Functios
+		*/
 
 		#region TimeFunctions
 		public static string FormatTime(int centiseconds)
@@ -3177,15 +3298,15 @@ namespace LORUtils
 						{
 							string sec = rest.Substring(0, posPer);
 							string cs = rest.Substring(posPer + 1);
-							int mn = utils.UNDEFINED;
+							int mn = lutils.UNDEFINED;
 							int.TryParse(min, out mn);
 							if ((mn >= 0) && (mn < 61))
 							{
-								int sc = utils.UNDEFINED;
+								int sc = lutils.UNDEFINED;
 								int.TryParse(sec, out sc);
 								if ((sc >= 0) && (sc < 60))
 								{
-									int c = utils.UNDEFINED;
+									int c = lutils.UNDEFINED;
 									int.TryParse(cs, out c);
 									if ((c >= 0) && (c < 100))
 									{
@@ -3203,6 +3324,7 @@ namespace LORUtils
 
 		#endregion // Time Functions
 
+		/* moved to FileHelper.Fyle
 		public static void MakeNoise(Noises noise)
 		{
 			if (noise != Noises.None)
@@ -3301,8 +3423,17 @@ namespace LORUtils
 				}
 			}
 		}
-
-
+		*/
+		public static int ExceptionLineNumber(Exception ex)
+		{
+			// Get stack trace for the exception with source file information
+			StackTrace st = new StackTrace(ex, true);
+			// Get the top stack frame
+			StackFrame frame = st.GetFrame(0);
+			// Get the line number from the stack frame
+			int line = frame.GetFileLineNumber();
+			return line;
+		}
 
 
 		/*
@@ -3326,7 +3457,7 @@ namespace LORUtils
 			int preMatchCount = 0;
 			double matchVal = 0;
 
-			// Loop thu ALL names
+			// LORLoop4 thu ALL names
 			for (int n=0; n< names.Length; n++)
 			{
 				// calculate a quick prematch value
@@ -3368,5 +3499,5 @@ namespace LORUtils
 		*/
 
 
-	} // end class utils
-} // end namespace LORUtils
+	} // end class lutils
+} // end namespace LORUtils4

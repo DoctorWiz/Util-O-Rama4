@@ -8,10 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-using LORUtils;
+using LORUtils4; using FileHelper;
 using Microsoft.Win32;
 
-namespace MergeORama
+namespace UtilORama4
 {
 	public partial class frmMerge : Form
 	{
@@ -20,9 +20,9 @@ namespace MergeORama
 		private string lastFile1 = "";
 		private string lastFile2 = "";
 		private string lastNewFile = "";
-		private Sequence4 seqOne = new Sequence4();
-		private Sequence4 seqNew;
-		private Sequence4 seqTwo = new Sequence4();
+		private LORSequence4 seqOne = new LORSequence4();
+		private LORSequence4 seqNew;
+		private LORSequence4 seqTwo = new LORSequence4();
 
 		private const byte ACTIONkeepFirst = 1;
 		private const byte ACTIONuseSecond = 2;
@@ -38,7 +38,7 @@ namespace MergeORama
 		private byte duplicateNameAction = ACTIONkeepFirst;
 		private bool mergeEffects = false;
 		private string numberFormat = " (#)";
-
+		private bool isWiz = Fyle.IsWizard || Fyle.IsAWizard;
 
 
 		private List<TreeNode>[] siNodes = null;
@@ -47,16 +47,16 @@ namespace MergeORama
 
 		private class Map
 		{
-			//public int addIdx = utils.UNDEFINED;
-			//public int newIdx = utils.UNDEFINED;
-			public IMember addID = null;
-			public IMember newID = null;
+			//public int addIdx = lutils.UNDEFINED;
+			//public int newIdx = lutils.UNDEFINED;
+			public iLORMember4 addID = null;
+			public iLORMember4 newID = null;
 
 			public Map()
 			{
 				// default constructor
 			}
-			public Map(IMember idAdd, IMember idNew)
+			public Map(iLORMember4 idAdd, iLORMember4 idNew)
 			{
 				addID = idAdd;
 				newID = idNew;
@@ -64,7 +64,7 @@ namespace MergeORama
 
 		}
 
-		int nodeIndex = utils.UNDEFINED;
+		int nodeIndex = lutils.UNDEFINED;
 
 		public frmMerge()
 		{
@@ -78,9 +78,9 @@ namespace MergeORama
 
 		private void InitForm()
 		{
-			basePath = utils.DefaultUserDataPath;
+			basePath = lutils.DefaultUserDataPath;
 
-			seqFolder = utils.DefaultSequencesPath;
+			seqFolder = lutils.DefaultSequencesPath;
 			lastFile1 = Properties.Settings.Default.LastFile1;
 			lastFile2 = Properties.Settings.Default.LastFile2;
 			lastNewFile = Properties.Settings.Default.LastNewFile;
@@ -89,22 +89,22 @@ namespace MergeORama
 			string dir = "";
 			if (lastFile1.Length > 6)
 			{
-				valid = utils.IsValidPath(lastFile1, true);
+				valid = Fyle.IsValidPath(lastFile1, true);
 			}
-			if (!valid) lastFile1 = utils.DefaultSequencesPath;
+			if (!valid) lastFile1 = lutils.DefaultSequencesPath;
 			valid = false;
 			if (lastFile2.Length > 6)
 			{
-				valid = utils.IsValidPath(lastFile2, true);
+				valid = Fyle.IsValidPath(lastFile2, true);
 			}
-			if (!valid) lastFile2 = utils.DefaultSequencesPath;
+			if (!valid) lastFile2 = lutils.DefaultSequencesPath;
 			valid = false;
 			if (lastNewFile.Length > 6)
 			{
-				valid = utils.IsValidPath(lastNewFile, true);
+				valid = Fyle.IsValidPath(lastNewFile, true);
 			}
-			if (!valid) lastNewFile = utils.DefaultSequencesPath;
-			button1.Visible = utils.IsWizard;
+			if (!valid) lastNewFile = lutils.DefaultSequencesPath;
+			button1.Visible = isWiz;
 
 
 			RestoreFormPosition();
@@ -268,12 +268,12 @@ namespace MergeORama
 		{
 			string initDir = "q:\\dfkjalshjdfklja";
 			if (lastFile1.Length > 6) initDir = Path.GetDirectoryName(lastFile1);
-			if (!Directory.Exists(initDir)) initDir = utils.DefaultChannelConfigsPath;
-			if (!Directory.Exists(initDir)) initDir = utils.DefaultSequencesPath;
-			if (!Directory.Exists(initDir)) initDir = utils.DefaultDocumentsPath;
+			if (!Directory.Exists(initDir)) initDir = lutils.DefaultChannelConfigsPath;
+			if (!Directory.Exists(initDir)) initDir = lutils.DefaultSequencesPath;
+			if (!Directory.Exists(initDir)) initDir = Fyle.DefaultDocumentsPath;
 			if (!Directory.Exists(initDir))
 			{
-				initDir = utils.DefaultSequencesPath;
+				initDir = lutils.DefaultSequencesPath;
 			}
 			string initFile = "";
 			if (File.Exists(lastFile1))
@@ -301,9 +301,9 @@ namespace MergeORama
 				Properties.Settings.Default.LastFile1 = lastFile1;
 				Properties.Settings.Default.Save();
 
-				txtFirstFile.Text = utils.ShortenLongPath(lastFile1, 80);
+				txtFirstFile.Text = Fyle.ShortenLongPath(lastFile1, 80);
 				seqOne.ReadSequenceFile(lastFile1);
-				utils.TreeFillChannels(treNewChannels, seqOne, ref siNodes, false, true);
+				lutils.TreeFillChannels(treNewChannels, seqOne, ref siNodes, false, true);
 				seqNew = seqOne;
 			} // end if (result = DialogResult.OK)
 				//pnlAll.Enabled = true;
@@ -313,12 +313,12 @@ namespace MergeORama
 		{
 			string initDir = "q:\\dfkjalshjdfklja";
 			if (lastFile2.Length > 6) initDir = Path.GetDirectoryName(lastFile2);
-			if (!Directory.Exists(initDir)) initDir = utils.DefaultChannelConfigsPath;
-			if (!Directory.Exists(initDir)) initDir = utils.DefaultSequencesPath;
-			if (!Directory.Exists(initDir)) initDir = utils.DefaultDocumentsPath;
+			if (!Directory.Exists(initDir)) initDir = lutils.DefaultChannelConfigsPath;
+			if (!Directory.Exists(initDir)) initDir = lutils.DefaultSequencesPath;
+			if (!Directory.Exists(initDir)) initDir = Fyle.DefaultDocumentsPath;
 			if (!Directory.Exists(initDir))
 			{
-				initDir = utils.DefaultSequencesPath;
+				initDir = lutils.DefaultSequencesPath;
 			}
 			string initFile = "";
 			if (File.Exists(lastFile2))
@@ -345,7 +345,7 @@ namespace MergeORama
 				Properties.Settings.Default.LastFile2 = lastFile2;
 				Properties.Settings.Default.Save();
 
-				txtSecondFile.Text = utils.ShortenLongPath(lastFile2, 80);
+				txtSecondFile.Text = Fyle.ShortenLongPath(lastFile2, 80);
 
 				//MergeSequences();
 				DialogResult dr = GetMergeOptions();
@@ -355,7 +355,7 @@ namespace MergeORama
 					seqTwo.ReadSequenceFile(lastFile2);
 					MergeSequences();
 
-					utils.TreeFillChannels(treNewChannels, seqNew, ref siNodes, false, true);
+					lutils.TreeFillChannels(treNewChannels, seqNew, ref siNodes, false, true);
 					ImBusy(false);
 					btnSave.Enabled = true;
 				}
@@ -409,15 +409,15 @@ namespace MergeORama
 			{
 				for (int g2Idx = 0; g2Idx < seqTwo.TimingGrids.Count; g2Idx++)
 				{
-					TimingGrid sourceGrid = seqTwo.TimingGrids[g2Idx];
+					LORTimings4 sourceGrid = seqTwo.TimingGrids[g2Idx];
 					sourceGrid.timings.Sort();
-					TimingGrid destGrid = null;
+					LORTimings4 destGrid = null;
 					// Grids treated like tracks.  Merge or Append?
 					if (mergeTracks)
 					{
 						found = true; // Reset to default
 						// Search for it, do NOT create if not found
-						destGrid = (TimingGrid)seqNew.Members.Find(sourceGrid.Name, MemberType.TimingGrid, false);
+						destGrid = (LORTimings4)seqNew.Members.Find(sourceGrid.Name, LORMemberType4.Timings, false);
 						if (destGrid == null) // no match found
 						{
 							found = false;
@@ -426,16 +426,16 @@ namespace MergeORama
 						else // match found!
 						{
 							// Check for conflicting types and warn user
-							if (sourceGrid.TimingGridType == TimingGridType.FixedGrid)
+							if (sourceGrid.LORTimingGridType4 == LORTimingGridType4.FixedGrid)
 							{
-								if (destGrid.TimingGridType == TimingGridType.Freeform)
+								if (destGrid.LORTimingGridType4 == LORTimingGridType4.Freeform)
 								{
 									GridMismatchError(sourceGrid.Name);
 								}
 							}
-							if (sourceGrid.TimingGridType == TimingGridType.Freeform)
+							if (sourceGrid.LORTimingGridType4 == LORTimingGridType4.Freeform)
 							{
-								if (destGrid.TimingGridType == TimingGridType.FixedGrid)
+								if (destGrid.LORTimingGridType4 == LORTimingGridType4.FixedGrid)
 								{
 									GridMismatchError(sourceGrid.Name);
 								}
@@ -458,16 +458,16 @@ namespace MergeORama
 					else // Append
 					{
 						destGrid = seqNew.CreateTimingGrid(sourceGrid.Name);
-						destGrid.TimingGridType = sourceGrid.TimingGridType;
+						destGrid.LORTimingGridType4 = sourceGrid.LORTimingGridType4;
 					} // Enbd if merge or append
 
 					// if not found, or any action other than keep first
 					if (!found || (duplicateNameAction != ACTIONkeepFirst))
 					{
 						// Copy type, spacing and timings
-						destGrid.TimingGridType = sourceGrid.TimingGridType;
+						destGrid.LORTimingGridType4 = sourceGrid.LORTimingGridType4;
 						destGrid.spacing = sourceGrid.spacing;
-						if (destGrid.TimingGridType == TimingGridType.Freeform)
+						if (destGrid.LORTimingGridType4 == LORTimingGridType4.Freeform)
 						{
 							destGrid.CopyTimings(sourceGrid.timings, false);
 						}
@@ -481,11 +481,11 @@ namespace MergeORama
 
 			if (mergeTracks)
 			{ 
-				//foreach (Track track2 in seqTwo.Tracks)
+				//foreach (LORTrack4 track2 in seqTwo.Tracks)
 				for (int t2Idx = 0; t2Idx < seqTwo.Tracks.Count; t2Idx++)
 				{
-					Track sourceTrack = seqTwo.Tracks[t2Idx];
-					Track destTrack = null;
+					LORTrack4 sourceTrack = seqTwo.Tracks[t2Idx];
+					LORTrack4 destTrack = null;
 					if (mergeTracksByNumber)
 					{
 						// Merge by number or name?
@@ -503,7 +503,7 @@ namespace MergeORama
 					if (mergeTracksByName)
 					{
 						found = true; // reset to default
-						destTrack = (Track)seqNew.Members.Find(sourceTrack.Name, MemberType.Track, false);
+						destTrack = (LORTrack4)seqNew.Members.Find(sourceTrack.Name, LORMemberType4.Track, false);
 						if (destTrack == null) // no matching name found
 						{
 							found = false;
@@ -571,7 +571,7 @@ namespace MergeORama
 			{
 				seqTwo.TimingGrids[timings2Idx].timings.Sort();
 				matched = false;
-				int matchingExTimingsGridIdx = utils.UNDEFINED;
+				int matchingExTimingsGridIdx = lutils.UNDEFINED;
 				for (int exTimingGridsIdx = 0; exTimingGridsIdx < seqNew.TimingGrids.Count; exTimingGridsIdx++)
 				{
 					// Compare names
@@ -593,7 +593,7 @@ namespace MergeORama
 					// Create a new timing grid and copy the name and type
 					int newSaveID = seqNew.Members.HighestSaveID + 1;
 
-					TimingGrid tGrid = seqNew.CreateTimingGrid(seqTwo.TimingGrids[timings2Idx].Name);
+					LORTimings4 tGrid = seqNew.CreateTimingGrid(seqTwo.TimingGrids[timings2Idx].Name);
 					//tGrid.type = seqTwo.TimingGrids[timings2Idx].type;
 					tGrid.spacing = seqTwo.TimingGrids[timings2Idx].spacing;
 					// Create a new array for timings, and copy them
@@ -605,14 +605,14 @@ namespace MergeORama
 			//  TRACKS  //
 			/////////////
 
-			foreach (Track track2 in seqTwo.Tracks)
+			foreach (LORTrack4 track2 in seqTwo.Tracks)
 			//for (int tracks2Idx = 0; tracks2Idx < seqTwo.Tracks.Count; tracks2Idx++)
 			{
 				matched = false;
 				if (mergeTracks)
 				{
-					int matchedExTracksIdx = utils.UNDEFINED;
-					foreach (Track newTrack in seqNew.Tracks)
+					int matchedExTracksIdx = lutils.UNDEFINED;
+					foreach (LORTrack4 newTrack in seqNew.Tracks)
 					//for (int exTracksIdx = 0; exTracksIdx < seqNew.Tracks.Count; exTracksIdx++)
 					{
 						if (mergeTracksByName)
@@ -639,7 +639,7 @@ namespace MergeORama
 								break;
 							}
 						}
-					} // New Sequence Track Loop
+					} // New Sequence LORTrack4 LORLoop4
 					if (matched)
 					{
 						//MergeTracks(t2Idx, exIdx);
@@ -656,11 +656,11 @@ namespace MergeORama
 				//  CHANNEL GROUPS  //
 				/////////////////////
 
-				foreach (ChannelGroup group2 in seqTwo.ChannelGroups)
+				foreach (LORChannelGroup4 group2 in seqTwo.ChannelGroups)
 				//for (int groups2Idx = 0; groups2Idx < seqTwo.channelGroupCount; groups2Idx++)
 				{
-					int matchedExGroupsIdx = utils.UNDEFINED;
-					foreach (ChannelGroup newGroup in seqNew.ChannelGroups)
+					int matchedExGroupsIdx = lutils.UNDEFINED;
+					foreach (LORChannelGroup4 newGroup in seqNew.ChannelGroups)
 					//for (int exGroupsIdx = 0; exGroupsIdx < seqNew.channelGroupCount; exGroupsIdx++)
 					{
 						matched = false;
@@ -673,9 +673,9 @@ namespace MergeORama
 						//Array.Resize(ref groupMap, newGroupCount + 1);
 						Map gm = new Map(group2, newGroup);
 						groupMap.Add(gm);
-						if (matchedExGroupsIdx == utils.UNDEFINED)
+						if (matchedExGroupsIdx == lutils.UNDEFINED)
 						{
-							ChannelGroup group3 = seqNew.CreateChannelGroup(group2.Name);
+							LORChannelGroup4 group3 = seqNew.CreateChannelGroup(group2.Name);
 							gm = new Map(group3, newGroup);
 							groupMap.Add(gm);
 						}
@@ -709,7 +709,7 @@ namespace MergeORama
 
 		}
 
-		private void MergeTimingGrids(TimingGrid destGrid, TimingGrid sourceGrid)
+		private void MergeTimingGrids(LORTimings4 destGrid, LORTimings4 sourceGrid)
 		{
 			int t2Idx = 0;
 			int exIdx = 0;
@@ -761,7 +761,7 @@ namespace MergeORama
 					// Sequence2 and New Sequence have timing grids with the same name
 					// but in the New Sequence the grid is empty, and in Sequence2 it is not
 					// Names match, but are they the same type?  (might be why it's empty)
-					if (sourceGrid.TimingGridType == destGrid.TimingGridType)
+					if (sourceGrid.LORTimingGridType4 == destGrid.LORTimingGridType4)
 					{
 						// So--- Add all of them
 						//destGrid.itemCount = sourceGrid.itemCount;
@@ -787,27 +787,27 @@ namespace MergeORama
 			} // end 2nd timing grid had items
 		}
 
-		private void MergeMembers(Membership destMembers, Membership sourceMembers)
+		private void MergeMembers(LORMembership4 destMembers, LORMembership4 sourceMembers)
 		{
 			bool found = true;
 			
 			// May be called recursively
-			//foreach (IMember sourceMember in sourceMembers) // foreach and enumerable not working, fix!
+			//foreach (iLORMember4 sourceMember in sourceMembers) // foreach and enumerable not working, fix!
 			for (int smi=0; smi<sourceMembers.Count; smi++)
 			{
-				IMember sourceMember = sourceMembers[smi];
-				if (sourceMember.MemberType == MemberType.Channel)
+				iLORMember4 sourceMember = sourceMembers[smi];
+				if (sourceMember.MemberType == LORMemberType4.Channel)
 				{
-					Channel sourceCh = (Channel)sourceMember;
-					Channel destCh = MergeChannel(sourceCh, destMembers);
+					LORChannel4 sourceCh = (LORChannel4)sourceMember;
+					LORChannel4 destCh = MergeChannel(sourceCh, destMembers);
 				}
 
-				if (sourceMember.MemberType == MemberType.RGBchannel)
+				if (sourceMember.MemberType == LORMemberType4.RGBChannel)
 				{
 					found = true; // reset to default
-					Channel destCh = null; // placeholder
-					RGBchannel sourceRGB = (RGBchannel)sourceMember;
-					RGBchannel destRGB = (RGBchannel)destMembers.Find(sourceRGB.Name, MemberType.RGBchannel, false);
+					LORChannel4 destCh = null; // placeholder
+					LORRGBChannel4 sourceRGB = (LORRGBChannel4)sourceMember;
+					LORRGBChannel4 destRGB = (LORRGBChannel4)destMembers.Find(sourceRGB.Name, LORMemberType4.RGBChannel, false);
 					if (destRGB == null)
 					{
 						found = false;
@@ -839,10 +839,10 @@ namespace MergeORama
 					}
 				}
 
-				if (sourceMember.MemberType == MemberType.ChannelGroup)
+				if (sourceMember.MemberType == LORMemberType4.ChannelGroup)
 				{
-					ChannelGroup sourceGroup = (ChannelGroup)sourceMember;
-					ChannelGroup destGroup = (ChannelGroup)destMembers.Find(sourceGroup.Name, MemberType.ChannelGroup, true);
+					LORChannelGroup4 sourceGroup = (LORChannelGroup4)sourceMember;
+					LORChannelGroup4 destGroup = (LORChannelGroup4)destMembers.Find(sourceGroup.Name, LORMemberType4.ChannelGroup, true);
 
 
 
@@ -856,13 +856,13 @@ namespace MergeORama
 					//Recurse
 					MergeMembers(destGroup.Members, sourceGroup.Members);
 				}
-			} // end loop thru 2nd Sequence's Track Items
+			} // end loop thru 2nd Sequence's LORTrack4 Items
 		}
 
-		private Channel MergeChannel(Channel sourceCh, Membership destMembers)
+		private LORChannel4 MergeChannel(LORChannel4 sourceCh, LORMembership4 destMembers)
 		{
 			bool found = true; // reset to default
-			Channel destCh = (Channel)destMembers.Find(sourceCh.Name, MemberType.Channel, false);
+			LORChannel4 destCh = (LORChannel4)destMembers.Find(sourceCh.Name, LORMemberType4.Channel, false);
 
 			if (destCh == null)
 			{
@@ -875,7 +875,7 @@ namespace MergeORama
 			{
 				if (duplicateNameAction == ACTIONuseSecond)
 				{
-					//destCh = (Channel)destMember;
+					//destCh = (LORChannel4)destMember;
 				}
 				if (duplicateNameAction == ACTIONkeepBoth)
 				{
@@ -896,9 +896,9 @@ namespace MergeORama
 			return destCh;
 		}
 
-		private void MergeRGBchildren(RGBchannel sourceRGB, RGBchannel destRGB)
+		private void MergeRGBchildren(LORRGBChannel4 sourceRGB, LORRGBChannel4 destRGB)
 		{
-			Channel destCh = MergeChannel(sourceRGB.redChannel, seqNew.Members);
+			LORChannel4 destCh = MergeChannel(sourceRGB.redChannel, seqNew.Members);
 			destRGB.redChannel = destCh;
 			destCh = MergeChannel(sourceRGB.grnChannel, seqNew.Members);
 			destRGB.grnChannel = destCh;
@@ -922,7 +922,7 @@ namespace MergeORama
 			}
 			if (!Directory.Exists(initDir))
 			{
-				initDir = utils.DefaultSequencesPath;
+				initDir = lutils.DefaultSequencesPath;
 			}
 			string initFile = Path.GetFileNameWithoutExtension(lastFile1);
 			initFile += " merged with ";

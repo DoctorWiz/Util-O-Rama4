@@ -1,4 +1,4 @@
-﻿namespace MergeORama
+﻿namespace UtilORama4
 {
 	partial class frmMerge
 	{
@@ -66,10 +66,10 @@
 			// 
 			this.imlTreeIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imlTreeIcons.ImageStream")));
 			this.imlTreeIcons.TransparentColor = System.Drawing.Color.Transparent;
-			this.imlTreeIcons.Images.SetKeyName(0, "Track");
-			this.imlTreeIcons.Images.SetKeyName(1, "ChannelGroup");
-			this.imlTreeIcons.Images.SetKeyName(2, "RGBchannel");
-			this.imlTreeIcons.Images.SetKeyName(3, "Channel");
+			this.imlTreeIcons.Images.SetKeyName(0, "LORTrack4");
+			this.imlTreeIcons.Images.SetKeyName(1, "LORChannelGroup4");
+			this.imlTreeIcons.Images.SetKeyName(2, "LORRGBChannel4");
+			this.imlTreeIcons.Images.SetKeyName(3, "LORChannel4");
 			this.imlTreeIcons.Images.SetKeyName(4, "FF0000");
 			this.imlTreeIcons.Images.SetKeyName(5, "00FF00");
 			this.imlTreeIcons.Images.SetKeyName(6, "0000FF");

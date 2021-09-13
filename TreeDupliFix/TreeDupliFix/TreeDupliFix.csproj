@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{5BCDA386-A3C4-44F7-9BFB-98194C1B9CBB}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>TreeDupliFix</RootNamespace>
+    <RootNamespace>UtilORama4</RootNamespace>
     <AssemblyName>TreeDupliFix</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -36,6 +36,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,6 +48,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\COMMON\FileHelper.cs">
+      <Link>FileHelper.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\Sequence4\LORUtils.cs">
       <Link>LORUtils.cs</Link>
     </Compile>

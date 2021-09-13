@@ -11,9 +11,10 @@ using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
 using Microsoft.Win32;
-using LORUtils;
+using LORUtils4;
+using FileHelper;
 
-namespace ListORama
+namespace UtilORama4
 {
 
 
@@ -48,29 +49,29 @@ namespace ListORama
 
 		private const string REGCHAN = "Regular Channels";
 		private const string RGBCHAN = "RGB Channels";
-		private const string CHANGRP = "Channel Groups";
+		private const string CHANGRP = "LORChannel4 Groups";
 		private const string CHWITH = " with \"";
 		private const string CHWITHOUT = " without \"";
 		
-		//public static int nodeIndex = utils.UNDEFINED;
+		//public static int nodeIndex = lutils.UNDEFINED;
 		private bool firstShown = false;
 		private bool saveOptionChanges = false; // default false to ignore changes during initial setup, then change to true to save user changes
 
 		// These are used by MapList so need to be public
-		public Sequence4 theSequence = new Sequence4();
-		public Visualization4 theViz = new Visualization4();
+		public LORSequence4 theSequence = new LORSequence4();
+		public LORVisualization4 theViz = new LORVisualization4();
 		// Original: public List<List<TreeNode>> sourceNodesSI = new List<List<TreeNode>>();
 		public List<TreeNode>[] sourceNodesSI = null; //new List<TreeNode>();
 		public string lastSeqFile = "";
 		private string lastVizFile = "";
-		private string lastSavePath = utils.DefaultChannelConfigsPath;
+		private string lastSavePath = lutils.DefaultChannelConfigsPath;
 
 		private string basePath = "";
 		private string SeqFolder = "";
 		bool ignoreModeChange = false;
 		bool workingMyAssOff = false;
 
-		public int nodeIndex = utils.UNDEFINED;
+		public int nodeIndex = lutils.UNDEFINED;
 		// Note Master->Source mappings are a 1:Many relationship.
 		// A Master channel can map to only one Source channel
 		// But a Source channel may map to more than one Master channel
@@ -79,10 +80,10 @@ namespace ListORama
 		private int seqChanCount = 0;
 		//private ChannelList[] chList = null;
 		private int position = 0;
-		private List<SeqChannelItem> chItems = new List<SeqChannelItem>();
-		private List<SeqRGBItem> rgbItems = new List<SeqRGBItem>();
-		private List<SeqGroupItem> groupItems = new List<SeqGroupItem>();
-		private List<VizChannelItem> vizItems = new List<VizChannelItem>();
+		private List<LORChannel4> chItems = new List<LORChannel4>();
+		private List<LORRGBChannel4> rgbItems = new List<LORRGBChannel4>();
+		private List<LORChannelGroup4> groupItems = new List<LORChannelGroup4>();
+		private List<LORVizChannel4> vizItems = new List<LORVizChannel4>();
 
 		private bool[] gotit = null; // Got It - Size = HighestSavedIndex - True=AlreadyFound
 		private int regKeywdCount = 0;
@@ -150,7 +151,7 @@ namespace ListORama
 			string filePath = Properties.Settings.Default.LastSavePath;
 			if (!Directory.Exists(filePath))
 			{
-				filePath = utils.DefaultChannelConfigsPath;
+				filePath = lutils.DefaultChannelConfigsPath;
 			}
 			if (!Directory.Exists(filePath))
 			{
@@ -181,26 +182,26 @@ namespace ListORama
 			string keywd = txtKeyword.Text;
 			if (!chkKeyword.Checked) keywd = "";
 
-			Membership ukChn = new Membership(theSequence);
-			Membership unChn = new Membership(theSequence);
-			Membership ukRGB = new Membership(theSequence);
-			Membership unRGB = new Membership(theSequence);
-			Membership ukGrp = new Membership(theSequence);
-			Membership unGrp = new Membership(theSequence);
+			LORMembership4 ukChn = new LORMembership4(theSequence);
+			LORMembership4 unChn = new LORMembership4(theSequence);
+			LORMembership4 ukRGB = new LORMembership4(theSequence);
+			LORMembership4 unRGB = new LORMembership4(theSequence);
+			LORMembership4 ukGrp = new LORMembership4(theSequence);
+			LORMembership4 unGrp = new LORMembership4(theSequence);
 			if (chkKeyword.Checked)
 			{
-				if (chkRegKeywd.Checked) ukChn = GetUniqueMembers(MemberType.Channel, keywd, false);
-				if (chkRegKeywd.Checked) unChn = GetUniqueMembers(MemberType.Channel, keywd, true);
-				if (chkRegKeywd.Checked) ukRGB = GetUniqueMembers(MemberType.RGBchannel, keywd, false);
-				if (chkRegKeywd.Checked) unRGB = GetUniqueMembers(MemberType.RGBchannel, keywd, true);
-				if (chkRegKeywd.Checked) ukGrp = GetUniqueMembers(MemberType.ChannelGroup, keywd, false);
-				if (chkRegKeywd.Checked) unGrp = GetUniqueMembers(MemberType.ChannelGroup, keywd, true);
+				if (chkRegKeywd.Checked) ukChn = GetUniqueMembers(LORMemberType4.Channel, keywd, false);
+				if (chkRegKeywd.Checked) unChn = GetUniqueMembers(LORMemberType4.Channel, keywd, true);
+				if (chkRegKeywd.Checked) ukRGB = GetUniqueMembers(LORMemberType4.RGBChannel, keywd, false);
+				if (chkRegKeywd.Checked) unRGB = GetUniqueMembers(LORMemberType4.RGBChannel, keywd, true);
+				if (chkRegKeywd.Checked) ukGrp = GetUniqueMembers(LORMemberType4.ChannelGroup, keywd, false);
+				if (chkRegKeywd.Checked) unGrp = GetUniqueMembers(LORMemberType4.ChannelGroup, keywd, true);
 			}
 			else
 			{
-				if (chkRegKeywd.Checked) ukChn = GetUniqueMembers(MemberType.Channel);
-				if (chkRegKeywd.Checked) ukRGB = GetUniqueMembers(MemberType.RGBchannel);
-				if (chkRegKeywd.Checked) ukGrp = GetUniqueMembers(MemberType.ChannelGroup);
+				if (chkRegKeywd.Checked) ukChn = GetUniqueMembers(LORMemberType4.Channel);
+				if (chkRegKeywd.Checked) ukRGB = GetUniqueMembers(LORMemberType4.RGBChannel);
+				if (chkRegKeywd.Checked) ukGrp = GetUniqueMembers(LORMemberType4.ChannelGroup);
 
 			}
 			
@@ -224,7 +225,7 @@ namespace ListORama
 
 		}
 
-		private void MakeReport(string fileName, Membership members)
+		private void MakeReport(string fileName, LORMembership4 members)
 		{
 			if (members.Items.Count > 0)
 			{
@@ -236,21 +237,21 @@ namespace ListORama
 				{
 					if (optSortName.Checked)
 					{
-						members.sortMode = Membership.SORTbyName;
+						LORMembership4.sortMode = LORMembership4.SORTbyName;
 					}
 					if (optSortSavedIndex.Checked)
 					{
-						members.sortMode = Membership.SORTbyName;
+						LORMembership4.sortMode = LORMembership4.SORTbyName;
 					}
 					if (optSortOutput.Checked)
 					{
-						if (members.Items[0].MemberType == MemberType.Channel)
+						if (members.Items[0].MemberType == LORMemberType4.Channel)
 						{
-							members.sortMode = Membership.SORTbyOutput;
+							LORMembership4.sortMode = LORMembership4.SORTbyOutput;
 						}
 						else
 						{
-							members.sortMode = Membership.SORTbyName;
+							LORMembership4.sortMode = LORMembership4.SORTbyName;
 						}
 					}
 					members.Items.Sort();
@@ -258,7 +259,7 @@ namespace ListORama
 				StreamWriter writer = new StreamWriter(fileName);
 				if (chkHeaders.Checked)
 				{
-					string header = "Type,SavedIndex,Name,Centiseconds,Device,Unit,Network,Circuit,Universe,Channel,LOR Color,Web Color,Color Name";
+					string header = "Type,SavedIndex,Name,Centiseconds,Device,Unit,Network,Circuit,Universe,LORChannel4,LOR Color,Web Color,Color Name";
 					writer.WriteLine(header);
 				}
 				for (int i=0; i< members.Count; i++)
@@ -271,7 +272,7 @@ namespace ListORama
 
 		}
 
-		private void ReportMember(IMember member, StreamWriter writer)
+		private void ReportMember(iLORMember4 member, StreamWriter writer)
 		{
 			StringBuilder l = new StringBuilder();
 
@@ -280,53 +281,53 @@ namespace ListORama
 			l.Append(member.Name + COMMA);
 			l.Append(member.Centiseconds.ToString() + COMMA);
 
-			if (member.MemberType == MemberType.Channel)
+			if (member.MemberType == LORMemberType4.Channel)
 			{
-				Channel ch = (Channel)member;
+				LORChannel4 ch = (LORChannel4)member;
 				l.Append(ch.output.deviceType + COMMA);
-				if (ch.output.deviceType == DeviceType.LOR)
+				if (ch.output.deviceType == LORDeviceType4.LOR)
 				{
 					l.Append(ch.output.unit.ToString() + COMMA);
 					l.Append(ch.output.networkName + COMMA);
 					l.Append(ch.output.channel.ToString() + COMMA);
 					l.Append(COMMA + COMMA);
 				}
-				if (ch.output.deviceType == DeviceType.DMX)
+				if (ch.output.deviceType == LORDeviceType4.DMX)
 				{
 					l.Append(COMMA + COMMA + COMMA);
-					l.Append(ch.output.universe.ToString() + COMMA);
-					l.Append(ch.output.channel.ToString() + COMMA);
+					l.Append(ch.output.UniverseNumber.ToString() + COMMA);
+					l.Append(ch.output.DMXAddress.ToString() + COMMA);
 				}
-				if (ch.output.deviceType == DeviceType.None)
+				if (ch.output.deviceType == LORDeviceType4.None)
 				{
 					l.Append(COMMA + COMMA + COMMA);
 					l.Append(COMMA + COMMA);
 				}
 				l.Append(ch.color.ToString() + COMMA);
-				l.Append('#' + utils.Color_LORtoHTML(ch.color) + COMMA);
+				l.Append('#' + lutils.Color_LORtoHTML(ch.color) + COMMA);
 				l.Append(NearestColor.FindNearestColorName(ch.color) + COMMA);
 			}
-			if (member.MemberType == MemberType.RGBchannel)
+			if (member.MemberType == LORMemberType4.RGBChannel)
 			{
-				RGBchannel rgb = (RGBchannel)member;
-				Channel ch = rgb.redChannel;
+				LORRGBChannel4 rgb = (LORRGBChannel4)member;
+				LORChannel4 ch = rgb.redChannel;
 				l.Append(ch.output.deviceType + COMMA);
-				if (ch.output.deviceType == DeviceType.LOR)
+				if (ch.output.deviceType == LORDeviceType4.LOR)
 				{
 					l.Append(ch.output.unit.ToString() + COMMA);
 					l.Append(ch.output.network.ToString() + COMMA);
 					l.Append(ch.output.circuit.ToString() + COMMA);
 				}
-				if (ch.output.deviceType == DeviceType.DMX)
+				if (ch.output.deviceType == LORDeviceType4.DMX)
 				{
-					l.Append(ch.output.universe.ToString() + COMMA);
+					l.Append(ch.output.UniverseNumber.ToString() + COMMA);
 					l.Append(COMMA);
-					l.Append(ch.output.channel.ToString() + COMMA);
+					l.Append(ch.output.DMXAddress.ToString() + COMMA);
 				}
 			}
-			if (member.MemberType == MemberType.ChannelGroup)
+			if (member.MemberType == LORMemberType4.ChannelGroup)
 			{
-				ChannelGroup grp = (ChannelGroup)member;
+				LORChannelGroup4 grp = (LORChannelGroup4)member;
 				// Child Count
 				l.Append(grp.Members.Items.Count.ToString() + COMMA);
 				// Count children, grandchildren, grand-grandchildren... (recursive)
@@ -341,14 +342,14 @@ namespace ListORama
 			}
 
 
-			private Membership GetUniqueMembers(MemberType memberType, string keyword = "",
+			private LORMembership4 GetUniqueMembers(LORMemberType4 memberType, string keyword = "",
 			
 			
 			bool exclude = false)
 			
 		{
-			IMember[] members = null;
-			Membership uniqueMembers = new Membership(theSequence);
+			iLORMember4[] members = null;
+			LORMembership4 uniqueMembers = new LORMembership4(theSequence);
 			int uniqueCount = 0;
 			int listSize = theSequence.Members.HighestSavedIndex + theSequence.Tracks.Count + theSequence.TimingGrids.Count + 1;
 			Array.Resize(ref members, listSize);
@@ -367,12 +368,12 @@ namespace ListORama
 		}
 
 
-		private int GrabNodes(TreeNodeCollection nodes, IMember[] members)
+		private int GrabNodes(TreeNodeCollection nodes, iLORMember4[] members)
 		{
 			int uniqueCount = 0;
 			foreach (TreeNode node in nodes)
 			{
-				IMember member = (IMember)node.Tag;
+				iLORMember4 member = (iLORMember4)node.Tag;
 				if (member != null)
 				{
 					if (members[member.SavedIndex] == null)
@@ -418,7 +419,7 @@ namespace ListORama
 			{
 				*/
 			ImBusy("Analyzing " + Path.GetFileNameWithoutExtension(lastSeqFile));
-			Membership membrs;
+			LORMembership4 membrs;
 			if (cboTracks.SelectedIndex == 0)
 			{
 				membrs = theSequence.Members;
@@ -634,7 +635,7 @@ namespace ListORama
 		}
 
 
-		private void CollectSeqRegularChannels(Membership members)
+		private void CollectSeqRegularChannels(LORMembership4 members)
 		{
 			isKeywd = false;
 			reportMe = true;
@@ -644,24 +645,24 @@ namespace ListORama
 
 			int c = members.Count;
 			//! Enumeration NOt Working!
-			//foreach (IMember member in members) //! Enumeration Not Working!
+			//foreach (iLORMember4 member in members) //! Enumeration Not Working!
 			for (int n=0; n<c; n++)
 			{
-				IMember member = members.Items[n];
+				iLORMember4 member = members.Items[n];
 				reportMe = true;
-				if (member.Name.IndexOf(txtKeyword.Text) > utils.UNDEFINED) isKeywd = true;
+				if (member.Name.IndexOf(txtKeyword.Text) > lutils.UNDEFINED) isKeywd = true;
 
-				if (member.MemberType == MemberType.Track)
+				if (member.MemberType == LORMemberType4.Track)
 				{
-					Track tr = (Track)member;
+					LORTrack4 tr = (LORTrack4)member;
 					CollectSeqRegularChannels(tr.Members); // Recurse!
 				}
-				if (member.MemberType == MemberType.ChannelGroup)
+				if (member.MemberType == LORMemberType4.ChannelGroup)
 				{
 					if (!gotit[member.SavedIndex])
 					{
 						gotit[member.SavedIndex] = true;
-						ChannelGroup cg = (ChannelGroup)member;
+						LORChannelGroup4 cg = (LORChannelGroup4)member;
 						CollectSeqRegularChannels(cg.Members); // Recurse!
 						if (chkGrpKeywd.Checked || chkGrpNonKeywd.Checked)
 						{
@@ -669,12 +670,12 @@ namespace ListORama
 						}
 					}
 				}
-				if (member.MemberType == MemberType.RGBchannel)
+				if (member.MemberType == LORMemberType4.RGBChannel)
 				{
 					if (!gotit[member.SavedIndex])
 					{
 						gotit[member.SavedIndex] = true;
-						RGBchannel rgb = (RGBchannel)member;
+						LORRGBChannel4 rgb = (LORRGBChannel4)member;
 						ConsiderChannel(rgb.redChannel);
 						ConsiderChannel(rgb.grnChannel);
 						ConsiderChannel(rgb.bluChannel);
@@ -684,12 +685,12 @@ namespace ListORama
 						}
 					}
 				}
-				if (member.MemberType == MemberType.Channel)
+				if (member.MemberType == LORMemberType4.Channel)
 				{
 					if (!gotit[member.SavedIndex])
 					{
 						gotit[member.SavedIndex] = true;
-						Channel ch = (Channel)member;
+						LORChannel4 ch = (LORChannel4)member;
 						if (chkRegKeywd.Checked || chkRegNonKeywd.Checked)
 						{
 							ConsiderChannel(ch);
@@ -704,7 +705,7 @@ namespace ListORama
 			//}
 		}
 
-		private bool ConsiderChannel(Channel chan)
+		private bool ConsiderChannel(LORChannel4 chan)
 		{
 			bool reportMe = false;
 
@@ -723,25 +724,25 @@ namespace ListORama
 					reportMe = true;
 				}
 			}
-			if ((chan.output.deviceType == DeviceType.LOR) && !chkLOR.Checked)
+			if ((chan.output.deviceType == LORDeviceType4.LOR) && !chkLOR.Checked)
 			{
 				reportMe = false;
 			}
-			if ((chan.output.deviceType == DeviceType.DMX) && !chkDMX.Checked)
+			if ((chan.output.deviceType == LORDeviceType4.DMX) && !chkDMX.Checked)
 			{
 				reportMe = false;
 			}
-			if ((chan.output.deviceType == DeviceType.Digital) && !chkDigital.Checked)
+			if ((chan.output.deviceType == LORDeviceType4.Digital) && !chkDigital.Checked)
 			{
 				reportMe = false;
 			}
-			if ((chan.output.deviceType == DeviceType.None) && !chkNoController.Checked)
+			if ((chan.output.deviceType == LORDeviceType4.None) && !chkNoController.Checked)
 			{
 				reportMe = false;
 			}
 			if (reportMe)
 			{
-				SeqChannelItem thisCh = new SeqChannelItem();
+				LORChannel4 thisCh = new LORChannel4(chan.Name);
 				thisCh.theChannel = chan;
 				//thisCh.sortString = chan.SavedIndex.ToString(ZEROPAD);
 				thisCh.isKeywd = isKeywd;
@@ -760,7 +761,7 @@ namespace ListORama
 			return reportMe;
 		}
 
-		private bool ConsiderRGB(RGBchannel RGBc)
+		private bool ConsiderRGB(LORRGBChannel4 RGBc)
 		{
 			bool reportMe = false;
 			if (!chkKeyword.Checked)
@@ -778,26 +779,26 @@ namespace ListORama
 					reportMe = true;
 				}
 			}
-			Channel chan = RGBc.redChannel;
-			if ((chan.output.deviceType == DeviceType.LOR) && !chkLOR.Checked)
+			LORChannel4 chan = RGBc.redChannel;
+			if ((chan.output.deviceType == LORDeviceType4.LOR) && !chkLOR.Checked)
 			{
 				reportMe = false;
 			}
-			if ((chan.output.deviceType == DeviceType.DMX) && !chkDMX.Checked)
+			if ((chan.output.deviceType == LORDeviceType4.DMX) && !chkDMX.Checked)
 			{
 				reportMe = false;
 			}
-			if ((chan.output.deviceType == DeviceType.Digital) && !chkDigital.Checked)
+			if ((chan.output.deviceType == LORDeviceType4.Digital) && !chkDigital.Checked)
 			{
 				reportMe = false;
 			}
-			if ((chan.output.deviceType == DeviceType.None) && !chkNoController.Checked)
+			if ((chan.output.deviceType == LORDeviceType4.None) && !chkNoController.Checked)
 			{
 				reportMe = false;
 			}
 			if (reportMe)
 			{
-				SeqRGBItem thisRGB = new SeqRGBItem();
+				LORRGBChannel4 thisRGB = new LORRGBChannel4();
 				thisRGB.theRGBchannel = RGBc;
 				//thisRGB.sortString = chan.SavedIndex.ToString(ZEROPAD);
 				thisRGB.isKeywd = isKeywd;
@@ -816,7 +817,7 @@ namespace ListORama
 			return reportMe;
 		}
 
-		private bool ConsiderGroup(ChannelGroup group)
+		private bool ConsiderGroup(LORChannelGroup4 group)
 		{
 			bool reportMe = false;
 
@@ -837,7 +838,7 @@ namespace ListORama
 			}
 			if (reportMe)
 			{
-				SeqGroupItem thisGroup = new SeqGroupItem();
+				LORChannelGroup4 thisGroup = new LORChannelGroup4();
 				thisGroup.theGroup = group;
 				//thisGroup.sortString = group.SavedIndex.ToString(ZEROPAD);
 				thisGroup.isKeywd = isKeywd;
@@ -856,7 +857,7 @@ namespace ListORama
 			return reportMe;
 		}
 
-		private void CollectVizRegularChannels(Visualization4 visual)
+		private void CollectVizRegularChannels(LORVisualization4 visual)
 		{
 			bool hasKey = false;
 			reportMe = true;
@@ -866,10 +867,10 @@ namespace ListORama
 
 			int c = visual.VizChannels.Count;
 			//! Enumeration NOt Working!
-			//foreach (IMember member in members) //! Enumeration Not Working!
+			//foreach (iLORMember4 member in members) //! Enumeration Not Working!
 			for (int n = 0; n < c; n++)
 			{
-				VizChannel vc = visual.VizChannels[n];
+				LORVizChannel4 vc = visual.VizChannels[n];
 				reportMe = true;
 				string nm = vc.Name;
 				bool bIncl = FilterNode(vc);
@@ -877,10 +878,10 @@ namespace ListORama
 				hasKey = (pp >= 0);
 
 
-				//if (vc.rgbChild == RGBchild.None)
+				//if (vc.rgbChild == LORRGBChild4.None)
 					if (bIncl)
 					{
-						VizChannelItem thisVch = new VizChannelItem();
+						LORVizChannel4 thisVch = new LORVizChannel4();
 						thisVch.theChannel = vc;
 						thisVch.sortString = vc.SavedIndex.ToString(ZEROPAD);
 						thisVch.isKeywd = isKeywd;
@@ -907,7 +908,7 @@ namespace ListORama
 			//}
 		}
 
-		private bool ConsiderVizChannel(VizChannel vchan)
+		private bool ConsiderVizChannel(LORVizChannel4 vchan)
 		{
 			bool reportMe = false;
 
@@ -919,19 +920,19 @@ namespace ListORama
 			{
 				reportMe = true;
 			}
-			if ((vchan.output.deviceType == DeviceType.LOR) && !chkLOR.Checked)
+			if ((vchan.output.deviceType == LORDeviceType4.LOR) && !chkLOR.Checked)
 			{
 				reportMe = false;
 			}
-			if ((vchan.output.deviceType == DeviceType.DMX) && !chkDMX.Checked)
+			if ((vchan.output.deviceType == LORDeviceType4.DMX) && !chkDMX.Checked)
 			{
 				reportMe = false;
 			}
-			if ((vchan.output.deviceType == DeviceType.Digital) && !chkDigital.Checked)
+			if ((vchan.output.deviceType == LORDeviceType4.Digital) && !chkDigital.Checked)
 			{
 				reportMe = false;
 			}
-			if ((vchan.output.deviceType == DeviceType.None) && !chkNoController.Checked)
+			if ((vchan.output.deviceType == LORDeviceType4.None) && !chkNoController.Checked)
 			{
 				reportMe = false;
 			}
@@ -983,29 +984,29 @@ namespace ListORama
 				idx = 0;
 				while (idx < chItems.Count)
 				{
-					SeqChannelItem chItem = chItems[idx];
-					Channel chan = chItem.theChannel;
+					LORChannel4 chItem = chItems[idx];
+					LORChannel4 chan = chItem.theChannel;
 					if (sortOrder == SORT_BYNAME) chItem.sortString = chan.Name;
 					if (sortOrder == SORT_BYDISPLAYED) chItem.sortString = seqChanCount.ToString(ZEROPAD);
 					if (sortOrder == SORT_BYOUTPUT)
 					{
 						chItem.sortString = chan.output.deviceType.ToString() + DASH;
-						if (chan.output.deviceType == DeviceType.LOR)
+						if (chan.output.deviceType == LORDeviceType4.LOR)
 						{
 							chItem.sortString += chan.output.unit.ToString(ZEROPAD) + DASH;
 							chItem.sortString += chan.output.channel.ToString(ZEROPAD);
 						}
-						if (chan.output.deviceType == DeviceType.DMX)
+						if (chan.output.deviceType == LORDeviceType4.DMX)
 						{
 							chItem.sortString += chan.output.universe.ToString(ZEROPAD) + DASH;
 							chItem.sortString += chan.output.channel.ToString(ZEROPAD);
 						}
-						if (chan.output.deviceType == DeviceType.Digital)
+						if (chan.output.deviceType == LORDeviceType4.Digital)
 						{
 							chItem.sortString += chan.output.unit.ToString(ZEROPAD) + DASH;
 							chItem.sortString += chan.output.channel.ToString(ZEROPAD);
 						}
-						if (chan.output.deviceType == DeviceType.None)
+						if (chan.output.deviceType == LORDeviceType4.None)
 						{
 							chItem.sortString += seqChanCount.ToString(ZEROPAD) + DASH;
 							chItem.sortString += ZEROPAD;
@@ -1066,29 +1067,29 @@ namespace ListORama
 				idx = 0;
 				while (idx < rgbItems.Count)
 				{
-					SeqRGBItem rgbItem = rgbItems[idx];
-					Channel chan = rgbItem.theRGBchannel.redChannel;
+					LORRGBChannel4 rgbItem = rgbItems[idx];
+					LORChannel4 chan = rgbItem.theRGBchannel.redChannel;
 					if (sortOrder == SORT_BYNAME) rgbItem.sortString = rgbItem.theRGBchannel.Name;
 					if (sortOrder == SORT_BYDISPLAYED) rgbItem.sortString = seqChanCount.ToString(ZEROPAD);
 					if (sortOrder == SORT_BYOUTPUT)
 					{
 						rgbItem.sortString = chan.output.deviceType.ToString() + DASH;
-						if (chan.output.deviceType == DeviceType.LOR)
+						if (chan.output.deviceType == LORDeviceType4.LOR)
 						{
 							rgbItem.sortString += chan.output.unit.ToString(ZEROPAD) + DASH;
 							rgbItem.sortString += chan.output.channel.ToString(ZEROPAD);
 						}
-						if (chan.output.deviceType == DeviceType.DMX)
+						if (chan.output.deviceType == LORDeviceType4.DMX)
 						{
 							rgbItem.sortString += chan.output.universe.ToString(ZEROPAD) + DASH;
 							rgbItem.sortString += chan.output.channel.ToString(ZEROPAD);
 						}
-						if (chan.output.deviceType == DeviceType.Digital)
+						if (chan.output.deviceType == LORDeviceType4.Digital)
 						{
 							rgbItem.sortString += chan.output.unit.ToString(ZEROPAD) + DASH;
 							rgbItem.sortString += chan.output.channel.ToString(ZEROPAD);
 						}
-						if (chan.output.deviceType == DeviceType.None)
+						if (chan.output.deviceType == LORDeviceType4.None)
 						{
 							rgbItem.sortString += seqChanCount.ToString(ZEROPAD) + DASH;
 							rgbItem.sortString += ZEROPAD;
@@ -1149,7 +1150,7 @@ namespace ListORama
 				idx = 0;
 				while (idx < groupItems.Count)
 				{
-					SeqGroupItem groupItem = groupItems[idx];
+					LORChannelGroup4 groupItem = groupItems[idx];
 					if (sortOrder == SORT_BYNAME) groupItem.sortString = groupItem.theGroup.Name;
 					if (sortOrder == SORT_BYDISPLAYED) groupItem.sortString = seqChanCount.ToString(ZEROPAD);
 					if (sortOrder == SORT_BYOUTPUT)	groupItem.sortString = ",";
@@ -1210,29 +1211,29 @@ namespace ListORama
 				idx = 0;
 				while (idx < vizItems.Count)
 				{
-					VizChannelItem vizItem = vizItems[idx];
-					VizChannel vchan = vizItem.theChannel;
+					LORVizChannel4 vizItem = vizItems[idx];
+					LORVizChannel4 vchan = vizItem.theChannel;
 					if (sortOrder == SORT_BYNAME) vizItem.sortString = vchan.Name;
 					if (sortOrder == SORT_BYDISPLAYED) vizItem.sortString = seqChanCount.ToString(ZEROPAD);
 					if (sortOrder == SORT_BYOUTPUT)
 					{
 						vizItem.sortString = vchan.output.deviceType.ToString() + DASH;
-						if (vchan.output.deviceType == DeviceType.LOR)
+						if (vchan.output.deviceType == LORDeviceType4.LOR)
 						{
 							vizItem.sortString += vchan.output.unit.ToString(ZEROPAD) + DASH;
 							vizItem.sortString += vchan.output.channel.ToString(ZEROPAD);
 						}
-						if (vchan.output.deviceType == DeviceType.DMX)
+						if (vchan.output.deviceType == LORDeviceType4.DMX)
 						{
 							vizItem.sortString += vchan.output.universe.ToString(ZEROPAD) + DASH;
 							vizItem.sortString += vchan.output.channel.ToString(ZEROPAD);
 						}
-						if (vchan.output.deviceType == DeviceType.Digital)
+						if (vchan.output.deviceType == LORDeviceType4.Digital)
 						{
 							vizItem.sortString += vchan.output.unit.ToString(ZEROPAD) + DASH;
 							vizItem.sortString += vchan.output.channel.ToString(ZEROPAD);
 						}
-						if (vchan.output.deviceType == DeviceType.None)
+						if (vchan.output.deviceType == LORDeviceType4.None)
 						{
 							vizItem.sortString += seqChanCount.ToString(ZEROPAD) + DASH;
 							vizItem.sortString += ZEROPAD;
@@ -1251,11 +1252,11 @@ namespace ListORama
 		{
 			StreamWriter writer = new StreamWriter(fileName);
 			string lineOut = "";
-			DeviceType devType;
+			LORDeviceType4 devType;
 
 			if (chkHeaders.Checked)
 			{
-				lineOut = SeqChannelItem.Header(txtKeyword.Text);
+				lineOut = LORChannel4.Header(txtKeyword.Text);
 				writer.WriteLine(lineOut);
 			}
 
@@ -1271,11 +1272,11 @@ namespace ListORama
 		{
 			StreamWriter writer = new StreamWriter(fileName);
 			string lineOut = "";
-			DeviceType devType;
+			LORDeviceType4 devType;
 
 			if (chkHeaders.Checked)
 			{
-				lineOut = VizChannelItem.Header(txtKeyword.Text);
+				lineOut = LORVizChannel4.Header(txtKeyword.Text);
 				writer.WriteLine(lineOut);
 			}
 
@@ -1292,11 +1293,11 @@ namespace ListORama
 		{
 			StreamWriter writer = new StreamWriter(fileName);
 			string lineOut = "";
-			DeviceType devType;
+			LORDeviceType4 devType;
 
 			if (chkHeaders.Checked)
 			{
-				lineOut = SeqRGBItem.Header(txtKeyword.Text);
+				lineOut = LORRGBChannel4.Header(txtKeyword.Text);
 				writer.WriteLine(lineOut);
 			}
 
@@ -1312,7 +1313,7 @@ namespace ListORama
 		{
 			StreamWriter writer = new StreamWriter(fileName);
 			string lineOut = "";
-			DeviceType devType;
+			LORDeviceType4 devType;
 
 			if (chkHeaders.Checked)
 			{
@@ -1434,7 +1435,7 @@ namespace ListORama
 
 		private void BrowseSourceFile()
 		{ 
-			string initDir = utils.DefaultSequencesPath;
+			string initDir = lutils.DefaultSequencesPath;
 			string initFile = "";
 			if (lastSeqFile.Length > 4)
 			{
@@ -1489,13 +1490,13 @@ namespace ListORama
 			if (err < 100)
 			{
 				lastSeqFile = sourceChannelFile;
-				txtSourceFile.Text = utils.ShortenLongPath(lastSeqFile, 80);
+				txtSourceFile.Text = Fyle.ShortenLongPath(lastSeqFile, 80);
 				this.Text = "List-O-Rama - " + Path.GetFileName(lastSeqFile);
 				FileInfo fi = new FileInfo(sourceChannelFile);
 				//Properties.Settings.Default.BasePath = fi.DirectoryName;
 				Properties.Settings.Default.LastSeqFile = lastSeqFile;
 				Properties.Settings.Default.Save();
-				utils.TreeFillChannels(treeSource, theSequence, ref sourceNodesSI, false, false);
+				lutils.TreeFillChannels(treeSource, theSequence, ref sourceNodesSI, false, false);
 
 				cboTracks.Items.Clear();
 				cboTracks.Items.Add("All Tracks");
@@ -1515,7 +1516,7 @@ namespace ListORama
 
 		private void BrowseVisualFile()
 		{
-			string initDir = utils.DefaultVisualizationsPath;
+			string initDir = lutils.DefaultVisualizationsPath;
 			string initFile = "";
 			if (lastVizFile.Length > 4)
 			{
@@ -1563,7 +1564,7 @@ namespace ListORama
 			if (err < 100)
 			{
 				lastVizFile = vizFile;
-				txtSourceFile.Text = utils.ShortenLongPath(lastVizFile, 80);
+				txtSourceFile.Text = Fyle.ShortenLongPath(lastVizFile, 80);
 				this.Text = "List-O-Rama - " + Path.GetFileName(lastVizFile);
 				//FileInfo fi = new FileInfo(vizFile);
 				//Properties.Settings.Default.BasePath = fi.DirectoryName;
@@ -1601,7 +1602,7 @@ namespace ListORama
 
 		private void InitForm()
 		{
-			SeqFolder = utils.DefaultSequencesPath;
+			SeqFolder = lutils.DefaultSequencesPath;
 
 
 			lastSeqFile = Properties.Settings.Default.LastSeqFile;
@@ -1730,7 +1731,7 @@ namespace ListORama
 			TreeNode sn = e.Node;
 			if (sn != null)
 			{
-				IMember sid = (IMember)sn.Tag;
+				iLORMember4 sid = (iLORMember4)sn.Tag;
 				//int sourceSI = sid.SavedIndex;
 				// Did the selection change?
 					
@@ -1742,7 +1743,7 @@ namespace ListORama
 			TreeNode mn = e.Node;
 			if (mn != null)
 			{
-				IMember mid = (IMember)mn.Tag;
+				iLORMember4 mid = (iLORMember4)mn.Tag;
 				// Did the selection change?
 				
 			}
@@ -1811,10 +1812,10 @@ namespace ListORama
 		private void SelectNodes(TreeNodeCollection nOdes, int SavedIndex, bool select)
 		{
 			//string nTag = "";
-			IMember nID = null;
+			iLORMember4 nID = null;
 			foreach (TreeNode nOde in nOdes)
 			{
-				nID = (IMember)nOde.Tag;
+				nID = (iLORMember4)nOde.Tag;
 				if (nID.SavedIndex == SavedIndex)
 				{
 					SelectNode(nOde, select);
@@ -1851,10 +1852,10 @@ namespace ListORama
 		private void HighlightNodes(TreeNodeCollection nOdes, int SavedIndex, bool highlight)
 		{
 			//string nTag = "";
-			IMember nID = null;
+			iLORMember4 nID = null;
 			foreach (TreeNode nOde in nOdes)
 			{
-				nID = (IMember)nOde.Tag;
+				nID = (iLORMember4)nOde.Tag;
 				if (nID.SavedIndex == SavedIndex)
 				{
 					HighlightNode(nOde, highlight);
@@ -1909,7 +1910,7 @@ namespace ListORama
 
 		private int addElement(ref int[] numbers)
 		{
-			int newIdx = utils.UNDEFINED;
+			int newIdx = lutils.UNDEFINED;
 
 			if (numbers == null)
 			{
@@ -1954,7 +1955,7 @@ namespace ListORama
 
 		private int FindElement(ref int[] numbers, int SID)
 		{
-			int found = utils.UNDEFINED;
+			int found = lutils.UNDEFINED;
 			for (int i = 0; i < numbers.Length; i++)
 			{
 				if (numbers[i] == SID)
@@ -2176,7 +2177,7 @@ namespace ListORama
 
 		private void Event_DragEnter(object sender, DragEventArgs e)
 		{
-			e.Effect = DragDropEffects.Copy;
+			e.LOREffect4 = DragDropEffects.Copy;
 			//this.Cursor = Cursors.Cross;
 		}
 
@@ -2192,8 +2193,8 @@ namespace ListORama
 				byte isFile = 0;
 				if (arg.Substring(1, 2).CompareTo(":\\") == 0) isFile = 1;  // Local File
 				if (arg.Substring(0, 2).CompareTo("\\\\") == 0) isFile = 1; // UNC file
-				if (arg.Substring(4).IndexOf(".") > utils.UNDEFINED) isFile++;  // contains a period
-				if (utils.InvalidCharacterCount(arg) == 0) isFile++;
+				if (arg.Substring(4).IndexOf(".") > lutils.UNDEFINED) isFile++;  // contains a period
+				if (Fyle.InvalidCharacterCount(arg) == 0) isFile++;
 				if (isFile == 3)
 				{
 					if (File.Exists(arg))
@@ -2260,7 +2261,7 @@ namespace ListORama
 				//byte isFile = 0;
 				//if (arg.Substring(1, 2).CompareTo(":\\") == 0) isFile = 1;  // Local File
 				//if (arg.Substring(0, 2).CompareTo("\\\\") == 0) isFile = 1; // UNC file
-				//if (arg.Substring(4).IndexOf(".") > utils.UNDEFINED) isFile++;  // contains a period
+				//if (arg.Substring(4).IndexOf(".") > lutils.UNDEFINED) isFile++;  // contains a period
 				//if (InvalidCharacterCount(arg) == 0) isFile++;
 				//if (isFile == 2)
 				//{
@@ -2388,12 +2389,12 @@ namespace ListORama
 		{
 			if (txtKeyword.Text.Length > 0)
 			{ 
-				chkRegKeywd.Text =			REGCHAN + CHWITH +		txtKeyword.Text + utils.ENDQT;
-				chkRegNonKeywd.Text =		REGCHAN + CHWITHOUT + txtKeyword.Text + utils.ENDQT;
-				chkRGBKeywd.Text =			RGBCHAN + CHWITH +		txtKeyword.Text + utils.ENDQT;
-				chkRGBNonKeywd.Text =		RGBCHAN + CHWITHOUT + txtKeyword.Text + utils.ENDQT;
-				chkGrpKeywd.Text =		CHANGRP + CHWITH +		txtKeyword.Text + utils.ENDQT;
-				chkGrpNonKeywd.Text = CHANGRP + CHWITHOUT + txtKeyword.Text + utils.ENDQT;
+				chkRegKeywd.Text =			REGCHAN + CHWITH +		txtKeyword.Text + lutils.ENDQT;
+				chkRegNonKeywd.Text =		REGCHAN + CHWITHOUT + txtKeyword.Text + lutils.ENDQT;
+				chkRGBKeywd.Text =			RGBCHAN + CHWITH +		txtKeyword.Text + lutils.ENDQT;
+				chkRGBNonKeywd.Text =		RGBCHAN + CHWITHOUT + txtKeyword.Text + lutils.ENDQT;
+				chkGrpKeywd.Text =		CHANGRP + CHWITH +		txtKeyword.Text + lutils.ENDQT;
+				chkGrpNonKeywd.Text = CHANGRP + CHWITHOUT + txtKeyword.Text + lutils.ENDQT;
 				chkRegNonKeywd.Visible = true;
 				chkRGBNonKeywd.Visible = true;
 				chkGrpNonKeywd.Visible = true;
@@ -2470,7 +2471,7 @@ namespace ListORama
 								if (errs == 0)
 								{
 									lastSeqFile = lf;
-									txtSourceFile.Text = utils.ShortenLongPath(lf, 100);
+									txtSourceFile.Text = Fyle.ShortenLongPath(lf, 100);
 									enbl = true;
 								}
 							}
@@ -2504,7 +2505,7 @@ namespace ListORama
 								if (errs == 0)
 								{
 									lastSeqFile = lf;
-									txtSourceFile.Text = utils.ShortenLongPath(lf, 100);
+									txtSourceFile.Text = Fyle.ShortenLongPath(lf, 100);
 									enbl = true;
 								}
 							}
@@ -2526,18 +2527,18 @@ namespace ListORama
 		}
 
 		#region Filtered Tree Fills
-		public void FilteredFillChannels(TreeView tree, Sequence4 seq, List<TreeNode>[] siNodes, bool selectedOnly, bool inclRGBchildren)
+		public void FilteredFillChannels(TreeView tree, LORSequence4 seq, List<TreeNode>[] siNodes, bool selectedOnly, bool inclRGBchildren)
 		{
 			int listSize = seq.Members.HighestSavedIndex + seq.Tracks.Count + seq.TimingGrids.Count + 1;
 			if (siNodes == null)
 			{
 				Array.Resize(ref siNodes, listSize);
 			}
-			int t = SeqEnums.MEMBER_Channel | SeqEnums.MEMBER_RGBchannel | SeqEnums.MEMBER_ChannelGroup | SeqEnums.MEMBER_Track;
+			int t = LORSeqEnums4.MEMBER_Channel | LORSeqEnums4.MEMBER_RGBchannel | LORSeqEnums4.MEMBER_ChannelGroup | LORSeqEnums4.MEMBER_Track;
 			FilteredFillChannels(tree, seq, siNodes, selectedOnly, inclRGBchildren, t);
 		}
 
-		public void FilteredFillChannels(TreeView tree, Sequence4 seq, List<TreeNode>[] siNodes, bool selectedOnly, bool inclRGBchildren, int memberTypes)
+		public void FilteredFillChannels(TreeView tree, LORSequence4 seq, List<TreeNode>[] siNodes, bool selectedOnly, bool inclRGBchildren, int memberTypes)
 		{
 			//TODO: 'Selected' not implemented yet
 
@@ -2556,7 +2557,7 @@ namespace ListORama
 
 
 			//const string ERRproc = " in TreeFillChannels(";
-			//const string ERRtrk = "), in Track #";
+			//const string ERRtrk = "), in LORTrack4 #";
 			//const string ERRitem = ", Items #";
 			//const string ERRline = ", Line #";
 
@@ -2579,7 +2580,7 @@ namespace ListORama
 			}
 		}
 
-		private TreeNode FilteredAddTrack(Sequence4 seq, TreeNodeCollection baseNodes, int trackNumber, List<TreeNode>[] siNodes, bool selectedOnly,
+		private TreeNode FilteredAddTrack(LORSequence4 seq, TreeNodeCollection baseNodes, int trackNumber, List<TreeNode>[] siNodes, bool selectedOnly,
 			bool inclRGBchildren, int memberTypes)
 		{
 			if (siNodes == null)
@@ -2589,9 +2590,9 @@ namespace ListORama
 
 			string nodeText = "";
 			bool inclChan = false;
-			if ((memberTypes & SeqEnums.MEMBER_Channel) > 0) inclChan = true;
+			if ((memberTypes & LORSeqEnums4.MEMBER_Channel) > 0) inclChan = true;
 			bool inclRGB = false;
-			if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0) inclRGB = true;
+			if ((memberTypes & LORSeqEnums4.MEMBER_RGBchannel) > 0) inclRGB = true;
 
 			// TEMPORARY, FOR DEBUGGING
 			// int tcount = 0;
@@ -2602,7 +2603,7 @@ namespace ListORama
 
 			//try
 			//{
-			Track theTrack = seq.Tracks[trackNumber];
+			LORTrack4 theTrack = seq.Tracks[trackNumber];
 			nodeText = theTrack.Name;
 			TreeNode trackNode = baseNodes.Add(nodeText);
 			List<TreeNode> qlist;
@@ -2614,14 +2615,14 @@ namespace ListORama
 			// But we will assign one for tracking and matching purposes
 			//theTrack.SavedIndex = seq.Members.HighestSavedIndex + t + 1;
 
-			//if ((memberTypes & SeqEnums.MEMBER_Track) > 0)
+			//if ((memberTypes & LORSeqEnums4.MEMBER_Track) > 0)
 			//{
 			baseNodes = trackNode.Nodes;
 			nodeIndex++;
 			trackNode.Tag = theTrack;
 
-			trackNode.ImageKey = utils.ICONtrack;
-			trackNode.SelectedImageKey = utils.ICONtrack;
+			trackNode.ImageKey = lutils.ICONtrack;
+			trackNode.SelectedImageKey = lutils.ICONtrack;
 			trackNode.Checked = theTrack.Selected;
 			//}
 
@@ -2629,13 +2630,13 @@ namespace ListORama
 			{
 				//try
 				//{
-				IMember member = theTrack.Members.Items[ti];
+				iLORMember4 member = theTrack.Members.Items[ti];
 				int si = member.SavedIndex;
 				if (member != null)
 				{
-					if (member.MemberType == MemberType.ChannelGroup)
+					if (member.MemberType == LORMemberType4.ChannelGroup)
 					{
-						ChannelGroup memGrp = (ChannelGroup)member;
+						LORChannelGroup4 memGrp = (LORChannelGroup4)member;
 						int inclCount = FilteredDescendantCount(memGrp.Members, selectedOnly, inclChan, inclRGB, inclRGBchildren);
 						if (inclCount > 0)
 						{
@@ -2658,9 +2659,9 @@ namespace ListORama
 							//siNodes[si].Add(groupNode);
 						}
 					}
-					if (member.MemberType == MemberType.CosmicDevice)
+					if (member.MemberType == LORMemberType4.Cosmic)
 					{
-						CosmicDevice memDev = (CosmicDevice)member;
+						LORCosmic memDev = (LORCosmic)member;
 						int inclCount = FilteredDescendantCount(memDev.Members, selectedOnly, inclChan, inclRGB, inclRGBchildren);
 						if (inclCount > 0)
 						{
@@ -2676,7 +2677,7 @@ namespace ListORama
 								//siNodes[si].Add(groupNode);
 						}
 					}
-					if (member.MemberType == MemberType.RGBchannel)
+					if (member.MemberType == LORMemberType4.RGBChannel)
 					{
 						//if (FilterNode(member))
 						//{
@@ -2689,7 +2690,7 @@ namespace ListORama
 							rcount++;
 						//}
 					}
-					if (member.MemberType == MemberType.Channel)
+					if (member.MemberType == LORMemberType4.Channel)
 					{
 						if (FilterNode(member))
 						{
@@ -2716,7 +2717,7 @@ namespace ListORama
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
 					}
 					catch (System.InvalidCastException ex)
 					{
@@ -2728,7 +2729,7 @@ namespace ListORama
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
 					}
 					catch (Exception ex)
 					{
@@ -2740,7 +2741,7 @@ namespace ListORama
 						#if DEBUG
 							System.Diagnostics.Debugger.Break();
 						#endif
-						utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+						Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
 					}
 					*/
 				#endregion
@@ -2759,7 +2760,7 @@ namespace ListORama
 					#if DEBUG
 						System.Diagnostics.Debugger.Break();
 					#endif
-					utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+					Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
 				}
 				catch (System.InvalidCastException ex)
 				{
@@ -2771,7 +2772,7 @@ namespace ListORama
 					#if DEBUG
 						System.Diagnostics.Debugger.Break();
 					#endif
-					utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+					Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
 				}
 				catch (Exception ex)
 				{
@@ -2783,7 +2784,7 @@ namespace ListORama
 					#if DEBUG
 						System.Diagnostics.Debugger.Break();
 					#endif
-					utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+					Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
 				}
 				*/
 			#endregion
@@ -2795,7 +2796,7 @@ namespace ListORama
 			return trackNode;
 		} // end fillOldChannels
 
-		private TreeNode FilteredAddGroup(Sequence4 seq, TreeNodeCollection baseNodes, int groupSI, List<TreeNode>[] siNodes, bool selectedOnly,
+		private TreeNode FilteredAddGroup(LORSequence4 seq, TreeNodeCollection baseNodes, int groupSI, List<TreeNode>[] siNodes, bool selectedOnly,
 			bool inclRGBchildren, int memberTypes)
 		{
 			TreeNode groupNode = null;
@@ -2810,18 +2811,18 @@ namespace ListORama
 			if (siNodes[groupSI] != null)
 			{
 				//ChanInfo nodeTag = new ChanInfo();
-				//nodeTag.MemberType = MemberType.ChannelGroup;
+				//nodeTag.MemberType = LORMemberType4.ChannelGroup;
 				//nodeTag.objIndex = groupIndex;
 				//nodeTag.SavedIndex = theGroup.SavedIndex;
 				//nodeTag.nodeIndex = nodeIndex;
 
-				//ChannelGroup theGroup = seq.ChannelGroups[groupIndex];
-				ChannelGroup theGroup = (ChannelGroup)seq.Members.bySavedIndex[groupSI];
+				//LORChannelGroup4 theGroup = seq.ChannelGroups[groupIndex];
+				LORChannelGroup4 theGroup = (LORChannelGroup4)seq.Members.bySavedIndex[groupSI];
 
-				//IMember groupID = theGroup;
+				//iLORMember4 groupID = theGroup;
 
 				// Include groups in the TreeView?
-				//if ((memberTypes & SeqEnums.MEMBER_ChannelGroup) > 0)
+				//if ((memberTypes & LORSeqEnums4.MEMBER_ChannelGroup) > 0)
 				if (FilterNode(theGroup))
 				{
 					string nodeText = theGroup.Name;
@@ -2830,8 +2831,8 @@ namespace ListORama
 
 					nodeIndex++;
 					groupNode.Tag = theGroup;
-					groupNode.ImageKey = utils.ICONchannelGroup;
-					groupNode.SelectedImageKey = utils.ICONchannelGroup;
+					groupNode.ImageKey = lutils.ICONchannelGroup;
+					groupNode.SelectedImageKey = lutils.ICONchannelGroup;
 					groupNode.Checked = theGroup.Selected;
 					grpNodes = groupNode.Nodes;
 					siNodes[groupSI].Add(groupNode);
@@ -2847,15 +2848,15 @@ namespace ListORama
 				{
 					//try
 					//{
-					IMember member = theGroup.Members.Items[gi];
+					iLORMember4 member = theGroup.Members.Items[gi];
 					int si = member.SavedIndex;
-					if (member.MemberType == MemberType.ChannelGroup)
+					if (member.MemberType == LORMemberType4.ChannelGroup)
 					{
-						ChannelGroup memGrp = (ChannelGroup)member;
+						LORChannelGroup4 memGrp = (LORChannelGroup4)member;
 						bool inclChan = false;
-						if ((memberTypes & SeqEnums.MEMBER_Channel) > 0) inclChan = true;
+						if ((memberTypes & LORSeqEnums4.MEMBER_Channel) > 0) inclChan = true;
 						bool inclRGB = false;
-						if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0) inclRGB = true;
+						if ((memberTypes & LORSeqEnums4.MEMBER_RGBchannel) > 0) inclRGB = true;
 						int inclCount = FilteredDescendantCount(memGrp.Members, selectedOnly, inclChan, inclRGB, inclRGBchildren);
 						if (inclCount > 0)
 						{
@@ -2868,13 +2869,13 @@ namespace ListORama
 							}
 						int cosCount = FilteredDescendantCount(memGrp.Members, selectedOnly, inclChan, inclRGB, inclRGBchildren);
 					}
-					if (member.MemberType == MemberType.CosmicDevice)
+					if (member.MemberType == LORMemberType4.Cosmic)
 					{
-						CosmicDevice memDev = (CosmicDevice)member;
+						LORCosmic memDev = (LORCosmic)member;
 						bool inclChan = false;
-						if ((memberTypes & SeqEnums.MEMBER_Channel) > 0) inclChan = true;
+						if ((memberTypes & LORSeqEnums4.MEMBER_Channel) > 0) inclChan = true;
 						bool inclRGB = false;
-						if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0) inclRGB = true;
+						if ((memberTypes & LORSeqEnums4.MEMBER_RGBchannel) > 0) inclRGB = true;
 						int inclCount = memDev.Members.DescendantCount(selectedOnly, inclChan, inclRGB, inclRGBchildren);
 						if (inclCount > 0)
 						{
@@ -2887,9 +2888,9 @@ namespace ListORama
 							}
 						int cosCount = FilteredDescendantCount(memDev.Members, selectedOnly, inclChan, inclRGB, inclRGBchildren);
 					}
-					if (member.MemberType == MemberType.Channel)
+					if (member.MemberType == LORMemberType4.Channel)
 					{
-						if ((memberTypes & SeqEnums.MEMBER_Channel) > 0)
+						if ((memberTypes & LORSeqEnums4.MEMBER_Channel) > 0)
 						{
 							if (FilterNode(member))
 							{
@@ -2898,9 +2899,9 @@ namespace ListORama
 							}
 						}
 					}
-					if (member.MemberType == MemberType.RGBchannel)
+					if (member.MemberType == LORMemberType4.RGBChannel)
 					{
-						if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0)
+						if ((memberTypes & LORSeqEnums4.MEMBER_RGBchannel) > 0)
 						{
 							//if (FilterNode(member))
 							//{
@@ -2922,7 +2923,7 @@ namespace ListORama
 				#if DEBUG
 					Debugger.Break();
 				#endif
-				utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+				Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
 			} // end catch
 			*/
 					#endregion
@@ -2964,7 +2965,7 @@ namespace ListORama
 			return groupNode;
 		} // end AddGroup
 
-		private TreeNode FilteredAddDevice(Sequence4 seq, TreeNodeCollection baseNodes, int deviceSI, List<TreeNode>[] siNodes, bool selectedOnly,
+		private TreeNode FilteredAddDevice(LORSequence4 seq, TreeNodeCollection baseNodes, int deviceSI, List<TreeNode>[] siNodes, bool selectedOnly,
 			bool includeRGBchildren, int memberTypes)
 		{
 			if (deviceSI >= siNodes.Length)
@@ -2976,26 +2977,26 @@ namespace ListORama
 			if (siNodes[deviceSI] != null)
 			{
 				//ChanInfo nodeTag = new ChanInfo();
-				//nodeTag.MemberType = MemberType.ChannelGroup;
+				//nodeTag.MemberType = LORMemberType4.ChannelGroup;
 				//nodeTag.objIndex = groupIndex;
 				//nodeTag.SavedIndex = theGroup.SavedIndex;
 				//nodeTag.nodeIndex = nodeIndex;
 
-				//ChannelGroup theGroup = seq.ChannelGroups[groupIndex];
-				CosmicDevice theDevice = (CosmicDevice)seq.Members.bySavedIndex[deviceSI];
+				//LORChannelGroup4 theGroup = seq.ChannelGroups[groupIndex];
+				LORCosmic theDevice = (LORCosmic)seq.Members.bySavedIndex[deviceSI];
 
-				//IMember groupID = theGroup;
+				//iLORMember4 groupID = theGroup;
 
 				// Include groups in the TreeView?
-				if ((memberTypes & SeqEnums.MEMBER_CosmicDevice) > 0)
+				if ((memberTypes & LORSeqEnums4.MEMBER_CosmicDevice) > 0)
 				{
 					string nodeText = theDevice.Name;
 					deviceNode = baseNodes.Add(nodeText);
 
 					nodeIndex++;
 					deviceNode.Tag = theDevice;
-					deviceNode.ImageKey = utils.ICONcosmicDevice;
-					deviceNode.SelectedImageKey = utils.ICONcosmicDevice;
+					deviceNode.ImageKey = lutils.ICONcosmicDevice;
+					deviceNode.SelectedImageKey = lutils.ICONcosmicDevice;
 					deviceNode.Checked = theDevice.Selected;
 					baseNodes = deviceNode.Nodes;
 					siNodes[deviceSI].Add(deviceNode);
@@ -3011,15 +3012,15 @@ namespace ListORama
 				{
 					//try
 					//{
-					IMember member = theDevice.Members.Items[gi];
+					iLORMember4 member = theDevice.Members.Items[gi];
 					int si = member.SavedIndex;
-					if (member.MemberType == MemberType.ChannelGroup)
+					if (member.MemberType == LORMemberType4.ChannelGroup)
 					{
-						ChannelGroup memGrp = (ChannelGroup)member;
+						LORChannelGroup4 memGrp = (LORChannelGroup4)member;
 						bool inclChan = false;
-						if ((memberTypes & SeqEnums.MEMBER_Channel) > 0) inclChan = true;
+						if ((memberTypes & LORSeqEnums4.MEMBER_Channel) > 0) inclChan = true;
 						bool inclRGB = false;
-						if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0) inclRGB = true;
+						if ((memberTypes & LORSeqEnums4.MEMBER_RGBchannel) > 0) inclRGB = true;
 						int inclCount = memGrp.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 						if (inclCount > 0)
 						{
@@ -3032,13 +3033,13 @@ namespace ListORama
 							}
 						int cosCount = memGrp.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 					}
-					if (member.MemberType == MemberType.CosmicDevice)
+					if (member.MemberType == LORMemberType4.Cosmic)
 					{
-						CosmicDevice memDev = (CosmicDevice)member;
+						LORCosmic memDev = (LORCosmic)member;
 						bool inclChan = false;
-						if ((memberTypes & SeqEnums.MEMBER_Channel) > 0) inclChan = true;
+						if ((memberTypes & LORSeqEnums4.MEMBER_Channel) > 0) inclChan = true;
 						bool inclRGB = false;
-						if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0) inclRGB = true;
+						if ((memberTypes & LORSeqEnums4.MEMBER_RGBchannel) > 0) inclRGB = true;
 						int inclCount = memDev.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 						if (inclCount > 0)
 						{
@@ -3051,9 +3052,9 @@ namespace ListORama
 							}
 						int cosCount = memDev.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 					}
-					if (member.MemberType == MemberType.Channel)
+					if (member.MemberType == LORMemberType4.Channel)
 					{
-						if ((memberTypes & SeqEnums.MEMBER_Channel) > 0)
+						if ((memberTypes & LORSeqEnums4.MEMBER_Channel) > 0)
 						{
 							if (FilterNode(member))
 							{
@@ -3062,9 +3063,9 @@ namespace ListORama
 							}
 						}
 					}
-					if (member.MemberType == MemberType.RGBchannel)
+					if (member.MemberType == LORMemberType4.RGBChannel)
 					{
-						if ((memberTypes & SeqEnums.MEMBER_RGBchannel) > 0)
+						if ((memberTypes & LORSeqEnums4.MEMBER_RGBchannel) > 0)
 						{
 							if (FilterNode(member))
 							{
@@ -3086,7 +3087,7 @@ namespace ListORama
 				#if DEBUG
 					Debugger.Break();
 				#endif
-				utils.WriteLogEntry(emsg, utils.LOG_Error, Application.ProductName);
+				Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
 			} // end catch
 			*/
 					#endregion
@@ -3096,22 +3097,22 @@ namespace ListORama
 			return deviceNode;
 		} // end AddGroup
 
-		private TreeNode FilteredAddChannel(Sequence4 seq, TreeNodeCollection baseNodes, int channelSI, bool selectedOnly)
+		private TreeNode FilteredAddChannel(LORSequence4 seq, TreeNodeCollection baseNodes, int channelSI, bool selectedOnly)
 		{
-			Channel theChannel = (Channel)seq.Members.bySavedIndex[channelSI];
+			LORChannel4 theChannel = (LORChannel4)seq.Members.bySavedIndex[channelSI];
 			string nodeText = theChannel.Name;
 			TreeNode channelNode = baseNodes.Add(nodeText);
-			//IMember nodeTag = theChannel;
+			//iLORMember4 nodeTag = theChannel;
 			nodeIndex++;
 			channelNode.Tag = theChannel;
-			//channelNode.ImageIndex = imlTreeIcons.Images.IndexOfKey("Channel");
-			//channelNode.SelectedImageIndex = imlTreeIcons.Images.IndexOfKey("Channel");
-			//channelNode.ImageKey = utils.ICONchannel;
-			//channelNode.SelectedImageKey = utils.ICONchannel;
+			//channelNode.ImageIndex = imlTreeIcons.Images.IndexOfKey("LORChannel4");
+			//channelNode.SelectedImageIndex = imlTreeIcons.Images.IndexOfKey("LORChannel4");
+			//channelNode.ImageKey = lutils.ICONchannel;
+			//channelNode.SelectedImageKey = lutils.ICONchannel;
 
 
 			ImageList icons = imlTreeIcons; //baseNodes[0].TreeView.ImageList;
-			int iconIndex = utils.ColorIcon(icons, theChannel.color);
+			int iconIndex = lutils.ColorIcon(icons, theChannel.color);
 			channelNode.ImageIndex = iconIndex;
 			channelNode.SelectedImageIndex = iconIndex;
 			channelNode.Checked = theChannel.Selected;
@@ -3120,14 +3121,14 @@ namespace ListORama
 			return channelNode;
 		}
 
-		private TreeNode FilteredAddRGBchannel(Sequence4 seq, TreeNodeCollection baseNodes, int RGBsi, List<TreeNode>[] siNodes, bool selectedOnly, bool includeRGBchildren)
+		private TreeNode FilteredAddRGBchannel(LORSequence4 seq, TreeNodeCollection baseNodes, int RGBsi, List<TreeNode>[] siNodes, bool selectedOnly, bool includeRGBchildren)
 		{
 			TreeNode RGBNode = null;
 			// Default rgbNodes is basenodes, but normally gets
 			// overridden if the parent RGB node is to be included
 			TreeNodeCollection rgbNodes = baseNodes;
 			TreeNode channelNode = null;
-			Channel chan = null;
+			LORChannel4 chan = null;
 			string nodeText = "";
 			bool phrooo = false;
 
@@ -3137,7 +3138,7 @@ namespace ListORama
 			}
 			if (siNodes[RGBsi] != null)
 			{
-				RGBchannel theRGB = (RGBchannel)seq.Members.bySavedIndex[RGBsi];
+				LORRGBChannel4 theRGB = (LORRGBChannel4)seq.Members.bySavedIndex[RGBsi];
 				if (FilterNode(theRGB))
 				{
 					phrooo = true;
@@ -3147,8 +3148,8 @@ namespace ListORama
 
 					nodeIndex++;
 					RGBNode.Tag = theRGB;
-					RGBNode.ImageKey = utils.ICONrgbChannel;
-					RGBNode.SelectedImageKey = utils.ICONrgbChannel;
+					RGBNode.ImageKey = lutils.ICONrgbChannel;
+					RGBNode.SelectedImageKey = lutils.ICONrgbChannel;
 					RGBNode.Checked = theRGB.Selected;
 					rgbNodes = RGBNode.Nodes;
 					siNodes[RGBsi].Add(RGBNode);
@@ -3167,8 +3168,8 @@ namespace ListORama
 						//nodeTag = seq.Channels[ci];
 						nodeIndex++;
 						colorNode.Tag = theRGB.redChannel;
-						colorNode.ImageKey = utils.ICONredChannel;
-						colorNode.SelectedImageKey = utils.ICONredChannel;
+						colorNode.ImageKey = lutils.ICONredChannel;
+						colorNode.SelectedImageKey = lutils.ICONredChannel;
 						colorNode.Checked = theRGB.redChannel.Selected;
 						siNodes[ci].Add(colorNode);
 						//channelNode.Nodes.Add(colorNode);
@@ -3184,8 +3185,8 @@ namespace ListORama
 						//nodeTag = seq.Channels[ci];
 						nodeIndex++;
 						colorNode.Tag = theRGB.grnChannel;
-						colorNode.ImageKey = utils.ICONgrnChannel;
-						colorNode.SelectedImageKey = utils.ICONgrnChannel;
+						colorNode.ImageKey = lutils.ICONgrnChannel;
+						colorNode.SelectedImageKey = lutils.ICONgrnChannel;
 						colorNode.Checked = theRGB.grnChannel.Selected;
 						siNodes[ci].Add(colorNode);
 						//channelNode.Nodes.Add(colorNode);
@@ -3201,8 +3202,8 @@ namespace ListORama
 						//nodeTag = seq.Channels[ci];
 						nodeIndex++;
 						colorNode.Tag = seq.Channels[ci];
-						colorNode.ImageKey = utils.ICONbluChannel;
-						colorNode.SelectedImageKey = utils.ICONbluChannel;
+						colorNode.ImageKey = lutils.ICONbluChannel;
+						colorNode.SelectedImageKey = lutils.ICONbluChannel;
 						colorNode.Checked = theRGB.bluChannel.Selected;
 						siNodes[ci].Add(colorNode);
 						//channelNode.Nodes.Add(colorNode);
@@ -3239,20 +3240,20 @@ namespace ListORama
 			return channelNode;
 		}
 
-		public int FilteredDescendantCount(Membership members, bool selectedOnly, bool inclChan, bool inclRGB, bool inclRGBchildren)
+		public int FilteredDescendantCount(LORMembership4 members, bool selectedOnly, bool inclChan, bool inclRGB, bool inclRGBchildren)
 		{
 			int c = 0;
 			for (int l = 0; l < members.Items.Count; l++)
 			{
-				MemberType t = members.Items[l].MemberType;
-				if (t == MemberType.Channel)
+				LORMemberType4 t = members.Items[l].MemberType;
+				if (t == LORMemberType4.Channel)
 				{
 					if (inclChan)
 					{
 						if (members.Items[l].Selected || !selectedOnly) c++;
 					}
 				}
-				if (t == MemberType.RGBchannel)
+				if (t == LORMemberType4.RGBChannel)
 				{
 					if (inclRGB)
 					{
@@ -3260,21 +3261,21 @@ namespace ListORama
 					}
 					if (inclRGBchildren)
 					{
-						RGBchannel rgbCh = (RGBchannel)members.Items[l];
+						LORRGBChannel4 rgbCh = (LORRGBChannel4)members.Items[l];
 						if (rgbCh.redChannel.Selected || !selectedOnly) c++;
 						if (rgbCh.grnChannel.Selected || !selectedOnly) c++;
 						if (rgbCh.bluChannel.Selected || !selectedOnly) c++;
 					}
 				}
-				if (t == MemberType.ChannelGroup)
+				if (t == LORMemberType4.ChannelGroup)
 				{
-					ChannelGroup grp = (ChannelGroup)members.Items[l];
+					LORChannelGroup4 grp = (LORChannelGroup4)members.Items[l];
 					// Recurse!!
 					c += FilteredDescendantCount(grp.Members, selectedOnly, inclChan, inclRGB, inclRGBchildren);
 				}
-				if (t == MemberType.CosmicDevice)
+				if (t == LORMemberType4.Cosmic)
 				{
-					CosmicDevice dev = (CosmicDevice)members.Items[l];
+					LORCosmic dev = (LORCosmic)members.Items[l];
 					// Recurse!!
 					c += FilteredDescendantCount(dev.Members, selectedOnly, inclChan, inclRGB, inclRGBchildren);
 				}
@@ -3286,13 +3287,13 @@ namespace ListORama
 		}
 
 
-		public bool FilterNode(IMember member)
+		public bool FilterNode(iLORMember4 member)
 
 		{
 			bool trakOK = false;
 			bool ctrlOK = false;
 			bool nameOK = false;
-			if (member.MemberType == MemberType.Track)
+			if (member.MemberType == LORMemberType4.Track)
 			{
 				if (cboTracks.SelectedIndex == 0)
 				{
@@ -3312,17 +3313,17 @@ namespace ListORama
 				if (!chkKeyword.Checked)
 				{
 					// still need to filter by type
-					if (chkRegKeywd.Checked && (member.MemberType == MemberType.Channel)) nameOK = true;
-					if (chkRegKeywd.Checked && (member.MemberType == MemberType.VizChannel)) nameOK = true;
-					if (chkRGBKeywd.Checked && (member.MemberType == MemberType.RGBchannel)) nameOK = true;
-					if (chkGrpKeywd.Checked && (member.MemberType == MemberType.ChannelGroup)) nameOK = true;
+					if (chkRegKeywd.Checked && (member.MemberType == LORMemberType4.Channel)) nameOK = true;
+					if (chkRegKeywd.Checked && (member.MemberType == LORMemberType4.LORVizChannel4)) nameOK = true;
+					if (chkRGBKeywd.Checked && (member.MemberType == LORMemberType4.RGBChannel)) nameOK = true;
+					if (chkGrpKeywd.Checked && (member.MemberType == LORMemberType4.ChannelGroup)) nameOK = true;
 				}
 				else
 				{
 					// if name filtering is on
-					int pos = utils.FastIndexOf(member.Name, txtKeyword.Text);
+					int pos = lutils.FastIndexOf(member.Name, txtKeyword.Text);
 					bool pz = (pos >= 0);
-					if (member.MemberType == MemberType.Channel)
+					if (member.MemberType == LORMemberType4.Channel)
 					{
 						// if channel, check name
 						if (chkRegKeywd.Checked && pz)
@@ -3334,14 +3335,14 @@ namespace ListORama
 							nameOK = true;
 						}
 						// Even if name is OK, is the type OK?
-						Channel ch = (Channel)member;
-						if (!chkLOR.Checked && (ch.output.deviceType == DeviceType.LOR)) nameOK = false;
-						if (!chkDMX.Checked && (ch.output.deviceType == DeviceType.DMX)) nameOK = false;
-						if (!chkDigital.Checked && (ch.output.deviceType == DeviceType.Digital)) nameOK = false;
-						if (!chkNoController.Checked && (ch.output.deviceType == DeviceType.None)) nameOK = false;
+						LORChannel4 ch = (LORChannel4)member;
+						if (!chkLOR.Checked && (ch.output.deviceType == LORDeviceType4.LOR)) nameOK = false;
+						if (!chkDMX.Checked && (ch.output.deviceType == LORDeviceType4.DMX)) nameOK = false;
+						if (!chkDigital.Checked && (ch.output.deviceType == LORDeviceType4.Digital)) nameOK = false;
+						if (!chkNoController.Checked && (ch.output.deviceType == LORDeviceType4.None)) nameOK = false;
 					}
 
-					if (member.MemberType == MemberType.VizChannel)
+					if (member.MemberType == LORMemberType4.LORVizChannel4)
 					{
 						// if channel, check name
 						if (chkRegKeywd.Checked && pz)
@@ -3353,14 +3354,14 @@ namespace ListORama
 							nameOK = true;
 						}
 						// Even if name is OK, is the type OK?
-						VizChannel vc = (VizChannel)member;
-						if (!chkLOR.Checked && (vc.output.deviceType == DeviceType.LOR)) nameOK = false;
-						if (!chkDMX.Checked && (vc.output.deviceType == DeviceType.DMX)) nameOK = false;
-						if (!chkDigital.Checked && (vc.output.deviceType == DeviceType.Digital)) nameOK = false;
-						if (!chkNoController.Checked && (vc.output.deviceType == DeviceType.None)) nameOK = false;
+						LORVizChannel4 vc = (LORVizChannel4)member;
+						if (!chkLOR.Checked && (vc.output.deviceType == LORDeviceType4.LOR)) nameOK = false;
+						if (!chkDMX.Checked && (vc.output.deviceType == LORDeviceType4.DMX)) nameOK = false;
+						if (!chkDigital.Checked && (vc.output.deviceType == LORDeviceType4.Digital)) nameOK = false;
+						if (!chkNoController.Checked && (vc.output.deviceType == LORDeviceType4.None)) nameOK = false;
 					}
 
-					if (member.MemberType == MemberType.RGBchannel)
+					if (member.MemberType == LORMemberType4.RGBChannel)
 					{
 						if (chkRGBKeywd.Checked && pz)
 						{
@@ -3372,7 +3373,7 @@ namespace ListORama
 						}
 					}
 
-					if (member.MemberType == MemberType.ChannelGroup)
+					if (member.MemberType == LORMemberType4.ChannelGroup)
 					{
 						if (chkGrpKeywd.Checked && pz)
 						{
@@ -3384,7 +3385,7 @@ namespace ListORama
 						}
 					}
 				}
-				if (member.MemberType == MemberType.Channel)
+				if (member.MemberType == LORMemberType4.Channel)
 				{
 				}
 
@@ -3418,12 +3419,12 @@ namespace ListORama
 				chkGrpNonKeywd.Visible = chkKeyword.Checked;
 				if (chkKeyword.Checked)
 				{
-					chkRegKeywd.Text = REGCHAN + CHWITH + txtKeyword.Text + utils.ENDQT;
-					chkRegNonKeywd.Text = REGCHAN + CHWITHOUT + txtKeyword.Text + utils.ENDQT;
-					chkRGBKeywd.Text = RGBCHAN + CHWITH + txtKeyword.Text + utils.ENDQT;
-					chkRGBNonKeywd.Text = RGBCHAN + CHWITHOUT + txtKeyword.Text + utils.ENDQT;
-					chkGrpKeywd.Text = CHANGRP + CHWITH + txtKeyword.Text + utils.ENDQT;
-					chkGrpNonKeywd.Text = CHANGRP + CHWITHOUT + txtKeyword.Text + utils.ENDQT;
+					chkRegKeywd.Text = REGCHAN + CHWITH + txtKeyword.Text + lutils.ENDQT;
+					chkRegNonKeywd.Text = REGCHAN + CHWITHOUT + txtKeyword.Text + lutils.ENDQT;
+					chkRGBKeywd.Text = RGBCHAN + CHWITH + txtKeyword.Text + lutils.ENDQT;
+					chkRGBNonKeywd.Text = RGBCHAN + CHWITHOUT + txtKeyword.Text + lutils.ENDQT;
+					chkGrpKeywd.Text = CHANGRP + CHWITH + txtKeyword.Text + lutils.ENDQT;
+					chkGrpNonKeywd.Text = CHANGRP + CHWITHOUT + txtKeyword.Text + lutils.ENDQT;
 					chkRGBKeywd.Top = 108;
 					chkGrpKeywd.Top = 154;
 				}

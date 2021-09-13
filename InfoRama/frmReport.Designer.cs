@@ -1,4 +1,4 @@
-﻿namespace InfoRama
+﻿namespace UtilORama4
 {
 	partial class frmReport
 	{
@@ -180,7 +180,7 @@
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MinimumSize = new System.Drawing.Size(400, 400);
 			this.Name = "frmReport";
-			this.Text = "Info-Rama";
+			this.Text = "LORSeqInfo4-Rama";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmReport_FormClosing);
 			this.Load += new System.EventHandler(this.frmReport_Load);
 			this.ResizeEnd += new System.EventHandler(this.frmReport_ResizeEnd);

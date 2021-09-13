@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ListORama
+namespace UtilORama4
 {
 	partial class About : Form
 	{

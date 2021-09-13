@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Resources;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -8,10 +9,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Vamp-O-Rama")]
 [assembly: AssemblyDescription("Creates Light-O-Rama and xLights Timing Tracks based on the Vamp Plugins")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("W⚡zster Software")]
+[assembly: AssemblyCompany("Doctor 🧙 Wizard and W⚡zlights Software")]
 [assembly: AssemblyProduct("Vamp-O-Rama")]
-[assembly: AssemblyCopyright("Copyright © 2021+ by Doctor 🧙 Wizard and W⚡zster Software")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCopyright("Copyright © 2021+ by Doctor 🧙 Wizard and W⚡zlights Software")]
+[assembly: AssemblyTrademark("Util-O-Rama is a trademark of Doctor 🧙 Wizard and W⚡zlights Software")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
@@ -32,5 +33,6 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2021.1.27.0")]
-[assembly: AssemblyFileVersion("202.1.27.0")]
+[assembly: AssemblyVersion("4.2021.20.0")]
+[assembly: AssemblyFileVersion("4.2021.20.0")]
+[assembly: NeutralResourcesLanguage("en-US")]
