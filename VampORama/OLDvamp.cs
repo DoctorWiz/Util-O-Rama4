@@ -828,7 +828,7 @@ namespace UtilORama4
 
 			//string configs = tempPath + configFile;
 			//string configs = configFile;
-			//if (!System.IO.File.Exists(configs))
+			//if (!Fyle.Exists(configs))
 			//{
 			//	string homedir = AppDomain.CurrentDomain.BaseDirectory;
 			//	string srcconfig = homedir + Path.GetFileName( configFile);
@@ -857,7 +857,7 @@ namespace UtilORama4
 						resultsFile += ".csv";
 
 						//! FOR TESTING DEBUGGING, if set to re-use old files, OR if no file from a previous run exists
-						if ((!chkReuse.Checked) || (!System.IO.File.Exists(resultsFile)))
+						if ((!chkReuse.Checked) || (!Fyle.Exists(resultsFile)))
 						{
 							//ProcessStartInfo annotator = new ProcessStartInfo(annotatorProgram);
 							//annotator.Arguments = annotatorArguments;
@@ -934,7 +934,7 @@ namespace UtilORama4
 							int x = cmdProc.ExitCode;
 						}
 
-						if (System.IO.File.Exists(resultsFile))
+						if (Fyle.Exists(resultsFile))
 						{
 					//		return resultsFile;
 					//		errCount = 99999;
@@ -1040,23 +1040,23 @@ namespace UtilORama4
 			int errs = 0;
 			if (!chkReuse.Checked)
 			{
-				try { if (System.IO.File.Exists(resultsNoteOnsets)) System.IO.File.Delete(resultsNoteOnsets); }
+				try { if (Fyle.Exists(resultsNoteOnsets)) System.IO.File.Delete(resultsNoteOnsets); }
 				catch { errs++; }
-				try { if (System.IO.File.Exists(resultsBarBeats)) System.IO.File.Delete(resultsBarBeats); }
+				try { if (Fyle.Exists(resultsBarBeats)) System.IO.File.Delete(resultsBarBeats); }
 				catch { errs++; }
-				try { if (System.IO.File.Exists(resultsqmBeats)) System.IO.File.Delete(resultsqmBeats); }
+				try { if (Fyle.Exists(resultsqmBeats)) System.IO.File.Delete(resultsqmBeats); }
 				catch { errs++; }
-				try { if (System.IO.File.Exists(resultsTranscribe)) System.IO.File.Delete(resultsTranscribe); }
+				try { if (Fyle.Exists(resultsTranscribe)) System.IO.File.Delete(resultsTranscribe); }
 				catch { errs++; }
-				try { if (System.IO.File.Exists(resultsConstQ)) System.IO.File.Delete(resultsConstQ); }
+				try { if (Fyle.Exists(resultsConstQ)) System.IO.File.Delete(resultsConstQ); }
 				catch { errs++; }
-				try { if (System.IO.File.Exists(resultsChroma)) System.IO.File.Delete(resultsChroma); }
+				try { if (Fyle.Exists(resultsChroma)) System.IO.File.Delete(resultsChroma); }
 				catch { errs++; }
-				try { if (System.IO.File.Exists(resultsSegments)) System.IO.File.Delete(resultsSegments); }
+				try { if (Fyle.Exists(resultsSegments)) System.IO.File.Delete(resultsSegments); }
 				catch { errs++; }
-				try { if (System.IO.File.Exists(resultsSpectro)) System.IO.File.Delete(resultsSpectro); }
+				try { if (Fyle.Exists(resultsSpectro)) System.IO.File.Delete(resultsSpectro); }
 				catch { errs++; }
-				try { if (System.IO.File.Exists(fileAudioWork)) System.IO.File.Delete(fileAudioWork); }
+				try { if (Fyle.Exists(fileAudioWork)) System.IO.File.Delete(fileAudioWork); }
 				catch { errs++; }
 
 				errs += ClearTempDir();

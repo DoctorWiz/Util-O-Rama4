@@ -142,7 +142,8 @@ namespace UtilORama4
 		public enum AlignmentType { None = 1, Bars = 2, BeatsFull = 3, BeatsHalf = 4, BeatsThird = 5, BeatsQuarter = 6,
 																NoteOnsets = 7, FPS10 = 10, FPS20 = 20, FPS30 = 30, FPS40 = 40, FPS60 = 60, FPScustom = 100 };
 
-		public enum LabelTypes { None, KeyNamesAscii, KeyNamesUnicode, KeyNumbers, NoteNamesAscii, NoteNamesUnicode, MIDINoteNumbers, Frequency, Numbers, Letters };
+		public enum LabelTypes { None, KeyNamesASCII, KeyNamesUnicode, KeyNumbers, NoteNamesAscii, NoteNamesUnicode,
+														MIDINoteNumbers, Frequency, Numbers, Letters, BPM, TempoName };
 
 		public const int LABELnone							= 0;
 		public const int LABELkeyNameAscii			= 1;
@@ -156,8 +157,8 @@ namespace UtilORama4
 		public const int LABELletters						= 9;
 
 		public const string LABELNAMEnone							= "None";
-		public const string LABELNAMEkeyNameAscii			= "Key Name in ASCII";
-		public const string LABELNAMEkeyNameUnicode		= "Key Name in Unicode";
+		public const string LABELNAMEkeyNamesASCII		= "Key Name in ASCII";
+		public const string LABELNAMEkeyNamesUnicode	= "Key Name in Unicode";
 		public const string LABELNAMEkeyNumbers				= "Key Number";
 		public const string LABELNAMEnoteNamesAscii		= "Note Name in ASCII";
 		public const string LABELNAMEnoteNamesUnicode = "Note Name in Unicode";
@@ -165,10 +166,12 @@ namespace UtilORama4
 		public const string LABELNAMEfrequency				= "Frequency in Hz";
 		public const string LABELNAMEnumbers					= "Number";
 		public const string LABELNAMEletters					= "Letter";
+		public const string LABELNAMEbpm							= "Beats-Per-Minute (BPM)";
+		public const string LABELNAMEtempoName				= "Tempo Name";
 
-		public readonly static string[] LabelNames = {LABELNAMEnone, LABELNAMEkeyNameAscii, LABELNAMEkeyNameUnicode, LABELNAMEkeyNumbers,
+		public readonly static string[] LabelNames = {LABELNAMEnone, LABELNAMEkeyNamesASCII, LABELNAMEkeyNamesUnicode, LABELNAMEkeyNumbers,
 																	LABELNAMEnoteNamesAscii, LABELNAMEnoteNamesUnicode, LABELNAMEmidiNoteNumbers,
-																	LABELNAMEfrequency, LABELNAMEnumbers, LABELNAMEletters };
+																	LABELNAMEfrequency, LABELNAMEnumbers, LABELNAMEletters, LABELNAMEbpm, LABELNAMEtempoName };
 
 
 		//public readonly static string[] LabelTypeNames = { "None", "Key Names Ascii", "Key Names Unicode", "Key Numbers", "Note Names Ascii",
@@ -247,21 +250,21 @@ namespace UtilORama4
 			// Init return value with default/failsafe
 			AlignmentType at = AlignmentType.None;
 			
-			if (typeName == ALIGNNAMEfps40x)
+			if (typeName == ALIGNNAMEnone)
 			{
-				at = AlignmentType.FPS40;
+				at = AlignmentType.None;
 			}
 			else
-			{
-				if (typeName == ALIGNNAMEfps20x)
+			{ 
+				if (typeName == ALIGNNAMEfps40x)
 				{
-					at = AlignmentType.FPS20;
+					at = AlignmentType.FPS40;
 				}
 				else
 				{
-					if (typeName == ALIGNNAMEbars)
+					if (typeName == ALIGNNAMEfps20x)
 					{
-						at = AlignmentType.Bars;
+						at = AlignmentType.FPS20;
 					}
 					else
 					{
@@ -271,68 +274,75 @@ namespace UtilORama4
 						}
 						else
 						{
-							if (typeName == ALIGNNAMEbeatsFull)
+							if (typeName == ALIGNNAMEbars)
 							{
-								at = AlignmentType.BeatsFull;
+								at = AlignmentType.Bars;
 							}
 							else
 							{
-								if (typeName == ALIGNNAMEbeatsQuarter)
+								if (typeName == ALIGNNAMEbeatsFull)
 								{
-									at = AlignmentType.BeatsQuarter;
+									at = AlignmentType.BeatsFull;
 								}
 								else
 								{
-									if (typeName == ALIGNNAMEnoteOnsets)
+									if (typeName == ALIGNNAMEbeatsQuarter)
 									{
-										at = AlignmentType.NoteOnsets;
+										at = AlignmentType.BeatsQuarter;
 									}
 									else
 									{
-										if (typeName == ALIGNNAMEbeatsHalf)
+										if (typeName == ALIGNNAMEnoteOnsets)
 										{
-											at = AlignmentType.BeatsHalf;
+											at = AlignmentType.NoteOnsets;
 										}
 										else
 										{
-											if (typeName == ALIGNNAMEbeatsThird)
+											if (typeName == ALIGNNAMEbeatsHalf)
 											{
-												at = AlignmentType.BeatsThird;
+												at = AlignmentType.BeatsHalf;
 											}
 											else
 											{
-												if (typeName == ALIGNNAMEfps10l)
+												if (typeName == ALIGNNAMEbeatsThird)
 												{
-													at = AlignmentType.FPS10;
+													at = AlignmentType.BeatsThird;
 												}
 												else
 												{
-													if (typeName == ALIGNNAMEfps20l)
+													if (typeName == ALIGNNAMEfps10l)
 													{
-														at = AlignmentType.FPS20;
+														at = AlignmentType.FPS10;
 													}
 													else
 													{
-														if (typeName == ALIGNNAMEfps30l)
+														if (typeName == ALIGNNAMEfps20l)
 														{
-															at = AlignmentType.FPS30;
+															at = AlignmentType.FPS20;
 														}
 														else
 														{
-															if (typeName == ALIGNNAMEfps60l)
+															if (typeName == ALIGNNAMEfps30l)
 															{
-																at = AlignmentType.FPS60;
+																at = AlignmentType.FPS30;
 															}
 															else
 															{
-																if (typeName == ALIGNNAMEcustom)
+																if (typeName == ALIGNNAMEfps60l)
 																{
-																	at = AlignmentType.FPScustom;
+																	at = AlignmentType.FPS60;
 																}
 																else
 																{
-																	string msg = "Alignment Type '" + typeName + "' not recognized!";
-																	Fyle.BUG(msg);
+																	if (typeName == ALIGNNAMEcustom)
+																	{
+																		at = AlignmentType.FPScustom;
+																	}
+																	else
+																	{
+																		string msg = "Alignment Type '" + typeName + "' not recognized!";
+																		Fyle.BUG(msg);
+																	}
 																}
 															}
 														}
@@ -365,13 +375,13 @@ namespace UtilORama4
 			}
 			else
 			{
-			if (labelName == LABELNAMEkeyNameAscii)
+			if (labelName == LABELNAMEkeyNamesASCII)
 				{
-				lt = LabelTypes.KeyNamesAscii;
+				lt = LabelTypes.KeyNamesASCII;
 				}
 				else
 				{
-					if (labelName == LABELNAMEkeyNameUnicode)
+					if (labelName == LABELNAMEkeyNamesUnicode)
 					{
 					lt = LabelTypes.KeyNamesUnicode; 
 					}
@@ -419,8 +429,22 @@ namespace UtilORama4
 												}
 												else
 												{
-													string msg = "Label Type '" + labelName + "' not recognized!";
-													Fyle.BUG(msg);
+													if (labelName == LABELNAMEbpm)
+													{
+														lt = LabelTypes.BPM;
+													}
+													else
+													{
+														if (labelName == LABELNAMEtempoName)
+														{
+															lt = LabelTypes.TempoName;
+														}
+														else
+														{
+															string msg = "Label Type '" + labelName + "' not recognized!";
+															Fyle.BUG(msg);
+														}
+													}
 												}
 											}
 										}

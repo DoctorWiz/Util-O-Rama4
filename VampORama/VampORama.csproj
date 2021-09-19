@@ -264,7 +264,13 @@
     <Compile Include="TransformNoteOnsets.cs">
       <DependentUpon>Annotator.cs</DependentUpon>
     </Compile>
+    <Compile Include="TransformPitchKey.cs">
+      <DependentUpon>Annotator.cs</DependentUpon>
+    </Compile>
     <Compile Include="TransformPolyphonic.cs">
+      <DependentUpon>Annotator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TransformTempo.cs">
       <DependentUpon>Annotator.cs</DependentUpon>
     </Compile>
     <Compile Include="Transform_Interface.cs">

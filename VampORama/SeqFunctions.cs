@@ -29,12 +29,17 @@ namespace UtilORama4
 
 		}
 
+		//public static int ImportTimingGrid(LORTimings4 beatGrid, xTimings xEffects)
+		//{
+			//string grdName = beatGrid.Name;
+			//return ImportTimingGrid(beatGrid, grdName, xEffects);
+		//}
 
 		public static int ImportTimingGrid(LORTimings4 beatGrid, xTimings xEffects)
 		{
 			int errs = 0;
 			int lastStart = -1;
-			string gName = beatGrid.Name;
+			//string gName = beatGrid.Name;
 			string xName = xEffects.Name;
 
 			// If grid already has timings (from a previous run) clear them, start over fresh
@@ -65,7 +70,7 @@ namespace UtilORama4
 			{
 				string msg = "Warning:\r\nxTimings '" + xName + "' has ";
 				msg += tc.ToString() + " effects, but\r\n";
-				msg += "Timing Grid '" + gName + "' has ";
+				msg += "Timing Grid '" + beatGrid.Name + "' has ";
 				msg += beatGrid.timings.Count.ToString() + " effects.\r\n";
 				msg += "   (This may be because of tightly close timings)";
 				Fyle.BUG(msg);
@@ -453,6 +458,14 @@ namespace UtilORama4
 
 
 		}
+
+		public static int GetKeyColor(int keyNumber)
+		{
+			int idx = keyNumber - 1;
+			idx %= 12; ;
+			return NoteColors[idx];
+		}
+
 
 		public static int GetNoteColor(int noteNum)
 		{

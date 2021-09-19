@@ -63,17 +63,55 @@ namespace UtilORama4
 
 
 
-		public readonly static string[] octaveFreqs = { "0-31", "31-63", "63-127", "127-253", "253-507", "507-1015", "1015-2034", "2035-4068", "4068-8137", "8137-16274", "16274-32000", "Err", "Err" };
+		public readonly static string[] octaveFreqs = { "0-31", "31-63", "63-127", "127-253", "253-507", "507-1015", "1015-2034", "2035-4068",
+																										"4068-8137", "8137-16274", "16274-32000", "Err", "Err" };
 
 		public readonly static string[] octaveNamesA = { "CCCCCC 128'", "CCCCC 64'", "CCCC 32'", "CCC 16'", "CC 8'", "C4'",	"c1 2'", "c2 1'",
 																										"c3 1/2'", "c4 1/4'", "c5 1/8'", "c6 1/16'", "Err", "Err" };
-		public readonly static string[] octaveNamesB = { "Sub-Sub-Sub Contra", "Sub-Sub Contra", "Sub-Contra", "Contra", "Great", "Small", "1-Line", "2-Line", "3-Line", "4-Line", "5-Line", "6-Line", "Err", "Err" };
+		public readonly static string[] octaveNamesB = { "Sub-Sub-Sub Contra", "Sub-Sub Contra", "Sub-Contra", "Contra", "Great", "Small", "1-Line",
+																											"2-Line", "3-Line", "4-Line", "5-Line", "6-Line", "Err", "Err" };
 
 		public readonly static string[] chromaNamesUnicode = { "C", "C♯-D♭", "D", "D♯-E♭", "E", "F", "F♯-G♭", "G", "G♯-A♭", "A", "A♯-B♭", "B" };
 		public readonly static string[] chromaNamesAscii = { "C", "C#-Db", "D", "D#-Eb", "E", "F", "F#-Gb", "G", "G#-Ab", "A", "A#-Bb", "B" };
-		public readonly static string[] keyNamesUnicode = { "", "C major", "C♯ major", "D major", "D♯ major", "E major", "F major", "F♯ major", "G major", "G♯ major", "A major", "A♯ major", "B major",
-															"C minor", "C♯ minor", "D minor", "D♯ minor", "E minor", "F minor", "F♯ minor", "G minor", "G♯ minor", "A minor", "A♯ minor", "B minor" };
-		public readonly static string[] keyNamesAscii = { "", "C major", "C# major", "D major", "D# major", "E major", "F major", "F# major", "G major", "G# major", "A major", "A# major", "B major",
-															"C minor", "C# minor", "D minor", "D# minor", "E minor", "F minor", "F# minor", "G minor", "G# minor", "A minor", "A# minor", "B minor" };
+		
+		// 24 Keys numbered 1-24.  But arrays start at zero so there is a blank name at the beginning
+		public readonly static string[] keyNamesUnicode = { "", "C major", "C♯ major", "D major", "D♯ major", "E major", "F major",
+																												"F♯ major", "G major", "G♯ major", "A major", "A♯ major", "B major",
+																												"C minor", "C♯ minor", "D minor", "D♯ minor", "E minor", "F minor", "F♯ minor",
+																												"G minor", "G♯ minor", "A minor", "A♯ minor", "B minor" };
+		public readonly static string[] keyNamesASCII = { "", "C major", "C# major", "D major", "D# major", "E major", "F major",
+																											"F# major",	"G major", "G# major", "A major", "A# major", "B major", "C minor",
+																											"C# minor", "D minor", "D# minor", "E minor", "F minor", "F# minor", "G minor",
+																											"G# minor", "A minor", "A# minor", "B minor" };
+
+
+		// See Wikipedia: https://en.wikipedia.org/wiki/Tempo
+		public readonly static string[] tempoNames =  { "Larghissimo",		 "Adagissimo",       "Grave",       "Largo",        "Lento",
+																										"Larghetto",			 "Adagio",					 "Adagietto",   "Andante",      "Andantino",
+																										"Marcia moderato", "Andante moderato", "Moderato",    "Allegretto",   "Allegretto moderato",
+																										"Allegro",				 "Vivace",           "Vivacissimo", "Alligrissimo", "Presto",
+																										"Prestissimo" };
+		public readonly static int[] tempoSpeeds =    {     0,                 15,                 25,            40,             45,
+																											 60,                 66,                 72,            76,             80,
+																											 83,                 92,                108,           112,            116,
+																											120,                156,                172,           174,            176,
+																											200 };
+
+		public static int FindTempoIndex(int bpm)
+		{
+			int idx = 0;
+			for (int t=1; t<tempoSpeeds.Length; t++)
+			{
+				if (bpm >= tempoSpeeds[t]) idx = t;
+			}
+			return idx;
+		}
+		
+		public static string FindTempoName(int bpm)
+		{
+			int ti = FindTempoIndex(bpm);
+			return tempoNames[ti];
+		}
+
 	}
 }

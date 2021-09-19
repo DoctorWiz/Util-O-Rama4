@@ -38,7 +38,7 @@ namespace UtilORama4
 	
 		private void SetAlignCombos()
 		{
-			cboAlignBarsBeats.Items.Clear();
+			cboAlignBarBeats.Items.Clear();
 			cboAlignOnsets.Items.Clear();
 			cboAlignPolyphonic.Items.Clear();
 			cboAlignSpectrum.Items.Clear();
@@ -47,7 +47,7 @@ namespace UtilORama4
 			cboAlignSegments.Items.Clear();
 			cboAlignVocals.Items.Clear();
 
-			cboAlignBarsBeats.Items.Add(vamps.ALIGNNAMEnone);
+			cboAlignBarBeats.Items.Add(vamps.ALIGNNAMEnone);
 			cboAlignOnsets.Items.Add(vamps.ALIGNNAMEnone);
 			cboAlignPolyphonic.Items.Add(vamps.ALIGNNAMEnone);
 			cboAlignSpectrum.Items.Add(vamps.ALIGNNAMEnone);
@@ -59,7 +59,7 @@ namespace UtilORama4
 			// 60 FPS, 1.667cs LOR only
 			if (chkLOR.Checked)
 			{
-				cboAlignBarsBeats.Items.Add(vamps.ALIGNNAMEfps60l);
+				cboAlignBarBeats.Items.Add(vamps.ALIGNNAMEfps60l);
 				cboAlignOnsets.Items.Add(vamps.ALIGNNAMEfps60l);
 				cboAlignPolyphonic.Items.Add(vamps.ALIGNNAMEfps60l);
 				cboAlignSpectrum.Items.Add(vamps.ALIGNNAMEfps60l);
@@ -71,7 +71,7 @@ namespace UtilORama4
 			// 40 FPS, 25ms xLights only
 			if (chkxLights.Checked)
 			{
-				cboAlignBarsBeats.Items.Add(vamps.ALIGNNAMEfps40x);
+				cboAlignBarBeats.Items.Add(vamps.ALIGNNAMEfps40x);
 				cboAlignOnsets.Items.Add(vamps.ALIGNNAMEfps40x);
 				cboAlignPolyphonic.Items.Add(vamps.ALIGNNAMEfps40x);
 				cboAlignSpectrum.Items.Add(vamps.ALIGNNAMEfps40x);
@@ -83,7 +83,7 @@ namespace UtilORama4
 			// 30 FPS, 3.33cs LOR only
 			if (chkLOR.Checked)
 			{
-				cboAlignBarsBeats.Items.Add(vamps.ALIGNNAMEfps30l);
+				cboAlignBarBeats.Items.Add(vamps.ALIGNNAMEfps30l);
 				cboAlignOnsets.Items.Add(vamps.ALIGNNAMEfps30l);
 				cboAlignPolyphonic.Items.Add(vamps.ALIGNNAMEfps30l);
 				cboAlignSpectrum.Items.Add(vamps.ALIGNNAMEfps30l);
@@ -95,7 +95,7 @@ namespace UtilORama4
 			// 20 FPS, 5cs LOR only
 			if ((chkLOR.Checked) && (!chkxLights.Checked))
 			{
-				cboAlignBarsBeats.Items.Add(vamps.ALIGNNAMEfps20l);
+				cboAlignBarBeats.Items.Add(vamps.ALIGNNAMEfps20l);
 				cboAlignOnsets.Items.Add(vamps.ALIGNNAMEfps20l);
 				cboAlignPolyphonic.Items.Add(vamps.ALIGNNAMEfps20l);
 				cboAlignSpectrum.Items.Add(vamps.ALIGNNAMEfps20l);
@@ -107,7 +107,7 @@ namespace UtilORama4
 			// 20 FPS, 50ms or 5cs xLights (with or without LOR)
 			if (chkxLights.Checked)
 			{
-				cboAlignBarsBeats.Items.Add(vamps.ALIGNNAMEfps20x);
+				cboAlignBarBeats.Items.Add(vamps.ALIGNNAMEfps20x);
 				cboAlignOnsets.Items.Add(vamps.ALIGNNAMEfps20x);
 				cboAlignPolyphonic.Items.Add(vamps.ALIGNNAMEfps20x);
 				cboAlignSpectrum.Items.Add(vamps.ALIGNNAMEfps20x);
@@ -119,7 +119,7 @@ namespace UtilORama4
 			// 1 FPS, 10cs LOR only
 			if (chkLOR.Checked)
 			{
-				cboAlignBarsBeats.Items.Add(vamps.ALIGNNAMEfps10l);
+				cboAlignBarBeats.Items.Add(vamps.ALIGNNAMEfps10l);
 				cboAlignOnsets.Items.Add(vamps.ALIGNNAMEfps10l);
 				cboAlignPolyphonic.Items.Add(vamps.ALIGNNAMEfps10l);
 				cboAlignSpectrum.Items.Add(vamps.ALIGNNAMEfps10l);

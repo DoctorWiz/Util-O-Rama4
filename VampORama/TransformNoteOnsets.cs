@@ -36,6 +36,9 @@ namespace UtilORama4
 		public const int METHOD2flux = 7;
 
 		public static xTimings xOnsets = Annotator.xOnsets;
+		public static string ResultsName = "NoteOnsets.csv";
+		public static string FileResults = Annotator.TempPath + ResultsName;
+
 
 		public static readonly string[] availablePluginNames = {	"Queen Mary Note Onset Detector",
 																											"Queen Mary Polyphonic Transcription",
@@ -52,6 +55,14 @@ namespace UtilORama4
 																											"vamp:silvet:silvet:onsets",
 																											"vamp:vamp-aubio:aubioonset:onsets",
 																											"vamp:vamp-aubio:aubionotes:notes" };
+
+		public static readonly vamps.AlignmentType[] allowableAlignments = { vamps.AlignmentType.None,
+																																					vamps.AlignmentType.FPS20,
+																																					vamps.AlignmentType.FPS30,
+																																					vamps.AlignmentType.FPS40,
+																																					vamps.AlignmentType.FPS60,
+																																					vamps.AlignmentType.BeatsQuarter };
+
 
 		public static readonly string[] filesAvailableConfigs = {"vamp_qm-vamp-plugins_qm-onsetdetector_onsets.n3",
 																											"vamp_qm-vamp-plugins_qm-transcription_transcription.n3",
@@ -91,7 +102,7 @@ namespace UtilORama4
 		//}
 		public enum DetectionMethods { ComplexDomain = 0, SpectralDifference = 1, PhaseDeviation = 2, BroadbandEnergyRise = 3 };
 
-		private static readonly vamps.AlignmentType[] allowableAlignments = { vamps.AlignmentType.None, vamps.AlignmentType.FPS20, vamps.AlignmentType.FPS40 };
+		//private static readonly vamps.AlignmentType[] allowableAlignments = { vamps.AlignmentType.None, vamps.AlignmentType.FPS20, vamps.AlignmentType.FPS40 };
 
 
 		private static vamps.AlignmentType alignmentType = vamps.AlignmentType.None;
@@ -155,7 +166,7 @@ namespace UtilORama4
 			string fileConfig = filesAvailableConfigs[pluginIndex];
 			//string vampParams = availablePluginCodes[pluginIndex];
 			string pathConfigs = AppDomain.CurrentDomain.BaseDirectory + "VampConfigs\\";
-			string pathWork = Path.GetDirectoryName(fileSong) + "\\";
+			//string pathWork = Path.GetDirectoryName(fileSong) + "\\";
 			lastPluginUsed = pluginIndex;
 
 			int lineCount = 0;
@@ -168,7 +179,7 @@ namespace UtilORama4
 			StreamWriter writer;
 
 			string fileConfigFrom = pathConfigs + fileConfig;
-			string fileConfigTo = pathWork + fileConfig;
+			string fileConfigTo = Annotator.TempPath + fileConfig;
 
 			//string tempPath = Path.GetDirectoryName(fileSong);
 			//string vampParams = availablePluginNames[pluginIndex];
@@ -519,7 +530,8 @@ namespace UtilORama4
 			{
 				if (xOnsets.effects.Count > 0)
 				{
-					LORTimings4 gridOnsets = Annotator.Sequence.FindTimingGrid(transformName, true);
+					string gridName = "5 " + transformName;
+					LORTimings4 gridOnsets = Annotator.Sequence.FindTimingGrid(gridName, true);
 					SequenceFunctions.ImportTimingGrid(gridOnsets, xOnsets);
 					// Save a reference to the Note Onsets timing grid
 					Annotator.GridOnsets = gridOnsets;
@@ -539,19 +551,20 @@ namespace UtilORama4
 			return errs;
 		}
 
-		public static int xTimingsToLORChannels()
+		public static int xTimingsToLORChannel()
 		{
 			int errs = 0;
 
 			//LORTrack4 vampTrack = SequenceFunctions.GetTrack("Vamp-O-Rama");
-			LORChannelGroup4 beatGroup = Annotator.Sequence.FindChannelGroup(transformName, Annotator.VampTrack.Members, true);
+			//LORChannelGroup4 onsetGroup = Annotator.Sequence.FindChannelGroup(transformName, Annotator.VampTrack.Members, true);
 			if (xOnsets != null)
 			{
 				if (xOnsets.effects.Count > 0)
 				{
 					if (Annotator.UseRamps)
 					{
-						LORChannel4 chan = Annotator.Sequence.FindChannel(transformName, beatGroup.Members, true, true);
+						LORChannel4 chan = Annotator.Sequence.FindChannel(transformName, Annotator.VampTrack.Members, true, true);
+						chan.color = lutils.Color_NettoLOR(System.Drawing.Color.DarkViolet);
 						SequenceFunctions.ImportNoteChannel(chan, xOnsets);
 					}
 				}

@@ -80,7 +80,8 @@ namespace UtilORama4
 		//private string userSettingsLocalDir = "C:\\Users\\Wizard\\AppData\\Local\\UtilORama\\Vamperizer";  // Gets overwritten with X:\\Username\\AppData\\Roaming\\UtilORama\\SplitORama\\
 		//private string userSettingsRoamingDir = "C:\\Users\\Wizard\\AppData\\Roaming\\UtilORama\\Vamperizer";  // Gets overwritten with X:\\Username\\AppData\\Roaming\\UtilORama\\SplitORama\\
 		//private string machineSettingsDir = "C:\\ProgramData\\UtilORama\\Vamperizer";  // Gets overwritten with X:\\ProgramData\\UtilORama\\Vamperizer\\
-		private string pathWork = "C:\\Windows\\Temp\\";  // Gets overwritten with X:\\Username\\AppData\\Local\\Temp\\UtilORama\\SplitORama\\
+		//private string pathWork = "C:\\Windows\\Temp\\";  // Gets overwritten with X:\\Username\\AppData\\Local\\Temp\\UtilORama\\SplitORama\\
+		public string tempPath = Annotator.TempPath;
 		private string[] commandArgs;
 		private bool batchMode = false;
 		private int batch_fileCount = 0;
@@ -233,13 +234,13 @@ namespace UtilORama4
 			grpSavex.Visible = xLightsInstalled;
 
 			this.Text = myTitle;
-			string appFolder = applicationName;
-			appFolder = appFolder.Replace("-", "");
-			mySubDir = mySubDir + appFolder + "\\";
-			string baseDir = Path.GetTempPath();
-			if (baseDir.Substring(baseDir.Length - 1, 1) != "\\") baseDir += "\\";
-			pathWork = baseDir + mySubDir;
-			if (!Directory.Exists(pathWork)) Directory.CreateDirectory(pathWork);
+			//string appFolder = applicationName;
+			//appFolder = appFolder.Replace("-", "");
+			//mySubDir = mySubDir + appFolder + "\\";
+			//string baseDir = Path.GetTempPath();
+			//if (baseDir.Substring(baseDir.Length - 1, 1) != "\\") baseDir += "\\";
+			//pathWork = baseDir + mySubDir;
+			//if (!Directory.Exists(pathWork)) Directory.CreateDirectory(pathWork);
 
 			if (debugMode)
 			{
@@ -323,7 +324,7 @@ namespace UtilORama4
 
 			if (!chkReuse.Checked)
 			{
-				int errs = xUtils.ClearTempDir(pathWork);
+				int errs = xUtils.ClearTempDir(tempPath);
 			}
 
 			ProcessCommandLine();
@@ -418,11 +419,47 @@ namespace UtilORama4
 
 		public void FillCombos()
 		{
+			//////////////////////
+			//! Bars and Beats //
+			////////////////////
+			cboMethodBarsBeats.Items.Clear();
+			foreach(string plugName in VampBarBeats.availablePluginNames)
+				{
+				cboMethodBarsBeats.Items.Add(plugName);
+			}
+			cboLabelsBarBeats.Items.Clear();
+			foreach (string labelName in VampBarBeats.availableLabels)
+			{
+				cboLabelsBarBeats.Items.Add(labelName);
+			}
+			cboAlignBarBeats.Items.Clear();
+			foreach (vamps.AlignmentType alType in VampBarBeats.allowableAlignments)
+			{
+				cboAlignBarBeats.Items.Add(vamps.AlignmentName(alType));
+			}
 
+			///////////////////
+			//! Note Onsets //
+			/////////////////
+			cboMethodOnsets.Items.Clear();
+			foreach (string plugName in VampNoteOnsets.availablePluginNames)
+			{
+				cboMethodOnsets.Items.Add(plugName);
+			}
+			cboLabelsOnsets.Items.Clear();
+			foreach (string labelName in VampNoteOnsets.availableLabels)
+			{
+				cboLabelsOnsets.Items.Add(labelName);
+			}
+			cboAlignOnsets.Items.Clear();
+			foreach (vamps.AlignmentType alType in VampNoteOnsets.allowableAlignments)
+			{
+				cboAlignOnsets.Items.Add(vamps.AlignmentName(alType));
+			}
 
-
-
-			//Polyphonic Transcription
+			////////////////////////////////
+			//! Polyphonic Transcription //
+			//////////////////////////////
 			cboMethodPolyphonic.Items.Clear();
 			foreach(string plugName in VampPolyphonic.availablePluginNames)
 			{
@@ -439,6 +476,43 @@ namespace UtilORama4
 				cboAlignPolyphonic.Items.Add(vamps.AlignmentName(alType));
 			}
 
+			/////////////////////
+			//! Pitch and Key //
+			///////////////////
+			cboMethodPitchKey.Items.Clear();
+			foreach (string plugName in VampPitchKey.availablePluginNames)
+			{
+				cboMethodPitchKey.Items.Add(plugName);
+			}
+			cboLabelsPitchKey.Items.Clear();
+			foreach (string labelName in VampPitchKey.availableLabels)
+			{
+				cboLabelsPitchKey.Items.Add(labelName);
+			}
+			cboAlignPitchKey.Items.Clear();
+			foreach (vamps.AlignmentType alType in VampPitchKey.allowableAlignments)
+			{
+				cboAlignPitchKey.Items.Add(vamps.AlignmentName(alType));
+			}
+
+			///////////////////
+			//!  T E M P O  //
+			/////////////////
+			cboMethodTempo.Items.Clear();
+			foreach (string plugName in VampTempo.availablePluginNames)
+			{
+				cboMethodTempo.Items.Add(plugName);
+			}
+			cboLabelsTempo.Items.Clear();
+			foreach (string labelName in VampTempo.availableLabels)
+			{
+				cboLabelsTempo.Items.Add(labelName);
+			}
+			cboAlignTempo.Items.Clear();
+			foreach (vamps.AlignmentType alType in VampTempo.allowableAlignments)
+			{
+				cboAlignTempo.Items.Add(vamps.AlignmentName(alType));
+			}
 
 		}
 
@@ -459,7 +533,7 @@ namespace UtilORama4
 			txtStartBeat.Text = startBeat.ToString();
 			vscStartBeat.Value = (5 - startBeat);
 			SetCombo(cboDetectBarBeats, heartOfTheSun.detectBars);
-			chkWhiteBarBeats.Checked = heartOfTheSun.whiteBarsBeats;
+			chkWhiten.Checked = heartOfTheSun.whiteBarsBeats;
 			chkBars.Checked = heartOfTheSun.doBars;
 			chkBeatsFull.Checked = heartOfTheSun.DoBeatsFull;
 			chkBeatsHalf.Checked = heartOfTheSun.doBeatsHalf;
@@ -467,12 +541,12 @@ namespace UtilORama4
 			chkBeatsQuarter.Checked = heartOfTheSun.doBeatsQuarter;
 			//SetCombo(cboAlignBarsBeats,				heartOfTheSun.alignBarsBeats);
 
-			SetCombo(cboOnsetsPlugin, heartOfTheSun.methodOnsets);
+			SetCombo(cboMethodOnsets, heartOfTheSun.methodOnsets);
 			SetCombo(cboOnsetsDetect, heartOfTheSun.detectOnsets);
 			vscSensitivity.Value = heartOfTheSun.sensitivityOnsets;
-			chkOnsetsWhite.Checked = heartOfTheSun.whiteOnsets;
+			chkWhiten.Checked = heartOfTheSun.whiteOnsets;
 			chkNoteOnsets.Checked = heartOfTheSun.doOnsets;
-			SetCombo(cboOnsetsLabels, heartOfTheSun.labelOnsets);
+			SetCombo(cboLabelsOnsets, heartOfTheSun.labelOnsets);
 			//SetCombo(cboAlignOnsets,					heartOfTheSun.alignOnsets);
 			SetCombo(cboStepSize, heartOfTheSun.stepSize);
 			swRamps.Checked = heartOfTheSun.Ramps;
@@ -515,7 +589,7 @@ namespace UtilORama4
 			chkxLights.Checked = heartOfTheSun.UsexLights;
 			chkAutolaunch.Checked = heartOfTheSun.autoLaunch;
 
-			SetAlignments();
+			//SetAlignments();
 
 
 			RecallLastFile();
@@ -536,21 +610,21 @@ namespace UtilORama4
 			{ heartOfTheSun.timeSignature = 4; }
 			heartOfTheSun.startBeat = Int32.Parse(txtStartBeat.Text); // startBeat;
 			heartOfTheSun.detectBars = cboDetectBarBeats.Text;
-			heartOfTheSun.whiteBarsBeats = chkWhiteBarBeats.Checked;
+			heartOfTheSun.whiteBarsBeats = chkWhiten.Checked;
 			heartOfTheSun.doBars = chkBars.Checked;
 			heartOfTheSun.DoBeatsFull = chkBeatsFull.Checked;
 			heartOfTheSun.doBeatsHalf = chkBeatsHalf.Checked;
 			heartOfTheSun.doBeatsThird = chkBeatsThird.Checked;
 			heartOfTheSun.doBeatsQuarter = chkBeatsQuarter.Checked;
-			heartOfTheSun.alignBarsBeats = cboAlignBarsBeats.Text;
+			heartOfTheSun.alignBarsBeats = cboAlignBarBeats.Text;
 			heartOfTheSun.Ramps = swRamps.Checked;
 
-			heartOfTheSun.methodOnsets = cboOnsetsPlugin.Text;
+			heartOfTheSun.methodOnsets = cboMethodOnsets.Text;
 			heartOfTheSun.detectOnsets = cboOnsetsDetect.Text;
 			heartOfTheSun.sensitivityOnsets = vscSensitivity.Value;
-			heartOfTheSun.whiteOnsets = chkOnsetsWhite.Checked;
+			heartOfTheSun.whiteOnsets = chkWhiten.Checked;
 			heartOfTheSun.doOnsets = chkNoteOnsets.Checked;
-			heartOfTheSun.labelOnsets = cboOnsetsLabels.Text;
+			heartOfTheSun.labelOnsets = cboLabelsOnsets.Text;
 			heartOfTheSun.alignOnsets = cboAlignOnsets.Text;
 			heartOfTheSun.stepSize = cboStepSize.Text;
 
@@ -905,7 +979,7 @@ namespace UtilORama4
 					//SaveSelections(file);
 					if (!chkReuse.Checked)
 					{
-						int errs = xUtils.ClearTempDir(pathWork);
+						int errs = xUtils.ClearTempDir(tempPath);
 					}
 					//CloseForm();
 					SetTheControlsForTheHeartOfTheSun();
@@ -920,7 +994,7 @@ namespace UtilORama4
 			{
 				if (!chkReuse.Checked)
 				{
-					int errs = xUtils.ClearTempDir(pathWork);
+					int errs = xUtils.ClearTempDir(tempPath);
 				}
 				//CloseForm();
 				SetTheControlsForTheHeartOfTheSun();
@@ -1119,7 +1193,7 @@ namespace UtilORama4
 				ImBusy(true);
 				fileTimingsLast = dlgSaveFile.FileName;
 				Properties.Settings.Default.LastxLightsTimingsSavePath = Path.GetDirectoryName(dlgSaveFile.FileName);
-				ExportSelectedxTimings(dlgSaveFile.FileName);
+				ExportSelectedVampsToxLights(dlgSaveFile.FileName);
 				mruTimings.AddNew(fileTimingsLast);
 				mruTimings.SaveToConfig();
 				dirtyTimes = false;
@@ -1805,10 +1879,10 @@ namespace UtilORama4
 
 		private void btnOK_Click(object sender, EventArgs e)
 		{
-			bool success = RunAnalysis();
+			bool success = Analyze();
 		}
 
-		private bool RunAnalysis()
+		private bool Analyze()
 		{
 			bool success = false;
 
@@ -1839,8 +1913,9 @@ namespace UtilORama4
 				// Next, do we need to re-prep the vamp results
 				bool reRunVamps = false; // reset flag
 				if (!chkReuse.Checked) reRunVamps = true;
-				string barBeatsResults = pathWork + VampBarBeats.ResultsFile;
-				if (!System.IO.File.Exists(barBeatsResults)) reRunVamps = true;
+				//string barBeatsResults = pathWork + VampBarBeats.ResultsName;
+				VampBarBeats.FileResults = Annotator.TempPath + VampBarBeats.ResultsName;
+				if (!Fyle.Exists(VampBarBeats.FileResults)) reRunVamps = true;
 				if (reRunVamps)
 				{
 					Fyle.MakeNoise(Fyle.Noises.DrumRoll);
@@ -1848,7 +1923,7 @@ namespace UtilORama4
 					//! REMARKED OUT FOR TESTING DEBUGGING, LEAVE FILES
 					if (!chkReuse.Checked)
 					{
-						//int errs = xUtils.ClearTempDir(pathWork);
+						//int errs = xUtils.ClearTempDir(tempPath);
 					}
 					//! UNREMARK AFTER TESTING!
 					//Vamperize(fileAudioLast);
@@ -2242,17 +2317,20 @@ namespace UtilORama4
 
 			//if (chkBars.Checked)
 			//if (doBarsBeats)
+			//! BARS AND BEATS
 			if (chkBarsBeats.Checked)
 			{
+				//! BARS
 				if (VampBarBeats.xBars != null)
 				{
 					if (VampBarBeats.xBars.effects.Count > 0)
 					{
 						//WriteTimingFile4(transBarBeats.xBars, fileName);
 						//WriteTimingFile5(transBarBeats.xBars, fileName);
-						writeCount += 3;
+						writeCount++;
 					}
 				}
+				//! FULL BEATS WHOLE NOTES
 				if (chkBeatsFull.Checked)
 				{
 					if (VampBarBeats.xBeatsFull != null)
@@ -2261,10 +2339,11 @@ namespace UtilORama4
 						{
 							//WriteTimingFile4(transBarBeats.xBeatsFull, fileName);
 							//WriteTimingFile5(transBarBeats.xBeatsFull, fileName);
-							writeCount += 3;
+							writeCount++;
 						}
 					}
 				}
+				//! HALF BEATS EIGHTH NOTES
 				if (chkBeatsHalf.Checked)
 				{
 					if (VampBarBeats.xBeatsHalf != null)
@@ -2273,10 +2352,11 @@ namespace UtilORama4
 						{
 							//WriteTimingFile4(transBarBeats.xBeatsHalf, fileName);
 							//WriteTimingFile5(transBarBeats.xBeatsHalf, fileName);
-							writeCount += 3;
+							writeCount++;
 						}
 					}
 				}
+				//! THIRD BEATS TWELTH NOTES
 				if (chkBeatsThird.Checked)
 				{
 					if (VampBarBeats.xBeatsThird != null)
@@ -2285,10 +2365,11 @@ namespace UtilORama4
 						{
 							//WriteTimingFile4(transBarBeats.xBeatsThird, fileName);
 							//WriteTimingFile5(transBarBeats.xBeatsThird, fileName);
-							writeCount += 3;
+							writeCount++;
 						}
 					}
 				}
+				//! QUARTER BEATS SIXTEENTH NOTES
 				if (chkBeatsQuarter.Checked)
 				{
 					if (VampBarBeats.xBeatsQuarter != null)
@@ -2297,11 +2378,13 @@ namespace UtilORama4
 						{
 							//WriteTimingFile4(transBarBeats.xBeatsQuarter, fileName);
 							//WriteTimingFile5(transBarBeats.xBeatsQuarter, fileName);
-							writeCount += 3;
+							writeCount++;
 						}
 					}
 				}
-			}
+			} // End Bars and Beats
+			
+			//! NOTE ONSETS
 			if (chkNoteOnsets.Checked)
 			{
 				if (VampNoteOnsets.xOnsets != null)
@@ -2310,7 +2393,7 @@ namespace UtilORama4
 					{
 						//WriteTimingFile4(transOnsets.xOnsets, fileName);
 						//WriteTimingFile5(transOnsets.xOnsets, fileName);
-						writeCount += 3;
+						writeCount++;
 					}
 				}
 			}
@@ -2323,7 +2406,33 @@ namespace UtilORama4
 					if (VampPolyphonic.xPolyphonic.effects.Count > 0)
 					{
 						WriteTimingFile4(VampPolyphonic.xPolyphonic, fileName);
-						writeCount+=3;
+						writeCount++;
+					}
+				}
+			}
+
+			//! PITCH AND KEY CHANGES
+			if (chkPitchKey.Checked)
+			{
+				if (VampPitchKey.xPitchKey != null)
+				{
+					if (VampPitchKey.xPitchKey.effects.Count > 0)
+					{
+						WriteTimingFile4(VampPitchKey.xPitchKey, fileName);
+						writeCount++;
+					}
+				}
+			}
+
+			//! TEMPO CHANGES
+			if (chkPolyphonic.Checked)
+			{
+				if (VampPolyphonic.xPolyphonic != null)
+				{
+					if (VampPolyphonic.xPolyphonic.effects.Count > 0)
+					{
+						WriteTimingFile4(VampPolyphonic.xPolyphonic, fileName);
+						writeCount++;
 					}
 				}
 			}
@@ -2551,7 +2660,7 @@ namespace UtilORama4
 				case VampBarBeats.PLUGINqmBarAndBeat:
 					lblDetectBarBeats.Enabled = false;
 					cboDetectBarBeats.Enabled = false;
-					chkWhiteBarBeats.Enabled = false;
+					chkWhiten.Enabled = false;
 					break;
 				case VampBarBeats.PLUGINqmTempo:
 					lblDetectBarBeats.Enabled = true;
@@ -2562,12 +2671,12 @@ namespace UtilORama4
 					cboDetectBarBeats.Items.Add("Phase Deviation (Wind: Flute, Sax, Trumpet)");
 					cboDetectBarBeats.Items.Add("Complex Domain (Strings/Mixed: Piano, Guitar)");
 					cboDetectBarBeats.Items.Add("Broadband Energy Rise (Percussion mixed with other)");
-					chkWhiteBarBeats.Enabled = true;
+					chkWhiten.Enabled = true;
 					break;
 				case VampBarBeats.PLUGINbeatRoot:
 					lblDetectBarBeats.Enabled = false;
 					cboDetectBarBeats.Enabled = false;
-					chkWhiteBarBeats.Enabled = false;
+					chkWhiten.Enabled = false;
 					break;
 				case VampBarBeats.PLUGINaubio:
 					lblDetectBarBeats.Enabled = true;
@@ -2581,7 +2690,7 @@ namespace UtilORama4
 					cboDetectBarBeats.Items.Add("Kullback-Liebler");
 					cboDetectBarBeats.Items.Add("Modified Kullback-Liebler");
 					cboDetectBarBeats.Items.Add("Spectral Flux");
-					chkWhiteBarBeats.Enabled = false;
+					chkWhiten.Enabled = false;
 					break;
 			}
 		}
@@ -2605,20 +2714,20 @@ namespace UtilORama4
 			vscStartBeat.Value = 1;
 			startBeat = 1;
 			cboDetectBarBeats.SelectedIndex = 0;
-			chkWhiteBarBeats.Checked = false;
+			chkWhiten.Checked = false;
 			chkBars.Checked = true;
 			chkBeatsFull.Checked = true;
 			chkBeatsHalf.Checked = true;
 			chkBeatsThird.Checked = false;
 			chkBeatsQuarter.Checked = true;
-			cboAlignBarsBeats.SelectedIndex = 1; // 25ms 40fps
+			cboAlignBarBeats.SelectedIndex = 1; // 25ms 40fps
 
-			cboOnsetsPlugin.SelectedIndex = 0;
+			cboMethodOnsets.SelectedIndex = 0;
 			cboOnsetsDetect.SelectedIndex = 0;
 			vscSensitivity.Value = 50;
-			chkOnsetsWhite.Checked = false;
+			chkWhiten.Checked = false;
 			chkNoteOnsets.Checked = true;
-			cboOnsetsLabels.SelectedIndex = 0;
+			cboLabelsOnsets.SelectedIndex = 0;
 			cboAlignOnsets.SelectedIndex = 5; // Quarter Beats Sixteenth Notes
 
 			cboMethodPolyphonic.SelectedIndex = 0;
@@ -2816,7 +2925,7 @@ namespace UtilORama4
 		{
 			Process cmdPrompt = new Process();
 			cmdPrompt.StartInfo.FileName = "cmd.exe";
-			cmdPrompt.StartInfo.WorkingDirectory = pathWork;
+			cmdPrompt.StartInfo.WorkingDirectory = tempPath;
 			//cmdPrompt.StartInfo.Arguments = pathWork;
 			cmdPrompt.Start();
 		}
@@ -2825,7 +2934,7 @@ namespace UtilORama4
 		{
 			Process explore = new Process();
 			explore.StartInfo.FileName = "explorer.exe";
-			explore.StartInfo.Arguments = pathWork;
+			explore.StartInfo.Arguments = tempPath;
 			explore.Start();
 
 		}
@@ -2921,15 +3030,15 @@ namespace UtilORama4
 
 		}
 
-		private void SetAlignments()
+		private void zzzOLD_SetAlignments()
 		{
-			cboAlignBarsBeats.Items.Clear();
-			if (chkLOR.Checked) cboAlignBarsBeats.Items.Add(vamps.AlignmentName(vamps.AlignmentType.FPS10));
-			cboAlignBarsBeats.Items.Add(vamps.AlignmentName(vamps.AlignmentType.FPS20));
-			if (chkLOR.Checked) cboAlignBarsBeats.Items.Add(vamps.AlignmentName(vamps.AlignmentType.FPS30));
-			if (chkxLights.Checked) cboAlignBarsBeats.Items.Add(vamps.AlignmentName(vamps.AlignmentType.FPS40));
-			if (chkLOR.Checked) cboAlignBarsBeats.Items.Add(vamps.AlignmentName(vamps.AlignmentType.FPS60));
-			SetCombo(cboAlignBarsBeats, heartOfTheSun.alignBarsBeats);
+			cboAlignBarBeats.Items.Clear();
+			if (chkLOR.Checked) cboAlignBarBeats.Items.Add(vamps.AlignmentName(vamps.AlignmentType.FPS10));
+			cboAlignBarBeats.Items.Add(vamps.AlignmentName(vamps.AlignmentType.FPS20));
+			if (chkLOR.Checked) cboAlignBarBeats.Items.Add(vamps.AlignmentName(vamps.AlignmentType.FPS30));
+			if (chkxLights.Checked) cboAlignBarBeats.Items.Add(vamps.AlignmentName(vamps.AlignmentType.FPS40));
+			if (chkLOR.Checked) cboAlignBarBeats.Items.Add(vamps.AlignmentName(vamps.AlignmentType.FPS60));
+			SetCombo(cboAlignBarBeats, heartOfTheSun.alignBarsBeats);
 
 			cboAlignOnsets.Items.Clear();
 			if (chkLOR.Checked) cboAlignOnsets.Items.Add(vamps.AlignmentName(vamps.AlignmentType.FPS10));
@@ -2975,13 +3084,13 @@ namespace UtilORama4
 		private void cboOnsetsPlugin_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			//TODO Move this to TransformNoteOnsets class
-			int plugin = cboOnsetsPlugin.SelectedIndex;
+			int plugin = cboMethodOnsets.SelectedIndex;
 			switch (plugin)
 			{
 				case VampNoteOnsets.PLUGINqmOnset:
-					cboOnsetsLabels.Items.Clear();
-					cboOnsetsLabels.Items.Add(VampNoteOnsets.availableLabels[0]);
-					chkOnsetsWhite.Enabled = true;
+					cboLabelsOnsets.Items.Clear();
+					cboLabelsOnsets.Items.Add(VampNoteOnsets.availableLabels[0]);
+					chkWhiten.Enabled = true;
 					pnlOnsetSensitivity.Enabled = true;
 					cboOnsetsDetect.Items.Clear();
 					cboOnsetsDetect.Items.Add("High-Frequence Content");
@@ -2992,37 +3101,37 @@ namespace UtilORama4
 					cboOnsetsDetect.Enabled = true;
 					break;
 				case VampNoteOnsets.PLUGINqmTranscribe:
-					cboOnsetsLabels.Items.Clear();
-					cboOnsetsLabels.Items.Add(VampNoteOnsets.availableLabels[0]);
-					cboOnsetsLabels.Items.Add(VampNoteOnsets.availableLabels[1]);
-					cboOnsetsLabels.Items.Add(VampNoteOnsets.availableLabels[2]);
-					chkOnsetsWhite.Enabled = false;
+					cboLabelsOnsets.Items.Clear();
+					cboLabelsOnsets.Items.Add(VampNoteOnsets.availableLabels[0]);
+					cboLabelsOnsets.Items.Add(VampNoteOnsets.availableLabels[1]);
+					cboLabelsOnsets.Items.Add(VampNoteOnsets.availableLabels[2]);
+					chkWhiten.Enabled = false;
 					pnlOnsetSensitivity.Enabled = false;
 					cboOnsetsDetect.Enabled = false;
 					break;
 				case VampNoteOnsets.PLUGINOnsetDS:
-					chkOnsetsWhite.Enabled = false;
+					chkWhiten.Enabled = false;
 					pnlOnsetSensitivity.Enabled = false;
 					cboOnsetsDetect.Enabled = false;
-					cboOnsetsLabels.Items.Clear();
-					cboOnsetsLabels.Items.Add(VampNoteOnsets.availableLabels[0]);
+					cboLabelsOnsets.Items.Clear();
+					cboLabelsOnsets.Items.Add(VampNoteOnsets.availableLabels[0]);
 					break;
 				case VampNoteOnsets.PLUGINSilvet:
-					chkOnsetsWhite.Enabled = false;
+					chkWhiten.Enabled = false;
 					pnlOnsetSensitivity.Enabled = false;
 					cboOnsetsDetect.Enabled = false;
-					cboOnsetsLabels.Items.Clear();
-					cboOnsetsLabels.Items.Add(VampNoteOnsets.availableLabels[0]);
+					cboLabelsOnsets.Items.Clear();
+					cboLabelsOnsets.Items.Add(VampNoteOnsets.availableLabels[0]);
 					break;
 				case VampNoteOnsets.PLUGINaubioOnset:
-					chkOnsetsWhite.Enabled = false;
+					chkWhiten.Enabled = false;
 					pnlOnsetSensitivity.Enabled = false;
 					cboOnsetsDetect.Enabled = false;
-					cboOnsetsLabels.Items.Clear();
-					cboOnsetsLabels.Items.Add(VampNoteOnsets.availableLabels[0]);
+					cboLabelsOnsets.Items.Clear();
+					cboLabelsOnsets.Items.Add(VampNoteOnsets.availableLabels[0]);
 					break;
 				case VampNoteOnsets.PLUGINaubioTracker:
-					chkOnsetsWhite.Enabled = false;
+					chkWhiten.Enabled = false;
 					pnlOnsetSensitivity.Enabled = false;
 					cboOnsetsDetect.Items.Add("Energy Based");
 					cboOnsetsDetect.Items.Add("Spectral Difference (Percussion: Drums, Chimes)");

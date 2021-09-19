@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="VampORama.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="UtilORama4.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="Location" Type="System.Drawing.Point" Scope="User">
@@ -271,6 +271,15 @@
     </Setting>
     <Setting Name="LastxLightsTimingsSavePath" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="OutputLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">100, 50</Value>
+    </Setting>
+    <Setting Name="OutputSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">600, 450</Value>
+    </Setting>
+    <Setting Name="OutputWindowState" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>
 </SettingsFile>

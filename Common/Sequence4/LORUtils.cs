@@ -33,10 +33,10 @@ namespace LORUtils4
 		public const string ICONgrnChannel = "00FF00";
 		public const string ICONbluChannel = "0000FF";
 		public const string ICONwhtChannel = "FFFFFF";
-		// Note: LOR colors not in the same order as .Net or Web colors, Red and Blue are reversed
-		public const Int32 LORCOLOR_RED = 255;      // 0x0000FF
-		public const Int32 LORCOLOR_GRN = 65280;    // 0x00FF00
-		public const Int32 LORCOLOR_BLU = 16711680; // 0xFF0000
+		// Note: LOR colors not in the same order as .Net or Web colors, Red and Blue are reversed (In BGR order)
+		public const Int32 LORCOLOR_RED = 0x0000FF; // 255;      // 0x0000FF
+		public const Int32 LORCOLOR_GRN = 0x00FF00; // 65280;    // 0x00FF00
+		public const Int32 LORCOLOR_BLU = 0xFF0000; // 16711680; // 0xFF0000
 		public const Int32 LORCOLOR_BLK = 0;
 		public const Int32 LORCOLOR_WHT = 0xFFFFFF;
 
@@ -2309,7 +2309,7 @@ namespace LORUtils4
 					{
 						exe = "C:\\Program Files (x86)\\Light-O-Rama\\LORSequenceEditor.exe";
 					}
-					bool valid = System.IO.File.Exists(exe);
+					bool valid = Fyle.Exists(exe);
 					if (!valid)
 					{
 						exe = "";

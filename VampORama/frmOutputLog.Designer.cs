@@ -91,7 +91,7 @@ namespace UtilORama4
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.btnClose;
-			this.ClientSize = new System.Drawing.Size(598, 408);
+			this.ClientSize = new System.Drawing.Size(598, 411);
 			this.Controls.Add(this.lblDebug);
 			this.Controls.Add(this.txtOutput);
 			this.Controls.Add(this.btnSaveLog);

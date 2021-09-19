@@ -14,10 +14,10 @@ namespace UtilORama4
 	{
 		public const string transformName = "Bars and Beats";
 		public const string barsName = "Bars (Whole notes, (4 Quarter notes))";
-		public const string beatsFullName = "Beats-Full (Quarter notes)";
-		public const string beatsHalfName = "Beats-Half (Eighth notes)";
-		public const string beatsThirdName = "Beats-Third (Twelth notes)";
-		public const string beatsQuarterName = "Beats-Quarter (Sixteenth notes)";
+		public const string beatsFullName = "Full Beats (Quarter notes)";
+		public const string beatsHalfName = "Half Beats (Eighth notes)";
+		public const string beatsThirdName = "Third Beats (Twelth notes)";
+		public const string beatsQuarterName = "Quarter Beats (Sixteenth notes)";
 		public const string framesName = "Frames";
 
 
@@ -38,7 +38,8 @@ namespace UtilORama4
 																												//public bool ReuseResults = false;
 																												//public int totalCentiseconds = 0;
 																												//public int totalMilliseconds = 0;
-		public static string ResultsFile = "song_vamp_qm-vamp-plugins_qm-barbeattracker_beats.csv";
+		public static string ResultsName = "BarsAndBeats.csv";
+		public static string FileResults = Annotator.TempPath + ResultsName;
 
 		//private Annotator myAnnotator = null;
 
@@ -55,6 +56,12 @@ namespace UtilORama4
 																											//"vamp:mvamp-ibt:marsyas_ibt:beat_times",
 																											"vamp:vamp-aubio:aubiotempo:beats" };
 
+		public static readonly vamps.AlignmentType[] allowableAlignments = { vamps.AlignmentType.None,
+																																					vamps.AlignmentType.FPS20,
+																																					vamps.AlignmentType.FPS30,
+																																					vamps.AlignmentType.FPS40,
+																																					vamps.AlignmentType.FPS60 };
+
 		public static readonly string[] filesAvailableConfigs = {"vamp_qm-vamp-plugins_qm-barbeattracker_beats.n3",
 																											"vamp_qm-vamp-plugins_qm-tempotracker_output_beats.n3",
 																											"vamp_beatroot-vamp_beatroot_beats.n3",
@@ -65,6 +72,8 @@ namespace UtilORama4
 
 		private static string fileConfigBase = "vamp_qm-vamp-plugins_qm-barbeattracker_beats";
 		private static int pluginIndex = 0;
+		public static int AverageBarMS = 100;
+		public static int AverageBeatMS = 25;
 
 		public static int UsePlugin
 		{
@@ -115,7 +124,7 @@ namespace UtilORama4
 		}
 
 
-		private static readonly vamps.AlignmentType[] allowableAlignments = { vamps.AlignmentType.None, vamps.AlignmentType.FPS20, vamps.AlignmentType.FPS40 };
+		//private static readonly vamps.AlignmentType[] allowableAlignments = { vamps.AlignmentType.None, vamps.AlignmentType.FPS20, vamps.AlignmentType.FPS40 };
 
 
 		private static vamps.AlignmentType alignmentType = vamps.AlignmentType.None;
@@ -186,7 +195,7 @@ namespace UtilORama4
 			StreamWriter writer;
 
 			string fileConfigFrom = pathConfigs + fileConfig;
-			string fileConfigTo = Annotator.WorkPath + fileConfig;
+			string fileConfigTo = Annotator.TempPath + fileConfig;
 
 			try
 			{
@@ -594,40 +603,49 @@ namespace UtilORama4
 			Annotator.xBeatsThird = xBeatsThird;
 			Annotator.xBeatsQuarter = xBeatsQuarter;
 			Annotator.xFrames = xFrames;
+
+			int barTime = xBars.effects[xBars.effects.Count-1].starttime - xBars.effects[0].starttime;
+			AverageBarMS = (int)Math.Round(barTime / (double)xBars.effects.Count);
+			barTime = xBeatsFull.effects[xBeatsFull.effects.Count - 1].starttime - xBeatsFull.effects[0].starttime;
+			AverageBeatMS = (int)Math.Round(barTime / (double)xBeatsFull.effects.Count);
+
+
+
+
 			return err;
 		} // end Beats
 
 		public static int xTimingsToLORtimings()
 		{
 			int errs = 0;
-			xTimingToLORtimings(xBars);
-			Annotator.GridBeats = xTimingToLORtimings(xBeatsFull);
+			xTimingToLORtimings(xBars, "0 " + xBars.Name);
+			Annotator.GridBeats = xTimingToLORtimings(xBeatsFull, "1 " + xBeatsFull.Name);
 			if (Annotator.VampTrack.timingGrid == null) Annotator.VampTrack.timingGrid = Annotator.GridBeats;
-			xTimingToLORtimings(xBeatsHalf);
-			xTimingToLORtimings(xBeatsThird);
-			xTimingToLORtimings(xBeatsQuarter);
+			xTimingToLORtimings(xBeatsHalf, "2 " + xBeatsHalf.Name);
+			xTimingToLORtimings(xBeatsThird, "3 " + xBeatsThird.Name);
+			xTimingToLORtimings(xBeatsQuarter, "4 " + xBeatsQuarter.Name);
 			//errs += xTimingToLORtimings(xFrames);
 			Annotator.Sequence.CentiFix();
 			return errs;
 		}
 
-		public static LORTimings4 xTimingToLORtimings(xTimings timings)
+		public static LORTimings4 xTimingToLORtimings(xTimings timings, string gridName)
 		{
 			LORTimings4 beatGrid = null;
 			int errs = 0;
-			string theName = timings.Name;
+			//string theName = timings.Name;
 			if (timings != null)
 			{
 				if (timings.effects.Count > 0)
 				{
 					int tec = timings.effects.Count;
-					beatGrid = Annotator.Sequence.FindTimingGrid(theName, true);
+					beatGrid = Annotator.Sequence.FindTimingGrid(gridName, true);
 					errs = SequenceFunctions.ImportTimingGrid(beatGrid, timings);
 					if (tec != beatGrid.timings.Count)
 					{
-						string msg = "Warning:\r\nxTimings '" + theName + "' has ";
+						string msg = "Warning:\r\nxTimings '" + gridName + "' has ";
 						msg += timings.effects.Count.ToString() + " effects, but\r\n";
-						msg += "Timing Grid '" + theName + "' has ";
+						msg += "Timing Grid '" + gridName + "' has ";
 						msg += beatGrid.timings.Count.ToString() + " effects.\r\n";
 						msg += "   (This may be because of tightly close timings)";
 						Fyle.BUG(msg);
@@ -727,31 +745,31 @@ namespace UtilORama4
 			int errs = 0;
 			if (Annotator.UseRamps)
 			{
-				errs += xTimingToLORChannels(xBars);
-				errs += xTimingToLORChannels(xBeatsFull);
-				errs += xTimingToLORChannels(xBeatsHalf);
-				errs += xTimingToLORChannels(xBeatsThird);
-				errs += xTimingToLORChannels(xBeatsQuarter);
+				errs += xTimingToLORChannels(xBars,					lutils.Color_NettoLOR(System.Drawing.Color.Red));
+				errs += xTimingToLORChannels(xBeatsFull,		lutils.Color_NettoLOR(System.Drawing.Color.DarkOrange));
+				errs += xTimingToLORChannels(xBeatsHalf,		lutils.Color_NettoLOR(System.Drawing.Color.Gold));
+				errs += xTimingToLORChannels(xBeatsThird,		lutils.Color_NettoLOR(System.Drawing.Color.Lime));
+				errs += xTimingToLORChannels(xBeatsQuarter, lutils.Color_NettoLOR(System.Drawing.Color.Blue));
 			}
 			else
 			{
 				// Actually Bars
-				errs += xTimingToLORChannels(xBeatsQuarter, xBars.Name, Annotator.BeatsPerBar * 4);
+				errs += xTimingToLORChannels(xBeatsQuarter,	lutils.Color_NettoLOR(System.Drawing.Color.Red),				xBars.Name, Annotator.BeatsPerBar * 4);
 				// Actually Full Beats
-				errs += xTimingToLORChannels(xBeatsQuarter, xBeatsFull.Name, Annotator.BeatsPerBar);
+				errs += xTimingToLORChannels(xBeatsQuarter,	lutils.Color_NettoLOR(System.Drawing.Color.DarkOrange), xBeatsFull.Name, Annotator.BeatsPerBar);
 				// Actually Half Beats
-				errs += xTimingToLORChannels(xBeatsQuarter, xBeatsHalf.Name, 2);
+				errs += xTimingToLORChannels(xBeatsQuarter,	lutils.Color_NettoLOR(System.Drawing.Color.Gold),				xBeatsHalf.Name, 2);
 				// Third Beats
-				errs += xTimingToLORChannels(xBeatsThird);
+				errs += xTimingToLORChannels(xBeatsThird,		lutils.Color_NettoLOR(System.Drawing.Color.Lime));
 				// Finally, Quarter Beats
-				errs += xTimingToLORChannels(xBeatsQuarter);
+				errs += xTimingToLORChannels(xBeatsQuarter,	lutils.Color_NettoLOR(System.Drawing.Color.Blue));
 			}
 			
 			return errs;
 		}
 
 
-		public static int xTimingToLORChannels(xTimings timings, string beatName = "", int divider = 1) // Note lack of an s
+		public static int xTimingToLORChannels(xTimings timings, int LORcolor, string beatName = "", int divider = 1) // Note lack of an s
 		{
 			// NOTE: Exports a single timing
 			int errs = 0;

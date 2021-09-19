@@ -11,16 +11,16 @@ using xUtilities;
 
 namespace UtilORama4
 {
-	//! POLYPHONIC TRANSCRIPTION
-	static class VampPolyphonic //: ITransform
+	//! PITCH AND KEY
+	static class VampPitchKey //: ITransform
 	{
-		public const string transformName = "Polyphonic Transcription";
-		public const int PLUGINqmTranscribe = 0;
-		public const int PLUGINSilvet = 1;
-		public const int PLUGINalicante = 2;
-		public const int PLUGINaubioTracker = 3;
+		public const string transformName = "Pitch and Key Transcription";
+		public const int PLUGINqueenMary = 0;
+		public const int PLUGINcepstral = 1;
+		public const int PLUGINchordino = 2;
+		public const int PLUGINaubio = 3;
 
-		public static int lastPluginUsed = PLUGINqmTranscribe;
+		public static int lastPluginUsed = PLUGINqueenMary;
 
 		public const int METHOD1frequency = 0;
 		public const int METHOD1spectral = 1;
@@ -36,26 +36,28 @@ namespace UtilORama4
 		public const int METHOD2kullback = 5;
 		public const int METHOD2modKulback = 6;
 		public const int METHOD2flux = 7;
-		public static string PolyNoteNamePrefix = "";
-		public static string PolyGroupNamePrefix = "";
-		public static string ResultsName = "Polyphonic.csv";
+		public static string PitchKeyNamePrefix = "";
+		public static string PitchKeyGroupNamePrefix = "";
+		public static string ResultsName = "PitchKey.csv";
 		public static string FileResults = Annotator.TempPath + ResultsName;
 
 
-		public static xTimings xPolyphonic = new xTimings(transformName);
+		public static xTimings xPitchKey = new xTimings(transformName);
 		public static xTimings alignTimes = null;
 		//public static labelType labelType = labelType.none;
-		public static vamps.LabelTypes LabelType = vamps.LabelTypes.NoteNamesUnicode;
+		public static vamps.LabelTypes LabelType = vamps.LabelTypes.KeyNamesUnicode;
 
-		public static readonly string[] availablePluginNames = { "Queen Mary Polyphonic Transcription",
-																											"Silvet Note Transcription",
-																											"Aubio Note Tracker",
+		public static readonly string[] availablePluginNames = {	"Queen Mary Key Detector",
+																															"Cepstral Pitch Tracker",
+																															"Chordino Chord Notes",
+																															"Aubio Pitch Frequency",
 		//																											"#Alicante Note Onset Detector",
 																												"#Alicante Polyphonic Transcription" };
 
-		public static readonly string[] availablePluginCodes = {"vamp:qm-vamp-plugins:qm-transcription:transcription",
-																											"vamp:silvet:silvet:onsets",
-																											"vamp:vamp-aubio:aubionotes:notes" };
+		public static readonly string[] availablePluginCodes = {"vamp:qm-vamp-plugins:qm-keydetector:key",
+																														"vamp:cepstral-pitchtracker:cepstral-pitchtracker:notes",
+																														"vamp:nnls-chroma:chordino:chordnotes",
+																														"vamp:vamp-aubio:aubiopitch:frequency" };
 
 		public static readonly vamps.AlignmentType[] allowableAlignments = { vamps.AlignmentType.None,
 																																					vamps.AlignmentType.FPS20,
@@ -63,17 +65,24 @@ namespace UtilORama4
 																																					vamps.AlignmentType.FPS40,
 																																					vamps.AlignmentType.FPS60,
 																																					vamps.AlignmentType.NoteOnsets,
-																																					vamps.AlignmentType.BeatsQuarter };
+																																					vamps.AlignmentType.BeatsQuarter,
+																																					vamps.AlignmentType.Bars };
 
-		public static readonly string[] filesAvailableConfigs = {"vamp_qm-vamp-plugins_qm-transcription_transcription.n3",
-																										"vamp_silvet_silvet_onsets.n3",
-																										"vamp_vamp-aubio_aubionotes_notes.n3" };
+		public static readonly string[] filesAvailableConfigs = {	"vamp_qm-vamp-plugins_qm-keydetector_key.n3",
+																															"vamp_cepstral-pitchtracker_cepstral-pitchtracker_notes.n3",
+																															"vamp_nnls-chroma_chordino_chordnotes.n3",
+																															"vamp_vamp-aubio_aubiopitch_frequency.n3" };
 
 
-		public static readonly string[] availableLabels = {	vamps.LABELNAMEnone,
-																												vamps.LABELNAMEnoteNamesAscii,
-																												vamps.LABELNAMEnoteNamesUnicode,
-																												vamps.LABELNAMEmidiNoteNumbers };
+		private static readonly vamps.LabelTypes[] allowableLabels = { vamps.LabelTypes.None, vamps.LabelTypes.KeyNamesUnicode,
+																																		vamps.LabelTypes.KeyNamesASCII,
+												vamps.LabelTypes.KeyNumbers, vamps.LabelTypes.Frequency };
+
+		public static readonly string[] availableLabels = { vamps.LABELNAMEnone,
+																												vamps.LABELNAMEkeyNamesASCII,
+																												vamps.LABELNAMEkeyNamesUnicode,
+																												vamps.LABELNAMEmidiNoteNumbers,
+																												vamps.LABELNAMEfrequency };
 		//public static readonly string[] availableLabels = {"None",
 		//																						"Note Names ASCII",
 		//																						"Note Names Unicode",
@@ -84,8 +93,8 @@ namespace UtilORama4
 		//public const int LABELNoteNameUnicode = 2;
 		//public const int LABELMidiNoteNumber = 3;
 
-		private static LORChannelGroup4 polyGroup = null;
-		public static LORChannel4[] polyChannels = null;
+		private static LORChannelGroup4 pitchKeyGroup = null;
+		public static LORChannel4[] pitchKeyChannels = null;
 
 		private static int idx = 0;
 
@@ -138,22 +147,20 @@ namespace UtilORama4
 		}
 
 
-		private static readonly vamps.LabelTypes[] allowableLabels = { vamps.LabelTypes.None, vamps.LabelTypes.NoteNamesUnicode, vamps.LabelTypes.NoteNamesAscii,
-												vamps.LabelTypes.MIDINoteNumbers, vamps.LabelTypes.Frequency };
 
 
 		public static xTimings Timings
 		{
 			get
 			{
-				return xPolyphonic;
+				return xPitchKey;
 			}
 		}
 		public static Annotator.TransformTypes TransformationType
 		{
 			get
 			{
-				return Annotator.TransformTypes.PolyphonicTranscription;
+				return Annotator.TransformTypes.PitchAndKey;
 			}
 		}
 
@@ -202,8 +209,8 @@ namespace UtilORama4
 			{
 				switch (pluginIndex)
 				{
-					case PLUGINqmTranscribe:
-						// Queen Mary Polyphonic Transcription
+					case PLUGINqueenMary:
+						// Queen Mary Key Detector
 						reader = new StreamReader(fileConfigFrom);
 						writer = new StreamWriter(fileConfigTo);
 						while (!reader.EndOfStream)
@@ -220,8 +227,8 @@ namespace UtilORama4
 						writer.Close();
 						break;
 
-					case PLUGINSilvet:
-						// Silvet
+					case PLUGINcepstral:
+						// Cepstral Pitch Tracker
 						reader = new StreamReader(fileConfigFrom);
 						writer = new StreamWriter(fileConfigTo);
 						while (!reader.EndOfStream)
@@ -238,15 +245,16 @@ namespace UtilORama4
 						writer.Close();
 						break;
 
-					case PLUGINaubioTracker:
-						// Aubio Note Tracker
+					case PLUGINaubio:
+						// Aubio Pitch Frequency
 						err = Fyle.SafeCopy(fileConfigFrom, fileConfigTo);
 						break;
 
-					case PLUGINalicante:
-						// *Alicante Polyphonic Transcription
-						string msg = "Alicante Polyphonic Transcription is not currently available.  Using Queen Mary Transcription instead.";
-						DialogResult dr = MessageBox.Show(msg, "Plugin not available", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+					case PLUGINchordino:
+						// Chordino Chord Notes
+						//string msg = "Alicante Polyphonic Transcription is not currently available.  Using Queen Mary Transcription instead.";
+						//DialogResult dr = MessageBox.Show(msg, "Plugin not available", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+						//err = Fyle.SafeCopy(fileConfigFrom, fileConfigTo);
 						err = Fyle.SafeCopy(fileConfigFrom, fileConfigTo);
 						break;
 
@@ -299,7 +307,7 @@ namespace UtilORama4
 				lineCount++;
 			} // end while loop more lines remaining
 			reader.Close();
-			xPolyphonic = new xTimings(transformName);
+			xPitchKey = new xTimings(transformName);
 
 			reader = new StreamReader(resultsFile);
 
@@ -348,7 +356,7 @@ namespace UtilORama4
 							//if (cboLabelsSpectrum.SelectedIndex == 1)
 							//{
 							//TODO Impliment Label Type	
-							noteLabel = MusicalNotation.noteNamesUnicode[note];
+							noteLabel = MusicalNotation.keyNamesUnicode[note];
 							//}
 							//if (cboLabelsOnsets.SelectedIndex == 2)
 							//{
@@ -356,7 +364,7 @@ namespace UtilORama4
 							//}
 						}
 
-						xPolyphonic.Add(noteLabel, millisecs, millisecs + duration);
+						xPitchKey.Add(noteLabel, millisecs, millisecs + duration);
 						lastNote = millisecs;
 					}
 				} // end line contains a period
@@ -380,7 +388,7 @@ namespace UtilORama4
 			int millisecs = 0;
 			string[] parts;
 			int ontime = 0;
-			int note = 0;
+			int keyID = 0;
 			double dstart = 0D;
 			double dlen = 0D;
 			// End time is start + length
@@ -391,10 +399,6 @@ namespace UtilORama4
 			// Align
 			int startms = 0;
 			int endms = 0;
-
-
-
-
 
 
 			LabelType = labelType;
@@ -410,70 +414,89 @@ namespace UtilORama4
 			//Array.Resize(ref polyMSstart, pcount);
 			//Array.Resize(ref polyMSlen, pcount);
 			pcount = 0; // reset for re-use
-			xPolyphonic.effects.Clear();
+			xPitchKey.effects.Clear();
 
 			reader = new StreamReader(resultsFile);
 
+			// First, lets get the first line of the file which has the start time of the first
+			// Key or Pitch and it's Key or Pitch number
+			if (!reader.EndOfStream)
+			{
+				lineIn = reader.ReadLine();
+				parts = lineIn.Split(',');
+				if (parts.Length == 3)
+				{
+					// Try parsing fields 0 start time (in decimal seconds)
+					double.TryParse(parts[0], out dstart);
+					// Convert double:seconds to int:milliseconds
+					msstart = (int)Math.Round(dstart * 1000);
+					startms = Annotator.AlignTimeTo(msstart, alignmentType);
+					// Get MIDI note number
+					Int32.TryParse(parts[1], out keyID);
+					if (keyID < 0) // Data integrity check
+					{
+						// In theory, it's possible to have a note with MIDI value of 0, but really really really unlikely
+						Fyle.BUG("Invalid note!");
+					}
+				}
+			}
+
+			// Now get the rest of the lines from the file, with the start times and key numbers of each subsequent
+			// change in Pitch or Key
 			while ((lineIn = reader.ReadLine()) != null)
 			{
 				parts = lineIn.Split(',');
 				if (parts.Length == 3)
 				{
-					// declare doubles to hold start and length
-					dstart = 0;
-					dlen = 0;
-					// Try parsing fields 0 and 1 for start time and length (in decimal seconds)
-					double.TryParse(parts[0], out dstart);
-					double.TryParse(parts[1], out dlen);
-					// End time is start + length
-					dend = dstart + dlen;
+					// Try parsing fields 0 start time (in decimal seconds)
+					double.TryParse(parts[0], out dend);
 					// Convert double:seconds to int:milliseconds
-					msstart = (int)Math.Round(dstart * 1000);
 					msend = (int)Math.Round(dend * 1000);
-					if (msstart < 1) // Data integrity check
+					if (msend <= msstart) // Data integrity check
 					{
-						Fyle.BUG("Invalid start time!");
+						Fyle.BUG("Backwards Note?!?!");
 					}
 					else
 					{
-						if (msend < msstart) // Data integrity check
+						// Align
+						endms = Annotator.AlignTimeTo(msend, alignmentType);
+						// Default name is the Key Number
+						string keyName = keyID.ToString();
+						if (labelType == vamps.LabelTypes.KeyNamesUnicode) keyName = MusicalNotation.keyNamesUnicode[keyID];
+						if (labelType == vamps.LabelTypes.KeyNamesASCII) keyName = MusicalNotation.keyNamesASCII[keyID];
+						// Create new xEffect with these values, add to timings list
+						xEffect xef = new xEffect(keyName, startms, endms, keyID);
+						xPitchKey.effects.Add(xef);
+							
+						// End of this one is the start of the next one
+						startms = endms;
+						// Get MIDI note number
+						Int32.TryParse(parts[1], out keyID);
+						if (keyID < 0) // Data integrity check
 						{
-							Fyle.BUG("Backwards Note?!?!");
+							// In theory, it's possible to have a note with MIDI value of 0, but really really really unlikely
+							Fyle.BUG("Invalid note!");
 						}
-						else
-						{
-							// Align
-							startms = Annotator.AlignTimeTo(msstart, alignmentType);
-							endms = Annotator.AlignTimeTo(msend, alignmentType);
-							// Get MIDI note number
-							note = Int16.Parse(parts[2]);
-							if (note < 0) // Data integrity check
-							{
-								// In theory, it's possible to have a note with MIDI value of 0, but really really really unlikely
-								Fyle.BUG("Invalid note!");
-							}
-							else
-							{
-								// Create new xEffect with these values, add to timings list
-								xEffect xef = new xEffect(MusicalNotation.noteNamesUnicode[note], startms, endms, note);
-								xPolyphonic.effects.Add(xef);
-								pcount++;
-							}
-						}
+
+						pcount++;
 					}
 				}
 			} // end while loop more lines remaining
-			
-			// Need to sort because vamp plugin outputs in the order of the ENDtime
-			//  (Understandable, since it can't properly detect it until it's done)
-			//   (Sometimes, if a long note starts after a short one, they may be out of order
-			//    because the short one ended first.)
-			//        (And that will crash LOR!)
-			// But we need them sorted in order of STARTtime (for LOR's sake)
-			xPolyphonic.effects.Sort();
-
 			reader.Close();
 
+			// Finally, if not at the end-- add one last effect containing the last Pitch or Key
+			if (startms < Annotator.songTimeMS)
+			{
+				endms = Annotator.songTimeMS;
+				// Default name is the Key Number
+				string keyName = keyID.ToString();
+				if (labelType == vamps.LabelTypes.KeyNamesUnicode) keyName = MusicalNotation.keyNamesUnicode[keyID];
+				if (labelType == vamps.LabelTypes.KeyNamesASCII) keyName = MusicalNotation.keyNamesASCII[keyID];
+				// Create new xEffect with these values, add to timings list
+				xEffect xef = new xEffect(MusicalNotation.noteNamesUnicode[keyID], startms, endms, keyID);
+				xPitchKey.effects.Add(xef);
+			}
+			
 			return pcount;
 		} // end Beats
 
@@ -483,14 +506,13 @@ namespace UtilORama4
 			//SequenceFunctions.Sequence = sequence;
 			int errs = 0;
 
-			if (xPolyphonic != null)
+			if (xPitchKey != null)
 			{
-				if (xPolyphonic.effects.Count > 0)
+				if (xPitchKey.effects.Count > 0)
 				{
-					// Note: Number '5' is the same as None Onsets because this returns, effectively, the same results
-					string gridName = "5 " + transformName;
+					string gridName = "6 " + transformName;
 					LORTimings4 polyGrid = Annotator.Sequence.FindTimingGrid(gridName, true);
-					SequenceFunctions.ImportTimingGrid(polyGrid, xPolyphonic);
+					SequenceFunctions.ImportTimingGrid(polyGrid, xPitchKey);
 				}
 			}
 
@@ -501,48 +523,44 @@ namespace UtilORama4
 		{
 			int errs = 0;
 			int grpNum = -1;
-			int polyCount = 128;
+			int keyCount = 25; // 24 standard Keys numbered 1-24.  0 is included but invalid.
 			int lastStart = -1;
-			if (LabelType == vamps.LabelTypes.NoteNamesAscii)		polyCount = MusicalNotation.noteNamesASCII.Length;
-			if (LabelType == vamps.LabelTypes.NoteNamesUnicode) polyCount = MusicalNotation.noteNamesUnicode.Length;
+			if (LabelType == vamps.LabelTypes.NoteNamesAscii)		keyCount = MusicalNotation.keyNamesASCII.Length;
+			if (LabelType == vamps.LabelTypes.NoteNamesUnicode) keyCount = MusicalNotation.keyNamesUnicode.Length;
 
 			// Part 1
-			// Get Track, Polyphonic Group, Octave Groups, and Poly Channels
-			polyGroup = Annotator.Sequence.FindChannelGroup(transformName, Annotator.VampTrack.Members, true);
-			Array.Resize(ref polyChannels, polyCount);
-			LORChannelGroup4 octoGroup = null;
-			for (int n = 0; n < polyCount; n++)
+			// Get the Vamp Track, and the PitchKey Group,
+			// and create the Key Channels
+			pitchKeyGroup = Annotator.Sequence.FindChannelGroup(transformName, Annotator.VampTrack.Members, true);
+			Array.Resize(ref pitchKeyChannels, keyCount);
+			for (int n = 1; n < keyCount; n++)
 			{
-				int g2 = (int)n / 12;
-				if (g2 != grpNum)
-				{
-					octoGroup = Annotator.Sequence.FindChannelGroup(PolyGroupNamePrefix + MusicalNotation.octaveNamesA[g2], polyGroup.Members, true); ;
-					grpNum = g2;
-				}
-				string noteName = n.ToString();
-				if (LabelType == vamps.LabelTypes.NoteNamesAscii)		noteName = MusicalNotation.noteNamesASCII[n];
-				if (LabelType == vamps.LabelTypes.NoteNamesUnicode) noteName = MusicalNotation.noteNamesUnicode[n];
+				// Default channel name is the key's number...
+				string keyName = n.ToString();
+				// ... But use the ASCII or Unicode Key representation if specified
+				if (LabelType == vamps.LabelTypes.KeyNamesASCII)	 keyName = MusicalNotation.keyNamesASCII[n];
+				if (LabelType == vamps.LabelTypes.KeyNamesUnicode) keyName = MusicalNotation.keyNamesUnicode[n];
 
-				LORChannel4 chs = Annotator.Sequence.FindChannel(PolyNoteNamePrefix + noteName, octoGroup.Members, true, true);
-				chs.color = SequenceFunctions.NoteColors[g2];
+				LORChannel4 chs = Annotator.Sequence.FindChannel(PitchKeyNamePrefix + keyName, pitchKeyGroup.Members, true, true);
+				chs.color = SequenceFunctions.GetKeyColor(n);
 				chs.effects.Clear();
-				polyChannels[n] = chs;
+				pitchKeyChannels[n] = chs;
 			}
 
 			// Part 2
-			// Create an effect in the appropriate Note Poly Channel for each timing
-			if (xPolyphonic != null)
+			// Create an effect in the appropriate Key or Pitch Channel for each timing
+			if (xPitchKey != null)
 			{
-				if (xPolyphonic.effects.Count > 0)
+				if (xPitchKey.effects.Count > 0)
 				{
-					for (int f = 0; f < xPolyphonic.effects.Count; f++)
+					for (int f = 0; f < xPitchKey.effects.Count; f++)
 					{
-						xEffect timing = xPolyphonic.effects[f];
-						int note = timing.Midi;
-						if (note < 1) // Data integrity check
+						xEffect timing = xPitchKey.effects[f];
+						int keyID = timing.Midi;
+						if (keyID < 1) // Data integrity check
 						{
 							// In theory, its possible to have a note with a MIDI number of 0, but really really really unlikely
-							Fyle.BUG("Invalid Note MIDI number!");
+							Fyle.BUG("Invalid Key number!");
 						}
 						else
 						{
@@ -569,7 +587,7 @@ namespace UtilORama4
 									{
 										eft = new LOREffect4(LOREffectType4.Intensity, csStart, csEnd);
 									}
-									polyChannels[note].effects.Add(eft);
+									pitchKeyChannels[keyID].effects.Add(eft);
 								}
 								lastStart = csStart;
 							}
@@ -580,27 +598,15 @@ namespace UtilORama4
 
 			// Part 3
 			// Get rid of the empty ones
-			for (int g1 = 0; g1< polyGroup.Members.Count; g1++)
+			for (int n1 = 0; n1< pitchKeyGroup.Members.Count; n1++)
 			{
-				if (polyGroup.Members[g1].MemberType == LORMemberType4.ChannelGroup)
+				if (pitchKeyGroup.Members[n1].MemberType == LORMemberType4.Channel)
 				{
-					octoGroup = (LORChannelGroup4)polyGroup.Members[g1];
-					for (int n1 = 0; n1< octoGroup.Members.Count; n1++)
+					LORChannel4 ch = (LORChannel4)pitchKeyGroup.Members[n1];
+					if (ch.effects.Count < 1)
 					{
-						if (octoGroup.Members[n1].MemberType == LORMemberType4.Channel)
-						{
-							LORChannel4 ch = (LORChannel4)octoGroup.Members[n1];
-							if (ch.effects.Count < 1)
-							{
-								octoGroup.Members.Items.RemoveAt(n1);
-								n1--;
-							}
-						}
-					}
-					if (octoGroup.Members.Count < 1)
-					{
-						polyGroup.Members.Items.RemoveAt(g1);
-						g1--;
+						pitchKeyGroup.Members.Items.RemoveAt(n1);
+						n1--;
 					}
 				}
 			}

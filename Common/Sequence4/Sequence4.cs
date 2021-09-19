@@ -2257,7 +2257,7 @@ namespace LORUtils4
 
 
 
-		public LORRGBChannel4 FindRGBchannel(int SavedIndex)
+		public LORRGBChannel4 FindRGBChannel(int SavedIndex)
 		{
 			LORRGBChannel4 ret = null;
 			iLORMember4 member = Members.bySavedIndex[SavedIndex];
@@ -2271,7 +2271,7 @@ namespace LORUtils4
 			return ret;
 		} // end FindrgbChannel
 
-		public LORRGBChannel4 FindRGBchannel(string rgbChannelName)
+		public LORRGBChannel4 FindRGBChannel(string rgbChannelName, bool createIfNotFound = false)
 		{
 			LORRGBChannel4 ret = null;
 			iLORMember4 member = Members.Find(rgbChannelName, LORMemberType4.RGBChannel, false);
@@ -2279,6 +2279,98 @@ namespace LORUtils4
 			{
 				ret = (LORRGBChannel4)member;
 			}
+
+			if (ret == null)
+			{
+				if (createIfNotFound)
+				{
+					LORChannel4 redCh = FindChannel(rgbChannelName + " (R)", true);
+					redCh.color = lutils.LORCOLOR_RED;
+					LORChannel4 grnCh = FindChannel(rgbChannelName + " (G)", true);
+					grnCh.color = lutils.LORCOLOR_GRN;
+					LORChannel4 bluCh = FindChannel(rgbChannelName + " (B)", true);
+					bluCh.color = lutils.LORCOLOR_BLU;
+					ret = CreateRGBchannel(rgbChannelName);
+					ret.redChannel = redCh;
+					ret.grnChannel = grnCh;
+					ret.bluChannel = bluCh;
+					redCh.rgbChild = LORRGBChild4.Red;
+					grnCh.rgbChild = LORRGBChild4.Green;
+					bluCh.rgbChild = LORRGBChild4.Blue;
+					redCh.rgbParent = ret;
+					grnCh.rgbParent = ret;
+					bluCh.rgbParent = ret;
+					//int si = Sequence.Members.HighestSavedIndex + 1;
+					ret.Centiseconds = myCentiseconds;
+					//Channels.Add(ret);
+					Members.Add(ret);
+				}
+			}
+
+			return ret;
+		}
+
+		public LORRGBChannel4 FindRGBChannel(string rgbChannelName, LORMembership4 memberList, bool clearEffects = false, bool createIfNotFound = false)
+		{
+			// Gets existing channel specified by Name if it already exists in the group
+			// Creates it if it does not
+			LORRGBChannel4 ret = null;
+			iLORMember4 part = null;
+			int gidx = 0;
+			while ((ret == null) && (gidx < memberList.Count))
+			{
+				part = memberList.Items[gidx];
+				if (part.MemberType == LORMemberType4.RGBChannel)
+				{
+					if (part.Name == rgbChannelName)
+					{
+						ret = (LORRGBChannel4)part;
+						// Clear any existing effects from a previous run
+						if (clearEffects)
+						{
+							ret.redChannel.effects.Clear();
+							ret.grnChannel.effects.Clear();
+							ret.redChannel.effects.Clear();
+						}
+						gidx = memberList.Count; // Force exit of loop
+					}
+				}
+				gidx++;
+			}
+
+			if (ret == null)
+			{
+				if (createIfNotFound)
+				{
+					LORChannel4 redCh = FindChannel(rgbChannelName + " (R)", true);
+					redCh.color = lutils.LORCOLOR_RED;
+					LORChannel4 grnCh = FindChannel(rgbChannelName + " (G)", true);
+					grnCh.color = lutils.LORCOLOR_GRN;
+					LORChannel4 bluCh = FindChannel(rgbChannelName + " (B)", true);
+					bluCh.color = lutils.LORCOLOR_BLU;
+					if (clearEffects)
+					{
+						redCh.effects.Clear();
+						grnCh.effects.Clear();
+						redCh.effects.Clear();
+					}
+					ret = CreateRGBchannel(rgbChannelName);
+					ret.redChannel = redCh;
+					ret.grnChannel = grnCh;
+					ret.bluChannel = bluCh;
+					redCh.rgbChild = LORRGBChild4.Red;
+					grnCh.rgbChild = LORRGBChild4.Green;
+					bluCh.rgbChild = LORRGBChild4.Blue;
+					redCh.rgbParent = ret;
+					grnCh.rgbParent = ret;
+					bluCh.rgbParent = ret;
+					//int si = Sequence.Members.HighestSavedIndex + 1;
+					ret.Centiseconds = myCentiseconds;
+					//Channels.Add(ret);
+					memberList.Add(ret);
+				}
+			}
+
 			return ret;
 		}
 
