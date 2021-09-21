@@ -572,17 +572,17 @@ namespace RGBORama
 			int curLorColor = 0;
 			//bool steady = false;
 
-			redEffect.LOREffectType4 = LOREffectType4.Intensity;
+			redEffect.EffectType = LOREffectType4.Intensity;
 			redEffect.startCentisecond = 0;
 			redEffect.Intensity = 0;
 			redEffect.parent = rgbCh.redChannel;
 
-			grnEffect.LOREffectType4 = LOREffectType4.Intensity;
+			grnEffect.EffectType = LOREffectType4.Intensity;
 			grnEffect.startCentisecond = 0;
 			grnEffect.Intensity = 0;
 			grnEffect.parent = rgbCh.redChannel;
 
-			bluEffect.LOREffectType4 = LOREffectType4.Intensity;
+			bluEffect.EffectType = LOREffectType4.Intensity;
 			bluEffect.startCentisecond = 0;
 			bluEffect.Intensity = 0;
 			bluEffect.parent = rgbCh.redChannel;

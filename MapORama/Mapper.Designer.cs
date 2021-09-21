@@ -175,7 +175,7 @@
 			// treeMaster
 			// 
 			this.treeMaster.BackColor = System.Drawing.Color.White;
-			treeNodeAdvStyleInfo1.CheckBoxTickThickness = 1;
+			// treeNodeAdvStyleInfo1.CheckBoxTickThickness = 1;
 			treeNodeAdvStyleInfo1.CheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
 			treeNodeAdvStyleInfo1.EnsureDefaultOptionedChild = true;
 			treeNodeAdvStyleInfo1.IntermediateCheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
@@ -185,7 +185,7 @@
 			this.treeMaster.BaseStylePairs.AddRange(new Syncfusion.Windows.Forms.Tools.StyleNamePair[] {
             new Syncfusion.Windows.Forms.Tools.StyleNamePair("Standard", treeNodeAdvStyleInfo1)});
 			this.treeMaster.BeforeTouchSize = new System.Drawing.Size(300, 433);
-			this.treeMaster.ForeColor = System.Drawing.Color.Black;
+			// this.treeMaster.ForeColor = System.Drawing.Color.Black;
 			// 
 			// 
 			// 
@@ -1114,8 +1114,8 @@
 		private System.Windows.Forms.ToolStripMenuItem mnuSummary;
 		private System.Windows.Forms.Panel pnlMessage;
 		private System.Windows.Forms.Label lblMessage;
-		private Syncfusion.Windows.Forms.Tools.ProgressBarAdv prgBarInner;
-		private Syncfusion.Windows.Forms.Tools.ProgressBarAdv prgBarOuter;
+		// private Syncfusion.Windows.Forms.Tools.ProgressBarAdv prgBarInner;
+		// private Syncfusion.Windows.Forms.Tools.ProgressBarAdv prgBarOuter;
 		private System.Windows.Forms.CheckBox chkAutoLaunch;
 		private System.Windows.Forms.CheckBox chkCopyBeats;
 		private System.Windows.Forms.Label lblDebug;

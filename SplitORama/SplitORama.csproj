@@ -52,7 +52,7 @@
     <ApplicationIcon>Split Light Bulb.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>SplitORama.Program</StartupObject>
+    <StartupObject>UtilORama4.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\..\COMMON\FileHelper.cs">
@@ -61,23 +61,73 @@
     <Compile Include="..\Common\Sequence4\LORUtils.cs">
       <Link>LORUtils.cs</Link>
     </Compile>
+    <Compile Include="..\Common\Sequence4\SeqChannel.cs">
+      <Link>SeqChannel.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqChannelGroup.cs">
+      <Link>SeqChannelGroup.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqCosmicDevice.cs">
+      <Link>SeqCosmicDevice.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
     <Compile Include="..\Common\Sequence4\SeqEnums.cs">
       <Link>SeqEnums.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
     </Compile>
-    <Compile Include="..\Common\Sequence4\SeqMember.cs">
-      <Link>SeqMember.cs</Link>
+    <Compile Include="..\Common\Sequence4\SeqMemberBase.cs">
+      <Link>SeqMemberBase.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqMemberInterface.cs">
+      <Link>SeqMemberInterface.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqMembership.cs">
+      <Link>SeqMembership.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqRGBChannel.cs">
+      <Link>SeqRGBChannel.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
     </Compile>
     <Compile Include="..\Common\Sequence4\SeqSubs.cs">
       <Link>SeqSubs.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqTimingGrid.cs">
+      <Link>SeqTimingGrid.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqTrack.cs">
+      <Link>SeqTrack.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
     </Compile>
     <Compile Include="..\Common\Sequence4\Sequence4.cs">
       <Link>Sequence4.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SFTreeUtils.cs">
+      <Link>SFTreeUtils.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
     </Compile>
     <Compile Include="..\Common\Sequence4\Visualization4.cs">
       <Link>Visualization4.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
     </Compile>
-    <Compile Include="..\Common\Sequence4\VizMembers.cs">
-      <Link>VizMembers.cs</Link>
+    <Compile Include="..\Common\Sequence4\VizChannel.cs">
+      <Link>VizChannel.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\VizDrawObject.cs">
+      <Link>VizDrawObject.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\VizGroup.cs">
+      <Link>VizGroup.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
     </Compile>
     <Compile Include="FormUtils.cs" />
     <Compile Include="frmAbout.cs">
@@ -143,19 +193,41 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Syncfusion.Grid.Base, Version=15.2460.0.46, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
-    <Reference Include="Syncfusion.Grid.Windows, Version=15.2460.0.46, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
-    <Reference Include="Syncfusion.Shared.Base, Version=15.2460.0.46, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
-    <Reference Include="Syncfusion.Shared.Windows, Version=15.2460.0.46, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
-    <Reference Include="Syncfusion.SpellChecker.Base, Version=15.2460.0.46, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
-    <Reference Include="Syncfusion.Tools.Base, Version=15.2460.0.46, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
-    <Reference Include="Syncfusion.Tools.Windows, Version=15.2460.0.46, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
+    <Reference Include="Syncfusion.Grid.Base, Version=19.2460.0.44, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>C:\Program Files (x86)\Syncfusion\Essential Studio\Windows\19.2.0.44\precompiledassemblies\4.6\Syncfusion.Grid.Base.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Syncfusion.Grid.Windows, Version=19.2460.0.44, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>C:\Program Files (x86)\Syncfusion\Essential Studio\Windows\19.2.0.44\precompiledassemblies\4.6\Syncfusion.Grid.Windows.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Syncfusion.Shared.Base, Version=19.2460.0.44, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>C:\Program Files (x86)\Syncfusion\Essential Studio\Windows\19.2.0.44\precompiledassemblies\4.6\Syncfusion.Shared.Base.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Syncfusion.Shared.Windows, Version=19.2460.0.44, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>C:\Program Files (x86)\Syncfusion\Essential Studio\Windows\19.2.0.44\precompiledassemblies\4.6\Syncfusion.Shared.Windows.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Syncfusion.SpellChecker.Base, Version=19.2460.0.44, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89">
+      <HintPath>C:\Program Files (x86)\Syncfusion\Essential Studio\Windows\19.2.0.44\precompiledassemblies\4.6\Syncfusion.SpellChecker.Base.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Syncfusion.Tools.Base, Version=19.2460.0.44, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>C:\Program Files (x86)\Syncfusion\Essential Studio\Windows\19.2.0.44\precompiledassemblies\4.6\Syncfusion.Tools.Base.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Syncfusion.Tools.Windows, Version=19.2460.0.44, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>C:\Program Files (x86)\Syncfusion\Essential Studio\Windows\19.2.0.44\precompiledassemblies\4.6\Syncfusion.Tools.Windows.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Design" />
     <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.XML" />

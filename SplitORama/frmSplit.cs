@@ -225,7 +225,7 @@ namespace UtilORama4
 
 			ImBusy(true);
 			RestoreFormPosition();
-			tempPath = Fyle.GetAppTempFolder();
+			tempPath = Fyle.GetTempPath();
 			bool valid = false;
 
 			ProcessCommandLine();
@@ -1455,7 +1455,7 @@ namespace UtilORama4
 					dirtySel = false;
 					//btnSaveSelections.Enabled = dirtySelections;
 					//SystemSounds.Beep.Play();
-					lutils.PlayNotifyGenericSound();
+					Fyle.PlayNotifyGenericSound();
 					this.Cursor = Cursors.Default;
 				} // end no errors saving selections
 			}	// end dialog result = OK
@@ -1546,7 +1546,7 @@ namespace UtilORama4
 				if (seq.filename.Length > 5)
 				{
 					LoadApplySelections(dlgOpenFile.FileName, true, useFuzzy);
-					lutils.PlayNotifyGenericSound();
+					Fyle.PlayNotifyGenericSound();
 				}
 			} // end dialog result = OK
 
@@ -1933,7 +1933,7 @@ namespace UtilORama4
 
 		private void Event_DragEnter(object sender, DragEventArgs e)
 		{
-			e.LOREffect4 = DragDropEffects.Copy;
+			e.Effect = DragDropEffects.Copy;
 			//this.Cursor = Cursors.Cross;
 		}
 

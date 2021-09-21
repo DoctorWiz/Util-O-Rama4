@@ -508,7 +508,7 @@ private int		ImportNoteOnsetChannels(LORChannelGroup4 onsGrp, xTimings xBeatsFul
 			{
 				xEffect xef = xKeys.effects[q];
 				LOREffect4 lef = new LOREffect4();
-				lef.LOREffectType4 = LOREffectType4.Intensity;
+				lef.EffectType = LOREffectType4.Intensity;
 				lef.Intensity = 100;
 				lef.startCentisecond = ms2cs(xef.starttime);
 				// This should work, why doesn't it?
@@ -598,7 +598,7 @@ private int		ImportNoteOnsetChannels(LORChannelGroup4 onsGrp, xTimings xBeatsFul
 					//ch = GetChannel("theName");
 					ch = noteChannels[note];
 					ef = new LOREffect4();
-					ef.LOREffectType4 = LOREffectType4.Intensity;
+					ef.EffectType = LOREffectType4.Intensity;
 					ef.startCentisecond = centisecs;
 					ef.endCentisecond = centisecs + ontime;
 					if (useRampsPoly)
@@ -883,7 +883,7 @@ private int		ImportNoteOnsetChannels(LORChannelGroup4 onsGrp, xTimings xBeatsFul
 							//{
 							//ch = (LORChannel4)id.Owner;
 							ef = new LOREffect4();
-							ef.LOREffectType4 = LOREffectType4.Intensity;
+							ef.EffectType = LOREffectType4.Intensity;
 							ef.startCentisecond = lastcs[note];
 							ef.endCentisecond = centisecs;
 							ef.startIntensity = lastiVal[note];

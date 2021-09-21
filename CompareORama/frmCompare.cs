@@ -9,7 +9,8 @@ using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LORUtils4; using FileHelper;
+using LORUtils4;
+using FileHelper;
 using xUtils;
 using FuzzyString;
 
@@ -26,10 +27,10 @@ namespace UtilORama4
 		public List<LORRGBChannel4> RGBList = new List<LORRGBChannel4>();
 		public List<LORChannelGroup4> groupList = new List<LORChannelGroup4>();
 
-		public List<Model> xModelList = new List<Model>();
-		public List<RGBmodel> xRGBList = new List<RGBmodel>();
-		public List<Pixels> xPixelList = new List<Pixels>();
-		public List<ModelGroup> xGroupList = new List<ModelGroup>();
+		public List<xModel> xModelList = new List<xModel>();
+		public List<xRGBmodel> xRGBList = new List<xRGBmodel>();
+		public List<xPixels> xPixelList = new List<xPixels>();
+		public List<xModelGroup> xGroupList = new List<xModelGroup>();
 
 
 		//double minPreMatch = 85; // Properties.Settings.Default.FuzzyMinPrematch;
@@ -371,7 +372,7 @@ namespace UtilORama4
 							mbrType = xMemberType.Model; // Default
 							string st = xutils.getKeyWord(lineIn, "StringType");
 							//TODO Get its color!
-							Model xch = new Model(theName);
+							xModel xch = new xModel(theName);
 							xModelList.Add(xch);
 							count++;
 							member = xch;
@@ -383,7 +384,7 @@ namespace UtilORama4
 							if (ip >= 0)
 							{
 								mbrType = xMemberType.Pixels;
-								Pixels xpx = new Pixels(theName);
+								xPixels xpx = new xPixels(theName);
 								xPixelList.Add(xpx);
 								//count++;
 								member = xpx;
@@ -395,7 +396,7 @@ namespace UtilORama4
 								if (ip >= 0)
 								{
 									mbrType = xMemberType.RGBmodel;
-									RGBmodel xrgb = new RGBmodel(theName);
+									xRGBmodel xrgb = new xRGBmodel(theName);
 									xRGBList.Add(xrgb);
 									count++;
 									member = xrgb;
@@ -409,7 +410,7 @@ namespace UtilORama4
 						ip = lineIn.IndexOf("<modelGroup ");
 						if (ip >= 0)
 						{
-							ModelGroup xgrp = new ModelGroup(theName);
+							xModelGroup xgrp = new xModelGroup(theName);
 							xGroupList.Add(xgrp);
 							count++;
 							member = xgrp;
@@ -466,7 +467,7 @@ namespace UtilORama4
 			if (!Directory.Exists(initDir))
 			{
 				// Last Gasp, go the for the user's documents folder
-				initDir = LORUtils4.Fyle.DefaultDocumentsPath;
+				initDir = Fyle.DefaultDocumentsPath;
 			}
 
 			string initFile = "";
@@ -538,7 +539,7 @@ namespace UtilORama4
 			if (!Directory.Exists(initDir))
 			{
 				// Last Gasp, go the for the user's documents folder
-				initDir = LORUtils4.Fyle.DefaultDocumentsPath;
+				initDir = Fyle.DefaultDocumentsPath;
 			}
 
 			string initFile = "";
@@ -878,7 +879,7 @@ namespace UtilORama4
 			if (!Directory.Exists(initDir))
 			{
 				// Last Gasp, go the for the user's documents folder
-				initDir = LORUtils4.Fyle.DefaultDocumentsPath;
+				initDir = Fyle.DefaultDocumentsPath;
 			}
 
 			string seqName = Path.GetFileNameWithoutExtension(txtLORfile.Text);

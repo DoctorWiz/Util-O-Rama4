@@ -32,7 +32,7 @@ namespace UtilORama4
 		{
 			bool valid = false;
 			SeqFolder = lutils.DefaultSequencesPath;
-			logHomeDir = Fyle.GetAppTempFolder();
+			logHomeDir = Fyle.GetTempPath();
 
 			masterFile = Properties.Settings.Default.LastMasterFile;
 			if (masterFile.Length > 6)

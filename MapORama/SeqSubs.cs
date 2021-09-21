@@ -412,7 +412,7 @@ namespace LORUtils4
 	/////////////////
 	public class LOREffect4
 	{
-		public LORUtils4.LOREffectType4 LOREffectType4 = LOREffectType4.None;
+		public LORUtils4.LOREffectType4 EffectType = LOREffectType4.None;
 		private int myStartCentisecond = lutils.UNDEFINED;
 		private int myEndCentisecond = 360001;
 		public int Intensity = lutils.UNDEFINED;
@@ -441,7 +441,7 @@ namespace LORUtils4
 				// Raise Error to Debugger
 				System.Diagnostics.Debugger.Break();
 			}
-			this.LOREffectType4 = effectType;
+			this.EffectType = effectType;
 			myStartCentisecond = startCentisecond;
 			myEndCentisecond = endCentisecond;
 		}
@@ -452,7 +452,7 @@ namespace LORUtils4
 				// Raise Error to Debugger
 				System.Diagnostics.Debugger.Break();
 			}
-			this.LOREffectType4 = effectType;
+			this.EffectType = effectType;
 			myStartCentisecond = startCentisecond;
 			myEndCentisecond = endCentisecond;
 			Intensity = intensity;
@@ -465,7 +465,7 @@ namespace LORUtils4
 				// Raise Error to Debugger
 				System.Diagnostics.Debugger.Break();
 			}
-			this.LOREffectType4 = effectType;
+			this.EffectType = effectType;
 			myStartCentisecond = startCentisecond;
 			myEndCentisecond = endCentisecond;
 			startIntensity = start_Intensity;
@@ -475,7 +475,7 @@ namespace LORUtils4
 
 		public void Parse(string lineIn)
 		{
-			this.LOREffectType4 = LORSeqEnums4.EnumEffectType(lutils.getKeyWord(lineIn, lutils.FIELDtype));
+			this.EffectType = LORSeqEnums4.EnumEffectType(lutils.getKeyWord(lineIn, lutils.FIELDtype));
 			myStartCentisecond = lutils.getKeyValue(lineIn, lutils.FIELDstartCentisecond);
 			myEndCentisecond = lutils.getKeyValue(lineIn, lutils.FIELDendCentisecond);
 			Intensity = lutils.getKeyValue(lineIn, FIELDintensity);
@@ -497,7 +497,7 @@ namespace LORUtils4
 
 			ret.Append(lutils.StartTable(LORSequence4.TABLEeffect, 3));
 
-			ret.Append(lutils.SetKey(lutils.FIELDtype, LORSeqEnums4.EffectTypeName(this.LOREffectType4).ToLower()));
+			ret.Append(lutils.SetKey(lutils.FIELDtype, LORSeqEnums4.EffectTypeName(this.EffectType).ToLower()));
 			ret.Append(lutils.SetKey(lutils.FIELDstartCentisecond, startCentisecond));
 			ret.Append(lutils.SetKey(lutils.FIELDendCentisecond, myEndCentisecond));
 			if (Intensity > lutils.UNDEFINED)
@@ -615,10 +615,10 @@ namespace LORUtils4
 			get
 			{
 				LOREffectType4 levelOut = LOREffectType4.None;
-				if (this.LOREffectType4 == LOREffectType4.Shimmer) levelOut = LOREffectType4.Shimmer;
-				if (this.LOREffectType4 == LOREffectType4.Twinkle) levelOut = LOREffectType4.Twinkle;
-				if (this.LOREffectType4 == LOREffectType4.DMX) levelOut = LOREffectType4.DMX;
-				if (this.LOREffectType4 == LOREffectType4.Intensity)
+				if (this.EffectType == LOREffectType4.Shimmer) levelOut = LOREffectType4.Shimmer;
+				if (this.EffectType == LOREffectType4.Twinkle) levelOut = LOREffectType4.Twinkle;
+				if (this.EffectType == LOREffectType4.DMX) levelOut = LOREffectType4.DMX;
+				if (this.EffectType == LOREffectType4.Intensity)
 				{
 					if (endIntensity < 0)
 					{
@@ -645,7 +645,7 @@ namespace LORUtils4
 		{
 			// See Also: Duplicate()
 			LOREffect4 ret = new LOREffect4();
-			ret.LOREffectType4 = this.LOREffectType4;
+			ret.EffectType = this.EffectType;
 			ret.startCentisecond = startCentisecond;
 			ret.endCentisecond = myEndCentisecond;
 			ret.Intensity = Intensity;

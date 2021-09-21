@@ -1,4 +1,5 @@
 ﻿namespace UtilORama4
+{ 
 	partial class About
 	{
 		/// <summary>

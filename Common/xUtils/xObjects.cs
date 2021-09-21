@@ -25,56 +25,49 @@ namespace xUtils
 		string ToString();
 
 		xMemberType xMemberType
-		{
-			get;
-		}
+		{	get; }
 
 		bool Selected
-		{
-			get;
-			set;
-		}
+		{	get; set; }
 
 		bool ExactMatch
-		{
-			get;
-			set;
-		}
+		{ get; set; }
 
 		object Tag
-		{
-			get;
-			set;
-		}
+		{ get; set; }
 
+		int xLightsAddress
+		{ get; set; }
+
+		string StartChannel
+		{ get; set; }
 
 	} // End Interface xMember
 
 
 
-/// <summary>
-/// Model: StringType = Single Color
-/// </summary>
-	public class Model : xMember, IComparable<xMember>
+	/// <summary>
+	/// Model: StringType = Single Color
+	/// </summary>
+	public class xModel : xMember, IComparable<xMember>
 	{
 		private string myName = "";
 		private Color myColor = Color.Black;
 		private bool isSelected = false;
 		private bool matchExact = false;
 		private object tagItem = null;
+		private int xaddress = -1;
+		private string startChannel = "";
 		
 
-		public Model(string theName)
+		public xModel(string theName)
 		{
 			myName = theName;
 		}
 
 		public string Name
 		{
-			get
-			{
-				return myName;
-			}
+			get	{	return myName;}
 		}
 
 		public void ChangeName(string newName)
@@ -89,14 +82,8 @@ namespace xUtils
 
 		public Color Color
 		{
-			get
-			{
-				return myColor;
-			}
-			set
-			{
-				myColor = value;
-			}
+			get	{	return myColor;	}
+			set	{	myColor = value;}
 		}
 
 		public string ToString()
@@ -106,72 +93,63 @@ namespace xUtils
 
 		public xMemberType xMemberType
 		{
-			get
-			{
-				return xMemberType.Model;
-			}
+			get	{ return xMemberType.Model;}
 		}
 
 		public bool Selected
 		{
-			get
-			{
-				return isSelected;
-			}
-			set
-			{
-				isSelected = value;
-			}
+			get	{	return isSelected;}
+			set	{	isSelected = value;	}
 		}
 
 		public bool ExactMatch
 		{
-			get
-			{
-				return matchExact;
-			}
-			set
-			{
-				matchExact = value;
-			}
+			get	{	return matchExact;}
+			set	{	matchExact = value;	}
 		}
 
 		public object Tag
 		{
-			get
-			{
-				return tagItem;
-			}
-			set
-			{
-				tagItem = value;
-			}
+			get	{	return tagItem;	}
+			set	{	tagItem = value;}
+		}
+
+		public int xLightsAddress
+		{
+			get	{	return xaddress;}
+			set	{	xaddress = value;	}
+		}
+
+		public string StartChannel
+		{
+			get { return startChannel; }
+			set { startChannel = value; }
 		}
 
 	}
 
+
 	/// <summary>
 	/// Model: StringType=3 Channel RGB
 	/// </summary>
-	public class RGBmodel : xMember, IComparable<xMember>
+	public class xRGBmodel : xMember, IComparable<xMember>
 	{
 		private string myName = "";
 		//private Color myColor = Color.Black;
 		private bool isSelected = false;
 		private bool matchExact = false;
 		private object tagItem = null;
+		private int xaddress = -1;
+		private string startChannel = "";
 
-		public RGBmodel(string theName)
+		public xRGBmodel(string theName)
 		{
 			myName = theName;
 		}
 
 		public string Name
 		{
-			get
-			{
-				return myName;
-			}
+			get	{	return myName;}
 		}
 
 		public void ChangeName(string newName)
@@ -191,73 +169,64 @@ namespace xUtils
 
 		public xMemberType xMemberType
 		{
-			get
-			{
-				return xMemberType.RGBmodel;
-			}
+			get	{	return xMemberType.RGBmodel;}
 		}
 
 		public bool Selected
 		{
-			get
-			{
-				return isSelected;
-			}
-			set
-			{
-				isSelected = value;
-			}
+			get { return isSelected; }
+			set { isSelected = value; }
 		}
 
 		public bool ExactMatch
 		{
-			get
-			{
-				return matchExact;
-			}
-			set
-			{
-				matchExact = value;
-			}
+			get { return matchExact; }
+			set { matchExact = value; }
 		}
 
 		public object Tag
 		{
-			get
-			{
-				return tagItem;
-			}
-			set
-			{
-				tagItem = value;
-			}
+			get { return tagItem; }
+			set { tagItem = value; }
 		}
+
+		public int xLightsAddress
+		{
+			get { return xaddress; }
+			set { xaddress = value; }
+		}
+
+		public string StartChannel
+		{
+			get { return startChannel; }
+			set { startChannel = value; }
+		}
+
+
 
 	}
 
 	/// <summary>
 	/// Model: StringType = RGB Nodes
 	/// </summary>
-	public class Pixels : xMember, IComparable<xMember>
+	public class xPixels : xMember, IComparable<xMember>
 	{
 		private string myName = "";
 		//private Color myColor = Color.Black;
 		private bool isSelected = false;
 		private bool matchExact = false;
 		private object tagItem = null;
+		private int xaddress = -1;
+		private string startChannel = "";
 
-
-		public Pixels(string theName)
+		public xPixels(string theName)
 	{
 		myName = theName;
 	}
 
 	public string Name
 	{
-		get
-		{
-			return myName;
-		}
+		get	{	return myName;}
 	}
 
 	public void ChangeName(string newName)
@@ -277,54 +246,46 @@ namespace xUtils
 
 	public xMemberType xMemberType
 	{
-		get
-		{
-				return xMemberType.Pixels;
-		}
+		get	{	return xMemberType.Pixels;}
 	}
 
 		public bool Selected
 		{
-			get
-			{
-				return isSelected;
-			}
-			set
-			{
-				isSelected = value;
-			}
+			get { return isSelected; }
+			set { isSelected = value; }
 		}
 
 		public bool ExactMatch
 		{
-			get
-			{
-				return matchExact;
-			}
-			set
-			{
-				matchExact = value;
-			}
+			get { return matchExact; }
+			set { matchExact = value; }
 		}
 
 		public object Tag
 		{
-			get
-			{
-				return tagItem;
-			}
-			set
-			{
-				tagItem = value;
-			}
+			get { return tagItem; }
+			set { tagItem = value; }
 		}
+
+		public int xLightsAddress
+		{
+			get { return xaddress; }
+			set { xaddress = value; }
+		}
+
+		public string StartChannel
+		{
+			get { return startChannel; }
+			set { startChannel = value; }
+		}
+
 
 	}
 
 	/// <summary>
 	/// Model Group
 	/// </summary>
-	public class ModelGroup : xMember, IComparable<xMember>
+	public class xModelGroup : xMember, IComparable<xMember>
 {
 		private string myName = "";
 		//private Color myColor = Color.Black;
@@ -333,17 +294,14 @@ namespace xUtils
 		private object tagItem = null;
 		public List<xMember> xMembers = new List<xMember>();
 
-		public ModelGroup(string theName)
+		public xModelGroup(string theName)
 		{
 			myName = theName;
 		}
 
 		public string Name
 		{
-			get
-			{
-				return myName;
-			}
+			get	{	return myName;}
 		}
 
 		public void ChangeName(string newName)
@@ -363,47 +321,67 @@ namespace xUtils
 
 		public xMemberType xMemberType
 		{
-			get
-			{
-				return xMemberType.ModelGroup;
-			}
+			get	{	return xMemberType.ModelGroup;}
 		}
 
 		public bool Selected
 		{
-			get
-			{
-				return isSelected;
-			}
-			set
-			{
-				isSelected = value;
-			}
+			get { return isSelected; }
+			set { isSelected = value; }
 		}
 
 		public bool ExactMatch
 		{
-			get
-			{
-				return matchExact;
-			}
-			set
-			{
-				matchExact = value;
-			}
+			get { return matchExact; }
+			set { matchExact = value; }
 		}
 
 		public object Tag
 		{
+			get { return tagItem; }
+			set { tagItem = value; }
+		}
+
+		public int xLightsAddress
+		{
 			get
 			{
-				return tagItem;
+				int xadddress = -1;
+				if (xMembers != null)
+				{
+					if (xMembers.Count > 0)
+					{
+						xadddress = xMembers[0].xLightsAddress;
+					}
+				}
+				return xadddress;
 			}
 			set
 			{
-				tagItem = value;
+				// Throw away
 			}
 		}
+
+		public string StartChannel
+		{
+			get
+			{
+				string startCh = "";
+				if (xMembers != null)
+				{
+					if (xMembers.Count > 0)
+					{
+						startCh = xMembers[0].StartChannel;
+					}
+				}
+				return startCh;
+			}
+			set
+			{
+				// Throw away
+			}
+		}
+
 
 	}
 
