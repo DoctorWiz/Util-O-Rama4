@@ -19,7 +19,7 @@ namespace UtilORama4
 			get;
 		}
 
-		vamps.LabelTypes[] AllowableLabels
+		vamps.LabelType[] AllowableLabels
 		{
 			get;
 		}
@@ -47,7 +47,7 @@ namespace UtilORama4
 
 		//int xTimingsToLORChannels(xTimings timings, LORSequence4 sequence);
 
-		int ResultsToxTimings(string resultsFile, vamps.AlignmentType alignmentType, vamps.LabelTypes labelType);
+		int ResultsToxTimings(string resultsFile, vamps.AlignmentType alignmentType, vamps.LabelType labelType);
 
 		int xTimingsToxLights(string baseFileName);
 

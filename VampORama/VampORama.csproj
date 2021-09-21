@@ -270,6 +270,9 @@
     <Compile Include="TransformPolyphonic.cs">
       <DependentUpon>Annotator.cs</DependentUpon>
     </Compile>
+    <Compile Include="TransformSegments.cs">
+      <DependentUpon>Annotator.cs</DependentUpon>
+    </Compile>
     <Compile Include="TransformTempo.cs">
       <DependentUpon>Annotator.cs</DependentUpon>
     </Compile>

@@ -72,7 +72,7 @@ namespace UtilORama4
 																											"2-Line", "3-Line", "4-Line", "5-Line", "6-Line", "Err", "Err" };
 
 		public readonly static string[] chromaNamesUnicode = { "C", "C♯-D♭", "D", "D♯-E♭", "E", "F", "F♯-G♭", "G", "G♯-A♭", "A", "A♯-B♭", "B" };
-		public readonly static string[] chromaNamesAscii = { "C", "C#-Db", "D", "D#-Eb", "E", "F", "F#-Gb", "G", "G#-Ab", "A", "A#-Bb", "B" };
+		public readonly static string[] chromaNamesASCII = { "C", "C#-Db", "D", "D#-Eb", "E", "F", "F#-Gb", "G", "G#-Ab", "A", "A#-Bb", "B" };
 		
 		// 24 Keys numbered 1-24.  But arrays start at zero so there is a blank name at the beginning
 		public readonly static string[] keyNamesUnicode = { "", "C major", "C♯ major", "D major", "D♯ major", "E major", "F major",

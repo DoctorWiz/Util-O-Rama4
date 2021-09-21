@@ -145,7 +145,7 @@ namespace UtilORama4
 					seq.Centiseconds = cs;
 
 					//! ImportVampsToSequence();
-					//ExportSelectedLORTimings
+					//ExportSelectedTimings_ToLOR
 					ExportSelectedVampsToLOR();
 					success = SaveSequence(fileCurrent);
 

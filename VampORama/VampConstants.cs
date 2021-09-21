@@ -142,25 +142,27 @@ namespace UtilORama4
 		public enum AlignmentType { None = 1, Bars = 2, BeatsFull = 3, BeatsHalf = 4, BeatsThird = 5, BeatsQuarter = 6,
 																NoteOnsets = 7, FPS10 = 10, FPS20 = 20, FPS30 = 30, FPS40 = 40, FPS60 = 60, FPScustom = 100 };
 
-		public enum LabelTypes { None, KeyNamesASCII, KeyNamesUnicode, KeyNumbers, NoteNamesAscii, NoteNamesUnicode,
+		public enum LabelType { None, KeyNamesASCII, KeyNamesUnicode, KeyNumbers, NoteNamesASCII, NoteNamesUnicode,
 														MIDINoteNumbers, Frequency, Numbers, Letters, BPM, TempoName };
 
+		/*
 		public const int LABELnone							= 0;
-		public const int LABELkeyNameAscii			= 1;
+		public const int LABELkeyNameASCII			= 1;
 		public const int LABELkeyNameUnicode		= 2;
 		public const int LABELkeyNumbers				= 3;
-		public const int LABELnoteNamesAscii		= 4;
+		public const int LABELnoteNamesASCII		= 4;
 		public const int LABELnoteNamesUnicode	= 5;
 		public const int LABELmidiNoteNumbers		= 6;
 		public const int LABELfrequency					= 7;
 		public const int LABELnumbers						= 8;
 		public const int LABELletters						= 9;
+		*/
 
 		public const string LABELNAMEnone							= "None";
 		public const string LABELNAMEkeyNamesASCII		= "Key Name in ASCII";
 		public const string LABELNAMEkeyNamesUnicode	= "Key Name in Unicode";
 		public const string LABELNAMEkeyNumbers				= "Key Number";
-		public const string LABELNAMEnoteNamesAscii		= "Note Name in ASCII";
+		public const string LABELNAMEnoteNamesASCII		= "Note Name in ASCII";
 		public const string LABELNAMEnoteNamesUnicode = "Note Name in Unicode";
 		public const string LABELNAMEmidiNoteNumbers	= "MIDI Note Number";
 		public const string LABELNAMEfrequency				= "Frequency in Hz";
@@ -170,11 +172,11 @@ namespace UtilORama4
 		public const string LABELNAMEtempoName				= "Tempo Name";
 
 		public readonly static string[] LabelNames = {LABELNAMEnone, LABELNAMEkeyNamesASCII, LABELNAMEkeyNamesUnicode, LABELNAMEkeyNumbers,
-																	LABELNAMEnoteNamesAscii, LABELNAMEnoteNamesUnicode, LABELNAMEmidiNoteNumbers,
+																	LABELNAMEnoteNamesASCII, LABELNAMEnoteNamesUnicode, LABELNAMEmidiNoteNumbers,
 																	LABELNAMEfrequency, LABELNAMEnumbers, LABELNAMEletters, LABELNAMEbpm, LABELNAMEtempoName };
 
 
-		//public readonly static string[] LabelTypeNames = { "None", "Key Names Ascii", "Key Names Unicode", "Key Numbers", "Note Names Ascii",
+		//public readonly static string[] LabelTypeNames = { "None", "Key Names ASCII", "Key Names Unicode", "Key Numbers", "Note Names ASCII",
 		//												"Note Names Unicode",	"MIDI Note Numbers", "Frequency", "Numbers", "Letters" };
 
 
@@ -360,87 +362,136 @@ namespace UtilORama4
 			return at;
 		}
 
-		public static LabelTypes GetLabelTypeFromName(string labelName)
+		public static string LabelName(LabelType labelType)
 		{
-			// public enum LabelTypes { None, KeyNamesAscii, KeyNamesUnicode, KeyNumbers, NoteNamesAscii, NoteNamesUnicode, MIDINoteNumbers, Frequency, Numbers, Letters };
-			// public readonly static string[] LabelTypeNames = { "None", "Key Names Ascii", "Key Names Unicode", "Key Numbers", "Note Names Ascii",
+			// init return value with default/failsafe
+			string theName = LABELNAMEnone;
+
+			switch (labelType)
+			{
+				case LabelType.None:
+					theName = LABELNAMEnone;
+					break;
+				case LabelType.KeyNamesASCII:
+					theName = LABELNAMEkeyNamesASCII;
+					break;
+				case LabelType.KeyNamesUnicode:
+					theName = LABELNAMEkeyNamesUnicode;
+					break;
+				case LabelType.KeyNumbers:
+					theName = LABELNAMEkeyNumbers;
+					break;
+				case LabelType.NoteNamesASCII:
+					theName = LABELNAMEnoteNamesASCII;
+					break;
+				case LabelType.NoteNamesUnicode:
+					theName = LABELNAMEnoteNamesUnicode;
+					break;
+				case LabelType.MIDINoteNumbers:
+					theName = LABELNAMEmidiNoteNumbers;
+					break;
+				case LabelType.Frequency:
+					theName = LABELNAMEfrequency;
+					break;
+				case LabelType.Numbers:
+					theName = LABELNAMEnumbers;
+					break;
+				case LabelType.Letters:
+					theName = LABELNAMEletters;
+					break;
+				case LabelType.BPM:
+					theName = LABELNAMEbpm;
+					break;
+				case LabelType.TempoName:
+					theName = LABELNAMEtempoName;
+					break;
+			}
+			return theName;
+		}
+
+		public static LabelType GetLabelTypeFromName(string labelName)
+		{
+			// public enum LabelType { None, KeyNamesASCII, KeyNamesUnicode, KeyNumbers, NoteNamesASCII, NoteNamesUnicode, MIDINoteNumbers, Frequency, Numbers, Letters };
+			// public readonly static string[] LabelTypeNames = { "None", "Key Names ASCII", "Key Names Unicode", "Key Numbers", "Note Names ASCII",
 			//											"Note Names Unicode", "MIDI Note Numbers", "Frequency", "Numbers", "Letters" };
 
 			// Init return value with default/failsafe
-			LabelTypes lt = LabelTypes.None;
+			LabelType lt = LabelType.None;
 
 			if (labelName == LABELNAMEnone)
 			{
-			lt = LabelTypes.None;
+			lt = LabelType.None;
 			}
 			else
 			{
 			if (labelName == LABELNAMEkeyNamesASCII)
 				{
-				lt = LabelTypes.KeyNamesASCII;
+				lt = LabelType.KeyNamesASCII;
 				}
 				else
 				{
 					if (labelName == LABELNAMEkeyNamesUnicode)
 					{
-					lt = LabelTypes.KeyNamesUnicode; 
+					lt = LabelType.KeyNamesUnicode; 
 					}
 					else
 					{
 						if (labelName == LABELNAMEkeyNumbers)
 						{
-						lt = LabelTypes.KeyNumbers;
+						lt = LabelType.KeyNumbers;
 						}
 						else
 						{
-							if (labelName == LABELNAMEnoteNamesAscii)
+							if (labelName == LABELNAMEnoteNamesASCII)
 							{
-							lt = LabelTypes.NoteNamesAscii;
+							lt = LabelType.NoteNamesASCII;
 							}
 							else
 							{
 								if (labelName == LABELNAMEnoteNamesUnicode)
 								{
-								lt = LabelTypes.NoteNamesUnicode;
+								lt = LabelType.NoteNamesUnicode;
 								}
 								else
 								{
 									if (labelName == LABELNAMEmidiNoteNumbers)
 									{
-									lt = LabelTypes.MIDINoteNumbers;
+									lt = LabelType.MIDINoteNumbers;
 									}
 									else
 									{
 										if (labelName == LABELNAMEfrequency)
 										{
-										lt = LabelTypes.Frequency;
+										lt = LabelType.Frequency;
 										}
 										else
 										{
 										if (labelName == LABELNAMEnumbers)
 											{
-											lt = LabelTypes.Numbers;
+											lt = LabelType.Numbers;
 											}
 											else
 											{
 												if (labelName == LABELNAMEletters)
 												{
-													lt = LabelTypes.Letters;
+													lt = LabelType.Letters;
 												}
 												else
 												{
 													if (labelName == LABELNAMEbpm)
 													{
-														lt = LabelTypes.BPM;
+														lt = LabelType.BPM;
 													}
 													else
 													{
 														if (labelName == LABELNAMEtempoName)
 														{
-															lt = LabelTypes.TempoName;
+															lt = LabelType.TempoName;
 														}
 														else
 														{
+															string lowName = labelName.ToLower();
+
 															string msg = "Label Type '" + labelName + "' not recognized!";
 															Fyle.BUG(msg);
 														}

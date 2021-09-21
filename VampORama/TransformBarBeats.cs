@@ -32,7 +32,7 @@ namespace UtilORama4
 		public static xTimings xBeatsHalf = Annotator.xBeatsHalf; // new xTimings(beatsHalfName);
 		public static xTimings xBeatsThird = Annotator.xBeatsThird; // new xTimings(beatsThirdName);
 		public static xTimings xBeatsQuarter = Annotator.xBeatsQuarter; // new xTimings(beatsQuarterName);
-		public static xTimings xFrames = Annotator.xFrames; // new xTimings(framesName);
+		//public static xTimings xFrames = Annotator.xFrames; // new xTimings(framesName);
 																												//public static int BeatsPerBar = 4;
 																												//public static int FirstBeat = 1;
 																												//public bool ReuseResults = false;
@@ -40,7 +40,8 @@ namespace UtilORama4
 																												//public int totalMilliseconds = 0;
 		public static string ResultsName = "BarsAndBeats.csv";
 		public static string FileResults = Annotator.TempPath + ResultsName;
-
+		public static vamps.AlignmentType AlignmentType = vamps.AlignmentType.FPS40; // Default
+		public static vamps.LabelType LabelType = vamps.LabelType.Numbers;
 		//private Annotator myAnnotator = null;
 
 		public static readonly string[] availablePluginNames = {	"Queen Mary Bar and Beat Tracker",
@@ -68,35 +69,14 @@ namespace UtilORama4
 																											//"mvamp-ibt_marsyas_ibt_beat_times.n3",
 																											"vamp_vamp-aubio_aubiotempo_beats.n3" };
 
-		public static readonly string[] availableLabels = { vamps.LABELNAMEnone, vamps.LABELNAMEnumbers };
+		public static readonly vamps.LabelType[] allowableLabels = { vamps.LabelType.None, vamps.LabelType.Numbers };
+		//public static readonly string[] availableLabels = { vamps.LABELNAMEnone, vamps.LABELNAMEnumbers };
 
 		private static string fileConfigBase = "vamp_qm-vamp-plugins_qm-barbeattracker_beats";
 		private static int pluginIndex = 0;
 		public static int AverageBarMS = 100;
-		public static int AverageBeatMS = 25;
-
-		public static int UsePlugin
-		{
-			set
-			{
-				pluginIndex = value;
-				if (pluginIndex < 0) pluginIndex = 0;
-				if (pluginIndex >= availablePluginNames.Length) pluginIndex = availablePluginNames.Length - 1;
-			}
-			get
-			{
-				return pluginIndex;
-			}
-		}
-
-
-		//public string[] PluginFiles
-		//{
-		//	get
-		//	{
-		//		return pluginFiles;
-		//	}
-		//}
+		public static int AverageBeatFullMS = 25;
+		public static int AverageBeatQuarterMS = 6;
 		public const int METHODdomain = 0;
 		public const int METHODspectral = 1;
 		public const int METHODphase = 2;
@@ -124,34 +104,6 @@ namespace UtilORama4
 		}
 
 
-		//private static readonly vamps.AlignmentType[] allowableAlignments = { vamps.AlignmentType.None, vamps.AlignmentType.FPS20, vamps.AlignmentType.FPS40 };
-
-
-		private static vamps.AlignmentType alignmentType = vamps.AlignmentType.None;
-
-		private static vamps.AlignmentType AlignmentType
-		{
-			set
-			{
-				bool valid = false;
-				for (int i = 0; i < allowableAlignments.Length; i++)
-				{
-					if (value == allowableAlignments[i])
-					{
-						alignmentType = value;
-						valid = true;
-						i = allowableAlignments.Length; // Force exit of loop
-					}
-				}
-			}
-			get
-			{
-				return alignmentType;
-			}
-		}
-
-
-		private static readonly vamps.LabelTypes[] allowableLabels = { vamps.LabelTypes.None, vamps.LabelTypes.Numbers };
 
 		public static xTimings Timings
 		{
@@ -330,7 +282,7 @@ namespace UtilORama4
 
 
 		// Required by ITransform inteface, wrapper to true ResultsToxTimings procedure requiring more parameters
-		public static int ResultsToxTimings(string resultsFile, vamps.AlignmentType alignmentType, vamps.LabelTypes labelType)
+		public static int ResultsToxTimings(string resultsFile, vamps.AlignmentType alignmentType, vamps.LabelType labelType)
 		{
 			int err = 0;
 			if ((xBars == null) || (xBars.effects.Count < 2) || (!Annotator.ReuseResults))
@@ -347,7 +299,7 @@ namespace UtilORama4
 				int subSubSubBeat = 0;
 				int theTime = 0;
 
-				int countLines = 0;
+				//int countLines = 0;
 				int countBars = 1;
 				int countBeats = Annotator.FirstBeat;
 				int countHalves = 1;
@@ -358,58 +310,20 @@ namespace UtilORama4
 				int maxThirds = Annotator.BeatsPerBar * 3;
 				int maxQuarters = Annotator.BeatsPerBar * 4;
 
-				//int align = SequenceFunctions.GetAlignment(cboAlignBarsBeats.Text);
-
-				if (alignmentType == vamps.AlignmentType.FPS20)
-				{
-					Annotator.FPS = 20;
-					//Annotator.msPF = 50;
-				}
-				else
-				{
-					if (alignmentType == vamps.AlignmentType.FPS40)
-					{
-						Annotator.FPS = 40;
-						//Annotator.msPF = 25;
-					}
-					else
-					{
-						// if (alignmentType == vamps.AlignmentType.None)
-						// or if alignmentType == anything else (which would be invalid!)
-						//{
-							Annotator.FPS = 1000;
-							//msPF = 1;
-						//}
-
-					}
-				}
-
-
-
-
-
-
-
-
-				// Pass 1, count lines
-				StreamReader reader = new StreamReader(resultsFile);
-				while (!reader.EndOfStream)
-				{
-					lineIn = reader.ReadLine();
-					countLines++;
-				}
-				reader.Close();
+				// Store These
+				LabelType = labelType;
+				AlignmentType = alignmentType;
+				Annotator.SetAlignment(alignmentType);
 
 				xBars					= new xTimings("Bars" + " (Whole notes, (" + Annotator.BeatsPerBar.ToString() + " Quarter notes))");
 				xBeatsFull		= new xTimings(beatsFullName);
 				xBeatsHalf		= new xTimings(beatsHalfName);
 				xBeatsThird		= new xTimings(beatsThirdName);
 				xBeatsQuarter = new xTimings(beatsQuarterName);
-				xFrames				= new xTimings("Frames");
+				//xFrames				= new xTimings("Frames");
 
-				// Pass 2, read data into arrays
-				reader = new StreamReader(resultsFile);
-
+				// Pass 1, count lines
+				StreamReader reader = new StreamReader(resultsFile);
 				if (!reader.EndOfStream)
 				{
 					lineIn = reader.ReadLine();
@@ -421,7 +335,7 @@ namespace UtilORama4
 						string[] parts = lineIn.Split(',');
 
 						millisecs = xUtils.ParseMilliseconds(parts[0]);
-						millisecs = xUtils.RoundTimeTo(millisecs, Annotator.msPF);
+						millisecs = Annotator.AlignTime(millisecs);
 						lastBeat = millisecs;
 						lastBar = millisecs;
 					} // end line contains a period
@@ -437,7 +351,7 @@ namespace UtilORama4
 
 						millisecs = xUtils.ParseMilliseconds(parts[0]);
 						// FULL BEATS - QUARTER NOTES
-						millisecs = xUtils.RoundTimeTo(millisecs, Annotator.msPF);
+						millisecs = Annotator.AlignTime(millisecs);
 						beatLength = millisecs - lastBeat;
 						xBeatsFull.Add(countBeats.ToString(), lastBeat, millisecs,countBeats);
 						countBeats++;
@@ -453,7 +367,7 @@ namespace UtilORama4
 
 						// HALF BEATS - EIGHTH NOTES
 						subBeat = lastBeat + (beatLength / 2);
-						subBeat = xUtils.RoundTimeTo(subBeat, Annotator.msPF);
+						subBeat = Annotator.AlignTime(subBeat);
 						xBeatsHalf.Add(countHalves.ToString(), lastBeat, subBeat,countHalves);
 						countHalves++;
 
@@ -463,12 +377,12 @@ namespace UtilORama4
 
 						// THIRD BEATS - TWELTH NOTES
 						subBeat = lastBeat + (beatLength / 3);
-						subBeat = xUtils.RoundTimeTo(subBeat, Annotator.msPF);
+						subBeat = Annotator.AlignTime(subBeat);
 						xBeatsThird.Add(countThirds.ToString(), lastBeat, subBeat, countThirds);
 						countThirds++;
 
 						subSubBeat = lastBeat + (beatLength * 2 / 3);
-						subSubBeat = xUtils.RoundTimeTo(subSubBeat, Annotator.msPF);
+						subSubBeat = Annotator.AlignTime(subSubBeat);
 						xBeatsThird.Add(countThirds.ToString(), subBeat, subSubBeat, countThirds);
 						countThirds++;
 
@@ -478,17 +392,17 @@ namespace UtilORama4
 
 						// QUARTER BEATS - SIXTEENTH NOTES
 						subBeat = lastBeat + (beatLength / 4);
-						subBeat = xUtils.RoundTimeTo(subBeat, Annotator.msPF);
+						subBeat = Annotator.AlignTime(subBeat);
 						xBeatsQuarter.Add(countQuarters.ToString(), lastBeat, subBeat, countQuarters);
 						countQuarters++;
 
 						subSubBeat = lastBeat + (beatLength / 2);
-						subSubBeat = xUtils.RoundTimeTo(subSubBeat, Annotator.msPF);
+						subSubBeat = Annotator.AlignTime(subSubBeat);
 						xBeatsQuarter.Add(countQuarters.ToString(), subBeat, subSubBeat, countQuarters);
 						countQuarters++;
 
 						subSubSubBeat = lastBeat + (beatLength * 3 / 4);
-						subSubSubBeat = xUtils.RoundTimeTo(subSubSubBeat, Annotator.msPF);
+						subSubSubBeat = Annotator.AlignTime(subSubSubBeat);
 						xBeatsQuarter.Add(countQuarters.ToString(), subSubBeat, subSubSubBeat, countQuarters);
 						countQuarters++;
 
@@ -509,86 +423,6 @@ namespace UtilORama4
 				//int t = xBars.effects[0].starttime;
 				int t = 0;
 				int f = 1;
-				if (alignmentType == vamps.AlignmentType.FPS10)
-				{
-					xFrames.Name = "Frames 10FPS, 10cs";
-					while (t <= Annotator.TotalMilliseconds)
-					{
-						if (t>0)
-						{
-							xFrames.Add(f.ToString(), t, t+100);
-						}
-						t += 100;
-						f++;
-
-					}
-				}
-				if (alignmentType == vamps.AlignmentType.FPS20)
-				{
-					xFrames.Name = "Frames 20FPS, 5cs";
-					while (t <= Annotator.TotalMilliseconds)
-					{
-						if (t > 0)
-						{
-							xFrames.Add(f.ToString(), t, t + 50);
-						}
-						t += 50;
-						f++;
-					}
-				}
-				if (alignmentType == vamps.AlignmentType.FPS30)
-				{
-					xFrames.Name = "Frames 30FPS, 3.33cs";
-					while (t <= Annotator.TotalMilliseconds)
-					{
-						if (t > 0)
-						{
-							xFrames.Add(f.ToString(), t, t + 33);
-							f++;
-							xFrames.Add(f.ToString(), t + 33, t + 67);
-							f++;
-							xFrames.Add(f.ToString(), t + 67, t + 100);
-						}
-						t += 100;
-						f++;
-					}
-				}
-				if (alignmentType == vamps.AlignmentType.FPS40)
-				{
-					xFrames.Name = "Frames 40FPS, 2.5cs";
-					while (t < Annotator.TotalMilliseconds)
-					{
-						if (t > 0)
-						{
-							xFrames.Add(f.ToString(), t, t + 25);
-						}
-						t += 25;
-						f++;
-					}
-				}
-				if (alignmentType == vamps.AlignmentType.FPS60)
-				{
-					xFrames.Name = "Frames 60FPS, 1.667cs";
-					while (t <= Annotator.TotalMilliseconds)
-					{
-						if (t > 0)
-						{
-							xFrames.Add(f.ToString(), t, t + 17);
-							f++;
-							xFrames.Add(f.ToString(), t + 17, t + 33);
-							f++;
-							xFrames.Add(f.ToString(), t + 33, t + 50);
-							f++;
-							xFrames.Add(f.ToString(), t + 50, t + 67);
-							f++;
-							xFrames.Add(f.ToString(), t + 67, t + 83);
-							f++;
-							xFrames.Add(f.ToString(), t + 83, t + 100);
-						}
-						t += 100;
-						f++;
-					}
-				}
 
 
 			}
@@ -602,12 +436,31 @@ namespace UtilORama4
 			Annotator.xBeatsHalf = xBeatsHalf;
 			Annotator.xBeatsThird = xBeatsThird;
 			Annotator.xBeatsQuarter = xBeatsQuarter;
-			Annotator.xFrames = xFrames;
+			//Annotator.xFrames = xFrames;
 
-			int barTime = xBars.effects[xBars.effects.Count-1].starttime - xBars.effects[0].starttime;
-			AverageBarMS = (int)Math.Round(barTime / (double)xBars.effects.Count);
-			barTime = xBeatsFull.effects[xBeatsFull.effects.Count - 1].starttime - xBeatsFull.effects[0].starttime;
-			AverageBeatMS = (int)Math.Round(barTime / (double)xBeatsFull.effects.Count);
+			// If at least 2 bars, calculate the average
+			if (xBars.effects.Count > 1)
+			{
+				// subtract first starttime from last
+				int barTime = xBars.effects[xBars.effects.Count - 1].starttime - xBars.effects[0].starttime;
+				// Divide by the count-1
+				AverageBarMS = (int)Math.Round(barTime / (double)(xBars.effects.Count)-1);
+				Annotator.AverageBarMS = AverageBarMS;
+			}
+			// If at least 2 full beats, calculate the average, same as above
+			if (xBeatsFull.effects.Count > 1)
+			{
+				int beatTime = xBeatsFull.effects[xBeatsFull.effects.Count - 1].starttime - xBeatsFull.effects[0].starttime;
+				AverageBeatFullMS = (int)Math.Round(beatTime / (double)(xBeatsFull.effects.Count) - 1);
+				Annotator.AverageBeatFullMS = AverageBeatFullMS;
+			}
+			// And again for quarter beats
+			if (xBeatsQuarter.effects.Count > 1)
+			{
+				int quarterTime = xBeatsQuarter.effects[xBeatsQuarter.effects.Count - 1].starttime - xBeatsQuarter.effects[0].starttime;
+				AverageBeatQuarterMS = (int)Math.Round(quarterTime / (double)(xBeatsQuarter.effects.Count) - 1);
+				Annotator.AverageBeatQuarterMS = AverageBeatQuarterMS;
+			}
 
 
 
@@ -725,14 +578,6 @@ namespace UtilORama4
 						LORTimings4 gridQuarter = sequence.FindTimingGrid(beatsQuarterName, true);
 						SequenceFunctions.ImportTimingGrid(gridQuarter, xBeatsQuarter);
 					}
-				}
-			}
-			if (xFrames != null)
-			{
-				if (xFrames.effects.Count > 0)
-				{
-					LORTimings4 barFrame = sequence.FindTimingGrid(xFrames.Name, true);
-					SequenceFunctions.ImportTimingGrid(barFrame, xFrames);
 				}
 			}
 

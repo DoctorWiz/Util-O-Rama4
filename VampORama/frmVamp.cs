@@ -35,6 +35,8 @@ namespace UtilORama4
 {
 	public partial class frmVamp : Form
 	{
+		#region Form Variables and Constants
+
 		// I decided not to enum these, may change my mind later
 		public const byte SAVEmixedDisplay = 1;
 		public const byte SAVEcrgDisplay = 2;
@@ -91,6 +93,7 @@ namespace UtilORama4
 		private int curStep = 0;
 		public bool busy = true;
 		public bool vamping = false;
+		public bool analyzed = false;
 
 		public bool lightORamaInstalled = false;
 		public bool xLightsInstalled = false;
@@ -147,16 +150,10 @@ namespace UtilORama4
 
 		private string myTitle = "Vamp-O-Rama";
 
-
-		//public frmConsole consoleWindow;
-
-
 		[DllImport("shlwapi.dll")]
 		static extern bool PathCompactPathEx([Out] StringBuilder pszOut, string szPath, int cchMax, int dwFlags);
 
-
-
-
+		#endregion
 
 		public frmVamp()
 		{
@@ -428,9 +425,9 @@ namespace UtilORama4
 				cboMethodBarsBeats.Items.Add(plugName);
 			}
 			cboLabelsBarBeats.Items.Clear();
-			foreach (string labelName in VampBarBeats.availableLabels)
+			foreach (vamps.LabelType lblType in VampBarBeats.allowableLabels)
 			{
-				cboLabelsBarBeats.Items.Add(labelName);
+				cboLabelsBarBeats.Items.Add(vamps.LabelName(lblType));
 			}
 			cboAlignBarBeats.Items.Clear();
 			foreach (vamps.AlignmentType alType in VampBarBeats.allowableAlignments)
@@ -447,9 +444,9 @@ namespace UtilORama4
 				cboMethodOnsets.Items.Add(plugName);
 			}
 			cboLabelsOnsets.Items.Clear();
-			foreach (string labelName in VampNoteOnsets.availableLabels)
+			foreach (vamps.LabelType lblType in VampNoteOnsets.allowableLabels)
 			{
-				cboLabelsOnsets.Items.Add(labelName);
+				cboLabelsOnsets.Items.Add(vamps.LabelName(lblType));
 			}
 			cboAlignOnsets.Items.Clear();
 			foreach (vamps.AlignmentType alType in VampNoteOnsets.allowableAlignments)
@@ -466,9 +463,9 @@ namespace UtilORama4
 				cboMethodPolyphonic.Items.Add(plugName);
 			}
 			cboLabelsPolyphonic.Items.Clear();
-			foreach(string labelName in VampPolyphonic.availableLabels)
+			foreach(vamps.LabelType lblType in VampPolyphonic.allowableLabels)
 			{
-				cboLabelsPolyphonic.Items.Add(labelName);
+				cboLabelsPolyphonic.Items.Add(vamps.LabelName(lblType));
 			}
 			cboAlignPolyphonic.Items.Clear();
 			foreach(vamps.AlignmentType alType in VampPolyphonic.allowableAlignments)
@@ -485,9 +482,9 @@ namespace UtilORama4
 				cboMethodPitchKey.Items.Add(plugName);
 			}
 			cboLabelsPitchKey.Items.Clear();
-			foreach (string labelName in VampPitchKey.availableLabels)
+			foreach (vamps.LabelType lblType in VampPitchKey.allowableLabels)
 			{
-				cboLabelsPitchKey.Items.Add(labelName);
+				cboLabelsPitchKey.Items.Add(vamps.LabelName(lblType));
 			}
 			cboAlignPitchKey.Items.Clear();
 			foreach (vamps.AlignmentType alType in VampPitchKey.allowableAlignments)
@@ -504,14 +501,34 @@ namespace UtilORama4
 				cboMethodTempo.Items.Add(plugName);
 			}
 			cboLabelsTempo.Items.Clear();
-			foreach (string labelName in VampTempo.availableLabels)
+			foreach (vamps.LabelType lblType in VampTempo.allowableLabels)
 			{
-				cboLabelsTempo.Items.Add(labelName);
+				cboLabelsTempo.Items.Add(vamps.LabelName(lblType));
 			}
 			cboAlignTempo.Items.Clear();
 			foreach (vamps.AlignmentType alType in VampTempo.allowableAlignments)
 			{
 				cboAlignTempo.Items.Add(vamps.AlignmentName(alType));
+			}
+
+
+			///////////////////
+			//!  SEGMENTS  //
+			/////////////////
+			cboMethodSegments.Items.Clear();
+			foreach (string plugName in VampSegments.availablePluginNames)
+			{
+				cboMethodSegments.Items.Add(plugName);
+			}
+			cboLabelsSegments.Items.Clear();
+			foreach (vamps.LabelType lblType in VampSegments.allowableLabels)
+			{
+				cboLabelsSegments.Items.Add(vamps.LabelName(lblType));
+			}
+			cboAlignSegments.Items.Clear();
+			foreach (vamps.AlignmentType alType in VampSegments.allowableAlignments)
+			{
+				cboAlignSegments.Items.Add(vamps.AlignmentName(alType));
 			}
 
 		}
@@ -539,7 +556,8 @@ namespace UtilORama4
 			chkBeatsHalf.Checked = heartOfTheSun.doBeatsHalf;
 			chkBeatsThird.Checked = heartOfTheSun.doBeatsThird;
 			chkBeatsQuarter.Checked = heartOfTheSun.doBeatsQuarter;
-			//SetCombo(cboAlignBarsBeats,				heartOfTheSun.alignBarsBeats);
+			SetCombo(cboAlignBarBeats, heartOfTheSun.alignBarsBeats);
+			SetCombo(cboLabelsBarBeats, heartOfTheSun.labelBarBeats);
 
 			SetCombo(cboMethodOnsets, heartOfTheSun.methodOnsets);
 			SetCombo(cboOnsetsDetect, heartOfTheSun.detectOnsets);
@@ -547,7 +565,7 @@ namespace UtilORama4
 			chkWhiten.Checked = heartOfTheSun.whiteOnsets;
 			chkNoteOnsets.Checked = heartOfTheSun.doOnsets;
 			SetCombo(cboLabelsOnsets, heartOfTheSun.labelOnsets);
-			//SetCombo(cboAlignOnsets,					heartOfTheSun.alignOnsets);
+			SetCombo(cboAlignOnsets, heartOfTheSun.alignOnsets);
 			SetCombo(cboStepSize, heartOfTheSun.stepSize);
 			swRamps.Checked = heartOfTheSun.Ramps;
 
@@ -616,6 +634,7 @@ namespace UtilORama4
 			heartOfTheSun.doBeatsHalf = chkBeatsHalf.Checked;
 			heartOfTheSun.doBeatsThird = chkBeatsThird.Checked;
 			heartOfTheSun.doBeatsQuarter = chkBeatsQuarter.Checked;
+			heartOfTheSun.labelBarBeats = cboLabelsBarBeats.Text;
 			heartOfTheSun.alignBarsBeats = cboAlignBarBeats.Text;
 			heartOfTheSun.Ramps = swRamps.Checked;
 
@@ -877,9 +896,9 @@ namespace UtilORama4
 
 		private void ImVamping(bool amVamping)
 		{
-			picSleepy.Visible = amVamping;
+			lblWorkFolder.Visible = amVamping;
 			pnlVamping.Visible = amVamping;
-			picVampire.Visible = !amVamping;
+			//picVampire.Visible = !amVamping;
 			lblPickYourPoison.Visible = !amVamping;
 			picPoisonArrow.Visible = !amVamping;
 			vamping = amVamping;
@@ -979,7 +998,10 @@ namespace UtilORama4
 					//SaveSelections(file);
 					if (!chkReuse.Checked)
 					{
-						int errs = xUtils.ClearTempDir(tempPath);
+						if (!debugMode)
+						{
+							int errs = xUtils.ClearTempDir(tempPath);
+						}
 					}
 					//CloseForm();
 					SetTheControlsForTheHeartOfTheSun();
@@ -1844,6 +1866,7 @@ namespace UtilORama4
 
 				if (theStep == STEP_SaveTimings)
 				{
+
 					if (chkxLights.Checked)
 					{
 						lblStep4A.ForeColor = System.Drawing.Color.Red;
@@ -1880,6 +1903,10 @@ namespace UtilORama4
 		private void btnOK_Click(object sender, EventArgs e)
 		{
 			bool success = Analyze();
+			grpTimings.Enabled = !analyzed;
+			btnReanalyze.Location = btnOK.Location;
+			btnReanalyze.Visible = analyzed;
+			btnOK.Visible = !analyzed;
 		}
 
 		private bool Analyze()
@@ -1895,6 +1922,7 @@ namespace UtilORama4
 			if (System.IO.File.Exists(fileAudioLast))
 			{
 				ImVamping(true);
+				StatusUpdate("Preparing and Analyzing Audio File");
 				// Remember all current user settings, options, selections, etc. on the main form
 				SetTheControlsForTheHeartOfTheSun();
 
@@ -1970,7 +1998,8 @@ namespace UtilORama4
 						Application.DoEvents();
 					}
 				}
-
+				StatusUpdate("Analysis Complete!");
+				analyzed = true;
 				ImVamping(false);
 			}
 			else
@@ -2228,7 +2257,7 @@ namespace UtilORama4
 		{
 			startBeat = vscStartBeat.Value;
 			txtStartBeat.Text = startBeat.ToString();
-			SelectStep(4);
+			//SelectStep(4);
 		}
 
 		private void swTrackBeat_CheckedChanged(object sender, EventArgs e)
@@ -2293,10 +2322,10 @@ namespace UtilORama4
 
 		} // end SaveSelectionsAs...
 
-
-
-
-		private void ExportSelectedLORTimings(string fileName)
+		///////////////////////////////////////
+		//! EXPORT Selected Timings to LOR  //
+		/////////////////////////////////////
+		private void ExportSelectedTimings_ToLOR(string fileName)
 		{
 			// Get Temp Directory
 			bool startWritten = false;
@@ -2385,27 +2414,28 @@ namespace UtilORama4
 			} // End Bars and Beats
 			
 			//! NOTE ONSETS
+			// Note: Returns, effectively, the same timing grid as 'Polyphonic Transcription' (if selected)
 			if (chkNoteOnsets.Checked)
 			{
-				if (VampNoteOnsets.xOnsets != null)
+				if (VampNoteOnsets.Timings != null)
 				{
-					if (VampNoteOnsets.xOnsets.effects.Count > 0)
+					if (VampNoteOnsets.Timings.effects.Count > 0)
 					{
-						//WriteTimingFile4(transOnsets.xOnsets, fileName);
-						//WriteTimingFile5(transOnsets.xOnsets, fileName);
+						WriteTimingFile4(VampNoteOnsets.Timings, fileName);
 						writeCount++;
 					}
 				}
 			}
 
 			//! POLYPHONIC TRANSCRIPTION
+			// Note: Returns, effectively, the same timing grid as 'Note Onsets' (if selected)
 			if (chkPolyphonic.Checked)
 			{
-				if (VampPolyphonic.xPolyphonic != null)
+				if (VampPolyphonic.Timings != null)
 				{
-					if (VampPolyphonic.xPolyphonic.effects.Count > 0)
+					if (VampPolyphonic.Timings.effects.Count > 0)
 					{
-						WriteTimingFile4(VampPolyphonic.xPolyphonic, fileName);
+						WriteTimingFile4(VampPolyphonic.Timings, fileName);
 						writeCount++;
 					}
 				}
@@ -2414,24 +2444,37 @@ namespace UtilORama4
 			//! PITCH AND KEY CHANGES
 			if (chkPitchKey.Checked)
 			{
-				if (VampPitchKey.xPitchKey != null)
+				if (VampPitchKey.Timings != null)
 				{
-					if (VampPitchKey.xPitchKey.effects.Count > 0)
+					if (VampPitchKey.Timings.effects.Count > 0)
 					{
-						WriteTimingFile4(VampPitchKey.xPitchKey, fileName);
+						WriteTimingFile4(VampPitchKey.Timings, fileName);
 						writeCount++;
 					}
 				}
 			}
 
 			//! TEMPO CHANGES
-			if (chkPolyphonic.Checked)
+			if (chkTempo.Checked)
 			{
-				if (VampPolyphonic.xPolyphonic != null)
+				if (VampTempo.Timings != null)
 				{
-					if (VampPolyphonic.xPolyphonic.effects.Count > 0)
+					if (VampTempo.Timings.effects.Count > 0)
 					{
-						WriteTimingFile4(VampPolyphonic.xPolyphonic, fileName);
+						WriteTimingFile4(VampTempo.Timings, fileName);
+						writeCount++;
+					}
+				}
+			}
+
+			//! SEGMENTS
+			if (chkSegments.Checked)
+			{
+				if (VampSegments.Timings != null)
+				{
+					if (VampSegments.Timings.effects.Count > 0)
+					{
+						WriteTimingFile4(VampSegments.Timings, fileName);
 						writeCount++;
 					}
 				}
@@ -2728,7 +2771,7 @@ namespace UtilORama4
 			chkWhiten.Checked = false;
 			chkNoteOnsets.Checked = true;
 			cboLabelsOnsets.SelectedIndex = 0;
-			cboAlignOnsets.SelectedIndex = 5; // Quarter Beats Sixteenth Notes
+			cboAlignOnsets.SelectedIndex = 0; // Quarter Beats Sixteenth Notes
 
 			cboMethodPolyphonic.SelectedIndex = 0;
 			chkPolyphonic.Checked = true;
@@ -2737,22 +2780,22 @@ namespace UtilORama4
 
 			cboMethodSpectrum.SelectedIndex = 0;
 			chkSpectrum.Checked = false;
-			cboLabelsSpectrum.SelectedIndex = 1;
-			cboAlignSpectrum.SelectedIndex = 6;
+			cboLabelsSpectrum.SelectedIndex = 0;
+			cboAlignSpectrum.SelectedIndex = 0;
 
 			cboMethodPitchKey.SelectedIndex = 0;
 			chkPitchKey.Checked = true;
-			cboLabelsPitchKey.SelectedIndex = 1;
-			cboAlignPitchKey.SelectedIndex = 3; // Bars
+			cboLabelsPitchKey.SelectedIndex = 0;
+			cboAlignPitchKey.SelectedIndex = 0; // Bars
 
 			cboMethodTempo.SelectedIndex = 0;
 			chkTempo.Checked = false;
-			cboAlignTempo.SelectedIndex = 1;
-			cboAlignTempo.SelectedIndex = 3; // Bars
+			cboAlignTempo.SelectedIndex = 0;
+			cboAlignTempo.SelectedIndex = 0; // Bars
 
 			chkSegments.Checked = false;
-			cboLabelsSegments.SelectedIndex = 2;
-			cboAlignSegments.SelectedIndex = 3; // Bars
+			cboLabelsSegments.SelectedIndex = 0;
+			cboAlignSegments.SelectedIndex = 0; // Bars
 
 			chkVocals.Checked = false;
 			cboAlignVocals.SelectedIndex = 0; // None
@@ -3084,7 +3127,8 @@ namespace UtilORama4
 		private void cboOnsetsPlugin_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			//TODO Move this to TransformNoteOnsets class
-			int plugin = cboMethodOnsets.SelectedIndex;
+			
+			/*int plugin = cboMethodOnsets.SelectedIndex;
 			switch (plugin)
 			{
 				case VampNoteOnsets.PLUGINqmOnset:
@@ -3145,7 +3189,7 @@ namespace UtilORama4
 					break;
 
 			}
-
+			*/
 
 		}
 
@@ -3182,6 +3226,22 @@ namespace UtilORama4
 		private void lblBarsOnOff_Click(object sender, EventArgs e)
 		{
 			swRamps.Checked = false;
+		}
+
+		private void StatusUpdate(string message)
+		{
+			pnlStatus.Text = message;
+			staStatus.Refresh();
+		}
+
+		private void btnReanalyze_Click(object sender, EventArgs e)
+		{
+			analyzed = false;
+			grpTimings.Enabled = !analyzed;
+			//btnReanalyze.Location = btnOK.Location;
+			btnReanalyze.Visible = analyzed;
+			btnOK.Visible = !analyzed;
+
 		}
 	}
 

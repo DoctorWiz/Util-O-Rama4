@@ -31,17 +31,17 @@
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmVamp));
 			this.ttip = new System.Windows.Forms.ToolTip(this.components);
-			this.btnLaunchxLights = new System.Windows.Forms.Button();
-			this.btnSequenceEditor = new System.Windows.Forms.Button();
-			this.btnExploreLOR = new System.Windows.Forms.Button();
-			this.btnExploreVamp = new System.Windows.Forms.Button();
-			this.btnExplorexLights = new System.Windows.Forms.Button();
-			this.btnExploreTemp = new System.Windows.Forms.Button();
-			this.btnCmdTemp = new System.Windows.Forms.Button();
 			this.pnlTrackBeatsX = new System.Windows.Forms.Panel();
 			this.vscStartBeat = new System.Windows.Forms.VScrollBar();
 			this.txtStartBeat = new System.Windows.Forms.TextBox();
 			this.lblTrackBeatsX = new System.Windows.Forms.Label();
+			this.btnExploreVamp = new System.Windows.Forms.Button();
+			this.btnExplorexLights = new System.Windows.Forms.Button();
+			this.btnExploreTemp = new System.Windows.Forms.Button();
+			this.btnCmdTemp = new System.Windows.Forms.Button();
+			this.btnLaunchxLights = new System.Windows.Forms.Button();
+			this.btnSequenceEditor = new System.Windows.Forms.Button();
+			this.btnExploreLOR = new System.Windows.Forms.Button();
 			this.staStatus = new System.Windows.Forms.StatusStrip();
 			this.pnlHelp = new System.Windows.Forms.ToolStripStatusLabel();
 			this.pnlProgress = new System.Windows.Forms.ToolStripProgressBar();
@@ -65,6 +65,7 @@
 			this.mnuTimingMarks = new System.Windows.Forms.ToolStripMenuItem();
 			this.mnuTranscription = new System.Windows.Forms.ToolStripMenuItem();
 			this.grpTimings = new System.Windows.Forms.GroupBox();
+			this.grpExplore = new System.Windows.Forms.GroupBox();
 			this.grbGlobal = new System.Windows.Forms.GroupBox();
 			this.lblStepSize = new System.Windows.Forms.Label();
 			this.cboStepSize = new System.Windows.Forms.ComboBox();
@@ -82,7 +83,6 @@
 			this.lblAnalyzing = new System.Windows.Forms.Label();
 			this.lblWait = new System.Windows.Forms.Label();
 			this.lblVampRed = new System.Windows.Forms.Label();
-			this.grpExplore = new System.Windows.Forms.GroupBox();
 			this.lblNote3Third = new System.Windows.Forms.Label();
 			this.lblNote1Bars = new System.Windows.Forms.Label();
 			this.lblWorkFolder = new System.Windows.Forms.Label();
@@ -211,6 +211,7 @@
 			this.txtSaveNamexL = new System.Windows.Forms.TextBox();
 			this.imlTreeIcons = new System.Windows.Forms.ImageList(this.components);
 			this.grpAnalyze = new System.Windows.Forms.GroupBox();
+			this.btnReanalyze = new System.Windows.Forms.Button();
 			this.lblVampTime = new System.Windows.Forms.Label();
 			this.btnOK = new System.Windows.Forms.Button();
 			this.lblStep3 = new System.Windows.Forms.Label();
@@ -221,7 +222,7 @@
 			this.lblHelpOnsets = new System.Windows.Forms.Label();
 			this.picPoisonArrow = new System.Windows.Forms.PictureBox();
 			this.lblStep2A = new System.Windows.Forms.Label();
-			this.picSleepy = new System.Windows.Forms.PictureBox();
+			this.lblWorking = new System.Windows.Forms.Label();
 			this.tmrAni = new System.Windows.Forms.Timer(this.components);
 			this.grpSaveLOR = new System.Windows.Forms.GroupBox();
 			this.lblSeqTime = new System.Windows.Forms.Label();
@@ -239,11 +240,11 @@
 			this.staStatus.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.grpTimings.SuspendLayout();
+			this.grpExplore.SuspendLayout();
 			this.grbGlobal.SuspendLayout();
 			this.pnlBeatFade.SuspendLayout();
 			this.panel1.SuspendLayout();
 			this.pnlVamping.SuspendLayout();
-			this.grpExplore.SuspendLayout();
 			this.grpPlatform.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -266,11 +267,112 @@
 			this.grpOptions.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picVampire)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.picPoisonArrow)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.picSleepy)).BeginInit();
 			this.grpSaveLOR.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picLOR)).BeginInit();
 			this.panel3.SuspendLayout();
 			this.SuspendLayout();
+			// 
+			// pnlTrackBeatsX
+			// 
+			this.pnlTrackBeatsX.Controls.Add(this.vscStartBeat);
+			this.pnlTrackBeatsX.Controls.Add(this.txtStartBeat);
+			this.pnlTrackBeatsX.Controls.Add(this.lblTrackBeatsX);
+			this.pnlTrackBeatsX.Location = new System.Drawing.Point(5, 48);
+			this.pnlTrackBeatsX.Name = "pnlTrackBeatsX";
+			this.pnlTrackBeatsX.Size = new System.Drawing.Size(101, 23);
+			this.pnlTrackBeatsX.TabIndex = 142;
+			this.ttip.SetToolTip(this.pnlTrackBeatsX, "Sometimes the very first beat detected is NOT the first beat of the bar.\r\nIf (and" +
+        " only if) this happens, you can correct it here.\r\n");
+			// 
+			// vscStartBeat
+			// 
+			this.vscStartBeat.LargeChange = 1;
+			this.vscStartBeat.Location = new System.Drawing.Point(67, -3);
+			this.vscStartBeat.Maximum = 4;
+			this.vscStartBeat.Minimum = 1;
+			this.vscStartBeat.Name = "vscStartBeat";
+			this.vscStartBeat.Size = new System.Drawing.Size(16, 18);
+			this.vscStartBeat.TabIndex = 28;
+			this.ttip.SetToolTip(this.vscStartBeat, "Sometimes the very first beat detected is NOT the first beat of the bar.\r\nIf (and" +
+        " only if) this happens, you can correct it here.\r\n");
+			this.vscStartBeat.Value = 1;
+			this.vscStartBeat.Scroll += new System.Windows.Forms.ScrollEventHandler(this.vscStartBeat_Scroll);
+			// 
+			// txtStartBeat
+			// 
+			this.txtStartBeat.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.txtStartBeat.Location = new System.Drawing.Point(54, 0);
+			this.txtStartBeat.Name = "txtStartBeat";
+			this.txtStartBeat.ReadOnly = true;
+			this.txtStartBeat.Size = new System.Drawing.Size(13, 20);
+			this.txtStartBeat.TabIndex = 7;
+			this.txtStartBeat.Text = "1";
+			// 
+			// lblTrackBeatsX
+			// 
+			this.lblTrackBeatsX.AutoSize = true;
+			this.lblTrackBeatsX.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblTrackBeatsX.ForeColor = System.Drawing.Color.OrangeRed;
+			this.lblTrackBeatsX.Location = new System.Drawing.Point(1, 4);
+			this.lblTrackBeatsX.Name = "lblTrackBeatsX";
+			this.lblTrackBeatsX.Size = new System.Drawing.Size(54, 13);
+			this.lblTrackBeatsX.TabIndex = 6;
+			this.lblTrackBeatsX.Text = "Start Beat";
+			this.ttip.SetToolTip(this.lblTrackBeatsX, "Sometimes the very first beat detected is NOT the first beat of the bar.\r\nIf (and" +
+        " only if) this happens, you can correct it here.");
+			this.lblTrackBeatsX.UseMnemonic = false;
+			// 
+			// btnExploreVamp
+			// 
+			this.btnExploreVamp.AllowDrop = true;
+			this.btnExploreVamp.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnExploreVamp.Image = ((System.Drawing.Image)(resources.GetObject("btnExploreVamp.Image")));
+			this.btnExploreVamp.Location = new System.Drawing.Point(266, 16);
+			this.btnExploreVamp.Name = "btnExploreVamp";
+			this.btnExploreVamp.Size = new System.Drawing.Size(36, 36);
+			this.btnExploreVamp.TabIndex = 183;
+			this.ttip.SetToolTip(this.btnExploreVamp, "Explore the Vamperizer Source Code Folder");
+			this.btnExploreVamp.UseVisualStyleBackColor = true;
+			this.btnExploreVamp.Visible = false;
+			// 
+			// btnExplorexLights
+			// 
+			this.btnExplorexLights.AllowDrop = true;
+			this.btnExplorexLights.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnExplorexLights.Image = ((System.Drawing.Image)(resources.GetObject("btnExplorexLights.Image")));
+			this.btnExplorexLights.Location = new System.Drawing.Point(138, 16);
+			this.btnExplorexLights.Name = "btnExplorexLights";
+			this.btnExplorexLights.Size = new System.Drawing.Size(36, 36);
+			this.btnExplorexLights.TabIndex = 182;
+			this.ttip.SetToolTip(this.btnExplorexLights, "Explore xLights Show Folder");
+			this.btnExplorexLights.UseVisualStyleBackColor = true;
+			this.btnExplorexLights.Visible = false;
+			// 
+			// btnExploreTemp
+			// 
+			this.btnExploreTemp.AllowDrop = true;
+			this.btnExploreTemp.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnExploreTemp.Image = ((System.Drawing.Image)(resources.GetObject("btnExploreTemp.Image")));
+			this.btnExploreTemp.Location = new System.Drawing.Point(222, 16);
+			this.btnExploreTemp.Name = "btnExploreTemp";
+			this.btnExploreTemp.Size = new System.Drawing.Size(36, 36);
+			this.btnExploreTemp.TabIndex = 181;
+			this.ttip.SetToolTip(this.btnExploreTemp, "Explore the Temp Working Folder");
+			this.btnExploreTemp.UseVisualStyleBackColor = true;
+			this.btnExploreTemp.Visible = false;
+			// 
+			// btnCmdTemp
+			// 
+			this.btnCmdTemp.AllowDrop = true;
+			this.btnCmdTemp.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnCmdTemp.Image = ((System.Drawing.Image)(resources.GetObject("btnCmdTemp.Image")));
+			this.btnCmdTemp.Location = new System.Drawing.Point(180, 16);
+			this.btnCmdTemp.Name = "btnCmdTemp";
+			this.btnCmdTemp.Size = new System.Drawing.Size(36, 36);
+			this.btnCmdTemp.TabIndex = 180;
+			this.ttip.SetToolTip(this.btnCmdTemp, "Open Command Prompt in the Temp Working Directory");
+			this.btnCmdTemp.UseVisualStyleBackColor = true;
+			this.btnCmdTemp.Visible = false;
 			// 
 			// btnLaunchxLights
 			// 
@@ -311,109 +413,6 @@
 			this.btnExploreLOR.UseVisualStyleBackColor = true;
 			this.btnExploreLOR.Visible = false;
 			// 
-			// btnExploreVamp
-			// 
-			this.btnExploreVamp.AllowDrop = true;
-			this.btnExploreVamp.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnExploreVamp.Image = ((System.Drawing.Image)(resources.GetObject("btnExploreVamp.Image")));
-			this.btnExploreVamp.Location = new System.Drawing.Point(266, 16);
-			this.btnExploreVamp.Name = "btnExploreVamp";
-			this.btnExploreVamp.Size = new System.Drawing.Size(36, 36);
-			this.btnExploreVamp.TabIndex = 183;
-			this.ttip.SetToolTip(this.btnExploreVamp, "Explore the Vamperizer Source Code Folder");
-			this.btnExploreVamp.UseVisualStyleBackColor = true;
-			this.btnExploreVamp.Visible = false;
-			// 
-			// btnExplorexLights
-			// 
-			this.btnExplorexLights.AllowDrop = true;
-			this.btnExplorexLights.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnExplorexLights.Image = ((System.Drawing.Image)(resources.GetObject("btnExplorexLights.Image")));
-			this.btnExplorexLights.Location = new System.Drawing.Point(138, 16);
-			this.btnExplorexLights.Name = "btnExplorexLights";
-			this.btnExplorexLights.Size = new System.Drawing.Size(36, 36);
-			this.btnExplorexLights.TabIndex = 182;
-			this.ttip.SetToolTip(this.btnExplorexLights, "Explore xLights Show Folder");
-			this.btnExplorexLights.UseVisualStyleBackColor = true;
-			this.btnExplorexLights.Visible = false;
-			// 
-			// btnExploreTemp
-			// 
-			this.btnExploreTemp.AllowDrop = true;
-			this.btnExploreTemp.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnExploreTemp.Image = ((System.Drawing.Image)(resources.GetObject("btnExploreTemp.Image")));
-			this.btnExploreTemp.Location = new System.Drawing.Point(222, 16);
-			this.btnExploreTemp.Name = "btnExploreTemp";
-			this.btnExploreTemp.Size = new System.Drawing.Size(36, 36);
-			this.btnExploreTemp.TabIndex = 181;
-			this.ttip.SetToolTip(this.btnExploreTemp, "Explore the Temp Working Folder");
-			this.btnExploreTemp.UseVisualStyleBackColor = true;
-			this.btnExploreTemp.Visible = false;
-			this.btnExploreTemp.Click += new System.EventHandler(this.btnExploreTemp_Click);
-			// 
-			// btnCmdTemp
-			// 
-			this.btnCmdTemp.AllowDrop = true;
-			this.btnCmdTemp.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnCmdTemp.Image = ((System.Drawing.Image)(resources.GetObject("btnCmdTemp.Image")));
-			this.btnCmdTemp.Location = new System.Drawing.Point(180, 16);
-			this.btnCmdTemp.Name = "btnCmdTemp";
-			this.btnCmdTemp.Size = new System.Drawing.Size(36, 36);
-			this.btnCmdTemp.TabIndex = 180;
-			this.ttip.SetToolTip(this.btnCmdTemp, "Open Command Prompt in the Temp Working Directory");
-			this.btnCmdTemp.UseVisualStyleBackColor = true;
-			this.btnCmdTemp.Visible = false;
-			this.btnCmdTemp.Click += new System.EventHandler(this.btnCmdTemp_Click);
-			// 
-			// pnlTrackBeatsX
-			// 
-			this.pnlTrackBeatsX.Controls.Add(this.vscStartBeat);
-			this.pnlTrackBeatsX.Controls.Add(this.txtStartBeat);
-			this.pnlTrackBeatsX.Controls.Add(this.lblTrackBeatsX);
-			this.pnlTrackBeatsX.Location = new System.Drawing.Point(5, 48);
-			this.pnlTrackBeatsX.Name = "pnlTrackBeatsX";
-			this.pnlTrackBeatsX.Size = new System.Drawing.Size(101, 23);
-			this.pnlTrackBeatsX.TabIndex = 142;
-			this.ttip.SetToolTip(this.pnlTrackBeatsX, "Sometimes the very first beat detected is NOT the first beat of the bar.\r\nIf (and" +
-        " only if) this happens, you can correct it here.\r\n");
-			// 
-			// vscStartBeat
-			// 
-			this.vscStartBeat.LargeChange = 1;
-			this.vscStartBeat.Location = new System.Drawing.Point(67, -3);
-			this.vscStartBeat.Maximum = 4;
-			this.vscStartBeat.Minimum = 1;
-			this.vscStartBeat.Name = "vscStartBeat";
-			this.vscStartBeat.Size = new System.Drawing.Size(16, 18);
-			this.vscStartBeat.TabIndex = 28;
-			this.ttip.SetToolTip(this.vscStartBeat, "Sometimes the very first beat detected is NOT the first beat of the bar.\r\nIf (and" +
-        " only if) this happens, you can correct it here.\r\n");
-			this.vscStartBeat.Value = 1;
-			// 
-			// txtStartBeat
-			// 
-			this.txtStartBeat.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.txtStartBeat.Location = new System.Drawing.Point(54, 0);
-			this.txtStartBeat.Name = "txtStartBeat";
-			this.txtStartBeat.ReadOnly = true;
-			this.txtStartBeat.Size = new System.Drawing.Size(13, 20);
-			this.txtStartBeat.TabIndex = 7;
-			this.txtStartBeat.Text = "1";
-			// 
-			// lblTrackBeatsX
-			// 
-			this.lblTrackBeatsX.AutoSize = true;
-			this.lblTrackBeatsX.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblTrackBeatsX.ForeColor = System.Drawing.Color.OrangeRed;
-			this.lblTrackBeatsX.Location = new System.Drawing.Point(1, 4);
-			this.lblTrackBeatsX.Name = "lblTrackBeatsX";
-			this.lblTrackBeatsX.Size = new System.Drawing.Size(54, 13);
-			this.lblTrackBeatsX.TabIndex = 6;
-			this.lblTrackBeatsX.Text = "Start Beat";
-			this.ttip.SetToolTip(this.lblTrackBeatsX, "Sometimes the very first beat detected is NOT the first beat of the bar.\r\nIf (and" +
-        " only if) this happens, you can correct it here.");
-			this.lblTrackBeatsX.UseMnemonic = false;
-			// 
 			// staStatus
 			// 
 			this.staStatus.AllowDrop = true;
@@ -424,7 +423,7 @@
             this.pnlAbout});
 			this.staStatus.Location = new System.Drawing.Point(0, 700);
 			this.staStatus.Name = "staStatus";
-			this.staStatus.Size = new System.Drawing.Size(1147, 24);
+			this.staStatus.Size = new System.Drawing.Size(981, 24);
 			this.staStatus.TabIndex = 62;
 			this.staStatus.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
 			this.staStatus.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
@@ -456,7 +455,7 @@
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlStatus.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
 			this.pnlStatus.Name = "pnlStatus";
-			this.pnlStatus.Size = new System.Drawing.Size(1035, 19);
+			this.pnlStatus.Size = new System.Drawing.Size(869, 19);
 			this.pnlStatus.Spring = true;
 			// 
 			// pnlAbout
@@ -590,9 +589,9 @@
 			// 
 			// grpTimings
 			// 
+			this.grpTimings.Controls.Add(this.grpExplore);
 			this.grpTimings.Controls.Add(this.grbGlobal);
 			this.grpTimings.Controls.Add(this.pnlVamping);
-			this.grpTimings.Controls.Add(this.grpExplore);
 			this.grpTimings.Controls.Add(this.lblNote3Third);
 			this.grpTimings.Controls.Add(this.lblNote1Bars);
 			this.grpTimings.Controls.Add(this.lblWorkFolder);
@@ -623,11 +622,27 @@
 			this.grpTimings.Enabled = false;
 			this.grpTimings.Location = new System.Drawing.Point(352, 12);
 			this.grpTimings.Name = "grpTimings";
-			this.grpTimings.Size = new System.Drawing.Size(775, 676);
+			this.grpTimings.Size = new System.Drawing.Size(621, 676);
 			this.grpTimings.TabIndex = 113;
 			this.grpTimings.TabStop = false;
 			this.grpTimings.Text = "      Select Which Timings to Generate";
 			this.grpTimings.Enter += new System.EventHandler(this.grpTimings_Enter);
+			// 
+			// grpExplore
+			// 
+			this.grpExplore.Controls.Add(this.btnExploreVamp);
+			this.grpExplore.Controls.Add(this.btnExplorexLights);
+			this.grpExplore.Controls.Add(this.btnExploreTemp);
+			this.grpExplore.Controls.Add(this.btnCmdTemp);
+			this.grpExplore.Controls.Add(this.btnLaunchxLights);
+			this.grpExplore.Controls.Add(this.btnSequenceEditor);
+			this.grpExplore.Controls.Add(this.btnExploreLOR);
+			this.grpExplore.Location = new System.Drawing.Point(314, 7);
+			this.grpExplore.Name = "grpExplore";
+			this.grpExplore.Size = new System.Drawing.Size(314, 56);
+			this.grpExplore.TabIndex = 180;
+			this.grpExplore.TabStop = false;
+			this.grpExplore.Text = " Explore... ";
 			// 
 			// grbGlobal
 			// 
@@ -820,22 +835,6 @@
 			this.lblVampRed.TabIndex = 0;
 			this.lblVampRed.Text = "Vamp";
 			this.lblVampRed.Visible = false;
-			// 
-			// grpExplore
-			// 
-			this.grpExplore.Controls.Add(this.btnExploreVamp);
-			this.grpExplore.Controls.Add(this.btnExplorexLights);
-			this.grpExplore.Controls.Add(this.btnExploreTemp);
-			this.grpExplore.Controls.Add(this.btnCmdTemp);
-			this.grpExplore.Controls.Add(this.btnLaunchxLights);
-			this.grpExplore.Controls.Add(this.btnSequenceEditor);
-			this.grpExplore.Controls.Add(this.btnExploreLOR);
-			this.grpExplore.Location = new System.Drawing.Point(316, 12);
-			this.grpExplore.Name = "grpExplore";
-			this.grpExplore.Size = new System.Drawing.Size(314, 56);
-			this.grpExplore.TabIndex = 179;
-			this.grpExplore.TabStop = false;
-			this.grpExplore.Text = " Explore... ";
 			// 
 			// lblNote3Third
 			// 
@@ -2488,6 +2487,7 @@
 			// 
 			// grpAnalyze
 			// 
+			this.grpAnalyze.Controls.Add(this.btnReanalyze);
 			this.grpAnalyze.Controls.Add(this.lblVampTime);
 			this.grpAnalyze.Controls.Add(this.btnOK);
 			this.grpAnalyze.Controls.Add(this.lblStep3);
@@ -2498,6 +2498,20 @@
 			this.grpAnalyze.TabIndex = 126;
 			this.grpAnalyze.TabStop = false;
 			this.grpAnalyze.Text = "      Analyze the Audio File";
+			// 
+			// btnReanalyze
+			// 
+			this.btnReanalyze.AllowDrop = true;
+			this.btnReanalyze.DialogResult = System.Windows.Forms.DialogResult.OK;
+			this.btnReanalyze.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnReanalyze.Location = new System.Drawing.Point(162, 20);
+			this.btnReanalyze.Name = "btnReanalyze";
+			this.btnReanalyze.Size = new System.Drawing.Size(117, 41);
+			this.btnReanalyze.TabIndex = 165;
+			this.btnReanalyze.Text = "Change Options and\r\nAnalyze Again...";
+			this.btnReanalyze.UseVisualStyleBackColor = true;
+			this.btnReanalyze.Visible = false;
+			this.btnReanalyze.Click += new System.EventHandler(this.btnReanalyze_Click);
 			// 
 			// lblVampTime
 			// 
@@ -2543,7 +2557,7 @@
 			this.grpOptions.Controls.Add(this.lblHelpOnsets);
 			this.grpOptions.Controls.Add(this.picPoisonArrow);
 			this.grpOptions.Controls.Add(this.lblStep2A);
-			this.grpOptions.Controls.Add(this.picSleepy);
+			this.grpOptions.Controls.Add(this.lblWorking);
 			this.grpOptions.Enabled = false;
 			this.grpOptions.Location = new System.Drawing.Point(12, 89);
 			this.grpOptions.Name = "grpOptions";
@@ -2618,15 +2632,16 @@
 			this.lblStep2A.TabIndex = 122;
 			this.lblStep2A.Text = "2";
 			// 
-			// picSleepy
+			// lblWorking
 			// 
-			this.picSleepy.Image = ((System.Drawing.Image)(resources.GetObject("picSleepy.Image")));
-			this.picSleepy.Location = new System.Drawing.Point(3, 16);
-			this.picSleepy.Name = "picSleepy";
-			this.picSleepy.Size = new System.Drawing.Size(330, 248);
-			this.picSleepy.TabIndex = 157;
-			this.picSleepy.TabStop = false;
-			this.picSleepy.Visible = false;
+			this.lblWorking.AutoSize = true;
+			this.lblWorking.Font = new System.Drawing.Font("Creepsville", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblWorking.ForeColor = System.Drawing.Color.Crimson;
+			this.lblWorking.Location = new System.Drawing.Point(156, 87);
+			this.lblWorking.Name = "lblWorking";
+			this.lblWorking.Size = new System.Drawing.Size(142, 36);
+			this.lblWorking.TabIndex = 157;
+			this.lblWorking.Text = "Working...";
 			// 
 			// tmrAni
 			// 
@@ -2776,7 +2791,7 @@
 			this.AcceptButton = this.btnOK;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1147, 724);
+			this.ClientSize = new System.Drawing.Size(981, 724);
 			this.Controls.Add(this.grpSaveLOR);
 			this.Controls.Add(this.grpAnalyze);
 			this.Controls.Add(this.grpSavex);
@@ -2806,6 +2821,7 @@
 			this.menuStrip1.PerformLayout();
 			this.grpTimings.ResumeLayout(false);
 			this.grpTimings.PerformLayout();
+			this.grpExplore.ResumeLayout(false);
 			this.grbGlobal.ResumeLayout(false);
 			this.grbGlobal.PerformLayout();
 			this.pnlBeatFade.ResumeLayout(false);
@@ -2814,7 +2830,6 @@
 			this.panel1.PerformLayout();
 			this.pnlVamping.ResumeLayout(false);
 			this.pnlVamping.PerformLayout();
-			this.grpExplore.ResumeLayout(false);
 			this.grpPlatform.ResumeLayout(false);
 			this.grpPlatform.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
@@ -2854,7 +2869,6 @@
 			this.grpOptions.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picVampire)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.picPoisonArrow)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.picSleepy)).EndInit();
 			this.grpSaveLOR.ResumeLayout(false);
 			this.grpSaveLOR.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picLOR)).EndInit();
@@ -3041,18 +3055,9 @@
 		private System.Windows.Forms.Label lblBeats1Full;
 		private System.Windows.Forms.Label lblBeats4Quarter;
 		private System.Windows.Forms.Label lblBeats0Bars;
-		private System.Windows.Forms.GroupBox grpExplore;
-		private System.Windows.Forms.Button btnExploreVamp;
-		private System.Windows.Forms.Button btnExplorexLights;
-		private System.Windows.Forms.Button btnExploreTemp;
-		private System.Windows.Forms.Button btnCmdTemp;
-		private System.Windows.Forms.Button btnLaunchxLights;
-		private System.Windows.Forms.Button btnSequenceEditor;
-		private System.Windows.Forms.Button btnExploreLOR;
 		private System.Windows.Forms.Label lblSongTime;
 		private System.Windows.Forms.Label lblVampTime;
 		private System.Windows.Forms.Label lblSeqTime;
-		private System.Windows.Forms.PictureBox picSleepy;
 		private System.Windows.Forms.GroupBox grbGlobal;
 		private System.Windows.Forms.Label lblStepSize;
 		private System.Windows.Forms.ComboBox cboStepSize;
@@ -3071,6 +3076,16 @@
 		private System.Windows.Forms.Label lblTrackBeat44;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.ComboBox cboLabelsBarBeats;
+		private System.Windows.Forms.Label lblWorking;
+		private System.Windows.Forms.Button btnReanalyze;
+		private System.Windows.Forms.GroupBox grpExplore;
+		private System.Windows.Forms.Button btnExploreVamp;
+		private System.Windows.Forms.Button btnExplorexLights;
+		private System.Windows.Forms.Button btnExploreTemp;
+		private System.Windows.Forms.Button btnCmdTemp;
+		private System.Windows.Forms.Button btnLaunchxLights;
+		private System.Windows.Forms.Button btnSequenceEditor;
+		private System.Windows.Forms.Button btnExploreLOR;
 	}
 }
 

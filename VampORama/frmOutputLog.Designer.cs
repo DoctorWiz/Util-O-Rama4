@@ -106,7 +106,10 @@ namespace UtilORama4
 			this.Text = "Sonic Annotator Output Log";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmOutputLog_FormClosing);
 			this.Load += new System.EventHandler(this.frmOutputLog_Load);
+			this.Shown += new System.EventHandler(this.frmOutputLog_Shown);
 			this.ResizeEnd += new System.EventHandler(this.frmOutputLog_ResizeEnd);
+			this.Paint += new System.Windows.Forms.PaintEventHandler(this.frmOutputLog_Paint);
+			this.Move += new System.EventHandler(this.frmOutputLog_Move);
 			this.Resize += new System.EventHandler(this.frmOutputLog_Resize);
 			this.ResumeLayout(false);
 			this.PerformLayout();

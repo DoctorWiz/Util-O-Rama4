@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 using System.IO;
 using LORUtils4; using FileHelper;
 using xUtilities;
@@ -35,9 +36,12 @@ namespace UtilORama4
 		public const int METHOD2modKulback = 6;
 		public const int METHOD2flux = 7;
 
-		public static xTimings xOnsets = Annotator.xOnsets;
+		public static xTimings xNoteOnsets = Annotator.xNoteOnsets;
 		public static string ResultsName = "NoteOnsets.csv";
 		public static string FileResults = Annotator.TempPath + ResultsName;
+
+		public static vamps.AlignmentType AlignmentType = vamps.AlignmentType.BeatsQuarter; // Default
+		public static vamps.LabelType LabelType = vamps.LabelType.NoteNamesUnicode; // Default
 
 
 		public static readonly string[] availablePluginNames = {	"Queen Mary Note Onset Detector",
@@ -71,72 +75,22 @@ namespace UtilORama4
 																											"vamp_vamp-aubio_aubioonset_onsets.n3",
 																											"vamp_vamp-aubio_aubionotes_notes.n3" };
 
-		public static readonly string[] availableLabels = {"None",
-																								"Note Names",
-																								"Midi Note Numbers" };
+		public static readonly vamps.LabelType[] allowableLabels = { vamps.LabelType.None, vamps.LabelType.Numbers,
+																																	 vamps.LabelType.NoteNamesUnicode, vamps.LabelType.NoteNamesASCII,
+																																	vamps.LabelType.MIDINoteNumbers	};
 
-	//private SequenceFunctions SequenceFunctions = new SequenceFunctions();
-		//
+		//public static readonly string[] availableLabels = {vamps.LABELNAMEnone, vamps.LABELNAMEnumbers,
+		//																											vamps.LABELNAMEnoteNamesUnicode, vamps.LABELNAMEnoteNamesASCII,
+		//																											vamps.LABELNAMEmidiNoteNumbers };
 
-		public static int UsePlugin
-		{
-			set
-			{
-				lastPluginUsed = value;
-				if (lastPluginUsed < 0) lastPluginUsed = 0;
-				if (lastPluginUsed >= availablePluginNames.Length) lastPluginUsed = availablePluginNames.Length - 1;
-			}
-			get
-			{
-				return lastPluginUsed;
-			}
-		}
-
-
-		//public string[] PluginFiles
-		//{
-		//	get
-		//	{
-		//		return pluginFiles;
-		//	}
-		//}
 		public enum DetectionMethods { ComplexDomain = 0, SpectralDifference = 1, PhaseDeviation = 2, BroadbandEnergyRise = 3 };
-
-		//private static readonly vamps.AlignmentType[] allowableAlignments = { vamps.AlignmentType.None, vamps.AlignmentType.FPS20, vamps.AlignmentType.FPS40 };
-
-
-		private static vamps.AlignmentType alignmentType = vamps.AlignmentType.None;
-
-		private static vamps.AlignmentType AlignmentType
-		{
-			set
-			{
-				bool valid = false;
-				for (int i = 0; i < allowableAlignments.Length; i++)
-				{
-					if (value == allowableAlignments[i])
-					{
-						alignmentType = value;
-						valid = true;
-						i = allowableAlignments.Length; // Force exit of loop
-					}
-				}
-			}
-			get
-			{
-				return alignmentType;
-			}
-		}
-
-
-		private static readonly vamps.LabelTypes[] allowableLabels = { vamps.LabelTypes.None };
 
 
 		public static xTimings Timings
 		{
 			get
 			{
-				return xOnsets;
+				return xNoteOnsets;
 			}
 		}
 		public static Annotator.TransformTypes TransformationType
@@ -329,194 +283,127 @@ namespace UtilORama4
 			return err;
 		}
 
-
-		// Required by ITransform inteface, wrapper to true ResultsToxTimings procedure requiring more parameters
-		public static int ResultsToxTimings(string resultsFile, vamps.AlignmentType alignmentType, vamps.LabelTypes labelType)
-		{
-			return ResultsToxTimings(resultsFile, alignmentType, labelType);
-		}
-
-
-		// The true ResultsToxTimings procedure requiring more parameters, (not compliant with ITransform inteface)
-
-		public static int ResultsToxTimings(string resultsFile, vamps.AlignmentType alignmentType, vamps.LabelTypes labelType, DetectionMethods detectMethod = DetectionMethods.ComplexDomain)
+		public static int ResultsToxTimings(string resultsFile, vamps.AlignmentType alignmentType, vamps.LabelType labelType, DetectionMethods detectMethod = DetectionMethods.ComplexDomain)
 		{
 			int err = 0;
-			bool redo = true;
+			int pcount = 0;
+			string lineIn = "";
+			int ppos = 0;
+			int millisecs = 0;
+			string[] parts;
+			int eStart = 0;
+			int eEnd = 0;
+			int lastStart = -1;
+			string msg = "";
 
-			if (xOnsets == null)
+			// Store These
+			LabelType = labelType;
+			AlignmentType = alignmentType;
+			Annotator.SetAlignment(alignmentType);
+
+			msg = "\r\n\r\n### PROCESSING NOTE ONSETS ####################################";
+			Debug.WriteLine(msg);
+
+			pcount = 0;
+			xNoteOnsets.effects.Clear();
+
+			int onsetCount = 0;
+			int noteNum = -1;
+			string label = "1";
+			int milliLen = 0;
+			string noteInfo = "0";
+			int countBeats = Annotator.FirstBeat;
+
+			// Pass 2, read data into arrays
+			StreamReader reader = new StreamReader(resultsFile);
+			while (!reader.EndOfStream)
 			{
-				xOnsets = new xTimings(transformName);
-			}
-			if ((xOnsets.effects.Count > 0) && (!Annotator.ReuseResults))
-			{
-				xOnsets.effects.Clear();
-			}
-
-
-			//TODO Fix this so it works correctly
-			//if ((xOnsets == null) || (!ReuseResults))
-			//if (xOnsets == null)
-			{
-				int onsetCount = 0;
-				string lineIn = "";
-				int lastBeat = 0;
-				int lastBar = -1;
-				int beatLength = 0;
-				int ppos = 0;
-				int millisecs = 0;
-				int midiNum = -1;
-				string label = "1";
-				int milliLen = 0;
-				string noteNum = "0";
-				//string[] parts;
-
-				int countLines = 0;
-				int countBars = 1;
-				int countBeats = Annotator.FirstBeat;
-
-				//int align = SequenceFunctions.GetAlignment(cboAlignBarsBeats.Text);
-
-				switch (alignmentType)
+				lineIn = reader.ReadLine();
+				parts = lineIn.Split(',');
+				millisecs = xUtils.ParseMilliseconds(parts[0]);
+				eStart = Annotator.AlignTime(millisecs);
+				// Has it advanced since the last one?
+				if (eStart > lastStart)
 				{
-					case vamps.AlignmentType.FPS10:
-						Annotator.FPS = 10;
-						break;
-					case vamps.AlignmentType.FPS20:
-						Annotator.FPS = 20;
-						break;
-					case vamps.AlignmentType.FPS30:
-						Annotator.FPS = 30;
-						break;
-					case vamps.AlignmentType.FPS40:
-						Annotator.FPS = 40;
-						break;
-					case vamps.AlignmentType.FPS60:
-						Annotator.FPS = 60;
-						break;
-					case vamps.AlignmentType.BeatsFull:
-						Annotator.xAlignTo = Annotator.xBeatsFull;
-						break;
-					case vamps.AlignmentType.BeatsHalf:
-						Annotator.xAlignTo = Annotator.xBeatsHalf;
-						break;
-					case vamps.AlignmentType.BeatsThird:
-						Annotator.xAlignTo = Annotator.xBeatsThird;
-						break;
-					case vamps.AlignmentType.BeatsQuarter:
-						Annotator.xAlignTo = Annotator.xBeatsQuarter;
-						break;
-				}
-				Annotator.alignIdx = 0; // Reset
-
-
-				// Pass 1, count lines
-				StreamReader reader = new StreamReader(resultsFile);
-				while (!reader.EndOfStream)
-				{
-					lineIn = reader.ReadLine();
-					countLines++;
-				}
-				reader.Close();
-
-
-				// Pass 2, read data into arrays
-				reader = new StreamReader(resultsFile);
-
-				if (!reader.EndOfStream)
-				{
-					lineIn = reader.ReadLine();
-
-					ppos = lineIn.IndexOf('.');
-					if (ppos > xUtils.UNDEFINED)
+					// Depending on which plugin was used, the output file may have only 1, or maybe more, fields
+					// In the event of just one column default endTime to startTime
+					eEnd = eStart;
+					// But if there is another column- for duration- lets use it
+					if (parts.Length > 1)
 					{
+						milliLen = xUtils.ParseMilliseconds(parts[1]);
+						int ee = eStart + milliLen;
+						eEnd = Annotator.AlignTime(ee);
+					}
+					// If annotation file has no duration or end time, or if
+					// After Aligning to Beats (or other long time) we may end up with a note of Zero length
+					// if it was shorter than a Bar to begin with
 
-						string[] parts = lineIn.Split(',');
-
-						millisecs = xUtils.ParseMilliseconds(parts[0]);
-						millisecs = Annotator.AlignTimeTo(millisecs, alignmentType);
-						lastBeat = millisecs;
-						lastBar = millisecs;
-
-						if (parts.Length > 1)
-						{
-							milliLen = xUtils.ParseMilliseconds(parts[1]);
-						}
-						if (parts.Length > 2)
-						{
-							noteNum = parts[2];
-							if (noteNum.Length > 0)
-							{
-								midiNum = Int32.Parse(noteNum);
-								if (midiNum > 0)
-								{
-									//label = SequenceFunctions.noteNamesUnicode[midiNum];
-								}
-							}
-						}
-					} // end line contains a period
-				} // end while loop more lines remaining
-				while (!reader.EndOfStream)
-				{
-					lineIn = reader.ReadLine();
-					ppos = lineIn.IndexOf('.');
-					if (ppos > xUtils.UNDEFINED)
+					if (eEnd <= eStart)
 					{
-
-						string[] parts = lineIn.Split(',');
-
-						millisecs = xUtils.ParseMilliseconds(parts[0]);
-						label = countBeats.ToString();
-						// FULL BEATS - QUARTER NOTES
-						//millisecs = xUtils.RoundTimeTo(millisecs, msPF);
-						// Moved down to below > lastbeat check
-						//millisecs = Annotator.AlignTimeTo(millisecs, alignmentType);
-						beatLength = millisecs - lastBeat;
-						if (parts.Length > 1)
-						{
-							milliLen = xUtils.ParseMilliseconds(parts[1]);
+						// if not, lets ATTEMPT a fix
+						if ((alignmentType == vamps.AlignmentType.BeatsQuarter) ||
+								(alignmentType == vamps.AlignmentType.NoteOnsets))
+						{ 
+							// If aligning to quarter beats or note onsets, add 3/4 of an average quarter beat then align
+							int ee = eStart + (int)Math.Round((Annotator.AverageBeatQuarterMS * .75D));
+							eEnd = Annotator.AlignTime(ee);
 						}
-
-						// Has it advanced since the last one?
-						if (millisecs > lastBeat)
+						if (Annotator.AlignFPS > 0)
 						{
-							// OK, now align it
-							millisecs = Annotator.AlignTimeTo(millisecs, alignmentType);
-							// Is it still past the lastone after alignment?
-							if (millisecs > lastBeat)
+							// If aligning to frames, add one frame's worth
+							eEnd = eStart + (int)Math.Round(1000D / Annotator.AlignFPS);
+						}
+						if (alignmentType == vamps.AlignmentType.None)
+						{
+							// If no alignment, add 50ms which is 20 FPS
+							eEnd = eStart + 50;
+						}
+					}
+					onsetCount++;
+					label = onsetCount.ToString(); // Default
+					noteNum = onsetCount; // Default
+					// Again, depending on which plugin was used, there may or may not be note info
+					if (parts.Length > 2)
+					{
+						noteInfo = parts[2];
+						int.TryParse(noteInfo, out noteNum);
+
+						int effNum = onsetCount;
+						if (labelType == vamps.LabelType.MIDINoteNumbers) label = noteNum.ToString();
+						if ((noteNum > 0) && (noteNum < 128))
+						{
+							if (labelType == vamps.LabelType.MIDINoteNumbers)
 							{
-								// Save it, add it to list
-								xOnsets.Add(label, lastBeat, millisecs, midiNum);
-								// update count
-								countBeats++;
-								// Remember this for next round (in order to skip ones which haven't advanced)
-								lastBeat = millisecs;
+								label = noteNum.ToString();
+								effNum = noteNum;
+							}
+							if (labelType == vamps.LabelType.NoteNamesASCII)
+							{
+								label = MusicalNotation.noteNamesASCII[noteNum];
+								effNum = noteNum;
+							}
+							if (labelType == vamps.LabelType.NoteNamesASCII)
+							{
+								label = MusicalNotation.noteNamesASCII[noteNum];
+								effNum = noteNum;
 							}
 						}
-
-						// Get length and midi number for next entry
-						if (parts.Length > 2)
-						{
-							noteNum = parts[2];
-							if (noteNum.Length > 0)
-							{
-								midiNum = Int32.Parse(noteNum);
-								if (midiNum > 0)
-								{
-									//label = SequenceFunctions.noteNamesUnicode[midiNum];
-								}
-							}
-						}
-						onsetCount++;
-					} // end line contains a period
-				} // end while loop more lines remaining
-				xOnsets.Add(label, lastBeat, millisecs, midiNum);
-
-				reader.Close();
-			}
+					}
+					else
+					{ 
+						// Do nothing?
+						// (may need to mess with label, which is why this 'else' is here
+					}
+					xNoteOnsets.Add(label, eStart, eEnd, noteNum);
+					// Remember this for next round (in order to skip ones which haven't advanced)
+					lastStart = eStart;
+				} // end enough parts
+			} // end while loop more lines remaining
+			reader.Close();
+			Fyle.BUG("Check output window.  Did the alignments work as expected?");
 			return err;
 		} // end Beats
-
 
 		public static int xTimingsToLORtimings()
 		{
@@ -526,13 +413,13 @@ namespace UtilORama4
 			//SequenceFunctions.Sequence = sequence;
 			int errs = 0;
 
-			if (xOnsets != null)
+			if (xNoteOnsets != null)
 			{
-				if (xOnsets.effects.Count > 0)
+				if (xNoteOnsets.effects.Count > 0)
 				{
 					string gridName = "5 " + transformName;
 					LORTimings4 gridOnsets = Annotator.Sequence.FindTimingGrid(gridName, true);
-					SequenceFunctions.ImportTimingGrid(gridOnsets, xOnsets);
+					SequenceFunctions.ImportTimingGrid(gridOnsets, xNoteOnsets);
 					// Save a reference to the Note Onsets timing grid
 					Annotator.GridOnsets = gridOnsets;
 					// If the Vamp Track's timing grid is currently set to Full Beats or is null
@@ -557,26 +444,18 @@ namespace UtilORama4
 
 			//LORTrack4 vampTrack = SequenceFunctions.GetTrack("Vamp-O-Rama");
 			//LORChannelGroup4 onsetGroup = Annotator.Sequence.FindChannelGroup(transformName, Annotator.VampTrack.Members, true);
-			if (xOnsets != null)
+			if (xNoteOnsets != null)
 			{
-				if (xOnsets.effects.Count > 0)
+				if (xNoteOnsets.effects.Count > 0)
 				{
 					if (Annotator.UseRamps)
 					{
 						LORChannel4 chan = Annotator.Sequence.FindChannel(transformName, Annotator.VampTrack.Members, true, true);
 						chan.color = lutils.Color_NettoLOR(System.Drawing.Color.DarkViolet);
-						SequenceFunctions.ImportNoteChannel(chan, xOnsets);
+						SequenceFunctions.ImportNoteChannel(chan, xNoteOnsets);
 					}
 				}
 			}
-
-			return errs;
-		}
-
-		public static int xTimingsToxLights(string baseFileName)
-		{
-			int errs = 0;
-
 
 			return errs;
 		}

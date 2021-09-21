@@ -47,9 +47,22 @@ namespace UtilORama4
 		public static xTimings xBeatsHalf = new xTimings(VampBarBeats.beatsHalfName);
 		public static xTimings xBeatsThird = new xTimings(VampBarBeats.beatsThirdName);
 		public static xTimings xBeatsQuarter = new xTimings(VampBarBeats.beatsQuarterName);
-		public static xTimings xFrames = new xTimings("Frames");
-		public static xTimings xOnsets = new xTimings(VampNoteOnsets.transformName);
+		//public static xTimings xFrames = new xTimings("Frames");
+		public static xTimings xNoteOnsets = new xTimings(VampNoteOnsets.transformName);
 		public static xTimings xAlignTo = null;
+		public static vamps.AlignmentType AlignmentType = vamps.AlignmentType.None;
+
+		public static int AverageBarMS = 1;
+		public static int AverageBeatFullMS = 1;
+		public static int AverageBeatQuarterMS = 1;
+		
+		// Default MS per Frame alignment is Zero
+		// Zero indicates alignment to Bars, Beats, Onsets, or None
+		// Will range from 100-17 for 10-60 FPS
+		private static double msPerFrame = 0;
+		private static int alignFPS = 0;
+
+
 		public static int songTimeMS = 0;
 		public static int BeatsPerBar = 4;
 		public static int FirstBeat = 1;
@@ -60,10 +73,10 @@ namespace UtilORama4
 		private static int totalMilliseconds = 0;
 		private static int highestTime = 0;
 		//public static int TotalCentiseconds = 0;
-		private static int fps = 40;
+		//private static int fps = 40;
 		//private static int mspf = 25;
 
-		public static int alignIdx = 0;
+		private static int alignIndex = 0;
 		//private static bool Fyle.DebugMode = Fyle.IsWizard || Fyle.IsAWizard;
 		//public static LORTrack4 VampTrack = null;
 
@@ -96,8 +109,8 @@ namespace UtilORama4
 			xBeatsHalf = new xTimings(VampBarBeats.beatsHalfName);
 			xBeatsThird = new xTimings(VampBarBeats.beatsThirdName);
 			xBeatsQuarter = new xTimings(VampBarBeats.beatsQuarterName);
-			xFrames = new xTimings("Frames");
-			xOnsets = new xTimings(VampNoteOnsets.transformName);
+			//xFrames = new xTimings("Frames");
+			xNoteOnsets = new xTimings(VampNoteOnsets.transformName);
 			xAlignTo = null;
 			songTimeMS = 0;
 			BeatsPerBar = 4;
@@ -108,8 +121,8 @@ namespace UtilORama4
 			StepSize = 512;
 			totalMilliseconds = 0;
 			highestTime = 0;
-			fps = 40;
-			alignIdx = 0;
+			msPerFrame = 0;
+			alignIndex = 0;
 			LORSequence4 Sequence = null;
 			VampTrack = null;
 			noteChannels = null;
@@ -298,49 +311,93 @@ namespace UtilORama4
 			return resultsFile;
 		}
 
-		public static int AlignTimeTo(int startTime, vamps.AlignmentType alignTo)
+		public static void SetAlignment(vamps.AlignmentType alignTo)
 		{
-			int msPerFrame = 0;
-			int ret = startTime;
-			if (alignTo == vamps.AlignmentType.FPS10) msPerFrame = 100;
-			if (alignTo == vamps.AlignmentType.FPS20) msPerFrame = 50;
-			if (alignTo == vamps.AlignmentType.FPS30) msPerFrame = 33;
-			if (alignTo == vamps.AlignmentType.FPS40) msPerFrame = 25;
-			if (alignTo == vamps.AlignmentType.FPS60) msPerFrame = 17;
-			//if (alignTo == vamps.AlignmentType.FPScustom)
-			if (msPerFrame > 1 && msPerFrame < 1000)
-			{ 
-				int half = msPerFrame / 2;
-				int newStart = startTime / msPerFrame * msPerFrame;
-				int diff = startTime - newStart;
-				if (diff > half) newStart += msPerFrame;
-				ret = newStart;
+			AlignmentType = alignTo;
+			if (alignTo == vamps.AlignmentType.Bars) xAlignTo = xBars;
+			if (alignTo == vamps.AlignmentType.BeatsFull) xAlignTo = xBeatsFull;
+			if (alignTo == vamps.AlignmentType.BeatsHalf) xAlignTo = xBeatsHalf;
+			if (alignTo == vamps.AlignmentType.BeatsThird) xAlignTo = xBeatsThird;
+			if (alignTo == vamps.AlignmentType.BeatsQuarter) xAlignTo = xBeatsQuarter;
+			if (alignTo == vamps.AlignmentType.NoteOnsets) xAlignTo = xNoteOnsets;
+
+			if ((alignTo == vamps.AlignmentType.Bars) ||
+					(alignTo == vamps.AlignmentType.BeatsFull) ||
+					(alignTo == vamps.AlignmentType.BeatsHalf) ||
+					(alignTo == vamps.AlignmentType.BeatsThird) ||
+					(alignTo == vamps.AlignmentType.BeatsQuarter) ||
+					(alignTo == vamps.AlignmentType.NoteOnsets))
+			{ alignFPS = 0;  }
+
+			if (alignTo == vamps.AlignmentType.FPS10) alignFPS = 10;
+			if (alignTo == vamps.AlignmentType.FPS20) alignFPS = 20;
+			if (alignTo == vamps.AlignmentType.FPS30) alignFPS = 30;
+			if (alignTo == vamps.AlignmentType.FPS40) alignFPS = 40;
+			if (alignTo == vamps.AlignmentType.FPS60) alignFPS = 60;
+
+			if (alignTo == vamps.AlignmentType.None) alignFPS = 0;
+
+			msPerFrame = (1000D / alignFPS);
+
+			alignIndex = 0; // Reset any time alignment is changed or starting processing new annotations
+
+		}
+
+		public static int AlignTime(int theTime)
+		{
+			if (AlignmentType == vamps.AlignmentType.None)
+			{
+				return theTime;
 			}
 			else
 			{
-				if ((alignTo == vamps.AlignmentType.Bars) ||
-						(alignTo == vamps.AlignmentType.BeatsFull) ||
-						(alignTo == vamps.AlignmentType.BeatsHalf) ||
-						(alignTo == vamps.AlignmentType.BeatsThird) ||
-						(alignTo == vamps.AlignmentType.BeatsQuarter) ||
-						(alignTo == vamps.AlignmentType.NoteOnsets))
+				int ret = theTime;
+
+				if (alignFPS > 10)
 				{
-				if (xAlignTo != null)
+					// Divide then multiply by ms per frame to get earliest possible time
+					// (Note: as an divide as integer so remainder gets discarded)
+					int p1 = (int)(theTime / msPerFrame);
+					int newStart = (int)(p1 * msPerFrame);
+					// How much is half a frame?
+					double half = (msPerFrame / 2D);
+					// How far is it from the halfway point?
+					double diff = (newStart + half) - theTime;
+					// If less than zero, it is closer to the next frame
+					// so add a frame's worth of time to the start calculated above
+					if (diff < 0) newStart += (int)Math.Round(msPerFrame);
+					ret = newStart;
+				}
+				else
+				{
+					if ((AlignmentType == vamps.AlignmentType.Bars) ||
+							(AlignmentType == vamps.AlignmentType.BeatsFull) ||
+							(AlignmentType == vamps.AlignmentType.BeatsHalf) ||
+							(AlignmentType == vamps.AlignmentType.BeatsThird) ||
+							(AlignmentType == vamps.AlignmentType.BeatsQuarter) ||
+							(AlignmentType == vamps.AlignmentType.NoteOnsets))
 					{
-						if (xAlignTo.effects.Count > 0)
+						if (xAlignTo != null)
 						{
-							int ns = AlignToNearestTiming(startTime);
-							ret = ns;
+							if (xAlignTo.effects.Count > 0)
+							{
+								int ns = AlignToNearestTiming(theTime);
+								ret = ns;
+							}
+						}
+						else
+						{
+							Fyle.BUG("Why is xAlignTo not set?");
 						}
 					}
 				}
+				return ret;
 			}
-			return ret;
 		}
 
-		private static int AlignToNearestTiming(int startTime)
+		private static int AlignToNearestTiming(int theTime)
 		{
-			//! Important: Reset lastFoundIdx to xUtils.UNDEFINED before starting new timings and/or different alignTimes.
+			//! Important: Reset alignIndex to xUtils.UNDEFINED before starting new timings and/or different alignTimes.
 			//! alignTimes are assumed to be in ascending numerical order.
 
 			int retIdx = -1;
@@ -348,157 +405,212 @@ namespace UtilORama4
 			int diffHi = 0;
 			bool keepTrying = true;
 			int matchTime = -1;
-			int newStart = startTime;
+			int effectTime = 0;
+			int newStart = theTime;
+			string msg = "";
+			List<xEffect> effects = xAlignTo.effects;
 
-			while (keepTrying)
+			if (xAlignTo == null)
 			{
-				if (alignIdx >= 0)
+				Fyle.BUG("Trying to align to a null set of timings!");
+			}
+			else
+			{
+				if (effects.Count < 1)
 				{
-					//! Crashing Here!  xAlignTo is null-not assigned
-					diffLo = startTime - xAlignTo.effects[alignIdx].starttime;
-					if (diffLo < 0)
-					{
-						alignIdx--;
-					}
-					else
-					{
-						if (alignIdx < xAlignTo.effects.Count - 1)
-						{
-							diffHi = xAlignTo.effects[alignIdx + 1].starttime - startTime;
-							if (diffHi < 0)
-							{
-								alignIdx++;
-							}
-							else
-							{
-								if (diffLo < diffHi)
-								{
-									retIdx = alignIdx;
-									matchTime = xAlignTo.effects[alignIdx].starttime;
-									keepTrying = false;
-								}
-								else
-								{
-									alignIdx++;
-									retIdx = alignIdx;
-									matchTime = xAlignTo.effects[alignIdx].starttime;
-									keepTrying = false;
-								}
-							}
-						}
-						else
-						{
-							diffLo = startTime - xAlignTo.effects[xAlignTo.effects.Count - 1].starttime;
-							if (diffLo < 0)
-							{
-								alignIdx--;
-							}
-							else
-							{
-								diffHi = songTimeMS - startTime;
-								if (diffLo <= diffHi)
-								{
-									retIdx = alignIdx;
-									matchTime = xAlignTo.effects[alignIdx].starttime;
-									keepTrying = false;
-								}
-								else
-								{
-									alignIdx++;
-									retIdx = alignIdx;
-									matchTime = xAlignTo.effects[alignIdx].starttime;
-									keepTrying = false;
-								}
-							}
-						}
-					}
+					Fyle.BUG("AlignTo timings are empty!");
 				}
 				else
 				{
-					diffHi = xAlignTo.effects[0].starttime - startTime;
-					if (diffHi < 0)
+					while (keepTrying)
 					{
-						alignIdx++;
-					}
-					else
-					{
-						diffLo = startTime;
-						if (diffLo < diffHi)
+						effectTime = effects[alignIndex].starttime;
+						// Is the time passed in past or equal to our current effect?
+						if (theTime > effectTime)
 						{
-							retIdx = alignIdx;
-							matchTime = 0;
-							keepTrying = false;
+							// Is the current effect the last one?
+							if (alignIndex > (effects.Count - 2))
+							{
+								// Yup, last effect, we reached the end
+								// How far past the last one is it?
+								diffLo = theTime - effectTime;
+								// And how far is it from the end of the song?
+								diffHi = songTimeMS - theTime;
+								// Closer Zero or to the CURRENT effect.starttime?
+								if (diffLo < diffHi)
+								{
+									// Closer to to that last effect
+									matchTime = effectTime;
+									msg = "Time " + theTime.ToString() + " is between the last effect " + effectTime.ToString();
+									msg += " and the end of the song " + songTimeMS.ToString() + " but is closer to the last effect ";
+									msg += diffLo.ToString() + "<" + diffHi.ToString() + " so set to last effect " + matchTime.ToString();
+									Debug.WriteLine(msg);
+									// Woo-Hoo!  Got it!  Done!
+									keepTrying = false;
+								}
+								else
+								{
+									// Closer to the end of the song
+									matchTime = songTimeMS;
+									msg = "Time " + theTime.ToString() + " is between the last effect " + effectTime.ToString();
+									msg += " and the end of the song " + songTimeMS.ToString() + " but is closer to the the end of the song ";
+									msg += diffLo.ToString() + ">" + diffHi.ToString() + " so set to end of the song " + matchTime.ToString();
+									Debug.WriteLine(msg);
+									// Move along people, we're done here.
+									keepTrying = false;
+								} // End if closer to last effect or to end of song
+							}
+							else // it is or isn't the last effect (and the time is past the current one)
+							{
+								// So how does it compare to the next one
+								if (theTime > effects[alignIndex + 1].starttime)
+								{
+									// Past the next one too
+									// So advance the counter and keep trying
+									msg = "Time " + theTime.ToString() + " is past the current [" + alignIndex.ToString() + "] effect " + effectTime.ToString();
+									msg += " and there are more effects left and it is past the next [";
+									msg += (alignIndex + 1).ToString() + "] effect too " + effects[alignIndex+1].starttime.ToString();
+									msg += " so advancing the index to " + (alignIndex + 1).ToString();
+									Debug.WriteLine(msg);
+									alignIndex++;
+								} // End if at the last effect (or not)
+								else
+								{
+									// So at this point, by process of elimination
+									// 1. The time should be past the current effect
+									// 2. There are more effects left
+									// 3. The time should be before or equal the next effect
+									// This is the typical most common situation
+
+									// How far past the current effect is it?
+									diffLo = theTime - effectTime;
+									// And how far is it from the next effect
+									diffHi = effects[alignIndex + 1].starttime - theTime;
+									// Closer to the current effect.starttime or the next one?
+									if (diffLo < diffHi)
+									{
+										// Closer to current one
+										matchTime = effectTime;
+										msg = "Time " + theTime.ToString() + " is between the cuurent [" + alignIndex.ToString() + "] effect " + effectTime.ToString();
+										msg += " and the next [" + (alignIndex + 1).ToString() + "] effect " + songTimeMS.ToString() + " but is closer to the current effect ";
+										msg += diffLo.ToString() + "<" + diffHi.ToString() + " so set to current effect " + matchTime.ToString();
+										Debug.WriteLine(msg);
+										// Woo-Hoo!  Got it!  Done!
+										keepTrying = false;
+									}
+									else
+									{
+										// Closer to the next one
+										matchTime = effects[alignIndex + 1].starttime;
+										msg = "Time " + theTime.ToString() + " is between the cuurent [" + alignIndex.ToString() + "] effect " + effectTime.ToString();
+										msg += " and the next [" + (alignIndex + 1).ToString() + "] effect " + songTimeMS.ToString() + " but is closer to the next effect ";
+										msg += diffLo.ToString() + ">" + diffHi.ToString() + " so set to next effect " + matchTime.ToString();
+										Debug.WriteLine(msg);
+										// Move along people, we're done here.
+										keepTrying = false;
+									} // End if closer to current or next effect
+								} // end if time is or isn't past the next effect
+							} // end if there is or is not more effects after the current one
 						}
-						else
+						else // time passed before or equal the current effect
 						{
-							alignIdx++;
-							retIdx = alignIdx;
-							matchTime = xAlignTo.effects[alignIdx].starttime;
-							keepTrying = false;
-						}
-					}
-				}
-			}
-			if (Fyle.DebugMode)
-			{
-				string msg = "Start time " + startTime.ToString() + " aligned to " + matchTime.ToString();
-				Console.WriteLine(msg);
-			}
+							// This normally should only happen if we haven't reached the first one yet
+							// Are we at the very first effect?
+							if (alignIndex < 1)
+							{
+								// So time must be between Zero and the first effect
+								// How far past Zero is it?
+								diffLo = theTime;
+								// And how far is it from the [first] effect
+								diffHi = effectTime - theTime;
+								// Closer Zero or to the current (first) effect.starttime?
+								if (diffLo < diffHi)
+								{
+									// Closer to Zero
+									matchTime = 0;
+									msg = "Time " + theTime.ToString() + " is between Zero and the first effect " + effectTime.ToString();
+									msg += " but is closer to Zero " + diffLo.ToString() + "<" + diffHi.ToString() + " so set to Zero " + matchTime.ToString();
+									Debug.WriteLine(msg);
+									// Woo-Hoo!  Got it!  Done!
+									keepTrying = false;
+								}
+								else
+								{
+									// Closer to that first effect
+									matchTime = effectTime;
+									msg = "Time " + theTime.ToString() + " is between Zero and the first effect " + effectTime.ToString();
+									msg += " but is closer to the first effect " + diffLo.ToString() + "<" + diffHi.ToString();
+									msg += " so set to first effect " + matchTime.ToString();
+									Debug.WriteLine(msg);
+									// Move along people, we're done here.
+									keepTrying = false;
+								} // End if closer to Zero or to first effect
+							}
+							else // Not at the first effect (there are effects before this one), and the time we are looking for is before this one
+							{
+								//! THIS SHOULD NOT HAPPEN UNDER NORMAL CIRCUMSTANCES!
+								//Fyle.BUG("Alignment Going Backwards!", Fyle.Noises.Boing);
+								//? Investigate WHY!  Effects out of order?
+								msg = "** ALIGNMENT GOING BACKWARDS *******************************\r\n";
+								msg = "Time " + theTime.ToString() + " is before the current [" + alignIndex.ToString() + "] effect " + effectTime.ToString();
+								msg += " and this is not the first effect!";
+								Debug.WriteLine(msg);
+								alignIndex--;
+							} // End the current effect is or isn't the first one
+						} // End time is before or after the current effect
+					} // End While Keep Trying Loop
+				} // end if there is (or isn't} any effects in this collection
+			} // End if the AlignTo collection is (or is not) null
 
-			//if (retIdx >= 0)
-			//{
-			//	newStart = xAlignTo.effects[retIdx].starttime;
-			//}
-
-			//return newStart;
+						
 			return matchTime;
 		}
 
-		public static int FPS
+		public static int AlignFPS
 		{
 			// Frames-Per-Second
 			set
 			{
-				fps = value;
-				if (fps < 10) fps = 10;
-				if (fps > 100) fps = 100;
-				//mspf = 1000 / fps;
+				alignFPS = value;
+				if (alignFPS < 10) alignFPS = 10; // 100 MS
+				if (alignFPS > 60) alignFPS = 60; // 16.6666 FPS
+				msPerFrame = (1000D / alignFPS);
 			}
 			get
 			{
-				return fps;
+				return alignFPS;
 			}
 		}
 
-		public static int msPF
+		public static double AlignMilliseconds
 		{
 			// Milliseconds-Per-Frame
 			set
 			{
-				int mspf = value;
-				if (mspf < 10) mspf = 10;
-				if (mspf > 100) mspf = 100;
-				fps = 1000 / mspf;
+				alignFPS = (int)Math.Round(1000D / value);
+				if (alignFPS < 10) alignFPS = 10; // 100 MS
+				if (alignFPS > 60) alignFPS = 60; // 116.6666 FPS
+				msPerFrame = (1000D / alignFPS);
 			}
 			get
 			{
-				return (int)Math.Round(1000D / fps);
+				return msPerFrame;
 			}
 		}
 
-		public static int csPF
+		public static int AlignCentiseconds
 		{
 			// Milliseconds-Per-Frame
 			set
 			{
-				int mspf = value;
-				if (mspf < 10) mspf = 10;
-				if (mspf > 100) mspf = 100;
-				fps = 100 / mspf;
+				alignFPS = (int)Math.Round(100D / value);
+				if (alignFPS < 10) alignFPS = 10;  // 10 centiseconds
+				if (alignFPS > 60) alignFPS = 60; // 1.6666 centiseconds
+				msPerFrame = (1000D / alignFPS);
 			}
 			get
 			{
-				return (int)Math.Round(100D / fps);
+				return (int)Math.Round(100D / alignFPS);
 			}
 		}
 

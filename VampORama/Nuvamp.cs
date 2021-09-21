@@ -87,7 +87,7 @@ namespace UtilORama4
 			int completed = 0;
 			int err = 0;
 			//vamps.AlignmentType algn = vamps.AlignmentType.None;
-			//vamps.LabelTypes lbls = vamps.LabelTypes.None;
+			//vamps.LabelType lbls = vamps.LabelType.None;
 			bool reuse = chkReuse.Checked;
 			Annotator.ReuseResults = chkReuse.Checked;
 			Annotator.Whiten = chkWhiten.Checked;
@@ -108,6 +108,7 @@ namespace UtilORama4
 			{
 				if ((!reuse) || (!Fyle.Exists(VampBarBeats.FileResults)))
 				{
+					StatusUpdate("Annotating Bars and Beats");
 					int pluginIndex = cboMethodBarsBeats.SelectedIndex;
 					int detectionMethod = cboDetectBarBeats.SelectedIndex;
 					//whiten = chkWhiteBarBeats.Checked;
@@ -131,6 +132,7 @@ namespace UtilORama4
 			{
 				if ((!reuse) || (!Fyle.Exists(VampNoteOnsets.FileResults)))
 				{
+					StatusUpdate("Annotating Note Onsets");
 					int pluginIndex = cboMethodOnsets.SelectedIndex;
 					int detectionMethod = cboOnsetsDetect.SelectedIndex;
 					//whiten = chkWhiten.Checked;
@@ -152,6 +154,7 @@ namespace UtilORama4
 			{
 				if ((!reuse) || (!Fyle.Exists(VampPolyphonic.FileResults)))
 				{
+					StatusUpdate("Annotating Polyphonic Transcription");
 					int pluginIndex = cboMethodPolyphonic.SelectedIndex;
 					//whiten = chkWhiten.Checked;
 
@@ -174,6 +177,7 @@ namespace UtilORama4
 			{
 				if ((!reuse) || (!Fyle.Exists(VampPitchKey.FileResults)))
 				{
+					StatusUpdate("Annotating Pitch and Key");
 					int pluginIndex = cboMethodPitchKey.SelectedIndex;
 					//whiten = chkWhiten.Checked;
 
@@ -194,6 +198,7 @@ namespace UtilORama4
 			{
 				if ((!reuse) || (!Fyle.Exists(VampTempo.FileResults)))
 				{
+					StatusUpdate("Annotating Tempo Changes");
 					int pluginIndex = cboMethodTempo.SelectedIndex;
 					//whiten = chkWhiten.Checked;
 
@@ -207,36 +212,28 @@ namespace UtilORama4
 				}
 			}
 
-			/*
 			//!///////////////////////
-			//!   TEMPO   //
+			//!  SEGMENTS  //
 			//!/////////////////////
-			if (chkTempo.Checked)
+			if (chkSegments.Checked)
 			{
-				transTempo = new VampTempo();
-				int pluginIndex = cboMethodTempo.SelectedIndex;
-				//int detectionMethod = cboMethodPolyphonic.SelectedIndex;
-				whiten = chkWhiten.Checked;
-
-				//resultsNoteOnsets = transOnsets.AnnotateSong(fileSongTemp, pluginIndex, beatsPerBar, stepSize, detectionMethod, reuse, whiten);
-				//err = transOnsets.PrepareToVamp(fileSongTemp, pluginIndex, beatsPerBar, stepSize, reuse);
-				err = transTempo.PrepareToVamp(fileSongTemp, pluginIndex, beatsPerBar, stepSize); //, reuse, whiten);
-				if (err == 0)
+				if ((!reuse) || (!Fyle.Exists(VampSegments.FileResults)))
 				{
-					//string fileConfig = transTempo.filesAvailableConfigs[pluginIndex];
-					//string vampParams = transTempo.availablePluginCodes[pluginIndex];
-					//resultsTempo = VampThatSong(fileSongTemp, vampParams, fileConfig, reuse);
-					if (resultsTempo.Length > 4)
+					StatusUpdate("Annotating Segments");
+					int pluginIndex = cboMethodSegments.SelectedIndex;
+					//whiten = chkWhiten.Checked;
+
+					err = VampSegments.PrepareToVamp(fileSongTemp, pluginIndex);
+					if (err == 0)
 					{
-						vamps.AlignmentType algn = vamps.GetAlignmentTypeFromName(cboAlignTempo.Text);
-						//TODO Get user choice of label type and detection method from combo boxes
-						transTempo.ResultsToxTimings(resultsTempo, algn, vamps.LabelTypes.NoteNames); //, NoteOnsets.DetectionMethods.ComplexDomain);
-						completed++;
+						string fileConfig = VampSegments.filesAvailableConfigs[pluginIndex];
+						string vampParams = VampSegments.availablePluginCodes[pluginIndex];
+						err = VampThatSong(fileSongTemp, vampParams, fileConfig, VampSegments.ResultsName);
 					}
 				}
 			}
 
-
+			/*
 			//!///////////////////////
 			//! CHROMAGRAM OR SPECTROGRAM
 			//!/////////////////////
@@ -259,7 +256,7 @@ namespace UtilORama4
 					{
 						vamps.AlignmentType algn = vamps.GetAlignmentTypeFromName(cboAlignSpectrum.Text);
 						//TODO Get user choice of label type and detection method from combo boxes
-						transSpectrum.ResultsToxTimings(resultsSpectrum, algn, vamps.LabelTypes.NoteNames); //, NoteOnsets.DetectionMethods.ComplexDomain);
+						transSpectrum.ResultsToxTimings(resultsSpectrum, algn, vamps.LabelType.NoteNames); //, NoteOnsets.DetectionMethods.ComplexDomain);
 						completed++;
 					}
 				}
@@ -288,7 +285,7 @@ namespace UtilORama4
 					{
 						vamps.AlignmentType algn = vamps.GetAlignmentTypeFromName(cboAlignPolyphonic.Text);
 						//TODO Get user choice of label type and detection method from combo boxes
-						transSegments.ResultsToxTimings(resultsSegments, algn, vamps.LabelTypes.NoteNames); //, NoteOnsets.DetectionMethods.ComplexDomain);
+						transSegments.ResultsToxTimings(resultsSegments, algn, vamps.LabelType.NoteNames); //, NoteOnsets.DetectionMethods.ComplexDomain);
 						completed++;
 					}
 				}
@@ -312,7 +309,7 @@ namespace UtilORama4
 			int completed = 0;
 			int err = 0;
 			vamps.AlignmentType algn = vamps.AlignmentType.None;
-			vamps.LabelTypes lbls = vamps.LabelTypes.None;
+			vamps.LabelType lbls = vamps.LabelType.None;
 			bool reuse = chkReuse.Checked;
 			Annotator.ReuseResults = chkReuse.Checked;
 			//Annotator.Whiten = chkWhiteBarBeats.Checked;
@@ -333,9 +330,11 @@ namespace UtilORama4
 			{
 				if (Fyle.Exists(VampBarBeats.FileResults))
 				{
+					StatusUpdate("Processing Bar and Beat Annotations");
 					algn = vamps.GetAlignmentTypeFromName(cboAlignBarBeats.Text);
+					lbls = vamps.GetLabelTypeFromName(cboLabelsBarBeats.Text);
 					// Note: Does all 5: Bars, Whole Beats, Half, Third, and Quarter
-					VampBarBeats.ResultsToxTimings(VampBarBeats.FileResults, algn, vamps.LabelTypes.Numbers);
+					VampBarBeats.ResultsToxTimings(VampBarBeats.FileResults, algn, lbls);
 					completed++;
 				}
 				else
@@ -350,10 +349,11 @@ namespace UtilORama4
 			//!////////////////
 			//! NOTE ONSETS //
 			//!/////////////
-			if ((chkNoteOnsets.Checked) || (Annotator.xOnsets.effects.Count < 1))
+			if ((chkNoteOnsets.Checked) || (VampNoteOnsets.Timings.effects.Count < 1))
 			{
 				if (Fyle.Exists(VampNoteOnsets.FileResults))
 				{
+					StatusUpdate("Processing Note Onset Annotations");
 					algn = vamps.GetAlignmentTypeFromName(cboAlignOnsets.Text);
 					lbls = vamps.GetLabelTypeFromName(cboLabelsOnsets.Text);
 					VampNoteOnsets.ResultsToxTimings(VampNoteOnsets.FileResults, algn, lbls, VampNoteOnsets.DetectionMethods.ComplexDomain);
@@ -361,7 +361,7 @@ namespace UtilORama4
 				}
 				else
 				{
-					Fyle.BUG("Note Onsets Failed, no results file!");
+					// Fyle.BUG("Note Onsets Failed, no results file!");
 				}
 			}
 
@@ -372,6 +372,7 @@ namespace UtilORama4
 			{
 				if (Fyle.Exists(VampPolyphonic.FileResults))
 				{
+					StatusUpdate("Processing Polyphonic Transcription Annotations");
 					algn = vamps.GetAlignmentTypeFromName(cboAlignPolyphonic.Text);
 					lbls = vamps.GetLabelTypeFromName(cboLabelsPolyphonic.Text);
 					VampPolyphonic.ResultsToxTimings(VampPolyphonic.FileResults, algn, lbls);
@@ -394,6 +395,7 @@ namespace UtilORama4
 			{
 				if (Fyle.Exists(VampPitchKey.FileResults))
 				{
+					StatusUpdate("Processing Pitch and Key Annotations");
 					algn = vamps.GetAlignmentTypeFromName(cboAlignPitchKey.Text);
 					lbls = vamps.GetLabelTypeFromName(cboLabelsPitchKey.Text);
 					VampPitchKey.ResultsToxTimings(VampPitchKey.FileResults, algn, lbls);
@@ -414,6 +416,7 @@ namespace UtilORama4
 			{
 				if (Fyle.Exists(VampTempo.FileResults))
 				{
+					StatusUpdate("Processing Tempo Change Annotations");
 					algn = vamps.GetAlignmentTypeFromName(cboAlignTempo.Text);
 					lbls = vamps.GetLabelTypeFromName(cboLabelsTempo.Text);
 					VampTempo.ResultsToxTimings(VampTempo.FileResults, algn, lbls);
@@ -426,36 +429,27 @@ namespace UtilORama4
 				}
 			}
 
-			/*
 			//!///////////////////////
-			//!   TEMPO   //
+			//!  SEGMENTS  //
 			//!/////////////////////
-			if (chkTempo.Checked)
+			if ((chkSegments.Checked) || (VampSegments.Timings.effects.Count < 1))
 			{
-				transTempo = new VampTempo();
-				int pluginIndex = cboMethodTempo.SelectedIndex;
-				//int detectionMethod = cboMethodPolyphonic.SelectedIndex;
-				whiten = chkWhiten.Checked;
-
-				//resultsNoteOnsets = transOnsets.AnnotateSong(fileSongTemp, pluginIndex, beatsPerBar, stepSize, detectionMethod, reuse, whiten);
-				//err = transOnsets.PrepareToVamp(fileSongTemp, pluginIndex, beatsPerBar, stepSize, reuse);
-				err = transTempo.PrepareToVamp(fileSongTemp, pluginIndex, beatsPerBar, stepSize); //, reuse, whiten);
-				if (err == 0)
+				if (Fyle.Exists(VampSegments.FileResults))
 				{
-					//string fileConfig = transTempo.filesAvailableConfigs[pluginIndex];
-					//string vampParams = transTempo.availablePluginCodes[pluginIndex];
-					//resultsTempo = VampThatSong(fileSongTemp, vampParams, fileConfig, reuse);
-					if (resultsTempo.Length > 4)
-					{
-						vamps.AlignmentType algn = vamps.GetAlignmentTypeFromName(cboAlignTempo.Text);
-						//TODO Get user choice of label type and detection method from combo boxes
-						transTempo.ResultsToxTimings(resultsTempo, algn, vamps.LabelTypes.NoteNames); //, NoteOnsets.DetectionMethods.ComplexDomain);
-						completed++;
-					}
+					StatusUpdate("Processing Segment Annotations");
+					algn = vamps.GetAlignmentTypeFromName(cboAlignSegments.Text);
+					lbls = vamps.GetLabelTypeFromName(cboLabelsSegments.Text);
+					VampSegments.ResultsToxTimings(VampSegments.FileResults, algn, lbls);
+					completed++;
+				}
+				else
+				{
+					// No Results File!
+					//Fyle.BUG("Pitch and Key Tracker failed, no results file!");
 				}
 			}
 
-
+			/*
 			//!///////////////////////
 			//! CHROMAGRAM OR SPECTROGRAM
 			//!/////////////////////
@@ -478,40 +472,12 @@ namespace UtilORama4
 					{
 						vamps.AlignmentType algn = vamps.GetAlignmentTypeFromName(cboAlignSpectrum.Text);
 						//TODO Get user choice of label type and detection method from combo boxes
-						transSpectrum.ResultsToxTimings(resultsSpectrum, algn, vamps.LabelTypes.NoteNames); //, NoteOnsets.DetectionMethods.ComplexDomain);
+						transSpectrum.ResultsToxTimings(resultsSpectrum, algn, vamps.LabelType.NoteNames); //, NoteOnsets.DetectionMethods.ComplexDomain);
 						completed++;
 					}
 				}
 			}
 
-
-			//!///////////////////////
-			//!  SEGMENTS  ///
-			//!/////////////////////
-			if (chkSegments.Checked)
-			{
-				transSegments = new VampSegments();
-				int pluginIndex = cboMethodSegments.SelectedIndex;
-				//int detectionMethod = cboMethodPolyphonic.SelectedIndex;
-				whiten = chkWhiten.Checked;
-
-				//resultsNoteOnsets = transOnsets.AnnotateSong(fileSongTemp, pluginIndex, beatsPerBar, stepSize, detectionMethod, reuse, whiten);
-				//err = transOnsets.PrepareToVamp(fileSongTemp, pluginIndex, beatsPerBar, stepSize, reuse);
-				err = transSegments.PrepareToVamp(fileSongTemp, pluginIndex, beatsPerBar, stepSize); //, reuse, whiten);
-				if (err == 0)
-				{
-					//string fileConfig = transSegments.filesAvailableConfigs[pluginIndex];
-					//string vampParams = transSegments.availablePluginCodes[pluginIndex];
-					//resultsSegments = VampThatSong(fileSongTemp, vampParams, fileConfig, reuse);
-					if (resultsSegments.Length > 4)
-					{
-						vamps.AlignmentType algn = vamps.GetAlignmentTypeFromName(cboAlignPolyphonic.Text);
-						//TODO Get user choice of label type and detection method from combo boxes
-						transSegments.ResultsToxTimings(resultsSegments, algn, vamps.LabelTypes.NoteNames); //, NoteOnsets.DetectionMethods.ComplexDomain);
-						completed++;
-					}
-				}
-			}
 			*/
 
 
@@ -562,12 +528,13 @@ namespace UtilORama4
 				{
 					if (VampBarBeats.xBars.effects.Count > 0)
 					{
+						StatusUpdate("Exporting Bar Timings");
 						if (!allInOne)
 						{
 							writer = BeginTimingsXFile(fileBaseName + " - " + VampBarBeats.xBars.Name + exten);
 							writeCount++;
 						}
-						lineOut = xTimingsOutX(VampBarBeats.xBars, xTimings.LabelTypes.Numbers, allInOne);
+						lineOut = xTimingsOutX(VampBarBeats.xBars, vamps.LabelType.Numbers, allInOne);
 						writer.WriteLine(lineOut);
 					}
 				}
@@ -578,12 +545,13 @@ namespace UtilORama4
 					{
 						if (VampBarBeats.xBeatsFull.effects.Count > 0)
 						{
+							StatusUpdate("Exporting Full Beat Timings");
 							if (!allInOne)
 							{
 								writer = BeginTimingsXFile(fileBaseName + " - " + VampBarBeats.xBeatsFull.Name + exten);
 								writeCount++;
 							}
-							lineOut = xTimingsOutX(VampBarBeats.xBeatsFull, xTimings.LabelTypes.Numbers, allInOne);
+							lineOut = xTimingsOutX(VampBarBeats.xBeatsFull, vamps.LabelType.Numbers, allInOne);
 							writer.WriteLine(lineOut);
 						}
 					}
@@ -595,12 +563,13 @@ namespace UtilORama4
 					{
 						if (VampBarBeats.xBeatsHalf.effects.Count > 0)
 						{
+							StatusUpdate("Exporting Half Beat Timings");
 							if (!allInOne)
 							{
 								writer = BeginTimingsXFile(fileBaseName + " - " + VampBarBeats.xBeatsHalf.Name + exten);
 								writeCount++;
 							}
-							lineOut = xTimingsOutX(VampBarBeats.xBeatsHalf, xTimings.LabelTypes.Numbers, allInOne);
+							lineOut = xTimingsOutX(VampBarBeats.xBeatsHalf, vamps.LabelType.Numbers, allInOne);
 							writer.WriteLine(lineOut);
 						}
 					}
@@ -612,12 +581,13 @@ namespace UtilORama4
 					{
 						if (VampBarBeats.xBeatsThird.effects.Count > 0)
 						{
+							StatusUpdate("Exporting Third Beat Timings");
 							if (!allInOne)
 							{
 								writer = BeginTimingsXFile(fileBaseName + " - " + VampBarBeats.xBeatsThird.Name + exten);
 								writeCount++;
 							}
-							lineOut = xTimingsOutX(VampBarBeats.xBeatsThird, xTimings.LabelTypes.Numbers, allInOne);
+							lineOut = xTimingsOutX(VampBarBeats.xBeatsThird, vamps.LabelType.Numbers, allInOne);
 							writer.WriteLine(lineOut);
 						}
 					}
@@ -629,12 +599,13 @@ namespace UtilORama4
 					{
 						if (VampBarBeats.xBeatsQuarter.effects.Count > 0)
 						{
+							StatusUpdate("Exporting Quarter Beat Timings");
 							if (!allInOne)
 							{
 								writer = BeginTimingsXFile(fileBaseName + " - " + VampBarBeats.xBeatsQuarter.Name + exten);
 								writeCount++;
 							}
-							lineOut = xTimingsOutX(VampBarBeats.xBeatsQuarter, xTimings.LabelTypes.Numbers, allInOne);
+							lineOut = xTimingsOutX(VampBarBeats.xBeatsQuarter, vamps.LabelType.Numbers, allInOne);
 							writer.WriteLine(lineOut);
 						}
 					}
@@ -644,17 +615,18 @@ namespace UtilORama4
 			//! NOTE ONSETS
 				if (chkNoteOnsets.Checked)
 				{
-					if (VampNoteOnsets.xOnsets != null)
+					if (VampNoteOnsets.Timings != null)
 					{
-						if (VampNoteOnsets.xOnsets.effects.Count > 0)
+						if (VampNoteOnsets.Timings.effects.Count > 0)
 						{
-							if (!allInOne)
-							{
-								writer = BeginTimingsXFile(fileBaseName + " - " + VampNoteOnsets.xOnsets.Name + exten);
+						StatusUpdate("Exporting Note Onset Timings");
+						if (!allInOne)
+						{
+								writer = BeginTimingsXFile(fileBaseName + " - " + VampNoteOnsets.Timings.Name + exten);
 								writeCount++;
 							}
-							xTimings.LabelTypes lt = xTimings.LabelType(cboLabelsOnsets.Text);
-							lineOut = xTimingsOutX(VampNoteOnsets.xOnsets, lt, allInOne);
+							vamps.LabelType lt = vamps.GetLabelTypeFromName(cboLabelsOnsets.Text);
+							lineOut = xTimingsOutX(VampNoteOnsets.Timings, lt, allInOne);
 							writer.WriteLine(lineOut);
 							writeCount++;
 						}
@@ -664,12 +636,18 @@ namespace UtilORama4
 			//! POLYPHONIC TRANSCRIPTION
 			if (chkPolyphonic.Checked)
 			{
-				if (VampPolyphonic.xPolyphonic != null)
+				if (VampPolyphonic.Timings != null)
 				{
-					if (VampPolyphonic.xPolyphonic.effects.Count > 0)
+					if (VampPolyphonic.Timings.effects.Count > 0)
 					{
-						xTimings.LabelTypes lt = xTimings.LabelType(cboAlignPolyphonic.Text);
-						lineOut = xTimingsOutX(VampPolyphonic.xPolyphonic, lt, allInOne);
+						StatusUpdate("Exporting Polyphonic Transcription Timings");
+						if (!allInOne)
+						{
+							writer = BeginTimingsXFile(fileBaseName + " - " + VampPolyphonic.Timings.Name + exten);
+							writeCount++;
+						}
+						vamps.LabelType lt = vamps.GetLabelTypeFromName(cboLabelsPolyphonic.Text);
+						lineOut = xTimingsOutX(VampPolyphonic.Timings, lt, allInOne);
 						writer.WriteLine(lineOut);
 						writeCount++;
 					}
@@ -679,12 +657,19 @@ namespace UtilORama4
 			//! PITCH AND KEY
 			if (chkPitchKey.Checked)
 			{
-				if (VampPitchKey.xPitchKey != null)
+				if (VampPitchKey.Timings != null)
 				{
-					if (VampPitchKey.xPitchKey.effects.Count > 0)
+					if (VampPitchKey.Timings.effects.Count > 0)
 					{
-						xTimings.LabelTypes lt = xTimings.LabelType(cboAlignPitchKey.Text);
-						lineOut = xTimingsOutX(VampPitchKey.xPitchKey, lt, allInOne);
+						StatusUpdate("Exporting Pitch and Key Timings");
+						if (!allInOne)
+						{
+							writer = BeginTimingsXFile(fileBaseName + " - " + VampPitchKey.Timings.Name + exten);
+							writeCount++;
+						}
+
+						vamps.LabelType lt = vamps.GetLabelTypeFromName(cboLabelsPitchKey.Text);
+						lineOut = xTimingsOutX(VampPitchKey.Timings, lt, allInOne);
 						writer.WriteLine(lineOut);
 						writeCount++;
 					}
@@ -694,38 +679,46 @@ namespace UtilORama4
 			//! TEMPO CHANGES
 			if (chkTempo.Checked)
 			{
-				if (VampTempo.xTempo != null)
+				if (VampTempo.Timings != null)
 				{
-					if (VampTempo.xTempo.effects.Count > 0)
+					if (VampTempo.Timings.effects.Count > 0)
 					{
-						xTimings.LabelTypes lt = xTimings.LabelType(cboAlignTempo.Text);
-						lineOut = xTimingsOutX(VampTempo.xTempo, lt, allInOne);
+						StatusUpdate("Exporting Tempo Change Timings");
+						if (!allInOne)
+						{
+							writer = BeginTimingsXFile(fileBaseName + " - " + VampTempo.Timings.Name + exten);
+							writeCount++;
+						}
+						vamps.LabelType lt = vamps.GetLabelTypeFromName(cboLabelsTempo.Text);
+						lineOut = xTimingsOutX(VampTempo.Timings, lt, allInOne);
 						writer.WriteLine(lineOut);
 						writeCount++;
 					}
 				}
 			}
 
-			
-			/*
+			//! SEGMENTs
 			if (chkSegments.Checked)
 			{
-				if (xTimes.xSegments != null)
+				if (VampSegments.Timings != null)
 				{
-					if (xTimes.xSegments.effects.Count > 0)
+					if (VampSegments.Timings.effects.Count > 0)
 					{
-						WriteTimingFileX(xTimes.xSegments, fileName);
-						WriteTimingFile4(xTimes.xSegments, fileName);
-						WriteTimingFile5(xTimes.xSegments, fileName);
-						writeCount += 3;
+						StatusUpdate("Exporting Segment Timings");
+						if (!allInOne)
+						{
+							writer = BeginTimingsXFile(fileBaseName + " - " + VampSegments.Timings.Name + exten);
+							writeCount++;
+						}
+						vamps.LabelType lt = vamps.GetLabelTypeFromName(cboLabelsSegments.Text);
+						lineOut = xTimingsOutX(VampSegments.Timings, lt, allInOne);
+						writer.WriteLine(lineOut);
+						writeCount++;
 					}
 				}
 			}
 
 
-			*/
-
-			//}
 
 			if (allInOne)
 			{
@@ -735,8 +728,8 @@ namespace UtilORama4
 			writer.Close();
 
 
-
-			pnlStatus.Text = writeCount.ToString() + " files writen.";
+			StatusUpdate("Export of " + writeCount.ToString() + " Timings Complete!");
+			//pnlStatus.Text = writeCount.ToString() + " files writen.";
 
 
 		}
@@ -754,9 +747,10 @@ namespace UtilORama4
 			{
 				if (lightORamaInstalled && chkLOR.Checked)
 				{
+					StatusUpdate("Exporting Bar and Beat Annotations");
 					VampBarBeats.xTimingsToLORtimings(); // Does all 5: Bars, Full Beats, Halves, Thirds, Quarters
 					VampBarBeats.xTimingsToLORChannels(); // Does all 5
-					if (Fyle.Exists(VampBarBeats.FileResults)) completed++;
+					if (Fyle.Exists(VampBarBeats.FileResults)) completed += 5;
 				}
 			}
 
@@ -765,10 +759,12 @@ namespace UtilORama4
 			{
 				if (lightORamaInstalled && chkLOR.Checked)
 				{
-					if (VampNoteOnsets.xOnsets.effects.Count > 0)
+					if (VampNoteOnsets.Timings.effects.Count > 0)
 					{
+						StatusUpdate("Exporting Note Onset Annotations");
 						VampNoteOnsets.xTimingsToLORtimings();
 						VampNoteOnsets.xTimingsToLORChannel();
+						if (Fyle.Exists(VampNoteOnsets.FileResults)) completed++;
 					}
 				}
 			}
@@ -778,12 +774,13 @@ namespace UtilORama4
 			{
 				if (lightORamaInstalled && chkLOR.Checked)
 				{
-					if (VampPolyphonic.xPolyphonic.effects.Count > 0)
+					if (VampPolyphonic.Timings.effects.Count > 0)
 					{
+						StatusUpdate("Exporting Polyphonic Transcription Annotations");
 						VampPolyphonic.xTimingsToLORtimings();
 						VampPolyphonic.xTimingsToLORChannels();
+						if (Fyle.Exists(VampPolyphonic.FileResults)) completed++;
 					}
-					if (Fyle.Exists(VampPolyphonic.FileResults)) completed++;
 				}
 			}
 
@@ -792,16 +789,17 @@ namespace UtilORama4
 			{
 				if (lightORamaInstalled && chkLOR.Checked)
 				{
-					if (VampPitchKey.xPitchKey.effects.Count > 0)
+					if (VampPitchKey.Timings.effects.Count > 0)
 					{
+						StatusUpdate("Exporting Pitch and Key Annotations");
 						VampPitchKey.xTimingsToLORtimings();
 						// If set to ramps, temporarily change to On-Off
 						bool wasRamps = Annotator.UseRamps;
 						Annotator.UseRamps = false;
 						VampPitchKey.xTimingsToLORChannels();
 						Annotator.UseRamps = wasRamps;
+						if (Fyle.Exists(VampPitchKey.FileResults)) completed++;
 					}
-					if (Fyle.Exists(VampPitchKey.FileResults)) completed++;
 				}
 			}
 
@@ -810,17 +808,34 @@ namespace UtilORama4
 			{
 				if (lightORamaInstalled && chkLOR.Checked)
 				{
-					if (VampTempo.xTempo.effects.Count > 0)
+					if (VampTempo.Timings.effects.Count > 0)
 					{
+						StatusUpdate("Exporting Tempo Change Annotations");
 						VampTempo.xTimingsToLORtimings();
 						// If set to ramps, temporarily change to On-Off
-						VampTempo.xTimingsToLORChannel();
+						VampTempo.xTimingsToLORChannels();
+						if (Fyle.Exists(VampTempo.FileResults)) completed++;
 					}
-					if (Fyle.Exists(VampTempo.FileResults)) completed++;
 				}
 			}
 
+			//! SEGMENTS
+			if (chkSegments.Checked)
+			{
+				if (lightORamaInstalled && chkLOR.Checked)
+				{
+					if (VampSegments.Timings.effects.Count > 0)
+					{
+						StatusUpdate("Exporting Segment Annotations");
+						VampSegments.xTimingsToLORtimings();
+						// If set to ramps, temporarily change to On-Off
+						VampSegments.xTimingsToLORChannels();
+						if (Fyle.Exists(VampSegments.FileResults)) completed++;
+					}
+				}
+			}
 
+			StatusUpdate("Export Complete!");
 
 
 			return completed;
@@ -969,7 +984,7 @@ namespace UtilORama4
 		}
 
 
-		public string xTimingsOutX(xTimings timings, xTimings.LabelTypes labelType, bool indent = false)
+		public string xTimingsOutX(xTimings timings, vamps.LabelType labelType, bool indent = false)
 		{
 			string label = "";
 			string level0 = "";
@@ -1019,61 +1034,22 @@ namespace UtilORama4
 				//  label="foo" 
 				ret.Append(xEffect.FIELD_label);
 				ret.Append(xTimings.VALUE_start);
-				switch(labelType)
-				{
-					case xTimings.LabelTypes.None:
-						// Append Nothing!
-						break;
-					case xTimings.LabelTypes.Numbers:
-						ret.Append(effect.xlabel);
-						break;
-					case xTimings.LabelTypes.NoteNames:
-						label = "";
-						if (effect.Midi >= 0 && effect.Midi <= 127)
-						{
-							//label = SequenceFunctions.noteNamesUnicode[timings.effects[i].Midi];
-							label = MusicalNotation.noteNamesUnicode[effect.Midi];
-						}
-						ret.Append(label);
-						break;
-					case xTimings.LabelTypes.MidiNumbers:
-						ret.Append(effect.Midi.ToString());
-						break;
-					case xTimings.LabelTypes.KeyNumbers:
-						ret.Append(effect.Midi.ToString());
-						break;
-					case xTimings.LabelTypes.KeyNames:
-						label = "";
-						if (effect.Midi >= 0 && effect.Midi <= 24)
-						{
-							label = MusicalNotation.keyNamesUnicode[effect.Midi];
-						}
-						ret.Append(label);
-						break;
-					case xTimings.LabelTypes.Letters:
-						ret.Append(effect.xlabel);
-						break;
-					case xTimings.LabelTypes.Frequency:
-						label = "";
-						if (effect.Midi >= 0 && effect.Midi <= 127)
-						{
-							label = MusicalNotation.noteFreqs[effect.Midi];
-						}
-						ret.Append(label);
-						break;
-				}
+
+				//string newLabel = GetLabel(effect.Number, labelType);
+				ret.Append(effect.Label);
+				
 				ret.Append(xTimings.VALUE_end);
 				ret.Append(xTimings.SPC);
 				//  starttime="50" 
 				ret.Append(xEffect.FIELD_start);
 				ret.Append(xTimings.VALUE_start);
-				ret.Append(timings.effects[i].starttime.ToString());
+				ret.Append(effect.starttime.ToString());
 				ret.Append(xTimings.VALUE_end);
 				ret.Append(xTimings.SPC);
 				//  endtime="350" />
 				ret.Append(xEffect.FIELD_end);
 				ret.Append(xTimings.VALUE_start);
-				ret.Append(timings.effects[i].endtime.ToString());
+				ret.Append(effect.endtime.ToString());
 				ret.Append(xTimings.VALUE_end);
 				ret.Append(xTimings.SPC);
 
@@ -1095,6 +1071,71 @@ namespace UtilORama4
 
 			return ret.ToString();
 		}
+
+		public static string GetLabel(int number, vamps.LabelType labelType)
+		{
+			string label = "";
+			switch (labelType)
+			{
+				case vamps.LabelType.None:
+					// Leave Blank
+					break;
+				case vamps.LabelType.KeyNamesASCII:
+					if (number >= 0 && number <= 25)
+					{
+						label = MusicalNotation.keyNamesASCII[number];
+					}
+					break;
+				case vamps.LabelType.KeyNamesUnicode:
+					if (number >= 0 && number <= 25)
+					{
+						label = MusicalNotation.keyNamesUnicode[number];
+					}
+					break;
+				case vamps.LabelType.KeyNumbers:
+					 label = number.ToString();
+					break;
+				case vamps.LabelType.NoteNamesASCII:
+					if (number >= 0 && number <= 127)
+					{
+						label = MusicalNotation.noteNamesASCII[number];
+					}
+					break;
+				case vamps.LabelType.NoteNamesUnicode:
+					if (number >= 0 && number <= 127)
+					{
+						label = MusicalNotation.noteNamesUnicode[number];
+					}
+					break;
+				case vamps.LabelType.MIDINoteNumbers:
+					label = number.ToString();
+					break;
+				case vamps.LabelType.Frequency:
+					if (number >= 0 && number <= 127)
+					{
+						label = MusicalNotation.noteFreqs[number];
+					}
+					break;
+				case vamps.LabelType.Numbers:
+					label = number.ToString();
+					break;
+				case vamps.LabelType.Letters:
+					label = ((char)(number + 64)).ToString();
+					break;
+				case vamps.LabelType.BPM:
+					label = number.ToString();
+					break;
+				case vamps.LabelType.TempoName:
+					if (number >= 10 && number <= 250)
+					{
+						label = MusicalNotation.FindTempoName(number);
+					}
+					break;
+			}
+			return label;
+		}
+
+
 
 
 		public int VampThatSong(string fileSong, string vampParams, string fileConfig, string resultsOut)
@@ -1250,6 +1291,8 @@ namespace UtilORama4
 						BeginInvoke(new Action(OnOutputChanged));
 					}
 				}
+				//picSleepy.Refresh(); // Causes cross-thread error
+				Application.DoEvents();
 			}
 			return; // err;
 		}

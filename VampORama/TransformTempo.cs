@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
 using System.IO;
 using LORUtils4;
 using FileHelper;
@@ -46,12 +47,11 @@ namespace UtilORama4
 		//TODO Implement these in all the other Vamp Transform classes
 		//TODO Implement these in frmVamp.FillCombos
 		public const vamps.AlignmentType DefaultAlignment = vamps.AlignmentType.Bars;
-		public const vamps.LabelTypes DefaultLabels = vamps.LabelTypes.BPM;
+		public const vamps.LabelType DefaultLabels = vamps.LabelType.BPM;
 		
 		public static xTimings xTempo = new xTimings(transformName);
-		public static xTimings alignTimes = null;
-		//public static labelType labelType = labelType.none;
-		public static vamps.LabelTypes LabelType = vamps.LabelTypes.BPM;
+		public static vamps.LabelType LabelType = vamps.LabelType.BPM;
+		public static vamps.AlignmentType AlignmentType = vamps.AlignmentType.Bars; // Defaults
 
 		public static readonly string[] availablePluginNames = {  "Queen Mary Tempo Tracker",
 																															"BBC Tempo Tracker",
@@ -79,73 +79,27 @@ namespace UtilORama4
 
 
 
-		private static readonly vamps.LabelTypes[] allowableLabels = { vamps.LabelTypes.None, vamps.LabelTypes.BPM, vamps.LabelTypes.TempoName };
+		public static readonly vamps.LabelType[] allowableLabels = { vamps.LabelType.None,
+																																	vamps.LabelType.BPM,
+																																	vamps.LabelType.TempoName };
 
-		public static readonly string[] availableLabels = { vamps.LABELNAMEnone,
-																												vamps.LABELNAMEbpm,
-																												vamps.LABELNAMEtempoName };
+		//public static readonly string[] availableLabels = { vamps.LABELNAMEnone,
+		//																										vamps.LABELNAMEbpm,
+		//																										vamps.LABELNAMEtempoName };
 
 		//public const int LABELNone = 0;
 		//public const int LABELNoteNameASCII = 1;
 		//public const int LABELNoteNameUnicode = 2;
 		//public const int LABELMidiNoteNumber = 3;
 
-		//private static LORChannelGroup4 tempoGroup = null;
+		public static LORChannelGroup4 tempoGroup = null;
+		public static LORChannel4 tempoChannel = null;
 		public static LORRGBChannel4 tempoRGBChannel = null;
 
 		private static int idx = 0;
 		public static int MinChangePercent = 3;
 
-
-		public static int UsePlugin
-		{
-			set
-			{
-				lastPluginUsed = value;
-				if (lastPluginUsed < 0) lastPluginUsed = 0;
-				if (lastPluginUsed >= availablePluginNames.Length) lastPluginUsed = availablePluginNames.Length - 1;
-			}
-			get
-			{
-				return lastPluginUsed;
-			}
-		}
-
-
-		//public string[] PluginFiles
-		//{
-		//	get
-		//	{
-		//		return pluginFiles;
-		//	}
-		//}
 		public enum DetectionMethods { ComplexDomain = 0, SpectralDifference = 1, PhaseDeviation = 2, BroadbandEnergyRise = 3 };
-
-		private static vamps.AlignmentType alignmentType = vamps.AlignmentType.None;
-
-		private static vamps.AlignmentType AlignmentType
-		{
-			set
-			{
-				bool valid = false;
-				for (int i = 0; i < allowableAlignments.Length; i++)
-				{
-					if (value == allowableAlignments[i])
-					{
-						alignmentType = value;
-						valid = true;
-						i = allowableAlignments.Length; // Force exit of loop
-					}
-				}
-			}
-			get
-			{
-				return alignmentType;
-			}
-		}
-
-
-
 
 		public static xTimings Timings
 		{
@@ -270,150 +224,45 @@ namespace UtilORama4
 		}
 
 
-		private static int ResultsToxTimings1(string resultsFile, vamps.AlignmentType alignmentType, vamps.LabelTypes labelType)
-		{
-			int onsetCount = 0;
-			int lineCount = 0;
-			string lineIn = "";
-			int ppos = 0;
-			int millisecs = 0;
-			//int align = SetAlignmentHost(cboAlignTranscribe.Text);
-			string noteLabel = "";
-			int duration = 0;
-			int note = 0;
-			int lastNote = -1;
-
-			LabelType = labelType;
-			StreamReader reader = new StreamReader(resultsFile);
-
-			while (!reader.EndOfStream)
-			{
-				lineIn = reader.ReadLine();
-				lineCount++;
-			} // end while loop more lines remaining
-			reader.Close();
-			xTempo = new xTimings(transformName);
-
-			reader = new StreamReader(resultsFile);
-
-
-
-			while (!reader.EndOfStream)
-			{
-				lineIn = reader.ReadLine();
-				ppos = lineIn.IndexOf('.');
-				if (ppos > xUtils.UNDEFINED)
-				{
-
-					string[] parts = lineIn.Split(',');
-
-					millisecs = xUtils.ParseMilliseconds(parts[0]);
-					if (alignmentType > vamps.AlignmentType.None)
-					{
-						if ((alignmentType == vamps.AlignmentType.FPS40) || (alignmentType == vamps.AlignmentType.FPS20))
-						{
-							millisecs = Annotator.AlignTimeTo(millisecs, alignmentType); // AlignStartTo(millisecs, align);
-						}
-						else
-						{
-							if ((alignmentType == vamps.AlignmentType.Bars) ||
-								(alignmentType == vamps.AlignmentType.BeatsFull) ||
-								(alignmentType == vamps.AlignmentType.BeatsHalf) ||
-								(alignmentType == vamps.AlignmentType.BeatsThird) ||
-								(alignmentType == vamps.AlignmentType.BeatsQuarter) ||
-								(alignmentType == vamps.AlignmentType.NoteOnsets))
-							{
-								millisecs = Annotator.AlignTimeTo(millisecs, alignmentType);
-							}
-						}
-					}
-
-					// Avoid closely spaced duplicates
-					//if ((alignmentType < vamps.AlignmentType.None) || (millisecs > lastNote))
-					if (millisecs > lastNote)
-						{
-							// Get label, if available
-							if (parts.Length == 3)
-						{
-							duration = xUtils.ParseMilliseconds(parts[1]);
-							note = Int16.Parse(parts[2]);
-
-							//if (cboLabelsSpectrum.SelectedIndex == 1)
-							//{
-							//TODO Impliment Label Type	
-							noteLabel = MusicalNotation.keyNamesUnicode[note];
-							//}
-							//if (cboLabelsOnsets.SelectedIndex == 2)
-							//{
-							//	noteLabel = note.ToString();
-							//}
-						}
-
-						xTempo.Add(noteLabel, millisecs, millisecs + duration);
-						lastNote = millisecs;
-					}
-				} // end line contains a period
-			} // end while loop more lines remaining
-
-			reader.Close();
-
-			return onsetCount;
-		} // end Note Onsets
-
-
-
-		// The true ResultsToxTimings procedure requiring more parameters, (not compliant with ITransform inteface)
-
-		public static int ResultsToxTimings(string resultsFile, vamps.AlignmentType alignmentType, vamps.LabelTypes labelType, DetectionMethods detectMethod = DetectionMethods.ComplexDomain)
+		public static int ResultsToxTimings(string resultsFile, vamps.AlignmentType alignmentType, vamps.LabelType labelType, DetectionMethods detectMethod = DetectionMethods.ComplexDomain)
 		{
 			int pcount = 0;
-			int lineCount = 0;
 			string lineIn = "";
 			int ppos = 0;
 			int millisecs = 0;
 			string[] parts;
-			int ontime = 0;
-			int bpm = 100;
-			double rawbpm = 100D; ;
-			double dstart = 0D;
-			double dlen = 0D;
-			// End time is start + length
-			double dend = 0D;
-			// Convert double:seconds to int:milliseconds
-			int msstart = 0;
-			int msend = 0;
-			// Align
-			int startms = 0;
-			int endms = 0;
+			int keyID = 0;
+			int eStart = 0;
+			int eEnd = 0;
+			double rawbpm = 80D;
+			int bpm = 80;
 
-
+			// Store These
 			LabelType = labelType;
-			StreamReader reader = new StreamReader(resultsFile);
+			AlignmentType = alignmentType;
+			Annotator.SetAlignment(alignmentType);
 
-			while ((lineIn = reader.ReadLine()) != null)
-			{
-				lineCount++;
-			} // end while loop more lines remaining
+			string msg  = "\r\n\r\n### PROCESSING TEMPO CHANGES ####################################";
+			Debug.WriteLine(msg);
 
-			reader.Close();
 			pcount = 0; // reset for re-use
 			xTempo.effects.Clear();
 
-			reader = new StreamReader(resultsFile);
-
+			StreamReader reader = new StreamReader(resultsFile);
 			// First, lets get the first line of the file which has the start time of the first
 			// tempo and it's BPM
 			if (!reader.EndOfStream)
 			{
+				// Field 1 Part 0 is the start time
+				// Field 2 Part 1 is the BPM as a number with 3 decimal places
+				// Field 3 Part 2 is the BPM as a string
 				lineIn = reader.ReadLine();
 				parts = lineIn.Split(',');
-				if (parts.Length == 3)
+				if (parts.Length > 1)
 				{
 					// Try parsing fields 0 start time (in decimal seconds)
-					double.TryParse(parts[0], out dstart);
-					// Convert double:seconds to int:milliseconds
-					msstart = (int)Math.Round(dstart * 1000);
-					startms = Annotator.AlignTimeTo(msstart, alignmentType);
+					millisecs = xUtils.ParseMilliseconds(parts[0]);
+					eStart = Annotator.AlignTime(millisecs);
 					// Get BPM
 					string strbpm = parts[1];
 					Double.TryParse(strbpm, out rawbpm);
@@ -431,59 +280,60 @@ namespace UtilORama4
 			while ((lineIn = reader.ReadLine()) != null)
 			{
 				parts = lineIn.Split(',');
-				if (parts.Length == 3)
+				if (parts.Length > 1)
 				{
 					// Try parsing fields 0 start time (in decimal seconds)
-					double.TryParse(parts[0], out dend);
-					// Convert double:seconds to int:milliseconds
-					msend = (int)Math.Round(dend * 1000);
-					if (msend <= msstart) // Data integrity check
+					millisecs = xUtils.ParseMilliseconds(parts[0]);
+					eEnd = Annotator.AlignTime(millisecs);
+					if (eEnd < eStart) // Data integrity check
 					{
-						Fyle.BUG("Backwards Note?!?!");
+						Fyle.BUG("Backwards Tempo?!?!");
 					}
 					else
 					{
-						// Align
-						endms = Annotator.AlignTimeTo(msend, alignmentType);
-						// Default name is the BPM Number
-						string eName = bpm.ToString();
-						if (labelType == vamps.LabelTypes.TempoName)
-						{ eName += " " + MusicalNotation.FindTempoName(bpm); }
-						// Create new xEffect with these values, add to timings list
-						xEffect xef = new xEffect(eName, startms, endms, bpm);
-						xTempo.effects.Add(xef);
-							
-						// End of this one is the start of the next one
-						startms = endms;
-						// Get BPM
-						string strbpm = parts[1];
-						Double.TryParse(strbpm, out rawbpm);
-						bpm = (int)Math.Round(rawbpm);
-						if ((bpm < 10) || (bpm > 250)) // Data integrity check
+						// After Aligning to Bars (or other long time) we may end up with a tempo change of Zero length
+						// if it was shorter than a Bar to begin with
+						if (eEnd > eStart)
 						{
-							// In theory, it's possible to have a verrry high or low BPM, but really really really unlikely
-							Fyle.BUG("Invalid BPM!");
-						}
+							// Default name is the BPM Number
+							string eName = bpm.ToString();
+							if (labelType == vamps.LabelType.TempoName)
+							{ eName += " " + MusicalNotation.FindTempoName(bpm); }
+							// Create new xEffect with these values, add to timings list
+							xEffect xef = new xEffect(eName, eStart, eEnd, bpm);
+							xTempo.effects.Add(xef);
 
-						pcount++;
-					}
-				}
+							// End of this one is the start of the next one
+							eStart = eEnd;
+							// Get BPM for the NEXT one
+							string strbpm = parts[1];
+							Double.TryParse(strbpm, out rawbpm);
+							bpm = (int)Math.Round(rawbpm);
+							if ((bpm < 10) || (bpm > 250)) // Data integrity check
+							{
+								// In theory, it's possible to have a verrry high or low BPM, but really really really unlikely
+								Fyle.BUG("Invalid BPM!");
+							}
+							pcount++;
+						} // End tempo length
+					} // End temp forward
+				} // End enough parts
 			} // end while loop more lines remaining
 			reader.Close();
 
 			// Finally, if not at the end-- add one last effect containing the last Pitch or Key
-			if (startms < Annotator.songTimeMS)
+			if (eEnd < Annotator.songTimeMS)
 			{
-				endms = Annotator.songTimeMS;
+				eEnd = Annotator.songTimeMS;
 				// Default name is the BPM
 				string eName = bpm.ToString();
-				if (labelType == vamps.LabelTypes.TempoName)
+				if (labelType == vamps.LabelType.TempoName)
 				{ eName += " " + MusicalNotation.FindTempoName(bpm); }
-				// Create new xEffect with these values, add to timings list
-				xEffect xef = new xEffect(eName, startms, endms, bpm);
+				xEffect xef = new xEffect(eName, eStart, eEnd, bpm);
 				xTempo.effects.Add(xef);
 			}
-			
+			Fyle.BUG("Check output window.  Did the alignments work as expected?");
+
 			return pcount;
 		} // end Beats
 
@@ -506,7 +356,7 @@ namespace UtilORama4
 			return errs;
 		}
 
-		public static int xTimingsToLORChannel()
+		public static int xTimingsToLORChannels()
 		{
 			int errs = 0;
 			int grpNum = -1;
@@ -521,7 +371,9 @@ namespace UtilORama4
 
 			// Part 1
 			// Get the Vamp Track and create the Tempo Channel
-			tempoRGBChannel = Annotator.Sequence.FindRGBChannel(transformName, Annotator.VampTrack.Members, true, true);
+			tempoGroup = Annotator.Sequence.FindChannelGroup(transformName,Annotator.VampTrack.Members, true);
+			tempoRGBChannel = Annotator.Sequence.FindRGBChannel(transformName, tempoGroup.Members, true, true);
+			tempoChannel = FindTempoChannel(tempoGroup.Members, true, true);
 			
 			tempoRGBChannel.redChannel.effects.Clear();
 			tempoRGBChannel.grnChannel.effects.Clear();
@@ -532,18 +384,19 @@ namespace UtilORama4
 			for (int f = 0; f < xTempo.effects.Count; f++)
 			{
 				xEffect timing = xTempo.effects[f];
-				if (timing.Midi > 12)
+				if (timing.Number > 12)
 				{
-					if (timing.Midi < tempoLow) tempoLow = timing.Midi;
+					if (timing.Number < tempoLow) tempoLow = timing.Number;
 				}
-				if (timing.Midi < 250)
+				if (timing.Number < 250)
 				{
-					if (timing.Midi > tempoHigh) tempoHigh = timing.Midi;
+					if (timing.Number > tempoHigh) tempoHigh = timing.Number;
 				}
 			}
 			tempoSpread = tempoHigh - tempoLow;
 			tempoRatio = (100D / tempoSpread);
-
+			string tName = "Tempo " + tempoLow.ToString() + "-" + tempoHigh.ToString() + " BPM";
+			tempoChannel.ChangeName(tName);
 
 			// Part 3
 			// Create an effect in the appropriate Key or Pitch Channel for each timing
@@ -554,7 +407,7 @@ namespace UtilORama4
 					for (int f = 0; f < xTempo.effects.Count; f++)
 					{
 						xEffect timing = xTempo.effects[f];
-						int bpm = timing.Midi;
+						int bpm = timing.Number;
 						if ((bpm < 10) || (bpm > 250)) // Data integrity check
 						{
 							// In theory, its possible to have a note with a MIDI number of 0, but really really really unlikely
@@ -577,11 +430,11 @@ namespace UtilORama4
 								else
 								{
 									LOREffect4 eft = null;
-									int intensity = (int)Math.Round((bpm - tempoLow) * tempoRatio);
+									int intenPct = (int)Math.Round((bpm - tempoLow) * tempoRatio);
 									int r = 0;
 									int g = 0;
 									int b = 0;
-									PercentageColor(intensity, ref r, ref g, ref b);
+									PercentageColor(intenPct, ref r, ref g, ref b);
 									if (r > 0)
 									{
 										eft = new LOREffect4(LOREffectType4.Intensity, csStart, csEnd, r);
@@ -597,6 +450,8 @@ namespace UtilORama4
 										eft = new LOREffect4(LOREffectType4.Intensity, csStart, csEnd, b);
 										tempoRGBChannel.bluChannel.effects.Add(eft);
 									}
+									eft = new LOREffect4(LOREffectType4.Intensity, csStart, csEnd, intenPct);
+									tempoChannel.effects.Add(eft);
 								}
 								lastStart = csStart;
 							}
@@ -609,6 +464,49 @@ namespace UtilORama4
 			//Annotator.Sequence.CentiFix();
 
 			return errs;
+		}
+
+		private static LORChannel4 FindTempoChannel(LORMembership4 members, bool createIfNotFound = true, bool clearEffects = false)
+		{
+			LORChannel4 tempoCh = null;
+			if (members == null)
+			{
+				Fyle.BUG("Membership is null");
+			}
+			else
+			{
+				for (int m = 0; m < members.Count; m++)
+				{
+					if (members[m].MemberType == LORMemberType4.Channel)
+					{
+						string mName = members.Items[m].Name;
+						if (mName.Length > 8)
+						{
+							if (mName.Substring(0, 6) == "Tempo ")
+							{
+								if (mName.Substring(mName.Length - 3, 3) == " BPM")
+								{
+									// found it!
+									tempoCh = (LORChannel4)members[m];
+									m = members.Count; // force exit of loop
+								}
+							}
+						}
+					}
+				}
+				if (createIfNotFound)
+				{
+					tempoCh = Annotator.Sequence.CreateChannel("TempoChannel"); // Temporary name
+					tempoCh.color = 0xA00050; // Dark purple
+					members.Add(tempoCh);
+				}
+				if (clearEffects)
+				{
+					tempoCh.effects.Clear();
+				}
+
+			}
+			return tempoCh;
 		}
 
 		/*
@@ -636,13 +534,13 @@ namespace UtilORama4
 			for (int f = 0; f < xTempo.effects.Count; f++)
 			{
 				xEffect timing = xTempo.effects[f];
-				if (timing.Midi > 12)
+				if (timing.Number > 12)
 				{
-					if (timing.Midi < tempoLow) tempoLow = timing.Midi;
+					if (timing.Number < tempoLow) tempoLow = timing.Number;
 				}
-				if (timing.Midi < 250)
+				if (timing.Number < 250)
 				{ 
-					if (timing.Midi > tempoHigh) tempoHigh = timing.Midi;
+					if (timing.Number > tempoHigh) tempoHigh = timing.Number;
 				}
 			}
 			tempoSpread = tempoHigh - tempoLow;
@@ -658,7 +556,7 @@ namespace UtilORama4
 					for (int f = 0; f < xTempo.effects.Count; f++)
 					{
 						xEffect timing = xTempo.effects[f];
-						int bpm = timing.Midi;
+						int bpm = timing.Number;
 						if ((bpm < 10) || (bpm > 250)) // Data integrity check
 						{
 							// In theory, its possible to have a note with a MIDI number of 0, but really really really unlikely
@@ -698,6 +596,30 @@ namespace UtilORama4
 			return errs;
 		}
 		*/
+		public static void PercentageColor(int percentage, ref int r, ref int g, ref int b)
+		{
+			// Lowest = Blue
+			// Mid-Low = Cyan
+			// Middle = Green
+			// Mid-High = Yellow
+			// Highest = Red
+			// Sortofa cold-to-hot look
+			int px = percentage * 5;
+			if (percentage < 50)
+			{
+				r = 0;
+				g = px;
+				b = 250 - px;
+			}
+			else
+			{
+				r = px - 250;
+				g = 500 - px;
+				b = 0;
+			}
+			int foooooo = 0;
+		}
+
 		public static int OLD_PercentageColor(int percentage, ref int r, ref int g, ref int b)
 		{
 			// Returns a LOR color
@@ -722,7 +644,7 @@ namespace UtilORama4
 			return ret;
 		}
 
-		public static void PercentageColor(int percentage, ref int r, ref int g, ref int b)
+		public static void Old2_PercentageColor(int percentage, ref int r, ref int g, ref int b)
 		{
 			int px = percentage * 7;
 			if (percentage < 34)

@@ -16,7 +16,8 @@ namespace UtilORama4
 		private static int firstCsavedIndex = lutils.UNDEFINED;
 
 		// Note: these are LOR colors which are 24-bit int in BGR order
-		public static int[] NoteColors = {255, 32767, 65535, 65407, 65280, 8388573, 16776960, 16744192,
+		//       (NOT .Net colors in RGB order)
+		public static int[] ChannelColors = {255, 32767, 65535, 65407, 65280, 8388573, 16776960, 16744192,
 																			16711680, 16711807, 16711935, 8323327 };
 		// Colors are 0 = 0xFF0000; Red, 1 = 0xFF7F00; Orange, 2 = 0xFFFF00; Yellow, 3 = 0x7FFF00; Yellow-Green, 4 = 0x00FF00; Green,
 		// 5 = 0x00FF7F; Green-Cyan, 6 = 0x00FFFF; Cyan, 7 = 0x007FFF; Cyan-Blue, 8 = 0x0000FF; Blue, 9 = 0x7F00FF; Blu-Magenta,
@@ -459,6 +460,16 @@ namespace UtilORama4
 
 		}
 
+
+		public static int ChannelColor(int index)
+		{
+			// Make sure index is > 0 and get modulus of 12 ('cuz there's 12 colors!)
+			int n = (index + 1200) % 12;
+			return ChannelColors[n];
+
+		}
+
+		/*
 		public static int GetKeyColor(int keyNumber)
 		{
 			int idx = keyNumber - 1;
@@ -466,12 +477,13 @@ namespace UtilORama4
 			return NoteColors[idx];
 		}
 
-
 		public static int GetNoteColor(int noteNum)
 		{
+			int nn = noteNum % 12;
 			return NoteColors[noteNum];
 		}
-
+		*/
+		
 		public static int NoteColor_BAD(int noteNum)
 		{
 			// Returned value is LOR color, NOT Web or .Net color!

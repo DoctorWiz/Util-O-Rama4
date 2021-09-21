@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
 using System.IO;
 using LORUtils4;
 using FileHelper;
@@ -44,8 +45,9 @@ namespace UtilORama4
 
 		public static xTimings xPolyphonic = new xTimings(transformName);
 		public static xTimings alignTimes = null;
-		//public static labelType labelType = labelType.none;
-		public static vamps.LabelTypes LabelType = vamps.LabelTypes.NoteNamesUnicode;
+
+		public static vamps.LabelType LabelType = vamps.LabelType.NoteNamesUnicode;
+		public static vamps.AlignmentType AlignmentType = vamps.AlignmentType.BeatsQuarter;
 
 		public static readonly string[] availablePluginNames = { "Queen Mary Polyphonic Transcription",
 																											"Silvet Note Transcription",
@@ -70,10 +72,10 @@ namespace UtilORama4
 																										"vamp_vamp-aubio_aubionotes_notes.n3" };
 
 
-		public static readonly string[] availableLabels = {	vamps.LABELNAMEnone,
-																												vamps.LABELNAMEnoteNamesAscii,
-																												vamps.LABELNAMEnoteNamesUnicode,
-																												vamps.LABELNAMEmidiNoteNumbers };
+		//public static readonly string[] availableLabels = {	vamps.LABELNAMEnone,
+		//																										vamps.LABELNAMEnoteNamesASCII,
+		//																										vamps.LABELNAMEnoteNamesUnicode,
+		//																										vamps.LABELNAMEmidiNoteNumbers };
 		//public static readonly string[] availableLabels = {"None",
 		//																						"Note Names ASCII",
 		//																						"Note Names Unicode",
@@ -88,59 +90,10 @@ namespace UtilORama4
 		public static LORChannel4[] polyChannels = null;
 
 		private static int idx = 0;
-
-
-		public static int UsePlugin
-		{
-			set
-			{
-				lastPluginUsed = value;
-				if (lastPluginUsed < 0) lastPluginUsed = 0;
-				if (lastPluginUsed >= availablePluginNames.Length) lastPluginUsed = availablePluginNames.Length - 1;
-			}
-			get
-			{
-				return lastPluginUsed;
-			}
-		}
-
-
-		//public string[] PluginFiles
-		//{
-		//	get
-		//	{
-		//		return pluginFiles;
-		//	}
-		//}
 		public enum DetectionMethods { ComplexDomain = 0, SpectralDifference = 1, PhaseDeviation = 2, BroadbandEnergyRise = 3 };
 
-		private static vamps.AlignmentType alignmentType = vamps.AlignmentType.None;
-
-		private static vamps.AlignmentType AlignmentType
-		{
-			set
-			{
-				bool valid = false;
-				for (int i = 0; i < allowableAlignments.Length; i++)
-				{
-					if (value == allowableAlignments[i])
-					{
-						alignmentType = value;
-						valid = true;
-						i = allowableAlignments.Length; // Force exit of loop
-					}
-				}
-			}
-			get
-			{
-				return alignmentType;
-			}
-		}
-
-
-		private static readonly vamps.LabelTypes[] allowableLabels = { vamps.LabelTypes.None, vamps.LabelTypes.NoteNamesUnicode, vamps.LabelTypes.NoteNamesAscii,
-												vamps.LabelTypes.MIDINoteNumbers, vamps.LabelTypes.Frequency };
-
+		public static readonly vamps.LabelType[] allowableLabels = { vamps.LabelType.None, vamps.LabelType.NoteNamesUnicode, vamps.LabelType.NoteNamesASCII,
+												vamps.LabelType.MIDINoteNumbers, vamps.LabelType.Frequency };
 
 		public static xTimings Timings
 		{
@@ -164,7 +117,6 @@ namespace UtilORama4
 				return transformName;
 			}
 		}
-
 
 		public static int PrepareToVamp(string fileSong, int pluginIndex,	int detectionMethod = METHOD1domain)
 		{
@@ -277,204 +229,129 @@ namespace UtilORama4
 		}
 
 
-		private static int ResultsToxTimings1(string resultsFile, vamps.AlignmentType alignmentType, vamps.LabelTypes labelType)
+		private static int ResultsToxTimings1(string resultsFile, vamps.AlignmentType alignmentType, vamps.LabelType labelType)
 		{
-			int onsetCount = 0;
-			int lineCount = 0;
 			string lineIn = "";
 			int ppos = 0;
 			int millisecs = 0;
-			//int align = SetAlignmentHost(cboAlignTranscribe.Text);
 			string noteLabel = "";
 			int duration = 0;
 			int note = 0;
 			int lastNote = -1;
+			int eStart = 0;
+			int eEnd = 0;
+			int lastStart = -1;
+			int noteCount = 0;
 
+			// Store These
 			LabelType = labelType;
+			AlignmentType = alignmentType;
+			Annotator.SetAlignment(alignmentType);
+
+			xPolyphonic.effects.Clear();
+
 			StreamReader reader = new StreamReader(resultsFile);
-
 			while (!reader.EndOfStream)
 			{
 				lineIn = reader.ReadLine();
-				lineCount++;
-			} // end while loop more lines remaining
-			reader.Close();
-			xPolyphonic = new xTimings(transformName);
-
-			reader = new StreamReader(resultsFile);
-
-
-
-			while (!reader.EndOfStream)
-			{
-				lineIn = reader.ReadLine();
-				ppos = lineIn.IndexOf('.');
-				if (ppos > xUtils.UNDEFINED)
+				string[] parts = lineIn.Split(',');
+				if (parts.Length > 2) ;
 				{
-
-					string[] parts = lineIn.Split(',');
-
 					millisecs = xUtils.ParseMilliseconds(parts[0]);
-					if (alignmentType > vamps.AlignmentType.None)
+					eStart = Annotator.AlignTime(millisecs);
+					duration = xUtils.ParseMilliseconds(parts[1]);
+					int ee = eStart + duration;
+					eEnd = Annotator.AlignTime(ee);
+					// Note: Unlike other annotator transforms, we will NOT be checking to see
+					// if this note starts AFTER the last one, or if the end is after it
+					// since for Polyphonic Transcription this is perfectly legitimate
+					int.TryParse(parts[2], out note);
+					if ((note > 0) && (note < 127))
 					{
-						if ((alignmentType == vamps.AlignmentType.FPS40) || (alignmentType == vamps.AlignmentType.FPS20))
-						{
-							millisecs = Annotator.AlignTimeTo(millisecs, alignmentType); // AlignStartTo(millisecs, align);
-						}
-						else
-						{
-							if ((alignmentType == vamps.AlignmentType.Bars) ||
-								(alignmentType == vamps.AlignmentType.BeatsFull) ||
-								(alignmentType == vamps.AlignmentType.BeatsHalf) ||
-								(alignmentType == vamps.AlignmentType.BeatsThird) ||
-								(alignmentType == vamps.AlignmentType.BeatsQuarter) ||
-								(alignmentType == vamps.AlignmentType.NoteOnsets))
-							{
-								millisecs = Annotator.AlignTimeTo(millisecs, alignmentType);
-							}
-						}
-					}
+						noteLabel = MusicalNotation.noteNamesUnicode[note]; // Default
+						if (LabelType == vamps.LabelType.NoteNamesASCII)
+						{ noteLabel = MusicalNotation.noteNamesASCII[note]; }
+						if (LabelType == vamps.LabelType.Frequency)
+						{ noteLabel = MusicalNotation.noteFreqs[note]; }
+						if (LabelType == vamps.LabelType.MIDINoteNumbers)
+						{ noteLabel = note.ToString(); }
 
-					// Avoid closely spaced duplicates
-					//if ((alignmentType < vamps.AlignmentType.None) || (millisecs > lastNote))
-					if (millisecs > lastNote)
-						{
-							// Get label, if available
-							if (parts.Length == 3)
-						{
-							duration = xUtils.ParseMilliseconds(parts[1]);
-							note = Int16.Parse(parts[2]);
-
-							//if (cboLabelsSpectrum.SelectedIndex == 1)
-							//{
-							//TODO Impliment Label Type	
-							noteLabel = MusicalNotation.noteNamesUnicode[note];
-							//}
-							//if (cboLabelsOnsets.SelectedIndex == 2)
-							//{
-							//	noteLabel = note.ToString();
-							//}
-						}
-
-						xPolyphonic.Add(noteLabel, millisecs, millisecs + duration);
-						lastNote = millisecs;
+						noteCount++;
+						xPolyphonic.Add(noteLabel, eStart, eEnd, note);
+						lastStart = eStart;
 					}
 				} // end line contains a period
 			} // end while loop more lines remaining
 
 			reader.Close();
 
-			return onsetCount;
+			return noteCount;
 		} // end Note Onsets
 
 
 
 		// The true ResultsToxTimings procedure requiring more parameters, (not compliant with ITransform inteface)
 
-		public static int ResultsToxTimings(string resultsFile, vamps.AlignmentType alignmentType, vamps.LabelTypes labelType, DetectionMethods detectMethod = DetectionMethods.ComplexDomain)
+		public static int ResultsToxTimings(string resultsFile, vamps.AlignmentType alignmentType, vamps.LabelType labelType, DetectionMethods detectMethod = DetectionMethods.ComplexDomain)
 		{
-			int pcount = 0;
-			int lineCount = 0;
 			string lineIn = "";
 			int ppos = 0;
 			int millisecs = 0;
-			string[] parts;
-			int ontime = 0;
+			string noteLabel = "";
+			int duration = 0;
 			int note = 0;
-			double dstart = 0D;
-			double dlen = 0D;
-			// End time is start + length
-			double dend = 0D;
-			// Convert double:seconds to int:milliseconds
-			int msstart = 0;
-			int msend = 0;
-			// Align
-			int startms = 0;
-			int endms = 0;
+			int lastNote = -1;
+			int eStart = 0;
+			int eEnd = 0;
+			int lastStart = -1;
+			int noteCount = 0;
 
-
-
-
-
-
+			// Store These
 			LabelType = labelType;
-			StreamReader reader = new StreamReader(resultsFile);
+			AlignmentType = alignmentType;
+			Annotator.SetAlignment(alignmentType);
+			
+			string msg = "\r\n\r\n### PROCESSING POLYPHONIC TRANSCRIPTION ####################################";
+			Debug.WriteLine(msg);
 
-			while ((lineIn = reader.ReadLine()) != null)
-			{
-				lineCount++;
-			} // end while loop more lines remaining
-
-			reader.Close();
-			//Array.Resize(ref polyNotes, pcount);
-			//Array.Resize(ref polyMSstart, pcount);
-			//Array.Resize(ref polyMSlen, pcount);
-			pcount = 0; // reset for re-use
 			xPolyphonic.effects.Clear();
 
-			reader = new StreamReader(resultsFile);
-
-			while ((lineIn = reader.ReadLine()) != null)
+			StreamReader reader = new StreamReader(resultsFile);
+			while (!reader.EndOfStream)
 			{
-				parts = lineIn.Split(',');
-				if (parts.Length == 3)
+				lineIn = reader.ReadLine();
+				string[] parts = lineIn.Split(',');
+				if (parts.Length > 2) ;
 				{
-					// declare doubles to hold start and length
-					dstart = 0;
-					dlen = 0;
-					// Try parsing fields 0 and 1 for start time and length (in decimal seconds)
-					double.TryParse(parts[0], out dstart);
-					double.TryParse(parts[1], out dlen);
-					// End time is start + length
-					dend = dstart + dlen;
-					// Convert double:seconds to int:milliseconds
-					msstart = (int)Math.Round(dstart * 1000);
-					msend = (int)Math.Round(dend * 1000);
-					if (msstart < 1) // Data integrity check
+					millisecs = xUtils.ParseMilliseconds(parts[0]);
+					eStart = Annotator.AlignTime(millisecs);
+					duration = xUtils.ParseMilliseconds(parts[1]);
+					int ee = eStart + duration;
+					eEnd = Annotator.AlignTime(ee);
+					// Note: Unlike other annotator transforms, we will NOT be checking to see
+					// if this note starts AFTER the last one, or if the end is after it
+					// since for Polyphonic Transcription this is perfectly legitimate
+					int.TryParse(parts[2], out note);
+					if ((note > 0) && (note < 127))
 					{
-						Fyle.BUG("Invalid start time!");
+						noteLabel = MusicalNotation.noteNamesUnicode[note]; // Default
+						if (LabelType == vamps.LabelType.NoteNamesASCII)
+						{ noteLabel = MusicalNotation.noteNamesASCII[note]; }
+						if (LabelType == vamps.LabelType.Frequency)
+						{ noteLabel = MusicalNotation.noteFreqs[note]; }
+						if (LabelType == vamps.LabelType.MIDINoteNumbers)
+						{ noteLabel = note.ToString(); }
+
+						noteCount++;
+						xPolyphonic.Add(noteLabel, eStart, eEnd, note);
+						lastStart = eStart;
 					}
-					else
-					{
-						if (msend < msstart) // Data integrity check
-						{
-							Fyle.BUG("Backwards Note?!?!");
-						}
-						else
-						{
-							// Align
-							startms = Annotator.AlignTimeTo(msstart, alignmentType);
-							endms = Annotator.AlignTimeTo(msend, alignmentType);
-							// Get MIDI note number
-							note = Int16.Parse(parts[2]);
-							if (note < 0) // Data integrity check
-							{
-								// In theory, it's possible to have a note with MIDI value of 0, but really really really unlikely
-								Fyle.BUG("Invalid note!");
-							}
-							else
-							{
-								// Create new xEffect with these values, add to timings list
-								xEffect xef = new xEffect(MusicalNotation.noteNamesUnicode[note], startms, endms, note);
-								xPolyphonic.effects.Add(xef);
-								pcount++;
-							}
-						}
-					}
-				}
+				} // end line contains a period
 			} // end while loop more lines remaining
-			
-			// Need to sort because vamp plugin outputs in the order of the ENDtime
-			//  (Understandable, since it can't properly detect it until it's done)
-			//   (Sometimes, if a long note starts after a short one, they may be out of order
-			//    because the short one ended first.)
-			//        (And that will crash LOR!)
-			// But we need them sorted in order of STARTtime (for LOR's sake)
-			xPolyphonic.effects.Sort();
 
 			reader.Close();
 
-			return pcount;
+			return noteCount;
 		} // end Beats
 
 
@@ -503,8 +380,8 @@ namespace UtilORama4
 			int grpNum = -1;
 			int polyCount = 128;
 			int lastStart = -1;
-			if (LabelType == vamps.LabelTypes.NoteNamesAscii)		polyCount = MusicalNotation.noteNamesASCII.Length;
-			if (LabelType == vamps.LabelTypes.NoteNamesUnicode) polyCount = MusicalNotation.noteNamesUnicode.Length;
+			if (LabelType == vamps.LabelType.NoteNamesASCII)		polyCount = MusicalNotation.noteNamesASCII.Length;
+			if (LabelType == vamps.LabelType.NoteNamesUnicode) polyCount = MusicalNotation.noteNamesUnicode.Length;
 
 			// Part 1
 			// Get Track, Polyphonic Group, Octave Groups, and Poly Channels
@@ -520,11 +397,11 @@ namespace UtilORama4
 					grpNum = g2;
 				}
 				string noteName = n.ToString();
-				if (LabelType == vamps.LabelTypes.NoteNamesAscii)		noteName = MusicalNotation.noteNamesASCII[n];
-				if (LabelType == vamps.LabelTypes.NoteNamesUnicode) noteName = MusicalNotation.noteNamesUnicode[n];
+				if (LabelType == vamps.LabelType.NoteNamesASCII)		noteName = MusicalNotation.noteNamesASCII[n];
+				if (LabelType == vamps.LabelType.NoteNamesUnicode) noteName = MusicalNotation.noteNamesUnicode[n];
 
 				LORChannel4 chs = Annotator.Sequence.FindChannel(PolyNoteNamePrefix + noteName, octoGroup.Members, true, true);
-				chs.color = SequenceFunctions.NoteColors[g2];
+				chs.color = SequenceFunctions.ChannelColor(g2);
 				chs.effects.Clear();
 				polyChannels[n] = chs;
 			}
@@ -538,7 +415,7 @@ namespace UtilORama4
 					for (int f = 0; f < xPolyphonic.effects.Count; f++)
 					{
 						xEffect timing = xPolyphonic.effects[f];
-						int note = timing.Midi;
+						int note = timing.Number;
 						if (note < 1) // Data integrity check
 						{
 							// In theory, its possible to have a note with a MIDI number of 0, but really really really unlikely

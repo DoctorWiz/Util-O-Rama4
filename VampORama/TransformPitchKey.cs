@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
 using System.IO;
 using LORUtils4;
 using FileHelper;
@@ -40,12 +41,13 @@ namespace UtilORama4
 		public static string PitchKeyGroupNamePrefix = "";
 		public static string ResultsName = "PitchKey.csv";
 		public static string FileResults = Annotator.TempPath + ResultsName;
+		public static vamps.AlignmentType AlignmentType = vamps.AlignmentType.Bars;
+		public static vamps.LabelType LabelType = vamps.LabelType.KeyNamesUnicode;
 
 
 		public static xTimings xPitchKey = new xTimings(transformName);
 		public static xTimings alignTimes = null;
 		//public static labelType labelType = labelType.none;
-		public static vamps.LabelTypes LabelType = vamps.LabelTypes.KeyNamesUnicode;
 
 		public static readonly string[] availablePluginNames = {	"Queen Mary Key Detector",
 																															"Cepstral Pitch Tracker",
@@ -74,15 +76,17 @@ namespace UtilORama4
 																															"vamp_vamp-aubio_aubiopitch_frequency.n3" };
 
 
-		private static readonly vamps.LabelTypes[] allowableLabels = { vamps.LabelTypes.None, vamps.LabelTypes.KeyNamesUnicode,
-																																		vamps.LabelTypes.KeyNamesASCII,
-												vamps.LabelTypes.KeyNumbers, vamps.LabelTypes.Frequency };
+		public static readonly vamps.LabelType[] allowableLabels = { vamps.LabelType.None,
+																																	vamps.LabelType.KeyNamesUnicode,
+																																	vamps.LabelType.KeyNamesASCII,
+																																	vamps.LabelType.KeyNumbers,
+																																	vamps.LabelType.Frequency };
 
-		public static readonly string[] availableLabels = { vamps.LABELNAMEnone,
-																												vamps.LABELNAMEkeyNamesASCII,
-																												vamps.LABELNAMEkeyNamesUnicode,
-																												vamps.LABELNAMEmidiNoteNumbers,
-																												vamps.LABELNAMEfrequency };
+		//public static readonly string[] availableLabels = { vamps.LABELNAMEnone,
+		//																										vamps.LABELNAMEkeyNamesASCII,
+		//																										vamps.LABELNAMEkeyNamesUnicode,
+		//																										vamps.LABELNAMEmidiNoteNumbers,
+		//																										vamps.LABELNAMEfrequency };
 		//public static readonly string[] availableLabels = {"None",
 		//																						"Note Names ASCII",
 		//																						"Note Names Unicode",
@@ -98,56 +102,7 @@ namespace UtilORama4
 
 		private static int idx = 0;
 
-
-		public static int UsePlugin
-		{
-			set
-			{
-				lastPluginUsed = value;
-				if (lastPluginUsed < 0) lastPluginUsed = 0;
-				if (lastPluginUsed >= availablePluginNames.Length) lastPluginUsed = availablePluginNames.Length - 1;
-			}
-			get
-			{
-				return lastPluginUsed;
-			}
-		}
-
-
-		//public string[] PluginFiles
-		//{
-		//	get
-		//	{
-		//		return pluginFiles;
-		//	}
-		//}
 		public enum DetectionMethods { ComplexDomain = 0, SpectralDifference = 1, PhaseDeviation = 2, BroadbandEnergyRise = 3 };
-
-		private static vamps.AlignmentType alignmentType = vamps.AlignmentType.None;
-
-		private static vamps.AlignmentType AlignmentType
-		{
-			set
-			{
-				bool valid = false;
-				for (int i = 0; i < allowableAlignments.Length; i++)
-				{
-					if (value == allowableAlignments[i])
-					{
-						alignmentType = value;
-						valid = true;
-						i = allowableAlignments.Length; // Force exit of loop
-					}
-				}
-			}
-			get
-			{
-				return alignmentType;
-			}
-		}
-
-
-
 
 		public static xTimings Timings
 		{
@@ -285,139 +240,29 @@ namespace UtilORama4
 		}
 
 
-		private static int ResultsToxTimings1(string resultsFile, vamps.AlignmentType alignmentType, vamps.LabelTypes labelType)
-		{
-			int onsetCount = 0;
-			int lineCount = 0;
-			string lineIn = "";
-			int ppos = 0;
-			int millisecs = 0;
-			//int align = SetAlignmentHost(cboAlignTranscribe.Text);
-			string noteLabel = "";
-			int duration = 0;
-			int note = 0;
-			int lastNote = -1;
-
-			LabelType = labelType;
-			StreamReader reader = new StreamReader(resultsFile);
-
-			while (!reader.EndOfStream)
-			{
-				lineIn = reader.ReadLine();
-				lineCount++;
-			} // end while loop more lines remaining
-			reader.Close();
-			xPitchKey = new xTimings(transformName);
-
-			reader = new StreamReader(resultsFile);
-
-
-
-			while (!reader.EndOfStream)
-			{
-				lineIn = reader.ReadLine();
-				ppos = lineIn.IndexOf('.');
-				if (ppos > xUtils.UNDEFINED)
-				{
-
-					string[] parts = lineIn.Split(',');
-
-					millisecs = xUtils.ParseMilliseconds(parts[0]);
-					if (alignmentType > vamps.AlignmentType.None)
-					{
-						if ((alignmentType == vamps.AlignmentType.FPS40) || (alignmentType == vamps.AlignmentType.FPS20))
-						{
-							millisecs = Annotator.AlignTimeTo(millisecs, alignmentType); // AlignStartTo(millisecs, align);
-						}
-						else
-						{
-							if ((alignmentType == vamps.AlignmentType.Bars) ||
-								(alignmentType == vamps.AlignmentType.BeatsFull) ||
-								(alignmentType == vamps.AlignmentType.BeatsHalf) ||
-								(alignmentType == vamps.AlignmentType.BeatsThird) ||
-								(alignmentType == vamps.AlignmentType.BeatsQuarter) ||
-								(alignmentType == vamps.AlignmentType.NoteOnsets))
-							{
-								millisecs = Annotator.AlignTimeTo(millisecs, alignmentType);
-							}
-						}
-					}
-
-					// Avoid closely spaced duplicates
-					//if ((alignmentType < vamps.AlignmentType.None) || (millisecs > lastNote))
-					if (millisecs > lastNote)
-						{
-							// Get label, if available
-							if (parts.Length == 3)
-						{
-							duration = xUtils.ParseMilliseconds(parts[1]);
-							note = Int16.Parse(parts[2]);
-
-							//if (cboLabelsSpectrum.SelectedIndex == 1)
-							//{
-							//TODO Impliment Label Type	
-							noteLabel = MusicalNotation.keyNamesUnicode[note];
-							//}
-							//if (cboLabelsOnsets.SelectedIndex == 2)
-							//{
-							//	noteLabel = note.ToString();
-							//}
-						}
-
-						xPitchKey.Add(noteLabel, millisecs, millisecs + duration);
-						lastNote = millisecs;
-					}
-				} // end line contains a period
-			} // end while loop more lines remaining
-
-			reader.Close();
-
-			return onsetCount;
-		} // end Note Onsets
-
-
-
-		// The true ResultsToxTimings procedure requiring more parameters, (not compliant with ITransform inteface)
-
-		public static int ResultsToxTimings(string resultsFile, vamps.AlignmentType alignmentType, vamps.LabelTypes labelType, DetectionMethods detectMethod = DetectionMethods.ComplexDomain)
+		public static int ResultsToxTimings(string resultsFile, vamps.AlignmentType alignmentType, vamps.LabelType labelType, DetectionMethods detectMethod = DetectionMethods.ComplexDomain)
 		{
 			int pcount = 0;
-			int lineCount = 0;
 			string lineIn = "";
 			int ppos = 0;
 			int millisecs = 0;
 			string[] parts;
-			int ontime = 0;
 			int keyID = 0;
-			double dstart = 0D;
-			double dlen = 0D;
-			// End time is start + length
-			double dend = 0D;
-			// Convert double:seconds to int:milliseconds
-			int msstart = 0;
-			int msend = 0;
-			// Align
-			int startms = 0;
-			int endms = 0;
+			int eStart = 0;
+			int eEnd = 0;
 
-
+			// Store These
 			LabelType = labelType;
-			StreamReader reader = new StreamReader(resultsFile);
+			AlignmentType = alignmentType;
+			Annotator.SetAlignment(alignmentType);
 
-			while ((lineIn = reader.ReadLine()) != null)
-			{
-				lineCount++;
-			} // end while loop more lines remaining
+			string msg = "\r\n\r\n### PROCESSING PITCH and KEY ####################################";
+			Debug.WriteLine(msg);
 
-			reader.Close();
-			//Array.Resize(ref polyNotes, pcount);
-			//Array.Resize(ref polyMSstart, pcount);
-			//Array.Resize(ref polyMSlen, pcount);
 			pcount = 0; // reset for re-use
 			xPitchKey.effects.Clear();
 
-			reader = new StreamReader(resultsFile);
-
+			StreamReader reader = new StreamReader(resultsFile);
 			// First, lets get the first line of the file which has the start time of the first
 			// Key or Pitch and it's Key or Pitch number
 			if (!reader.EndOfStream)
@@ -427,16 +272,14 @@ namespace UtilORama4
 				if (parts.Length == 3)
 				{
 					// Try parsing fields 0 start time (in decimal seconds)
-					double.TryParse(parts[0], out dstart);
-					// Convert double:seconds to int:milliseconds
-					msstart = (int)Math.Round(dstart * 1000);
-					startms = Annotator.AlignTimeTo(msstart, alignmentType);
-					// Get MIDI note number
-					Int32.TryParse(parts[1], out keyID);
+					millisecs = xUtils.ParseMilliseconds(parts[0]);
+					eStart = Annotator.AlignTime(millisecs);
+					// Get MIDI note (pitch-key) number
+					int.TryParse(parts[1], out keyID);
 					if (keyID < 0) // Data integrity check
 					{
-						// In theory, it's possible to have a note with MIDI value of 0, but really really really unlikely
-						Fyle.BUG("Invalid note!");
+						// In theory, it's possible to have a key with MIDI value of 0, but really really really unlikely
+						Fyle.BUG("Invalid Key!");
 					}
 				}
 			}
@@ -449,54 +292,57 @@ namespace UtilORama4
 				if (parts.Length == 3)
 				{
 					// Try parsing fields 0 start time (in decimal seconds)
-					double.TryParse(parts[0], out dend);
-					// Convert double:seconds to int:milliseconds
-					msend = (int)Math.Round(dend * 1000);
-					if (msend <= msstart) // Data integrity check
+					millisecs = xUtils.ParseMilliseconds(parts[0]);
+					eEnd = Annotator.AlignTime(millisecs);
+					if (eEnd <= eStart) // Data integrity check
 					{
-						Fyle.BUG("Backwards Note?!?!");
+						Fyle.BUG("Backwards Key?!?!");
 					}
 					else
 					{
-						// Align
-						endms = Annotator.AlignTimeTo(msend, alignmentType);
-						// Default name is the Key Number
-						string keyName = keyID.ToString();
-						if (labelType == vamps.LabelTypes.KeyNamesUnicode) keyName = MusicalNotation.keyNamesUnicode[keyID];
-						if (labelType == vamps.LabelTypes.KeyNamesASCII) keyName = MusicalNotation.keyNamesASCII[keyID];
-						// Create new xEffect with these values, add to timings list
-						xEffect xef = new xEffect(keyName, startms, endms, keyID);
-						xPitchKey.effects.Add(xef);
-							
-						// End of this one is the start of the next one
-						startms = endms;
-						// Get MIDI note number
-						Int32.TryParse(parts[1], out keyID);
-						if (keyID < 0) // Data integrity check
+						// After Aligning to Bars (or other long time) we may end up with a key of Zero length
+						// if it was shorter than a Bar to begin with
+						if (eEnd > eStart)
 						{
-							// In theory, it's possible to have a note with MIDI value of 0, but really really really unlikely
-							Fyle.BUG("Invalid note!");
-						}
+							// Default name is the Key Number
+							string keyName = keyID.ToString();
+							if (labelType == vamps.LabelType.KeyNamesUnicode) keyName = MusicalNotation.keyNamesUnicode[keyID];
+							if (labelType == vamps.LabelType.KeyNamesASCII) keyName = MusicalNotation.keyNamesASCII[keyID];
+							// Create new xEffect with these values, add to timings list
+							xEffect xef = new xEffect(keyName, eStart, eEnd, keyID);
+							xPitchKey.effects.Add(xef);
 
-						pcount++;
+							// End of this one is the start of the next one
+							eStart = eEnd;
+							// Get MIDI key number for the NEXT section
+							Int32.TryParse(parts[1], out keyID);
+							if (keyID < 0) // Data integrity check
+							{
+								// it's impossible to have a key with MIDI value of 0
+								Fyle.BUG("Invalid Key!");
+							}
+
+							pcount++;
+						}
 					}
 				}
 			} // end while loop more lines remaining
 			reader.Close();
 
 			// Finally, if not at the end-- add one last effect containing the last Pitch or Key
-			if (startms < Annotator.songTimeMS)
+			if (eStart < Annotator.songTimeMS)
 			{
-				endms = Annotator.songTimeMS;
+				eEnd = Annotator.songTimeMS;
 				// Default name is the Key Number
 				string keyName = keyID.ToString();
-				if (labelType == vamps.LabelTypes.KeyNamesUnicode) keyName = MusicalNotation.keyNamesUnicode[keyID];
-				if (labelType == vamps.LabelTypes.KeyNamesASCII) keyName = MusicalNotation.keyNamesASCII[keyID];
+				if (labelType == vamps.LabelType.KeyNamesUnicode) keyName = MusicalNotation.keyNamesUnicode[keyID];
+				if (labelType == vamps.LabelType.KeyNamesASCII) keyName = MusicalNotation.keyNamesASCII[keyID];
 				// Create new xEffect with these values, add to timings list
-				xEffect xef = new xEffect(MusicalNotation.noteNamesUnicode[keyID], startms, endms, keyID);
+				xEffect xef = new xEffect(MusicalNotation.noteNamesUnicode[keyID], eStart, eEnd, keyID);
 				xPitchKey.effects.Add(xef);
 			}
-			
+			Fyle.BUG("Check output window.  Did the alignments work as expected?");
+
 			return pcount;
 		} // end Beats
 
@@ -525,8 +371,8 @@ namespace UtilORama4
 			int grpNum = -1;
 			int keyCount = 25; // 24 standard Keys numbered 1-24.  0 is included but invalid.
 			int lastStart = -1;
-			if (LabelType == vamps.LabelTypes.NoteNamesAscii)		keyCount = MusicalNotation.keyNamesASCII.Length;
-			if (LabelType == vamps.LabelTypes.NoteNamesUnicode) keyCount = MusicalNotation.keyNamesUnicode.Length;
+			if (LabelType == vamps.LabelType.NoteNamesASCII)		keyCount = MusicalNotation.keyNamesASCII.Length;
+			if (LabelType == vamps.LabelType.NoteNamesUnicode) keyCount = MusicalNotation.keyNamesUnicode.Length;
 
 			// Part 1
 			// Get the Vamp Track, and the PitchKey Group,
@@ -538,11 +384,11 @@ namespace UtilORama4
 				// Default channel name is the key's number...
 				string keyName = n.ToString();
 				// ... But use the ASCII or Unicode Key representation if specified
-				if (LabelType == vamps.LabelTypes.KeyNamesASCII)	 keyName = MusicalNotation.keyNamesASCII[n];
-				if (LabelType == vamps.LabelTypes.KeyNamesUnicode) keyName = MusicalNotation.keyNamesUnicode[n];
+				if (LabelType == vamps.LabelType.KeyNamesASCII)	 keyName = MusicalNotation.keyNamesASCII[n];
+				if (LabelType == vamps.LabelType.KeyNamesUnicode) keyName = MusicalNotation.keyNamesUnicode[n];
 
 				LORChannel4 chs = Annotator.Sequence.FindChannel(PitchKeyNamePrefix + keyName, pitchKeyGroup.Members, true, true);
-				chs.color = SequenceFunctions.GetKeyColor(n);
+				chs.color = SequenceFunctions.ChannelColor(n-1);
 				chs.effects.Clear();
 				pitchKeyChannels[n] = chs;
 			}
@@ -556,7 +402,7 @@ namespace UtilORama4
 					for (int f = 0; f < xPitchKey.effects.Count; f++)
 					{
 						xEffect timing = xPitchKey.effects[f];
-						int keyID = timing.Midi;
+						int keyID = timing.Number;
 						if (keyID < 1) // Data integrity check
 						{
 							// In theory, its possible to have a note with a MIDI number of 0, but really really really unlikely

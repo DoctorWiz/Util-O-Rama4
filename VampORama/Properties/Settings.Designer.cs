@@ -1138,5 +1138,29 @@ namespace UtilORama4.Properties {
                 this["OutputWindowState"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string alignBarBeats {
+            get {
+                return ((string)(this["alignBarBeats"]));
+            }
+            set {
+                this["alignBarBeats"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string labelBarBeats {
+            get {
+                return ((string)(this["labelBarBeats"]));
+            }
+            set {
+                this["labelBarBeats"] = value;
+            }
+        }
     }
 }

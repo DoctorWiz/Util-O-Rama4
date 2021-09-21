@@ -8,11 +8,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using FileHelper;
 
 namespace UtilORama4
 {
 	public partial class frmOutputLog : Form
 	{
+		private bool firstPaint = false;
+		
+		
 		Form ownerForm = null;
 		public frmOutputLog()
 		{
@@ -23,7 +27,7 @@ namespace UtilORama4
 		{
 			InitializeComponent();
 			ownerForm = parentForm;
-			RestoreFormPosition();
+			//RestoreFormPosition();
 		}
 		public string LogText
 		{
@@ -42,8 +46,8 @@ namespace UtilORama4
 		private void SaveFormPosition()
 		{
 			// Get current location, size, and state
-			Point myLoc = this.Location;
-			Size mySize = this.Size;
+			Point myLoc = new Point(this.RestoreBounds.X, this.RestoreBounds.Y);
+			Size mySize = new Size(this.RestoreBounds.Width, this.RestoreBounds.Height);
 			FormWindowState myState = this.WindowState;
 			// if minimized or maximized
 			if (myState != FormWindowState.Normal)
@@ -308,5 +312,36 @@ namespace UtilORama4
 			}
 
 		}
+
+		private void frmOutputLog_Move(object sender, EventArgs e)
+		{
+			//Fyle.BUG("Output form has been moved.  Check call stack and find out why.");
+		}
+
+		private void frmOutputLog_Shown(object sender, EventArgs e)
+		{
+			//RestoreFormPosition();
+		}
+
+		private void frmOutputLog_Paint(object sender, PaintEventArgs e)
+		{
+			if (!firstPaint)
+			{
+				CenterThisOverOwner();
+				firstPaint = true;
+			}
+		}
+
+		private void CenterThisOverOwner()
+		{
+			System.Drawing.Size savedSize = Properties.Settings.Default.OutputSize;
+			this.Width = savedSize.Width;
+			this.Height = savedSize.Height; ;
+			int X = (ownerForm.Width - this.Width) / 2 + ownerForm.Left;
+			int Y = (ownerForm.Height - this.Height) / 2 + ownerForm.Top;
+			this.Location = new Point(X, Y);
+		}
+
+
 	}
 }
