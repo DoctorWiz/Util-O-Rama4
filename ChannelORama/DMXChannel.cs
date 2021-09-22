@@ -226,7 +226,7 @@ namespace UtilORama4
 			}
 		}
 
-		public UInt32 ColorLOR
+		public int ColorLOR
 		{
 			get
 			{

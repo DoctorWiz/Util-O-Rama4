@@ -953,16 +953,17 @@ namespace UtilORama4
 
 		private DialogResult GetMergeOptions()
 		{
-			frmOptions optForm = new frmOptions();
-			//DialogResult result = optForm.Show(this);
-			DialogResult dr = optForm.ShowDialog(this);
-			//DialogResult result = optForm.DialogResult;
-			if (dr == DialogResult.OK)
-			{
-				//MergeSequences();
-			}
-			return dr;
 
+			//frmOptions optForm = new frmOptions();
+			//DialogResult result = optForm.Show(this);
+			DialogResult dr = DialogResult.OK; // optForm.ShowDialog(this);
+			//DialogResult result = optForm.DialogResult;
+			//if (dr == DialogResult.OK)
+			//{
+				//MergeSequences();
+			//}
+			return dr;
+			
 		}
 
 		private void treNewChannels_AfterSelect(object sender, TreeViewEventArgs e)

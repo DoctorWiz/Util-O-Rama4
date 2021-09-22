@@ -175,7 +175,7 @@
 			// treeMaster
 			// 
 			this.treeMaster.BackColor = System.Drawing.Color.White;
-			// treeNodeAdvStyleInfo1.CheckBoxTickThickness = 1;
+			treeNodeAdvStyleInfo1.CheckBoxTickThickness = 1;
 			treeNodeAdvStyleInfo1.CheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
 			treeNodeAdvStyleInfo1.EnsureDefaultOptionedChild = true;
 			treeNodeAdvStyleInfo1.IntermediateCheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
@@ -185,7 +185,7 @@
 			this.treeMaster.BaseStylePairs.AddRange(new Syncfusion.Windows.Forms.Tools.StyleNamePair[] {
             new Syncfusion.Windows.Forms.Tools.StyleNamePair("Standard", treeNodeAdvStyleInfo1)});
 			this.treeMaster.BeforeTouchSize = new System.Drawing.Size(300, 433);
-			// this.treeMaster.ForeColor = System.Drawing.Color.Black;
+			this.treeMaster.ForeColor = System.Drawing.Color.Black;
 			// 
 			// 
 			// 
@@ -222,10 +222,10 @@
 			// 
 			this.imlTreeIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imlTreeIcons.ImageStream")));
 			this.imlTreeIcons.TransparentColor = System.Drawing.Color.Transparent;
-			this.imlTreeIcons.Images.SetKeyName(0, "LORTrack4");
-			this.imlTreeIcons.Images.SetKeyName(1, "LORChannelGroup4");
-			this.imlTreeIcons.Images.SetKeyName(2, "LORRGBChannel4");
-			this.imlTreeIcons.Images.SetKeyName(3, "LORChannel4");
+			this.imlTreeIcons.Images.SetKeyName(0, "Track");
+			this.imlTreeIcons.Images.SetKeyName(1, "ChannelGroup");
+			this.imlTreeIcons.Images.SetKeyName(2, "RGBchannel");
+			this.imlTreeIcons.Images.SetKeyName(3, "Channel");
 			this.imlTreeIcons.Images.SetKeyName(4, "RedCh");
 			this.imlTreeIcons.Images.SetKeyName(5, "GrnCh");
 			this.imlTreeIcons.Images.SetKeyName(6, "BluCh");
@@ -512,7 +512,6 @@
 			this.lblSourceFile.Size = new System.Drawing.Size(112, 13);
 			this.lblSourceFile.TabIndex = 21;
 			this.lblSourceFile.Text = "Source Sequence File";
-			this.lblSourceFile.Click += new System.EventHandler(this.lblSourceFile_Click);
 			this.lblSourceFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
 			this.lblSourceFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
 			// 
@@ -537,7 +536,6 @@
 			this.txtSourceFile.Name = "txtSourceFile";
 			this.txtSourceFile.Size = new System.Drawing.Size(300, 20);
 			this.txtSourceFile.TabIndex = 19;
-			this.txtSourceFile.TextChanged += new System.EventHandler(this.txtSourceFile_TextChanged);
 			this.txtSourceFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
 			this.txtSourceFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
 			// 
@@ -1114,8 +1112,8 @@
 		private System.Windows.Forms.ToolStripMenuItem mnuSummary;
 		private System.Windows.Forms.Panel pnlMessage;
 		private System.Windows.Forms.Label lblMessage;
-		// private Syncfusion.Windows.Forms.Tools.ProgressBarAdv prgBarInner;
-		// private Syncfusion.Windows.Forms.Tools.ProgressBarAdv prgBarOuter;
+		private Syncfusion.Windows.Forms.Tools.ProgressBarAdv prgBarInner;
+		private Syncfusion.Windows.Forms.Tools.ProgressBarAdv prgBarOuter;
 		private System.Windows.Forms.CheckBox chkAutoLaunch;
 		private System.Windows.Forms.CheckBox chkCopyBeats;
 		private System.Windows.Forms.Label lblDebug;

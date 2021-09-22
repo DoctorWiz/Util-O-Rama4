@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Time_O_Rama
+namespace UtilORama4
 {
 	static class Program
 	{

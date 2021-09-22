@@ -3280,7 +3280,7 @@ namespace UtilORama4
 			//pnlProgress.Maximum = (int)(qq);
 			pnlProgress.Maximum = seqMaster.Members.Count * 10;
 			pp = 0;
-			string logFile = Fyle.GetAppTempFolder() + "Fuzzy.log";
+			string logFile = Fyle.GetTempPath() + "Fuzzy.log";
 			if (File.Exists(logFile))
 			{
 				File.Delete(logFile);
@@ -4427,7 +4427,7 @@ namespace UtilORama4
 			string lineOut = "";
 			if (writeLog)
 			{
-				logFile = Fyle.GetAppTempFolder() + "Fuzzy.log";
+				logFile = Fyle.GetTempPath() + "Fuzzy.log";
 				writer = new StreamWriter(logFile, true);
 				writer.WriteLine("");
 				lineOut = "Looking for     \"" + theName + "\" in ";

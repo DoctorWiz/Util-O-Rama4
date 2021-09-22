@@ -35,12 +35,36 @@
   <ItemGroup>
     <Reference Include="Syncfusion.Core.WinForms, Version=18.4460.0.30, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
     <Reference Include="Syncfusion.DataSource.WinForms, Version=18.4460.0.30, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
+    <Reference Include="Syncfusion.Grid.Base, Version=18.4460.0.30, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.Grid.Base.18.4.0.30\lib\net46\Syncfusion.Grid.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.Grid.Windows, Version=18.4460.0.30, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.Grid.Windows.18.4.0.30\lib\net46\Syncfusion.Grid.Windows.dll</HintPath>
+    </Reference>
     <Reference Include="Syncfusion.GridCommon.WinForms, Version=18.4460.0.30, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
+    <Reference Include="Syncfusion.Licensing, Version=18.4460.0.30, Culture=neutral, PublicKeyToken=632609b4d040f6b4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.Licensing.18.4.0.30\lib\net46\Syncfusion.Licensing.dll</HintPath>
+    </Reference>
     <Reference Include="Syncfusion.SfListView.WinForms, Version=18.4460.0.30, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL" />
-    <Reference Include="Syncfusion.Shared.Base, Version=18.4460.0.30, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
+    <Reference Include="Syncfusion.Shared.Base, Version=18.4460.0.30, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.Shared.Base.18.4.0.30\lib\net46\Syncfusion.Shared.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.Shared.Windows, Version=18.4460.0.30, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.Shared.Windows.18.4.0.30\lib\net46\Syncfusion.Shared.Windows.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.SpellChecker.Base, Version=18.4460.0.30, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.SpellChecker.Base.18.4.0.30\lib\net46\Syncfusion.SpellChecker.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.Tools.Base, Version=18.4460.0.30, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.Tools.Base.18.4.0.30\lib\net46\Syncfusion.Tools.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.Tools.Windows, Version=18.4460.0.30, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.Tools.Windows.18.4.0.30\lib\net46\Syncfusion.Tools.Windows.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -58,17 +82,76 @@
     <Compile Include="..\Common\Sequence4\LORUtils.cs">
       <Link>LORUtils.cs</Link>
     </Compile>
+    <Compile Include="..\Common\Sequence4\SeqChannel.cs">
+      <Link>SeqChannel.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqChannelGroup.cs">
+      <Link>SeqChannelGroup.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqCosmicDevice.cs">
+      <Link>SeqCosmicDevice.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
     <Compile Include="..\Common\Sequence4\SeqEnums.cs">
       <Link>SeqEnums.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
     </Compile>
-    <Compile Include="..\Common\Sequence4\SeqMember.cs">
-      <Link>SeqMember.cs</Link>
+    <Compile Include="..\Common\Sequence4\SeqMemberBase.cs">
+      <Link>SeqMemberBase.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqMemberInterface.cs">
+      <Link>SeqMemberInterface.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqMembership.cs">
+      <Link>SeqMembership.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqRGBChannel.cs">
+      <Link>SeqRGBChannel.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
     </Compile>
     <Compile Include="..\Common\Sequence4\SeqSubs.cs">
       <Link>SeqSubs.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqTimingGrid.cs">
+      <Link>SeqTimingGrid.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqTrack.cs">
+      <Link>SeqTrack.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
     </Compile>
     <Compile Include="..\Common\Sequence4\Sequence4.cs">
       <Link>Sequence4.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SFTreeUtils.cs">
+      <Link>SFTreeUtils.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\Visualization4.cs">
+      <Link>Visualization4.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\VizChannel.cs">
+      <Link>VizChannel.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\VizDrawObject.cs">
+      <Link>VizDrawObject.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\VizGroup.cs">
+      <Link>VizGroup.cs</Link>
+      <DependentUpon>LORUtils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\xUtils\xObjects.cs">
+      <Link>xObjects.cs</Link>
     </Compile>
     <Compile Include="..\Common\xUtils\xTimings.cs">
       <Link>xTimings.cs</Link>
@@ -97,6 +180,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
