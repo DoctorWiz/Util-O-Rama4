@@ -157,20 +157,20 @@ namespace UtilORama4
 			{
 				filePath = Path.GetDirectoryName(lastSeqFile);
 			}
-			dlgSaveFile.InitialDirectory = filePath;
-			dlgSaveFile.FileName = Path.GetFileNameWithoutExtension(lastSeqFile);
-			dlgSaveFile.DefaultExt = ".csv";
-			dlgSaveFile.Filter = "Comma Separated Values *.csv|*.csv";
-			dlgSaveFile.CheckPathExists = true;
-			dlgSaveFile.OverwritePrompt = false;
-			dlgSaveFile.Title = "Save Data Files As...";
-			DialogResult dr = dlgSaveFile.ShowDialog(this);
+			dlgFileSave.InitialDirectory = filePath;
+			dlgFileSave.FileName = Path.GetFileNameWithoutExtension(lastSeqFile);
+			dlgFileSave.DefaultExt = ".csv";
+			dlgFileSave.Filter = "Comma Separated Values *.csv|*.csv";
+			dlgFileSave.CheckPathExists = true;
+			dlgFileSave.OverwritePrompt = false;
+			dlgFileSave.Title = "Save Data Files As...";
+			DialogResult dr = dlgFileSave.ShowDialog(this);
 			if (dr == DialogResult.OK)
 			{
-				lastSavePath = Path.GetDirectoryName(dlgSaveFile.FileName) + "\\";
+				lastSavePath = Path.GetDirectoryName(dlgFileSave.FileName) + "\\";
 				Properties.Settings.Default.LastSavePath = lastSavePath;
 				Properties.Settings.Default.Save();
-				string fileName = lastSavePath + Path.GetFileNameWithoutExtension(dlgSaveFile.FileName);
+				string fileName = lastSavePath + Path.GetFileNameWithoutExtension(dlgFileSave.FileName);
 
 
 				GenerateSequenceCSVs(fileName);
@@ -400,21 +400,21 @@ namespace UtilORama4
 			string msg = "";
 
 			/*
-			dlgSaveFile.Filter = filt;
-			dlgSaveFile.FilterIndex = 1;
-			//dlgSaveFile.FileName = Path.GetFullPath(fileSeqCur) + Path.GetFileNameWithoutExtension(fileSeqCur) + " Part " + member.ToString() + ext;
-			dlgSaveFile.CheckPathExists = true;
-			dlgSaveFile.InitialDirectory = initDir;
-			dlgSaveFile.DefaultExt = "csv";
-			dlgSaveFile.OverwritePrompt = true;
-			dlgSaveFile.Title = tit;
-			dlgSaveFile.SupportMultiDottedExtensions = true;
-			dlgSaveFile.ValidateNames = true;
+			dlgFileSave.Filter = filt;
+			dlgFileSave.FilterIndex = 1;
+			//dlgFileSave.FileName = Path.GetFullPath(fileSeqCur) + Path.GetFileNameWithoutExtension(fileSeqCur) + " Part " + member.ToString() + ext;
+			dlgFileSave.CheckPathExists = true;
+			dlgFileSave.InitialDirectory = initDir;
+			dlgFileSave.DefaultExt = "csv";
+			dlgFileSave.OverwritePrompt = true;
+			dlgFileSave.Title = tit;
+			dlgFileSave.SupportMultiDottedExtensions = true;
+			dlgFileSave.ValidateNames = true;
 			//newFileIn = Path.GetFileNameWithoutExtension(fileSeqCur) + " Part " + member.ToString(); // + ext;
 			//newFileIn = "Part " + member.ToString() + " of " + Path.GetFileNameWithoutExtension(fileSeqCur);
 			//newFileIn = "Part Mother Fucker!!";
-			dlgSaveFile.FileName = initFile;
-			DialogResult result = dlgSaveFile.ShowDialog(this);
+			dlgFileSave.FileName = initFile;
+			DialogResult result = dlgFileSave.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
 				*/
@@ -1451,26 +1451,26 @@ namespace UtilORama4
 			}
 
 
-			dlgOpenFile.Filter = "Sequence Files *.las, *.lms|*.las;*.lms|Musical Sequences *.lms|*.lms|Animated Sequences *.las|*.las";
-			dlgOpenFile.FilterIndex = 3;
-			dlgOpenFile.DefaultExt = "*.lms";
-			dlgOpenFile.InitialDirectory = initDir;
-			dlgOpenFile.FileName = initFile;
-			dlgOpenFile.CheckFileExists = true;
-			dlgOpenFile.CheckPathExists = true;
-			dlgOpenFile.Multiselect = false;
-			dlgOpenFile.Title = "Open Sequence...";
+			dlgFileOpen.Filter = "Sequence Files *.las, *.lms|*.las;*.lms|Musical Sequences *.lms|*.lms|Animated Sequences *.las|*.las";
+			dlgFileOpen.FilterIndex = 3;
+			dlgFileOpen.DefaultExt = "*.lms";
+			dlgFileOpen.InitialDirectory = initDir;
+			dlgFileOpen.FileName = initFile;
+			dlgFileOpen.CheckFileExists = true;
+			dlgFileOpen.CheckPathExists = true;
+			dlgFileOpen.Multiselect = false;
+			dlgFileOpen.Title = "Open Sequence...";
 			ImBusy(true);
 			pnlAll.Enabled = false;
-			DialogResult result = dlgOpenFile.ShowDialog(this);
+			DialogResult result = dlgFileOpen.ShowDialog(this);
 
 			if (result == DialogResult.OK)
 			{
-				int err = LoadSequenceFile(dlgOpenFile.FileName);
+				int err = LoadSequenceFile(dlgFileOpen.FileName);
 				if (err < 100)
 				{
 					// All this is done in LoadSequenceFile()
-					//lastSeqFile = dlgOpenFile.FileName;
+					//lastSeqFile = dlgFileOpen.FileName;
 					//txtSourceFile.Text = lastSeqFile;
 					//Properties.Settings.Default.LastSeqFile = lastSeqFile;
 					//Properties.Settings.Default.Save();
@@ -1532,22 +1532,22 @@ namespace UtilORama4
 			}
 
 
-			dlgOpenFile.Filter = "Visualization Files *.lee|*.lee";
-			dlgOpenFile.FilterIndex = 1;
-			dlgOpenFile.DefaultExt = "*.lee";
-			dlgOpenFile.InitialDirectory = initDir;
-			dlgOpenFile.FileName = initFile;
-			dlgOpenFile.CheckFileExists = true;
-			dlgOpenFile.CheckPathExists = true;
-			dlgOpenFile.Multiselect = false;
-			dlgOpenFile.Title = "Open Visualization...";
+			dlgFileOpen.Filter = "Visualization Files *.lee|*.lee";
+			dlgFileOpen.FilterIndex = 1;
+			dlgFileOpen.DefaultExt = "*.lee";
+			dlgFileOpen.InitialDirectory = initDir;
+			dlgFileOpen.FileName = initFile;
+			dlgFileOpen.CheckFileExists = true;
+			dlgFileOpen.CheckPathExists = true;
+			dlgFileOpen.Multiselect = false;
+			dlgFileOpen.Title = "Open Visualization...";
 			pnlAll.Enabled = false;
 			ImBusy(true);
-			DialogResult result = dlgOpenFile.ShowDialog(this);
+			DialogResult result = dlgFileOpen.ShowDialog(this);
 
 			if (result == DialogResult.OK)
 			{
-				string vFile = dlgOpenFile.FileName;
+				string vFile = dlgFileOpen.FileName;
 				int err = LoadVisualFile(vFile);
 			} // end if (result = DialogResult.OK)
 			pnlAll.Enabled = true;
@@ -2817,7 +2817,7 @@ namespace UtilORama4
 				//nodeTag.nodeIndex = nodeIndex;
 
 				//LORChannelGroup4 theGroup = seq.ChannelGroups[groupIndex];
-				LORChannelGroup4 theGroup = (LORChannelGroup4)seq.Members.bySavedIndex[groupSI];
+				LORChannelGroup4 theGroup = (LORChannelGroup4)seq.Members.BySavedIndex[groupSI];
 
 				//iLORMember4 groupID = theGroup;
 
@@ -2983,7 +2983,7 @@ namespace UtilORama4
 				//nodeTag.nodeIndex = nodeIndex;
 
 				//LORChannelGroup4 theGroup = seq.ChannelGroups[groupIndex];
-				LORCosmic theDevice = (LORCosmic)seq.Members.bySavedIndex[deviceSI];
+				LORCosmic theDevice = (LORCosmic)seq.Members.BySavedIndex[deviceSI];
 
 				//iLORMember4 groupID = theGroup;
 
@@ -3099,7 +3099,7 @@ namespace UtilORama4
 
 		private TreeNode FilteredAddChannel(LORSequence4 seq, TreeNodeCollection baseNodes, int channelSI, bool selectedOnly)
 		{
-			LORChannel4 theChannel = (LORChannel4)seq.Members.bySavedIndex[channelSI];
+			LORChannel4 theChannel = (LORChannel4)seq.Members.BySavedIndex[channelSI];
 			string nodeText = theChannel.Name;
 			TreeNode channelNode = baseNodes.Add(nodeText);
 			//iLORMember4 nodeTag = theChannel;
@@ -3138,7 +3138,7 @@ namespace UtilORama4
 			}
 			if (siNodes[RGBsi] != null)
 			{
-				LORRGBChannel4 theRGB = (LORRGBChannel4)seq.Members.bySavedIndex[RGBsi];
+				LORRGBChannel4 theRGB = (LORRGBChannel4)seq.Members.BySavedIndex[RGBsi];
 				if (FilterNode(theRGB))
 				{
 					phrooo = true;

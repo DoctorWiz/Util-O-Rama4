@@ -65,6 +65,7 @@ namespace UtilORama4
 						beatGrid.AddTiming(t);
 					}
 				}
+				//TODO Raise event for progress bar
 				lastStart = t;
 			}
 			if (tc != beatGrid.timings.Count)
@@ -76,6 +77,7 @@ namespace UtilORama4
 				msg += "   (This may be because of tightly close timings)";
 				Fyle.BUG(msg);
 			}
+			//TODO ? Output status message with count?
 			return errs;
 		}
 
@@ -271,6 +273,7 @@ namespace UtilORama4
 					effectEnd = ms2cs(xef.endtime);
 					lorEffect = new LOREffect4(LOREffectType4.FadeDown, effectStart, effectEnd, 100, 0);
 					beatCh.AddEffect(lorEffect);
+					//TODO Raise event for progress bar
 				}
 			}
 			else // On-Off, NOT ramps
@@ -308,8 +311,10 @@ namespace UtilORama4
 					lorEffect = new LOREffect4(LOREffectType4.Intensity, effectStart, effectEnd, 100);
 					beatCh.effects.Add(lorEffect);
 					effectIndexStart += divider;
+					//TODO Raise event for progress bar
 				} // End while effectIndexStart < effect count
 			} // End while q < effects count
+			//TODO Output status message
 			return beatCh.effects.Count;
 		}
 
@@ -330,11 +335,11 @@ namespace UtilORama4
 			{
 				noteCh.effects.Clear();
 			}
-				for (int q = 0; q < xEffects.effects.Count; q++)
-				{
-					xef = xEffects.effects[q];
-					st = ms2cs(xef.starttime);
-					et = ms2cs(xef.endtime);
+			for (int q = 0; q < xEffects.effects.Count; q++)
+			{
+				xef = xEffects.effects[q];
+				st = ms2cs(xef.starttime);
+				et = ms2cs(xef.endtime);
 				if (Annotator.UseRamps)
 				{
 					// Ramps are very simple, just add a fade-down effect for each effect
@@ -345,7 +350,9 @@ namespace UtilORama4
 					lef = new LOREffect4(LOREffectType4.Intensity, st, et, 100);
 				}
 				noteCh.AddEffect(lef);
+				//TODO Raise event for progress bar
 			}
+			//TODO Output status message with count
 			return noteCh.effects.Count;
 		}
 		

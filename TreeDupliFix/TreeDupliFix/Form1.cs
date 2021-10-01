@@ -128,19 +128,23 @@ namespace UtilORama4
 
 		private void btnSaveAs_Click(object sender, EventArgs e)
 		{
-			dlgSave.InitialDirectory = Path.GetDirectoryName(fileName);
-			dlgSave.Filter = lutils.FILT_SAVE_EITHER;
-			dlgSave.DefaultExt = Path.GetExtension(fileName);
-			dlgSave.FileName = Path.GetFileNameWithoutExtension(fileName) + " Fixed";
-			dlgSave.Title = "Save Fixed File As...";
-			dlgSave.OverwritePrompt = true;
-			dlgSave.CheckPathExists = true;
-			dlgSave.ValidateNames = true;
-			DialogResult dr = dlgSave.ShowDialog();
+			dlgFileSave.InitialDirectory = Path.GetDirectoryName(fileName);
+			dlgFileSave.Filter = lutils.FILT_SAVE_EITHER;
+			dlgFileSave.DefaultExt = Path.GetExtension(fileName);
+			dlgFileSave.FileName = Path.GetFileNameWithoutExtension(fileName) + " Fixed";
+			dlgFileSave.Title = "Save Fixed File As...";
+			dlgFileSave.OverwritePrompt = false;
+			dlgFileSave.CheckPathExists = true;
+			dlgFileSave.ValidateNames = true;
+			DialogResult dr = dlgFileSave.ShowDialog();
 			if (dr == DialogResult.OK)
 			{
-				string newFile = dlgSave.FileName;
-				seq.WriteSequenceFile_DisplayOrder(newFile, true, false);
+				DialogResult ow = Fyle.SafeOverwriteFile(dlgFileSave.FileName);
+				if (ow == DialogResult.Yes)
+				{
+					string newFile = dlgFileSave.FileName;
+					seq.WriteSequenceFile_DisplayOrder(newFile, true, false);
+				}
 			}
 		} // End SaveAs
 

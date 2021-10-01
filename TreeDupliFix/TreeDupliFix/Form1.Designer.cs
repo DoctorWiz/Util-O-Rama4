@@ -34,7 +34,7 @@
 			this.lblStaus = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
 			this.dlgOpen = new System.Windows.Forms.OpenFileDialog();
-			this.dlgSave = new System.Windows.Forms.SaveFileDialog();
+			this.dlgFileSave = new System.Windows.Forms.SaveFileDialog();
 			this.SuspendLayout();
 			// 
 			// btnBrowseOpen
@@ -111,7 +111,7 @@
 		private System.Windows.Forms.Label lblStaus;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.OpenFileDialog dlgOpen;
-		private System.Windows.Forms.SaveFileDialog dlgSave;
+		private System.Windows.Forms.SaveFileDialog dlgFileSave;
 	}
 }
 

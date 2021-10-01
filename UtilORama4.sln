@@ -46,6 +46,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlankORama", "BlankORama\Bl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChannelORama", "ChannelORama\ChannelORama.csproj", "{625B1D42-4E48-4DD5-AD91-F83C26D07BBB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DimORama", "DimORama\DimORama.csproj", "{A6369B9A-A7F7-4019-B946-E323C279CD06}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -204,6 +206,14 @@ Global
 		{625B1D42-4E48-4DD5-AD91-F83C26D07BBB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{625B1D42-4E48-4DD5-AD91-F83C26D07BBB}.Release|x86.ActiveCfg = Release|Any CPU
 		{625B1D42-4E48-4DD5-AD91-F83C26D07BBB}.Release|x86.Build.0 = Release|Any CPU
+		{A6369B9A-A7F7-4019-B946-E323C279CD06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6369B9A-A7F7-4019-B946-E323C279CD06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6369B9A-A7F7-4019-B946-E323C279CD06}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A6369B9A-A7F7-4019-B946-E323C279CD06}.Debug|x86.Build.0 = Debug|Any CPU
+		{A6369B9A-A7F7-4019-B946-E323C279CD06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6369B9A-A7F7-4019-B946-E323C279CD06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6369B9A-A7F7-4019-B946-E323C279CD06}.Release|x86.ActiveCfg = Release|Any CPU
+		{A6369B9A-A7F7-4019-B946-E323C279CD06}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

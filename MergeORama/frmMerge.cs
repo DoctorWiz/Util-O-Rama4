@@ -281,21 +281,21 @@ namespace UtilORama4
 				initFile = Path.GetFileName(lastFile1);
 			}
 
-			dlgOpenFile.Filter = "Sequence Files *.las, *.lms|*.las;*.lms|Musical Sequence Files *.lms|*.lms|Animated Sequence Files *.las|*.las";
-			//dlgOpenFile.DefaultExt = "*.lms";
+			dlgFileOpen.Filter = "Sequence Files *.las, *.lms|*.las;*.lms|Musical Sequence Files *.lms|*.lms|Animated Sequence Files *.las|*.las";
+			//dlgFileOpen.DefaultExt = "*.lms";
 
-			dlgOpenFile.InitialDirectory = initDir;
-			dlgOpenFile.FileName = initFile;
-			dlgOpenFile.CheckFileExists = true;
-			dlgOpenFile.CheckPathExists = true;
-			dlgOpenFile.Multiselect = false;
-			dlgOpenFile.Title = "Select First Sequence...";
+			dlgFileOpen.InitialDirectory = initDir;
+			dlgFileOpen.FileName = initFile;
+			dlgFileOpen.CheckFileExists = true;
+			dlgFileOpen.CheckPathExists = true;
+			dlgFileOpen.Multiselect = false;
+			dlgFileOpen.Title = "Select First Sequence...";
 			//pnlAll.Enabled = false;
-			DialogResult result = dlgOpenFile.ShowDialog();
+			DialogResult result = dlgFileOpen.ShowDialog();
 
 			if (result == DialogResult.OK)
 			{
-				lastFile1 = dlgOpenFile.FileName;
+				lastFile1 = dlgFileOpen.FileName;
 
 				FileInfo fi = new FileInfo(lastFile1);
 				Properties.Settings.Default.LastFile1 = lastFile1;
@@ -326,20 +326,20 @@ namespace UtilORama4
 				initFile = Path.GetFileName(lastFile2);
 			}
 
-			dlgOpenFile.Filter = "Sequence Files *.las, *.lms|*.las;*.lms|Musical Sequence Files *.lms|*.lms|Animated Sequence Files *.las|*.las";
-			//dlgOpenFile.DefaultExt = "*.lms";
-			dlgOpenFile.InitialDirectory = initDir;
-			dlgOpenFile.FileName = initFile;
-			dlgOpenFile.CheckFileExists = true;
-			dlgOpenFile.CheckPathExists = true;
-			dlgOpenFile.Multiselect = false;
-			dlgOpenFile.Title = "Select Second Sequence...";
+			dlgFileOpen.Filter = "Sequence Files *.las, *.lms|*.las;*.lms|Musical Sequence Files *.lms|*.lms|Animated Sequence Files *.las|*.las";
+			//dlgFileOpen.DefaultExt = "*.lms";
+			dlgFileOpen.InitialDirectory = initDir;
+			dlgFileOpen.FileName = initFile;
+			dlgFileOpen.CheckFileExists = true;
+			dlgFileOpen.CheckPathExists = true;
+			dlgFileOpen.Multiselect = false;
+			dlgFileOpen.Title = "Select Second Sequence...";
 			//pnlAll.Enabled = false;
-			DialogResult result = dlgOpenFile.ShowDialog();
+			DialogResult result = dlgFileOpen.ShowDialog();
 
 			if (result == DialogResult.OK)
 			{
-				lastFile2 = dlgOpenFile.FileName;
+				lastFile2 = dlgFileOpen.FileName;
 
 				FileInfo fi = new FileInfo(lastFile2);
 				Properties.Settings.Default.LastFile2 = lastFile2;
@@ -928,21 +928,25 @@ namespace UtilORama4
 			initFile += " merged with ";
 			initFile += Path.GetFileNameWithoutExtension(lastFile2);
 
-			dlgSaveFile.Filter = "Musical Sequence Files *.lms|*.lms|Animated Sequence Files *.las|*.las";
-			dlgSaveFile.FileName = initFile;
-			dlgSaveFile.InitialDirectory = initDir;
-			dlgSaveFile.CheckPathExists = true;
-			dlgSaveFile.OverwritePrompt = true;
-			dlgSaveFile.Title = "Save Merged Sequences As...";
-			DialogResult result = dlgSaveFile.ShowDialog();
+			dlgFileSave.Filter = "Musical Sequence Files *.lms|*.lms|Animated Sequence Files *.las|*.las";
+			dlgFileSave.FileName = initFile;
+			dlgFileSave.InitialDirectory = initDir;
+			dlgFileSave.CheckPathExists = true;
+			dlgFileSave.OverwritePrompt = false;
+			dlgFileSave.Title = "Save Merged Sequences As...";
+			DialogResult result = dlgFileSave.ShowDialog();
 			if (result == DialogResult.OK)
 			{
-				ImBusy(true);
-				lastNewFile = dlgSaveFile.FileName;
-				Properties.Settings.Default.LastNewFile = lastNewFile;
-				Properties.Settings.Default.Save();
-				seqNew.WriteSequenceFile_DisplayOrder(lastNewFile);
-				ImBusy(false);
+				DialogResult ow = Fyle.SafeOverwriteFile(dlgFileSave.FileName);
+				if (ow == DialogResult.Yes)
+				{
+					ImBusy(true);
+					lastNewFile = dlgFileSave.FileName;
+					Properties.Settings.Default.LastNewFile = lastNewFile;
+					Properties.Settings.Default.Save();
+					seqNew.WriteSequenceFile_DisplayOrder(lastNewFile);
+					ImBusy(false);
+				}
 			}
 
 
@@ -993,6 +997,18 @@ namespace UtilORama4
 			numberFormat = Properties.Settings.Default.AddNumberFormat;
 
 		}
+
+		private void pnlAbout_Click(object sender, EventArgs e)
+		{
+			ImBusy(true);
+			frmAbout aboutBox = new frmAbout();
+			aboutBox.picIcon.Image = picAboutIcon.Image;
+			aboutBox.Icon = this.Icon;
+			aboutBox.ShowDialog(this);
+			ImBusy(false);
+		}
+
+
 	}
 
 }

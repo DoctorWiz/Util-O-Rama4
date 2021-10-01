@@ -60,6 +60,7 @@
 			this.btnBrowseSource = new System.Windows.Forms.Button();
 			this.txtSourceFile = new System.Windows.Forms.TextBox();
 			this.lblMasterAlreadyMapped = new System.Windows.Forms.Label();
+			this.picAboutIcon = new System.Windows.Forms.PictureBox();
 			this.chkCopyBeats = new System.Windows.Forms.CheckBox();
 			this.chkAutoLaunch = new System.Windows.Forms.CheckBox();
 			this.pnlMessage = new System.Windows.Forms.Panel();
@@ -70,8 +71,8 @@
 			this.btnSaveNewSeq = new System.Windows.Forms.Button();
 			this.prgBarInner = new Syncfusion.Windows.Forms.Tools.ProgressBarAdv();
 			this.prgBarOuter = new Syncfusion.Windows.Forms.Tools.ProgressBarAdv();
-			this.dlgSaveFile = new System.Windows.Forms.SaveFileDialog();
-			this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
+			this.dlgFileSave = new System.Windows.Forms.SaveFileDialog();
+			this.dlgFileOpen = new System.Windows.Forms.OpenFileDialog();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
 			this.mnuFileOpen = new System.Windows.Forms.ToolStripMenuItem();
@@ -114,6 +115,7 @@
 			this.pnlOverwrite.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picPreviewMaster)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.picPreviewSource)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.picAboutIcon)).BeginInit();
 			this.pnlMessage.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.prgBarInner)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.prgBarOuter)).BeginInit();
@@ -147,6 +149,7 @@
 			this.pnlAll.Controls.Add(this.btnBrowseSource);
 			this.pnlAll.Controls.Add(this.txtSourceFile);
 			this.pnlAll.Controls.Add(this.lblMasterAlreadyMapped);
+			this.pnlAll.Controls.Add(this.picAboutIcon);
 			this.pnlAll.Location = new System.Drawing.Point(0, 26);
 			this.pnlAll.Name = "pnlAll";
 			this.pnlAll.Size = new System.Drawing.Size(762, 580);
@@ -554,6 +557,16 @@
 			this.ttip.SetToolTip(this.lblMasterAlreadyMapped, resources.GetString("lblMasterAlreadyMapped.ToolTip"));
 			this.lblMasterAlreadyMapped.Visible = false;
 			// 
+			// picAboutIcon
+			// 
+			this.picAboutIcon.Image = ((System.Drawing.Image)(resources.GetObject("picAboutIcon.Image")));
+			this.picAboutIcon.Location = new System.Drawing.Point(697, 470);
+			this.picAboutIcon.Name = "picAboutIcon";
+			this.picAboutIcon.Size = new System.Drawing.Size(128, 128);
+			this.picAboutIcon.TabIndex = 129;
+			this.picAboutIcon.TabStop = false;
+			this.picAboutIcon.Visible = false;
+			// 
 			// chkCopyBeats
 			// 
 			this.chkCopyBeats.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -698,9 +711,9 @@
 			this.prgBarOuter.Visible = false;
 			this.prgBarOuter.WaitingGradientWidth = 400;
 			// 
-			// dlgOpenFile
+			// dlgFileOpen
 			// 
-			this.dlgOpenFile.FileName = "openFileDialog1";
+			this.dlgFileOpen.FileName = "openFileDialog1";
 			// 
 			// menuStrip1
 			// 
@@ -988,7 +1001,7 @@
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlStatus.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
 			this.pnlStatus.Name = "pnlStatus";
-			this.pnlStatus.Size = new System.Drawing.Size(516, 19);
+			this.pnlStatus.Size = new System.Drawing.Size(649, 19);
 			this.pnlStatus.Spring = true;
 			// 
 			// pnlAbout
@@ -1042,6 +1055,7 @@
 			this.pnlOverwrite.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.picPreviewMaster)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.picPreviewSource)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.picAboutIcon)).EndInit();
 			this.pnlMessage.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.prgBarInner)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.prgBarOuter)).EndInit();
@@ -1070,8 +1084,8 @@
 		private System.Windows.Forms.Label lblSourceFile;
 		private System.Windows.Forms.Button btnBrowseSource;
 		private System.Windows.Forms.TextBox txtSourceFile;
-		private System.Windows.Forms.SaveFileDialog dlgSaveFile;
-		private System.Windows.Forms.OpenFileDialog dlgOpenFile;
+		private System.Windows.Forms.SaveFileDialog dlgFileSave;
+		private System.Windows.Forms.OpenFileDialog dlgFileOpen;
 		private System.Windows.Forms.ImageList imlTreeIcons;
 		private System.Windows.Forms.Button btnSummary;
 		private System.Windows.Forms.Button btnAutoMap;
@@ -1131,6 +1145,7 @@
 		private Syncfusion.Windows.Forms.Tools.TreeViewAdv treeMaster;
 		private System.Windows.Forms.Label lblMasterHasEffects;
 		private System.Windows.Forms.Label lblMasterAlreadyMapped;
+		private System.Windows.Forms.PictureBox picAboutIcon;
 	}
 }
 

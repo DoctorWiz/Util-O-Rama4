@@ -34,7 +34,8 @@ namespace UtilORama4
 {
 	public static class Annotator
 	{
-		private	const string WRITEformat = " -f -w csv --csv-force ";
+		#region class variables and constants
+		private const string WRITEformat = " -f -w csv --csv-force ";
 
 		//public ITransform transformer = new BarBeats();
 		//public Transpose transposer = new Transpose();
@@ -70,6 +71,8 @@ namespace UtilORama4
 		public static bool ReuseResults = false;
 		public static bool Whiten = false;
 		public static int StepSize = 512;
+		public static int NeedStepSize = 0;
+		public static bool StepErrFlag = false;
 		private static int totalMilliseconds = 0;
 		private static int highestTime = 0;
 		//public static int TotalCentiseconds = 0;
@@ -97,6 +100,10 @@ namespace UtilORama4
 
 		public enum TransformTypes { BarsAndBeats, NoteOnsets, PolyphonicTranscription, PitchAndKey, Tempo, Chromagram, Spectrogram, Segments};
 
+
+		#endregion
+		
+		
 		static Annotator()
 		{
 			int x = 5;

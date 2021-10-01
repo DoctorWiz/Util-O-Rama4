@@ -1954,7 +1954,7 @@ namespace UtilORama4
 						{
 							//ch = seq.xTimingss[firstCobjIdx + note];
 							ch = noteTimings[note];
-							//Identity id = seq.Members.bySavedIndex[noteTimings[note]];
+							//Identity id = seq.Members.BySavedIndex[noteTimings[note]];
 							//if (id.PartType == LORMemberType4.xTimings)
 							//{
 							//ch = (xTimings)id.Owner;
@@ -2209,7 +2209,7 @@ namespace UtilORama4
 						{
 							//ch = seq.xTimingss[firstCobjIdx + note];
 							ch = noteTimings[note];
-							//Identity id = seq.Members.bySavedIndex[noteTimings[note]];
+							//Identity id = seq.Members.BySavedIndex[noteTimings[note]];
 							//if (id.PartType == LORMemberType4.xTimings)
 							//{
 							//ch = (xTimings)id.Owner;

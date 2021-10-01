@@ -181,21 +181,21 @@ namespace UtilORama4
 			}
 
 
-			dlgOpenFile.Filter = lutils.FILT_OPEN_ANY;
-			dlgOpenFile.DefaultExt = lutils.EXT_LMS;
-			dlgOpenFile.InitialDirectory = initDir;
-			dlgOpenFile.FileName = initFile;
-			dlgOpenFile.CheckFileExists = true;
-			dlgOpenFile.CheckPathExists = true;
-			dlgOpenFile.Multiselect = false;
-			dlgOpenFile.Title = "Open Sequence...";
-			DialogResult result = dlgOpenFile.ShowDialog();
+			dlgFileOpen.Filter = lutils.FILT_OPEN_ANY;
+			dlgFileOpen.DefaultExt = lutils.EXT_LMS;
+			dlgFileOpen.InitialDirectory = initDir;
+			dlgFileOpen.FileName = initFile;
+			dlgFileOpen.CheckFileExists = true;
+			dlgFileOpen.CheckPathExists = true;
+			dlgFileOpen.Multiselect = false;
+			dlgFileOpen.Title = "Open Sequence...";
+			DialogResult result = dlgFileOpen.ShowDialog();
 
 			pnlAll.Enabled = false;
 			if (result == DialogResult.OK)
 			{
 				ImBusy(true);
-				int err = LoadSourceFile(dlgOpenFile.FileName);
+				int err = LoadSourceFile(dlgFileOpen.FileName);
 				ImBusy(false);
 				AskToMap();
 			} // end if (result = DialogResult.OK)
@@ -258,7 +258,7 @@ namespace UtilORama4
 				mappedSIs = null;
 				mapSrcToMast = null;
 				mappedMemberCount = 0;
-				//Array.Resize(ref mapSrcToMast, seqSource.Members.allCount);
+				//Array.Resize(ref mapSrcToMast, seqSource.Members.AllCount);
 				Array.Resize(ref mapSrcToMast, seqSource.Members.Items.Count);
 				for (int i = 0; i < mapSrcToMast.Length; i++)
 				{
@@ -266,7 +266,7 @@ namespace UtilORama4
 				}
 				if (seqMaster.Channels.Count > 0)
 				{
-					//Array.Resize(ref mapMastToSrc, seqMaster.Members.allCount);
+					//Array.Resize(ref mapMastToSrc, seqMaster.Members.AllCount);
 					Array.Resize(ref mapMastToSrc, seqMaster.Members.Items.Count);
 					Array.Resize(ref mappedSIs, seqMaster.Members.Items.Count);
 					for (int i = 0; i < mapMastToSrc.Length; i++)
@@ -300,22 +300,22 @@ namespace UtilORama4
 			}
 
 
-			dlgOpenFile.Filter = lutils.FILT_OPEN_CFG;
-			dlgOpenFile.DefaultExt = lutils.EXT_LCC;
-			dlgOpenFile.InitialDirectory = initDir;
-			dlgOpenFile.FileName = initFile;
-			dlgOpenFile.CheckFileExists = true;
-			dlgOpenFile.CheckPathExists = true;
-			dlgOpenFile.Multiselect = false;
-			dlgOpenFile.Title = "Select Destination Sequence File...";
-			DialogResult result = dlgOpenFile.ShowDialog();
+			dlgFileOpen.Filter = lutils.FILT_OPEN_CFG;
+			dlgFileOpen.DefaultExt = lutils.EXT_LCC;
+			dlgFileOpen.InitialDirectory = initDir;
+			dlgFileOpen.FileName = initFile;
+			dlgFileOpen.CheckFileExists = true;
+			dlgFileOpen.CheckPathExists = true;
+			dlgFileOpen.Multiselect = false;
+			dlgFileOpen.Title = "Select Destination Sequence File...";
+			DialogResult result = dlgFileOpen.ShowDialog();
 
 			//pnlAll.Enabled = false;
 			if (result == DialogResult.OK)
 			{
-				masterFile = dlgOpenFile.FileName;
+				masterFile = dlgFileOpen.FileName;
 
-				int err = LoadMasterFile(dlgOpenFile.FileName);
+				int err = LoadMasterFile(dlgFileOpen.FileName);
 				if (err == 0)
 				{
 					Properties.Settings.Default.LastMasterFile = masterFile;
@@ -339,9 +339,9 @@ namespace UtilORama4
 			int err = seqMaster.ReadSequenceFile(masterChannelFile);
 			if (err < 100)  // Error numbers below 100 are warnings, above 100 are fatal
 			{
-				for (int w = 0; w < seqMaster.Members.byName.Count; w++)
+				for (int w = 0; w < seqMaster.Members.ByName.Count; w++)
 				{
-					//Console.WriteLine(seqMaster.Members.byName[w].Name);
+					//Console.WriteLine(seqMaster.Members.ByName[w].Name);
 				}
 
 
@@ -367,14 +367,14 @@ namespace UtilORama4
 				mappedMemberCount = 0;
 				if (seqSource.Channels.Count > 0)
 				{
-					Array.Resize(ref mapSrcToMast, seqSource.Members.allCount);
+					Array.Resize(ref mapSrcToMast, seqSource.Members.AllCount);
 					for (int i = 0; i < mapSrcToMast.Length; i++)
 					{
 						mapSrcToMast[i] = new List<iLORMember4>();
 					}
 				}
-				Array.Resize(ref mapMastToSrc, seqMaster.Members.allCount);
-				Array.Resize(ref mappedSIs, seqMaster.Members.allCount);
+				Array.Resize(ref mapMastToSrc, seqMaster.Members.AllCount);
+				Array.Resize(ref mappedSIs, seqMaster.Members.AllCount);
 				for (int i = 0; i < mapMastToSrc.Length; i++)
 				{
 					mapMastToSrc[i] = null;
@@ -455,11 +455,11 @@ namespace UtilORama4
 				if (mapMastToSrc[mapLoop] != null)
 				{
 					int newSI = mapLoop;
-					iLORMember4 newChild = seqNew.Members.bySavedIndex[newSI];
+					iLORMember4 newChild = seqNew.Members.BySavedIndex[newSI];
 					if (newChild.MemberType == LORMemberType4.Channel)
 					{
 						//int sourceSI = mapMastToSrc[mapLoop];
-						//iLORMember4 sourceChildMember = seqSource.Members.bySavedIndex[sourceSI];
+						//iLORMember4 sourceChildMember = seqSource.Members.BySavedIndex[sourceSI];
 						iLORMember4 sourceChildMember = mapMastToSrc[mapLoop];
 						if (sourceChildMember.MemberType == LORMemberType4.Channel)
 						{
@@ -477,7 +477,7 @@ namespace UtilORama4
 						if (newChild.MemberType == LORMemberType4.RGBChannel)
 						{
 							//int sourceSI = mapMastToSrc[mapLoop];
-							//iLORMember4 sourceChildMember = seqSource.Members.bySavedIndex[sourceSI];
+							//iLORMember4 sourceChildMember = seqSource.Members.BySavedIndex[sourceSI];
 							iLORMember4 sourceChildMember = mapMastToSrc[mapLoop];
 							if (sourceChildMember.MemberType == LORMemberType4.RGBChannel)
 							{
@@ -572,9 +572,9 @@ namespace UtilORama4
 
 		private void SaveMap()
 		{
-			dlgSaveFile.DefaultExt = lutils.EXT_CHMAP;
-			dlgSaveFile.Filter = lutils.FILE_CHMAP;
-			dlgSaveFile.FilterIndex = 0;
+			dlgFileSave.DefaultExt = lutils.EXT_CHMAP;
+			dlgFileSave.Filter = lutils.FILE_CHMAP;
+			dlgFileSave.FilterIndex = 0;
 			string initDir = lutils.DefaultChannelConfigsPath;
 			string initFile = "";
 			if (mapFile.Length > 4)
@@ -589,43 +589,47 @@ namespace UtilORama4
 					initFile = Path.GetFileName(mapFile);
 				}
 			}
-			dlgSaveFile.FileName = initFile;
-			dlgSaveFile.InitialDirectory = initDir;
-			dlgSaveFile.OverwritePrompt = true;
-			dlgSaveFile.CheckPathExists = true;
-			dlgSaveFile.Title = "Save Channel Map As...";
+			dlgFileSave.FileName = initFile;
+			dlgFileSave.InitialDirectory = initDir;
+			dlgFileSave.OverwritePrompt = false;
+			dlgFileSave.CheckPathExists = true;
+			dlgFileSave.Title = "Save Channel Map As...";
 
-			DialogResult dr = dlgSaveFile.ShowDialog();
+			DialogResult dr = dlgFileSave.ShowDialog();
 			if (dr == DialogResult.OK)
 			{
-
-				string mapTemp = System.IO.Path.GetTempPath();
-				mapTemp += Path.GetFileName(dlgSaveFile.FileName);
-				int mapErr = SaveMap(mapTemp);
-				if (mapErr == 0)
+				DialogResult ow = Fyle.SafeOverwriteFile(dlgFileSave.FileName);
+				if (ow == DialogResult.Yes)
 				{
-					mapFile = dlgSaveFile.FileName;
-					if (File.Exists(mapFile))
+
+					string mapTemp = System.IO.Path.GetTempPath();
+					mapTemp += Path.GetFileName(dlgFileSave.FileName);
+					int mapErr = SaveMap(mapTemp);
+					if (mapErr == 0)
 					{
-						//TODO: Add Exception Catch
-						File.Delete(mapFile);
-					}
-					File.Copy(mapTemp, mapFile);
-					File.Delete(mapTemp);
-					dirtyMap = false;
-					//btnSaveMap.Enabled = dirtyMap;
-					txtMappingFile.Text = Path.GetFileName(mapFile);
-					Properties.Settings.Default.LastMapFile = mapFile;
-					Properties.Settings.Default.Save();
-				} // end no errors saving map
+						mapFile = dlgFileSave.FileName;
+						if (File.Exists(mapFile))
+						{
+							//TODO: Add Exception Catch
+							File.Delete(mapFile);
+						}
+						File.Copy(mapTemp, mapFile);
+						File.Delete(mapTemp);
+						dirtyMap = false;
+						//btnSaveMap.Enabled = dirtyMap;
+						txtMappingFile.Text = Path.GetFileName(mapFile);
+						Properties.Settings.Default.LastMapFile = mapFile;
+						Properties.Settings.Default.Save();
+					} // end no errors saving map
+				}
 			} // end dialog result = OK
 		} // end btnSaveMap Click event
 
 		private void BrowseForMap()
 		{
-			dlgOpenFile.DefaultExt = lutils.EXT_CHMAP;
-			dlgOpenFile.Filter = lutils.FILE_CHMAP;
-			dlgOpenFile.FilterIndex = 0;
+			dlgFileOpen.DefaultExt = lutils.EXT_CHMAP;
+			dlgFileOpen.Filter = lutils.FILE_CHMAP;
+			dlgFileOpen.FilterIndex = 0;
 			string initDir = lutils.DefaultChannelConfigsPath;
 			string initFile = "";
 			if (mapFile.Length > 4)
@@ -640,15 +644,15 @@ namespace UtilORama4
 					initFile = Path.GetFileName(mapFile);
 				}
 			}
-			dlgOpenFile.FileName = initFile;
-			dlgOpenFile.InitialDirectory = initDir;
-			dlgOpenFile.CheckPathExists = true;
-			dlgOpenFile.Title = "Load-Apply Channel Map..";
+			dlgFileOpen.FileName = initFile;
+			dlgFileOpen.InitialDirectory = initDir;
+			dlgFileOpen.CheckPathExists = true;
+			dlgFileOpen.Title = "Load-Apply Channel Map..";
 
-			DialogResult dr = dlgOpenFile.ShowDialog();
+			DialogResult dr = dlgFileOpen.ShowDialog();
 			if (dr == DialogResult.OK)
 			{
-				mapFile = dlgOpenFile.FileName;
+				mapFile = dlgFileOpen.FileName;
 				txtMappingFile.Text = Path.GetFileName(mapFile);
 				Properties.Settings.Default.LastMapFile = mapFile;
 				Properties.Settings.Default.Save();
@@ -701,7 +705,7 @@ namespace UtilORama4
 			{
 				if (mapMastToSrc[i] != null)
 				{
-					iLORMember4 masterMember = seqMaster.Members.bySavedIndex[i];
+					iLORMember4 masterMember = seqMaster.Members.BySavedIndex[i];
 					iLORMember4 newSourceMember = mapMastToSrc[i];
 
 					lineOut = lutils.LEVEL2 + lutils.STTBL + TABLEchannels + lutils.ENDTBL;
@@ -946,7 +950,7 @@ namespace UtilORama4
 										if (masterSI <= seqMaster.Members.HighestSavedIndex)
 										{
 											// In range, so fetch it
-											masterMember = seqMaster.Members.bySavedIndex[masterSI];
+											masterMember = seqMaster.Members.BySavedIndex[masterSI];
 											// Now compare the name, is it actually the same member?
 											// (May not be a match, but good chance it is.)
 											if (masterMember.Name.ToLower().CompareTo(masterName.ToLower()) != 0)
@@ -969,7 +973,7 @@ namespace UtilORama4
 											// (Read comments above)
 											if (sourceSI <= seqSource.Members.HighestSavedIndex)
 											{
-												newSourceMember = seqSource.Members.bySavedIndex[sourceSI];
+												newSourceMember = seqSource.Members.BySavedIndex[sourceSI];
 												if (newSourceMember.Name.ToLower().CompareTo(sourceName.ToLower()) != 0)
 												{
 													newSourceMember = null;
@@ -991,8 +995,8 @@ namespace UtilORama4
 														Console.WriteLine(logMsg);
 														logWriter1.WriteLine(logMsg);
 														//MapMembers(masterSI, sourceSI, true, false);
-														//seqMaster.Members.bySavedIndex[masterSI].Selected = true;
-														//seqSource.Members.bySavedIndex[sourceSI].Selected = true;
+														//seqMaster.Members.BySavedIndex[masterSI].Selected = true;
+														//seqSource.Members.BySavedIndex[sourceSI].Selected = true;
 														//MapMembers(masterSI, sourceSI, false);
 														int newMaps = MapMembers(masterMember, newSourceMember, true);
 														mappedMemberCount += newMaps;
@@ -1104,9 +1108,9 @@ namespace UtilORama4
 											sourceSI = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
 											sourceType = LORSeqEnums4.EnumMemberType(lutils.getKeyWord(lineIn, lutils.FIELDtype));
 
-											if (!seqMaster.Members.bySavedIndex[masterSI].Selected)
+											if (!seqMaster.Members.BySavedIndex[masterSI].Selected)
 											{
-												if (seqMaster.Members.bySavedIndex[masterSI].MemberType == masterType)
+												if (seqMaster.Members.BySavedIndex[masterSI].MemberType == masterType)
 												{
 													// Search for it again by name, this time use fuzzy find
 													logMsg = "Fuzzy searching Destination for ";
@@ -1124,11 +1128,11 @@ namespace UtilORama4
 													// Got it yet?
 													if (masterSI > lutils.UNDEFINED)
 													{
-														if (sourceSI < seqSource.Members.bySavedIndex.Count)
+														if (sourceSI < seqSource.Members.BySavedIndex.Count)
 														{
-															if (seqSource.Members.bySavedIndex[sourceSI].MemberType == sourceType)
+															if (seqSource.Members.BySavedIndex[sourceSI].MemberType == sourceType)
 															{
-																if (!seqSource.Members.bySavedIndex[sourceSI].Selected)
+																if (!seqSource.Members.BySavedIndex[sourceSI].Selected)
 																{
 																	//try to find it again by name and this time use fuzzy matching
 																	logMsg = "Fuzzy searching Source for ";
@@ -1145,16 +1149,16 @@ namespace UtilORama4
 																// Got it yet?
 																if (sourceSI > lutils.UNDEFINED)
 																{
-																	if (seqSource.Members.bySavedIndex[sourceSI].MemberType ==
-																			seqMaster.Members.bySavedIndex[masterSI].MemberType)
+																	if (seqSource.Members.BySavedIndex[sourceSI].MemberType ==
+																			seqMaster.Members.BySavedIndex[masterSI].MemberType)
 																	{
 																		logMsg = "Fuzzy Matched " + masterName + " to " + sourceName;
 																		Console.WriteLine(logMsg);
 																		logWriter1.WriteLine(logMsg);
 																		int newMaps = MapMembers(masterSI, sourceSI, true, false);
 																		mappedMemberCount += newMaps;
-																		seqMaster.Members.bySavedIndex[masterSI].Selected = true;
-																		seqSource.Members.bySavedIndex[sourceSI].Selected = true;
+																		seqMaster.Members.BySavedIndex[masterSI].Selected = true;
+																		seqSource.Members.BySavedIndex[sourceSI].Selected = true;
 																	}
 																}
 															} // if source type matchies
@@ -1213,10 +1217,10 @@ namespace UtilORama4
 		{
 			ImBusy(true);
 			string xt = Path.GetExtension(sourceFile).ToLower();
-			dlgSaveFile.DefaultExt = xt;
-			dlgSaveFile.Filter = lutils.FILT_SAVE_EITHER;
-			dlgSaveFile.FilterIndex = 0;
-			if (xt.CompareTo(lutils.EXT_LAS) == 0) dlgSaveFile.FilterIndex = 1;
+			dlgFileSave.DefaultExt = xt;
+			dlgFileSave.Filter = lutils.FILT_SAVE_EITHER;
+			dlgFileSave.FilterIndex = 0;
+			if (xt.CompareTo(lutils.EXT_LAS) == 0) dlgFileSave.FilterIndex = 1;
 			string initDir = SeqFolder;
 			string initFile = "";
 			if (sourceFile.Length > 4)
@@ -1235,44 +1239,48 @@ namespace UtilORama4
 				}
 			}
 			string newName = SuggestedNewName(initFile);
-			dlgSaveFile.FileName = newName;
-			dlgSaveFile.InitialDirectory = initDir;
-			dlgSaveFile.OverwritePrompt = true;
-			dlgSaveFile.CheckPathExists = true;
-			dlgSaveFile.Title = "Save New Sequence As...";
+			dlgFileSave.FileName = newName;
+			dlgFileSave.InitialDirectory = initDir;
+			dlgFileSave.OverwritePrompt = false;
+			dlgFileSave.CheckPathExists = true;
+			dlgFileSave.Title = "Save New Sequence As...";
 
-			DialogResult dr = dlgSaveFile.ShowDialog();
+			DialogResult dr = dlgFileSave.ShowDialog();
 			if (dr == DialogResult.OK)
 			{
-
-				string saveTemp = System.IO.Path.GetTempPath();
-				saveTemp += Path.GetFileName(dlgSaveFile.FileName);
-
-				string msg = "GLB";
-				msg += LeftBushesChildCount().ToString();
-				lblDebug.Text = msg;
-
-				int mapErr = SaveNewMappedSequence(saveTemp);
-				if (mapErr == 0)
+				DialogResult ow = Fyle.SafeOverwriteFile(dlgFileSave.FileName);
+				if (ow == DialogResult.Yes)
 				{
-					saveFile = dlgSaveFile.FileName;
-					if (File.Exists(saveFile))
-					{
-						//TODO: Add Exception Catch
-						File.Delete(saveFile);
-					}
-					File.Copy(saveTemp, saveFile);
-					File.Delete(saveTemp);
 
-					if (chkAutoLaunch.Checked)
-					{
-						System.Diagnostics.Process.Start(saveFile);
+					string saveTemp = System.IO.Path.GetTempPath();
+					saveTemp += Path.GetFileName(dlgFileSave.FileName);
 
-					}
-					//dirtyMap = false;
-					//btnSaveMap.Enabled = dirtyMap;
-					//txtMappingFile.Text = Path.GetFileName(mapFile);
-				} // end no errors saving map
+					string msg = "GLB";
+					msg += LeftBushesChildCount().ToString();
+					lblDebug.Text = msg;
+
+					int mapErr = SaveNewMappedSequence(saveTemp);
+					if (mapErr == 0)
+					{
+						saveFile = dlgFileSave.FileName;
+						if (File.Exists(saveFile))
+						{
+							//TODO: Add Exception Catch
+							File.Delete(saveFile);
+						}
+						File.Copy(saveTemp, saveFile);
+						File.Delete(saveTemp);
+
+						if (chkAutoLaunch.Checked)
+						{
+							System.Diagnostics.Process.Start(saveFile);
+
+						}
+						//dirtyMap = false;
+						//btnSaveMap.Enabled = dirtyMap;
+						//txtMappingFile.Text = Path.GetFileName(mapFile);
+					} // end no errors saving map
+				}
 			} // end dialog result = OK
 			ImBusy(false);
 		}
@@ -2152,9 +2160,9 @@ namespace UtilORama4
 			}
 			else
 			{
-				LORMemberType4 sourceType = seqSource.Members.bySavedIndex[sourceThingSI].MemberType;
+				LORMemberType4 sourceType = seqSource.Members.BySavedIndex[sourceThingSI].MemberType;
 
-				if (sourceType != seqMaster.Members.bySavedIndex[masterThingSI].MemberType)
+				if (sourceType != seqMaster.Members.BySavedIndex[masterThingSI].MemberType)
 				{
 					ret = false;
 				}
@@ -2175,8 +2183,8 @@ namespace UtilORama4
 							if (sourceType == LORMemberType4.Track)
 							{
 								ret = false;
-								LORTrack4 sourceTrk = (LORTrack4)seqSource.Members.bySavedIndex[sourceThingSI];
-								LORTrack4 masterTrk = (LORTrack4)seqMaster.Members.bySavedIndex[masterThingSI];
+								LORTrack4 sourceTrk = (LORTrack4)seqSource.Members.BySavedIndex[sourceThingSI];
+								LORTrack4 masterTrk = (LORTrack4)seqMaster.Members.BySavedIndex[masterThingSI];
 								//if ((sourceTrk.itemSavedIndexes[0] < 0) || (masterTrk.itemSavedIndexes[0] < 0))
 								if ((sourceTrk.Members.Items.Count < 1) || (masterTrk.Members.Items.Count < 1))
 								{
@@ -2205,8 +2213,8 @@ namespace UtilORama4
 							{
 								if (sourceType == LORMemberType4.ChannelGroup)
 								{
-									LORChannelGroup4 sourceGrp = (LORChannelGroup4)seqSource.Members.bySavedIndex[sourceThingSI]; // seqSource.ChannelGroups[seqSource.savedIndexes[sourceThingSI].objIndex];
-									LORChannelGroup4 masterGrp = (LORChannelGroup4)seqMaster.Members.bySavedIndex[masterThingSI]; // seqMaster.ChannelGroups[seqMaster.savedIndexes[masterThingSI].objIndex];
+									LORChannelGroup4 sourceGrp = (LORChannelGroup4)seqSource.Members.BySavedIndex[sourceThingSI]; // seqSource.ChannelGroups[seqSource.savedIndexes[sourceThingSI].objIndex];
+									LORChannelGroup4 masterGrp = (LORChannelGroup4)seqMaster.Members.BySavedIndex[masterThingSI]; // seqMaster.ChannelGroups[seqMaster.savedIndexes[masterThingSI].objIndex];
 																																																				//if ((sourceGrp.itemSavedIndexes[0] < 0) || (masterGrp.itemSavedIndexes[0] < 0))
 									if ((sourceGrp.Members.Items.Count < 1) || (masterGrp.Members.Items.Count < 1))
 									{
@@ -2598,7 +2606,7 @@ namespace UtilORama4
 			else
 			{
 				// Fetch the source and master
-				//iLORMember4 sourceMember = seqSource.Members.bySavedIndex[theSourceSI];
+				//iLORMember4 sourceMember = seqSource.Members.BySavedIndex[theSourceSI];
 				int masterSI = masterMember.SavedIndex;
 				int sourceSI = sourceMember.SavedIndex;
 
@@ -2855,7 +2863,7 @@ namespace UtilORama4
 					// if not a group, is it an RGB channel?
 					if (masterMember.MemberType == LORMemberType4.RGBChannel)
 					{
-						//LORRGBChannel4 sourceRGBchannel = (LORRGBChannel4)seqSource.Members.bySavedIndex[theSourceSI];
+						//LORRGBChannel4 sourceRGBchannel = (LORRGBChannel4)seqSource.Members.BySavedIndex[theSourceSI];
 						LORRGBChannel4 masterRGBchannel = (LORRGBChannel4)masterMember;
 						LORRGBChannel4 sourceRGBchannel = (LORRGBChannel4)sourceMember;
 						//mapCount += UnmapMembers(masterRGBchannel.redChannel.SavedIndex, sourceRGBchannel.redChannel.SavedIndex, true);
@@ -3084,8 +3092,8 @@ namespace UtilORama4
 
 			mapMastToSrc = null;  // Array indexed by Master.SavedIndex, elements contain Source.SaveIndex
 			mappedSIs = null;
-			Array.Resize(ref mapMastToSrc, seqMaster.Members.allCount);
-			Array.Resize(ref mappedSIs, seqMaster.Members.allCount);
+			Array.Resize(ref mapMastToSrc, seqMaster.Members.AllCount);
+			Array.Resize(ref mappedSIs, seqMaster.Members.AllCount);
 			for (int i = 0; i < mapMastToSrc.Length; i++)
 			{
 				mapMastToSrc[i] = null;
@@ -3093,7 +3101,7 @@ namespace UtilORama4
 			}
 
 			mapSrcToMast = null; // Array indexed by Source.SavedIindex, elements are Lists of Master.SavedIndex-es
-			Array.Resize(ref mapSrcToMast, seqSource.Members.allCount);
+			Array.Resize(ref mapSrcToMast, seqSource.Members.AllCount);
 			for (int i = 0; i < mapSrcToMast.Length; i++)
 			{
 				mapSrcToMast[i] = new List<iLORMember4>();
@@ -3347,7 +3355,7 @@ namespace UtilORama4
 					{
 						if (masterMember.SavedIndex <= seqSource.Members.HighestSavedIndex)
 						{
-							iLORMember4 newSourceMember = seqSource.Members.bySavedIndex[masterMember.SavedIndex];
+							iLORMember4 newSourceMember = seqSource.Members.BySavedIndex[masterMember.SavedIndex];
 							if (masterMember.MemberType == newSourceMember.MemberType)
 							{
 								if (masterMember.Name.ToLower().CompareTo(newSourceMember.Name.ToLower()) == 0)
@@ -4436,9 +4444,9 @@ namespace UtilORama4
 				writer.WriteLine(lineOut);
 			}
 
-			if (sequence.Members.byName.ContainsKey(theName))
+			if (sequence.Members.ByName.ContainsKey(theName))
 			{
-				iLORMember4 r2 = sequence.Members.byName[theName];
+				iLORMember4 r2 = sequence.Members.ByName[theName];
 				if (r2.MemberType == theType)
 				{
 					ret = r2;
@@ -4543,7 +4551,7 @@ namespace UtilORama4
 						for (int i = 0; i < count; i++)
 						{
 							// Get the ID, perform a more thorough final fuzzy match, and save the score
-							iLORMember4 member = sequence.Members.bySavedIndex[SIs[i]];
+							iLORMember4 member = sequence.Members.BySavedIndex[SIs[i]];
 							//score = theName.RankEquality(member.Name, finalAlgorithms);
 
 							string source = theName;
@@ -4629,7 +4637,7 @@ namespace UtilORama4
 							for (int f = 0; f < count; f++)
 							{
 								lineOut = scores[f].ToString("0.0000") + " SI:";
-								iLORMember4 y = sequence.Members.bySavedIndex[SIs[f]];
+								iLORMember4 y = sequence.Members.BySavedIndex[SIs[f]];
 								lineOut += y.SavedIndex.ToString().PadLeft(5);
 								lineOut += "=\"" + y.Name + "\"";
 								writer.WriteLine(lineOut);
@@ -4640,7 +4648,7 @@ namespace UtilORama4
 						if (scores[count - 1] * 100 > minFinalMatchScore)
 						{
 							// Return the ID with the best qualifying final match
-							ret = sequence.Members.bySavedIndex[SIs[count - 1]];
+							ret = sequence.Members.BySavedIndex[SIs[count - 1]];
 							// Get name just for debugging
 							string msg = theName + " ~= " + ret.Name;
 							if (writeLog)
@@ -4648,7 +4656,7 @@ namespace UtilORama4
 								lineOut = "Best Match Is:";
 								writer.WriteLine(lineOut);
 								lineOut = scores[count - 1].ToString("0.0000") + " SI:";
-								iLORMember4 y = sequence.Members.bySavedIndex[SIs[count - 1]];
+								iLORMember4 y = sequence.Members.BySavedIndex[SIs[count - 1]];
 								lineOut += y.SavedIndex.ToString().PadLeft(5);
 								lineOut += "=\"" + y.Name + "\"";
 								writer.WriteLine(lineOut);
@@ -4733,7 +4741,7 @@ namespace UtilORama4
 		public iLORMember4 FindByName(string theName, LORMembership4 children, LORMemberType4 PartType, long preAlgorithm, double minPreMatch, long finalAlgorithms, double minFinalMatch, bool ignoreSelected)
 		{
 			iLORMember4 ret = null;
-			if (children.byName.TryGetValue(theName, out ret))
+			if (children.ByName.TryGetValue(theName, out ret))
 			{
 				// Found the name, is the type correct?
 				if (ret.MemberType != PartType)
@@ -4804,7 +4812,7 @@ namespace UtilORama4
 				for (int i = 0; i < count; i++)
 				{
 					// Get the ID, perform a more thorough final fuzzy match, and save the score
-					iLORMember4 child = children.bySavedIndex[SIs[i]];
+					iLORMember4 child = children.BySavedIndex[SIs[i]];
 					score = theName.RankEquality(child.Name, finalAlgorithms);
 					scores[i] = score;
 				}
@@ -4814,7 +4822,7 @@ namespace UtilORama4
 				if (scores[count - 1] > minFinalMatch)
 				{
 					// Return the ID with the best qualifying final match
-					ret = children.bySavedIndex[SIs[count - 1]];
+					ret = children.BySavedIndex[SIs[count - 1]];
 					// Get Name just for debugging
 					string msg = theName + " ~= " + ret.Name;
 				}

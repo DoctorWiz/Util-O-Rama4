@@ -29,7 +29,7 @@
 		private void InitializeComponent()
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSparkle));
-			this.dlgSaveFile = new System.Windows.Forms.SaveFileDialog();
+			this.dlgFileSave = new System.Windows.Forms.SaveFileDialog();
 			this.dlgColor = new System.Windows.Forms.ColorDialog();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.lblTotal = new System.Windows.Forms.Label();
@@ -766,7 +766,7 @@
 
 		#endregion
 
-		private System.Windows.Forms.SaveFileDialog dlgSaveFile;
+		private System.Windows.Forms.SaveFileDialog dlgFileSave;
 		private System.Windows.Forms.ColorDialog dlgColor;
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.Label lblTotal;

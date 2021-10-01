@@ -39,8 +39,8 @@
 			this.lblSequenceFile = new System.Windows.Forms.Label();
 			this.btnBrowseSelections = new System.Windows.Forms.Button();
 			this.txtSelectionsFile = new System.Windows.Forms.TextBox();
-			this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
-			this.dlgSaveFile = new System.Windows.Forms.SaveFileDialog();
+			this.dlgFileOpen = new System.Windows.Forms.OpenFileDialog();
+			this.dlgFileSave = new System.Windows.Forms.SaveFileDialog();
 			this.btnInvert = new System.Windows.Forms.Button();
 			this.btnSaveSelections = new System.Windows.Forms.Button();
 			this.lblSelectionCount = new System.Windows.Forms.Label();
@@ -205,9 +205,9 @@
 			this.txtSelectionsFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
 			this.txtSelectionsFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
 			// 
-			// dlgOpenFile
+			// dlgFileOpen
 			// 
-			this.dlgOpenFile.FileName = "openFileDialog1";
+			this.dlgFileOpen.FileName = "openFileDialog1";
 			// 
 			// btnInvert
 			// 
@@ -673,8 +673,8 @@
 		private System.Windows.Forms.Label lblSequenceFile;
 		private System.Windows.Forms.Button btnBrowseSelections;
 		private System.Windows.Forms.TextBox txtSelectionsFile;
-		private System.Windows.Forms.OpenFileDialog dlgOpenFile;
-		private System.Windows.Forms.SaveFileDialog dlgSaveFile;
+		private System.Windows.Forms.OpenFileDialog dlgFileOpen;
+		private System.Windows.Forms.SaveFileDialog dlgFileSave;
 		private System.Windows.Forms.ImageList imlTreeIcons;
 		private System.Windows.Forms.Button btnInvert;
 		private System.Windows.Forms.Button btnSaveSelections;

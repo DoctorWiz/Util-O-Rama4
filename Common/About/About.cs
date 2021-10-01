@@ -6,16 +6,17 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LORUtils4; using FileHelper;
+using LORUtils4;
+using FileHelper;
 
 namespace UtilORama4
 {
-	partial class About : Form
+	partial class frmAbout : Form
 	{
 
 		string applicationName = "Util-O-Rama";
 
-		public About()
+		public frmAbout()
 		{
 			InitializeComponent();
 
@@ -23,19 +24,20 @@ namespace UtilORama4
 
 			this.Text = String.Format("About {0}", applicationName);
 			this.labelProductName.Text = applicationName;
-			string ver = String.Format("Version {0}", AssemblyVersion);
-			string[] vparts = AssemblyVersion.Split('.');
-			if (Int16.Parse(vparts[1]) < 1)
-			{
-				ver = "Alpha " + ver + " α";
-			}
-			else
-			{
-				if (Int16.Parse(vparts[1]) < 2)
-				{
-					ver = "Beta " + ver + " β";
-				}
-			}
+			//string ver = String.Format("Version {0}", AssemblyVersion);
+			//string[] vparts = AssemblyVersion.Split('.');
+			//if (Int16.Parse(vparts[1]) < 1)
+			//{
+			//	ver = "Alpha " + ver + " α";
+			//}
+			//else
+			//{
+			//	if (Int16.Parse(vparts[1]) < 2)
+			//	{
+			//		ver = "Beta " + ver + " β";
+			//	}
+			//}
+			string ver = "Version " + Fyle.Version();
 
 			this.labelVersion.Text = ver;
 			//this.labelCopyright.Text = AssemblyCopyright;
@@ -45,9 +47,35 @@ namespace UtilORama4
 
 			labelSuite.Text = applicationName + labelSuite.Text;
 			labelFreeware.Text = applicationName + labelFreeware.Text;
+
+			int major = 4;
+			int minor = 0;
+			int patch = 0;
+			int build = 0;
+			Fyle.VersionNumbers(ref major, ref minor, ref patch, ref build);
+			if (patch < 2) // Patch version 0 and 1 are alpha releases
+			{
+				lblAlpha.Top = lblDisclaimer.Top;
+				lblDisclaimer.Top = lblAlpha.Top + lblAlpha.Height + 8;
+				this.Height = this.Height + lblAlpha.Height + 8;
+				lblAlpha.Visible = true;
+			}
+			else
+			{
+				if (patch < 5) // Patch versions 2, 3, and 4 are beta releases
+				{
+					lblBeta.Top = lblDisclaimer.Top;
+					lblDisclaimer.Top = lblBeta.Top + lblBeta.Height + 8;
+					this.Height = this.Height + lblBeta.Height + 8;
+					lblBeta.Visible = true;
+				}
+			}
+
+
+
 		}
 
-		public About(string utilityName)
+		public frmAbout(string utilityName)
 		{
 			InitializeComponent();
 

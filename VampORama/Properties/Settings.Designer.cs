@@ -1162,5 +1162,53 @@ namespace UtilORama4.Properties {
                 this["labelBarBeats"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool doChromagram {
+            get {
+                return ((bool)(this["doChromagram"]));
+            }
+            set {
+                this["doChromagram"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string methodChromagram {
+            get {
+                return ((string)(this["methodChromagram"]));
+            }
+            set {
+                this["methodChromagram"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string labelChromagram {
+            get {
+                return ((string)(this["labelChromagram"]));
+            }
+            set {
+                this["labelChromagram"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string alignChromagram {
+            get {
+                return ((string)(this["alignChromagram"]));
+            }
+            set {
+                this["alignChromagram"] = value;
+            }
+        }
     }
 }

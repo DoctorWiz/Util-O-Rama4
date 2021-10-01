@@ -246,8 +246,9 @@ namespace UtilORama4
 		private void pnlAbout_Click(object sender, EventArgs e)
 		{
 			ImBusy(true);
-			Form aboutBox = new About();
-			// aboutBox.setIcon = picAboutIcon.Image;
+			frmAbout aboutBox = new frmAbout();
+			aboutBox.picIcon.Image = picAboutIcon.Image;
+			aboutBox.Icon = this.Icon;
 			aboutBox.ShowDialog(this);
 			ImBusy(false);
 
@@ -897,19 +898,24 @@ namespace UtilORama4
 			dlgFileSave.InitialDirectory = initDir;
 			dlgFileSave.FileName = initFile;
 			dlgFileSave.CheckPathExists = true;
-			dlgFileSave.OverwritePrompt = true;
+			dlgFileSave.OverwritePrompt = false; // Use mine instead
 			dlgFileSave.Title = "Save Spreedsheet File As...";
 			DialogResult result = dlgFileSave.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
-				ImBusy(true);
-				string f = dlgFileSave.FileName;
-				txtSpreadsheet.Text = f;
-				heartOfTheSun.Spreadsheet = f;
-				int m =CompileSpreadsheet(f, true);
-				pnlStatus.Text = "Spreadsheet saved with " + m.ToString() + " lines.";
-				System.Diagnostics.Process.Start(@f);
-				ImBusy(false);
+				DialogResult ow = Fyle.SafeOverwriteFile(dlgFileSave.FileName);
+				if (ow == DialogResult.Yes)
+				{
+
+					ImBusy(true);
+					string f = dlgFileSave.FileName;
+					txtSpreadsheet.Text = f;
+					heartOfTheSun.Spreadsheet = f;
+					int m = CompileSpreadsheet(f, true);
+					pnlStatus.Text = "Spreadsheet saved with " + m.ToString() + " lines.";
+					System.Diagnostics.Process.Start(@f);
+					ImBusy(false);
+				}
 			} // end if (result = DialogResult.OK)
 
 		}

@@ -67,6 +67,8 @@ namespace LORUtils4
 		public const string FIELDtotalCentiseconds = " totalCentiseconds";
 		public const string FIELDstartCentisecond = " startCentisecond";
 		public const string FIELDendCentisecond = " endCentisecond";
+		//! EXPERIMENTAL, MAY CRASH SHOWTIME
+		public const string FIELDcomment = " comment";
 		public const string XMLINFO = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>";
 
 		public const string FILE_SEQ = "All Sequences *.las, *.lms|*.las;*.lms";
@@ -121,6 +123,12 @@ namespace LORUtils4
 		public const char DELIM2 = '⬘';
 		public const char DELIM3 = '⬗';
 		public const char DELIM4 = '⬙';
+		public const char DELIM5 = '֍';
+		public const string DELIMA = "🗲";
+		public const string DELIMB = "🧙";
+		public const string DELIMC = "👍";
+		public const string DELIMD = "🐕";
+		public const string DELIME = "💡";
 		private const char DELIM_Map = (char)164;  // ¤
 		private const char DELIM_SID = (char)177;  // ±
 		private const char DELIM_Name = (char)167;  // §
@@ -586,7 +594,7 @@ namespace LORUtils4
 				//nodeTag.nodeIndex = nodeIndex;
 
 				//LORChannelGroup4 theGroup = seq.ChannelGroups[groupIndex];
-				//LORCosmic4 device = (LORCosmic4)seq.Members.bySavedIndex[deviceSI];
+				//LORCosmic4 device = (LORCosmic4)seq.Members.BySavedIndex[deviceSI];
 
 				//iLORMember4 groupID = theGroup;
 
@@ -709,7 +717,7 @@ namespace LORUtils4
 
 		private static TreeNode TreeAddChannel(LORSequence4 seq, TreeNodeCollection baseNodes, LORChannel4 channel, bool selectedOnly)
 		{
-			//LORChannel4 channel = (LORChannel4)seq.Members.bySavedIndex[channelSI];
+			//LORChannel4 channel = (LORChannel4)seq.Members.BySavedIndex[channelSI];
 			int channelSI = channel.SavedIndex;
 			string nodeText = channel.Name;
 			TreeNode channelNode = baseNodes.Add(nodeText);
@@ -755,7 +763,7 @@ namespace LORUtils4
 			}
 			if (nodesBySI[RGBsi] != null)
 			{
-				iLORMember4 mbrR = seq.Members.bySavedIndex[RGBsi];
+				iLORMember4 mbrR = seq.Members.BySavedIndex[RGBsi];
 				if (mbrR.MemberType == LORMemberType4.RGBChannel)
 				{
 					//LORRGBChannel4 rgbChannel = (LORRGBChannel4)mbrR;

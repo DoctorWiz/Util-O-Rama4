@@ -31,8 +31,8 @@
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmList));
 			this.imlTreeIcons = new System.Windows.Forms.ImageList(this.components);
-			this.dlgSaveFile = new System.Windows.Forms.SaveFileDialog();
-			this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
+			this.dlgFileSave = new System.Windows.Forms.SaveFileDialog();
+			this.dlgFileOpen = new System.Windows.Forms.OpenFileDialog();
 			this.ttip = new System.Windows.Forms.ToolTip(this.components);
 			this.staStatus = new System.Windows.Forms.StatusStrip();
 			this.pnlHelp = new System.Windows.Forms.ToolStripStatusLabel();
@@ -97,9 +97,9 @@
 			this.imlTreeIcons.Images.SetKeyName(5, "GrnCh");
 			this.imlTreeIcons.Images.SetKeyName(6, "BluCh");
 			// 
-			// dlgOpenFile
+			// dlgFileOpen
 			// 
-			this.dlgOpenFile.FileName = "openFileDialog1";
+			this.dlgFileOpen.FileName = "openFileDialog1";
 			// 
 			// staStatus
 			// 
@@ -669,8 +669,8 @@
 		}
 
 		#endregion
-		private System.Windows.Forms.SaveFileDialog dlgSaveFile;
-		private System.Windows.Forms.OpenFileDialog dlgOpenFile;
+		private System.Windows.Forms.SaveFileDialog dlgFileSave;
+		private System.Windows.Forms.OpenFileDialog dlgFileOpen;
 		private System.Windows.Forms.ImageList imlTreeIcons;
 		private System.Windows.Forms.ToolTip ttip;
 		private System.Windows.Forms.StatusStrip staStatus;

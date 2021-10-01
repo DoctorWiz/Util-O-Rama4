@@ -401,7 +401,7 @@ namespace UtilORama4
 				if (LabelType == vamps.LabelType.NoteNamesUnicode) noteName = MusicalNotation.noteNamesUnicode[n];
 
 				LORChannel4 chs = Annotator.Sequence.FindChannel(PolyNoteNamePrefix + noteName, octoGroup.Members, true, true);
-				chs.color = SequenceFunctions.ChannelColor(g2);
+				chs.color = SequenceFunctions.ChannelColor(n);
 				chs.effects.Clear();
 				polyChannels[n] = chs;
 			}

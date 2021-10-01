@@ -119,16 +119,16 @@ namespace UtilORama4
 			//Console.WriteLine();
 			//Console.WriteLine();
 
-			//for (int i = 0; i < seqSource.Members.byName.Count; i++)
-			foreach(iLORMember4 sourceMember in seqSource.Members.byName.Values)
+			//for (int i = 0; i < seqSource.Members.ByName.Count; i++)
+			foreach(iLORMember4 sourceMember in seqSource.Members.ByName.Values)
 			{
-				//iLORMember4 sourceMember = seqSource.Members.byName[i];
+				//iLORMember4 sourceMember = seqSource.Members.ByName[i];
 				LORRGBChild4 rchild = LORRGBChild4.None;
 				LORMemberType4 tt = sourceMember.MemberType;
 
 				if (tt == LORMemberType4.Channel)
 				{
-					LORChannel4 ch = (LORChannel4)seqSource.Members.bySavedIndex[sourceMember.SavedIndex];
+					LORChannel4 ch = (LORChannel4)seqSource.Members.BySavedIndex[sourceMember.SavedIndex];
 					rchild = ch.rgbChild;
 				}
 					//string n = sourceMember.Name;
@@ -136,7 +136,7 @@ namespace UtilORama4
 					//Console.Write(sourceMember.SavedIndex);
 					//Console.Write("\t");
 
-					//iLORMember4 s2 = seqSource.Members.bySavedIndex[sourceMember.SavedIndex];
+					//iLORMember4 s2 = seqSource.Members.BySavedIndex[sourceMember.SavedIndex];
 					//string n2 = s2.Name;
 					//Console.Write(n2 + "\t");
 					//Console.Write(s2.SavedIndex);
@@ -164,10 +164,10 @@ namespace UtilORama4
 
 			if (chkUnmapped.Checked)
 			{
-				//for (int i = 0; i < seqMaster.Members.byName.Count; i++)
-				foreach (iLORMember4 masterMember in seqMaster.Members.byName.Values)
+				//for (int i = 0; i < seqMaster.Members.ByName.Count; i++)
+				foreach (iLORMember4 masterMember in seqMaster.Members.ByName.Values)
 				{
-					//int mSI = seqMaster.Members.byName[i].SavedIndex;
+					//int mSI = seqMaster.Members.ByName[i].SavedIndex;
 					if (mapMastToSrc[masterMember.SavedIndex] == null)
 					{
 						LORRGBChild4 rchild = LORRGBChild4.None;
@@ -194,7 +194,7 @@ namespace UtilORama4
 
 			for (int i = 0; i < savedIndexes.Length; i++)
 			{
-				iLORMember4 sourceMember = seqSource.Members.bySavedIndex[savedIndexes[i]];
+				iLORMember4 sourceMember = seqSource.Members.BySavedIndex[savedIndexes[i]];
 				LORRGBChild4 rchild = LORRGBChild4.None;
 				LORMemberType4 sourceType = sourceMember.MemberType;
 
@@ -229,7 +229,7 @@ namespace UtilORama4
 				c = lutils.DisplayOrderBuildLists(seqMaster, ref savedIndexes, ref levels, false, false);
 				for (int i = 0; i < savedIndexes.Length; i++)
 				{
-					iLORMember4 masterMember = seqMaster.Members.bySavedIndex[savedIndexes[i]];
+					iLORMember4 masterMember = seqMaster.Members.BySavedIndex[savedIndexes[i]];
 					int masterSI = masterMember.SavedIndex;
 					if (masterSI < mapMastToSrc.Length)
 					{
@@ -261,16 +261,16 @@ namespace UtilORama4
 
 		public void FillByMasterAlpha()
 		{
-			//for (int i = 0; i < seqMaster.Members.byName.Count; i++)
-			foreach(iLORMember4 masterMember in seqMaster.Members.byName.Values)
+			//for (int i = 0; i < seqMaster.Members.ByName.Count; i++)
+			foreach(iLORMember4 masterMember in seqMaster.Members.ByName.Values)
 			{
-				//iLORMember4 masterMember = seqMaster.Members.byName[i];
+				//iLORMember4 masterMember = seqMaster.Members.ByName[i];
 				LORRGBChild4 rchild = LORRGBChild4.None;
 				LORMemberType4 tt = masterMember.MemberType;
 
 				if (tt == LORMemberType4.Channel)
 				{
-					LORChannel4 ch = (LORChannel4)seqMaster.Members.bySavedIndex[masterMember.SavedIndex];
+					LORChannel4 ch = (LORChannel4)seqMaster.Members.BySavedIndex[masterMember.SavedIndex];
 					rchild = ch.rgbChild;
 				}
 
@@ -295,8 +295,8 @@ namespace UtilORama4
 
 			if (chkUnmapped.Checked)
 			{
-				//for (int i = 0; i < seqSource.Members.byName.Count; i++)
-				foreach (iLORMember4 sourceMember in seqSource.Members.byName.Values)
+				//for (int i = 0; i < seqSource.Members.ByName.Count; i++)
+				foreach (iLORMember4 sourceMember in seqSource.Members.ByName.Values)
 				{
 					int sourceSI = sourceMember.SavedIndex;
 					if (mapSrcToMast[sourceSI].Count == 0)
@@ -325,7 +325,7 @@ namespace UtilORama4
 
 			for (int i = 0; i < savedIndexes.Length; i++)
 			{
-				iLORMember4 masterMember = seqMaster.Members.bySavedIndex[savedIndexes[i]];
+				iLORMember4 masterMember = seqMaster.Members.BySavedIndex[savedIndexes[i]];
 				int masterSI = masterMember.SavedIndex;
 				LORRGBChild4 rchild = LORRGBChild4.None;
 				LORMemberType4 masterType = masterMember.MemberType;
@@ -358,7 +358,7 @@ namespace UtilORama4
 				for (int i = 0; i < savedIndexes.Length; i++)
 				{
 					int sourceSI = savedIndexes[i];
-					iLORMember4 sourceMember = seqSource.Members.bySavedIndex[sourceSI];
+					iLORMember4 sourceMember = seqSource.Members.BySavedIndex[sourceSI];
 					if (mapSrcToMast[sourceSI].Count == 0)
 					{
 						LORRGBChild4 rchild = LORRGBChild4.None;

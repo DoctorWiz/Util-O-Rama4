@@ -41,7 +41,7 @@ namespace UtilORama4
 			cboAlignBarBeats.Items.Clear();
 			cboAlignOnsets.Items.Clear();
 			cboAlignPolyphonic.Items.Clear();
-			cboAlignSpectrum.Items.Clear();
+			cboAlignChromagram.Items.Clear();
 			cboAlignTempo.Items.Clear();
 			cboAlignPitchKey.Items.Clear();
 			cboAlignSegments.Items.Clear();
@@ -50,7 +50,7 @@ namespace UtilORama4
 			cboAlignBarBeats.Items.Add(vamps.ALIGNNAMEnone);
 			cboAlignOnsets.Items.Add(vamps.ALIGNNAMEnone);
 			cboAlignPolyphonic.Items.Add(vamps.ALIGNNAMEnone);
-			cboAlignSpectrum.Items.Add(vamps.ALIGNNAMEnone);
+			cboAlignChromagram.Items.Add(vamps.ALIGNNAMEnone);
 			cboAlignTempo.Items.Add(vamps.ALIGNNAMEnone);
 			cboAlignPitchKey.Items.Add(vamps.ALIGNNAMEnone);
 			cboAlignSegments.Items.Add(vamps.ALIGNNAMEnone);
@@ -62,7 +62,7 @@ namespace UtilORama4
 				cboAlignBarBeats.Items.Add(vamps.ALIGNNAMEfps60l);
 				cboAlignOnsets.Items.Add(vamps.ALIGNNAMEfps60l);
 				cboAlignPolyphonic.Items.Add(vamps.ALIGNNAMEfps60l);
-				cboAlignSpectrum.Items.Add(vamps.ALIGNNAMEfps60l);
+				cboAlignChromagram.Items.Add(vamps.ALIGNNAMEfps60l);
 				cboAlignTempo.Items.Add(vamps.ALIGNNAMEfps60l);
 				cboAlignPitchKey.Items.Add(vamps.ALIGNNAMEfps60l);
 				cboAlignSegments.Items.Add(vamps.ALIGNNAMEfps60l);
@@ -74,7 +74,7 @@ namespace UtilORama4
 				cboAlignBarBeats.Items.Add(vamps.ALIGNNAMEfps40x);
 				cboAlignOnsets.Items.Add(vamps.ALIGNNAMEfps40x);
 				cboAlignPolyphonic.Items.Add(vamps.ALIGNNAMEfps40x);
-				cboAlignSpectrum.Items.Add(vamps.ALIGNNAMEfps40x);
+				cboAlignChromagram.Items.Add(vamps.ALIGNNAMEfps40x);
 				cboAlignTempo.Items.Add(vamps.ALIGNNAMEfps40x);
 				cboAlignPitchKey.Items.Add(vamps.ALIGNNAMEfps40x);
 				cboAlignSegments.Items.Add(vamps.ALIGNNAMEfps40x);
@@ -86,7 +86,7 @@ namespace UtilORama4
 				cboAlignBarBeats.Items.Add(vamps.ALIGNNAMEfps30l);
 				cboAlignOnsets.Items.Add(vamps.ALIGNNAMEfps30l);
 				cboAlignPolyphonic.Items.Add(vamps.ALIGNNAMEfps30l);
-				cboAlignSpectrum.Items.Add(vamps.ALIGNNAMEfps30l);
+				cboAlignChromagram.Items.Add(vamps.ALIGNNAMEfps30l);
 				cboAlignTempo.Items.Add(vamps.ALIGNNAMEfps30l);
 				cboAlignPitchKey.Items.Add(vamps.ALIGNNAMEfps30l);
 				cboAlignSegments.Items.Add(vamps.ALIGNNAMEfps30l);
@@ -98,7 +98,7 @@ namespace UtilORama4
 				cboAlignBarBeats.Items.Add(vamps.ALIGNNAMEfps20l);
 				cboAlignOnsets.Items.Add(vamps.ALIGNNAMEfps20l);
 				cboAlignPolyphonic.Items.Add(vamps.ALIGNNAMEfps20l);
-				cboAlignSpectrum.Items.Add(vamps.ALIGNNAMEfps20l);
+				cboAlignChromagram.Items.Add(vamps.ALIGNNAMEfps20l);
 				cboAlignTempo.Items.Add(vamps.ALIGNNAMEfps20l);
 				cboAlignPitchKey.Items.Add(vamps.ALIGNNAMEfps20l);
 				cboAlignSegments.Items.Add(vamps.ALIGNNAMEfps20l);
@@ -110,7 +110,7 @@ namespace UtilORama4
 				cboAlignBarBeats.Items.Add(vamps.ALIGNNAMEfps20x);
 				cboAlignOnsets.Items.Add(vamps.ALIGNNAMEfps20x);
 				cboAlignPolyphonic.Items.Add(vamps.ALIGNNAMEfps20x);
-				cboAlignSpectrum.Items.Add(vamps.ALIGNNAMEfps20x);
+				cboAlignChromagram.Items.Add(vamps.ALIGNNAMEfps20x);
 				cboAlignTempo.Items.Add(vamps.ALIGNNAMEfps20x);
 				cboAlignPitchKey.Items.Add(vamps.ALIGNNAMEfps20x);
 				cboAlignSegments.Items.Add(vamps.ALIGNNAMEfps20x);
@@ -122,7 +122,7 @@ namespace UtilORama4
 				cboAlignBarBeats.Items.Add(vamps.ALIGNNAMEfps10l);
 				cboAlignOnsets.Items.Add(vamps.ALIGNNAMEfps10l);
 				cboAlignPolyphonic.Items.Add(vamps.ALIGNNAMEfps10l);
-				cboAlignSpectrum.Items.Add(vamps.ALIGNNAMEfps10l);
+				cboAlignChromagram.Items.Add(vamps.ALIGNNAMEfps10l);
 				cboAlignTempo.Items.Add(vamps.ALIGNNAMEfps10l);
 				cboAlignPitchKey.Items.Add(vamps.ALIGNNAMEfps10l);
 				cboAlignSegments.Items.Add(vamps.ALIGNNAMEfps10l);
@@ -137,7 +137,7 @@ namespace UtilORama4
 
 				cboAlignOnsets.Items.Add(vamps.ALIGNNAMEbeatsFull);
 				cboAlignPolyphonic.Items.Add(vamps.ALIGNNAMEbeatsFull);
-				cboAlignSpectrum.Items.Add(vamps.ALIGNNAMEbeatsFull);
+				cboAlignChromagram.Items.Add(vamps.ALIGNNAMEbeatsFull);
 				cboAlignTempo.Items.Add(vamps.ALIGNNAMEbeatsFull);
 				cboAlignPitchKey.Items.Add(vamps.ALIGNNAMEbeatsFull);
 				cboAlignSegments.Items.Add(vamps.ALIGNNAMEbeatsFull);
@@ -145,7 +145,7 @@ namespace UtilORama4
 
 				cboAlignOnsets.Items.Add(vamps.ALIGNNAMEbeatsHalf);
 				cboAlignPolyphonic.Items.Add(vamps.ALIGNNAMEbeatsHalf);
-				cboAlignSpectrum.Items.Add(vamps.ALIGNNAMEbeatsHalf);
+				cboAlignChromagram.Items.Add(vamps.ALIGNNAMEbeatsHalf);
 				cboAlignTempo.Items.Add(vamps.ALIGNNAMEbeatsHalf);
 				cboAlignPitchKey.Items.Add(vamps.ALIGNNAMEbeatsHalf);
 				cboAlignSegments.Items.Add(vamps.ALIGNNAMEbeatsHalf);
@@ -153,7 +153,7 @@ namespace UtilORama4
 
 				cboAlignOnsets.Items.Add(vamps.ALIGNNAMEbeatsThird);
 				cboAlignPolyphonic.Items.Add(vamps.ALIGNNAMEbeatsThird);
-				cboAlignSpectrum.Items.Add(vamps.ALIGNNAMEbeatsThird);
+				cboAlignChromagram.Items.Add(vamps.ALIGNNAMEbeatsThird);
 				cboAlignTempo.Items.Add(vamps.ALIGNNAMEbeatsThird);
 				cboAlignPitchKey.Items.Add(vamps.ALIGNNAMEbeatsThird);
 				cboAlignSegments.Items.Add(vamps.ALIGNNAMEbeatsThird);
@@ -161,7 +161,7 @@ namespace UtilORama4
 
 				cboAlignOnsets.Items.Add(vamps.ALIGNNAMEbeatsQuarter);
 				cboAlignPolyphonic.Items.Add(vamps.ALIGNNAMEbeatsQuarter);
-				cboAlignSpectrum.Items.Add(vamps.ALIGNNAMEbeatsQuarter);
+				cboAlignChromagram.Items.Add(vamps.ALIGNNAMEbeatsQuarter);
 				cboAlignTempo.Items.Add(vamps.ALIGNNAMEbeatsQuarter);
 				cboAlignPitchKey.Items.Add(vamps.ALIGNNAMEbeatsQuarter);
 				cboAlignSegments.Items.Add(vamps.ALIGNNAMEbeatsQuarter);

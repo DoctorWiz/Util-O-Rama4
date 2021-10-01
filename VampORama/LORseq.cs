@@ -40,51 +40,55 @@ namespace UtilORama4
 			ifile = Fyle.FixInvalidFilenameCharacters(ifile);
 			ifile += ".lms";
 
-			dlgSaveFile.Filter = filter;
-			dlgSaveFile.InitialDirectory = idr;
-			dlgSaveFile.FileName = ifile;
-			dlgSaveFile.FilterIndex = 1;
-			dlgSaveFile.OverwritePrompt = true;
-			dlgSaveFile.Title = "Save Sequence As...";
-			dlgSaveFile.ValidateNames = true;
-			DialogResult result = dlgSaveFile.ShowDialog(this);
+			dlgFileSave.Filter = filter;
+			dlgFileSave.InitialDirectory = idr;
+			dlgFileSave.FileName = ifile;
+			dlgFileSave.FilterIndex = 1;
+			dlgFileSave.OverwritePrompt = false;
+			dlgFileSave.Title = "Save Sequence As...";
+			dlgFileSave.ValidateNames = true;
+			DialogResult result = dlgFileSave.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
-				ImBusy(true);
-				fileSeqName = dlgSaveFile.FileName;
-				txtSeqName.Text = Path.GetFileNameWithoutExtension(fileSeqName);
-				LORSequence4 newSeq = CreateNewSequence(fileSeqName);
-				//Annotator.Init(newSeq);
-				seq.info.author = lutils.DefaultAuthor;
-				//seq.info.music.Album = audioData.Album;
-				//seq.info.music.Artist = audioData.Artist;
-				//seq.info.music.Title = audioData.Title;
-				//seq.info.music.File = fileAudioLast;
-				//int cs = (int)Math.Round(Annotator.songTimeMS / 10D);
-				//centiseconds = cs;
-				//seq.Centiseconds = cs;
-				//Annotator.TotalCentiseconds = cs;
-				//ImportVampsToSequence();
-
-				int tc = Annotator.Sequence.Tracks.Count;
-
-
-				ExportSelectedVampsToLOR();
-				success = SaveSequence(fileSeqName);
-
-
-				tc = Annotator.Sequence.Tracks.Count;
-
-				//ImBusy(false);
-				if (success)
+				DialogResult ow = Fyle.SafeOverwriteFile(dlgFileSave.FileName);
+				if (ow == DialogResult.Yes)
 				{
-					if (chkAutolaunch.Checked)
-					{
-						System.Diagnostics.Process.Start(fileSeqName);
-					}
-				}
+					ImBusy(true);
+					fileSeqName = dlgFileSave.FileName;
+					txtSeqName.Text = Path.GetFileNameWithoutExtension(fileSeqName);
+					LORSequence4 newSeq = CreateNewSequence(fileSeqName);
+					//Annotator.Init(newSeq);
+					seq.info.author = lutils.DefaultAuthor;
+					//seq.info.music.Album = audioData.Album;
+					//seq.info.music.Artist = audioData.Artist;
+					//seq.info.music.Title = audioData.Title;
+					//seq.info.music.File = fileAudioLast;
+					//int cs = (int)Math.Round(Annotator.songTimeMS / 10D);
+					//centiseconds = cs;
+					//seq.Centiseconds = cs;
+					//Annotator.TotalCentiseconds = cs;
+					//ImportVampsToSequence();
 
-				
+					int tc = Annotator.Sequence.Tracks.Count;
+
+
+					ExportSelectedVampsToLOR();
+					success = SaveSequence(fileSeqName);
+
+
+					tc = Annotator.Sequence.Tracks.Count;
+
+					//ImBusy(false);
+					if (success)
+					{
+						if (chkAutolaunch.Checked)
+						{
+							System.Diagnostics.Process.Start(fileSeqName);
+						}
+					}
+
+
+				}
 			}
 			//btnBrowseSequence.Focus();
 			return success;
@@ -114,15 +118,15 @@ namespace UtilORama4
 			}
 
 
-			dlgOpenFile.Filter = filt;
-			dlgOpenFile.FilterIndex = 2;    //! Temporary?  Set back to 1 and/or change filter string?
-			dlgOpenFile.InitialDirectory = idir;
-			//dlgOpenFile.FileName = Properties.Settings.Default.fileSeqLast;
+			dlgFileOpen.Filter = filt;
+			dlgFileOpen.FilterIndex = 2;    //! Temporary?  Set back to 1 and/or change filter string?
+			dlgFileOpen.InitialDirectory = idir;
+			//dlgFileOpen.FileName = Properties.Settings.Default.fileSeqLast;
 
-			DialogResult dr = dlgOpenFile.ShowDialog(this);
+			DialogResult dr = dlgFileOpen.ShowDialog(this);
 			if (dr == DialogResult.OK)
 			{
-				fileCurrent = dlgOpenFile.FileName;
+				fileCurrent = dlgFileOpen.FileName;
 				txtSeqName.Text = Path.GetFileName(fileCurrent);
 				string ex = Path.GetExtension(fileCurrent).ToLower();
 				// If they picked an existing musical sequence
@@ -878,7 +882,7 @@ private int		ImportNoteOnsetChannels(LORChannelGroup4 onsGrp, xTimings xBeatsFul
 						{
 							//ch = seq.Channels[firstCobjIdx + note];
 							ch = noteChannels[note];
-							//Identity id = seq.Members.bySavedIndex[noteChannels[note]];
+							//Identity id = seq.Members.BySavedIndex[noteChannels[note]];
 							//if (id.PartType == LORMemberType4.Channel)
 							//{
 							//ch = (LORChannel4)id.Owner;

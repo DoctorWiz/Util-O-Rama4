@@ -573,21 +573,21 @@ namespace UtilORama4
 			}
 			string initFile = "";
 
-			dlgOpenFile.Filter = "Sequence Files *.las, *.lms|*.las;*.lms|Musical Sequences *.lms|*.lms|Animated Sequences *.las|*.las";
-			dlgOpenFile.DefaultExt = "*.lms";
-			dlgOpenFile.InitialDirectory = initDir;
-			dlgOpenFile.FileName = initFile;
-			dlgOpenFile.CheckFileExists = true;
-			dlgOpenFile.CheckPathExists = true;
-			dlgOpenFile.Multiselect = false;
-			dlgOpenFile.Title = "Select a Sequence...";
+			dlgFileOpen.Filter = "Sequence Files *.las, *.lms|*.las;*.lms|Musical Sequences *.lms|*.lms|Animated Sequences *.las|*.las";
+			dlgFileOpen.DefaultExt = "*.lms";
+			dlgFileOpen.InitialDirectory = initDir;
+			dlgFileOpen.FileName = initFile;
+			dlgFileOpen.CheckFileExists = true;
+			dlgFileOpen.CheckPathExists = true;
+			dlgFileOpen.Multiselect = false;
+			dlgFileOpen.Title = "Select a Sequence...";
 			//pnlAll.Enabled = false;
-			DialogResult result = dlgOpenFile.ShowDialog(this);
+			DialogResult result = dlgFileOpen.ShowDialog(this);
 
 			if (result == DialogResult.OK)
 			{
 				ImBusy(true);
-				string thisFile  = dlgOpenFile.FileName;
+				string thisFile  = dlgFileOpen.FileName;
 				txtFile.Text = thisFile;
 				Properties.Settings.Default.fileLast = thisFile;
 				Properties.Settings.Default.Save();
@@ -781,32 +781,36 @@ namespace UtilORama4
 				string ext = Path.GetExtension(fileSequence).ToLower();
 				string pth = Path.GetDirectoryName(fileSequence);
 				string fn = Path.GetFileNameWithoutExtension(fileSequence) + " CentiFixed";
-				dlgSaveFile.DefaultExt = ext;
-				dlgSaveFile.InitialDirectory = pth;
-				dlgSaveFile.FileName = fn;
+				dlgFileSave.DefaultExt = ext;
+				dlgFileSave.InitialDirectory = pth;
+				dlgFileSave.FileName = fn;
 				if (ext == "lms")
 				{
-					dlgSaveFile.Filter = "Musical Sequence *.lms|*.lms";
+					dlgFileSave.Filter = "Musical Sequence *.lms|*.lms";
 				}
 				else
 				{
-					dlgSaveFile.Filter = "Animated Sequence *.las|*.las";
+					dlgFileSave.Filter = "Animated Sequence *.las|*.las";
 				}
-				dlgSaveFile.FilterIndex = 1;
-				dlgSaveFile.OverwritePrompt = true;
-				dlgSaveFile.SupportMultiDottedExtensions = true;
-				dlgSaveFile.ValidateNames = true;
-				dlgSaveFile.Title = "Save Fixed Sequence As...";
-				DialogResult dr = dlgSaveFile.ShowDialog(this);
+				dlgFileSave.FilterIndex = 1;
+				dlgFileSave.OverwritePrompt = false; // Use mine instead
+				dlgFileSave.SupportMultiDottedExtensions = true;
+				dlgFileSave.ValidateNames = true;
+				dlgFileSave.Title = "Save Fixed Sequence As...";
+				DialogResult dr = dlgFileSave.ShowDialog(this);
 				if (dr == DialogResult.OK)
 				{
-					string newFile = dlgSaveFile.FileName;
+					DialogResult ow = Fyle.SafeOverwriteFile(dlgFileSave.FileName);
+					if (ow == DialogResult.Yes)
+					{
+						string newFile = dlgFileSave.FileName;
 
-					ImBusy(true);
-					CentiFixx(newCS);
-					seq.WriteSequenceFile(newFile);
-					SystemSounds.Exclamation.Play();
-					ImBusy(false);
+						ImBusy(true);
+						CentiFixx(newCS);
+						seq.WriteSequenceFile(newFile);
+						SystemSounds.Exclamation.Play();
+						ImBusy(false);
+					}
 				}
 			}
 			

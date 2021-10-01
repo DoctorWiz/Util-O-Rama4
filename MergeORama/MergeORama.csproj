@@ -82,6 +82,14 @@
     <Compile Include="..\..\COMMON\FileHelper.cs">
       <Link>FileHelper.cs</Link>
     </Compile>
+    <Compile Include="..\Common\About\About.cs">
+      <Link>About.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\Common\About\About.designer.cs">
+      <Link>About.designer.cs</Link>
+      <DependentUpon>About.cs</DependentUpon>
+    </Compile>
     <Compile Include="..\Common\Sequence4\LORUtils.cs">
       <Link>LORUtils.cs</Link>
     </Compile>
@@ -153,12 +161,6 @@
       <Link>VizGroup.cs</Link>
       <DependentUpon>LORUtils.cs</DependentUpon>
     </Compile>
-    <Compile Include="About.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="About.Designer.cs">
-      <DependentUpon>About.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmMerge.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -167,6 +169,10 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="..\Common\About\About.resx">
+      <Link>About.resx</Link>
+      <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmMerge.resx">
       <DependentUpon>frmMerge.cs</DependentUpon>
       <SubType>Designer</SubType>

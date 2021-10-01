@@ -266,8 +266,10 @@ namespace UtilORama4
 		private void pnlAbout_Click(object sender, EventArgs e)
 		{
 			ImBusy(true);
-			Form aboutBox = new About();
+			frmAbout aboutBox = new frmAbout();
 			// aboutBox.setIcon = picAboutIcon.Image;
+			aboutBox.Icon = this.Icon;
+			aboutBox.picIcon.Image = picAboutIcon.Image;
 			aboutBox.ShowDialog(this);
 			ImBusy(false);
 

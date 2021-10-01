@@ -275,7 +275,7 @@ namespace LORUtils4
 			if (myParent != null)
 			{
 				LORSequence4 mySeq = (LORSequence4)myParent;
-				iLORMember4 newPart = mySeq.Members.bySavedIndex[itemSavedIndex];
+				iLORMember4 newPart = mySeq.Members.BySavedIndex[itemSavedIndex];
 				this.MakeDirty(true);
 				ret = AddItem(newPart);
 			}

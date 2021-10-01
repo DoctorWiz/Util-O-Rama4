@@ -277,26 +277,30 @@ namespace UtilORama4
 
 		private void btnSaveLog_Click(object sender, EventArgs e)
 		{
-			dlgSaveFile.Title = "Save Output Log File As...";
-			dlgSaveFile.InitialDirectory = "shell:::{679F85CB-0220-4080-B29B-5540CC05AAB6}";
-			dlgSaveFile.Filter = "Log Files (*.log)|*.log|Text Files (*.txt)|*.txt";
-			dlgSaveFile.FilterIndex = 1;
-			dlgSaveFile.DefaultExt = ".log";
-			dlgSaveFile.FileName = "Sonic Annotator Output.log";
-			dlgSaveFile.CheckPathExists = true;
-			dlgSaveFile.OverwritePrompt = true;
-			dlgSaveFile.SupportMultiDottedExtensions = true;
-			dlgSaveFile.ValidateNames = true;
+			dlgFileSave.Title = "Save Output Log File As...";
+			dlgFileSave.InitialDirectory = "shell:::{679F85CB-0220-4080-B29B-5540CC05AAB6}";
+			dlgFileSave.Filter = "Log Files (*.log)|*.log|Text Files (*.txt)|*.txt";
+			dlgFileSave.FilterIndex = 1;
+			dlgFileSave.DefaultExt = ".log";
+			dlgFileSave.FileName = "Sonic Annotator Output.log";
+			dlgFileSave.CheckPathExists = true;
+			dlgFileSave.OverwritePrompt = false;
+			dlgFileSave.SupportMultiDottedExtensions = true;
+			dlgFileSave.ValidateNames = true;
 			//newFileIn = Path.GetFileNameWithoutExtension(fileCurrent) + " Part " + member.ToString(); // + ext;
 			//newFileIn = "Part " + member.ToString() + " of " + Path.GetFileNameWithoutExtension(fileCurrent);
 			//newFileIn = "Part Mother Fucker!!";
-			//dlgSaveFile.FileName = initFile;
-			DialogResult result = dlgSaveFile.ShowDialog(this);
+			//dlgFileSave.FileName = initFile;
+			DialogResult result = dlgFileSave.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
-				StreamWriter writer = new StreamWriter(dlgSaveFile.FileName);
-				writer.Write(txtOutput.Text);
-				writer.Close();
+				DialogResult ow = Fyle.SafeOverwriteFile(dlgFileSave.FileName);
+				if (ow == DialogResult.Yes)
+				{
+					StreamWriter writer = new StreamWriter(dlgFileSave.FileName);
+					writer.Write(txtOutput.Text);
+					writer.Close();
+				}
 			}
 		}
 

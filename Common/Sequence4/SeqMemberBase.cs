@@ -21,10 +21,18 @@ namespace LORUtils4
 		protected bool imSelected = false;
 		protected bool isDirty = false;
 		protected bool isExactMatch = false;
-		protected object myTag = null;
+		protected object myTag = null; // General Purpose Object
+		protected object myNodes = null;
+		
+		// Note: Mapped to is used by Map-O-Rama and possibly by other utils in the future
+		// Only holds a single member so only works for master-to-source mapping
+		// source-to-master mapping may include multiple members, and is stored in a List<iLORmember4> stored in the Tag property
 		protected iLORMember4 mappedTo = null;
+
 		protected int myUniverseNumber = lutils.UNDEFINED;
 		protected int myDMXAddress = lutils.UNDEFINED;
+		protected string myComment = ""; // Not really a comment somuch as a general purpose temporary string.
+		protected int miscNumber = 0; // General purpose temporary integer.  Use varies according to utility and function.
 
 		public LORMemberBase4()
 		{ }
@@ -41,13 +49,9 @@ namespace LORUtils4
 		}
 
 		public string Name
-		{
-			get
-			{
-				return myName;
-			}
-		}
-
+		{	get	{	return myName; } }
+		// Note: Name property does not have a 'set'.  Uses ChangeName() instead-- because this property is
+		// usually only set once and not usually changed thereafter.
 		public void ChangeName(string newName)
 		{
 			myName = newName;
@@ -102,13 +106,9 @@ namespace LORUtils4
 		}
 
 		public int Index
-		{
-			get
-			{
-				return myIndex;
-			}
-		}
-
+		{	get	{	return myIndex;	} }
+		// Note: Index property does not have a 'set'.  Uses SetIndex() instead-- because this property is
+		// usually only set once and not usually changed thereafter.
 		public void SetIndex(int theIndex)
 		{
 			myIndex = theIndex;
@@ -116,13 +116,9 @@ namespace LORUtils4
 		}
 
 		public int SavedIndex
-		{
-			get
-			{
-				return mySavedIndex;
-			}
-		}
-
+		{	get	{	return mySavedIndex; } }
+		// Note: SavedIndex property does not have a 'set'.  Uses SetSavedIndex() instead-- because this property is
+		// usually only set once and not usually changed thereafter.
 		public void SetSavedIndex(int theSavedIndex)
 		{
 			mySavedIndex = theSavedIndex;
@@ -130,25 +126,12 @@ namespace LORUtils4
 		}
 
 		public int AltSavedIndex
-		{
-			get
-			{
-				return myAltSavedIndex;
-			}
-			set
-			{
-				myAltSavedIndex = value;
-			}
-		}
+		{	get	{	return myAltSavedIndex;	}	set	{	myAltSavedIndex = value; } }
 
 		public iLORMember4 Parent
-		{
-			get
-			{
-				return myParent;
-			}
-		}
-
+		{	get	{	return myParent; } }
+		// Note: Parent property does not have a 'set'.  Uses SetParent() instead-- because this property is
+		// usually only set once and not usually changed thereafter
 		public void SetParent(iLORMember4 newParent)
 		{
 			if (newParent != null)
@@ -177,26 +160,13 @@ namespace LORUtils4
 		}
 
 		public bool Selected
-		{
-			get
-			{
-				return imSelected;
-			}
-			set
-			{
-				imSelected = value;
-			}
-		}
+		{	get	{	return imSelected; } set { imSelected = value; } }
 
 		public bool Dirty
-		{
-			get
-			{
-				return isDirty;
-			}
-		}
-
-		public void MakeDirty(bool dirtyState)
+		{	get	{	return isDirty;	}	}
+		// Note: Dirty flag is read-only.  Uses MakeDirty() instead-- to set it
+		// and optionally to clear it.
+		public void MakeDirty(bool dirtyState = true)
 		{
 			if (dirtyState)
 			{
@@ -208,13 +178,10 @@ namespace LORUtils4
 			isDirty = dirtyState;
 		}
 
+		// This property is included here to be part of the base interface
+		// But every subclass should override it and return their own value
 		public LORMemberType4 MemberType
-		{
-			get
-			{
-				return LORMemberType4.Channel;
-			}
-		}
+		{	get	{	return LORMemberType4.None;	}	}
 
 		public int CompareTo(iLORMember4 other)
 		{
@@ -252,16 +219,22 @@ namespace LORUtils4
 			return result;
 		}
 
+		// This function is included here to be part of the base interface
+		// But every subclass should override it and return their own value
 		public string LineOut()
 		{
 			return "";
 		}
 
+		// The 'Name' property is the default return value for ToString()
+		// But subclasses may override it, for sorting, or other reasons
 		public override string ToString()
 		{
 			return myName;
 		}
 
+		// This function is included here to be a skeleton for the base interface
+		// But every subclass should override it and return their own value
 		public void Parse(string lineIn)
 		{
 			//LORSequence4 Parent = ID.Parent;
@@ -275,6 +248,7 @@ namespace LORUtils4
 		{
 			get
 			{
+				// Sneaky trick: Uses AltSavedIndex to tell if it has been renumbered and thus written
 				bool r = false;
 				if (myAltSavedIndex > lutils.UNDEFINED) r = true;
 				return r;
@@ -297,26 +271,24 @@ namespace LORUtils4
 			mbr.myAltSavedIndex = myAltSavedIndex;
 			mbr.imSelected = imSelected;
 			mbr.Tag = myTag;
+			mbr.myNodes = myNodes;
 			mbr.mappedTo = mappedTo;
 			mbr.isDirty = isDirty;
 			mbr.myParent = myParent;
 			mbr.isExactMatch = isExactMatch;
 			mbr.myUniverseNumber = myUniverseNumber;
 			mbr.myDMXAddress = myDMXAddress;
+			mbr.myComment = myComment;
 			return mbr;
 		}
 
 		public object Tag
-		{
-			get
-			{
-				return myTag;
-			}
-			set
-			{
-				myTag = value;
-			}
-		}
+		{ get { return myTag; } set { myTag = value; } }
+
+		// Intended to normally hold a List<TreeNodeAdv> (List of SyncFusion TreeView Nodes)
+		// But not specifically typed here so as not to require SyncFusion if not used
+		public object Nodes
+		{ get { return myTag; } set { myTag = value; } }
 
 		public iLORMember4 MapTo
 		{
@@ -326,33 +298,38 @@ namespace LORUtils4
 			}
 			set
 			{
-				if (value.MemberType == LORMemberType4.Channel)
+				// Hmmmmmmm, do I really want to enforce this??
+				if (value.MemberType == this.MemberType)
 				{
 					mappedTo = value;
 				}
 				else
 				{
-					System.Diagnostics.Debugger.Break();
+					string msg = "Why are you trying to map a " + LORSeqEnums4.MemberName(value.MemberType);
+					msg += " a " + LORSeqEnums4.MemberName(this.MemberType) + " ?!?";
+					Fyle.BUG(msg);
+					// Now that I've been warned, go ahead and do it anyway.
+					// (Unless I tell the debugger to step over this next line...)
+					mappedTo = value;
 				}
 			}
 		}
 
 		public bool ExactMatch
 		{ get { return isExactMatch; } set { isExactMatch = value; } }
+		
+		// Properties are read-only and overridden by subclasses to pull the correct values from the appropriate
+		// locations.  Included in base class only as a placeholder.  (No way to set them in base class)
 		public int UniverseNumber
-		{
-			get
-			{
-				return myUniverseNumber;
-			}
-		}
+		{	get	{	return myUniverseNumber; } }
 		public int DMXAddress
-		{
-			get
-			{
-				return myDMXAddress;
-			}
-		}
+		{	get	{	return myDMXAddress; } }
 
-	} // End class LORMemberBase4
+		// Not supported by ShowTime, and not saved along with the sequence file.  Included only for temporary use in Util-O-Rama
+		public string Comment
+		{ get { return myComment; } set { myComment = value; } }
+		public int RuleID
+		{ get { return miscNumber; } set { miscNumber = value; } }
+
+	}// End class LORMemberBase4
 }

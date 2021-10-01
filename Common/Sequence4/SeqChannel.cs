@@ -108,6 +108,12 @@ namespace LORUtils4
 			mySavedIndex = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
 			color = (int)lutils.getKeyValue(lineIn, FIELDcolor);
 			myCentiseconds = lutils.getKeyValue(lineIn, lutils.FIELDcentiseconds);
+			
+			//! NOT supported by ShowTime.  Will not exist in sequence files saved from ShowTime (return blank "")
+			// Preserved only in sequence files saved in Util-O-Rama
+			// Only intended for temporary use within Util-O-Rama anyway so no big deal
+			myComment = lutils.getKeyWord(lineIn, lutils.FIELDcomment);
+
 			output.Parse(lineIn);
 			//if (myParent != null) myParent.MakeDirty(true);
 		}
@@ -171,6 +177,15 @@ namespace LORUtils4
 			ret.Append(lutils.FIELDEQ);
 			ret.Append(myAltSavedIndex.ToString());
 			ret.Append(lutils.ENDQT);
+
+
+			//! EXPERIMENTAL-- MAY CRASH SHOWTIME
+			ret.Append(lutils.FIELDcomment);
+			ret.Append(lutils.FIELDEQ);
+			ret.Append(myComment);
+			ret.Append(lutils.ENDQT);
+
+
 
 			// Are there any effects for this channel?
 			if (!noEffects && (effects.Count > 0))

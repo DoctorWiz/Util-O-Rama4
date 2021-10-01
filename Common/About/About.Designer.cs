@@ -1,6 +1,6 @@
 ﻿namespace UtilORama4
 {
-	partial class About
+	partial class frmAbout
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -27,7 +27,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(About));
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAbout));
 			this.labelVersion = new System.Windows.Forms.Label();
 			this.labelCopyright = new System.Windows.Forms.Label();
 			this.okButton = new System.Windows.Forms.Button();
@@ -48,17 +48,21 @@
 			this.labelUtils = new System.Windows.Forms.LinkLabel();
 			this.label5 = new System.Windows.Forms.Label();
 			this.label1 = new System.Windows.Forms.Label();
-			this.label2 = new System.Windows.Forms.Label();
+			this.lblDisclaimer = new System.Windows.Forms.Label();
+			this.lblAlpha = new System.Windows.Forms.Label();
+			this.lblBeta = new System.Windows.Forms.Label();
+			this.picWizard = new System.Windows.Forms.PictureBox();
 			((System.ComponentModel.ISupportInitialize)(this.picIcon)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.picGPL)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.picLOR)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.picWizard)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// labelVersion
 			// 
 			this.labelVersion.AutoSize = true;
 			this.labelVersion.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelVersion.Location = new System.Drawing.Point(150, 47);
+			this.labelVersion.Location = new System.Drawing.Point(150, 50);
 			this.labelVersion.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
 			this.labelVersion.MaximumSize = new System.Drawing.Size(0, 17);
 			this.labelVersion.Name = "labelVersion";
@@ -71,18 +75,18 @@
 			// 
 			this.labelCopyright.AutoSize = true;
 			this.labelCopyright.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelCopyright.Location = new System.Drawing.Point(150, 75);
+			this.labelCopyright.Location = new System.Drawing.Point(150, 80);
 			this.labelCopyright.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
 			this.labelCopyright.Name = "labelCopyright";
-			this.labelCopyright.Size = new System.Drawing.Size(155, 19);
+			this.labelCopyright.Size = new System.Drawing.Size(163, 19);
 			this.labelCopyright.TabIndex = 28;
-			this.labelCopyright.Text = "Copyright © 2021... by";
+			this.labelCopyright.Text = "Copyright © 2021+... by";
 			// 
 			// okButton
 			// 
 			this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.okButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.okButton.Location = new System.Drawing.Point(348, 319);
+			this.okButton.Location = new System.Drawing.Point(348, 318);
 			this.okButton.Name = "okButton";
 			this.okButton.Size = new System.Drawing.Size(75, 23);
 			this.okButton.TabIndex = 31;
@@ -243,7 +247,7 @@
 			// labelSuite
 			// 
 			this.labelSuite.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelSuite.Location = new System.Drawing.Point(310, 12);
+			this.labelSuite.Location = new System.Drawing.Point(310, 10);
 			this.labelSuite.Name = "labelSuite";
 			this.labelSuite.Size = new System.Drawing.Size(113, 35);
 			this.labelSuite.TabIndex = 46;
@@ -254,7 +258,7 @@
 			this.labelUtils.AutoEllipsis = true;
 			this.labelUtils.AutoSize = true;
 			this.labelUtils.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelUtils.Location = new System.Drawing.Point(309, 41);
+			this.labelUtils.Location = new System.Drawing.Point(309, 39);
 			this.labelUtils.Name = "labelUtils";
 			this.labelUtils.Size = new System.Drawing.Size(70, 14);
 			this.labelUtils.TabIndex = 47;
@@ -265,7 +269,7 @@
 			// label5
 			// 
 			this.label5.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label5.Location = new System.Drawing.Point(376, 41);
+			this.label5.Location = new System.Drawing.Point(376, 39);
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(35, 14);
 			this.label5.TabIndex = 48;
@@ -280,22 +284,57 @@
 			this.label1.TabIndex = 49;
 			this.label1.Text = "of the                         community.";
 			// 
-			// label2
+			// lblDisclaimer
 			// 
-			this.label2.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label2.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-			this.label2.Location = new System.Drawing.Point(9, 292);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(333, 57);
-			this.label2.TabIndex = 50;
-			this.label2.Text = resources.GetString("label2.Text");
+			this.lblDisclaimer.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblDisclaimer.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+			this.lblDisclaimer.Location = new System.Drawing.Point(9, 292);
+			this.lblDisclaimer.Name = "lblDisclaimer";
+			this.lblDisclaimer.Size = new System.Drawing.Size(333, 57);
+			this.lblDisclaimer.TabIndex = 50;
+			this.lblDisclaimer.Text = resources.GetString("lblDisclaimer.Text");
 			// 
-			// About
+			// lblAlpha
+			// 
+			this.lblAlpha.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblAlpha.ForeColor = System.Drawing.Color.Chocolate;
+			this.lblAlpha.Location = new System.Drawing.Point(9, 360);
+			this.lblAlpha.Name = "lblAlpha";
+			this.lblAlpha.Size = new System.Drawing.Size(333, 82);
+			this.lblAlpha.TabIndex = 51;
+			this.lblAlpha.Text = resources.GetString("lblAlpha.Text");
+			this.lblAlpha.Visible = false;
+			// 
+			// lblBeta
+			// 
+			this.lblBeta.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblBeta.ForeColor = System.Drawing.Color.Purple;
+			this.lblBeta.Location = new System.Drawing.Point(9, 455);
+			this.lblBeta.Name = "lblBeta";
+			this.lblBeta.Size = new System.Drawing.Size(333, 72);
+			this.lblBeta.TabIndex = 52;
+			this.lblBeta.Text = resources.GetString("lblBeta.Text");
+			this.lblBeta.Visible = false;
+			// 
+			// picWizard
+			// 
+			this.picWizard.Image = ((System.Drawing.Image)(resources.GetObject("picWizard.Image")));
+			this.picWizard.Location = new System.Drawing.Point(146, 120);
+			this.picWizard.Name = "picWizard";
+			this.picWizard.Size = new System.Drawing.Size(48, 48);
+			this.picWizard.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+			this.picWizard.TabIndex = 53;
+			this.picWizard.TabStop = false;
+			// 
+			// frmAbout
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(435, 354);
-			this.Controls.Add(this.label2);
+			this.ClientSize = new System.Drawing.Size(435, 353);
+			this.Controls.Add(this.picWizard);
+			this.Controls.Add(this.lblBeta);
+			this.Controls.Add(this.lblAlpha);
+			this.Controls.Add(this.lblDisclaimer);
 			this.Controls.Add(this.label5);
 			this.Controls.Add(this.labelUtils);
 			this.Controls.Add(this.labelSuite);
@@ -320,7 +359,7 @@
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
-			this.Name = "About";
+			this.Name = "frmAbout";
 			this.Padding = new System.Windows.Forms.Padding(9);
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -330,6 +369,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.picIcon)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.picGPL)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.picLOR)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.picWizard)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -356,6 +396,9 @@
 		private System.Windows.Forms.LinkLabel labelUtils;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.Label lblDisclaimer;
+		private System.Windows.Forms.Label lblAlpha;
+		private System.Windows.Forms.Label lblBeta;
+		private System.Windows.Forms.PictureBox picWizard;
 	}
 }

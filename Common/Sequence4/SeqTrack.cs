@@ -163,7 +163,7 @@ namespace LORUtils4
 						if (mySeq.TimingGrids[i].SaveID == tempGridSaveID)
 						{
 							tg = mySeq.TimingGrids[i];
-							i = mySeq.TimingGrids.Count; // force exit of loop
+							i = mySeq.TimingGrids.Count; // Loopus Interruptus
 						}
 					}
 					if (tg == null)

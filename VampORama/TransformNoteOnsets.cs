@@ -401,7 +401,7 @@ namespace UtilORama4
 				} // end enough parts
 			} // end while loop more lines remaining
 			reader.Close();
-			Fyle.BUG("Check output window.  Did the alignments work as expected?");
+			//Fyle.BUG("Check output window.  Did the alignments work as expected?");
 			return err;
 		} // end Beats
 

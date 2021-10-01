@@ -34,8 +34,8 @@
 			this.pnlProgress = new System.Windows.Forms.ToolStripProgressBar();
 			this.pnlStatus = new System.Windows.Forms.ToolStripStatusLabel();
 			this.pnlAbout = new System.Windows.Forms.ToolStripStatusLabel();
-			this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
-			this.dlgSaveFile = new System.Windows.Forms.SaveFileDialog();
+			this.dlgFileOpen = new System.Windows.Forms.OpenFileDialog();
+			this.dlgFileSave = new System.Windows.Forms.SaveFileDialog();
 			this.btnBrowseSeq = new System.Windows.Forms.Button();
 			this.btnSave = new System.Windows.Forms.Button();
 			this.txtFile = new System.Windows.Forms.TextBox();
@@ -109,9 +109,9 @@
 			this.pnlAbout.Text = "About...";
 			this.pnlAbout.Click += new System.EventHandler(this.pnlAbout_Click);
 			// 
-			// dlgOpenFile
+			// dlgFileOpen
 			// 
-			this.dlgOpenFile.FileName = "openFileDialog1";
+			this.dlgFileOpen.FileName = "openFileDialog1";
 			// 
 			// btnBrowseSeq
 			// 
@@ -280,8 +280,8 @@
 		private System.Windows.Forms.ToolStripProgressBar pnlProgress;
 		private System.Windows.Forms.ToolStripStatusLabel pnlStatus;
 		private System.Windows.Forms.ToolStripStatusLabel pnlAbout;
-		private System.Windows.Forms.OpenFileDialog dlgOpenFile;
-		private System.Windows.Forms.SaveFileDialog dlgSaveFile;
+		private System.Windows.Forms.OpenFileDialog dlgFileOpen;
+		private System.Windows.Forms.SaveFileDialog dlgFileSave;
 		private System.Windows.Forms.Button btnBrowseSeq;
 		private System.Windows.Forms.Button btnSave;
 		private System.Windows.Forms.TextBox txtFile;

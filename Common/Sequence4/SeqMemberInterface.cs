@@ -13,84 +13,54 @@ namespace LORUtils4
 	public interface iLORMember4 : IComparable<iLORMember4>
 	{
 		string Name
-		{
-			get;
-		}
+		{	get; }
 		void ChangeName(string newName);
 		int Centiseconds
-		{
-			get;
-			set;
-		}
+		{	get; set;	}
 		int Index
-		{
-			get;
-		}
+		{	get; }
 		void SetIndex(int theIndex);
 		int SavedIndex
-		{
-			get;
-		}
+		{	get; }
 		void SetSavedIndex(int theSavedIndex);
 		int AltSavedIndex
-		{
-			get;
-			set;
-		}
+		{	get; set;	}
 		iLORMember4 Parent
-		{
-			get;
-		}
+		{	get; }
 		void SetParent(iLORMember4 newParent);
 		// For Channels, RGBChannels, ChannelGroups, Tracks, Timings, etc.  This will be the parent Sequence
 		// For VizChannels and VizDrawObjects this will be the parent Visualization
 		bool Selected
-		{
-			get;
-			set;
-		}
+		{	get; set;	}
 		bool Dirty
-		{
-			get;
-		}
-		void MakeDirty(bool dirtyState);
+		{	get; }
+		void MakeDirty(bool dirtyState = true);
 		LORMemberType4 MemberType
-		{
-			get;
-		}
+		{	get; }
 		int CompareTo(iLORMember4 otherObj);
 		string LineOut();
 		string ToString();
 		void Parse(string lineIn);
 		bool Written
-		{
-			get;
-		}
+		{	get; }
 		iLORMember4 Clone();
 		iLORMember4 Clone(string newName);
 		object Tag
-		{
-			get;
-			set;
-		}
+		{	get; set; }
+		object Nodes
+		{ get; set; }
 		iLORMember4 MapTo
-		{
-			get;
-			set;
-		}
+		{	get; set;	}
 		bool ExactMatch
-		{
-			get;
-			set;
-		}
+		{	get; set;	}
 		int UniverseNumber
-		{
-			get;
-		}
+		{	get; }
 		int DMXAddress
-		{
-			get;
-		}
+		{	get; }
+		string Comment
+		{ get; set; }
+		int RuleID
+		{ get; set; }
 
 	}
 }

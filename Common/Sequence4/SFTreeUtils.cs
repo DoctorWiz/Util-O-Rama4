@@ -442,7 +442,7 @@ namespace LORUtils4
 				//nodeTag.nodeIndex = nodeIndex;
 
 				//LORChannelGroup4 theGroup = seq.ChannelGroups[groupIndex];
-				//LORCosmic4 device = (LORCosmic4)seq.Members.bySavedIndex[deviceSI];
+				//LORCosmic4 device = (LORCosmic4)seq.Members.BySavedIndex[deviceSI];
 
 				//iLORMember4 groupID = theGroup;
 
@@ -566,7 +566,7 @@ namespace LORUtils4
 
 		private static TreeNodeAdv TreeAddChannel(LORSequence4 seq, TreeNodeAdvCollection baseNodes, LORChannel4 channel, bool selectedOnly)
 		{
-			//LORChannel4 channel = (LORChannel4)seq.Members.bySavedIndex[channelSI];
+			//LORChannel4 channel = (LORChannel4)seq.Members.BySavedIndex[channelSI];
 			int channelSI = channel.SavedIndex;
 			string nodeText = channel.Name;
 			TreeNodeAdv channelNode = new TreeNodeAdv(nodeText);
@@ -614,7 +614,7 @@ namespace LORUtils4
 			}
 			if (nodesBySI[RGBsi] != null)
 			{
-				iLORMember4 mbrR = seq.Members.bySavedIndex[RGBsi];
+				iLORMember4 mbrR = seq.Members.BySavedIndex[RGBsi];
 				if (mbrR.MemberType == LORMemberType4.RGBChannel)
 				{
 					//LORRGBChannel4 rgbChannel = (LORRGBChannel4)mbrR;

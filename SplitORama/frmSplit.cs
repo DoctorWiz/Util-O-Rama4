@@ -101,20 +101,20 @@ namespace UtilORama4
 
 			string filt = "All Sequences (*.las, *.lms, *.lcc)|*.las;*.lms;*.lcc|Musical Sequences only (*.lms)|*.lms";
 			filt += "|Animated Sequences only (*.las)|*.las|LORChannel4 Configurations only(*.lcc)|*.lcc";
-			dlgOpenFile.Filter = filt;
-			dlgOpenFile.DefaultExt = "*.lms";
-			dlgOpenFile.InitialDirectory = initDir;
-			dlgOpenFile.FileName = initFile;
-			dlgOpenFile.CheckFileExists = true;
-			dlgOpenFile.CheckPathExists = true;
-			dlgOpenFile.Multiselect = false;
-			dlgOpenFile.Title = "Select a Sequence...";
+			dlgFileOpen.Filter = filt;
+			dlgFileOpen.DefaultExt = "*.lms";
+			dlgFileOpen.InitialDirectory = initDir;
+			dlgFileOpen.FileName = initFile;
+			dlgFileOpen.CheckFileExists = true;
+			dlgFileOpen.CheckPathExists = true;
+			dlgFileOpen.Multiselect = false;
+			dlgFileOpen.Title = "Select a Sequence...";
 			//pnlAll.Enabled = false;
-			DialogResult result = dlgOpenFile.ShowDialog(this);
+			DialogResult result = dlgFileOpen.ShowDialog(this);
 
 			if (result == DialogResult.OK)
 			{
-				LoadSequence(dlgOpenFile.FileName, true);
+				LoadSequence(dlgFileOpen.FileName, true);
 
 
 
@@ -1315,25 +1315,28 @@ namespace UtilORama4
 				}
 			}
 
-			dlgSaveFile.Filter = filt;
-			dlgSaveFile.FilterIndex = 1;
-			//dlgSaveFile.FileName = Path.GetFullPath(fileSeqCur) + Path.GetFileNameWithoutExtension(fileSeqCur) + " Part " + member.ToString() + ext;
-			dlgSaveFile.CheckPathExists = true;
-			dlgSaveFile.InitialDirectory = initDir;
-			dlgSaveFile.DefaultExt = ext;
-			dlgSaveFile.OverwritePrompt = true;
-			dlgSaveFile.Title = tit;
-			dlgSaveFile.SupportMultiDottedExtensions = true;
-			dlgSaveFile.ValidateNames = true;
+			dlgFileSave.Filter = filt;
+			dlgFileSave.FilterIndex = 1;
+			//dlgFileSave.FileName = Path.GetFullPath(fileSeqCur) + Path.GetFileNameWithoutExtension(fileSeqCur) + " Part " + member.ToString() + ext;
+			dlgFileSave.CheckPathExists = true;
+			dlgFileSave.InitialDirectory = initDir;
+			dlgFileSave.DefaultExt = ext;
+			dlgFileSave.OverwritePrompt = false;
+			dlgFileSave.Title = tit;
+			dlgFileSave.SupportMultiDottedExtensions = true;
+			dlgFileSave.ValidateNames = true;
 			//newFileIn = Path.GetFileNameWithoutExtension(fileSeqCur) + " Part " + member.ToString(); // + ext;
 																																														 //newFileIn = "Part " + member.ToString() + " of " + Path.GetFileNameWithoutExtension(fileSeqCur);
 																																														 //newFileIn = "Part Mother Fucker!!";
-			dlgSaveFile.FileName = initFile;
-			DialogResult result = dlgSaveFile.ShowDialog(this);
+			dlgFileSave.FileName = initFile;
+			DialogResult result = dlgFileSave.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
-				SaveSequence(dlgSaveFile.FileName);
-			}
+				DialogResult ow = Fyle.SafeOverwriteFile(dlgFileSave.FileName);
+				if (ow == DialogResult.Yes)
+				{
+					SaveSequence(dlgFileSave.FileName);
+				}
 				/*
 				//! For testing only...
 					frmOptions options = new frmOptions();
@@ -1364,7 +1367,7 @@ namespace UtilORama4
 				//}
 				this.Cursor = Cursors.Default;
 				*/
-			
+			}
 		} // end Save File As
 
 		private void SaveSequence(string newFilename)
@@ -1395,9 +1398,9 @@ namespace UtilORama4
 
 		private void btnSaveSelections_Click(object sender, EventArgs e)
 		{
-			dlgSaveFile.DefaultExt = "ChSel";
-			dlgSaveFile.Filter = "LORChannel4 Selections|*.ChSel";
-			dlgSaveFile.FilterIndex = 0;
+			dlgFileSave.DefaultExt = "ChSel";
+			dlgFileSave.Filter = "LORChannel4 Selections|*.ChSel";
+			dlgFileSave.FilterIndex = 0;
 			string initDir = "";
 			string initFile = "";
 			if (fileSelCur.Length > 4)
@@ -1426,39 +1429,43 @@ namespace UtilORama4
 			{
 				initDir = lutils.DefaultChannelConfigsPath;
 			}
-			dlgSaveFile.FileName = initFile;
-			dlgSaveFile.InitialDirectory = initDir;
-			dlgSaveFile.OverwritePrompt = true;
-			dlgSaveFile.CheckPathExists = true;
-			dlgSaveFile.DefaultExt = "ChSel";
-			dlgSaveFile.SupportMultiDottedExtensions = true;
-			dlgSaveFile.ValidateNames = true;
-			dlgSaveFile.Title = "Save Channel Selections As...";
+			dlgFileSave.FileName = initFile;
+			dlgFileSave.InitialDirectory = initDir;
+			dlgFileSave.OverwritePrompt = false;
+			dlgFileSave.CheckPathExists = true;
+			dlgFileSave.DefaultExt = "ChSel";
+			dlgFileSave.SupportMultiDottedExtensions = true;
+			dlgFileSave.ValidateNames = true;
+			dlgFileSave.Title = "Save Channel Selections As...";
 
-			DialogResult dr = dlgSaveFile.ShowDialog(this);
-			if (dr == DialogResult.OK)
-			{
-				this.Cursor = Cursors.WaitCursor;
-				string selectionsTemp = System.IO.Path.GetTempPath();
-				selectionsTemp += Path.GetFileName(dlgSaveFile.FileName);
-				int selectionsErr = SaveSelections(selectionsTemp);
-				if (selectionsErr == 0)
+			DialogResult dr = dlgFileSave.ShowDialog(this);
+				if (dr == DialogResult.OK)
 				{
-					fileSelCur = dlgSaveFile.FileName;
-					if (File.Exists(fileSelCur))
+					DialogResult ow = Fyle.SafeOverwriteFile(dlgFileSave.FileName);
+					if (ow == DialogResult.Yes)
 					{
-						//TODO: Add Exception Catch
-						File.Delete(fileSelCur);
-					}
-					File.Copy(selectionsTemp, fileSelCur);
-					File.Delete(selectionsTemp);
-					dirtySel = false;
-					//btnSaveSelections.Enabled = dirtySelections;
-					//SystemSounds.Beep.Play();
-					Fyle.PlayNotifyGenericSound();
-					this.Cursor = Cursors.Default;
-				} // end no errors saving selections
-			}	// end dialog result = OK
+						this.Cursor = Cursors.WaitCursor;
+						string selectionsTemp = System.IO.Path.GetTempPath();
+						selectionsTemp += Path.GetFileName(dlgFileSave.FileName);
+						int selectionsErr = SaveSelections(selectionsTemp);
+						if (selectionsErr == 0)
+						{
+							fileSelCur = dlgFileSave.FileName;
+							if (File.Exists(fileSelCur))
+							{
+								//TODO: Add Exception Catch
+								File.Delete(fileSelCur);
+							}
+							File.Copy(selectionsTemp, fileSelCur);
+							File.Delete(selectionsTemp);
+							dirtySel = false;
+							//btnSaveSelections.Enabled = dirtySelections;
+							//SystemSounds.Beep.Play();
+							Fyle.PlayNotifyGenericSound();
+							this.Cursor = Cursors.Default;
+						} // end no errors saving selections
+					} // end dialog result = OK
+				}
 		} // end SaveSelectionsAs...
 
 		private int SaveSelections(string fileName)
@@ -1513,13 +1520,13 @@ namespace UtilORama4
 
 		private void btnBrowseSelections_Click(object sender, EventArgs e)
 		{
-			dlgOpenFile.DefaultExt = "ChSel";
-			dlgOpenFile.Filter = "LORChannel4 Selections|*.ChSel";
-			dlgOpenFile.DefaultExt = "ChSelections";
-			dlgOpenFile.FilterIndex = 0;
-			dlgOpenFile.CheckPathExists = true;
-			dlgOpenFile.SupportMultiDottedExtensions = true;
-			dlgOpenFile.ValidateNames = true;
+			dlgFileOpen.DefaultExt = "ChSel";
+			dlgFileOpen.Filter = "LORChannel4 Selections|*.ChSel";
+			dlgFileOpen.DefaultExt = "ChSelections";
+			dlgFileOpen.FilterIndex = 0;
+			dlgFileOpen.CheckPathExists = true;
+			dlgFileOpen.SupportMultiDottedExtensions = true;
+			dlgFileOpen.ValidateNames = true;
 
 			string initDir = lutils.DefaultChannelConfigsPath;
 			string initFile = "";
@@ -1535,17 +1542,17 @@ namespace UtilORama4
 					initFile = Path.GetFileName(fileSelCur);
 				}
 			}
-			dlgOpenFile.FileName = initFile;
-			dlgOpenFile.InitialDirectory = initDir;
-			dlgOpenFile.CheckPathExists = true;
-			dlgOpenFile.Title = "Load-Apply Channel Selections..";
+			dlgFileOpen.FileName = initFile;
+			dlgFileOpen.InitialDirectory = initDir;
+			dlgFileOpen.CheckPathExists = true;
+			dlgFileOpen.Title = "Load-Apply Channel Selections..";
 
-			DialogResult dr = dlgOpenFile.ShowDialog(this);
+			DialogResult dr = dlgFileOpen.ShowDialog(this);
 			if (dr == DialogResult.OK)
 			{
 				if (seq.filename.Length > 5)
 				{
-					LoadApplySelections(dlgOpenFile.FileName, true, useFuzzy);
+					LoadApplySelections(dlgFileOpen.FileName, true, useFuzzy);
 					Fyle.PlayNotifyGenericSound();
 				}
 			} // end dialog result = OK
@@ -1994,7 +2001,7 @@ namespace UtilORama4
 		public iLORMember4 FindByName(string theName, LORMembership4 members, LORMemberType4 PartType, long preAlgorithm, double minPreMatch, long finalAlgorithms, double minFinalMatch, bool ignoreSelected)
 		{
 			iLORMember4 ret = null;
-			if (members.byName.TryGetValue(theName, out ret))
+			if (members.ByName.TryGetValue(theName, out ret))
 			{
 				// Found the name, is the type correct?
 				if (ret.MemberType != PartType)
@@ -2066,7 +2073,7 @@ namespace UtilORama4
 				for (int i = 0; i < count; i++)
 				{
 					// Get the ID, perform a more thorough final fuzzy match, and save the score
-					iLORMember4 child = members.bySavedIndex[SIs[i]];
+					iLORMember4 child = members.BySavedIndex[SIs[i]];
 					score = theName.RankEquality(child.Name, finalAlgorithms);
 					scores[i] = score;
 				}
@@ -2076,7 +2083,7 @@ namespace UtilORama4
 				if (scores[count - 1] > minFinalMatch)
 				{
 					// Return the ID with the best qualifying final match
-					ret = members.bySavedIndex[SIs[count - 1]];
+					ret = members.BySavedIndex[SIs[count - 1]];
 					// Get Name just for debugging
 					string msg = theName + " ~= " + ret.Name;
 				}
@@ -2120,7 +2127,7 @@ namespace UtilORama4
 				for (int i = 0; i < count; i++)
 				{
 					// Get the ID, perform a more thorough final fuzzy match, and save the score
-					iLORMember4 child = seq.Members.bySavedIndex[SIs[i]];
+					iLORMember4 child = seq.Members.BySavedIndex[SIs[i]];
 					score = theName.RankEquality(child.Name, finalAlgorithms);
 					scores[i] = score;
 				}
@@ -2130,7 +2137,7 @@ namespace UtilORama4
 				if (scores[count - 1] > minFinalMatch)
 				{
 					// Return the ID with the best qualifying final match
-					iLORMember4 ret = seq.Members.bySavedIndex[SIs[count - 1]];
+					iLORMember4 ret = seq.Members.BySavedIndex[SIs[count - 1]];
 					// Get Name just for debugging
 					string msg = theName + " ~= " + ret.Name;
 				}

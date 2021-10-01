@@ -38,8 +38,8 @@
 			this.label1 = new System.Windows.Forms.Label();
 			this.btnBrowseSecond = new System.Windows.Forms.Button();
 			this.txtSecondFile = new System.Windows.Forms.TextBox();
-			this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
-			this.dlgSaveFile = new System.Windows.Forms.SaveFileDialog();
+			this.dlgFileOpen = new System.Windows.Forms.OpenFileDialog();
+			this.dlgFileSave = new System.Windows.Forms.SaveFileDialog();
 			this.btnSave = new System.Windows.Forms.Button();
 			this.button1 = new System.Windows.Forms.Button();
 			this.staStatus = new System.Windows.Forms.StatusStrip();
@@ -47,7 +47,9 @@
 			this.pnlProgress = new System.Windows.Forms.ToolStripProgressBar();
 			this.pnlStatus = new System.Windows.Forms.ToolStripStatusLabel();
 			this.pnlAbout = new System.Windows.Forms.ToolStripStatusLabel();
+			this.picAboutIcon = new System.Windows.Forms.PictureBox();
 			this.staStatus.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.picAboutIcon)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// treNewChannels
@@ -128,9 +130,9 @@
 			this.txtSecondFile.Size = new System.Drawing.Size(261, 20);
 			this.txtSecondFile.TabIndex = 39;
 			// 
-			// dlgOpenFile
+			// dlgFileOpen
 			// 
-			this.dlgOpenFile.FileName = "openFileDialog1";
+			this.dlgFileOpen.FileName = "openFileDialog1";
 			// 
 			// btnSave
 			// 
@@ -206,6 +208,17 @@
 			this.pnlAbout.Name = "pnlAbout";
 			this.pnlAbout.Size = new System.Drawing.Size(52, 19);
 			this.pnlAbout.Text = "About...";
+			this.pnlAbout.Click += new System.EventHandler(this.pnlAbout_Click);
+			// 
+			// picAboutIcon
+			// 
+			this.picAboutIcon.Image = ((System.Drawing.Image)(resources.GetObject("picAboutIcon.Image")));
+			this.picAboutIcon.Location = new System.Drawing.Point(229, 286);
+			this.picAboutIcon.Name = "picAboutIcon";
+			this.picAboutIcon.Size = new System.Drawing.Size(128, 128);
+			this.picAboutIcon.TabIndex = 130;
+			this.picAboutIcon.TabStop = false;
+			this.picAboutIcon.Visible = false;
 			// 
 			// frmMerge
 			// 
@@ -222,6 +235,7 @@
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.btnBrowseSecond);
 			this.Controls.Add(this.txtSecondFile);
+			this.Controls.Add(this.picAboutIcon);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
@@ -233,6 +247,7 @@
 			this.Load += new System.EventHandler(this.frmMerge_Load);
 			this.staStatus.ResumeLayout(false);
 			this.staStatus.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.picAboutIcon)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -247,8 +262,8 @@
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Button btnBrowseSecond;
 		private System.Windows.Forms.TextBox txtSecondFile;
-		private System.Windows.Forms.OpenFileDialog dlgOpenFile;
-		private System.Windows.Forms.SaveFileDialog dlgSaveFile;
+		private System.Windows.Forms.OpenFileDialog dlgFileOpen;
+		private System.Windows.Forms.SaveFileDialog dlgFileSave;
 		private System.Windows.Forms.ImageList imlTreeIcons;
 		private System.Windows.Forms.Button btnSave;
 		private System.Windows.Forms.Button button1;
@@ -257,6 +272,7 @@
 		private System.Windows.Forms.ToolStripProgressBar pnlProgress;
 		private System.Windows.Forms.ToolStripStatusLabel pnlStatus;
 		private System.Windows.Forms.ToolStripStatusLabel pnlAbout;
+		private System.Windows.Forms.PictureBox picAboutIcon;
 	}
 }
 

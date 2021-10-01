@@ -69,7 +69,8 @@ namespace UtilORama4
 		private MRU mruTimings = new MRU(heartOfTheSun, "filesTiming", 10);
 		private MRU mruAudio = new MRU(heartOfTheSun, "filesAudio", 10);
 		//private List<xTimings> timingsList = new List<xTimings>();
-
+		private const string OutputTitle = "Sonic Annotator Output Log";
+		private const string ProcTitle = "Analyzing ";
 		//private MRU mruAudio = new MRU();
 
 		//private LORSequence4 seq = new LORSequence4();
@@ -94,6 +95,7 @@ namespace UtilORama4
 		public bool busy = true;
 		public bool vamping = false;
 		public bool analyzed = false;
+		
 
 		public bool lightORamaInstalled = false;
 		public bool xLightsInstalled = false;
@@ -220,7 +222,7 @@ namespace UtilORama4
 				grpPolyphonic.Top -= moveBy;
 				grpPitchKey.Top -= moveBy;
 				grpSegments.Top -= moveBy;
-				grpSpectrum.Top -= moveBy;
+				grpChromagram.Top -= moveBy;
 				grpVocals.Top -= moveBy;
 				grpTempo.Top -= moveBy;
 
@@ -414,125 +416,6 @@ namespace UtilORama4
 
 		}
 
-		public void FillCombos()
-		{
-			//////////////////////
-			//! Bars and Beats //
-			////////////////////
-			cboMethodBarsBeats.Items.Clear();
-			foreach(string plugName in VampBarBeats.availablePluginNames)
-				{
-				cboMethodBarsBeats.Items.Add(plugName);
-			}
-			cboLabelsBarBeats.Items.Clear();
-			foreach (vamps.LabelType lblType in VampBarBeats.allowableLabels)
-			{
-				cboLabelsBarBeats.Items.Add(vamps.LabelName(lblType));
-			}
-			cboAlignBarBeats.Items.Clear();
-			foreach (vamps.AlignmentType alType in VampBarBeats.allowableAlignments)
-			{
-				cboAlignBarBeats.Items.Add(vamps.AlignmentName(alType));
-			}
-
-			///////////////////
-			//! Note Onsets //
-			/////////////////
-			cboMethodOnsets.Items.Clear();
-			foreach (string plugName in VampNoteOnsets.availablePluginNames)
-			{
-				cboMethodOnsets.Items.Add(plugName);
-			}
-			cboLabelsOnsets.Items.Clear();
-			foreach (vamps.LabelType lblType in VampNoteOnsets.allowableLabels)
-			{
-				cboLabelsOnsets.Items.Add(vamps.LabelName(lblType));
-			}
-			cboAlignOnsets.Items.Clear();
-			foreach (vamps.AlignmentType alType in VampNoteOnsets.allowableAlignments)
-			{
-				cboAlignOnsets.Items.Add(vamps.AlignmentName(alType));
-			}
-
-			////////////////////////////////
-			//! Polyphonic Transcription //
-			//////////////////////////////
-			cboMethodPolyphonic.Items.Clear();
-			foreach(string plugName in VampPolyphonic.availablePluginNames)
-			{
-				cboMethodPolyphonic.Items.Add(plugName);
-			}
-			cboLabelsPolyphonic.Items.Clear();
-			foreach(vamps.LabelType lblType in VampPolyphonic.allowableLabels)
-			{
-				cboLabelsPolyphonic.Items.Add(vamps.LabelName(lblType));
-			}
-			cboAlignPolyphonic.Items.Clear();
-			foreach(vamps.AlignmentType alType in VampPolyphonic.allowableAlignments)
-			{
-				cboAlignPolyphonic.Items.Add(vamps.AlignmentName(alType));
-			}
-
-			/////////////////////
-			//! Pitch and Key //
-			///////////////////
-			cboMethodPitchKey.Items.Clear();
-			foreach (string plugName in VampPitchKey.availablePluginNames)
-			{
-				cboMethodPitchKey.Items.Add(plugName);
-			}
-			cboLabelsPitchKey.Items.Clear();
-			foreach (vamps.LabelType lblType in VampPitchKey.allowableLabels)
-			{
-				cboLabelsPitchKey.Items.Add(vamps.LabelName(lblType));
-			}
-			cboAlignPitchKey.Items.Clear();
-			foreach (vamps.AlignmentType alType in VampPitchKey.allowableAlignments)
-			{
-				cboAlignPitchKey.Items.Add(vamps.AlignmentName(alType));
-			}
-
-			///////////////////
-			//!  T E M P O  //
-			/////////////////
-			cboMethodTempo.Items.Clear();
-			foreach (string plugName in VampTempo.availablePluginNames)
-			{
-				cboMethodTempo.Items.Add(plugName);
-			}
-			cboLabelsTempo.Items.Clear();
-			foreach (vamps.LabelType lblType in VampTempo.allowableLabels)
-			{
-				cboLabelsTempo.Items.Add(vamps.LabelName(lblType));
-			}
-			cboAlignTempo.Items.Clear();
-			foreach (vamps.AlignmentType alType in VampTempo.allowableAlignments)
-			{
-				cboAlignTempo.Items.Add(vamps.AlignmentName(alType));
-			}
-
-
-			///////////////////
-			//!  SEGMENTS  //
-			/////////////////
-			cboMethodSegments.Items.Clear();
-			foreach (string plugName in VampSegments.availablePluginNames)
-			{
-				cboMethodSegments.Items.Add(plugName);
-			}
-			cboLabelsSegments.Items.Clear();
-			foreach (vamps.LabelType lblType in VampSegments.allowableLabels)
-			{
-				cboLabelsSegments.Items.Add(vamps.LabelName(lblType));
-			}
-			cboAlignSegments.Items.Clear();
-			foreach (vamps.AlignmentType alType in VampSegments.allowableAlignments)
-			{
-				cboAlignSegments.Items.Add(vamps.AlignmentName(alType));
-			}
-
-		}
-
 
 
 		///////////////////////////////////////////////////////////////////////////////////
@@ -574,10 +457,10 @@ namespace UtilORama4
 			SetCombo(cboLabelsPolyphonic, heartOfTheSun.labelTranscribe);
 			SetCombo(cboAlignPolyphonic, heartOfTheSun.alignTranscribe);
 
-			SetCombo(cboMethodSpectrum, heartOfTheSun.methodSpectrum);
-			chkSpectrum.Checked = heartOfTheSun.doSpectrum;
-			SetCombo(cboLabelsSpectrum, heartOfTheSun.labelSpectrum);
-			SetCombo(cboAlignSpectrum, heartOfTheSun.alignSpectrum);
+			SetCombo(cboMethodChromagram, heartOfTheSun.methodSpectrum);
+			chkChromagram.Checked = heartOfTheSun.doSpectrum;
+			SetCombo(cboLabelsChromagram, heartOfTheSun.labelSpectrum);
+			SetCombo(cboAlignChromagram, heartOfTheSun.alignSpectrum);
 
 			SetCombo(cboMethodPitchKey, heartOfTheSun.methodPitchKey);
 			chkPitchKey.Checked = heartOfTheSun.doPitchKey;
@@ -593,6 +476,11 @@ namespace UtilORama4
 			SetCombo(cboAlignSegments, heartOfTheSun.alignSegments);
 			SetCombo(cboMethodSegments, heartOfTheSun.methodSegments);
 			SetCombo(cboLabelsSegments, heartOfTheSun.labelSegments);
+
+			chkChromathing.Checked = heartOfTheSun.doChromagram;
+			SetCombo(cboAlignChromagram, heartOfTheSun.alignChromagram);
+			SetCombo(cboMethodChromagram, heartOfTheSun.methodChromagram);
+			SetCombo(cboLabelsChromagram, heartOfTheSun.labelChromagram);
 
 			chkVocals.Checked = heartOfTheSun.doVocals;
 			SetCombo(cboAlignVocals, heartOfTheSun.alignVocals);
@@ -652,10 +540,10 @@ namespace UtilORama4
 			heartOfTheSun.labelTranscribe = cboLabelsPolyphonic.Text;
 			heartOfTheSun.alignTranscribe = cboAlignPolyphonic.Text;
 
-			heartOfTheSun.methodSpectrum = cboMethodSpectrum.Text;
-			heartOfTheSun.doSpectrum = chkSpectrum.Checked;
-			heartOfTheSun.labelSpectrum = cboLabelsSpectrum.Text;
-			heartOfTheSun.alignSpectrum = cboAlignSpectrum.Text;
+			heartOfTheSun.methodSpectrum = cboMethodChromagram.Text;
+			heartOfTheSun.doSpectrum = chkChromagram.Checked;
+			heartOfTheSun.labelSpectrum = cboLabelsChromagram.Text;
+			heartOfTheSun.alignSpectrum = cboAlignChromagram.Text;
 
 			heartOfTheSun.methodPitchKey = cboMethodPitchKey.Text;
 			heartOfTheSun.doPitchKey = chkPitchKey.Checked;
@@ -671,6 +559,11 @@ namespace UtilORama4
 			heartOfTheSun.methodSegments = cboMethodSegments.Text;
 			heartOfTheSun.alignSegments = cboAlignSegments.Text;
 			heartOfTheSun.labelSegments = cboLabelsSegments.Text;
+
+			heartOfTheSun.doChromagram = chkChromathing.Checked;
+			heartOfTheSun.methodChromagram = cboMethodChromagram.Text;
+			heartOfTheSun.alignChromagram = cboAlignChromagram.Text;
+			heartOfTheSun.labelChromagram = cboLabelsChromagram.Text;
 
 			heartOfTheSun.doVocals = chkVocals.Checked;
 			heartOfTheSun.alignVocals = cboAlignVocals.Text;
@@ -899,6 +792,7 @@ namespace UtilORama4
 			lblWorkFolder.Visible = amVamping;
 			pnlVamping.Visible = amVamping;
 			//picVampire.Visible = !amVamping;
+			picWorking.Visible = amVamping;
 			lblPickYourPoison.Visible = !amVamping;
 			picPoisonArrow.Visible = !amVamping;
 			vamping = amVamping;
@@ -1195,33 +1089,37 @@ namespace UtilORama4
 
 			string initFile = Path.GetFileNameWithoutExtension(fileAudioLast);
 
-			dlgSaveFile.Filter = filt;
-			dlgSaveFile.FilterIndex = 1;
-			dlgSaveFile.FileName = initFile; // xUtils.ShowDirectory + Path.GetFileNameWithoutExtension(fileAudioLast) + ".xtiming";
-			dlgSaveFile.CheckPathExists = true;
-			dlgSaveFile.InitialDirectory = initDir;
-			dlgSaveFile.DefaultExt = ".xtiming";
-			dlgSaveFile.OverwritePrompt = true;
-			dlgSaveFile.Title = tit;
-			dlgSaveFile.SupportMultiDottedExtensions = true;
-			dlgSaveFile.ValidateNames = true;
+			dlgFileSave.Filter = filt;
+			dlgFileSave.FilterIndex = 1;
+			dlgFileSave.FileName = initFile; // xUtils.ShowDirectory + Path.GetFileNameWithoutExtension(fileAudioLast) + ".xtiming";
+			dlgFileSave.CheckPathExists = true;
+			dlgFileSave.InitialDirectory = initDir;
+			dlgFileSave.DefaultExt = ".xtiming";
+			dlgFileSave.OverwritePrompt = false; // Use MY overwrite warning instead
+			dlgFileSave.Title = tit;
+			dlgFileSave.SupportMultiDottedExtensions = true;
+			dlgFileSave.ValidateNames = true;
 			//newFileIn = Path.GetFileNameWithoutExtension(fileCurrent) + " Part " + member.ToString(); // + ext;
 			//newFileIn = "Part " + member.ToString() + " of " + Path.GetFileNameWithoutExtension(fileCurrent);
 			//newFileIn = "Part Mother Fucker!!";
-			//dlgSaveFile.FileName = initFile;
-			DialogResult result = dlgSaveFile.ShowDialog(this);
+			//dlgFileSave.FileName = initFile;
+			DialogResult result = dlgFileSave.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
-				ImBusy(true);
-				fileTimingsLast = dlgSaveFile.FileName;
-				Properties.Settings.Default.LastxLightsTimingsSavePath = Path.GetDirectoryName(dlgSaveFile.FileName);
-				ExportSelectedVampsToxLights(dlgSaveFile.FileName);
-				mruTimings.AddNew(fileTimingsLast);
-				mruTimings.SaveToConfig();
-				dirtyTimes = false;
-				//SystemSounds.Beep.Play();
-				Fyle.MakeNoise(Fyle.Noises.TaDa);
-				ImBusy(false);
+				DialogResult ow = Fyle.SafeOverwriteFile(dlgFileSave.FileName);
+				if (ow == DialogResult.Yes)
+				{
+					ImBusy(true);
+					fileTimingsLast = dlgFileSave.FileName;
+					Properties.Settings.Default.LastxLightsTimingsSavePath = Path.GetDirectoryName(dlgFileSave.FileName);
+					ExportSelectedVampsToxLights(dlgFileSave.FileName);
+					mruTimings.AddNew(fileTimingsLast);
+					mruTimings.SaveToConfig();
+					dirtyTimes = false;
+					//SystemSounds.Beep.Play();
+					Fyle.MakeNoise(Fyle.Noises.TaDa);
+					ImBusy(false);
+				}
 			}
 		} // end Save File As
 
@@ -1515,24 +1413,24 @@ namespace UtilORama4
 				}
 
 
-				dlgOpenFile.Filter = MusicFilter();
-				dlgOpenFile.FilterIndex = 1;
-				dlgOpenFile.DefaultExt = "";
-				dlgOpenFile.InitialDirectory = initDir;
-				dlgOpenFile.FileName = initFile;
-				dlgOpenFile.CheckFileExists = true;
-				dlgOpenFile.CheckPathExists = true;
-				dlgOpenFile.Multiselect = false;
-				dlgOpenFile.Title = "Select Media File...";
+				dlgFileOpen.Filter = MusicFilter();
+				dlgFileOpen.FilterIndex = 1;
+				dlgFileOpen.DefaultExt = "";
+				dlgFileOpen.InitialDirectory = initDir;
+				dlgFileOpen.FileName = initFile;
+				dlgFileOpen.CheckFileExists = true;
+				dlgFileOpen.CheckPathExists = true;
+				dlgFileOpen.Multiselect = false;
+				dlgFileOpen.Title = "Select Media File...";
 				//pnlAll.Enabled = false;
-				DialogResult result = dlgOpenFile.ShowDialog(this);
+				DialogResult result = dlgFileOpen.ShowDialog(this);
 
 				if (result == DialogResult.OK)
 				{
-					fileAudioLast = dlgOpenFile.FileName;
+					fileAudioLast = dlgFileOpen.FileName;
 					txtFileAudio.Text = ShrinkPath(fileAudioLast, 100);
 					//int errs = ClearTempDir();
-					//AnalyzeSong(dlgOpenFile.FileName);
+					//AnalyzeSong(dlgFileOpen.FileName);
 					//grpSequence.Enabled = true;
 					grpTimings.Enabled = true;
 					//grpOptions.Enabled = true;
@@ -1542,7 +1440,14 @@ namespace UtilORama4
 					string songInfo = audioData.Title + " by " + audioData.Artist;
 					this.Text = myTitle + " - " + songInfo;
 					lblSongTime.Text = FormatSongTime(Annotator.TotalMilliseconds);
-					
+
+					analyzed = false;
+					grpTimings.Enabled = !analyzed;
+					btnReanalyze.Location = btnOK.Location;
+					btnReanalyze.Visible = analyzed;
+					btnOK.Visible = !analyzed;
+
+
 				} // end if (result = DialogResult.OK)
 
 
@@ -1664,20 +1569,20 @@ namespace UtilORama4
 					{
 						initDir = where;
 					}
-					dlgOpenFile.InitialDirectory = initDir;
-					dlgOpenFile.FileName = "sonic-annotator.exe";
-					dlgOpenFile.Filter = "Sonic Annotator|*.exe";
-					dlgOpenFile.FilterIndex = 1;
-					dlgOpenFile.Multiselect = false;
-					dlgOpenFile.SupportMultiDottedExtensions = false;
-					dlgOpenFile.CheckPathExists = true;
-					dlgOpenFile.CheckFileExists = true;
-					dlgOpenFile.DefaultExt = ".exe";
-					dlgOpenFile.Title = "Locate Sonic Annotator";
-					dr = dlgOpenFile.ShowDialog(this);
+					dlgFileOpen.InitialDirectory = initDir;
+					dlgFileOpen.FileName = "sonic-annotator.exe";
+					dlgFileOpen.Filter = "Sonic Annotator|*.exe";
+					dlgFileOpen.FilterIndex = 1;
+					dlgFileOpen.Multiselect = false;
+					dlgFileOpen.SupportMultiDottedExtensions = false;
+					dlgFileOpen.CheckPathExists = true;
+					dlgFileOpen.CheckFileExists = true;
+					dlgFileOpen.DefaultExt = ".exe";
+					dlgFileOpen.Title = "Locate Sonic Annotator";
+					dr = dlgFileOpen.ShowDialog(this);
 					if (dr == DialogResult.OK)
 					{
-						string anoFile = dlgOpenFile.FileName;
+						string anoFile = dlgFileOpen.FileName;
 						string anoExe = Path.GetFileName(anoFile).ToLower();
 						if (anoExe.CompareTo("sonic-annotator.exe") != 0)
 						{
@@ -1779,33 +1684,37 @@ namespace UtilORama4
 			if (ifile.Length < 2)
 			{
 
-				dlgSaveFile.Filter = filter;
-				dlgSaveFile.InitialDirectory = idr;
-				dlgSaveFile.FileName = ifile;
-				dlgSaveFile.FilterIndex = 1;
-				dlgSaveFile.OverwritePrompt = true; //  false; // Handled Below
-				dlgSaveFile.Title = "Save Timings As...";
-				dlgSaveFile.ValidateNames = true;
+				dlgFileSave.Filter = filter;
+				dlgFileSave.InitialDirectory = idr;
+				dlgFileSave.FileName = ifile;
+				dlgFileSave.FilterIndex = 1;
+				dlgFileSave.OverwritePrompt = false; //  false; // Handled Below
+				dlgFileSave.Title = "Save Timings As...";
+				dlgFileSave.ValidateNames = true;
 
 				while (saveAsk)
 				{
-					DialogResult result = dlgSaveFile.ShowDialog(this);
+					DialogResult result = dlgFileSave.ShowDialog(this);
 					bool doSave = true;
 					if (result == DialogResult.OK)
 					{
-						if (System.IO.File.Exists(dlgSaveFile.FileName))
+						DialogResult ow = Fyle.SafeOverwriteFile(dlgFileSave.FileName);
+						if (ow == DialogResult.No)
 						{
-							string fn = Path.GetFileNameWithoutExtension(dlgSaveFile.FileName).ToLower();
-							string ed = "";
-							string t = Path.GetFileName(dlgSaveFile.FileName);
-							t += " already exists.\r\nDo you want to replace it?";
-							DialogResult dr3 = MessageBox.Show(this, t, "Confirm Save As", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+							//if (System.IO.File.Exists(dlgFileSave.FileName))
+							//{
+							//string fn = Path.GetFileNameWithoutExtension(dlgFileSave.FileName).ToLower();
+							//string ed = "";
+							//string t = Path.GetFileName(dlgFileSave.FileName);
+							//t += " already exists.\r\nDo you want to replace it?";
+							//DialogResult dr3 = MessageBox.Show(this, t, "Confirm Save As", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 							//if (dr3 == DialogResult.Cancel) saveAsk = true;
-							if (dr3 == DialogResult.No) doSave = false;
+							//if (dr3 == DialogResult.No) doSave = false;
+							doSave = false;
 						}
 						if (doSave)
 						{
-							fileTimingsLast = dlgSaveFile.FileName;
+							fileTimingsLast = dlgFileSave.FileName;
 							txtSaveNamexL.Text = Path.GetFileNameWithoutExtension(fileSeqSave);
 							saveAsk = false;
 						}
@@ -2298,25 +2207,29 @@ namespace UtilORama4
 			}
 
 			// Setup File Save Dialog
-			dlgSaveFile.DefaultExt = "xtiming";
-			dlgSaveFile.Filter = "xLights Timings (*.xtiming)|*.xTiming|All Files (*.*)|*.*";
-			dlgSaveFile.FilterIndex = 0;
+			dlgFileSave.DefaultExt = "xtiming";
+			dlgFileSave.Filter = "xLights Timings (*.xtiming)|*.xTiming|All Files (*.*)|*.*";
+			dlgFileSave.FilterIndex = 0;
 			string initFile = Path.GetFileNameWithoutExtension(fileAudioLast);
-			dlgSaveFile.FileName = initFile;
-			dlgSaveFile.InitialDirectory = pathExport;
-			dlgSaveFile.OverwritePrompt = true;
-			dlgSaveFile.CheckPathExists = true;
-			dlgSaveFile.SupportMultiDottedExtensions = true;
-			dlgSaveFile.ValidateNames = true;
-			dlgSaveFile.Title = "Save Timings As...";
+			dlgFileSave.FileName = initFile;
+			dlgFileSave.InitialDirectory = pathExport;
+			dlgFileSave.OverwritePrompt = false; // Use mine instead!
+			dlgFileSave.CheckPathExists = true;
+			dlgFileSave.SupportMultiDottedExtensions = true;
+			dlgFileSave.ValidateNames = true;
+			dlgFileSave.Title = "Save Timings As...";
 
-			DialogResult dr = dlgSaveFile.ShowDialog(this);
+			DialogResult dr = dlgFileSave.ShowDialog(this);
 			if (dr == DialogResult.OK)
 			{
-				string newFile = dlgSaveFile.FileName;
-				//ExportSelectedTimings(newFile);
-				//xUtils.PlayNotifyGenericSound();
-				SystemSounds.Exclamation.Play();
+				DialogResult ow = Fyle.SafeOverwriteFile(dlgFileSave.FileName);
+				if (ow == DialogResult.Yes)
+				{
+					string newFile = dlgFileSave.FileName;
+					//ExportSelectedTimings(newFile);
+					//xUtils.PlayNotifyGenericSound();
+					SystemSounds.Exclamation.Play();
+				}
 			} // end dialog result = OK
 			ImBusy(false);
 
@@ -2778,10 +2691,10 @@ namespace UtilORama4
 			cboLabelsPolyphonic.SelectedIndex = 0;
 			cboAlignPolyphonic.SelectedIndex = 6; // Note Onsets
 
-			cboMethodSpectrum.SelectedIndex = 0;
-			chkSpectrum.Checked = false;
-			cboLabelsSpectrum.SelectedIndex = 0;
-			cboAlignSpectrum.SelectedIndex = 0;
+			cboMethodChromagram.SelectedIndex = 0;
+			chkChromagram.Checked = false;
+			cboLabelsChromagram.SelectedIndex = 0;
+			cboAlignChromagram.SelectedIndex = 0;
 
 			cboMethodPitchKey.SelectedIndex = 0;
 			chkPitchKey.Checked = true;

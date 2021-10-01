@@ -1198,21 +1198,21 @@ namespace UtilORama4
 			string initDir = lutils.DefaultSequencesPath;
 			string initFile = "";
 
-			dlgOpenFile.Filter = "Sequence Files *.las, *.lms|*.las;*.lms|Musical Sequences *.lms|*.lms|Animated Sequences *.las|*.las";
-			dlgOpenFile.DefaultExt = "*.lms";
-			dlgOpenFile.InitialDirectory = initDir;
-			dlgOpenFile.FileName = initFile;
-			dlgOpenFile.CheckFileExists = true;
-			dlgOpenFile.CheckPathExists = true;
-			dlgOpenFile.Multiselect = false;
-			dlgOpenFile.Title = "Select a Sequence...";
+			dlgFileOpen.Filter = "Sequence Files *.las, *.lms|*.las;*.lms|Musical Sequences *.lms|*.lms|Animated Sequences *.las|*.las";
+			dlgFileOpen.DefaultExt = "*.lms";
+			dlgFileOpen.InitialDirectory = initDir;
+			dlgFileOpen.FileName = initFile;
+			dlgFileOpen.CheckFileExists = true;
+			dlgFileOpen.CheckPathExists = true;
+			dlgFileOpen.Multiselect = false;
+			dlgFileOpen.Title = "Select a Sequence...";
 			//pnlAll.Enabled = false;
-			DialogResult result = dlgOpenFile.ShowDialog(this);
+			DialogResult result = dlgFileOpen.ShowDialog(this);
 
 			if (result == DialogResult.OK)
 			{
 				ImBusy(true);
-				string thisFile  = dlgOpenFile.FileName;
+				string thisFile  = dlgFileOpen.FileName;
 				string thisRpt = tempPath + Path.GetFileNameWithoutExtension(thisFile) + "Report.htm";
 				loadSequence(thisFile);
 				CreateReport(thisFile, thisRpt);

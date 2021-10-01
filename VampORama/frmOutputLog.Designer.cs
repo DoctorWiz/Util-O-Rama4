@@ -34,7 +34,7 @@ namespace UtilORama4
 			this.btnSaveLog = new System.Windows.Forms.Button();
 			this.txtOutput = new System.Windows.Forms.TextBox();
 			this.lblDebug = new System.Windows.Forms.Label();
-			this.dlgSaveFile = new System.Windows.Forms.SaveFileDialog();
+			this.dlgFileSave = new System.Windows.Forms.SaveFileDialog();
 			this.SuspendLayout();
 			// 
 			// btnClose
@@ -122,6 +122,6 @@ namespace UtilORama4
 		private System.Windows.Forms.Button btnSaveLog;
 		private System.Windows.Forms.TextBox txtOutput;
 		private System.Windows.Forms.Label lblDebug;
-		public System.Windows.Forms.SaveFileDialog dlgSaveFile;
+		public System.Windows.Forms.SaveFileDialog dlgFileSave;
 	}
 }
