@@ -677,7 +677,7 @@
 			this.prgBarInner.CustomWaitingRender = false;
 			this.prgBarInner.ForeColor = System.Drawing.Color.Lime;
 			this.prgBarInner.ForegroundImage = null;
-			this.prgBarInner.Location = new System.Drawing.Point(2, 642);
+			this.prgBarInner.Location = new System.Drawing.Point(226, 700);
 			this.prgBarInner.MultipleColors = new System.Drawing.Color[] {
         System.Drawing.Color.Empty};
 			this.prgBarInner.Name = "prgBarInner";
@@ -700,7 +700,7 @@
 			this.prgBarOuter.ForegroundImage = null;
 			this.prgBarOuter.GradientEndColor = System.Drawing.Color.Red;
 			this.prgBarOuter.GradientStartColor = System.Drawing.Color.Lime;
-			this.prgBarOuter.Location = new System.Drawing.Point(0, 633);
+			this.prgBarOuter.Location = new System.Drawing.Point(209, 680);
 			this.prgBarOuter.MultipleColors = new System.Drawing.Color[] {
         System.Drawing.Color.Empty};
 			this.prgBarOuter.Name = "prgBarOuter";

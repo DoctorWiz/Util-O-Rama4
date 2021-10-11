@@ -38,7 +38,7 @@ namespace UtilORama4
 			this.pnlAbout = new System.Windows.Forms.ToolStripStatusLabel();
 			this.btnOK = new System.Windows.Forms.Button();
 			this.lblFilenameDest = new System.Windows.Forms.Label();
-			this.btnBrowseDest = new System.Windows.Forms.Button();
+			this.btnSaveSeq = new System.Windows.Forms.Button();
 			this.txtFilenameDest = new System.Windows.Forms.TextBox();
 			this.lblSourceFile = new System.Windows.Forms.Label();
 			this.btnBrowseSource = new System.Windows.Forms.Button();
@@ -62,9 +62,10 @@ namespace UtilORama4
 			this.tabChannels = new Syncfusion.Windows.Forms.Tools.TabControlAdv();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label1 = new System.Windows.Forms.Label();
-			this.btnBrowseChannels = new System.Windows.Forms.Button();
-			this.txtFilenameChannels = new System.Windows.Forms.TextBox();
-			this.btnSaveChannels = new System.Windows.Forms.Button();
+			this.btnBrowseMap = new System.Windows.Forms.Button();
+			this.txtFilenameMap = new System.Windows.Forms.TextBox();
+			this.btnSaveMap = new System.Windows.Forms.Button();
+			this.chkLaunch = new System.Windows.Forms.CheckBox();
 			this.staStatus.SuspendLayout();
 			this.tabDim.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picPreviewSource)).BeginInit();
@@ -83,7 +84,7 @@ namespace UtilORama4
             this.pnlAbout});
 			this.staStatus.Location = new System.Drawing.Point(0, 716);
 			this.staStatus.Name = "staStatus";
-			this.staStatus.Size = new System.Drawing.Size(734, 24);
+			this.staStatus.Size = new System.Drawing.Size(657, 24);
 			this.staStatus.TabIndex = 63;
 			// 
 			// pnlHelp
@@ -107,7 +108,7 @@ namespace UtilORama4
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlStatus.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
 			this.pnlStatus.Name = "pnlStatus";
-			this.pnlStatus.Size = new System.Drawing.Size(591, 19);
+			this.pnlStatus.Size = new System.Drawing.Size(545, 19);
 			this.pnlStatus.Spring = true;
 			// 
 			// pnlAbout
@@ -144,19 +145,20 @@ namespace UtilORama4
 			this.lblFilenameDest.TabIndex = 117;
 			this.lblFilenameDest.Text = "Destination Sequence File";
 			// 
-			// btnBrowseDest
+			// btnSaveSeq
 			// 
-			this.btnBrowseDest.AllowDrop = true;
-			this.btnBrowseDest.Location = new System.Drawing.Point(318, 667);
-			this.btnBrowseDest.Name = "btnBrowseDest";
-			this.btnBrowseDest.Size = new System.Drawing.Size(36, 20);
-			this.btnBrowseDest.TabIndex = 116;
-			this.btnBrowseDest.Text = "...";
-			this.btnBrowseDest.UseVisualStyleBackColor = true;
+			this.btnSaveSeq.AllowDrop = true;
+			this.btnSaveSeq.Location = new System.Drawing.Point(318, 667);
+			this.btnSaveSeq.Name = "btnSaveSeq";
+			this.btnSaveSeq.Size = new System.Drawing.Size(36, 20);
+			this.btnSaveSeq.TabIndex = 116;
+			this.btnSaveSeq.Text = "...";
+			this.btnSaveSeq.UseVisualStyleBackColor = true;
 			// 
 			// txtFilenameDest
 			// 
 			this.txtFilenameDest.AllowDrop = true;
+			this.txtFilenameDest.BackColor = System.Drawing.Color.LightGray;
 			this.txtFilenameDest.Enabled = false;
 			this.txtFilenameDest.Location = new System.Drawing.Point(12, 667);
 			this.txtFilenameDest.Name = "txtFilenameDest";
@@ -188,6 +190,7 @@ namespace UtilORama4
 			// txtFilenameSource
 			// 
 			this.txtFilenameSource.AllowDrop = true;
+			this.txtFilenameSource.BackColor = System.Drawing.Color.LightGray;
 			this.txtFilenameSource.Enabled = false;
 			this.txtFilenameSource.Location = new System.Drawing.Point(12, 25);
 			this.txtFilenameSource.Name = "txtFilenameSource";
@@ -218,6 +221,7 @@ namespace UtilORama4
 			// 
 			// tabDim
 			// 
+			this.tabDim.BackColor = System.Drawing.Color.LightGray;
 			this.tabDim.Controls.Add(this.lblTabFunction);
 			this.tabDim.Controls.Add(this.picPreviewSource);
 			this.tabDim.Controls.Add(this.treeSource);
@@ -227,6 +231,7 @@ namespace UtilORama4
 			this.tabDim.Name = "tabDim";
 			this.tabDim.ShowCloseButton = true;
 			this.tabDim.Size = new System.Drawing.Size(321, 507);
+			this.tabDim.TabForeColor = System.Drawing.Color.Crimson;
 			this.tabDim.TabIndex = 1;
 			this.tabDim.Text = "Dim       %";
 			this.tabDim.ThemesEnabled = false;
@@ -245,6 +250,7 @@ namespace UtilORama4
 			// picPreviewSource
 			// 
 			this.picPreviewSource.BackColor = System.Drawing.Color.Tan;
+			this.picPreviewSource.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.picPreviewSource.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.picPreviewSource.Location = new System.Drawing.Point(9, 459);
 			this.picPreviewSource.Name = "picPreviewSource";
@@ -260,6 +266,7 @@ namespace UtilORama4
 			treeNodeAdvStyleInfo1.CheckBoxTickThickness = 1;
 			treeNodeAdvStyleInfo1.CheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
 			treeNodeAdvStyleInfo1.EnsureDefaultOptionedChild = true;
+			treeNodeAdvStyleInfo1.InteractiveCheckBox = true;
 			treeNodeAdvStyleInfo1.IntermediateCheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
 			treeNodeAdvStyleInfo1.OptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
 			treeNodeAdvStyleInfo1.SelectedOptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
@@ -279,6 +286,7 @@ namespace UtilORama4
 			this.treeSource.HelpTextControl.TabIndex = 0;
 			this.treeSource.HelpTextControl.Visible = true;
 			this.treeSource.InactiveSelectedNodeForeColor = System.Drawing.SystemColors.ControlText;
+			this.treeSource.InteractiveCheckBoxes = true;
 			this.treeSource.LeftImageList = this.imlTreeIcons;
 			this.treeSource.Location = new System.Drawing.Point(9, 21);
 			this.treeSource.MetroColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(165)))), ((int)(((byte)(220)))));
@@ -311,6 +319,7 @@ namespace UtilORama4
 			this.tabTrim.Name = "tabTrim";
 			this.tabTrim.ShowCloseButton = true;
 			this.tabTrim.Size = new System.Drawing.Size(321, 507);
+			this.tabTrim.TabForeColor = System.Drawing.Color.Blue;
 			this.tabTrim.TabIndex = 2;
 			this.tabTrim.Text = "Trim       %";
 			this.tabTrim.ThemesEnabled = false;
@@ -324,6 +333,7 @@ namespace UtilORama4
 			this.tabOnOff.Name = "tabOnOff";
 			this.tabOnOff.ShowCloseButton = true;
 			this.tabOnOff.Size = new System.Drawing.Size(321, 507);
+			this.tabOnOff.TabForeColor = System.Drawing.Color.Green;
 			this.tabOnOff.TabIndex = 3;
 			this.tabOnOff.Text = "On-Off";
 			this.tabOnOff.ThemesEnabled = false;
@@ -337,6 +347,7 @@ namespace UtilORama4
 			this.tabMinTime.Name = "tabMinTime";
 			this.tabMinTime.ShowCloseButton = true;
 			this.tabMinTime.Size = new System.Drawing.Size(321, 507);
+			this.tabMinTime.TabForeColor = System.Drawing.Color.Purple;
 			this.tabMinTime.TabIndex = 4;
 			this.tabMinTime.Text = "Min       Sec";
 			this.tabMinTime.ThemesEnabled = false;
@@ -358,8 +369,9 @@ namespace UtilORama4
 			// 
 			// picAboutIcon
 			// 
-			this.picAboutIcon.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("picAboutIcon.BackgroundImage")));
+			this.picAboutIcon.ErrorImage = null;
 			this.picAboutIcon.Image = ((System.Drawing.Image)(resources.GetObject("picAboutIcon.Image")));
+			this.picAboutIcon.InitialImage = null;
 			this.picAboutIcon.Location = new System.Drawing.Point(528, 559);
 			this.picAboutIcon.Name = "picAboutIcon";
 			this.picAboutIcon.Size = new System.Drawing.Size(128, 128);
@@ -402,15 +414,18 @@ namespace UtilORama4
 			// 
 			// tabChannels
 			// 
+			this.tabChannels.BackColor = System.Drawing.Color.LightGray;
 			this.tabChannels.BeforeTouchSize = new System.Drawing.Size(324, 534);
+			this.tabChannels.Controls.Add(this.tabNoChange);
 			this.tabChannels.Controls.Add(this.tabDim);
 			this.tabChannels.Controls.Add(this.tabTrim);
 			this.tabChannels.Controls.Add(this.tabOnOff);
 			this.tabChannels.Controls.Add(this.tabMinTime);
-			this.tabChannels.Controls.Add(this.tabNoChange);
+			this.tabChannels.InactiveTabColor = System.Drawing.Color.DarkGray;
 			this.tabChannels.Location = new System.Drawing.Point(12, 105);
 			this.tabChannels.Name = "tabChannels";
 			this.tabChannels.PersistTabState = true;
+			this.tabChannels.ShowScroll = false;
 			this.tabChannels.Size = new System.Drawing.Size(324, 534);
 			this.tabChannels.TabIndex = 139;
 			this.tabChannels.SelectedIndexChanged += new System.EventHandler(this.tabChannels_SelectedIndexChanged);
@@ -436,46 +451,61 @@ namespace UtilORama4
 			this.label1.TabIndex = 144;
 			this.label1.Text = "Channel List File";
 			// 
-			// btnBrowseChannels
+			// btnBrowseMap
 			// 
-			this.btnBrowseChannels.AllowDrop = true;
-			this.btnBrowseChannels.Location = new System.Drawing.Point(242, 69);
-			this.btnBrowseChannels.Name = "btnBrowseChannels";
-			this.btnBrowseChannels.Size = new System.Drawing.Size(53, 20);
-			this.btnBrowseChannels.TabIndex = 143;
-			this.btnBrowseChannels.Text = "Load...";
-			this.btnBrowseChannels.UseVisualStyleBackColor = true;
+			this.btnBrowseMap.AllowDrop = true;
+			this.btnBrowseMap.Location = new System.Drawing.Point(242, 69);
+			this.btnBrowseMap.Name = "btnBrowseMap";
+			this.btnBrowseMap.Size = new System.Drawing.Size(53, 20);
+			this.btnBrowseMap.TabIndex = 143;
+			this.btnBrowseMap.Text = "Load...";
+			this.btnBrowseMap.UseVisualStyleBackColor = true;
+			this.btnBrowseMap.Click += new System.EventHandler(this.btnBrowseChannels_Click);
 			// 
-			// txtFilenameChannels
+			// txtFilenameMap
 			// 
-			this.txtFilenameChannels.AllowDrop = true;
-			this.txtFilenameChannels.Enabled = false;
-			this.txtFilenameChannels.Location = new System.Drawing.Point(12, 70);
-			this.txtFilenameChannels.Name = "txtFilenameChannels";
-			this.txtFilenameChannels.Size = new System.Drawing.Size(224, 20);
-			this.txtFilenameChannels.TabIndex = 142;
-			this.txtFilenameChannels.Text = "       (None)   (Click to load a channel list)  --->";
+			this.txtFilenameMap.AllowDrop = true;
+			this.txtFilenameMap.BackColor = System.Drawing.Color.LightGray;
+			this.txtFilenameMap.Enabled = false;
+			this.txtFilenameMap.Location = new System.Drawing.Point(12, 70);
+			this.txtFilenameMap.Name = "txtFilenameMap";
+			this.txtFilenameMap.Size = new System.Drawing.Size(224, 20);
+			this.txtFilenameMap.TabIndex = 142;
+			this.txtFilenameMap.Text = "       (None)   (Click to load a channel list)  --->";
 			// 
-			// btnSaveChannels
+			// btnSaveMap
 			// 
-			this.btnSaveChannels.AllowDrop = true;
-			this.btnSaveChannels.Location = new System.Drawing.Point(301, 69);
-			this.btnSaveChannels.Name = "btnSaveChannels";
-			this.btnSaveChannels.Size = new System.Drawing.Size(53, 20);
-			this.btnSaveChannels.TabIndex = 145;
-			this.btnSaveChannels.Text = "Save...";
-			this.btnSaveChannels.UseVisualStyleBackColor = true;
+			this.btnSaveMap.AllowDrop = true;
+			this.btnSaveMap.Location = new System.Drawing.Point(301, 69);
+			this.btnSaveMap.Name = "btnSaveMap";
+			this.btnSaveMap.Size = new System.Drawing.Size(53, 20);
+			this.btnSaveMap.TabIndex = 145;
+			this.btnSaveMap.Text = "Save...";
+			this.btnSaveMap.UseVisualStyleBackColor = true;
+			this.btnSaveMap.Click += new System.EventHandler(this.btnSaveChannels_Click);
+			// 
+			// chkLaunch
+			// 
+			this.chkLaunch.AutoSize = true;
+			this.chkLaunch.Location = new System.Drawing.Point(22, 690);
+			this.chkLaunch.Name = "chkLaunch";
+			this.chkLaunch.Size = new System.Drawing.Size(155, 17);
+			this.chkLaunch.TabIndex = 146;
+			this.chkLaunch.Text = "Launch in Sequence Editor";
+			this.chkLaunch.UseVisualStyleBackColor = true;
 			// 
 			// frmDim
 			// 
 			this.AcceptButton = this.btnOK;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(734, 740);
-			this.Controls.Add(this.btnSaveChannels);
+			this.BackColor = System.Drawing.Color.LightGray;
+			this.ClientSize = new System.Drawing.Size(657, 740);
+			this.Controls.Add(this.chkLaunch);
+			this.Controls.Add(this.btnSaveMap);
 			this.Controls.Add(this.label1);
-			this.Controls.Add(this.btnBrowseChannels);
-			this.Controls.Add(this.txtFilenameChannels);
+			this.Controls.Add(this.btnBrowseMap);
+			this.Controls.Add(this.txtFilenameMap);
 			this.Controls.Add(this.txtDim);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.tabChannels);
@@ -483,7 +513,7 @@ namespace UtilORama4
 			this.Controls.Add(this.txtTrim);
 			this.Controls.Add(this.picAboutIcon);
 			this.Controls.Add(this.lblFilenameDest);
-			this.Controls.Add(this.btnBrowseDest);
+			this.Controls.Add(this.btnSaveSeq);
 			this.Controls.Add(this.txtFilenameDest);
 			this.Controls.Add(this.lblSourceFile);
 			this.Controls.Add(this.btnBrowseSource);
@@ -522,7 +552,7 @@ namespace UtilORama4
 		private System.Windows.Forms.ToolStripStatusLabel pnlAbout;
 		private System.Windows.Forms.Button btnOK;
 		private System.Windows.Forms.Label lblFilenameDest;
-		private System.Windows.Forms.Button btnBrowseDest;
+		private System.Windows.Forms.Button btnSaveSeq;
 		private System.Windows.Forms.TextBox txtFilenameDest;
 		private System.Windows.Forms.Label lblSourceFile;
 		private System.Windows.Forms.Button btnBrowseSource;
@@ -546,9 +576,10 @@ namespace UtilORama4
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label lblTabFunction;
 		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.Button btnBrowseChannels;
-		private System.Windows.Forms.TextBox txtFilenameChannels;
-		private System.Windows.Forms.Button btnSaveChannels;
+		private System.Windows.Forms.Button btnBrowseMap;
+		private System.Windows.Forms.TextBox txtFilenameMap;
+		private System.Windows.Forms.Button btnSaveMap;
+		private System.Windows.Forms.CheckBox chkLaunch;
 	}
 }
 

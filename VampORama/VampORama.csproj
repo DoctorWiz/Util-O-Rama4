@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D0CB347F-95A1-4A9E-BD42-D9474B0A28A5}</ProjectGuid>
+    <ProjectGuid>{D0CB347F-7311-4A9E-BD42-D9474B0A28A5}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>UtilORama4</RootNamespace>
     <AssemblyName>Vamp-O-Rama</AssemblyName>
@@ -27,13 +27,13 @@
     <MapFileExtensions>true</MapFileExtensions>
     <InstallUrl>http://wizlights.com/utilorama/download/</InstallUrl>
     <SupportUrl>http://wizlights.com/xutils/xtune</SupportUrl>
-    <ProductName>xTune</ProductName>
+    <ProductName>Vamp-O-Rama</ProductName>
     <PublisherName>Wizster Software</PublisherName>
-    <SuiteName>xUtils</SuiteName>
+    <SuiteName>Util-O-Rama</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>1</ApplicationRevision>
-    <ApplicationVersion>2021.1.27.%2a</ApplicationVersion>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>4.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -58,8 +58,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>VampHeadOverPurpleBulb.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>DFEA86D9CB3FA985769C66E2F25E93D7E92C1ABB</ManifestCertificateThumbprint>
@@ -288,7 +287,12 @@
     <Compile Include="Transform6Segments.cs">
       <DependentUpon>Transform0Interface.cs</DependentUpon>
     </Compile>
-    <Compile Include="Transform7Chromagram.cs" />
+    <Compile Include="Transform7Chromagram.cs">
+      <DependentUpon>Transform0Interface.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Transform8Chords.cs">
+      <DependentUpon>Transform0Interface.cs</DependentUpon>
+    </Compile>
     <Compile Include="VampConstants.cs" />
     <Compile Include="OLDvamp.cs">
       <SubType>Form</SubType>
@@ -349,6 +353,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="localshows.html" />
+    <Content Include="VampHeadOverPurpleBulb.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

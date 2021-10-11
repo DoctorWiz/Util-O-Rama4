@@ -38,7 +38,7 @@ namespace LORUtils4
 			}
 			else
 			{
-				if (lineIn.Length > 1)
+				if (lineIn.Length > 0)
 				{
 					myName = lineIn;
 				}
@@ -180,11 +180,12 @@ namespace LORUtils4
 
 
 			//! EXPERIMENTAL-- MAY CRASH SHOWTIME
-			ret.Append(lutils.FIELDcomment);
-			ret.Append(lutils.FIELDEQ);
-			ret.Append(myComment);
-			ret.Append(lutils.ENDQT);
-
+			//ret.Append(lutils.FIELDcomment);
+			//ret.Append(lutils.FIELDEQ);
+			//ret.Append(myComment);
+			//ret.Append(lutils.ENDQT);
+			//! Yup!  Error "Unexpected save file information found" when trying to open the file.
+			//! So much for being able to save any extraneous data.
 
 
 			// Are there any effects for this channel?

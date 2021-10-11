@@ -258,7 +258,6 @@ namespace UtilORama4
 			panelAddX = chaos.NextDouble() * 2 + .5D;
 			panelAddY = chaos.NextDouble() * 2 + .5D;
 
-			FillCombos();
 
 
 
@@ -426,77 +425,11 @@ namespace UtilORama4
 			SetTheControlsToDefaults();
 			bool foo = false;
 
-			SetCombo(cboMethodBarsBeats, heartOfTheSun.methodBarsBeats);
-			timeSignature = heartOfTheSun.timeSignature;
-			if (timeSignature == 3) swTrackBeat.Checked = true; else swTrackBeat.Checked = false;
-			startBeat = heartOfTheSun.startBeat;
-			txtStartBeat.Text = startBeat.ToString();
-			vscStartBeat.Value = (5 - startBeat);
-			SetCombo(cboDetectBarBeats, heartOfTheSun.detectBars);
-			chkWhiten.Checked = heartOfTheSun.whiteBarsBeats;
-			chkBars.Checked = heartOfTheSun.doBars;
-			chkBeatsFull.Checked = heartOfTheSun.DoBeatsFull;
-			chkBeatsHalf.Checked = heartOfTheSun.doBeatsHalf;
-			chkBeatsThird.Checked = heartOfTheSun.doBeatsThird;
-			chkBeatsQuarter.Checked = heartOfTheSun.doBeatsQuarter;
-			SetCombo(cboAlignBarBeats, heartOfTheSun.alignBarsBeats);
-			SetCombo(cboLabelsBarBeats, heartOfTheSun.labelBarBeats);
-
-			SetCombo(cboMethodOnsets, heartOfTheSun.methodOnsets);
-			SetCombo(cboOnsetsDetect, heartOfTheSun.detectOnsets);
-			vscSensitivity.Value = heartOfTheSun.sensitivityOnsets;
-			chkWhiten.Checked = heartOfTheSun.whiteOnsets;
-			chkNoteOnsets.Checked = heartOfTheSun.doOnsets;
-			SetCombo(cboLabelsOnsets, heartOfTheSun.labelOnsets);
-			SetCombo(cboAlignOnsets, heartOfTheSun.alignOnsets);
-			SetCombo(cboStepSize, heartOfTheSun.stepSize);
-			swRamps.Checked = heartOfTheSun.Ramps;
-
-			SetCombo(cboMethodPolyphonic, heartOfTheSun.methodTranscribe);
-			chkPolyphonic.Checked = heartOfTheSun.doTranscribe;
-			SetCombo(cboLabelsPolyphonic, heartOfTheSun.labelTranscribe);
-			SetCombo(cboAlignPolyphonic, heartOfTheSun.alignTranscribe);
-
-			SetCombo(cboMethodChromagram, heartOfTheSun.methodSpectrum);
-			chkChromagram.Checked = heartOfTheSun.doSpectrum;
-			SetCombo(cboLabelsChromagram, heartOfTheSun.labelSpectrum);
-			SetCombo(cboAlignChromagram, heartOfTheSun.alignSpectrum);
-
-			SetCombo(cboMethodPitchKey, heartOfTheSun.methodPitchKey);
-			chkPitchKey.Checked = heartOfTheSun.doPitchKey;
-			SetCombo(cboLabelsPitchKey, heartOfTheSun.labelPitchKey);
-			SetCombo(cboAlignPitchKey, heartOfTheSun.alignPitchKey);
-
-			SetCombo(cboMethodTempo, heartOfTheSun.methodTempo);
-			chkTempo.Checked = heartOfTheSun.doTempo;
-			SetCombo(cboLabelsTempo, heartOfTheSun.labelTempo);
-			SetCombo(cboAlignTempo, heartOfTheSun.alignTempo);
-
-			chkSegments.Checked = heartOfTheSun.doSegments;
-			SetCombo(cboAlignSegments, heartOfTheSun.alignSegments);
-			SetCombo(cboMethodSegments, heartOfTheSun.methodSegments);
-			SetCombo(cboLabelsSegments, heartOfTheSun.labelSegments);
-
-			chkChromathing.Checked = heartOfTheSun.doChromagram;
-			SetCombo(cboAlignChromagram, heartOfTheSun.alignChromagram);
-			SetCombo(cboMethodChromagram, heartOfTheSun.methodChromagram);
-			SetCombo(cboLabelsChromagram, heartOfTheSun.labelChromagram);
-
-			chkVocals.Checked = heartOfTheSun.doVocals;
-			SetCombo(cboAlignVocals, heartOfTheSun.alignVocals);
-
-			chkFlux.Checked = heartOfTheSun.doFlux;
-			chkChords.Checked = heartOfTheSun.doChords;
-			chkVocals.Checked = heartOfTheSun.doVocals;
-
 			fileAudioLast = heartOfTheSun.fileAudioLast;
-
 			chkLOR.Checked = heartOfTheSun.UseLOR;
 			chkxLights.Checked = heartOfTheSun.UsexLights;
 			chkAutolaunch.Checked = heartOfTheSun.autoLaunch;
-
-			//SetAlignments();
-
+			FillCombos();
 
 			RecallLastFile();
 		}
@@ -517,66 +450,14 @@ namespace UtilORama4
 			heartOfTheSun.startBeat = Int32.Parse(txtStartBeat.Text); // startBeat;
 			heartOfTheSun.detectBars = cboDetectBarBeats.Text;
 			heartOfTheSun.whiteBarsBeats = chkWhiten.Checked;
-			heartOfTheSun.doBars = chkBars.Checked;
-			heartOfTheSun.DoBeatsFull = chkBeatsFull.Checked;
-			heartOfTheSun.doBeatsHalf = chkBeatsHalf.Checked;
-			heartOfTheSun.doBeatsThird = chkBeatsThird.Checked;
-			heartOfTheSun.doBeatsQuarter = chkBeatsQuarter.Checked;
-			heartOfTheSun.labelBarBeats = cboLabelsBarBeats.Text;
-			heartOfTheSun.alignBarsBeats = cboAlignBarBeats.Text;
-			heartOfTheSun.Ramps = swRamps.Checked;
-
-			heartOfTheSun.methodOnsets = cboMethodOnsets.Text;
-			heartOfTheSun.detectOnsets = cboOnsetsDetect.Text;
-			heartOfTheSun.sensitivityOnsets = vscSensitivity.Value;
-			heartOfTheSun.whiteOnsets = chkWhiten.Checked;
-			heartOfTheSun.doOnsets = chkNoteOnsets.Checked;
-			heartOfTheSun.labelOnsets = cboLabelsOnsets.Text;
-			heartOfTheSun.alignOnsets = cboAlignOnsets.Text;
-			heartOfTheSun.stepSize = cboStepSize.Text;
-
-			heartOfTheSun.methodTranscribe = cboMethodPolyphonic.Text;
-			heartOfTheSun.doTranscribe = chkPolyphonic.Checked;
-			heartOfTheSun.labelTranscribe = cboLabelsPolyphonic.Text;
-			heartOfTheSun.alignTranscribe = cboAlignPolyphonic.Text;
-
-			heartOfTheSun.methodSpectrum = cboMethodChromagram.Text;
-			heartOfTheSun.doSpectrum = chkChromagram.Checked;
-			heartOfTheSun.labelSpectrum = cboLabelsChromagram.Text;
-			heartOfTheSun.alignSpectrum = cboAlignChromagram.Text;
-
-			heartOfTheSun.methodPitchKey = cboMethodPitchKey.Text;
-			heartOfTheSun.doPitchKey = chkPitchKey.Checked;
-			heartOfTheSun.labelPitchKey = cboLabelsPitchKey.Text;
-			heartOfTheSun.alignPitchKey = cboAlignPitchKey.Text;
-
-			heartOfTheSun.methodTempo = cboMethodTempo.Text;
-			heartOfTheSun.doTempo = chkTempo.Checked;
-			heartOfTheSun.labelTempo = cboLabelsTempo.Text;
-			heartOfTheSun.alignTempo = cboAlignTempo.Text;
-
-			heartOfTheSun.doSegments = chkSegments.Checked;
-			heartOfTheSun.methodSegments = cboMethodSegments.Text;
-			heartOfTheSun.alignSegments = cboAlignSegments.Text;
-			heartOfTheSun.labelSegments = cboLabelsSegments.Text;
-
-			heartOfTheSun.doChromagram = chkChromathing.Checked;
-			heartOfTheSun.methodChromagram = cboMethodChromagram.Text;
-			heartOfTheSun.alignChromagram = cboAlignChromagram.Text;
-			heartOfTheSun.labelChromagram = cboLabelsChromagram.Text;
-
-			heartOfTheSun.doVocals = chkVocals.Checked;
-			heartOfTheSun.alignVocals = cboAlignVocals.Text;
-
-			heartOfTheSun.doFlux = chkFlux.Checked;
-			heartOfTheSun.doChords = chkChords.Checked;
-			heartOfTheSun.doVocals = chkVocals.Checked;
 
 			heartOfTheSun.fileAudioLast = fileAudioLast;
 
 			heartOfTheSun.UseLOR = chkLOR.Checked;
 			heartOfTheSun.UsexLights = chkxLights.Checked;
 			heartOfTheSun.autoLaunch = chkAutolaunch.Checked;
+
+			SaveCombos();
 
 			heartOfTheSun.Save();
 
@@ -1393,25 +1274,28 @@ namespace UtilORama4
 
 			if (btnBrowseAudio.Text == "Browse...")
 			{
-				string initDir = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+				// First, lets try the same folder the last audio file came from
+				string initDir = Path.GetDirectoryName(fileAudioLast);
+				if (!Directory.Exists(initDir))
+				{
+					// No good?  Next try the default audio path for Light-O-Rama Showtime
+					initDir = lutils.DefaultAudioPath;
+					if (!Directory.Exists(initDir))
+					{
+						// Still no good?  Try the Audio Folder under the xLights show directory
+						initDir = xUtils.ShowDirectory + "\\Audio";
+						if (!Directory.Exists(initDir))
+						{
+							// STILL no good?  Last chance- the user's MyMusic folder
+							initDir = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+							if (!Directory.Exists(initDir))
+							{
+								//? What else do I try?
+							}
+						}
+					}
+				}
 				string initFile = "";
-				if (vampMode)
-				{
-					string tryDir = xUtils.ShowDirectory + "\\Audio";
-					if (Directory.Exists(tryDir))
-					{
-						initDir = tryDir;
-					}
-				}
-				else
-				{
-					string tryDir = lutils.DefaultAudioPath;
-					if (Directory.Exists(tryDir))
-					{
-						initDir = tryDir;
-					}
-				}
-
 
 				dlgFileOpen.Filter = MusicFilter();
 				dlgFileOpen.FilterIndex = 1;
@@ -1846,6 +1730,10 @@ namespace UtilORama4
 				{
 					PrepAudioFile(fileAudioLast);
 				}
+				lblSongName.Text = audioData.Title + " by " + audioData.Artist;
+				pnlVamping.Top = grpAnalyze.Top;
+				pnlVamping.Left = grpAnalyze.Left;
+				pnlVamping.Visible = true;
 
 				// Next, do we need to re-prep the vamp results
 				bool reRunVamps = false; // reset flag
@@ -1909,6 +1797,7 @@ namespace UtilORama4
 				}
 				StatusUpdate("Analysis Complete!");
 				analyzed = true;
+				pnlVamping.Visible = false;
 				ImVamping(false);
 			}
 			else

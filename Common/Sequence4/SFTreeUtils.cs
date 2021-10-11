@@ -132,14 +132,14 @@ namespace LORUtils4
 
 
 			trackNode.Checked = track.Selected;
-			if (track.Tag == null)
+			if (track.Nodes == null)
 			{
-				//nodeList = new List<TreeNodeAdv>();
-				//track.Tag = nodeList;
+				nodeList = new List<TreeNodeAdv>();
+				track.Nodes = nodeList;
 			}
 			else
 			{
-				//nodeList = (List<TreeNodeAdv>)track.Tag;
+				nodeList = (List<TreeNodeAdv>)track.Nodes;
 			}
 			//nodeList.Add(trackNode);
 			//}
@@ -204,6 +204,10 @@ namespace LORUtils4
 						qlist.Add(channelNode);
 						ccount++;
 					}
+					List<TreeNodeAdv> tnlist = new List<TreeNodeAdv>();
+					tnlist.Add(trackNode);
+					track.Nodes = tnlist;
+
 				} // end not null
 					//} // end try
 				#region catch1
@@ -326,16 +330,18 @@ namespace LORUtils4
 					groupNode.Checked = group.Selected;
 					baseNodes = groupNode.Nodes;
 					nodesBySI[groupSI].Add(groupNode);
-					if (group.Tag == null)
+					if (group.Nodes == null)
 					{
 						nodeList = new List<TreeNodeAdv>();
-						group.Tag = nodeList;
+						group.Nodes = nodeList;
 					}
 					else
 					{
-						nodeList = (List<TreeNodeAdv>)group.Tag;
+						nodeList = (List<TreeNodeAdv>)group.Nodes;
 					}
 					nodeList.Add(groupNode);
+					group.Nodes = nodesBySI[groupSI];
+
 				}
 				//List<TreeNodeAdv> qlist;
 
@@ -460,6 +466,7 @@ namespace LORUtils4
 					deviceNode.Checked = device.Selected;
 					baseNodes = deviceNode.Nodes;
 					nodesBySI[deviceSI].Add(deviceNode);
+					device.Nodes = nodesBySI[deviceSI];
 				}
 				//List<TreeNodeAdv> qlist;
 
@@ -575,14 +582,14 @@ namespace LORUtils4
 			//iLORMember4 nodeTag = channel;
 			nodeIndex++;
 			channelNode.Tag = channel;
-			if (channel.Tag == null)
+			if (channel.Nodes == null)
 			{
 				nodeList = new List<TreeNodeAdv>();
-				channel.Tag = nodeList;
+				channel.Nodes = nodeList;
 			}
 			else
 			{
-				nodeList = (List<TreeNodeAdv>)channel.Tag;
+				nodeList = (List<TreeNodeAdv>)channel.Nodes;
 			}
 			nodeList.Add(channelNode);
 			//channelNode.ImageIndex = imlTreeIcons.Images.IndexOfKey("LORChannel4");
@@ -597,7 +604,6 @@ namespace LORUtils4
 			channelNode.LeftImageIndices = colorIcon;
 			//channelNode.SelectedImageIndex = iconIndex;
 			channelNode.Checked = channel.Selected;
-
 
 			return channelNode;
 		}
@@ -627,14 +633,14 @@ namespace LORUtils4
 					channelNode.LeftImageIndices = ICONrgbChannel;
 					//channelNode.SelectedImageKey = ICONrgbChannel;
 					channelNode.Checked = rgbChannel.Selected;
-					if (rgbChannel.Tag == null)
+					if (rgbChannel.Nodes == null)
 					{
 						nodeList = new List<TreeNodeAdv>();
-						rgbChannel.Tag = nodeList;
+						rgbChannel.Nodes = nodeList;
 					}
 					else
 					{
-						nodeList = (List<TreeNodeAdv>)rgbChannel.Tag;
+						nodeList = (List<TreeNodeAdv>)rgbChannel.Nodes;
 					}
 					nodeList.Add(channelNode);
 
@@ -654,14 +660,14 @@ namespace LORUtils4
 						colorNode.Checked = rgbChannel.redChannel.Selected;
 						nodesBySI[ci].Add(colorNode);
 						channelNode.Nodes.Add(colorNode);
-						if (rgbChannel.redChannel.Tag == null)
+						if (rgbChannel.redChannel.Nodes == null)
 						{
 							nodeList = new List<TreeNodeAdv>();
-							rgbChannel.redChannel.Tag = nodeList;
+							rgbChannel.redChannel.Nodes = nodeList;
 						}
 						else
 						{
-							nodeList = (List<TreeNodeAdv>)rgbChannel.redChannel.Tag;
+							nodeList = (List<TreeNodeAdv>)rgbChannel.redChannel.Nodes;
 						}
 						nodeList.Add(channelNode);
 
@@ -678,14 +684,14 @@ namespace LORUtils4
 						colorNode.Checked = rgbChannel.grnChannel.Selected;
 						nodesBySI[ci].Add(colorNode);
 						channelNode.Nodes.Add(colorNode);
-						if (rgbChannel.grnChannel.Tag == null)
+						if (rgbChannel.grnChannel.Nodes == null)
 						{
 							nodeList = new List<TreeNodeAdv>();
-							rgbChannel.grnChannel.Tag = nodeList;
+							rgbChannel.grnChannel.Nodes = nodeList;
 						}
 						else
 						{
-							nodeList = (List<TreeNodeAdv>)rgbChannel.grnChannel.Tag;
+							nodeList = (List<TreeNodeAdv>)rgbChannel.grnChannel.Nodes;
 						}
 						nodeList.Add(channelNode);
 
@@ -703,16 +709,17 @@ namespace LORUtils4
 						colorNode.Checked = rgbChannel.bluChannel.Selected;
 						nodesBySI[ci].Add(colorNode);
 						channelNode.Nodes.Add(colorNode);
-						if (rgbChannel.bluChannel.Tag == null)
+						if (rgbChannel.bluChannel.Nodes == null)
 						{
 							nodeList = new List<TreeNodeAdv>();
-							rgbChannel.bluChannel.Tag = nodeList;
+							rgbChannel.bluChannel.Nodes = nodeList;
 						}
 						else
 						{
-							nodeList = (List<TreeNodeAdv>)rgbChannel.bluChannel.Tag;
+							nodeList = (List<TreeNodeAdv>)rgbChannel.bluChannel.Nodes;
 						}
 						nodeList.Add(channelNode);
+						rgbChannel.Nodes = nodesBySI[RGBsi];
 					} // end includeRGBchildren
 				}
 				else

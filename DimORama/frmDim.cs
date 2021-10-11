@@ -21,17 +21,17 @@ namespace UtilORama4
 		private const string helpPage = "http://wizlights.com/utilorama/blankorama";
 
 		// Tab index on GUI, do not confuse with Rule numbers below
-		private const int TAB_DIM = 0;
-		private const int TAB_TRIM = 1;
-		private const int TAB_ONOFF = 2;
-		private const int TAB_MINTIME = 3;
-		private const int TAB_NOCHANGE = 4;
+		private const int TAB_NOCHANGE = 0;
+		private const int TAB_DIM = 1;
+		private const int TAB_TRIM = 2;
+		private const int TAB_ONOFF = 3;
+		private const int TAB_MINTIME = 4;
 		// Rule number (not the same as the GUI tab number above)
 		private const int RULE_NOCHANGE = 0;
 		private const int RULE_DIM = 1;
 		private const int RULE_TRIM = 2;
-		private const int RULE_ONOFF = 4;
-		private const int RULE_MINTIME = 8;
+		private const int RULE_ONOFF = 3;
+		private const int RULE_MINTIME = 4;
 		private const int RULES_DIM_MINTIME = RULE_DIM + RULE_MINTIME;
 		private const int RULES_TRIM_MINTIME = RULE_TRIM + RULE_MINTIME;
 		private const int RULES_ONOFF_MINTIME = RULE_ONOFF + RULE_MINTIME;
@@ -39,27 +39,44 @@ namespace UtilORama4
 		private const int RULES_MIXED = 128;
 
 		// Convert Tab Index to Rule   0          1          2           3             4
-		private int[] TabRules = { RULE_DIM, RULE_TRIM, RULE_ONOFF, RULE_MINTIME, RULE_NOCHANGE };
+		private int[] TabRules = { RULE_NOCHANGE, RULE_DIM, RULE_TRIM, RULE_ONOFF, RULE_MINTIME };
 
 		// Colors for the various possible rules
-		public readonly Color COLOR_NOCHANGE = Color.Black;
-		public readonly Color COLOR_DIM = Color.Red;
-		public readonly Color COLOR_TRIM = Color.Lime;
-		public readonly Color COLOR_ONOFF = Color.Blue;
-		public readonly Color COLOR_MINTIME = Color.FromArgb(50, 50, 50); // Very Dark Gray
-		public readonly Color COLOR_DIM_MINTIME = Color.DarkRed;
-		public readonly Color COLOR_TRIM_MINTIME = Color.Green;
-		public readonly Color COLOR_ONOFF_MINTIME = Color.DarkBlue;
+		public static readonly Color COLOR_NOCHANGE = Color.Black;
+		public static readonly Color COLOR_DIM = Color.Red;
+		public static readonly Color COLOR_TRIM = Color.Lime;
+		public static readonly Color COLOR_ONOFF = Color.Blue;
+		public static readonly Color COLOR_MINTIME = Color.FromArgb(50, 50, 50); // Very Dark Gray
+		public static readonly Color COLOR_DIM_MINTIME = Color.DarkRed;
+		public static readonly Color COLOR_TRIM_MINTIME = Color.Green;
+		public static readonly Color COLOR_ONOFF_MINTIME = Color.DarkBlue;
+		public static readonly Color COLOR_INVALID = Color.Orange;
+		public static readonly Color COLOR_INDETERMINATE = Color.DarkSlateGray;
+		//                                     0/4/8/12              1/5/9/13						 2/6/10/14						 3/7/11/15
+		public readonly Color[] ruleColors = {COLOR_NOCHANGE,       COLOR_DIM,          COLOR_TRIM,           COLOR_ONOFF,
+																					COLOR_MINTIME,        COLOR_DIM_MINTIME,  COLOR_TRIM_MINTIME,  COLOR_ONOFF_MINTIME };
+																					
+
 
 
 		private string filenameSource = "";
 		private string filenameDest = "";
 		private string filenameMap = "";
 		private bool firstShown = false;
+		public const string EXT_DIMMAP = "DimMap";
+		//public const string FILE_DIMMAP = "Channel Dimming Map *.DimMap|*DimMap";
+		public const string FILE_DIMMAP = "Channel Dimming Map *." + EXT_DIMMAP + "|*." + EXT_DIMMAP;
 
 		private LORSequence4 seqSource = null;
 		private LORSequence4 seqDest = null;
+		private bool dirtyMap = false;
+		private bool dirtySeq = false;
+		private int currentTab = 0;
+		
+		
+		//! Try to avoid using this!  Now included in the new  .Nodes property of all iLORMembers
 		private List<TreeNodeAdv>[] nodesBySI = null; // new List<TreeNodeAdv>();
+		//! If that works out I can rid of this and all the associated code needed to update it
 
 
 		public frmDim()
@@ -81,15 +98,16 @@ namespace UtilORama4
 			// https://www.syncfusion.com/kb/1189/what-is-the-reason-for-position-of-the-tab-page-in-the-winforms-tabcontroladv-not-the-same
 			tabChannels.Controls.Clear();
 			// To add the tab pages in the order 1, 2, 3, 4
-			tabChannels.Controls.AddRange(new System.Windows.Forms.Control[] { tabDim, tabTrim, tabOnOff, tabMinTime, tabNoChange });
+			//tabChannels.Controls.AddRange(new System.Windows.Forms.Control[] { tabDim, tabTrim, tabOnOff, tabMinTime, tabNoChange });
+			tabChannels.Controls.AddRange(new System.Windows.Forms.Control[] {tabNoChange, tabDim, tabTrim, tabOnOff, tabMinTime });
 
 
 			int y = tabChannels.Top + 4;
-			txtDim.Location = new Point(42, y);
+			txtDim.Location = new Point(110, y);
 			this.Controls.SetChildIndex(txtDim, 0);
-			txtTrim.Location = new Point(104, y);
+			txtTrim.Location = new Point(172, y);
 			this.Controls.SetChildIndex(txtTrim, 1);
-			txtTime.Location = new Point(209, y);
+			txtTime.Location = new Point(278, y);
 			this.Controls.SetChildIndex(txtTime, 2);
 
 		}
@@ -301,49 +319,60 @@ namespace UtilORama4
 			treeSource.Width = tabChannels.Width - 20;
 			picPreviewSource.Width = tabChannels.Width - 20;
 
-			int mh = txtFilenameChannels.Top + txtFilenameChannels.Height + txtFilenameDest.Height + 70;
+			// Reserve 80 pixels at the bottom for the destination file
+			int mh = txtFilenameMap.Top + txtFilenameMap.Height + txtFilenameDest.Height + 80;
 			tabChannels.Height = ClientRectangle.Height - mh;
 			int th = tabChannels.Height - picPreviewSource.Height - 62;
 			treeSource.Height = th;
 			picPreviewSource.Top = treeSource.Top + treeSource.Height + 6;
 			lblFilenameDest.Top = tabChannels.Top + tabChannels.Height + 5;
 			txtFilenameDest.Top = lblFilenameDest.Top + lblFilenameDest.Height + 2;
-			btnBrowseDest.Top = txtFilenameDest.Top;
+			chkLaunch.Top = txtFilenameDest.Top + txtFilenameDest.Height + 2;
+			btnSaveSeq.Top = txtFilenameDest.Top;
 
 		}
 
 		private void tabChannels_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			tabChannels.SelectedTab.Controls.Add(lblTabFunction);
-			tabChannels.SelectedTab.Controls.Add(treeSource);
-			tabChannels.SelectedTab.Controls.Add(picPreviewSource);
-			switch (tabChannels.SelectedIndex)
+
+		}
+
+		private int ChangeTab(int newTab)
+		{
+			int lastTab = currentTab;
+			if (newTab != currentTab)
 			{
-				case TAB_DIM:
-					lblTabFunction.Text = "These channels will be scaled to a maximum of " + txtDim.Text + "% intensity";
-					break;
-				case TAB_TRIM:
-					lblTabFunction.Text = "These channels will be truncated to a maximum of " + txtTrim.Text + "% intensity";
-					break;
-				case TAB_ONOFF:
-					lblTabFunction.Text = "These channels must be fully on, or fully off";
-					break;
-				case TAB_MINTIME:
-					lblTabFunction.Text = "These channels must stay on or off for a minimum of " + txtTime.Text + " seconds";
-					break;
-				case TAB_NOCHANGE:
-					lblTabFunction.Text = "These channels will be left as-is and not modified";
-					break;
+				currentTab = newTab;
+				tabChannels.SelectedIndex = newTab;
+				tabChannels.SelectedTab.Controls.Add(lblTabFunction);
+				tabChannels.SelectedTab.Controls.Add(treeSource);
+				tabChannels.SelectedTab.Controls.Add(picPreviewSource);
+				switch (newTab)
+				{
+					case TAB_DIM:
+						lblTabFunction.Text = "These channels will be scaled to a maximum of " + txtDim.Text + "% intensity";
+						break;
+					case TAB_TRIM:
+						lblTabFunction.Text = "These channels will be truncated to a maximum of " + txtTrim.Text + "% intensity";
+						break;
+					case TAB_ONOFF:
+						lblTabFunction.Text = "These channels must be fully on, or fully off";
+						break;
+					case TAB_MINTIME:
+						lblTabFunction.Text = "These channels must stay on or off for a minimum of " + txtTime.Text + " seconds";
+						break;
+					case TAB_NOCHANGE:
+						lblTabFunction.Text = "These channels will be left as-is and not modified";
+						break;
+				}
+				UpdateChannelTree(newTab);
 			}
-			UpdateChannelTree(tabChannels.SelectedIndex);
+			return lastTab;
 		}
 
 		private void UpdateChannelTree(int selectedTab)
 		{
-			//switch (selectedTab)
-
-
-
+			UpdateTreeFormatting(TabRules[selectedTab]);
 
 		}
 
@@ -418,6 +447,7 @@ namespace UtilORama4
 				Properties.Settings.Default.filenameSource = filenameSource;
 				Properties.Settings.Default.Save();
 				TreeUtils.TreeFillChannels(treeSource, seqSource, ref nodesBySI, false, false);
+				UpdateTreeFormatting(TabRules[tabChannels.SelectedIndex]);
 				//TODO: Re-select current tab, trigging refresh of the tree checkboxes, etc.
 			}
 			ImBusy(false);
@@ -599,196 +629,198 @@ namespace UtilORama4
 			return err;
 		}
 
-		private void SaveMap(string mapFile)
+		private int SaveMap(string mapFile)
 		{
-			string lineOut = "";
-			StreamWriter writer = new StreamWriter(mapFile);
-			// DELIMA = "🗲";
-			// DELIMB = "🧙";
-			// DELIMC = "👍";
-			// DELIMD = "🐕";
-			// DELIME = "💡"
-			
-			// File Header
-			lineOut = lutils.DELIME + " Util-O-Rama Dim-O-Rama Channel List " + lutils.DELIME;
-			writer.WriteLine(lineOut);
-			// Dim Section; Channels and RGB Channels to be dimmed or scaled, and by how much
-			lineOut = lutils.DELIMC + "Dim" + lutils.DELIMC + txtDim.Text;
-			writer.WriteLine(lineOut);
-			// Channels to be dimmed or scaled, Saved Index and Name
-			lineOut = lutils.DELIMA + "Channels" + lutils.DELIMA;
-			writer.WriteLine(lineOut);
-			for (int c=0; c < seqSource.Channels.Count; c++)
+			int err = 0;
+			try
 			{
-				int q = seqSource.Channels[c].RuleID & RULE_DIM;
-				if (q == RULE_DIM)
-				{
-					lineOut = seqSource.Channels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.Channels[c].Name;
-					writer.WriteLine(lineOut);
-				}
-			}
-			// RGB Channels to be dimmed or scaled, Saved Index and Name
-			lineOut = lutils.DELIMA + "RGBChannels" + lutils.DELIMA;
-			writer.WriteLine(lineOut);
-			for (int c = 0; c < seqSource.RGBchannels.Count; c++)
-			{
-				int q = seqSource.RGBchannels[c].RuleID & RULE_DIM;
-				if (q == RULE_DIM)
-				{
-					lineOut = seqSource.RGBchannels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.RGBchannels[c].Name;
-					writer.WriteLine(lineOut);
-				}
-			}
+				string lineOut = "";
+				StreamWriter writer = new StreamWriter(mapFile);
+				// DELIMA = "🗲";
+				// DELIMB = "🧙";
+				// DELIMC = "👍";
+				// DELIMD = "🐕";
+				// DELIME = "💡"
 
-			// Trim Section; Channels and RGB Channels to be trimmed or truncated, and by how much
-			lineOut = lutils.DELIMC + "Trim" + lutils.DELIMC + txtTrim.Text;
-			writer.WriteLine(lineOut);
-			// Channels to be trimmed or truncated, Saved Index and Name
-			lineOut = lutils.DELIMA + "Channels" + lutils.DELIMA;
-			writer.WriteLine(lineOut);
-			for (int c = 0; c < seqSource.Channels.Count; c++)
-			{
-				int q = seqSource.Channels[c].RuleID & RULE_TRIM;
-				if (q == RULE_TRIM)
+				// File Header
+				lineOut = lutils.DELIME + " Util-O-Rama Dim-O-Rama Channel List " + lutils.DELIME;
+				writer.WriteLine(lineOut);
+				// Dim Section; Channels and RGB Channels to be dimmed or scaled, and by how much
+				lineOut = lutils.DELIMC + "Dim" + lutils.DELIMC + txtDim.Text;
+				writer.WriteLine(lineOut);
+				// Channels to be dimmed or scaled, Saved Index and Name
+				lineOut = lutils.DELIMA + "Channels" + lutils.DELIMA;
+				writer.WriteLine(lineOut);
+				for (int c = 0; c < seqSource.Channels.Count; c++)
 				{
-					lineOut = seqSource.Channels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.Channels[c].Name;
-					writer.WriteLine(lineOut);
+					int q = seqSource.Channels[c].RuleID & RULE_DIM;
+					if (q == RULE_DIM)
+					{
+						lineOut = seqSource.Channels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.Channels[c].Name;
+						writer.WriteLine(lineOut);
+					}
 				}
-			}
-			// RGB Channels to be trimmed or truncated, Saved Index and Name
-			lineOut = lutils.DELIMA + "RGBChannels" + lutils.DELIMA;
-			writer.WriteLine(lineOut);
-			for (int c = 0; c < seqSource.RGBchannels.Count; c++)
-			{
-				int q = seqSource.RGBchannels[c].RuleID & RULE_TRIM;
-				if (q == RULE_TRIM)
+				// RGB Channels to be dimmed or scaled, Saved Index and Name
+				lineOut = lutils.DELIMA + "RGBChannels" + lutils.DELIMA;
+				writer.WriteLine(lineOut);
+				for (int c = 0; c < seqSource.RGBchannels.Count; c++)
 				{
-					lineOut = seqSource.RGBchannels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.RGBchannels[c].Name;
-					writer.WriteLine(lineOut);
+					int q = seqSource.RGBchannels[c].RuleID & RULE_DIM;
+					if (q == RULE_DIM)
+					{
+						lineOut = seqSource.RGBchannels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.RGBchannels[c].Name;
+						writer.WriteLine(lineOut);
+					}
 				}
-			}
 
-			// On-Off Section; Channels and RGB Channels to set strictly On or Off
-			lineOut = lutils.DELIMC + "OnOff" + lutils.DELIMC;
-			writer.WriteLine(lineOut);
-			// Channels to be set on or off, Saved Index and Name
-			lineOut = lutils.DELIMA + "Channels" + lutils.DELIMA;
-			writer.WriteLine(lineOut);
-			for (int c = 0; c < seqSource.Channels.Count; c++)
-			{
-				int q = seqSource.Channels[c].RuleID & RULE_ONOFF;
-				if (q == RULE_ONOFF)
+				// Trim Section; Channels and RGB Channels to be trimmed or truncated, and by how much
+				lineOut = lutils.DELIMC + "Trim" + lutils.DELIMC + txtTrim.Text;
+				writer.WriteLine(lineOut);
+				// Channels to be trimmed or truncated, Saved Index and Name
+				lineOut = lutils.DELIMA + "Channels" + lutils.DELIMA;
+				writer.WriteLine(lineOut);
+				for (int c = 0; c < seqSource.Channels.Count; c++)
 				{
-					lineOut = seqSource.Channels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.Channels[c].Name;
-					writer.WriteLine(lineOut);
+					int q = seqSource.Channels[c].RuleID & RULE_TRIM;
+					if (q == RULE_TRIM)
+					{
+						lineOut = seqSource.Channels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.Channels[c].Name;
+						writer.WriteLine(lineOut);
+					}
 				}
-			}
-			// RGB Channels to be set strictly on or off
-			lineOut = lutils.DELIMA + "RGBChannels" + lutils.DELIMA;
-			writer.WriteLine(lineOut);
-			for (int c = 0; c < seqSource.RGBchannels.Count; c++)
-			{
-				int q = seqSource.RGBchannels[c].RuleID & RULE_ONOFF;
-				if (q == RULE_ONOFF)
+				// RGB Channels to be trimmed or truncated, Saved Index and Name
+				lineOut = lutils.DELIMA + "RGBChannels" + lutils.DELIMA;
+				writer.WriteLine(lineOut);
+				for (int c = 0; c < seqSource.RGBchannels.Count; c++)
 				{
-					lineOut = seqSource.RGBchannels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.RGBchannels[c].Name;
-					writer.WriteLine(lineOut);
+					int q = seqSource.RGBchannels[c].RuleID & RULE_TRIM;
+					if (q == RULE_TRIM)
+					{
+						lineOut = seqSource.RGBchannels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.RGBchannels[c].Name;
+						writer.WriteLine(lineOut);
+					}
 				}
-			}
 
-			// Minimum Time Section; Channels and RGB Channels to be left on or off for a minimum number of seconds, and how many
-			lineOut = lutils.DELIMC + "MinTime" + lutils.DELIMC + txtTime.Text;
-			writer.WriteLine(lineOut);
-			// Channels to be be on or off for a minimum time
-			lineOut = lutils.DELIMA + "Channels" + lutils.DELIMA;
-			writer.WriteLine(lineOut);
-			for (int c = 0; c < seqSource.Channels.Count; c++)
-			{
-				int q = seqSource.Channels[c].RuleID & RULE_MINTIME;
-				if (q == RULE_MINTIME)
+				// On-Off Section; Channels and RGB Channels to set strictly On or Off
+				lineOut = lutils.DELIMC + "OnOff" + lutils.DELIMC;
+				writer.WriteLine(lineOut);
+				// Channels to be set on or off, Saved Index and Name
+				lineOut = lutils.DELIMA + "Channels" + lutils.DELIMA;
+				writer.WriteLine(lineOut);
+				for (int c = 0; c < seqSource.Channels.Count; c++)
 				{
-					lineOut = seqSource.Channels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.Channels[c].Name;
-					writer.WriteLine(lineOut);
+					int q = seqSource.Channels[c].RuleID & RULE_ONOFF;
+					if (q == RULE_ONOFF)
+					{
+						lineOut = seqSource.Channels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.Channels[c].Name;
+						writer.WriteLine(lineOut);
+					}
 				}
-			}
-			// RGB Channels to be on or off for a minimum time
-			lineOut = lutils.DELIMA + "RGBChannels" + lutils.DELIMA;
-			writer.WriteLine(lineOut);
-			for (int c = 0; c < seqSource.RGBchannels.Count; c++)
-			{
-				int q = seqSource.RGBchannels[c].RuleID & RULE_ONOFF;
-				if (q == RULE_ONOFF)
+				// RGB Channels to be set strictly on or off
+				lineOut = lutils.DELIMA + "RGBChannels" + lutils.DELIMA;
+				writer.WriteLine(lineOut);
+				for (int c = 0; c < seqSource.RGBchannels.Count; c++)
 				{
-					lineOut = seqSource.RGBchannels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.RGBchannels[c].Name;
-					writer.WriteLine(lineOut);
+					int q = seqSource.RGBchannels[c].RuleID & RULE_ONOFF;
+					if (q == RULE_ONOFF)
+					{
+						lineOut = seqSource.RGBchannels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.RGBchannels[c].Name;
+						writer.WriteLine(lineOut);
+					}
 				}
-			}
 
-			// And finally, just for the benefit of us humans
-			// Will be ignored when this file is read back in, written out only for reference and debugging by humans
-			// No Change Section; Channels and RGB Channels to be left alone and get no changes
-			lineOut = lutils.DELIMC + "NoChange" + lutils.DELIMC;
-			writer.WriteLine(lineOut);
-			// Channels to get no changes and be left alone
-			lineOut = lutils.DELIMA + "Channels" + lutils.DELIMA;
-			writer.WriteLine(lineOut);
-			for (int c = 0; c < seqSource.Channels.Count; c++)
-			{
-				if (seqSource.Channels[c].RuleID == RULE_NOCHANGE)
+				// Minimum Time Section; Channels and RGB Channels to be left on or off for a minimum number of seconds, and how many
+				lineOut = lutils.DELIMC + "MinTime" + lutils.DELIMC + txtTime.Text;
+				writer.WriteLine(lineOut);
+				// Channels to be be on or off for a minimum time
+				lineOut = lutils.DELIMA + "Channels" + lutils.DELIMA;
+				writer.WriteLine(lineOut);
+				for (int c = 0; c < seqSource.Channels.Count; c++)
 				{
-					lineOut = seqSource.Channels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.Channels[c].Name;
-					writer.WriteLine(lineOut);
+					int q = seqSource.Channels[c].RuleID & RULE_MINTIME;
+					if (q == RULE_MINTIME)
+					{
+						lineOut = seqSource.Channels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.Channels[c].Name;
+						writer.WriteLine(lineOut);
+					}
 				}
-			}
-			// RGB Channels to be ignored, left alone, not changed
-			lineOut = lutils.DELIMA + "RGBChannels" + lutils.DELIMA;
-			writer.WriteLine(lineOut);
-			for (int c = 0; c < seqSource.RGBchannels.Count; c++)
-			{
-				if(seqSource.RGBchannels[c].RuleID == RULE_NOCHANGE)
+				// RGB Channels to be on or off for a minimum time
+				lineOut = lutils.DELIMA + "RGBChannels" + lutils.DELIMA;
+				writer.WriteLine(lineOut);
+				for (int c = 0; c < seqSource.RGBchannels.Count; c++)
 				{
-					lineOut = seqSource.RGBchannels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.RGBchannels[c].Name;
-					writer.WriteLine(lineOut);
+					int q = seqSource.RGBchannels[c].RuleID & RULE_ONOFF;
+					if (q == RULE_ONOFF)
+					{
+						lineOut = seqSource.RGBchannels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.RGBchannels[c].Name;
+						writer.WriteLine(lineOut);
+					}
 				}
+
+				// And finally, just for the benefit of us humans
+				// Will be ignored when this file is read back in, written out only for reference and debugging by humans
+				// No Change Section; Channels and RGB Channels to be left alone and get no changes
+				lineOut = lutils.DELIMC + "NoChange" + lutils.DELIMC;
+				writer.WriteLine(lineOut);
+				// Channels to get no changes and be left alone
+				lineOut = lutils.DELIMA + "Channels" + lutils.DELIMA;
+				writer.WriteLine(lineOut);
+				for (int c = 0; c < seqSource.Channels.Count; c++)
+				{
+					if (seqSource.Channels[c].RuleID == RULE_NOCHANGE)
+					{
+						lineOut = seqSource.Channels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.Channels[c].Name;
+						writer.WriteLine(lineOut);
+					}
+				}
+				// RGB Channels to be ignored, left alone, not changed
+				lineOut = lutils.DELIMA + "RGBChannels" + lutils.DELIMA;
+				writer.WriteLine(lineOut);
+				for (int c = 0; c < seqSource.RGBchannels.Count; c++)
+				{
+					if (seqSource.RGBchannels[c].RuleID == RULE_NOCHANGE)
+					{
+						lineOut = seqSource.RGBchannels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.RGBchannels[c].Name;
+						writer.WriteLine(lineOut);
+					}
+				}
+
+				// Again, just for us easily confused humans...
+				lineOut = lutils.DELIME + " (End of File) " + lutils.DELIME;
+				writer.WriteLine(lineOut);
+
+				writer.Close();
+				filenameMap = mapFile;
+				Properties.Settings.Default.filenameMap = filenameMap;
+				Properties.Settings.Default.Save();
 			}
-
-			// Again, just for us easily confused humans...
-			lineOut = lutils.DELIME + " (End of File) " + lutils.DELIME;
-			writer.WriteLine(lineOut);
-
-			writer.Close();
-			filenameMap = mapFile;
-			Properties.Settings.Default.filenameMap = filenameMap;
-			Properties.Settings.Default.Save();
+			catch (Exception ex)
+			{
+				string msg = "Error saving map file!\r\n\r\n" + ex.Message;
+				Fyle.BUG(msg);
+			}
+			return err;
 
 		}
 
-		private void BrowseForMap()
+		private string BrowseForMap()
 		{
-
-
-
-
-
-
-
-
-			/*
-			dlgFileOpen.DefaultExt = lutils.EXT_CHMAP;
-			dlgFileOpen.Filter = lutils.FILE_CHMAP;
+			string theFile = "";
+			dlgFileOpen.DefaultExt = EXT_DIMMAP;
+			dlgFileOpen.Filter = FILE_DIMMAP;
 			dlgFileOpen.FilterIndex = 0;
 			string initDir = lutils.DefaultChannelConfigsPath;
 			string initFile = "";
-			if (mapFile.Length > 4)
+			if (filenameMap.Length > 4)
 			{
-				string pth = Path.GetDirectoryName(mapFile);
+				string pth = Path.GetDirectoryName(filenameMap);
 				if (Directory.Exists(pth))
 				{
 					initDir = pth;
 				}
-				if (File.Exists(mapFile))
+				if (File.Exists(filenameMap))
 				{
-					initFile = Path.GetFileName(mapFile);
+					initFile = Path.GetFileName(filenameMap);
 				}
 			}
 			dlgFileOpen.FileName = initFile;
@@ -799,24 +831,24 @@ namespace UtilORama4
 			DialogResult dr = dlgFileOpen.ShowDialog();
 			if (dr == DialogResult.OK)
 			{
-				mapFile = dlgFileOpen.FileName;
-				txtMappingFile.Text = Path.GetFileName(mapFile);
-				Properties.Settings.Default.LastMapFile = mapFile;
+				filenameMap = dlgFileOpen.FileName;
+				theFile = filenameMap;
+				txtFilenameMap.Text = Path.GetFileName(filenameMap);
+				Properties.Settings.Default.filenameMap = filenameMap;
 				Properties.Settings.Default.Save();
 				Properties.Settings.Default.Upgrade();
 				Properties.Settings.Default.Save();
-				if (seqMaster.Members.Items.Count > 1)
+				if (seqSource.Members.Items.Count > 1)
 				{
 					if (seqSource.Members.Items.Count > 1)
 					{
-						LoadApplyMapFile(mapFile);
+						LoadApplyMapFile(filenameMap);
 					}
 				}
 				dirtyMap = false;
 				btnSaveMap.Enabled = dirtyMap;
-				mnuSaveNewMap.Enabled = dirtyMap;
 			} // end dialog result = OK
-			*/
+			return theFile;
 		} // end btnLoadMap Click event
 
 		private int LoadApplyMap(string mapFile)
@@ -954,7 +986,7 @@ namespace UtilORama4
 					// did we get Something, and is that something a channel?
 					if (member != null)
 					{
-						if (member.MemberType == LORMemberType4.Channel	)
+						if (member.MemberType == LORMemberType4.Channel)
 						{
 							// So far so good!  Now, does the name match ?
 							// Case insensitive
@@ -1026,7 +1058,7 @@ namespace UtilORama4
 			}
 			return rgbChan;
 		}
-			
+
 
 
 		private string LoadApplyMapFile(string fileName)
@@ -1690,7 +1722,7 @@ namespace UtilORama4
 		}
 
 
-	private Bitmap DrawCutoff(Bitmap preview, Color lineColor, int percent)
+		private Bitmap DrawCutoff(Bitmap preview, Color lineColor, int percent)
 		{
 			int y = preview.Height * percent / 100;
 			y = preview.Height - y;
@@ -1706,7 +1738,7 @@ namespace UtilORama4
 			// Returns the count of how many effects actually needed scaling
 			int count = 0;
 			bool needed = false;
-			switch(member.MemberType)
+			switch (member.MemberType)
 			{
 				//////////////
 				// CHANNEL //
@@ -1769,7 +1801,7 @@ namespace UtilORama4
 						// and if *NONE* of the effects on ALL 3 subchannels exceed the threshold
 						// then this RGB channel as probably already been scaled
 						// but if *ANY* effects on *ANY* of the subchannels exceed the threshold...
-						
+
 						// Loop thru all RED effects...
 						for (int e = 0; e < rgb.redChannel.effects.Count; e++)
 						{
@@ -1839,7 +1871,7 @@ namespace UtilORama4
 				//////////////////
 				case LORMemberType4.ChannelGroup:
 					LORChannelGroup4 group = (LORChannelGroup4)member;
-					foreach(iLORMember4 subMember in group.Members)
+					foreach (iLORMember4 subMember in group.Members)
 					{
 						// Recurse!
 						count += ScaleChannel(subMember, percent, force);
@@ -1880,7 +1912,7 @@ namespace UtilORama4
 			// Returns the count of how many effects actually needed scaling
 			int count = 0;
 			bool needed = false;
-			switch(member.MemberType)
+			switch (member.MemberType)
 			{
 				//////////////
 				// CHANNEL //
@@ -1945,7 +1977,7 @@ namespace UtilORama4
 				//////////////////
 				case LORMemberType4.ChannelGroup:
 					LORChannelGroup4 group = (LORChannelGroup4)member;
-					foreach(iLORMember4 subMember in group.Members)
+					foreach (iLORMember4 subMember in group.Members)
 					{
 						// Recurse!
 						count += TrimChannel(subMember, percent);
@@ -2114,13 +2146,13 @@ namespace UtilORama4
 					LOREffect4 thiseffect = null;
 					LOREffect4 nexteffect = null;
 					// Loop thru all but last effects
-					for (int e = 0; e < (chan.effects.Count-1); e++)
+					for (int e = 0; e < (chan.effects.Count - 1); e++)
 					{
 						thiseffect = chan.effects[e];
 						// Does this effect now start after the end of the channel
 						//   (thanks to being moved on the last pass of the loop) ?
 						if (thiseffect.startCentisecond > chan.Centiseconds)
-						{ 
+						{
 							// get rid of it
 							chan.effects.RemoveAt(e);
 							// Decrement counter so as to next check the next effect (which now is at THIS position!)
@@ -2173,7 +2205,7 @@ namespace UtilORama4
 					if (thiseffect.startCentisecond > chan.Centiseconds)
 					{
 						// get rid of it
-						chan.effects.RemoveAt(chan.effects.Count-1);
+						chan.effects.RemoveAt(chan.effects.Count - 1);
 					}
 					else
 					{
@@ -2248,7 +2280,133 @@ namespace UtilORama4
 			return count;
 		}
 
+		private void UpdateTreeFormatting(int theRule)
+		{
+			for (int n = 0; n < treeSource.Nodes.Count; n++)
+			{
+				// Is the nodes collection just at the root, or all of them?  Guess we're about to find out
+				TreeNodeAdv node = treeSource.Nodes[n];
+				{
+					UpdateNodeChecks(node, theRule);
+					//UpdateNodeFormatting(node);
+				}
+			}
+		}
 
+		private void UpdateNodeFormatting(TreeNodeAdv node, bool recurse = false)
+		{
+			if (node.Tag != null)
+			{
+				iLORMember4 member = (iLORMember4)node.Tag;
+				if (node.CheckState == CheckState.Indeterminate)
+				{
+					node.TextColor = COLOR_INDETERMINATE;
+				}
+				else
+				{
+					int rules = member.RuleID;
+					node.TextColor = ruleColors[rules];
+				}
+				//If it has clones
+				List<TreeNodeAdv> chNodes = (List<TreeNodeAdv>)member.Tag;
+				if (chNodes.Count > 1)
+				{
+					for (int c=0; c< chNodes.Count; c++)
+					{
+						if (chNodes[c].Text != node.Text)
+						{
+							//? Don't THINK I need to recurse this as all clones should have identical children (?)
+							//? And might cause deadlock or infinate loop if I try (?)
+							UpdateNodeFormatting(chNodes[c], false);
+							//? Or should I copy the checked state thereby triggering the AfterCheck event (?)
+							//? Also might cause deadlock or infinate loop if I try (?)
+							chNodes[c].CheckState = node.CheckState;
+						}
+					}
+				}
+			}
+			if (recurse)
+			{
+				// Recurse if it has children!
+				for (int n = 0; n < node.Nodes.Count; n++)
+				{
+					// Keep Recursing going DOWN the tree
+					UpdateNodeFormatting(node.Nodes[n], true);
+				}
+			}
+			if (node.Parent != null)
+			{
+				// Recurse UP the tree, but NOT back down again
+				UpdateNodeFormatting(node.Parent, false);
+			}
+
+
+
+		}
+
+		private CheckState UpdateNodeChecks(TreeNodeAdv node, int theRule)
+		{
+			CheckState ret = CheckState.Unchecked;
+			if (node.Tag != null)
+			{
+				iLORMember4 member = (iLORMember4)node.Tag;
+				int nodeRule = member.RuleID;
+				if ((member.MemberType == LORMemberType4.Channel) ||
+					(member.MemberType == LORMemberType4.RGBChannel))
+				{
+					if ((theRule == RULE_DIM) ||
+						(theRule == RULE_TRIM) ||
+						(theRule == RULE_ONOFF))
+					{
+						// if exclusive rule dim, trim or onoff, mask out the mintime rule
+						bool chk = ((nodeRule & 3) == theRule);
+						node.Checked = chk;
+					}
+					else
+					{
+						if (theRule == RULE_MINTIME)
+						{
+							// if non-exclusive mintime rule, mask out exclusive dim, trim, and onoff
+							bool chk = ((nodeRule & RULE_MINTIME) == theRule);
+							node.Checked = chk;
+						}
+						else
+						{
+							// if rule is very exclusive nochange, do masking
+							if (theRule == RULE_NOCHANGE)
+							{
+								bool chk = (nodeRule == theRule);
+								node.Checked = chk;
+							}
+						}
+					}
+					if (node.Checked) ret = CheckState.Checked;
+				}
+				else 
+				{
+					if (member.MemberType == LORMemberType4.ChannelGroup)
+					{
+						LORChannelGroup4 group = (LORChannelGroup4)member;
+						ret = GroupCheckState(group.Members, theRule);
+					}
+					else
+					{
+						if (member.MemberType == LORMemberType4.Track)
+						{
+							LORTrack4 track = (LORTrack4)member;
+							ret = GroupCheckState(track.Members, theRule);
+						}
+					} // End if a group, or not
+				} // end if a channel or rgb channel, or not
+			} // end if tag ain't null
+			// Recurse if it has children!
+			for (int n = 0; n < node.Nodes.Count; n++)
+			{
+				UpdateNodeChecks(node.Nodes[n], theRule);
+			}
+			node.CheckState = ret;
+			return ret;
+		}
 
 
 		private void treeSource_AfterCheck(object sender, TreeNodeAdvEventArgs e)
@@ -2256,8 +2414,15 @@ namespace UtilORama4
 			TreeNodeAdv node = e.Node;
 			if (node != null)
 			{
+				// So if I'm reading the Syncfustion documentation correctly---
+				// This should fire once for the checked node, again for the parent, and again for children?
 				bool chk = node.Checked;
+				string whichNode = node.Text;
 				CheckNode(node, chk, tabChannels.SelectedIndex);
+				//TODO Here or in CheckNode(...) below
+				//TODO Update node appearance (forecolor, checkstate, ...) for all nodes of this member
+				//  (keep in mind that a member channel can easily be in the tree in multiple places)
+				UpdateNodeFormatting(node); // , TabRules[tabChannels.SelectedIndex]) ;
 			}
 		}
 
@@ -2268,237 +2433,326 @@ namespace UtilORama4
 			{
 				if (node.Tag != null)
 				{
-					iLORMember4 member = (iLORMember4) node.Tag;
-					LORMemberType4 memberType = member.MemberType;
-					int mtime = member.RuleID & RULE_MINTIME;
-					//bool minTime = ((member.RuleID & RULE_MINTIME) == RULE_MINTIME);
-					//int baseRule = (member.RuleID & 7);
-					if (memberType == LORMemberType4.Channel)
-					{
-						if (isChecked)
-						{
-							// Check-ing Dim, Trim, or On-Off
-							if (tabIndex < 3)
-							{
-								// Is MinTime set (need to preserve)
-								// Add the rule, plus MinTime if set
-								member.RuleID = TabRules[tabIndex] | mtime;
-							}
-							else
-							{
-								// Check-ing MinTime
-								if (tabIndex == 3)
-								{
-									// Add MinTime rule to any other rules already there
-									member.RuleID = member.RuleID | RULE_MINTIME;
-								}
-								else
-								{
-									// Set to 'NoChange' state
-									if (tabIndex == 4)
-									{
-										member.RuleID = RULE_NOCHANGE;
-									} // end if Tab 4 (NoChange)
-								} // end if Tab 3 (MinTime), or not...
-							} // end if Tab 0,1, or 2, (Dim, Trim, OnOff) or not...
-						}
-						else // UN-checked
-						{
-							// Un-Check-ing Dim, Trim, or On-Off
-							if (tabIndex < 3)
-							{
-								// Is MinTime set (need to preserve)
-								// clear the rule, keep MinTime if set
-								member.RuleID = mtime;
-							}
-							else
-							{
-								// Un-Check-ing MinTime
-								if (tabIndex == 3)
-								{
-									// clear MinTime rule preserving Dim, Trim or On-Off if set
-									member.RuleID = member.RuleID & 7;
-								}
-								else
-								{
-									// Un-check 'NoChange' state ?!?
-									if (tabIndex == 4)
-									{
-										// Cannot be unchecked (as long as no other rules are set)
-										if (member.RuleID == RULE_NOCHANGE)
-										{
-											node.Checked = true;
-										}
-									} // end if Tab 4 (NoChange)
-								} // end if Tab 3 (MinTime), or not...
-							} // end if Tab 0,1, or 2, (Dim, Trim, OnOff) or not...
-						} // end if checked, or not...
-					}
-					else // Not a Channel (something else)
-					{
-						if (memberType == LORMemberType4.RGBChannel)
-						{
-							LORRGBChannel4 rgbChan = (LORRGBChannel4)member;
-							if (isChecked)
-							{
-								// Check-ing Dim, Trim, or On-Off
-								if (tabIndex < 3)
-								{
-									// Is MinTime set (need to preserve)
-									// Add the rule, plus MinTime if set
-									rgbChan.RuleID = TabRules[tabIndex] | mtime;
-								}
-								else
-								{
-									// Check-ing MinTime
-									if (tabIndex == 3)
-									{
-										// Add MinTime rule to any other rules already there
-										rgbChan.RuleID = member.RuleID | RULE_MINTIME;
-									}
-									else
-									{
-										// Set to 'NoChange' state
-										if (tabIndex == 4)
-										{
-											rgbChan.RuleID = RULE_NOCHANGE;
-										} // end if Tab 4 (NoChange)
-									} // end if Tab 3 (MinTime), or not...
-								} // end if Tab 0,1, or 2, (Dim, Trim, OnOff) or not...
-							}
-							else // UN-checked
-							{
-								// Un-Check-ing Dim, Trim, or On-Off
-								if (tabIndex < 3)
-								{
-									// Is MinTime set (need to preserve)
-									// clear the rule, keep MinTime if set
-									rgbChan.RuleID = mtime;
-								}
-								else
-								{
-									// Un-Check-ing MinTime
-									if (tabIndex == 3)
-									{
-										// clear MinTime rule preserving Dim, Trim or On-Off if set
-										rgbChan.RuleID = member.RuleID & 7;
-									}
-									else
-									{
-										// Un-check 'NoChange' state ?!?
-										if (tabIndex == 4)
-										{
-											// Cannot be unchecked (as long as no other rules are set)
-											if (member.RuleID == RULE_NOCHANGE)
-											{
-												node.Checked = true;
-											}
-										} // end if Tab 4 (NoChange)
-									} // end if Tab 3 (MinTime), or not...
-								} // end if Tab 0,1, or 2, (Dim, Trim, OnOff) or not...
-							} // end if checked, or not...
-							// Copy Rule State to the RGB Channels 3 subchannels
-							rgbChan.redChannel.RuleID = rgbChan.RuleID;
-							rgbChan.grnChannel.RuleID = rgbChan.RuleID;
-							rgbChan.bluChannel.RuleID = rgbChan.RuleID;
-						}
-						else // Not a  RGBChannel (something else)  by process of elimination should be a Group or Track
-						{
-							if ((memberType == LORMemberType4.ChannelGroup) ||
-									(memberType == LORMemberType4.Track))
-							{
-								if (isChecked)
-								{
-									// Check-ing Dim, Trim, or On-Off
-									if (tabIndex < 3)
-									{
-										// Is MinTime set (need to preserve)
-										// Add the rule, plus MinTime if set
-										member.RuleID = TabRules[tabIndex] | mtime;
-									}
-									else
-									{
-										// Check-ing MinTime
-										if (tabIndex == 3)
-										{
-											// Add MinTime rule to any other rules already there
-											member.RuleID = member.RuleID | RULE_MINTIME;
-										}
-										else
-										{
-											// Set to 'NoChange' state
-											if (tabIndex == 4)
-											{
-												member.RuleID = RULE_NOCHANGE;
-											} // end if Tab 4 (NoChange)
-										} // end if Tab 3 (MinTime), or not...
-									} // end if Tab 0,1, or 2, (Dim, Trim, OnOff) or not...
-								}
-								else // UN-checked
-								{
-									// Un-Check-ing Dim, Trim, or On-Off
-									if (tabIndex < 3)
-									{
-										// Is MinTime set (need to preserve)
-										// clear the rule, keep MinTime if set
-										member.RuleID = mtime;
-									}
-									else
-									{
-										// Un-Check-ing MinTime
-										if (tabIndex == 3)
-										{
-											// clear MinTime rule preserving Dim, Trim or On-Off if set
-											member.RuleID = member.RuleID & 7;
-										}
-										else
-										{
-											// Un-check 'NoChange' state ?!?
-											if (tabIndex == 4)
-											{
-												// Cannot be unchecked (as long as no other rules are set)
-												if (member.RuleID == RULE_NOCHANGE)
-												{
-													node.Checked = true;
-												}
-											} // end if Tab 4 (NoChange)
-										} // end if Tab 3 (MinTime), or not...
-									} // end if Tab 0,1, or 2, (Dim, Trim, OnOff) or not...
-								} // end if checked, or not...
-									// Copy Rule State to its members
-								if (member.MemberType == LORMemberType4.ChannelGroup)
-								{
-									LORChannelGroup4 group = (LORChannelGroup4)member;
-									SetMemberRules(group.Members, TabRules[tabIndex], isChecked);
-								}
-								if (member.MemberType == LORMemberType4.Track)
-								{
-									LORTrack4 track = (LORTrack4)member;
-									SetMemberRules(track.Members, TabRules[tabIndex], isChecked);
-								}
-							}
-							else // Not a group or track
-							{
-								// What the fuck is it then
-								string msg = "What kind of member are you trying to change the check state for?";
-								LORMemberType4 memType = member.MemberType;
-								Fyle.BUG(msg);
-							} // end if group or track, or not...
-						} // end if RGB Channel, or not...
-					} // end if a Channel, or not...
+					iLORMember4 member = (iLORMember4)node.Tag;
+					SetMemberRules(member, TabRules[tabIndex], isChecked);
 				} // end if node.Tag ain't null
 			} // end if node ain't null
 		}
 
-		private int SetMemberRules(LORMembership4 membership, int newRule, bool isChecked)
+
+		private int SetMemberRules(iLORMember4 member, int newRule, bool isChecked)
 		{
-			int count = 0;
-			for (int m=0; m< membership.Items.Count ; m++)
+			// Return old rules
+			int ret = member.RuleID;
+			// What is the CURRENT rule and MinTime of this member (before change)
+			int rul = member.RuleID & 3;
+			int mtime = member.RuleID & RULE_MINTIME;
+			// If its one of the 3 exclusive rules
+			if ((newRule == RULE_DIM) ||
+				(newRule == RULE_TRIM) ||
+				(newRule == RULE_ONOFF))
 			{
-				iLORMember4 member = membership.Members[m];
-				//! LEFT OFF HERE!
+				if (isChecked)
+				{
+					// Set the new rule, preserving MinTime if set
+					member.RuleID = newRule | mtime;
+				}
+				else
+				{
+					// Clear the rule but preserve MinTime if set
+					member.RuleID = RULE_NOCHANGE | mtime;
+					// (RULE_NOCHANGE = 0 so just member.RuleID = mtime would have worked,
+					// but this way its more obvious whats going on)
+				}
+				// If its the MinTime rule (which is not exclusive)
+				if (newRule == RULE_MINTIME)
+				{
+					if (isChecked)
+					{
+						// Add the MinTime bit, preserving any previous other rules
+						member.RuleID = rul | RULE_MINTIME;
+					}
+					else
+					{
+						// Erase the MinTime bit by setting it to just the other rule (if any)
+						member.RuleID = rul;
+					}
+				}
+				if (newRule == RULE_NOCHANGE)
+				{
+					if (isChecked)
+					{
+						// Clear any other rules including exclusive Dim, Trim, and OnOff, as well as Mintime
+						member.RuleID = RULE_NOCHANGE;
+					}
+					else
+					{
+						// You can't turn off nothing, so what do we do here?
+						// Assume clear
+						member.RuleID = RULE_NOCHANGE;
+					}
+				}
+
+				if (member.MemberType == LORMemberType4.RGBChannel)
+				{
+					// If an RGB channel, copy it to the 3 subchannels
+					LORRGBChannel4 rgbCh = (LORRGBChannel4)member;
+					rgbCh.redChannel.RuleID = rgbCh.RuleID;
+					rgbCh.grnChannel.RuleID = rgbCh.RuleID;
+					rgbCh.bluChannel.RuleID = rgbCh.RuleID;
+				}
+				// If a group or a track, we need to recurse
+				if (member.MemberType == LORMemberType4.ChannelGroup)
+				{
+					// Recurse!!
+					LORChannelGroup4 group = (LORChannelGroup4)member;
+					for (int m = 0; m < group.Members.Count; m++)
+					{
+						iLORMember4 subMember = group.Members[m];
+						SetMemberRules(subMember, newRule, isChecked);
+					}
+				}
+				if (member.MemberType == LORMemberType4.Track)
+				{
+					// Recurse!!
+					LORTrack4 track = (LORTrack4)member;
+					for (int m = 0; m < track.Members.Count; m++)
+					{
+						iLORMember4 subMember = track.Members[m];
+						SetMemberRules(subMember, newRule, isChecked);
+					}
+				}
 			}
-			return count;
+			return ret;
+		}
+
+		private CheckState GroupCheckState(LORMembership4 members, int theRule)
+		{
+			CheckState ret = CheckState.Unchecked;
+			int countTotal = 0;  // How many channels or rgbchannels-- so far
+			int countRule = 0; // how many of them-- so far-- have this rule
+			// as soon as we get out of balance we will exit, so these are NOT complete counts
+			
+			// Loop thru all members (duh)
+			for (int m=0; m< members.Count; m++)
+			{
+				// Get current member
+				iLORMember4 member = members[m];
+				// If channel or rgb channel, and thus no children
+				if ((member.MemberType == LORMemberType4.Channel) ||
+					(member.MemberType == LORMemberType4.RGBChannel))
+				{
+					// Raise total count
+					countTotal++;
+					// If one of the 3 exclusive rules
+					if ((theRule == RULE_DIM) ||
+						(theRule == RULE_TRIM) ||
+						(theRule == RULE_ONOFF))
+					{
+						// mask out MinTime
+						int mr = member.RuleID & 3;
+						// Does rule match
+						if (mr==theRule)
+						{
+							// Yep, matches, increase that counter
+							countRule++;
+							// If ALL of them so far have matched
+							if (countRule == countTotal)
+							// Then this parent will be checked (so far)
+							{ ret = CheckState.Checked;	}
+							else
+							{
+								// else if a previous one(s) didn't match, and now we have have a match
+								// we have a unbalanced sichiation, so return indetermine and exit the loop to avoid wasting in more time
+								ret = CheckState.Indeterminate;
+								m = members.Count; // Loopus Interruptus
+							}
+						}
+					}
+					else
+					{
+						// If the MinTime rule which is not exclusive
+						if (theRule == RULE_MINTIME)
+						{
+							// mask out other rules
+							int mr = member.RuleID & 4;
+							// does rule match?
+							if (mr == theRule)
+							{
+								// Yes Sir, increase counter
+								countRule++;
+								// If ALL of them so far have matched
+								if (countRule == countTotal)
+								// Then this parent will be checked (so far)
+								{ ret = CheckState.Checked; }
+								else
+								{
+									// else if a previous one(s) didn't match, and now we have have a match
+									// we have a unbalanced sichiation, so return indetermine and exit the loop to avoid wasting in more time
+									ret = CheckState.Indeterminate;
+									m = members.Count; // Loopus Interruptus
+								}
+							}
+						}
+						else
+						{
+							// If the rule is NoChange, which is exclusive to all rules including MinTime
+							if (theRule == RULE_NOCHANGE)
+							{
+								// NO masking
+								int mr = member.RuleID;
+								// Does it match the rule number (NoChange) (reminder: its zero by the way)
+								if (mr == theRule)
+								{
+									// We got us another
+									countRule++;
+									// All of 'em so far?
+									if (countRule == countTotal)
+									{ ret = CheckState.Checked; }
+									else
+									{
+										// Lost our balance and fell down
+										ret = CheckState.Indeterminate;
+										m = members.Count; // Loopus Interruptus
+									}
+								} // End if member rule == The NoChange Rule
+							} // End if The Rule is NoChange
+						} // End if The Rule is MinTime, or not
+					} // End if The Rule is Dim, Trim, or OnOff
+				}
+				else // Member is not channel or rgb channel
+				// So by process of elimination must be group or track
+				{
+					// if a group
+					if (member.MemberType == LORMemberType4.ChannelGroup)
+					{
+						// type cast it so we can get its members
+						LORChannelGroup4 group = (LORChannelGroup4)member;
+						// Run a test on them-- RECURSE!
+						CheckState grpState = GroupCheckState(group.Members, theRule);
+						// If the group is indeterminite, or doesn't match what we've got so far
+						if ((grpState == CheckState.Indeterminate) ||
+							(grpState != ret))
+						{
+							// That makes everything so far indetermint
+							ret = CheckState.Indeterminate;
+							// So lets get out of here and not waste any more time
+							m = members.Count; // Loopus Interruptus
+						}
+					}
+					else
+					{
+						// If a track (which is basically a group) follow same logic as group above
+						if (member.MemberType == LORMemberType4.Track)
+						{
+							LORTrack4 track = (LORTrack4)member;
+							CheckState trkState = GroupCheckState(track.Members, theRule);
+							if ((trkState == CheckState.Indeterminate) ||
+								(trkState != ret))
+							{
+								ret = CheckState.Indeterminate;
+								m = members.Count; // Loopus Interruptus
+							}
+						} // End if a track
+					} // end if a group, or not
+				} // end if a channel or rgb channel, or not
+			} // member loop
+			return ret;
+		}
+
+		private void btnSaveChannels_Click(object sender, EventArgs e)
+		{
+			SaveMap();
+		}
+
+		private void SaveMap()
+		{
+			dlgFileSave.DefaultExt = EXT_DIMMAP;
+			dlgFileSave.Filter = FILE_DIMMAP;
+			dlgFileSave.FilterIndex = 0;
+			string initDir = lutils.DefaultChannelConfigsPath;
+			string initFile = "";
+			if (filenameMap.Length > 4)
+			{
+				string pth = Path.GetFullPath(filenameMap);
+				if (Directory.Exists(pth))
+				{
+					initDir = pth;
+				}
+				if (File.Exists(filenameMap))
+				{
+					initFile = Path.GetFileName(filenameMap);
+				}
+			}
+			dlgFileSave.FileName = initFile;
+			dlgFileSave.InitialDirectory = initDir;
+			dlgFileSave.OverwritePrompt = false;
+			dlgFileSave.CheckPathExists = true;
+			dlgFileSave.Title = "Save Channel Map As...";
+
+			DialogResult dr = dlgFileSave.ShowDialog();
+			if (dr == DialogResult.OK)
+			{
+				DialogResult ow = Fyle.SafeOverwriteFile(dlgFileSave.FileName);
+				if (ow == DialogResult.Yes)
+				{
+
+					string mapTemp = System.IO.Path.GetTempPath();
+					mapTemp += Path.GetFileName(dlgFileSave.FileName);
+					int mapErr = SaveMap(mapTemp);
+					if (mapErr == 0)
+					{
+						filenameMap = dlgFileSave.FileName;
+						if (File.Exists(filenameMap))
+						{
+							//TODO: Add Exception Catch
+							File.Delete(filenameMap);
+						}
+						File.Copy(mapTemp, filenameMap);
+						File.Delete(mapTemp);
+						dirtyMap = false;
+						//btnSaveMap.Enabled = dirtyMap;
+						txtFilenameMap.Text = Path.GetFileName(filenameMap);
+						Properties.Settings.Default.filenameMap = filenameMap;
+						Properties.Settings.Default.Save();
+					} // end no errors saving map
+				}
+			} // end dialog result = OK
+		} // end btnSaveMap Click event
+
+
+		private void btnBrowseChannels_Click(object sender, EventArgs e)
+		{
+			BrowseForMap();
+		}
+
+		private bool MakeDirty(bool isDirty=true)
+		{
+			bool ret = dirtyMap; // Return previous state
+			if (isDirty!= dirtyMap) // did it change?
+			{
+				if (seqSource != null)
+				{
+					if (seqSource.Channels.Count > 0)
+					{
+						dirtyMap = isDirty;
+						dirtySeq = isDirty;
+						btnSaveMap.Enabled = isDirty;
+						btnSaveSeq.Enabled = isDirty;
+						string txt = "Dim-O-Rama - " + Path.GetFileNameWithoutExtension(filenameSource);
+						if (isDirty)
+						{
+							txt += " (Modified)";
+						}
+						else
+						{
+
+						}
+						this.Text = txt;
+					}
+				}
+			}
+			return ret;
 		}
 
 

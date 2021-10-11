@@ -1210,5 +1210,41 @@ namespace UtilORama4.Properties {
                 this["alignChromagram"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string methodChords {
+            get {
+                return ((string)(this["methodChords"]));
+            }
+            set {
+                this["methodChords"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string labelChords {
+            get {
+                return ((string)(this["labelChords"]));
+            }
+            set {
+                this["labelChords"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string alignChords {
+            get {
+                return ((string)(this["alignChords"]));
+            }
+            set {
+                this["alignChords"] = value;
+            }
+        }
     }
 }

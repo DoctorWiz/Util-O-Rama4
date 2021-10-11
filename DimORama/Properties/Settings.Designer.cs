@@ -106,5 +106,17 @@ namespace UtilORama4.Properties {
                 this["filenameMap"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutoLaunch {
+            get {
+                return ((bool)(this["AutoLaunch"]));
+            }
+            set {
+                this["AutoLaunch"] = value;
+            }
+        }
     }
 }

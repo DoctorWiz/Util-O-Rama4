@@ -381,6 +381,10 @@ namespace UtilORama4
 			int grpNum = -1;
 			int polyCount = 128;
 			int lastStart = -1;
+
+			Annotator.SetAlignment(AlignmentType);
+
+
 			if (LabelType == vamps.LabelType.NoteNamesASCII)		polyCount = MusicalNotation.noteNamesASCII.Length;
 			if (LabelType == vamps.LabelType.NoteNamesUnicode) polyCount = MusicalNotation.noteNamesUnicode.Length;
 

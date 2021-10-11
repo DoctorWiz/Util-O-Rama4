@@ -71,6 +71,21 @@ namespace UtilORama4
 			{
 				cboAlignBarBeats.Items.Add(vamps.AlignmentName(alType));
 			}
+			SetCombo(cboMethodBarsBeats, heartOfTheSun.methodBarsBeats);
+			timeSignature = heartOfTheSun.timeSignature;
+			if (timeSignature == 3) swTrackBeat.Checked = true; else swTrackBeat.Checked = false;
+			startBeat = heartOfTheSun.startBeat;
+			txtStartBeat.Text = startBeat.ToString();
+			vscStartBeat.Value = (5 - startBeat);
+			SetCombo(cboDetectBarBeats, heartOfTheSun.detectBars);
+			chkWhiten.Checked = heartOfTheSun.whiteBarsBeats;
+			chkBars.Checked = heartOfTheSun.doBars;
+			chkBeatsFull.Checked = heartOfTheSun.DoBeatsFull;
+			chkBeatsHalf.Checked = heartOfTheSun.doBeatsHalf;
+			chkBeatsThird.Checked = heartOfTheSun.doBeatsThird;
+			chkBeatsQuarter.Checked = heartOfTheSun.doBeatsQuarter;
+			SetCombo(cboAlignBarBeats, heartOfTheSun.alignBarsBeats);
+			SetCombo(cboLabelsBarBeats, heartOfTheSun.labelBarBeats);
 
 			///////////////////
 			//! Note Onsets //
@@ -90,6 +105,15 @@ namespace UtilORama4
 			{
 				cboAlignOnsets.Items.Add(vamps.AlignmentName(alType));
 			}
+			SetCombo(cboMethodOnsets, heartOfTheSun.methodOnsets);
+			SetCombo(cboOnsetsDetect, heartOfTheSun.detectOnsets);
+			vscSensitivity.Value = heartOfTheSun.sensitivityOnsets;
+			chkWhiten.Checked = heartOfTheSun.whiteOnsets;
+			chkNoteOnsets.Checked = heartOfTheSun.doOnsets;
+			SetCombo(cboLabelsOnsets, heartOfTheSun.labelOnsets);
+			SetCombo(cboAlignOnsets, heartOfTheSun.alignOnsets);
+			SetCombo(cboStepSize, heartOfTheSun.stepSize);
+			swRamps.Checked = heartOfTheSun.Ramps;
 
 			////////////////////////////////
 			//! Polyphonic Transcription //
@@ -109,6 +133,10 @@ namespace UtilORama4
 			{
 				cboAlignPolyphonic.Items.Add(vamps.AlignmentName(alType));
 			}
+			SetCombo(cboMethodPolyphonic, heartOfTheSun.methodTranscribe);
+			chkPolyphonic.Checked = heartOfTheSun.doTranscribe;
+			SetCombo(cboLabelsPolyphonic, heartOfTheSun.labelTranscribe);
+			SetCombo(cboAlignPolyphonic, heartOfTheSun.alignTranscribe);
 
 			/////////////////////
 			//! Pitch and Key //
@@ -128,6 +156,10 @@ namespace UtilORama4
 			{
 				cboAlignPitchKey.Items.Add(vamps.AlignmentName(alType));
 			}
+			SetCombo(cboMethodPitchKey, heartOfTheSun.methodPitchKey);
+			chkPitchKey.Checked = heartOfTheSun.doPitchKey;
+			SetCombo(cboLabelsPitchKey, heartOfTheSun.labelPitchKey);
+			SetCombo(cboAlignPitchKey, heartOfTheSun.alignPitchKey);
 
 			///////////////////
 			//!  T E M P O  //
@@ -147,6 +179,10 @@ namespace UtilORama4
 			{
 				cboAlignTempo.Items.Add(vamps.AlignmentName(alType));
 			}
+			SetCombo(cboMethodTempo, heartOfTheSun.methodTempo);
+			chkTempo.Checked = heartOfTheSun.doTempo;
+			SetCombo(cboLabelsTempo, heartOfTheSun.labelTempo);
+			SetCombo(cboAlignTempo, heartOfTheSun.alignTempo);
 
 
 			///////////////////
@@ -167,6 +203,10 @@ namespace UtilORama4
 			{
 				cboAlignSegments.Items.Add(vamps.AlignmentName(alType));
 			}
+			chkSegments.Checked = heartOfTheSun.doSegments;
+			SetCombo(cboAlignSegments, heartOfTheSun.alignSegments);
+			SetCombo(cboMethodSegments, heartOfTheSun.methodSegments);
+			SetCombo(cboLabelsSegments, heartOfTheSun.labelSegments);
 
 			////////////////////
 			//!  Chromagram  //
@@ -186,8 +226,103 @@ namespace UtilORama4
 			{
 				cboAlignChromagram.Items.Add(vamps.AlignmentName(alType));
 			}
+			chkChromathing.Checked = heartOfTheSun.doChromagram;
+			SetCombo(cboAlignChromagram, heartOfTheSun.alignChromagram);
+			SetCombo(cboMethodChromagram, heartOfTheSun.methodChromagram);
+			SetCombo(cboLabelsChromagram, heartOfTheSun.labelChromagram);
+
+			/////////////////////////
+			//!  Chords Chords  //
+			///////////////////////
+			cboMethodChords.Items.Clear();
+			foreach (string plugName in VampChords.availablePluginNames)
+			{
+				cboMethodChords.Items.Add(plugName);
+			}
+			cboLabelsChords.Items.Clear();
+			foreach (vamps.LabelType lblType in VampChords.allowableLabels)
+			{
+				cboLabelsChords.Items.Add(vamps.LabelName(lblType));
+			}
+			cboAlignChords.Items.Clear();
+			foreach (vamps.AlignmentType alType in VampChords.allowableAlignments)
+			{
+				cboAlignChords.Items.Add(vamps.AlignmentName(alType));
+			}
+			chkChords.Checked = heartOfTheSun.doChords;
+			SetCombo(cboAlignChords, heartOfTheSun.alignChords);
+			SetCombo(cboMethodChords, heartOfTheSun.methodChords);
+			SetCombo(cboLabelsChords, heartOfTheSun.labelChords);
 
 		}
+
+		private void SaveCombos()
+		{
+			//! Bars and Beats
+			heartOfTheSun.doBars = chkBars.Checked;
+			heartOfTheSun.DoBeatsFull = chkBeatsFull.Checked;
+			heartOfTheSun.doBeatsHalf = chkBeatsHalf.Checked;
+			heartOfTheSun.doBeatsThird = chkBeatsThird.Checked;
+			heartOfTheSun.doBeatsQuarter = chkBeatsQuarter.Checked;
+			heartOfTheSun.labelBarBeats = cboLabelsBarBeats.Text;
+			heartOfTheSun.alignBarsBeats = cboAlignBarBeats.Text;
+			heartOfTheSun.Ramps = swRamps.Checked;
+
+			//! Note Onsets
+			heartOfTheSun.methodOnsets = cboMethodOnsets.Text;
+			heartOfTheSun.detectOnsets = cboOnsetsDetect.Text;
+			heartOfTheSun.sensitivityOnsets = vscSensitivity.Value;
+			heartOfTheSun.whiteOnsets = chkWhiten.Checked;
+			heartOfTheSun.doOnsets = chkNoteOnsets.Checked;
+			heartOfTheSun.labelOnsets = cboLabelsOnsets.Text;
+			heartOfTheSun.alignOnsets = cboAlignOnsets.Text;
+			heartOfTheSun.stepSize = cboStepSize.Text;
+
+			//! Polyphonic Transcription
+			heartOfTheSun.methodTranscribe = cboMethodPolyphonic.Text;
+			heartOfTheSun.doTranscribe = chkPolyphonic.Checked;
+			heartOfTheSun.labelTranscribe = cboLabelsPolyphonic.Text;
+			heartOfTheSun.alignTranscribe = cboAlignPolyphonic.Text;
+
+			//! Pitch & Key
+			heartOfTheSun.methodPitchKey = cboMethodPitchKey.Text;
+			heartOfTheSun.doPitchKey = chkPitchKey.Checked;
+			heartOfTheSun.labelPitchKey = cboLabelsPitchKey.Text;
+			heartOfTheSun.alignPitchKey = cboAlignPitchKey.Text;
+
+			//! Tempo
+			heartOfTheSun.methodTempo = cboMethodTempo.Text;
+			heartOfTheSun.doTempo = chkTempo.Checked;
+			heartOfTheSun.labelTempo = cboLabelsTempo.Text;
+			heartOfTheSun.alignTempo = cboAlignTempo.Text;
+
+			//! Segments
+			heartOfTheSun.doSegments = chkSegments.Checked;
+			heartOfTheSun.methodSegments = cboMethodSegments.Text;
+			heartOfTheSun.alignSegments = cboAlignSegments.Text;
+			heartOfTheSun.labelSegments = cboLabelsSegments.Text;
+
+			//! Chromagram
+			heartOfTheSun.doChromagram = chkChromathing.Checked;
+			heartOfTheSun.methodChromagram = cboMethodChromagram.Text;
+			heartOfTheSun.alignChromagram = cboAlignChromagram.Text;
+			heartOfTheSun.labelChromagram = cboLabelsChromagram.Text;
+
+			//! Chords
+			heartOfTheSun.doChords = chkChords.Checked;
+			heartOfTheSun.methodChords = cboMethodChords.Text;
+			heartOfTheSun.alignChords = cboAlignChords.Text;
+			heartOfTheSun.labelChords = cboLabelsChords.Text;
+
+			//! Spectrum
+			//heartOfTheSun.methodSpectrum = cboMethodChromagram.Text;
+			//heartOfTheSun.doSpectrum = chkChromagram.Checked;
+			//heartOfTheSun.labelSpectrum = cboLabelsChromagram.Text;
+			//heartOfTheSun.alignSpectrum = cboAlignChromagram.Text;
+		}
+
+
+
 
 		private int RunSelectedVamps()
 		{
@@ -394,6 +529,31 @@ namespace UtilORama4
 						string fileConfig = VampChromagram.filesAvailableConfigs[pluginIndex];
 						string vampParams = VampChromagram.availablePluginCodes[pluginIndex];
 						err = VampThatSong(fileSongTemp, vampParams, fileConfig, VampChromagram.ResultsName);
+					}
+				}
+			}
+
+			//!///////////////////////
+			//!  CHORDS CHORDINO  //
+			//!/////////////////////
+			if (chkChords.Checked)
+			{
+				if ((!reuse) || (!Fyle.Exists(VampChords.FileResults)))
+				{
+					StatusUpdate("Annotating Chords");
+					if (logWindow != null) logWindow.Text = OutputTitle + " - Chords";
+					msg = "\r\n\r\n******************"; OutputText(msg);
+					msg = "***   CHORDS   ***"; OutputText(msg);
+					msg = "******************"; OutputText(msg);
+					int pluginIndex = cboMethodChords.SelectedIndex;
+					//whiten = chkWhiten.Checked;
+
+					err = VampChords.PrepareToVamp(fileSongTemp, pluginIndex);
+					if (err == 0)
+					{
+						string fileConfig = VampChords.filesAvailableConfigs[pluginIndex];
+						string vampParams = VampChords.availablePluginCodes[pluginIndex];
+						err = VampThatSong(fileSongTemp, vampParams, fileConfig, VampChords.ResultsName);
 					}
 				}
 			}
@@ -610,6 +770,31 @@ namespace UtilORama4
 				{
 					// No Results File!
 					//Fyle.BUG("Chromagram Transcription failed, no results file!");
+				}
+			}
+
+			//!///////////////////////
+			//!  CHORDS CHORDINO //
+			//!/////////////////////
+			if ((chkChords.Checked) || (VampChords.Timings.effects.Count < 1))
+			{
+				if (Fyle.Exists(VampChords.FileResults))
+				{
+					StatusUpdate("Processing Chord Annotations");
+					if (logWindow != null) logWindow.Text = ProcTitle + " Chords";
+					msg = "\r\n\r\n******************"; OutputText(msg);
+					msg = "***   Analyzing  ***"; OutputText(msg);
+					msg = "***   CHORDS   ***"; OutputText(msg);
+					msg = "******************"; OutputText(msg);
+					algn = vamps.GetAlignmentTypeFromName(cboAlignChords.Text);
+					lbls = vamps.GetLabelTypeFromName(cboLabelsChords.Text);
+					VampChords.ResultsToxTimings(VampChords.FileResults, algn, lbls);
+					completed++;
+				}
+				else
+				{
+					// No Results File!
+					//Fyle.BUG("Pitch and Key Tracker failed, no results file!");
 				}
 			}
 
@@ -875,6 +1060,27 @@ namespace UtilORama4
 				}
 			}
 
+			//! CHORDS
+			if (chkChords.Checked)
+			{
+				if (VampChords.Timings != null)
+				{
+					if (VampChords.Timings.effects.Count > 0)
+					{
+						StatusUpdate("Exporting Chord Timings");
+						if (!allInOne)
+						{
+							writer = BeginTimingsXFile(fileBaseName + " - " + VampChords.Timings.Name + exten);
+							writeCount++;
+						}
+						vamps.LabelType lt = vamps.GetLabelTypeFromName(cboLabelsChords.Text);
+						lineOut = xTimingsOutX(VampChords.Timings, lt, allInOne);
+						writer.WriteLine(lineOut);
+						writeCount++;
+					}
+				}
+			}
+
 
 			if (allInOne)
 			{
@@ -1007,6 +1213,22 @@ namespace UtilORama4
 					//}
 				}
 			}
+
+			//! CHORDS
+			if (chkChords.Checked)
+			{
+				if (lightORamaInstalled && chkLOR.Checked)
+				{
+					if (VampChords.Timings.effects.Count > 0)
+					{
+						StatusUpdate("Exporting Chord Annotations");
+						VampChords.xTimingsToLORtimings();
+						VampChords.ResultsToLORChannels();
+						if (Fyle.Exists(VampChords.FileResults)) completed++;
+					}
+				}
+			}
+
 
 			StatusUpdate("Export Complete!");
 

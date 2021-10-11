@@ -65,6 +65,14 @@
 			this.mnuTimingMarks = new System.Windows.Forms.ToolStripMenuItem();
 			this.mnuTranscription = new System.Windows.Forms.ToolStripMenuItem();
 			this.grpTimings = new System.Windows.Forms.GroupBox();
+			this.grpChords = new System.Windows.Forms.GroupBox();
+			this.chkChords = new System.Windows.Forms.CheckBox();
+			this.label2 = new System.Windows.Forms.Label();
+			this.cboLabelsChords = new System.Windows.Forms.ComboBox();
+			this.label3 = new System.Windows.Forms.Label();
+			this.cboMethodChords = new System.Windows.Forms.ComboBox();
+			this.label4 = new System.Windows.Forms.Label();
+			this.cboAlignChords = new System.Windows.Forms.ComboBox();
 			this.grbGlobal = new System.Windows.Forms.GroupBox();
 			this.lblStepSize = new System.Windows.Forms.Label();
 			this.cboStepSize = new System.Windows.Forms.ComboBox();
@@ -169,6 +177,8 @@
 			this.lblOnsetsAlign = new System.Windows.Forms.Label();
 			this.cboAlignOnsets = new System.Windows.Forms.ComboBox();
 			this.grpBarsBeats = new System.Windows.Forms.GroupBox();
+			this.lblDetectBarBeats = new System.Windows.Forms.Label();
+			this.cboDetectBarBeats = new System.Windows.Forms.ComboBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.cboLabelsBarBeats = new System.Windows.Forms.ComboBox();
 			this.chkBarsBeats = new System.Windows.Forms.CheckBox();
@@ -187,7 +197,6 @@
 			this.lblAlignBarsBeats = new System.Windows.Forms.Label();
 			this.cboAlignBarBeats = new System.Windows.Forms.ComboBox();
 			this.lblStep2B = new System.Windows.Forms.Label();
-			this.chkChords = new System.Windows.Forms.CheckBox();
 			this.chkFlux = new System.Windows.Forms.CheckBox();
 			this.grpExplore = new System.Windows.Forms.GroupBox();
 			this.btnResetDefaults = new System.Windows.Forms.Button();
@@ -234,12 +243,11 @@
 			this.lblFileSequence = new System.Windows.Forms.Label();
 			this.btnSaveSeq = new System.Windows.Forms.Button();
 			this.txtSeqName = new System.Windows.Forms.TextBox();
-			this.lblDetectBarBeats = new System.Windows.Forms.Label();
-			this.cboDetectBarBeats = new System.Windows.Forms.ComboBox();
 			this.pnlTrackBeatsX.SuspendLayout();
 			this.staStatus.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.grpTimings.SuspendLayout();
+			this.grpChords.SuspendLayout();
 			this.grbGlobal.SuspendLayout();
 			this.pnlBeatFade.SuspendLayout();
 			this.panel1.SuspendLayout();
@@ -335,6 +343,7 @@
 			this.ttip.SetToolTip(this.btnExploreVamp, "Explore the Vamperizer Source Code Folder");
 			this.btnExploreVamp.UseVisualStyleBackColor = true;
 			this.btnExploreVamp.Visible = false;
+			this.btnExploreVamp.Click += new System.EventHandler(this.btnExploreVamp_Click);
 			// 
 			// btnExplorexLights
 			// 
@@ -348,6 +357,7 @@
 			this.ttip.SetToolTip(this.btnExplorexLights, "Explore xLights Show Folder");
 			this.btnExplorexLights.UseVisualStyleBackColor = true;
 			this.btnExplorexLights.Visible = false;
+			this.btnExplorexLights.Click += new System.EventHandler(this.btnExplorexLights_Click);
 			// 
 			// btnExploreTemp
 			// 
@@ -361,6 +371,7 @@
 			this.ttip.SetToolTip(this.btnExploreTemp, "Explore the Temp Working Folder");
 			this.btnExploreTemp.UseVisualStyleBackColor = true;
 			this.btnExploreTemp.Visible = false;
+			this.btnExploreTemp.Click += new System.EventHandler(this.btnExploreVamp_Click);
 			// 
 			// btnCmdTemp
 			// 
@@ -374,6 +385,7 @@
 			this.ttip.SetToolTip(this.btnCmdTemp, "Open Command Prompt in the Temp Working Directory");
 			this.btnCmdTemp.UseVisualStyleBackColor = true;
 			this.btnCmdTemp.Visible = false;
+			this.btnCmdTemp.Click += new System.EventHandler(this.btnCmdTemp_Click);
 			// 
 			// btnLaunchxLights
 			// 
@@ -387,6 +399,7 @@
 			this.ttip.SetToolTip(this.btnLaunchxLights, "Launch xLights");
 			this.btnLaunchxLights.UseVisualStyleBackColor = true;
 			this.btnLaunchxLights.Visible = false;
+			this.btnLaunchxLights.Click += new System.EventHandler(this.btnLaunchxLights_Click);
 			// 
 			// btnSequenceEditor
 			// 
@@ -400,6 +413,7 @@
 			this.ttip.SetToolTip(this.btnSequenceEditor, "Launch Light-O-Rama Sequence Editor");
 			this.btnSequenceEditor.UseVisualStyleBackColor = true;
 			this.btnSequenceEditor.Visible = false;
+			this.btnSequenceEditor.Click += new System.EventHandler(this.btnSequenceEditor_Click);
 			// 
 			// btnExploreLOR
 			// 
@@ -413,6 +427,7 @@
 			this.ttip.SetToolTip(this.btnExploreLOR, "Explore Light-O-Rama Sequences Folder");
 			this.btnExploreLOR.UseVisualStyleBackColor = true;
 			this.btnExploreLOR.Visible = false;
+			this.btnExploreLOR.Click += new System.EventHandler(this.btnExploreTemp_Click);
 			// 
 			// staStatus
 			// 
@@ -424,7 +439,7 @@
             this.pnlAbout});
 			this.staStatus.Location = new System.Drawing.Point(0, 700);
 			this.staStatus.Name = "staStatus";
-			this.staStatus.Size = new System.Drawing.Size(997, 24);
+			this.staStatus.Size = new System.Drawing.Size(990, 24);
 			this.staStatus.TabIndex = 62;
 			this.staStatus.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
 			this.staStatus.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
@@ -456,7 +471,7 @@
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlStatus.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
 			this.pnlStatus.Name = "pnlStatus";
-			this.pnlStatus.Size = new System.Drawing.Size(1319, 19);
+			this.pnlStatus.Size = new System.Drawing.Size(871, 19);
 			this.pnlStatus.Spring = true;
 			// 
 			// pnlAbout
@@ -590,8 +605,8 @@
 			// 
 			// grpTimings
 			// 
+			this.grpTimings.Controls.Add(this.grpChords);
 			this.grpTimings.Controls.Add(this.grbGlobal);
-			this.grpTimings.Controls.Add(this.pnlVamping);
 			this.grpTimings.Controls.Add(this.lblNote3Third);
 			this.grpTimings.Controls.Add(this.lblNote1Bars);
 			this.grpTimings.Controls.Add(this.lblWorkFolder);
@@ -617,16 +632,126 @@
 			this.grpTimings.Controls.Add(this.grpOnsets);
 			this.grpTimings.Controls.Add(this.grpBarsBeats);
 			this.grpTimings.Controls.Add(this.lblStep2B);
-			this.grpTimings.Controls.Add(this.chkChords);
 			this.grpTimings.Controls.Add(this.chkFlux);
 			this.grpTimings.Enabled = false;
 			this.grpTimings.Location = new System.Drawing.Point(352, 12);
 			this.grpTimings.Name = "grpTimings";
-			this.grpTimings.Size = new System.Drawing.Size(637, 676);
+			this.grpTimings.Size = new System.Drawing.Size(628, 676);
 			this.grpTimings.TabIndex = 113;
 			this.grpTimings.TabStop = false;
 			this.grpTimings.Text = "      Select Which Timings to Generate";
 			this.grpTimings.Enter += new System.EventHandler(this.grpTimings_Enter);
+			// 
+			// grpChords
+			// 
+			this.grpChords.Controls.Add(this.chkChords);
+			this.grpChords.Controls.Add(this.label2);
+			this.grpChords.Controls.Add(this.cboLabelsChords);
+			this.grpChords.Controls.Add(this.label3);
+			this.grpChords.Controls.Add(this.cboMethodChords);
+			this.grpChords.Controls.Add(this.label4);
+			this.grpChords.Controls.Add(this.cboAlignChords);
+			this.grpChords.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.grpChords.Location = new System.Drawing.Point(469, 237);
+			this.grpChords.Name = "grpChords";
+			this.grpChords.Size = new System.Drawing.Size(147, 154);
+			this.grpChords.TabIndex = 181;
+			this.grpChords.TabStop = false;
+			this.grpChords.Text = "   Chords";
+			// 
+			// chkChords
+			// 
+			this.chkChords.AutoSize = true;
+			this.chkChords.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.chkChords.Location = new System.Drawing.Point(0, 0);
+			this.chkChords.Name = "chkChords";
+			this.chkChords.Size = new System.Drawing.Size(15, 14);
+			this.chkChords.TabIndex = 151;
+			this.chkChords.Tag = "11";
+			this.chkChords.UseVisualStyleBackColor = true;
+			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label2.Location = new System.Drawing.Point(6, 64);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(41, 13);
+			this.label2.TabIndex = 149;
+			this.label2.Text = "Labels:";
+			// 
+			// cboLabelsChords
+			// 
+			this.cboLabelsChords.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.cboLabelsChords.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboLabelsChords.FormattingEnabled = true;
+			this.cboLabelsChords.Items.AddRange(new object[] {
+            "None",
+            "Note Names",
+            "MIDI Note Numbers"});
+			this.cboLabelsChords.Location = new System.Drawing.Point(6, 80);
+			this.cboLabelsChords.Name = "cboLabelsChords";
+			this.cboLabelsChords.Size = new System.Drawing.Size(135, 21);
+			this.cboLabelsChords.TabIndex = 148;
+			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label3.Location = new System.Drawing.Point(6, 16);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(86, 13);
+			this.label3.TabIndex = 144;
+			this.label3.Text = "Plugin / Method:";
+			// 
+			// cboMethodChords
+			// 
+			this.cboMethodChords.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.cboMethodChords.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboMethodChords.FormattingEnabled = true;
+			this.cboMethodChords.Items.AddRange(new object[] {
+            "Queen Mary Note Onset Detector",
+            "Queen Mary Polyphonic Transcription",
+            "OnsetDS Onset Detector",
+            "Silvet Note Transcription",
+            "Alicante Note Onset Detector",
+            "Alicante Polyphonic Transcription",
+            "Aubio Onset Detector",
+            "Aubio Note Tracker"});
+			this.cboMethodChords.Location = new System.Drawing.Point(6, 32);
+			this.cboMethodChords.Name = "cboMethodChords";
+			this.cboMethodChords.Size = new System.Drawing.Size(135, 21);
+			this.cboMethodChords.TabIndex = 143;
+			// 
+			// label4
+			// 
+			this.label4.AutoSize = true;
+			this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label4.Location = new System.Drawing.Point(6, 104);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(49, 13);
+			this.label4.TabIndex = 142;
+			this.label4.Text = "Align To:";
+			// 
+			// cboAlignChords
+			// 
+			this.cboAlignChords.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.cboAlignChords.DropDownWidth = 180;
+			this.cboAlignChords.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboAlignChords.FormattingEnabled = true;
+			this.cboAlignChords.Items.AddRange(new object[] {
+            "None",
+            "25ms 40fps",
+            "50ms 20fps",
+            "Bars / Whole Notes",
+            "Full Beats / Quarter Notes",
+            "Half Beats / Eighth Notes",
+            "Quarter Beats / Sixteenth Notes",
+            "Note Onsets"});
+			this.cboAlignChords.Location = new System.Drawing.Point(6, 120);
+			this.cboAlignChords.Name = "cboAlignChords";
+			this.cboAlignChords.Size = new System.Drawing.Size(135, 21);
+			this.cboAlignChords.TabIndex = 141;
 			// 
 			// grbGlobal
 			// 
@@ -767,7 +892,7 @@
 			this.pnlVamping.Controls.Add(this.lblAnalyzing);
 			this.pnlVamping.Controls.Add(this.lblWait);
 			this.pnlVamping.Controls.Add(this.lblVampRed);
-			this.pnlVamping.Location = new System.Drawing.Point(667, 325);
+			this.pnlVamping.Location = new System.Drawing.Point(159, 176);
 			this.pnlVamping.Name = "pnlVamping";
 			this.pnlVamping.Size = new System.Drawing.Size(334, 72);
 			this.pnlVamping.TabIndex = 125;
@@ -928,7 +1053,7 @@
 			this.chk24fps.AutoSize = true;
 			this.chk24fps.Enabled = false;
 			this.chk24fps.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.chk24fps.Location = new System.Drawing.Point(616, 453);
+			this.chk24fps.Location = new System.Drawing.Point(649, 445);
 			this.chk24fps.Name = "chk24fps";
 			this.chk24fps.Size = new System.Drawing.Size(153, 17);
 			this.chk24fps.TabIndex = 170;
@@ -942,7 +1067,7 @@
 			this.chk30fps.AutoSize = true;
 			this.chk30fps.Enabled = false;
 			this.chk30fps.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.chk30fps.Location = new System.Drawing.Point(616, 437);
+			this.chk30fps.Location = new System.Drawing.Point(649, 429);
 			this.chk30fps.Name = "chk30fps";
 			this.chk30fps.Size = new System.Drawing.Size(153, 17);
 			this.chk30fps.TabIndex = 169;
@@ -967,7 +1092,7 @@
 			this.chk15fps.AutoSize = true;
 			this.chk15fps.Enabled = false;
 			this.chk15fps.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.chk15fps.Location = new System.Drawing.Point(616, 469);
+			this.chk15fps.Location = new System.Drawing.Point(649, 461);
 			this.chk15fps.Name = "chk15fps";
 			this.chk15fps.Size = new System.Drawing.Size(153, 17);
 			this.chk15fps.TabIndex = 168;
@@ -1975,6 +2100,32 @@
 			this.grpBarsBeats.TabStop = false;
 			this.grpBarsBeats.Text = "   Bars && Beats ";
 			// 
+			// lblDetectBarBeats
+			// 
+			this.lblDetectBarBeats.AutoSize = true;
+			this.lblDetectBarBeats.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblDetectBarBeats.Location = new System.Drawing.Point(7, 272);
+			this.lblDetectBarBeats.Name = "lblDetectBarBeats";
+			this.lblDetectBarBeats.Size = new System.Drawing.Size(95, 13);
+			this.lblDetectBarBeats.TabIndex = 163;
+			this.lblDetectBarBeats.Text = "Detection Method:";
+			// 
+			// cboDetectBarBeats
+			// 
+			this.cboDetectBarBeats.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.cboDetectBarBeats.DropDownWidth = 300;
+			this.cboDetectBarBeats.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboDetectBarBeats.FormattingEnabled = true;
+			this.cboDetectBarBeats.Items.AddRange(new object[] {
+            "\'Complex Domain\' (Strings/Mixed: Piano, Guitar)",
+            "\'Spectral Difference\' (Percussion: Drums, Chimes)",
+            "\'Phase Deviation\' (Wind: Flute, Sax, Trumpet)",
+            "\'Broadband Energy Rise\' (Percussion mixed with other)"});
+			this.cboDetectBarBeats.Location = new System.Drawing.Point(6, 288);
+			this.cboDetectBarBeats.Name = "cboDetectBarBeats";
+			this.cboDetectBarBeats.Size = new System.Drawing.Size(135, 21);
+			this.cboDetectBarBeats.TabIndex = 162;
+			// 
 			// label1
 			// 
 			this.label1.AutoSize = true;
@@ -2203,21 +2354,6 @@
 			this.lblStep2B.Size = new System.Drawing.Size(21, 24);
 			this.lblStep2B.TabIndex = 121;
 			this.lblStep2B.Text = "2";
-			// 
-			// chkChords
-			// 
-			this.chkChords.AutoSize = true;
-			this.chkChords.Enabled = false;
-			this.chkChords.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.chkChords.Location = new System.Drawing.Point(636, 102);
-			this.chkChords.Name = "chkChords";
-			this.chkChords.Size = new System.Drawing.Size(63, 17);
-			this.chkChords.TabIndex = 126;
-			this.chkChords.Tag = "13";
-			this.chkChords.Text = "Chords";
-			this.chkChords.UseVisualStyleBackColor = true;
-			this.chkChords.Visible = false;
-			this.chkChords.CheckedChanged += new System.EventHandler(this.chkTiming_CheckedChanged);
 			// 
 			// chkFlux
 			// 
@@ -2523,6 +2659,7 @@
 			// grpOptions
 			// 
 			this.grpOptions.BackColor = System.Drawing.SystemColors.Control;
+			this.grpOptions.Controls.Add(this.pnlVamping);
 			this.grpOptions.Controls.Add(this.picWorking);
 			this.grpOptions.Controls.Add(this.lblPickYourPoison);
 			this.grpOptions.Controls.Add(this.chkReuse);
@@ -2757,38 +2894,12 @@
 			this.txtSeqName.Size = new System.Drawing.Size(219, 20);
 			this.txtSeqName.TabIndex = 124;
 			// 
-			// lblDetectBarBeats
-			// 
-			this.lblDetectBarBeats.AutoSize = true;
-			this.lblDetectBarBeats.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblDetectBarBeats.Location = new System.Drawing.Point(7, 272);
-			this.lblDetectBarBeats.Name = "lblDetectBarBeats";
-			this.lblDetectBarBeats.Size = new System.Drawing.Size(95, 13);
-			this.lblDetectBarBeats.TabIndex = 163;
-			this.lblDetectBarBeats.Text = "Detection Method:";
-			// 
-			// cboDetectBarBeats
-			// 
-			this.cboDetectBarBeats.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cboDetectBarBeats.DropDownWidth = 300;
-			this.cboDetectBarBeats.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.cboDetectBarBeats.FormattingEnabled = true;
-			this.cboDetectBarBeats.Items.AddRange(new object[] {
-            "\'Complex Domain\' (Strings/Mixed: Piano, Guitar)",
-            "\'Spectral Difference\' (Percussion: Drums, Chimes)",
-            "\'Phase Deviation\' (Wind: Flute, Sax, Trumpet)",
-            "\'Broadband Energy Rise\' (Percussion mixed with other)"});
-			this.cboDetectBarBeats.Location = new System.Drawing.Point(6, 288);
-			this.cboDetectBarBeats.Name = "cboDetectBarBeats";
-			this.cboDetectBarBeats.Size = new System.Drawing.Size(135, 21);
-			this.cboDetectBarBeats.TabIndex = 162;
-			// 
 			// frmVamp
 			// 
 			this.AcceptButton = this.btnOK;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(997, 724);
+			this.ClientSize = new System.Drawing.Size(990, 724);
 			this.Controls.Add(this.grpExplore);
 			this.Controls.Add(this.grpSaveLOR);
 			this.Controls.Add(this.grpAnalyze);
@@ -2819,6 +2930,8 @@
 			this.menuStrip1.PerformLayout();
 			this.grpTimings.ResumeLayout(false);
 			this.grpTimings.PerformLayout();
+			this.grpChords.ResumeLayout(false);
+			this.grpChords.PerformLayout();
 			this.grbGlobal.ResumeLayout(false);
 			this.grbGlobal.PerformLayout();
 			this.pnlBeatFade.ResumeLayout(false);
@@ -2917,7 +3030,6 @@
 		private System.Windows.Forms.Button btnSavexL;
 		private System.Windows.Forms.TextBox txtSaveNamexL;
 		private System.Windows.Forms.CheckBox chkFlux;
-		private System.Windows.Forms.CheckBox chkChords;
 		private System.Windows.Forms.ImageList imlTreeIcons;
 		private System.Windows.Forms.GroupBox grpAnalyze;
 		private System.Windows.Forms.Button btnOK;
@@ -3085,6 +3197,15 @@
 		private System.Windows.Forms.PictureBox picWorking;
 		private System.Windows.Forms.Label lblDetectBarBeats;
 		private System.Windows.Forms.ComboBox cboDetectBarBeats;
+		private System.Windows.Forms.GroupBox grpChords;
+		//? private System.Windows.Forms.CheckBox chkChords; // Duplicate?
+		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.ComboBox cboLabelsChords;
+		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.ComboBox cboMethodChords;
+		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.ComboBox cboAlignChords;
+		private System.Windows.Forms.CheckBox chkChords;
 	}
 }
 

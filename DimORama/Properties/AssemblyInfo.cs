@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Resources;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -8,8 +9,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Dim-O-Rama")]
 [assembly: AssemblyDescription("Dims, Trims, and otherwise Adjusts Light-O-Rama Channels")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Wizster Software")]
-[assembly: AssemblyProduct("Tune-O-Rama")]
+[assembly: AssemblyCompany("W⚡zlights Software")]
+[assembly: AssemblyProduct("Dim-O-Rama")]
 [assembly: AssemblyCopyright("Copyright © 2021+ by Doctor 🧙 Wizard and W⚡zlights Software")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -34,3 +35,4 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("4.0.0.0")]
 [assembly: AssemblyFileVersion("4.0.0.0")]
+[assembly: NeutralResourcesLanguage("en-US")]

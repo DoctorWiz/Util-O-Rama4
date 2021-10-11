@@ -98,7 +98,7 @@ namespace UtilORama4
 		
 
 
-		public enum TransformTypes { BarsAndBeats, NoteOnsets, PolyphonicTranscription, PitchAndKey, Tempo, Chromagram, Spectrogram, Segments};
+		public enum TransformTypes { BarsAndBeats, NoteOnsets, PolyphonicTranscription, PitchAndKey, Tempo, Chromagram, Spectrogram, Segments, Chords};
 
 
 		#endregion
