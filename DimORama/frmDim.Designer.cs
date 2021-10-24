@@ -45,7 +45,6 @@ namespace UtilORama4
 			this.txtFilenameSource = new System.Windows.Forms.TextBox();
 			this.dlgFileSave = new System.Windows.Forms.SaveFileDialog();
 			this.dlgFileOpen = new System.Windows.Forms.OpenFileDialog();
-			this.imlTreeIcons = new System.Windows.Forms.ImageList(this.components);
 			this.ttip = new System.Windows.Forms.ToolTip(this.components);
 			this.tabDim = new Syncfusion.Windows.Forms.Tools.TabPageAdv();
 			this.lblTabFunction = new System.Windows.Forms.Label();
@@ -66,6 +65,7 @@ namespace UtilORama4
 			this.txtFilenameMap = new System.Windows.Forms.TextBox();
 			this.btnSaveMap = new System.Windows.Forms.Button();
 			this.chkLaunch = new System.Windows.Forms.CheckBox();
+			this.imlTreeIcons = new System.Windows.Forms.ImageList(this.components);
 			this.staStatus.SuspendLayout();
 			this.tabDim.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picPreviewSource)).BeginInit();
@@ -202,19 +202,6 @@ namespace UtilORama4
 			// 
 			this.dlgFileOpen.FileName = "openFileDialog1";
 			// 
-			// imlTreeIcons
-			// 
-			this.imlTreeIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imlTreeIcons.ImageStream")));
-			this.imlTreeIcons.TransparentColor = System.Drawing.Color.Transparent;
-			this.imlTreeIcons.Images.SetKeyName(0, "Track");
-			this.imlTreeIcons.Images.SetKeyName(1, "ChannelGroup");
-			this.imlTreeIcons.Images.SetKeyName(2, "RGBchannel");
-			this.imlTreeIcons.Images.SetKeyName(3, "Channel");
-			this.imlTreeIcons.Images.SetKeyName(4, "RedCh");
-			this.imlTreeIcons.Images.SetKeyName(5, "GrnCh");
-			this.imlTreeIcons.Images.SetKeyName(6, "BluCh");
-			this.imlTreeIcons.Images.SetKeyName(7, "");
-			// 
 			// ttip
 			// 
 			this.ttip.ShowAlways = true;
@@ -287,7 +274,6 @@ namespace UtilORama4
 			this.treeSource.HelpTextControl.Visible = true;
 			this.treeSource.InactiveSelectedNodeForeColor = System.Drawing.SystemColors.ControlText;
 			this.treeSource.InteractiveCheckBoxes = true;
-			this.treeSource.LeftImageList = this.imlTreeIcons;
 			this.treeSource.Location = new System.Drawing.Point(9, 21);
 			this.treeSource.MetroColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(165)))), ((int)(((byte)(220)))));
 			this.treeSource.Name = "treeSource";
@@ -494,6 +480,43 @@ namespace UtilORama4
 			this.chkLaunch.Text = "Launch in Sequence Editor";
 			this.chkLaunch.UseVisualStyleBackColor = true;
 			// 
+			// imlTreeIcons
+			// 
+			this.imlTreeIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imlTreeIcons.ImageStream")));
+			this.imlTreeIcons.TransparentColor = System.Drawing.Color.Transparent;
+			this.imlTreeIcons.Images.SetKeyName(0, "Universe");
+			this.imlTreeIcons.Images.SetKeyName(1, "Controller");
+			this.imlTreeIcons.Images.SetKeyName(2, "Track");
+			this.imlTreeIcons.Images.SetKeyName(3, "Channel");
+			this.imlTreeIcons.Images.SetKeyName(4, "RGBChannel");
+			this.imlTreeIcons.Images.SetKeyName(5, "ChannelGroup");
+			this.imlTreeIcons.Images.SetKeyName(6, "CosmicDevice");
+			this.imlTreeIcons.Images.SetKeyName(7, "#400000");
+			this.imlTreeIcons.Images.SetKeyName(8, "#804040");
+			this.imlTreeIcons.Images.SetKeyName(9, "#FF0000");
+			this.imlTreeIcons.Images.SetKeyName(10, "#00FF00");
+			this.imlTreeIcons.Images.SetKeyName(11, "#0000FF");
+			this.imlTreeIcons.Images.SetKeyName(12, "#FFFFFF");
+			this.imlTreeIcons.Images.SetKeyName(13, "#000000");
+			this.imlTreeIcons.Images.SetKeyName(14, "#8000FF");
+			this.imlTreeIcons.Images.SetKeyName(15, "#FF8000");
+			this.imlTreeIcons.Images.SetKeyName(16, "#FFFF00");
+			this.imlTreeIcons.Images.SetKeyName(17, "#FF80FF");
+			this.imlTreeIcons.Images.SetKeyName(18, "#00FFFF");
+			this.imlTreeIcons.Images.SetKeyName(19, "#000080");
+			this.imlTreeIcons.Images.SetKeyName(20, "#008000");
+			this.imlTreeIcons.Images.SetKeyName(21, "#008080");
+			this.imlTreeIcons.Images.SetKeyName(22, "#8080FF");
+			this.imlTreeIcons.Images.SetKeyName(23, "#400080");
+			this.imlTreeIcons.Images.SetKeyName(24, "#404040");
+			this.imlTreeIcons.Images.SetKeyName(25, "#408080");
+			this.imlTreeIcons.Images.SetKeyName(26, "#800000");
+			this.imlTreeIcons.Images.SetKeyName(27, "#800080");
+			this.imlTreeIcons.Images.SetKeyName(28, "#808000");
+			this.imlTreeIcons.Images.SetKeyName(29, "#808080");
+			this.imlTreeIcons.Images.SetKeyName(30, "#C0C0C0");
+			this.imlTreeIcons.Images.SetKeyName(31, "#FF00FF");
+			// 
 			// frmDim
 			// 
 			this.AcceptButton = this.btnOK;
@@ -559,7 +582,6 @@ namespace UtilORama4
 		private System.Windows.Forms.TextBox txtFilenameSource;
 		private System.Windows.Forms.SaveFileDialog dlgFileSave;
 		private System.Windows.Forms.OpenFileDialog dlgFileOpen;
-		private System.Windows.Forms.ImageList imlTreeIcons;
 		private System.Windows.Forms.ToolTip ttip;
 		private System.Windows.Forms.PictureBox picAboutIcon;
 		private System.Windows.Forms.TextBox txtTime;
@@ -580,6 +602,7 @@ namespace UtilORama4
 		private System.Windows.Forms.TextBox txtFilenameMap;
 		private System.Windows.Forms.Button btnSaveMap;
 		private System.Windows.Forms.CheckBox chkLaunch;
+		private System.Windows.Forms.ImageList imlTreeIcons;
 	}
 }
 

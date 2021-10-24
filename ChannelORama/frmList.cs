@@ -15,6 +15,8 @@ using LORUtils4;
 using FileHelper;
 using xUtils;
 using FuzzyString;
+using Syncfusion.Windows.Forms.Tools;
+
 //using xUtils;
 
 namespace UtilORama4
@@ -44,6 +46,21 @@ namespace UtilORama4
 
 		private xRGBEffects xSeq = null;
 		private LORVisualization4 lViz = null;
+
+		private int[] TREEICONuniverse = { 0 };
+		private int[] TREEICONcontroller = { 1 };
+		private int[] TREEICONtrack = { 2 };
+		private int[] TREEICONchannel = { 3 }; // Generic, non colored (dark cyan with "Ch" on it)
+		private int[] TREEICONrgbChannel = { 4 }; // #7 below looks better
+		private int[] TREEICONchannelGroup = { 5 };
+		private int[] TREEICONcosmic = { 6 };
+		private int[] TREEICONrgbColor = { 7 };
+		private int[] TREEICONmulticolor = { 8 };
+		private int[] TREEICONred = { 9 };
+		private int[] TREEICONgreen = { 10 };
+		private int[] TREEICONblue = { 11 };
+
+
 
 		public frmList()
 		{
@@ -482,7 +499,7 @@ namespace UtilORama4
 
 							int i = 1;
 							int.TryParse(row[2], out i);
-							channel.LOROutput4 = i;               // Field 2 = LOROutput4 Number
+							channel.OutputNum = i;               // Field 2 = LOROutput4 Number
 
 							channel.Name = row[3];                // Field 3 = Name
 							chanName = channel.Name;              // For debugging exceptions
@@ -833,7 +850,7 @@ namespace UtilORama4
 
 						row.Add(channel.DMXUniverse.UniverseNumber.ToString()); // Field 0
 						row.Add(channel.DMXController.LetterID);                // Field 1
-						row.Add(channel.LOROutput4.ToString());                 // Field 2
+						row.Add(channel.OutputNum.ToString());                 // Field 2
 						row.Add(channel.Name);                                  // Field 3
 						row.Add(channel.Location);                              // Field 4
 						row.Add(channel.Comment);                               // Field 5
@@ -910,9 +927,9 @@ namespace UtilORama4
 			int treeHt = this.ClientSize.Height - staStatus.Height - 16;
 			int treeWd = this.ClientSize.Width - btnUniverse.Width - 24;
 			int btnLeft = ClientSize.Width - btnUniverse.Width - 8;
-			int okTop = treeChannelList.Top + treeHt - btnOK.Height;
-			treeChannelList.Height = treeHt;
-			treeChannelList.Width = treeWd;
+			int okTop = treeChannels.Top + treeHt - btnOK.Height;
+			treeChannels.Height = treeHt;
+			treeChannels.Width = treeWd;
 			btnOK.Top = okTop;
 			btnUniverse.Left = btnLeft;
 			btnController.Left = btnLeft;
@@ -924,13 +941,13 @@ namespace UtilORama4
 			btnComparex.Left = btnLeft;
 			btnWiz.Left = btnLeft;
 			btnOK.Left = btnLeft;
-			int y = treeChannelList.Top + treeChannelList.Height - btnSave.Height;
+			int y = treeChannels.Top + treeChannels.Height - btnSave.Height;
 			btnSave.Top = y;
 		}
 
 		private void BuildTree()
 		{
-			treeChannelList.Nodes.Clear();
+			treeChannels.Nodes.Clear();
 
 			BuildTreeUniverses(universes);
 		}
@@ -943,25 +960,26 @@ namespace UtilORama4
 				DMXUniverse univ = uniList[u];
 				//nodeText = univ.UniverseNumber.ToString() + ": " + univ.Name;
 				nodeText = univ.ToString();
-				TreeNode uniNode = treeChannelList.Nodes.Add(nodeText);
-				uniNode.ImageIndex = 0;
-				uniNode.SelectedImageIndex = 0;
+
+				Syncfusion.Windows.Forms.Tools.TreeNodeAdv uniNode = new Syncfusion.Windows.Forms.Tools.TreeNodeAdv(nodeText);
+				treeChannels.Nodes.Add(uniNode); // treeChannels.Nodes.Add(nodeText); //   treeChannels.Nodes.Add(nodeText);
+				uniNode.LeftImageIndices = TREEICONuniverse;
 				uniNode.Tag = uniList[u];
 				uniList[u].Tag = uniNode;
 				BuildTreeControllers(uniNode);
 				if (univ.BadName || univ.BadNumber)
 				{
-					uniNode.ForeColor = Color.Red;
+					uniNode.TextColor = Color.Red;
 				}
 				else
 				{
-					uniNode.ForeColor = SystemColors.WindowText;
+					uniNode.TextColor = Color.Black;
 				}
 
 			}
 		}
 
-		public void BuildTreeControllers(TreeNode uniNode)
+		public void BuildTreeControllers(TreeNodeAdv uniNode)
 		{
 			string nodeText = "";
 			DMXUniverse universe = (DMXUniverse)uniNode.Tag;
@@ -973,25 +991,25 @@ namespace UtilORama4
 				//nodeText += l.ToString("000") + ": ";
 				//nodeText += controller.LetterID + ": " + controller.Name;
 				nodeText = controller.ToString();
-				TreeNode ctlNode = uniNode.Nodes.Add(nodeText);
-				ctlNode.ImageIndex = 1;
-				ctlNode.SelectedImageIndex = 1;
+				Syncfusion.Windows.Forms.Tools.TreeNodeAdv ctlNode = new Syncfusion.Windows.Forms.Tools.TreeNodeAdv(nodeText);
+				uniNode.Nodes.Add(ctlNode); // treeChannels.Nodes.Add(nodeText); //   treeChannels.Nodes.Add(nodeText);
+				ctlNode.LeftImageIndices = TREEICONcontroller;
 				ctlNode.Tag = controller;
 				controller.Tag = ctlNode;
 				BuildTreeChannels(ctlNode);
 				if (controller.BadLetter || controller.BadName)
 				{
-					ctlNode.ForeColor = Color.Red;
+					ctlNode.TextColor = Color.Red;
 				}
 				else
 				{
-					ctlNode.ForeColor = SystemColors.WindowText;
+					ctlNode.TextColor = Color.Black;
 				}
 
 			}
 		}
 
-		public void BuildTreeChannels(TreeNode ctlNode)
+		public void BuildTreeChannels(TreeNodeAdv ctlNode)
 		{
 			string nodeText = "";
 			DMXController controller = (DMXController)ctlNode.Tag;
@@ -1000,26 +1018,27 @@ namespace UtilORama4
 				DMXChannel channel = controller.DMXChannels[ch];
 				//nodeText = channel.LOROutput4.ToString() + ": " + channel.Name;
 				nodeText = channel.ToString();
-				TreeNode chanNode = ctlNode.Nodes.Add(nodeText);
-				ImageList icons = treeChannelList.ImageList;
+				Syncfusion.Windows.Forms.Tools.TreeNodeAdv chanNode = new Syncfusion.Windows.Forms.Tools.TreeNodeAdv(nodeText);
+				ctlNode.Nodes.Add(chanNode); // treeChannels.Nodes.Add(nodeText); //   treeChannels.Nodes.Add(nodeText);
+				ImageList icons = treeChannels.LeftImageList;
 				int iconIndex = LORUtils4.lutils.ColorIcon(icons, channel.Color);
-				chanNode.ImageIndex = iconIndex;
-				chanNode.SelectedImageIndex = iconIndex;
+				int[] ico = { iconIndex };
+				chanNode.LeftImageIndices = ico;
 				chanNode.Tag = channel;
 				channel.Tag = chanNode;
 				if (channel.BadName || channel.BadOutput)
 				{
-					chanNode.ForeColor = Color.Red;
+					chanNode.TextColor = Color.Red;
 				}
 				else
 				{
-					chanNode.ForeColor = SystemColors.WindowText;
+					chanNode.TextColor = Color.Black;
 				}
 
 			}
 		}
 
-		public void UpdateUniveseNode(TreeNode node)
+		public void UpdateUniveseNode(TreeNodeAdv node)
 		{
 			if (node != null)
 			{
@@ -1036,7 +1055,7 @@ namespace UtilORama4
 			}
 		}
 
-		public void UpdateControllerNode(TreeNode node)
+		public void UpdateControllerNode(TreeNodeAdv node)
 		{
 			if (node != null)
 			{
@@ -1056,7 +1075,7 @@ namespace UtilORama4
 			}
 		}
 
-		public void UpdateChannelNode(TreeNode node)
+		public void UpdateChannelNode(TreeNodeAdv node)
 		{
 			if (node != null)
 			{
@@ -1068,25 +1087,25 @@ namespace UtilORama4
 						//string nodeText = channel.LOROutput4.ToString() + ": " + channel.Name;
 						string nodeText = channel.ToString();
 						node.Text = nodeText;
-						ImageList icons = treeChannelList.ImageList;
+						ImageList icons = treeChannels.LeftImageList;
 						int iconIndex = LORUtils4.lutils.ColorIcon(icons, channel.Color);
-						node.ImageIndex = iconIndex;
-						node.SelectedImageIndex = iconIndex;
+						int[] ico = { iconIndex };
+						node.LeftImageIndices = ico;
 					}
 				}
 			}
 		}
 
 
-		private void treeChannelList_AfterSelect(object sender, TreeViewEventArgs e)
+		private void treeChannels_AfterSelect(object sender, EventArgs e)
 		{
-			TreeNode node = treeChannelList.SelectedNode;
+			TreeNodeAdv node = treeChannels.SelectedNode;
 			if (node != null)
 			{
-				int ni = node.ImageIndex;
-				bool en = (ni == 0);
+				int[] ni = node.LeftImageIndices;
+				bool en = (ni == TREEICONuniverse);
 				btnController.Enabled = en;
-				en = (ni == 1);
+				en = (ni == TREEICONcontroller);
 				btnChannel.Enabled = en;
 			}
 		}
@@ -1094,33 +1113,33 @@ namespace UtilORama4
 		private void treeChannelList_DoubleClick(object sender, EventArgs e)
 		{
 			bool needRebuild = false;
-			TreeNode node = treeChannelList.SelectedNode;
+			TreeNodeAdv node = treeChannels.SelectedNode;
 			if (node != null)
 			{
-				int ni = node.ImageIndex;
-				if (ni > 1)
+				int[] ni = node.LeftImageIndices;
+				if (ni == TREEICONcontroller)
 				{
-					EditChannelNode(node);
+					EditControllerNode(node);
 				}
-
 				else
 				{
-					if (ni == 1)
+					if (ni == TREEICONuniverse)
 					{
-						EditControllerNode(node);
+						EditUniverseNode(node);
 					}
 					else
 					{
-						if (ni == 0)
+						int ix = ni[0];
+						if (ix>2)
 						{
-							EditUniverseNode(node);
+							EditChannelNode(node);
 						}
 					}
 				}
 			}
 		}
 
-		private void EditUniverseNode(TreeNode node)
+		private void EditUniverseNode(TreeNodeAdv node)
 		{
 			bool needSort = false;
 			DMXUniverse universe = (DMXUniverse)node.Tag;
@@ -1144,17 +1163,17 @@ namespace UtilORama4
 					}
 					if (needSort)
 					{
-						treeChannelList.Sort();
+						treeChannels.Nodes.Sort();
 					}
 				}
 			}
 			if (universe.BadName || universe.BadNumber)
 			{
-				node.ForeColor = Color.Red;
+				node.TextColor = Color.Red;
 			}
 			else
 			{
-				node.ForeColor = SystemColors.WindowText;
+				node.TextColor = Color.Black;
 			}
 
 			universe.Editing = false;
@@ -1162,7 +1181,7 @@ namespace UtilORama4
 
 		}
 
-		public void EditControllerNode(TreeNode node)
+		public void EditControllerNode(TreeNodeAdv node)
 		{
 			bool needSort = false;
 			DMXController controller = (DMXController)node.Tag;
@@ -1206,17 +1225,17 @@ namespace UtilORama4
 					}
 					if (needSort)
 					{
-						treeChannelList.Sort();
+						treeChannels.Nodes.Sort();
 					}
 				}
 			}
 			if (controller.BadName || controller.BadLetter)
 			{
-				node.ForeColor = Color.Red;
+				node.TextColor = Color.Red;
 			}
 			else
 			{
-				node.ForeColor = SystemColors.WindowText;
+				node.TextColor = Color.Black;
 			}
 			controller.Editing = false;
 			ctlForm.Dispose();
@@ -1225,7 +1244,7 @@ namespace UtilORama4
 
 		}
 
-		public void EditChannelNode(TreeNode node)
+		public void EditChannelNode(TreeNodeAdv node)
 		{
 			bool needSort = false;
 			DMXChannel channelToEdit = (DMXChannel)node.Tag;
@@ -1286,7 +1305,7 @@ namespace UtilORama4
 									DMXController controller = universe.DMXControllers[c];
 									if (channelToEdit.DMXController.ID == controller.ID)
 									{
-										TreeNode newp = (TreeNode)controller.Tag;
+										TreeNodeAdv newp = (TreeNodeAdv)controller.Tag;
 										newp.Nodes.Add(node);
 										// Force exit of both loops
 										c = universe.DMXControllers.Count;
@@ -1302,17 +1321,17 @@ namespace UtilORama4
 						//Try another technique....
 						if (needSort)
 						{
-							treeChannelList.Sort();
+							treeChannels.Nodes.Sort();
 						}
 					}
 				}
 				if (channelToEdit.BadName || channelToEdit.BadOutput)
 				{
-					node.ForeColor = Color.Red;
+					node.TextColor = Color.Red;
 				}
 				else
 				{
-					node.ForeColor = SystemColors.WindowText;
+					node.TextColor = SystemColors.WindowText;
 				}
 			}
 			catch (Exception ex)
@@ -1334,12 +1353,12 @@ namespace UtilORama4
 
 		private void btnChannel_Click(object sender, EventArgs e)
 		{
-			if (treeChannelList.SelectedNode != null)
+			if (treeChannels.SelectedNode != null)
 			{
-				if (treeChannelList.SelectedNode.Tag.GetType() == typeof(DMXController))
+				if (treeChannels.SelectedNode.Tag.GetType() == typeof(DMXController))
 				{
-					TreeNode parentNode = treeChannelList.SelectedNode;
-					DMXController parentCtl = (DMXController)treeChannelList.SelectedNode.Tag;
+					TreeNodeAdv parentNode = treeChannels.SelectedNode;
+					DMXController parentCtl = (DMXController)treeChannels.SelectedNode.Tag;
 
 					DMXChannel channel = new DMXChannel();
 					lastID++;
@@ -1372,23 +1391,25 @@ namespace UtilORama4
 									}
 								}
 								channel.DMXController.DMXChannels.Add(channel);
-								parentNode = (TreeNode)channel.DMXController.Tag;
+								parentNode = (TreeNodeAdv)channel.DMXController.Tag;
 								channel.DMXController.DMXChannels.Sort();
 							}
 							AllChannels.Add(channel);
 							AllChannels.Sort();
-							TreeNode node = parentNode.Nodes.Add(channel.ToString());
+							TreeNodeAdv node = new TreeNodeAdv(channel.ToString());
+							parentNode.Nodes.Add(node);
 							node.Tag = channel;
-							node.ImageIndex = LORUtils4.lutils.ColorIcon(imlTreeIcons, channel.Color);
-							node.SelectedImageIndex = node.ImageIndex;
+							int ImageIndex = LORUtils4.lutils.ColorIcon(imlTreeIcons, channel.Color);
+							int[] ico = { ImageIndex };
+							node.LeftImageIndices = ico;
 							channel.Tag = node;
 							MakeDirty(true);
 
 							//BuildTree();
-							treeChannelList.Sort();
+							treeChannels.Nodes.Sort();
 						}
-						treeChannelList.SelectedNode = parentNode;
-						treeChannelList.Focus();
+						treeChannels.SelectedNode = parentNode;
+						treeChannels.Focus();
 						channel.Editing = false;
 						chanForm.Dispose();
 					}
@@ -1398,11 +1419,11 @@ namespace UtilORama4
 
 		private void btnController_Click(object sender, EventArgs e)
 		{
-			if (treeChannelList.SelectedNode != null)
+			if (treeChannels.SelectedNode != null)
 			{
-				if (treeChannelList.SelectedNode.Tag.GetType() == typeof(DMXUniverse))
+				if (treeChannels.SelectedNode.Tag.GetType() == typeof(DMXUniverse))
 				{
-					TreeNode uniNode = treeChannelList.SelectedNode;
+					TreeNodeAdv uniNode = treeChannels.SelectedNode;
 					DMXUniverse parentUni = (DMXUniverse)uniNode.Tag;
 
 					DMXController ctlr = new DMXController();
@@ -1436,9 +1457,9 @@ namespace UtilORama4
 							ctlr.DMXUniverse.DMXControllers.Sort();
 						}
 						//BuildTree();
-						treeChannelList.Sort();
+						treeChannels.Nodes.Sort();
 					}
-					treeChannelList.SelectedNode = uniNode;
+					treeChannels.SelectedNode = uniNode;
 					ctlr.Editing = false;
 					ctlrForm.Dispose();
 				}
@@ -1603,7 +1624,7 @@ namespace UtilORama4
 										row = new CsvRow();
 										row.Add(channel.UniverseNumber.ToString());  // Field 0 - Universe
 										row.Add(channel.DMXController.LetterID);     // Field 1 - Controller
-										row.Add(channel.LOROutput4.ToString());       // Field 2 - LOROutput4
+										row.Add(channel.OutputNum.ToString());       // Field 2 - LOROutput4
 										row.Add(channel.DMXAddress.ToString());      // Field 3 - DMX Address
 										row.Add(channel.xLightsAddress.ToString());  // Field 4 - xLights Address
 										row.Add(channel.Active.ToString());          // Field 5 - Active
@@ -1647,14 +1668,14 @@ namespace UtilORama4
 			ExportToSpreadsheet(dbPath);
 		}
 
-		private void treeChannelList_KeyPress(object sender, KeyPressEventArgs e)
+		private void treeChannels_KeyPress(object sender, KeyPressEventArgs e)
 		{
-			if (treeChannelList.SelectedNode != null)
+			if (treeChannels.SelectedNode != null)
 			{
 				if (e.KeyChar == (char)Keys.Delete)
 				{
 					// Note: non-success does not mean the code failed, it's pro'ly cuz the user said 'No' to delete
-					bool deleted = DeleteNode(treeChannelList.SelectedNode);
+					bool deleted = DeleteNode(treeChannels.SelectedNode);
 				}
 				if ((e.KeyChar == (char)Keys.Enter) || (e.KeyChar == (char)Keys.Return))
 				{
@@ -1662,7 +1683,7 @@ namespace UtilORama4
 				}
 				if ((e.KeyChar == 99) || (e.KeyChar == (char)Keys.Space))
 				{
-					IDMXThingy d = (IDMXThingy) treeChannelList.SelectedNode.Tag;
+					IDMXThingy d = (IDMXThingy)treeChannels.SelectedNode.Tag;
 					string theName = d.Name;
 					Clipboard.SetText(theName);
 					Fyle.MakeNoise(Fyle.Noises.Pop);
@@ -1670,7 +1691,7 @@ namespace UtilORama4
 			}
 		}
 
-		private bool DeleteNode(TreeNode node)
+		private bool DeleteNode(TreeNodeAdv node)
 		{
 			// Note: non-success does not mean the code failed, it's pro'ly cuz the user said 'No' to delete
 			bool success = false;
@@ -1682,7 +1703,7 @@ namespace UtilORama4
 				{
 					DMXChannel channel = (DMXChannel)node.Tag;
 					msg = "Are you sure you want to delete channel ";
-					msg += channel.LOROutput4 + ": " + channel.Name + "?";
+					msg += channel.OutputNum + ": " + channel.Name + "?";
 					DialogResult dr = MessageBox.Show(this, msg, "Delete LORChannel4?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
 					if (dr == DialogResult.Yes)
 					{
@@ -1762,14 +1783,14 @@ namespace UtilORama4
 			return success;
 		}
 
-		private void treeChannelList_KeyUp(object sender, KeyEventArgs e)
+		private void treeChannels_KeyUp(object sender, KeyEventArgs e)
 		{
-			if (treeChannelList.SelectedNode != null)
+			if (treeChannels.SelectedNode != null)
 			{
 				if (e.KeyCode == Keys.Delete)
 				{
 					// Note: non-success does not mean the code failed, it's pro'ly cuz the user said 'No' to delete
-					bool deleted = DeleteNode(treeChannelList.SelectedNode);
+					bool deleted = DeleteNode(treeChannels.SelectedNode);
 				}
 				else
 				{
@@ -2501,14 +2522,15 @@ namespace UtilORama4
 		{
 			SaveData(dbPath);
 		}
-	} // End Class frmList
 
+	}
 
-	public class FuzzyList: IComparable<FuzzyList>
+	public class FuzzyList : IComparable<FuzzyList>
 	{
 		public double Score = 0;
 		public object Item1 = null;
 		public object Item2 = null;
+
 
 		public FuzzyList(object firstItem, object secondItem, double fuzzyScore)
 		{
@@ -2523,6 +2545,5 @@ namespace UtilORama4
 			return otherItem.Score.CompareTo(Score);
 		}
 	}
-
-
 }
+

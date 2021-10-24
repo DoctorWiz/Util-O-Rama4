@@ -95,8 +95,9 @@
 			// 
 			// picIcon
 			// 
-			this.picIcon.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("picIcon.BackgroundImage")));
+			this.picIcon.ErrorImage = null;
 			this.picIcon.Image = ((System.Drawing.Image)(resources.GetObject("picIcon.Image")));
+			this.picIcon.InitialImage = null;
 			this.picIcon.Location = new System.Drawing.Point(12, 12);
 			this.picIcon.Name = "picIcon";
 			this.picIcon.Size = new System.Drawing.Size(128, 128);
@@ -251,7 +252,7 @@
 			this.labelSuite.Name = "labelSuite";
 			this.labelSuite.Size = new System.Drawing.Size(113, 35);
 			this.labelSuite.TabIndex = 46;
-			this.labelSuite.Text = " is member of the";
+			this.labelSuite.Text = " is a member of the";
 			// 
 			// labelUtils
 			// 

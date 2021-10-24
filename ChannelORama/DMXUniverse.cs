@@ -62,7 +62,12 @@ namespace UtilORama4
 		protected bool isDirty = false;
 		protected object myTag = null;
 		protected bool matchesExactly = false;  // Used to distinguish exact name matches from fuzzy name matches
+
+		// Controllers under this universe
 		public List<DMXController> DMXControllers = new List<DMXController>();
+		// All Controllers under ALL Universes
+		public static List<DMXController> AllControllers = new List<DMXController>();
+		// All DMX Channels across all Universes and all Controllers
 		public static List<DMXChannel> AllChannels = new List<DMXChannel>();
 
 		public DMXChannel DMXChannelAt(int DMXAddress)

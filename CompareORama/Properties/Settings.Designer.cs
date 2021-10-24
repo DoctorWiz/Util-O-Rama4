@@ -62,36 +62,60 @@ namespace UtilORama4.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Me\\Documents\\xLights\\MyShow\\xlights_rgbeffects.xml")]
-        public string rgbeffects {
+        public string Filergbeffects {
             get {
-                return ((string)(this["rgbeffects"]));
+                return ((string)(this["Filergbeffects"]));
             }
             set {
-                this["rgbeffects"] = value;
+                this["Filergbeffects"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Me\\Documents\\Light-O-Rama\\MySequence.lms")]
-        public string Sequence {
+        public string FileSequence {
             get {
-                return ((string)(this["Sequence"]));
+                return ((string)(this["FileSequence"]));
             }
             set {
-                this["Sequence"] = value;
+                this["FileSequence"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Me\\Documents\\LOR-to-xLights_Channel_Comparison.csv")]
-        public string Spreadsheet {
+        public string FileDatabase {
             get {
-                return ((string)(this["Spreadsheet"]));
+                return ((string)(this["FileDatabase"]));
             }
             set {
-                this["Spreadsheet"] = value;
+                this["FileDatabase"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FileVisualization {
+            get {
+                return ((string)(this["FileVisualization"]));
+            }
+            set {
+                this["FileVisualization"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FileReport {
+            get {
+                return ((string)(this["FileReport"]));
+            }
+            set {
+                this["FileReport"] = value;
             }
         }
     }

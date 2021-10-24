@@ -227,7 +227,7 @@ namespace UtilORama4
 
 		private void MakeReport(string fileName, LORMembership4 members)
 		{
-			if (members.Items.Count > 0)
+			if (Members.Items.Count > 0)
 			{
 				if (optSortDisplayed.Checked)
 				{
@@ -245,7 +245,7 @@ namespace UtilORama4
 					}
 					if (optSortOutput.Checked)
 					{
-						if (members.Items[0].MemberType == LORMemberType4.Channel)
+						if (Members.Items[0].MemberType == LORMemberType4.Channel)
 						{
 							LORMembership4.sortMode = LORMembership4.SORTbyOutput;
 						}
@@ -254,7 +254,7 @@ namespace UtilORama4
 							LORMembership4.sortMode = LORMembership4.SORTbyName;
 						}
 					}
-					members.Items.Sort();
+					Members.Items.Sort();
 				}
 				StreamWriter writer = new StreamWriter(fileName);
 				if (chkHeaders.Checked)
@@ -648,7 +648,7 @@ namespace UtilORama4
 			//foreach (iLORMember4 member in members) //! Enumeration Not Working!
 			for (int n=0; n<c; n++)
 			{
-				iLORMember4 member = members.Items[n];
+				iLORMember4 member = Members.Items[n];
 				reportMe = true;
 				if (member.Name.IndexOf(txtKeyword.Text) > lutils.UNDEFINED) isKeywd = true;
 
@@ -3243,25 +3243,25 @@ namespace UtilORama4
 		public int FilteredDescendantCount(LORMembership4 members, bool selectedOnly, bool inclChan, bool inclRGB, bool inclRGBchildren)
 		{
 			int c = 0;
-			for (int l = 0; l < members.Items.Count; l++)
+			for (int l = 0; l < Members.Items.Count; l++)
 			{
-				LORMemberType4 t = members.Items[l].MemberType;
+				LORMemberType4 t = Members.Items[l].MemberType;
 				if (t == LORMemberType4.Channel)
 				{
 					if (inclChan)
 					{
-						if (members.Items[l].Selected || !selectedOnly) c++;
+						if (Members.Items[l].Selected || !selectedOnly) c++;
 					}
 				}
 				if (t == LORMemberType4.RGBChannel)
 				{
 					if (inclRGB)
 					{
-						if (members.Items[l].Selected || !selectedOnly) c++;
+						if (Members.Items[l].Selected || !selectedOnly) c++;
 					}
 					if (inclRGBchildren)
 					{
-						LORRGBChannel4 rgbCh = (LORRGBChannel4)members.Items[l];
+						LORRGBChannel4 rgbCh = (LORRGBChannel4)Members.Items[l];
 						if (rgbCh.redChannel.Selected || !selectedOnly) c++;
 						if (rgbCh.grnChannel.Selected || !selectedOnly) c++;
 						if (rgbCh.bluChannel.Selected || !selectedOnly) c++;
@@ -3269,13 +3269,13 @@ namespace UtilORama4
 				}
 				if (t == LORMemberType4.ChannelGroup)
 				{
-					LORChannelGroup4 grp = (LORChannelGroup4)members.Items[l];
+					LORChannelGroup4 grp = (LORChannelGroup4)Members.Items[l];
 					// Recurse!!
 					c += FilteredDescendantCount(grp.Members, selectedOnly, inclChan, inclRGB, inclRGBchildren);
 				}
 				if (t == LORMemberType4.Cosmic)
 				{
-					LORCosmic dev = (LORCosmic)members.Items[l];
+					LORCosmic dev = (LORCosmic)Members.Items[l];
 					// Recurse!!
 					c += FilteredDescendantCount(dev.Members, selectedOnly, inclChan, inclRGB, inclRGBchildren);
 				}

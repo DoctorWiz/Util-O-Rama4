@@ -168,14 +168,17 @@ namespace LORUtils4
 		// and optionally to clear it.
 		public void MakeDirty(bool dirtyState = true)
 		{
+			isDirty = dirtyState;
 			if (dirtyState)
 			{
 				if (myParent != null)
 				{
-					myParent.MakeDirty(true);
+					if (!myParent.Dirty)
+					{
+						myParent.MakeDirty(true);
+					}
 				}
 			}
-			isDirty = dirtyState;
 		}
 
 		// This property is included here to be part of the base interface
@@ -307,10 +310,12 @@ namespace LORUtils4
 				{
 					string msg = "Why are you trying to map a " + LORSeqEnums4.MemberName(value.MemberType);
 					msg += " a " + LORSeqEnums4.MemberName(this.MemberType) + " ?!?";
-					Fyle.BUG(msg);
+					//Fyle.BUG(msg);
+					Debug.WriteLine(msg);
+					Fyle.MakeNoise(Fyle.Noises.Pop);
 					// Now that I've been warned, go ahead and do it anyway.
 					// (Unless I tell the debugger to step over this next line...)
-					mappedTo = value;
+					//mappedTo = value;
 				}
 			}
 		}

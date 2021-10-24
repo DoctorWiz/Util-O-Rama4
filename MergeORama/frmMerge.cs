@@ -8,7 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-using LORUtils4; using FileHelper;
+using LORUtils4;
+using FileHelper;
 using Microsoft.Win32;
 
 namespace UtilORama4
@@ -39,10 +40,10 @@ namespace UtilORama4
 		private bool mergeEffects = false;
 		private string numberFormat = " (#)";
 		private bool isWiz = Fyle.IsWizard || Fyle.IsAWizard;
+		private static Properties.Settings heartOfTheSun = Properties.Settings.Default;
 
 
-		private List<TreeNode>[] siNodes = null;
-
+		private List<Syncfusion.Windows.Forms.Tools.TreeNodeAdv>[] siNodes = null;
 
 
 		private class Map
@@ -78,21 +79,22 @@ namespace UtilORama4
 
 		private void InitForm()
 		{
+			GetTheControlsFromTheHeartOfTheSun();
 			basePath = lutils.DefaultUserDataPath;
 
 			seqFolder = lutils.DefaultSequencesPath;
-			lastFile1 = Properties.Settings.Default.LastFile1;
-			lastFile2 = Properties.Settings.Default.LastFile2;
-			lastNewFile = Properties.Settings.Default.LastNewFile;
 
 			bool valid = false;
-			string dir = "";
 			if (lastFile1.Length > 6)
 			{
 				valid = Fyle.IsValidPath(lastFile1, true);
 			}
 			if (!valid) lastFile1 = lutils.DefaultSequencesPath;
 			valid = false;
+			if (Fyle.Exists(lastFile1))
+			{
+
+			}
 			if (lastFile2.Length > 6)
 			{
 				valid = Fyle.IsValidPath(lastFile2, true);
@@ -107,9 +109,30 @@ namespace UtilORama4
 			button1.Visible = isWiz;
 
 
-			RestoreFormPosition();
 
 		} // end InitForm
+
+		private void SetTheControlsToTheHeartOfTheSun()
+		{
+			// Nod to Pink Floyd!
+			// Saves user control states to settings file (for next run)
+			SaveFormPosition();
+			heartOfTheSun.LastFile1 = lastFile1;
+			heartOfTheSun.LastFile2 = lastFile2;
+			heartOfTheSun.AutoLaunch = chkAutoLaunch.Checked;
+			heartOfTheSun.Save();
+
+		}
+
+		private void GetTheControlsFromTheHeartOfTheSun()
+		{
+			// Restores user control states from previous run
+			RestoreFormPosition();
+			lastFile1 = heartOfTheSun.LastFile1;
+			lastFile2 = heartOfTheSun.LastFile2;
+			chkAutoLaunch.Checked = heartOfTheSun.AutoLaunch;
+		}
+
 
 		private void RestoreFormPosition()
 		{
@@ -129,8 +152,8 @@ namespace UtilORama4
 			// Alternative 1: Position it entirely in the screen containing
 			// the top left corner
 
-			Point savedLoc = Properties.Settings.Default.Location;
-			Size savedSize = Properties.Settings.Default.Size;
+			Point savedLoc = heartOfTheSun.Location;
+			Size savedSize = heartOfTheSun.Size;
 			if (this.FormBorderStyle != FormBorderStyle.Sizable)
 			{
 				savedSize = new Size(this.Width, this.Height);
@@ -240,7 +263,7 @@ namespace UtilORama4
 
 		private void frmMerge_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			SaveFormPosition();
+			SetTheControlsToTheHeartOfTheSun();
 		}
 
 		private void SaveFormPosition()
@@ -258,10 +281,10 @@ namespace UtilORama4
 			}
 
 			// Save it for later!
-			Properties.Settings.Default.Location = myLoc;
-			Properties.Settings.Default.Size = mySize;
-			Properties.Settings.Default.WindowState = (int)myState;
-			Properties.Settings.Default.Save();
+			heartOfTheSun.Location = myLoc;
+			heartOfTheSun.Size = mySize;
+			heartOfTheSun.WindowState = (int)myState;
+			//heartOfTheSun.Save();
 		} // End SaveFormPostion
 
 		private void btnBrowseFirst_Click(object sender, EventArgs e)
@@ -295,19 +318,26 @@ namespace UtilORama4
 
 			if (result == DialogResult.OK)
 			{
-				lastFile1 = dlgFileOpen.FileName;
+				OpenFile1(dlgFileOpen.FileName);
 
-				FileInfo fi = new FileInfo(lastFile1);
-				Properties.Settings.Default.LastFile1 = lastFile1;
-				Properties.Settings.Default.Save();
-
-				txtFirstFile.Text = Fyle.ShortenLongPath(lastFile1, 80);
-				seqOne.ReadSequenceFile(lastFile1);
-				lutils.TreeFillChannels(treNewChannels, seqOne, ref siNodes, false, true);
-				seqNew = seqOne;
+				heartOfTheSun.LastFile1 = dlgFileOpen.FileName;
+				heartOfTheSun.Save();
 			} // end if (result = DialogResult.OK)
 				//pnlAll.Enabled = true;
 		} // end browse for First File
+
+		private void OpenFile1(string fileName)
+		{
+			lastFile1 = fileName;
+
+			FileInfo fi = new FileInfo(lastFile1);
+
+			txtFirstFile.Text = Fyle.ShortenLongPath(lastFile1, 80);
+			seqOne.ReadSequenceFile(lastFile1);
+			TreeUtils.TreeFillChannels(treeNewChannels, seqOne, ref siNodes, false, true);
+			seqNew = seqOne;
+		}
+
 
 		private void btnBrowseSecond_Click(object sender, EventArgs e)
 		{
@@ -355,7 +385,7 @@ namespace UtilORama4
 					seqTwo.ReadSequenceFile(lastFile2);
 					MergeSequences();
 
-					lutils.TreeFillChannels(treNewChannels, seqNew, ref siNodes, false, true);
+					TreeUtils.TreeFillChannels(treeNewChannels, seqNew, ref siNodes, false, true);
 					ImBusy(false);
 					btnSave.Enabled = true;
 				}
@@ -523,6 +553,7 @@ namespace UtilORama4
 				}
 
 			}
+			seqNew.CentiFix();
 		}
 
 		private void GridMismatchError(string gridName)
@@ -720,7 +751,6 @@ namespace UtilORama4
 				{
 					t2Idx = 0;
 					exIdx = 0;
-					int dir = 0;
 
 					List<int> t2Timings = sourceGrid.timings;
 					List<int> exTimings = destGrid.timings;
@@ -842,17 +872,19 @@ namespace UtilORama4
 				if (sourceMember.MemberType == LORMemberType4.ChannelGroup)
 				{
 					LORChannelGroup4 sourceGroup = (LORChannelGroup4)sourceMember;
-					LORChannelGroup4 destGroup = (LORChannelGroup4)destMembers.Find(sourceGroup.Name, LORMemberType4.ChannelGroup, true);
+					
+					//LORChannelGroup4 destGroup = (LORChannelGroup4)destMembers.Find(sourceGroup.Name, LORMemberType4.ChannelGroup, true);
+					LORChannelGroup4 destGroup = seqNew.FindChannelGroup(sourceGroup.Name, destMembers, true);
 
 
 
 					// Should only happen once
-					if (destGroup.SavedIndex == 31) System.Diagnostics.Debugger.Break();
-					
-					
-					
-					
-					
+					//if (destGroup.SavedIndex == 31) System.Diagnostics.Debugger.Break();
+
+
+
+
+
 					//Recurse
 					MergeMembers(destGroup.Members, sourceGroup.Members);
 				}
@@ -944,7 +976,14 @@ namespace UtilORama4
 					lastNewFile = dlgFileSave.FileName;
 					Properties.Settings.Default.LastNewFile = lastNewFile;
 					Properties.Settings.Default.Save();
-					seqNew.WriteSequenceFile_DisplayOrder(lastNewFile);
+					int err = seqNew.WriteSequenceFile_DisplayOrder(lastNewFile);
+					if (err < 1)
+					{
+						if (chkAutoLaunch.Checked)
+						{
+							Fyle.LaunchFile(lastNewFile);
+						}
+					}
 					ImBusy(false);
 				}
 			}

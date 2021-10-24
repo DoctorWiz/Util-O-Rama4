@@ -87,6 +87,34 @@ namespace LORUtils4
 			return result;
 		}
 
+		public int ItemID
+		{
+			get
+			{
+				return mySavedIndex;
+			}
+			set
+			{
+				mySavedIndex = value;
+				//if (myParent != null) myParent.MakeDirty(true);
+				//System.Diagnostics.Debugger.Break();
+			}
+		}
+
+		public int AltSaveID
+		{
+			get
+			{
+				return myAltSavedIndex;
+			}
+			set
+			{
+				myAltSavedIndex = value;
+				//if (myParent != null) myParent.MakeDirty(true);
+				//System.Diagnostics.Debugger.Break();
+			}
+		}
+
 
 		public new int Centiseconds
 		{
@@ -103,27 +131,6 @@ namespace LORUtils4
 			}
 		}
 
-
-		public int VizID
-		{
-			get
-			{
-				return mySavedIndex;
-			}
-		}
-
-		public int AltVizID
-		{
-			get
-			{
-				return myAltSavedIndex;
-			}
-			set
-			{
-				myAltSavedIndex = value;
-			}
-		}
-
 		public LORVizDrawObject4 Owner
 		{
 			get { return DrawObject; }
@@ -135,7 +142,7 @@ namespace LORUtils4
 		{
 			get
 			{
-				return LORMemberType4.VizChannel4;
+				return LORMemberType4.VizChannel;
 			}
 		}
 
@@ -159,7 +166,7 @@ namespace LORUtils4
 		{
 			//LORSequence4 Parent = ID.Parent;
 			myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
-			mySavedIndex = lutils.getKeyValue(lineIn, LORVisualization4.FIELDvizID);
+			ItemID = lutils.getKeyValue(lineIn, LORVisualization4.FIELDvizID);
 			color = lutils.getKeyValue(lineIn, LORVisualization4.FIELDvizColor);
 			//myCentiseconds = lutils.getKeyValue(lineIn, lutils.FIELDcentiseconds);
 			output.Parse(lineIn);
@@ -188,7 +195,7 @@ namespace LORUtils4
 
 			ret.Append(lutils.StartTable(LORVisualization4.TABLEvizChannel, 2));
 
-			ret.Append(lutils.SetKey(LORVisualization4.FIELDvizID, VizID));
+			ret.Append(lutils.SetKey(LORVisualization4.FIELDvizID, ItemID));
 			ret.Append(lutils.SetKey(LORVisualization4.FIELDvizName, lutils.XMLifyName(myName)));
 			ret.Append(output.LineOut());
 			ret.Append(lutils.SetKey(LORVisualization4.FIELDvizColor, (int)color));

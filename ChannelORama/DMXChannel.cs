@@ -66,7 +66,7 @@ namespace UtilORama4
 			isActive = otherChannel.isActive;
 			Color = otherChannel.Color;
 			DMXController = otherChannel.DMXController;
-			LOROutput4 = otherChannel.myOutput;
+			OutputNum = otherChannel.myOutput;
 			DMXDevice = otherChannel.DMXDevice;
 			isEditing = otherChannel.isEditing;
 			//nameIsBad				= otherChannel.nameIsBad;
@@ -134,7 +134,7 @@ namespace UtilORama4
 			}
 		}
 
-		public int LOROutput4
+		public int OutputNum
 		{
 			get
 			{
@@ -279,7 +279,7 @@ namespace UtilORama4
 				int ret = 0;
 				if (DMXController != null)
 				{
-					ret = DMXController.xLightsAddress + LOROutput4 - 1;
+					ret = DMXController.xLightsAddress + OutputNum - 1;
 				}
 				return ret;
 
@@ -303,7 +303,7 @@ namespace UtilORama4
 		}
 		public override string ToString()
 		{
-			string ret = LOROutput4.ToString("00") + ": " + Name;
+			string ret = OutputNum.ToString("00") + ": " + Name;
 			return ret;
 		}
 
@@ -336,7 +336,7 @@ namespace UtilORama4
 			newChan.isActive				= isActive;
 			newChan.Color					= Color;
 			newChan.DMXController = DMXController;
-			newChan.LOROutput4			= myOutput;
+			newChan.OutputNum			= myOutput;
 			newChan.DMXDevice = DMXDevice;
 			newChan.isEditing				= isEditing;
 			//newChan.nameIsBad				= nameIsBad;
@@ -357,7 +357,7 @@ namespace UtilORama4
 			isActive = otherChannel.isActive;
 			Color = otherChannel.Color;
 			DMXController = otherChannel.DMXController;
-			LOROutput4 = otherChannel.myOutput;
+			OutputNum = otherChannel.myOutput;
 			DMXDevice = otherChannel.DMXDevice;
 			isEditing = otherChannel.isEditing;
 			//nameIsBad				= otherChannel.nameIsBad;

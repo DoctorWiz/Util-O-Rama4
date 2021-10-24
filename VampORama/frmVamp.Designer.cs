@@ -85,11 +85,6 @@
 			this.swTrackBeat = new JCS.ToggleSwitch();
 			this.lblTrackBeat34 = new System.Windows.Forms.Label();
 			this.lblTrackBeat44 = new System.Windows.Forms.Label();
-			this.pnlVamping = new System.Windows.Forms.Panel();
-			this.lblSongName = new System.Windows.Forms.Label();
-			this.lblAnalyzing = new System.Windows.Forms.Label();
-			this.lblWait = new System.Windows.Forms.Label();
-			this.lblVampRed = new System.Windows.Forms.Label();
 			this.lblNote3Third = new System.Windows.Forms.Label();
 			this.lblNote1Bars = new System.Windows.Forms.Label();
 			this.lblWorkFolder = new System.Windows.Forms.Label();
@@ -198,6 +193,11 @@
 			this.cboAlignBarBeats = new System.Windows.Forms.ComboBox();
 			this.lblStep2B = new System.Windows.Forms.Label();
 			this.chkFlux = new System.Windows.Forms.CheckBox();
+			this.pnlVamping = new System.Windows.Forms.Panel();
+			this.lblSongName = new System.Windows.Forms.Label();
+			this.lblAnalyzing = new System.Windows.Forms.Label();
+			this.lblWait = new System.Windows.Forms.Label();
+			this.lblVampRed = new System.Windows.Forms.Label();
 			this.grpExplore = new System.Windows.Forms.GroupBox();
 			this.btnResetDefaults = new System.Windows.Forms.Button();
 			this.grpAudio = new System.Windows.Forms.GroupBox();
@@ -251,7 +251,6 @@
 			this.grbGlobal.SuspendLayout();
 			this.pnlBeatFade.SuspendLayout();
 			this.panel1.SuspendLayout();
-			this.pnlVamping.SuspendLayout();
 			this.grpPlatform.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -266,6 +265,7 @@
 			this.pnlOnsetSensitivity.SuspendLayout();
 			this.grpBarsBeats.SuspendLayout();
 			this.pnlNotes.SuspendLayout();
+			this.pnlVamping.SuspendLayout();
 			this.grpExplore.SuspendLayout();
 			this.grpAudio.SuspendLayout();
 			this.grpSavex.SuspendLayout();
@@ -471,7 +471,7 @@
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlStatus.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
 			this.pnlStatus.Name = "pnlStatus";
-			this.pnlStatus.Size = new System.Drawing.Size(871, 19);
+			this.pnlStatus.Size = new System.Drawing.Size(878, 19);
 			this.pnlStatus.Spring = true;
 			// 
 			// pnlAbout
@@ -885,65 +885,6 @@
 			this.lblTrackBeat44.Size = new System.Drawing.Size(46, 13);
 			this.lblTrackBeat44.TabIndex = 127;
 			this.lblTrackBeat44.Text = "4/4 time";
-			// 
-			// pnlVamping
-			// 
-			this.pnlVamping.Controls.Add(this.lblSongName);
-			this.pnlVamping.Controls.Add(this.lblAnalyzing);
-			this.pnlVamping.Controls.Add(this.lblWait);
-			this.pnlVamping.Controls.Add(this.lblVampRed);
-			this.pnlVamping.Location = new System.Drawing.Point(159, 176);
-			this.pnlVamping.Name = "pnlVamping";
-			this.pnlVamping.Size = new System.Drawing.Size(334, 72);
-			this.pnlVamping.TabIndex = 125;
-			this.pnlVamping.Visible = false;
-			this.pnlVamping.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlVamping_Paint);
-			// 
-			// lblSongName
-			// 
-			this.lblSongName.AutoSize = true;
-			this.lblSongName.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblSongName.ForeColor = System.Drawing.Color.Blue;
-			this.lblSongName.Location = new System.Drawing.Point(5, 33);
-			this.lblSongName.Name = "lblSongName";
-			this.lblSongName.Size = new System.Drawing.Size(216, 18);
-			this.lblSongName.TabIndex = 3;
-			this.lblSongName.Text = "Blue Christmas by Elvis Presley";
-			this.lblSongName.Click += new System.EventHandler(this.lblSongName_Click);
-			// 
-			// lblAnalyzing
-			// 
-			this.lblAnalyzing.AutoSize = true;
-			this.lblAnalyzing.Font = new System.Drawing.Font("Times New Roman", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblAnalyzing.ForeColor = System.Drawing.Color.Red;
-			this.lblAnalyzing.Location = new System.Drawing.Point(5, 7);
-			this.lblAnalyzing.Name = "lblAnalyzing";
-			this.lblAnalyzing.Size = new System.Drawing.Size(189, 24);
-			this.lblAnalyzing.TabIndex = 2;
-			this.lblAnalyzing.Text = "Analyzing your song";
-			// 
-			// lblWait
-			// 
-			this.lblWait.AutoSize = true;
-			this.lblWait.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblWait.ForeColor = System.Drawing.Color.Red;
-			this.lblWait.Location = new System.Drawing.Point(60, 53);
-			this.lblWait.Name = "lblWait";
-			this.lblWait.Size = new System.Drawing.Size(75, 15);
-			this.lblWait.TabIndex = 1;
-			this.lblWait.Text = "Please wait...";
-			// 
-			// lblVampRed
-			// 
-			this.lblVampRed.AutoSize = true;
-			this.lblVampRed.Font = new System.Drawing.Font("Times New Roman", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblVampRed.ForeColor = System.Drawing.Color.Red;
-			this.lblVampRed.Location = new System.Drawing.Point(3, 5);
-			this.lblVampRed.Name = "lblVampRed";
-			this.lblVampRed.Size = new System.Drawing.Size(62, 24);
-			this.lblVampRed.TabIndex = 0;
-			this.lblVampRed.Text = "Vamp";
-			this.lblVampRed.Visible = false;
 			// 
 			// lblNote3Third
 			// 
@@ -2370,6 +2311,65 @@
 			this.chkFlux.Visible = false;
 			this.chkFlux.CheckedChanged += new System.EventHandler(this.chkTiming_CheckedChanged);
 			// 
+			// pnlVamping
+			// 
+			this.pnlVamping.Controls.Add(this.lblSongName);
+			this.pnlVamping.Controls.Add(this.lblAnalyzing);
+			this.pnlVamping.Controls.Add(this.lblWait);
+			this.pnlVamping.Controls.Add(this.lblVampRed);
+			this.pnlVamping.Location = new System.Drawing.Point(159, 176);
+			this.pnlVamping.Name = "pnlVamping";
+			this.pnlVamping.Size = new System.Drawing.Size(334, 72);
+			this.pnlVamping.TabIndex = 125;
+			this.pnlVamping.Visible = false;
+			this.pnlVamping.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlVamping_Paint);
+			// 
+			// lblSongName
+			// 
+			this.lblSongName.AutoSize = true;
+			this.lblSongName.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblSongName.ForeColor = System.Drawing.Color.Blue;
+			this.lblSongName.Location = new System.Drawing.Point(5, 33);
+			this.lblSongName.Name = "lblSongName";
+			this.lblSongName.Size = new System.Drawing.Size(216, 18);
+			this.lblSongName.TabIndex = 3;
+			this.lblSongName.Text = "Blue Christmas by Elvis Presley";
+			this.lblSongName.Click += new System.EventHandler(this.lblSongName_Click);
+			// 
+			// lblAnalyzing
+			// 
+			this.lblAnalyzing.AutoSize = true;
+			this.lblAnalyzing.Font = new System.Drawing.Font("Times New Roman", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblAnalyzing.ForeColor = System.Drawing.Color.Red;
+			this.lblAnalyzing.Location = new System.Drawing.Point(5, 7);
+			this.lblAnalyzing.Name = "lblAnalyzing";
+			this.lblAnalyzing.Size = new System.Drawing.Size(189, 24);
+			this.lblAnalyzing.TabIndex = 2;
+			this.lblAnalyzing.Text = "Analyzing your song";
+			// 
+			// lblWait
+			// 
+			this.lblWait.AutoSize = true;
+			this.lblWait.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblWait.ForeColor = System.Drawing.Color.Red;
+			this.lblWait.Location = new System.Drawing.Point(60, 53);
+			this.lblWait.Name = "lblWait";
+			this.lblWait.Size = new System.Drawing.Size(75, 15);
+			this.lblWait.TabIndex = 1;
+			this.lblWait.Text = "Please wait...";
+			// 
+			// lblVampRed
+			// 
+			this.lblVampRed.AutoSize = true;
+			this.lblVampRed.Font = new System.Drawing.Font("Times New Roman", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblVampRed.ForeColor = System.Drawing.Color.Red;
+			this.lblVampRed.Location = new System.Drawing.Point(3, 5);
+			this.lblVampRed.Name = "lblVampRed";
+			this.lblVampRed.Size = new System.Drawing.Size(62, 24);
+			this.lblVampRed.TabIndex = 0;
+			this.lblVampRed.Text = "Vamp";
+			this.lblVampRed.Visible = false;
+			// 
 			// grpExplore
 			// 
 			this.grpExplore.Controls.Add(this.btnExploreVamp);
@@ -2938,8 +2938,6 @@
 			this.pnlBeatFade.PerformLayout();
 			this.panel1.ResumeLayout(false);
 			this.panel1.PerformLayout();
-			this.pnlVamping.ResumeLayout(false);
-			this.pnlVamping.PerformLayout();
 			this.grpPlatform.ResumeLayout(false);
 			this.grpPlatform.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
@@ -2966,6 +2964,8 @@
 			this.grpBarsBeats.PerformLayout();
 			this.pnlNotes.ResumeLayout(false);
 			this.pnlNotes.PerformLayout();
+			this.pnlVamping.ResumeLayout(false);
+			this.pnlVamping.PerformLayout();
 			this.grpExplore.ResumeLayout(false);
 			this.grpAudio.ResumeLayout(false);
 			this.grpAudio.PerformLayout();

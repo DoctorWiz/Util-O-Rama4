@@ -380,7 +380,8 @@ namespace UtilORama4
 		{
 			string[] lvi = { "", "" };
 			string s = "";
-			string k = "";
+			//string k = "";
+			int[] k = null;
 			int iconIndex = lutils.UNDEFINED;
 			for (int i = 0; i < levelS; i++) 
 			{
@@ -414,9 +415,9 @@ namespace UtilORama4
 			{
 				m += "  (Unmapped)";
 				LORMemberType4 o = sourceMember.MemberType;
-				if (o == LORMemberType4.Track) k = lutils.ICONtrack;
-				if (o == LORMemberType4.RGBChannel) k = lutils.ICONrgbChannel;
-				if (o == LORMemberType4.ChannelGroup) k = lutils.ICONchannelGroup;
+				if (o == LORMemberType4.Track) k = TreeUtils.ICONtrack;
+				if (o == LORMemberType4.RGBChannel) k = TreeUtils.ICONrgbChannel;
+				if (o == LORMemberType4.ChannelGroup) k = TreeUtils.ICONchannelGroup;
 				if (o == LORMemberType4.Channel)
 				{
 					LORChannel4 ch = (LORChannel4)sourceMember;
@@ -428,9 +429,9 @@ namespace UtilORama4
 				string n = masterMember.Name;
 				m += n;
 				LORMemberType4 o = masterMember.MemberType;
-				if (o == LORMemberType4.Track) k = lutils.ICONtrack;
-				if (o == LORMemberType4.RGBChannel) k = lutils.ICONrgbChannel;
-				if (o == LORMemberType4.ChannelGroup) k = lutils.ICONchannelGroup;
+				if (o == LORMemberType4.Track) k = TreeUtils.ICONtrack;
+				if (o == LORMemberType4.RGBChannel) k = TreeUtils.ICONrgbChannel;
+				if (o == LORMemberType4.ChannelGroup) k = TreeUtils.ICONchannelGroup;
 				if (o == LORMemberType4.Channel)
 				{
 					LORChannel4 ch = (LORChannel4)masterMember;
@@ -448,7 +449,8 @@ namespace UtilORama4
 
 			if (iconIndex < 0)
 			{
-				iconIndex = imlTreeIcons.Images.IndexOfKey(k);
+				//iconIndex = imlTreeIcons.Images.IndexOfKey(k);
+				//iconIndex = 
 			}
 
 			int w = imlTreeIcons.Images.Count;

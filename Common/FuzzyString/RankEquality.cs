@@ -55,9 +55,9 @@ namespace FuzzyString
 																						USE_YETILEVENSHTEIN | // The King!!  Fastest and very accurate!
 																						//USE_WEIGHTEDLEVENSHTEIN |  // Works and accurage but also the slowest!
 																						USE_LONGESTCOMMONSUBSEQUENCE |  // Accurate but one of the slower ones
-																						USE_LONGESTCOMMONSUBSTRING |  // Accurate but on of the slower ones
+																						USE_LONGESTCOMMONSUBSTRING |  // Accurate but one of the slower ones
 																						USE_METRIC | // Accurate but the slowest of all being used
-																						//USE_NEEDLEMANWUNSCH |  // Works but slow!
+																						//USE_NEEDLEMANWUNSCH |  // Works but slow!  See also: https://en.wikipedia.org/wiki/Wagner%E2%80%93Fischer_algorithm
 																						//USE_NGRAM |  // Broken!
 																						USE_QGRAM | // slowing, semi-accurate
 																						USE_OPTIMALSTRINGALIGNMENT | // sorta slow, but accurate

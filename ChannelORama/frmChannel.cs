@@ -124,7 +124,7 @@ namespace UtilORama4
 					}
 				}
 			}
-			numOutput.Value = chan.LOROutput4;
+			numOutput.Value = chan.Output;
 			if (chan.DMXController != null)
 			{
 				for (int i=0; i< cboController.Items.Count; i++)

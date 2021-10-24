@@ -22,6 +22,7 @@ namespace UtilORama4
 		private bool firstShown = false;
 		private Control currentToolTipControl = null;
 		private bool isWiz = Fyle.IsWizard || Fyle.IsAWizard;
+		private static Properties.Settings heartOfTheSun = Properties.Settings.Default;
 
 		public frmRemapper()
 		{
@@ -109,6 +110,16 @@ namespace UtilORama4
 				System.Media.SystemSounds.Beep.Play();
 
 			}
+
+		}
+
+		private void GetTheControlsFromTheHeartOfTheSun()
+		{
+
+		}
+
+		private void SetTheControlsToTheHeartOfTheSun()
+		{
 
 		}
 

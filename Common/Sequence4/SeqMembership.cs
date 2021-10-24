@@ -6,18 +6,29 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Diagnostics;
+using System.Windows.Forms;
 using FileHelper;
 
 namespace LORUtils4
 {
 	public class LORMembership4 : IEnumerator, IEnumerable  //  IEnumerator<iLORMember4>
 	{
-		private List<iLORMember4> myItemsList = new List<iLORMember4>();   // The Main List
+		private List<iLORMember4> myMembers = new List<iLORMember4>();   // The Main List
 		//private List<iLORMember4> Members = null;
 		private List<iLORMember4> myBySavedIndexList = new List<iLORMember4>();
 		private List<iLORMember4> myByAltSavedIndexList = new List<iLORMember4>();
 		private List<LORTimings4> myBySaveIDList = new List<LORTimings4>();
 		private List<LORTimings4> myByAltSaveIDList = new List<LORTimings4>();
+
+		private List<LORVizDrawObject4> myByObjectIDList = new List<LORVizDrawObject4>();
+		private List<LORVizDrawObject4> myByAltObjectIDList = new List<LORVizDrawObject4>();
+		private List<LORVizItemGroup4> myByItemIDList = new List<LORVizItemGroup4>();
+		private List<LORVizItemGroup4> myByAltItemIDList = new List<LORVizItemGroup4>();
+
+
+
+
+
 		private List<LORTrack4> myByTrackIndexList = new List<LORTrack4>();
 		private List<LORTrack4> myByAltTrackIndexList = new List<LORTrack4>();
 		private SortedDictionary<string, iLORMember4> myByNameDictionary = new SortedDictionary<string, iLORMember4>();
@@ -27,9 +38,15 @@ namespace LORUtils4
 		public int AltHighestSavedIndex = lutils.UNDEFINED;
 		private int myHighestSaveID = lutils.UNDEFINED;
 		public int AltHighestSaveID = lutils.UNDEFINED;
+		// B-cuz item numbers in Visualizations are 1-based (instead of normal 0-based)
+		private int myHighestItemID = 0;
+		public int AltHighestItemID = lutils.UNDEFINED;
+		// B-cuz drawobjects in Visualizations do the same thing
+		private int myHighestObjectID = 0;
+		public int AltHighestObjectID = lutils.UNDEFINED;
 		//iLORMember4 Parent = null;  // Parent SEQUENCE
-		protected iLORMember4 myOwner = null;  // Parent GROUP or TRACK
-		private LORSequence4 myParentSeq = null;
+		protected iLORMember4 myOwner = null;  // Parent GROUP or TRACK or Sequence or Visualization
+		private iLORMember4 myParent = null;
 
 
 		public const int SORTbySavedIndex = 1;
@@ -44,6 +61,9 @@ namespace LORUtils4
 		private	int myCosmicDeviceCount = 0;
 		private	int myTrackCount = 0;
 		private	int myTimingGridCount = 0;
+		private int myVizChannelCount = 0;
+		private int myVizItemGroupCount = 0;
+		private int myVizDrawObjectCount = 0;
 		private	int myEverythingCount = 0;
 		
 		// For Enumeration
@@ -61,25 +81,75 @@ namespace LORUtils4
 			}
 			else
 			{
+				// Reminder: Owner = Member (Track, Group, or Cosmic) that owns this Membership
+				//           Parent = Base Sequence or Visualization
 				myOwner = theOwner;
-				myParentSeq = (LORSequence4)Owner.Parent;
+				if (Owner.Parent != null)
+				{
+					myParent = Owner.Parent;
+				}
 			}
+
+			if (theOwner.MemberType == LORMemberType4.Visualization)
+			{
+				// SavedIndices and SaveIDs in Sequences start at 0. Cool! Great! No Prob!
+				// But Channels, Groups, and DrawObjects in Visualizations start at 1 (Grrrrr)
+				// So add a dummy object at the [0] start of the lists
+				LORVizChannel4 lvc = new LORVizChannel4("\0\0DUMMY VIZCHANNEL AT INDEX [0] - DO NOT USE!");
+				lvc.SetIndex(0);
+				lvc.SetSavedIndex(0);
+				lvc.SetParent(myParent);
+				myHighestSavedIndex = 0;
+				myBySavedIndexList.Add(lvc);
+				LORVizDrawObject4 lvdo = new LORVizDrawObject4("\0\0DUMMY VIZDRAWOBJECT AT INDEX [0] - DO NOT USE!");
+				lvdo.SetIndex(0);
+				lvdo.SetSavedIndex(0);
+				lvdo.SetParent(myParent);
+				myHighestObjectID = 0;
+				myByObjectIDList.Add(lvdo);
+				LORVizItemGroup4 lvig = new LORVizItemGroup4("\0\0DUMMY VIZITEMGROUP AT INDEX [0] - DO NOT USE!");
+				lvig.SetIndex(0);
+				lvig.SetSavedIndex(0);
+				lvig.SetParent(myParent);
+				myHighestSavedIndex = 0;
+				myBySavedIndexList.Add(lvig);
+			}
+			if (theOwner.MemberType == LORMemberType4.VizItemGroup)
+			{
+				LORVizDrawObject4 lvdo = new LORVizDrawObject4("\0\0DUMMY VIZDRAWOBJECT AT INDEX [0] - DO NOT USE!");
+				lvdo.SetIndex(0);
+				lvdo.SetSavedIndex(0);
+				lvdo.SetParent(myParent);
+				myHighestItemID = 0;
+				myByObjectIDList.Add(lvdo);
+			}
+
+
 		}
 
 		public void Clear()
 		{
-			myItemsList = new List<iLORMember4>();   // The Main List
+			myMembers = new List<iLORMember4>();   // The Main List
 			myBySavedIndexList = new List<iLORMember4>();
 			myByAltSavedIndexList = new List<iLORMember4>();
 			myBySaveIDList = new List<LORTimings4>();
 			myByAltSaveIDList = new List<LORTimings4>();
 			myByTrackIndexList = new List<LORTrack4>();
 			myByAltTrackIndexList = new List<LORTrack4>();
+			myByObjectIDList = new List<LORVizDrawObject4>();
+			myByAltObjectIDList = new List<LORVizDrawObject4>();
+			myByItemIDList = new List<LORVizItemGroup4>();
+			myByAltItemIDList = new List<LORVizItemGroup4>();
+
 			myByNameDictionary = new SortedDictionary<string, iLORMember4>();
 			myHighestSavedIndex = lutils.UNDEFINED;
 			AltHighestSavedIndex = lutils.UNDEFINED;
 			myHighestSaveID = lutils.UNDEFINED;
 			AltHighestSaveID = lutils.UNDEFINED;
+			myHighestItemID = lutils.UNDEFINED;
+			AltHighestItemID = lutils.UNDEFINED;
+			myHighestObjectID = lutils.UNDEFINED;
+			AltHighestObjectID = lutils.UNDEFINED;
 			myOwner = null;  // Parent GROUP or TRACK
 			//myParentSeq = null;
 			sortMode = SORTbySavedIndex;
@@ -95,18 +165,26 @@ namespace LORUtils4
 
 		// READ-ONLY values and object properties
 		public List<iLORMember4> Items
-		{ get { return myItemsList; } }
+		{ get { return myMembers; } }
 		public List<iLORMember4> Members
-		{ get { return myItemsList; } }
+		{ get { return myMembers; } }
 		//private List<iLORMember4> Members = null;
 		public List<iLORMember4> BySavedIndex
 		{ get { return myBySavedIndexList; } }
 		public List<iLORMember4> ByAltSavedIndex
 		{ get { return myByAltSavedIndexList; } }
+		public List<LORVizItemGroup4> ByItemID
+		{ get { return myByItemIDList; } }
+		public List<LORVizItemGroup4> ByAltItemID
+		{ get { return myByItemIDList; } }
 		public List<LORTimings4> BySaveID
 		{ get { return myBySaveIDList; } }
 		public List<LORTimings4> ByAltSaveID
 		{ get { return myByAltSaveIDList; } }
+		public List<LORVizDrawObject4> ByObjectID
+		{ get { return myByObjectIDList; } }
+		public List<LORVizDrawObject4> ByAltObjectID
+		{ get { return myByAltObjectIDList; } }
 		public List<LORTrack4> ByTrackIndex
 		{ get { return myByTrackIndexList; } }
 		public List<LORTrack4> ByAltTrackIndex
@@ -114,7 +192,14 @@ namespace LORUtils4
 		public SortedDictionary<string, iLORMember4> ByName
 		{ get { return myByNameDictionary; } }
 		public int HighestSavedIndex
-		{ get { return myHighestSavedIndex; } }
+		{ 
+			// Used by Sequence Channels, RGB Channels, Channel Groups, and Cosmic Devices
+			// Used by Visualization VizChannels
+			get
+			{
+				return myHighestSavedIndex;
+			} 
+		}
 		public int ChannelCount
 		{ get { return myChannelCount; } }
 		public int RGBChannelCount
@@ -127,6 +212,13 @@ namespace LORUtils4
 		{ get { return myTrackCount; } }
 		public int TimingGridCount
 		{ get { return myTimingGridCount; } }
+		public int VizChannelCount
+		{ get { return myVizChannelCount; } }
+		public int VizItemGroupCount
+		{ get { return myVizItemGroupCount; } }
+		public int VizDrawObjectCount
+		{ get { return myVizDrawObjectCount; } }
+
 		public int AllCount
 		{ get { return myEverythingCount; } }
 
@@ -150,13 +242,18 @@ namespace LORUtils4
 			//! WHY?!?!
 			if (Fyle.DebugMode) System.Diagnostics.Debugger.Break();
 			myOwner = newOwner;
-			myParentSeq = (LORSequence4)myOwner.Parent;
+			myParent = myOwner.Parent;
 		}
 
 		// LORMembership4.Add(Member)
 		public int Add(iLORMember4 newMember)
 		{
 			int memberSI = lutils.UNDEFINED;
+			int psi = lutils.UNDEFINED;
+			int tc = lutils.UNDEFINED;
+			int psv = lutils.UNDEFINED;
+			bool need2add = false;
+			LORMemberType4 parentType = LORMemberType4.None;
 			//#if DEBUG
 			//	string msg = "LORMembership4.Add(" + newMember.Name + ":" + newMember.MemberType.ToString() + ")";
 			//	Debug.WriteLine(msg);
@@ -167,44 +264,59 @@ namespace LORUtils4
 			//		string msg = "LORMembership4.Add(" + newMember.Name + ":" + newMember.MemberType.ToString() + ")";
 			//		msg += " to owner " + this.Owner.Name;
 			//		Debug.WriteLine(msg);
-				// Check to make sure timing grid is not being added to a channel group (while initial reading of file)
-				// If so, trace stack, find out why
-					//System.Diagnostics.Debugger.Break();
+			// Check to make sure timing grid is not being added to a channel group (while initial reading of file)
+			// If so, trace stack, find out why
+			//System.Diagnostics.Debugger.Break();
 			//	}
 			//#endif
-			if (this.Parent == null)
+
+
+			// If for some reason this didn't get set yet
+			if (myParent == null)
 			{
-				if (newMember.Parent == null)
+				if (myOwner.Parent != null)
 				{
-					if (Fyle.DebugMode)
-					{
-						System.Diagnostics.Debugger.Break();
-					}
+					myParent = myOwner.Parent;
 				}
 				else
 				{
-					//this.Parent = (LORSequence4)newMember.Parent;
+					string warn = myOwner.Name + " has no parent and so neither does its Membership!";
+					//Fyle.BUG(warn);
+				}
+			}
+			// Did that fix it, or still null?
+			if (myParent == null)
+			{
+				if (newMember.Parent != null)
+				{
+					myParent = newMember.Parent;
+				}
+				else
+				{
+					string fatal = "Parentage of " + myOwner.Name + "'s Membership is undetermined!";
+					Fyle.BUG(fatal);
 				}
 			}
 			else
 			{
-				newMember.SetParent(this.Parent);
+				newMember.SetParent(myParent);
 			}
 
-			if (myParentSeq == null)
+			if (myParent == null)
 			{
 				Fyle.BUG("Membership has no Parent Sequence!");
 			}
 
 
 
-			if (Parent != null) Parent.MakeDirty(true);
+			if (myParent != null) Parent.MakeDirty(true);
 			if ((newMember.MemberType == LORMemberType4.Channel) ||
 				  (newMember.MemberType == LORMemberType4.RGBChannel) ||
 				  (newMember.MemberType == LORMemberType4.ChannelGroup) ||
 				  (newMember.MemberType == LORMemberType4.Cosmic))
 			{
 				// Reminder, Must be a member which really has a SavedIndex to hit this point
+				parentType = myParent.MemberType;
 				memberSI = newMember.SavedIndex;
 				if (memberSI < 0)
 				{
@@ -245,7 +357,7 @@ namespace LORUtils4
 				}
 				myBySavedIndexList[memberSI] = newMember;
 				myByAltSavedIndexList[memberSI] = newMember;
-				myItemsList.Add(newMember);
+				myMembers.Add(newMember);
 			}
 
 			if (newMember.MemberType == LORMemberType4.Track)
@@ -300,10 +412,85 @@ namespace LORUtils4
 				myTimingGridCount++;
 			}
 
+
+			if ((newMember.MemberType == LORMemberType4.VizChannel) ||
+					(newMember.MemberType == LORMemberType4.VizDrawObject) ||
+					(newMember.MemberType == LORMemberType4.VizItemGroup))
+			{
+				// Reminder, Must be a Visualizer member to hit this point
+				parentType = myParent.MemberType;
+				// Note: SavedIndex same as ItemID
+				int memberIID = newMember.SavedIndex;
+
+				if (newMember.MemberType == LORMemberType4.VizChannel)
+				{
+					if (memberIID < 0)
+					{
+						myHighestSavedIndex++;
+						memberIID = myHighestSavedIndex;
+						newMember.SetSavedIndex(memberIID);
+					}
+					if (memberIID > myHighestSavedIndex)
+					{
+						myHighestSavedIndex = memberIID;
+					}
+					while (myBySavedIndexList.Count <= memberIID)
+					{
+						myBySavedIndexList.Add(null);
+					}
+					myBySavedIndexList[memberIID] = newMember;
+					myVizChannelCount++;
+				}
+				if (newMember.MemberType == LORMemberType4.VizDrawObject)
+				{
+					if (memberIID < 0)
+					{
+						myHighestObjectID++;
+						memberIID = myHighestObjectID;
+						newMember.SetSavedIndex(memberIID);
+					}
+					if (memberIID > myHighestObjectID)
+					{
+						myHighestObjectID = memberIID;
+					}
+					while(myByObjectIDList.Count <= memberIID)
+					{
+						myByObjectIDList.Add(null);
+					}
+					myByObjectIDList[memberIID] = (LORVizDrawObject4)newMember;
+					myVizDrawObjectCount++;
+				}
+				if (newMember.MemberType == LORMemberType4.VizItemGroup)
+				{
+					if (memberIID < 0)
+					{
+						myHighestItemID++;
+						memberIID = myHighestItemID;
+						newMember.SetSavedIndex(memberIID);
+					}
+					if (memberIID > myHighestItemID)
+					{
+						myHighestItemID = memberIID;
+					}
+					while (myByItemIDList.Count <= memberIID)
+					{
+						myByItemIDList.Add(null);
+					}
+					myByItemIDList[memberIID] = (LORVizItemGroup4)newMember;
+					myVizItemGroupCount++;
+				}
+
+				myMembers.Add(newMember);
+			}
+
+
+
+
+
 			if (myOwner.MemberType == LORMemberType4.Sequence)
 			{
 				//LORSequence4 mySeq = (LORSequence4)myOwner.Parent;
-				bool need2add = false; // Reset
+				need2add = false; // Reset
 															 //if (newMember.SavedIndex < 0)
 															 //{
 															 //	need2add = true;
@@ -316,9 +503,15 @@ namespace LORUtils4
 					memberSI = newMember.SavedIndex;
 					//LORSequence4 myParentSeq = (LORSequence4)Parent;
 					//if (memberSI > mySeq.Members.myHighestSavedIndex)
-					if (memberSI > myParentSeq.Members.myHighestSavedIndex)
+
+						LORSequence4 ps = (LORSequence4)myParent;
+						psi = ps.AllMembers.myHighestSavedIndex;
+						tc = ps.Tracks.Count;
+						psv = ps.AllMembers.HighestSaveID;
+
+					if (memberSI > psi)
 					{
-							need2add = true;
+						need2add = true;
 					}
 				}
 				// Else new member is LORTrack4 or Timing Grid
@@ -326,7 +519,7 @@ namespace LORUtils4
 				{
 					LORTrack4 newTrack = (LORTrack4)newMember;
 					int trkIdx = newTrack.Index;
-					if (trkIdx > myParentSeq.Tracks.Count)
+					if (trkIdx > tc)
 					{
 						need2add = true;
 					}
@@ -335,44 +528,90 @@ namespace LORUtils4
 				{
 					LORTimings4 newGrid = (LORTimings4)newMember;
 					int gridSaveID = newGrid.SaveID;
-					if (gridSaveID > myParentSeq.Members.myHighestSaveID)
-					{ 
+					if (gridSaveID > psv)
+					{
 						need2add = true;
 					}
 				}
+			}
 
-
-				if (need2add)
+			if (myOwner.MemberType == LORMemberType4.Visualization)
+			{
+				//LORSequence4 mySeq = (LORSequence4)myOwner.Parent;
+				need2add = false; // Reset
+															 //if (newMember.SavedIndex < 0)
+															 //{
+															 //	need2add = true;
+															 //}
+				if ((newMember.MemberType == LORMemberType4.VizChannel) ||
+						(newMember.MemberType == LORMemberType4.VizDrawObject) ||
+						(newMember.MemberType == LORMemberType4.VizItemGroup))
 				{
+					int memberIID = newMember.SavedIndex;
+					//LORSequence4 myParentSeq = (LORSequence4)Parent;
+					//if (memberSI > mySeq.Members.myHighestSavedIndex)
+
+					LORVisualization4 pv = (LORVisualization4)myParent;
+					psi = pv.AllMembers.myHighestItemID;
+
+					if (memberIID > psi)
+					{
+						need2add = true;
+					}
+				}
+			}
+
+
+			if (need2add)
+			{
+				if (parentType == LORMemberType4.Sequence)
+				{
+					LORSequence4 psq = (LORSequence4)myParent;
 					if (newMember.MemberType == LORMemberType4.Channel)
 					{
-						myParentSeq.Channels.Add((LORChannel4)newMember);
+						psq.Channels.Add((LORChannel4)newMember);
 					}
 					if (newMember.MemberType == LORMemberType4.RGBChannel)
 					{
-						myParentSeq.RGBchannels.Add((LORRGBChannel4)newMember);
+						psq.RGBchannels.Add((LORRGBChannel4)newMember);
 					}
 					if (newMember.MemberType == LORMemberType4.ChannelGroup)
 					{
-						myParentSeq.ChannelGroups.Add((LORChannelGroup4)newMember);
+						psq.ChannelGroups.Add((LORChannelGroup4)newMember);
 					}
 					if (newMember.MemberType == LORMemberType4.Cosmic)
 					{
-						myParentSeq.CosmicDevices.Add((LORCosmic4)newMember);
+						psq.CosmicDevices.Add((LORCosmic4)newMember);
 					}
 					if (newMember.MemberType == LORMemberType4.Track)
 					{
-						myParentSeq.Tracks.Add((LORTrack4)newMember);
+						psq.Tracks.Add((LORTrack4)newMember);
 					}
 					if (newMember.MemberType == LORMemberType4.Timings)
 					{
-						myParentSeq.TimingGrids.Add((LORTimings4)newMember);
+						psq.TimingGrids.Add((LORTimings4)newMember);
 					}
+				}
+				if (parentType == LORMemberType4.Visualization)
+				{
+					LORVisualization4 pvz = (LORVisualization4)myParent;
+					if (newMember.MemberType == LORMemberType4.VizChannel)
+					{
+						pvz.VizChannels.Add((LORVizChannel4)newMember);
+					}
+					if (newMember.MemberType == LORMemberType4.VizItemGroup)
+					{
+						pvz.VizItemGroups.Add((LORVizItemGroup4)newMember);
+					}
+					if (newMember.MemberType == LORMemberType4.VizDrawObject)
+					{
+						pvz.VizDrawObjects.Add((LORVizDrawObject4)newMember);
+					}
+				}
 
-					myItemsList.Add(newMember);
-					myEverythingCount++;
-				} // end if need2add
-			} // end if owner is the sequenced
+					myMembers.Add(newMember);
+				myEverythingCount++;
+			} // end if need2add
 
 			return memberSI;
 		}
@@ -380,8 +619,8 @@ namespace LORUtils4
 		// For iEnumerable
 		public iLORMember4 this[int index]
 		{
-			get { return myItemsList[index]; }
-			set { myItemsList.Insert(index, value); }
+			get { return myMembers[index]; }
+			set { myMembers.Insert(index, value); }
 		}
 
 		public IEnumerator GetEnumerator()
@@ -393,13 +632,13 @@ namespace LORUtils4
 		{
 			//! NOTE: Does NOT check sub-groups!
 			bool found = false;
-			for (int m=0; m< myItemsList.Count; m++)
+			for (int m=0; m< myMembers.Count; m++)
 			{
-				iLORMember4 member = myItemsList[m];
+				iLORMember4 member = myMembers[m];
 				if (member.Name == memberName)
 				{
 					found = true;
-					m = myItemsList.Count; // Exit loop
+					m = myMembers.Count; // Exit loop
 				}
 			}
 			return found;
@@ -409,13 +648,13 @@ namespace LORUtils4
 		{
 			//! NOTE: Does NOT check sub-groups!
 			bool found = false;
-			for (int m = 0; m < myItemsList.Count; m++)
+			for (int m = 0; m < myMembers.Count; m++)
 			{
-				iLORMember4 member = myItemsList[m];
+				iLORMember4 member = myMembers[m];
 				if (member.SavedIndex == savedIndex)
 				{
 					found = true;
-					m = myItemsList.Count; // Exit loop
+					m = myMembers.Count; // Exit loop
 				}
 			}
 			return found;
@@ -425,7 +664,7 @@ namespace LORUtils4
 		public bool MoveNext()
 		{
 			position++;
-			return (position < myItemsList.Count);
+			return (position < myMembers.Count);
 		}
 
 		public void Reset()
@@ -433,7 +672,7 @@ namespace LORUtils4
 
 		public object Current
 		{
-			get { return myItemsList[position]; }
+			get { return myMembers[position]; }
 		}
 
 
@@ -441,11 +680,41 @@ namespace LORUtils4
 		{
 			get
 			{
-				return myItemsList.Count;
+				return myMembers.Count;
 			}
 		}
 
-		public int SelectedMemberCount
+		public CheckState CheckState
+		{
+			get
+			{
+				// Default is indeterminate
+				CheckState cs = CheckState.Indeterminate;
+				// How many SELECTED descendants are there?
+				//    first parameter is selected=true
+				int s = DescendantCount(true, true, false, true);
+				// Are NONE of them selected, and my owner unselected also?
+				if ((s == 0) &&  !Owner.Selected)
+				{
+					// Then we are completely unchecked!
+					cs = CheckState.Unchecked;
+				}
+				else // at least one or more descented is selected
+				{
+					// How many TOTAL descendants are there (including unselected)
+					int d = DescendantCount(false, true, false, true);
+					// Does selected = total, and is my owner selected also?
+					if ((s==d) && Owner.Selected)
+					{
+						// Then we are fully and completely checked!
+						cs = CheckState.Checked;
+					}
+				}
+				return cs;
+			}
+		}
+
+		public int SelectedDescendantCount
 		{
 			// Besides getting the number of selected members and submembers
 			// it also 'cleans up' the selection states
@@ -455,7 +724,7 @@ namespace LORUtils4
 				int count = 0;
 				if (myOwner.Selected)
 				{
-					foreach (iLORMember4 m in myItemsList)
+					foreach (iLORMember4 m in myMembers)
 					{
 						if (m.MemberType == LORMemberType4.Channel)
 						{
@@ -487,7 +756,7 @@ namespace LORUtils4
 							if (m.Selected)
 							{
 								LORChannelGroup4 g = (LORChannelGroup4)m;
-								int subCount = g.Members.SelectedMemberCount;  // Recurse!
+								int subCount = g.Members.SelectedDescendantCount;  // Recurse!
 								if (subCount == 0)
 								{
 									m.Selected = false;
@@ -504,7 +773,7 @@ namespace LORUtils4
 							if (m.Selected)
 							{
 								LORCosmic4 d = (LORCosmic4)m;
-								int subCount = d.Members.SelectedMemberCount;  // Recurse!
+								int subCount = d.Members.SelectedDescendantCount;  // Recurse!
 								if (subCount == 0)
 								{
 									m.Selected = false;
@@ -535,6 +804,7 @@ namespace LORUtils4
 
 		public int HighestSaveID
 		{
+			// For Sequence Timing Grids only
 			get
 			{
 				return myHighestSaveID;
@@ -544,6 +814,35 @@ namespace LORUtils4
 				myHighestSaveID = value;
 			}
 		}
+
+		public int HighestItemID
+		{
+			// For Visualization ItemGroups only
+			get
+			{
+				return myHighestItemID;
+			}
+			set
+			{
+				myHighestItemID = value;
+			}
+		}
+
+		public int HighestObjectID
+		{
+			// For Visualization DrawObjects only
+			get
+			{
+				return myHighestObjectID;
+			}
+			set
+			{
+				myHighestObjectID = value;
+			}
+		}
+
+
+
 
 		public void ReIndex()
 		{
@@ -563,9 +862,9 @@ namespace LORUtils4
 			myBySaveIDList = new List<LORTimings4>();
 			myByAltSaveIDList = new List<LORTimings4>();
 
-			for (int i = 0; i < myItemsList.Count; i++)
+			for (int i = 0; i < myMembers.Count; i++)
 			{
-				iLORMember4 member = myItemsList[i];
+				iLORMember4 member = myMembers[i];
 
 				int n = 2;
 				string itemName = member.Name;
@@ -663,28 +962,28 @@ namespace LORUtils4
 			sortMode = SORTbyName;
 
 			//LORSequence4 mySeq = (LORSequence4)Parent;
-			if (myParentSeq.TimingGrids.Count > 0)
-			{
+			//if (myParentSeq.TimingGrids.Count > 0)
+			//{
 				//AlphaSortSavedIndexes(byTimingGridName, 0, Parent.TimingGrids.Count - 1);
 				//byAlphaTimingGridNames.Sort();
-			}
+			//}
 
 		} // end ReIndex
 
 		private void NULLITEMCHECK()
 		{
-			for (int i = 0; i < myItemsList.Count; i++)
+			for (int i = 0; i < myMembers.Count; i++)
 			{
-				if (myItemsList[i] == null) System.Diagnostics.Debugger.Break();
-				if (myItemsList[i].Parent == null) System.Diagnostics.Debugger.Break();
-				int v = myItemsList[i].CompareTo(myItemsList[0]);
+				if (myMembers[i] == null) System.Diagnostics.Debugger.Break();
+				if (myMembers[i].Parent == null) System.Diagnostics.Debugger.Break();
+				int v = myMembers[i].CompareTo(myMembers[0]);
 			}
 
 		}
 
 
 		// LORMembership4.find(name, type, create)
-		public iLORMember4 Find(string theName, LORMemberType4 theType, bool createIfNotFound)
+		public iLORMember4 Find(string theName, LORMemberType4 theType, bool createIfNotFound = false)
 		{
 #if DEBUG
 			string msg = "LORMembership4.find(" + theName + ", ";
@@ -695,11 +994,11 @@ namespace LORUtils4
 			iLORMember4 ret = null;
 			if (ret==null)
 			{
-				if (myParentSeq == null)
+				if (myParent == null)
 				{
-					myParentSeq = (LORSequence4)Parent;
-					if (Parent != null)
-					{
+					if (myParent.MemberType == LORMemberType4.Sequence)
+					{ 
+						LORSequence4 parentSeq = (LORSequence4)Parent;
 						if (theType == LORMemberType4.Channel)
 						{
 							if (myChannelCount > 0)
@@ -708,7 +1007,7 @@ namespace LORUtils4
 							}
 							if ((ret == null) && createIfNotFound)
 							{
-								ret = myParentSeq.CreateChannel(theName);
+								ret = parentSeq.CreateChannel(theName);
 								Add(ret);
 							}
 						}
@@ -720,7 +1019,7 @@ namespace LORUtils4
 							}
 							if ((ret == null) && createIfNotFound)
 							{
-								ret = myParentSeq.CreateRGBchannel(theName);
+								ret = parentSeq.CreateRGBchannel(theName);
 								Add(ret);
 							}
 						}
@@ -732,7 +1031,7 @@ namespace LORUtils4
 							}
 							if ((ret == null) && createIfNotFound)
 							{
-								ret = myParentSeq.CreateChannelGroup(theName);
+								ret = parentSeq.CreateChannelGroup(theName);
 								Add(ret);
 							}
 						}
@@ -744,7 +1043,7 @@ namespace LORUtils4
 							}
 							if ((ret == null) && createIfNotFound)
 							{
-								ret = myParentSeq.CreateCosmicDevice(theName);
+								ret = parentSeq.CreateCosmicDevice(theName);
 								Add(ret);
 							}
 						}
@@ -756,7 +1055,7 @@ namespace LORUtils4
 							}
 							if ((ret == null) && createIfNotFound)
 							{
-								ret = myParentSeq.CreateTimingGrid(theName);
+								ret = parentSeq.CreateTimingGrid(theName);
 								Add(ret);
 							}
 						}
@@ -768,7 +1067,48 @@ namespace LORUtils4
 							}
 							if ((ret == null) && createIfNotFound)
 							{
-								ret = myParentSeq.CreateTrack(theName);
+								ret = parentSeq.CreateTrack(theName);
+								Add(ret);
+							}
+						}
+					}
+
+					if (myParent.MemberType == LORMemberType4.Visualization)
+					{
+						LORVisualization4 parentViz = (LORVisualization4)Parent;
+						if (theType == LORMemberType4.VizChannel)
+						{
+							if (myVizChannelCount > 0)
+							{
+								ret = FindByName(theName, theType);
+							}
+							if ((ret == null) && createIfNotFound)
+							{
+								ret = parentViz.CreateVizChannel(theName);
+								Add(ret);
+							}
+						}
+						if (theType == LORMemberType4.VizDrawObject)
+						{
+							if (myVizDrawObjectCount > 0)
+							{
+								ret = FindByName(theName, theType);
+							}
+							if ((ret == null) && createIfNotFound)
+							{
+								ret = parentViz.CreateDrawObject(theName);
+								Add(ret);
+							}
+						}
+						if (theType == LORMemberType4.VizItemGroup)
+						{
+							if (myVizItemGroupCount > 0)
+							{
+								ret = FindByName(theName, theType);
+							}
+							if ((ret == null) && createIfNotFound)
+							{
+								ret = parentViz.CreateItemGroup(theName);
 								Add(ret);
 							}
 						}
@@ -853,7 +1193,7 @@ namespace LORUtils4
 		}
 
 
-		public int DescendantCount(bool selectedOnly, bool countPlain, bool countRGBparents, bool countRGBchildren)
+		public int DescendantCount(bool selectedOnly = false, bool countPlain = true, bool countRGBparents = false, bool countRGBchildren = true)
 		{
 			// Depending on situation/usaage, you will probably want to count
 			// The RGBchannels, OR count their 3 children.
@@ -862,25 +1202,25 @@ namespace LORUtils4
 			// Tracks are not counted.
 
 			int c = 0;
-			for (int l = 0; l < myItemsList.Count; l++)
+			for (int l = 0; l < myMembers.Count; l++)
 			{
-				LORMemberType4 t = myItemsList[l].MemberType;
+				LORMemberType4 t = myMembers[l].MemberType;
 				if (t == LORMemberType4.Channel)
 				{
 					if (countPlain)
 					{
-						if (myItemsList[l].Selected || !selectedOnly) c++;
+						if (myMembers[l].Selected || !selectedOnly) c++;
 					}
 				}
 				if (t == LORMemberType4.RGBChannel)
 				{
 					if (countRGBparents)
 					{
-						if (myItemsList[l].Selected || !selectedOnly) c++;
+						if (myMembers[l].Selected || !selectedOnly) c++;
 					}
 					if (countRGBchildren)
 					{
-						LORRGBChannel4 rgbCh = (LORRGBChannel4)myItemsList[l];
+						LORRGBChannel4 rgbCh = (LORRGBChannel4)myMembers[l];
 						if (rgbCh.redChannel.Selected || !selectedOnly) c++;
 						if (rgbCh.grnChannel.Selected || !selectedOnly) c++;
 						if (rgbCh.bluChannel.Selected || !selectedOnly) c++;
@@ -888,13 +1228,13 @@ namespace LORUtils4
 				}
 				if (t == LORMemberType4.ChannelGroup)
 				{
-					LORChannelGroup4 grp = (LORChannelGroup4)myItemsList[l];
+					LORChannelGroup4 grp = (LORChannelGroup4)myMembers[l];
 					// Recurse!!
 					c += grp.Members.DescendantCount(selectedOnly, countPlain, countRGBparents, countRGBchildren);
 				}
 				if (t == LORMemberType4.Cosmic)
 				{
-					LORCosmic4 dev = (LORCosmic4)myItemsList[l];
+					LORCosmic4 dev = (LORCosmic4)myMembers[l];
 					// Recurse!!
 					c += dev.Members.DescendantCount(selectedOnly, countPlain, countRGBparents, countRGBchildren);
 				}
@@ -908,14 +1248,14 @@ namespace LORUtils4
 		{
 			get
 			{
-				if (myParentSeq == null)
+				if (myParent == null)
 				{
 					if (myOwner != null)
 					{
-						myParentSeq = (LORSequence4)myOwner.Parent;
+						myParent = myOwner.Parent;
 					}
 				}
-				return myParentSeq;
+				return myParent;
 			}
 		}
 

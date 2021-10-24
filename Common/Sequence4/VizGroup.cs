@@ -16,13 +16,15 @@ namespace LORUtils4
 	{
 		protected LORVisualization4 parentVisualization = null;
 		public bool Locked = false;
-		public string Comment = "";
 		public int[] AssignedObjectsNumbers = null;
-		public List<iLORMember4> AssignedObjects = new List<iLORMember4>();
+		
+		// Will Contain just DrawObjects (for now anyway)
+		public LORMembership4 Members = null;
 
 		private static readonly string FIELDLocked = " Locked";
 		private static readonly string FIELDComment = " Comment";
 		private static readonly string FIELDObjectID = " Object";
+		private static readonly string FIELDAssignedID = "AssignedObject ID";
 		
 		// SuperStarStuff
 		// Since (for now) I don't have SuperStar, and
@@ -53,11 +55,24 @@ namespace LORUtils4
 		public static readonly string FIELDS_SS_DEFAULTS = " SSWU=\"0\" SSFF=\"\" SSReverseOrder=\"False\" SSForceRowColumn=\"False\" SSRow=\"0\" SSColumn=\"0\" SSUseMyOrder=\"False\" SSStar=\"False\" SSMatrixInd=\"0\" SSPropColorTemp=\"0\"";
 
 		public LORVizItemGroup4()
-		{ }
+		{
+			Members = new LORMembership4(this);
+		}
 
 		public LORVizItemGroup4(string lineIn)
 		{
+			Members = new LORMembership4(this);
 			Parse(lineIn);
+		}
+
+		public LORVizItemGroup4(iLORMember4 parent, string lineIn)
+		{
+			
+			base.SetParent(parent);
+			myParent = parent;
+			Members = new LORMembership4(this);
+			Parse(lineIn);
+
 		}
 
 		public int VizID
@@ -85,9 +100,9 @@ namespace LORUtils4
 			get
 			{
 				int un = lutils.UNDEFINED;
-				if (AssignedObjects.Count > 0)
+				if (Members.Count > 0)
 				{
-					un = AssignedObjects[0].UniverseNumber;
+					un = Members.Items[0].UniverseNumber;
 				}
 				return un;
 			}
@@ -97,9 +112,9 @@ namespace LORUtils4
 			get
 			{
 				int da = lutils.UNDEFINED;
-				if (AssignedObjects.Count > 0)
+				if (Members.Count > 0)
 				{
-					da = AssignedObjects[0].DMXAddress;
+					da = Members.Items[0].DMXAddress;
 				}
 				return da;
 			}
@@ -109,7 +124,7 @@ namespace LORUtils4
 		{
 			get
 			{
-				return LORMemberType4.VizChannel4;
+				return LORMemberType4.VizItemGroup;
 			}
 		}
 
@@ -119,12 +134,12 @@ namespace LORUtils4
 			
 			if (LORMembership4.sortMode == LORMembership4.SORTbyOutput)
 			{
-				if (AssignedObjects != null)
+				if (Members != null)
 				{
-					result = AssignedObjects[0].UniverseNumber.CompareTo(other.UniverseNumber);
+					result = Members.Items[0].UniverseNumber.CompareTo(other.UniverseNumber);
 					if (result == 0)
 					{
-						result = AssignedObjects[0].DMXAddress.CompareTo(other.DMXAddress);
+						result = Members.Items[0].DMXAddress.CompareTo(other.DMXAddress);
 					}
 				}
 			}
@@ -142,7 +157,7 @@ namespace LORUtils4
 			newGrp.parentVisualization = parentVisualization;
 			newGrp.Locked = Locked;
 			newGrp.Comment = newGrp.Comment;
-			newGrp.AssignedObjectsNumbers = AssignedObjectsNumbers;
+			newGrp.Members = Members;
 			//newGrp.AssignedObjects = AssignedObjects;
 			// Use/Keep Defaults for SuperStarStuff
 			return newGrp;
@@ -164,10 +179,15 @@ namespace LORUtils4
 		public new void Parse(string lineIn)
 		{
 			mySavedIndex = lutils.getKeyValue(lineIn, LORVisualization4.FIELDvizID);
+			myIndex = mySavedIndex;
 			myName = lutils.getKeyWord(lineIn, lutils.FIELDname);
 			Locked = lutils.getKeyState(lineIn, FIELDLocked);
 			Comment = lutils.getKeyWord(lineIn, FIELDComment);
 		}
+
+		public int ItemID
+		{	get	{ return mySavedIndex; }	}
+
 
 		public void ParseAssignedObjectNumbers(StreamReader reader)
 		{
@@ -183,10 +203,22 @@ namespace LORUtils4
 					if (iEnd > 0) keepGoing = false;
 					if (keepGoing)
 					{
-						int o = lutils.getKeyValue(lineIn, FIELDObjectID);
+						int ox = lutils.getKeyValue(lineIn, FIELDAssignedID);
+						int oid = lutils.getKeyValue(lineIn, FIELDObjectID);
+						if (AssignedObjectsNumbers == null)
+						{
+							Array.Resize(ref AssignedObjectsNumbers, ox+1);
+							AssignedObjectsNumbers[ox] = oid;
+						}
+						else
+						{
+							int c = AssignedObjectsNumbers.Length;
+							Array.Resize(ref AssignedObjectsNumbers, ox + 1);
+							AssignedObjectsNumbers[ox] = oid;
+						}
+
+
 						aoCount++;
-						Array.Resize(ref AssignedObjectsNumbers, aoCount);
-						AssignedObjectsNumbers[aoCount - 1] = o;
 					} // End second KeepGoing test-- not end of <Item>
 				} // End first KeepGoing test-- not EndOfStream
 			} // End While KeepGoing

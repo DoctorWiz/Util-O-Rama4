@@ -203,10 +203,11 @@
 			this.treeMaster.Location = new System.Drawing.Point(415, 99);
 			this.treeMaster.MetroColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(165)))), ((int)(((byte)(220)))));
 			this.treeMaster.Name = "treeMaster";
+			this.treeMaster.NodeStateImageList = this.imlTreeIcons;
 			this.treeMaster.SelectedNodeForeColor = System.Drawing.SystemColors.HighlightText;
 			this.treeMaster.Size = new System.Drawing.Size(300, 433);
 			this.treeMaster.TabIndex = 118;
-			this.treeMaster.Text = "Master";
+			this.treeMaster.Text = "Destination Channels";
 			this.treeMaster.ThemeStyle.TreeNodeAdvStyle.CheckBoxTickThickness = 0;
 			this.treeMaster.ThemeStyle.TreeNodeAdvStyle.EnsureDefaultOptionedChild = true;
 			// 
@@ -225,14 +226,38 @@
 			// 
 			this.imlTreeIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imlTreeIcons.ImageStream")));
 			this.imlTreeIcons.TransparentColor = System.Drawing.Color.Transparent;
-			this.imlTreeIcons.Images.SetKeyName(0, "Track");
-			this.imlTreeIcons.Images.SetKeyName(1, "ChannelGroup");
-			this.imlTreeIcons.Images.SetKeyName(2, "RGBchannel");
+			this.imlTreeIcons.Images.SetKeyName(0, "Universe");
+			this.imlTreeIcons.Images.SetKeyName(1, "Controller");
+			this.imlTreeIcons.Images.SetKeyName(2, "Track");
 			this.imlTreeIcons.Images.SetKeyName(3, "Channel");
-			this.imlTreeIcons.Images.SetKeyName(4, "RedCh");
-			this.imlTreeIcons.Images.SetKeyName(5, "GrnCh");
-			this.imlTreeIcons.Images.SetKeyName(6, "BluCh");
-			this.imlTreeIcons.Images.SetKeyName(7, "");
+			this.imlTreeIcons.Images.SetKeyName(4, "RGBChannel");
+			this.imlTreeIcons.Images.SetKeyName(5, "ChannelGroup");
+			this.imlTreeIcons.Images.SetKeyName(6, "CosmicDevice");
+			this.imlTreeIcons.Images.SetKeyName(7, "#400000");
+			this.imlTreeIcons.Images.SetKeyName(8, "#804040");
+			this.imlTreeIcons.Images.SetKeyName(9, "#FF0000");
+			this.imlTreeIcons.Images.SetKeyName(10, "#00FF00");
+			this.imlTreeIcons.Images.SetKeyName(11, "#0000FF");
+			this.imlTreeIcons.Images.SetKeyName(12, "#FFFFFF");
+			this.imlTreeIcons.Images.SetKeyName(13, "#000000");
+			this.imlTreeIcons.Images.SetKeyName(14, "#8000FF");
+			this.imlTreeIcons.Images.SetKeyName(15, "#FF8000");
+			this.imlTreeIcons.Images.SetKeyName(16, "#FFFF00");
+			this.imlTreeIcons.Images.SetKeyName(17, "#FF80FF");
+			this.imlTreeIcons.Images.SetKeyName(18, "#00FFFF");
+			this.imlTreeIcons.Images.SetKeyName(19, "#000080");
+			this.imlTreeIcons.Images.SetKeyName(20, "#008000");
+			this.imlTreeIcons.Images.SetKeyName(21, "#008080");
+			this.imlTreeIcons.Images.SetKeyName(22, "#8080FF");
+			this.imlTreeIcons.Images.SetKeyName(23, "#400080");
+			this.imlTreeIcons.Images.SetKeyName(24, "#404040");
+			this.imlTreeIcons.Images.SetKeyName(25, "#408080");
+			this.imlTreeIcons.Images.SetKeyName(26, "#800000");
+			this.imlTreeIcons.Images.SetKeyName(27, "#800080");
+			this.imlTreeIcons.Images.SetKeyName(28, "#808000");
+			this.imlTreeIcons.Images.SetKeyName(29, "#808080");
+			this.imlTreeIcons.Images.SetKeyName(30, "#C0C0C0");
+			this.imlTreeIcons.Images.SetKeyName(31, "#FF00FF");
 			// 
 			// treeSource
 			// 
@@ -265,7 +290,7 @@
 			this.treeSource.SelectedNodeForeColor = System.Drawing.SystemColors.HighlightText;
 			this.treeSource.Size = new System.Drawing.Size(300, 433);
 			this.treeSource.TabIndex = 117;
-			this.treeSource.Text = "treeViewAdv1";
+			this.treeSource.Text = "Source Channels";
 			this.treeSource.ThemeStyle.TreeNodeAdvStyle.CheckBoxTickThickness = 0;
 			this.treeSource.ThemeStyle.TreeNodeAdvStyle.EnsureDefaultOptionedChild = true;
 			// 
@@ -1086,7 +1111,6 @@
 		private System.Windows.Forms.TextBox txtSourceFile;
 		private System.Windows.Forms.SaveFileDialog dlgFileSave;
 		private System.Windows.Forms.OpenFileDialog dlgFileOpen;
-		private System.Windows.Forms.ImageList imlTreeIcons;
 		private System.Windows.Forms.Button btnSummary;
 		private System.Windows.Forms.Button btnAutoMap;
 		private System.Windows.Forms.MenuStrip menuStrip1;
@@ -1146,6 +1170,7 @@
 		private System.Windows.Forms.Label lblMasterHasEffects;
 		private System.Windows.Forms.Label lblMasterAlreadyMapped;
 		private System.Windows.Forms.PictureBox picAboutIcon;
+		private System.Windows.Forms.ImageList imlTreeIcons;
 	}
 }
 

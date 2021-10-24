@@ -28,6 +28,7 @@ namespace LORUtils4
 		public static readonly string FIELDvizID = " ID";
 		public static readonly string FIELDbackColor = " Background_Color";
 		public static readonly string FIELDreverseOrder = " SSReverseOrder";
+		public static readonly string FIELDAssignedID = "AssignedObject ID";
 		// Sequence Channels use "channel", "name" and "color" (Lower Case)
 		// But Visualizations use "LORChannel4", "Name" and "Color" -- Arrrggggh!
 		public static readonly string FIELDvizName = " Name";
@@ -51,25 +52,59 @@ namespace LORUtils4
 		public LORSeqInfo4 info = null;
 		public LOROutput4 output = new LOROutput4();
 		public int lineCount = 0;
-		public List<LORVizChannel4> VizChannels = new List<LORVizChannel4>();
-		public LORMembership4 Members = null;
-		public List<LORVizDrawObject4> VizDrawObjects = new List<LORVizDrawObject4>();
 		public List<LORVizItemGroup4> VizItemGroups = new List<LORVizItemGroup4>();
+		public List<LORVizDrawObject4> VizDrawObjects = new List<LORVizDrawObject4>();
+		// Contains ALL channels, even though they are sub-members to DrawObjects which are sub-members to ItemGroups
+		public List<LORVizChannel4> VizChannels = new List<LORVizChannel4>();
+
+		// Members contains the only objects directly below a visualization
+		//   which is ItemGroups
+		public LORMembership4 Members = null;
+		// All Members contains ItemGroups, DrawObjects, and VizChannels
+		public LORMembership4 AllMembers = null;
 		//public List<Prop> Props = new List<Prop>();
 
 
 		public LORVisualization4()
 		{
+			// I'm my own grandpa
+			base.SetParent(this);
+			AllMembers = new LORMembership4(this);
 			Members = new LORMembership4(this);
 			myName = "$_UNNAMED_$";
-	}
+		}
 
 	public LORVisualization4(string fileName)
 		{
+			// I'm my own grandpa
+			base.SetParent(this);
+			AllMembers = new LORMembership4(this);
 			Members = new LORMembership4(this);
 			myName = fileName;
 			ReadVisualizationFile(fileName);
 		}
+
+		private void MakeDummies()
+		{
+			// SavedIndices and SaveIDs in Sequences start at 0. Cool! Great! No Prob!
+			// But Channels, Groups, and DrawObjects in Visualizations start at 1 (Grrrrr)
+			// So add a dummy object at the [0] start of the lists
+			LORVizChannel4 lvc = new LORVizChannel4("\0\0DUMMY VIZCHANNEL AT INDEX [0] - DO NOT USE!");
+			lvc.SetIndex(0);
+			lvc.SetSavedIndex(0);
+			lvc.SetParent(myParent);
+			LORVizDrawObject4 lvdo = new LORVizDrawObject4("\0\0DUMMY VIZDRAWOBJECT AT INDEX [0] - DO NOT USE!");
+			lvdo.SetIndex(0);
+			lvdo.SetSavedIndex(0);
+			lvdo.SetParent(myParent);
+			LORVizItemGroup4 lvig = new LORVizItemGroup4("\0\0DUMMY VIZITEMGROUP AT INDEX [0] - DO NOT USE!");
+			lvig.SetIndex(0);
+			lvig.SetSavedIndex(0);
+			lvig.SetParent(myParent);
+
+		}
+
+
 
 		public int ReadVisualizationFile(string existingFileName)
 		{
@@ -89,7 +124,6 @@ namespace LORUtils4
 			LORVizChannel4 lastVizChannel = null;
 			//Prop lastProp = null;
 			LORVizDrawObject4 lastDrawObject = null;
-			LORVizItemGroup4 lastGroup = null;
 
 			Clear(true);
 
@@ -169,6 +203,8 @@ namespace LORUtils4
 										{
 										//TODO: Save it!	
 										lastDrawObject = ParseDrawObject(lineIn);
+											lastDrawObject.SetParent(this);
+											AllMembers.Add(lastDrawObject);
 										}
 										else // Not a LORVizDrawObject4
 										{
@@ -177,7 +213,9 @@ namespace LORUtils4
 											if (li > 0)
 											{
 												lastVizChannel = ParseVizChannel(lineIn);
+												lastVizChannel.SetParent(this);
 												lastVizChannel.DrawObject = lastDrawObject;
+												AllMembers.Add(lastVizChannel);
 												if (lastDrawObject.redChannel == null)
 												{
 													if (lastVizChannel.SavedIndex == 1)
@@ -256,13 +294,19 @@ namespace LORUtils4
 														} // end if a track
 														else // not a track
 														{
+															//! Item Groups
 															li = lutils.ContainsKey(lineIn, STARTitem);
 															if (li > 0)
 															{
-																LORVizItemGroup4 newGrp = new LORVizItemGroup4(lineIn);
+																LORVizItemGroup4 newGrp = new LORVizItemGroup4(this, lineIn);
 																newGrp.ParseAssignedObjectNumbers(reader);
-																VizItemGroups.Add(newGrp);
+																while (VizItemGroups.Count <= newGrp.Index)
+																{
+																	VizItemGroups.Add(null);
+																}
+																VizItemGroups[newGrp.Index] = newGrp;
 																Members.Add(newGrp);
+																AllMembers.Add(newGrp);
 															}
 															else
 															{
@@ -330,6 +374,7 @@ namespace LORUtils4
 			if (errorStatus <= 0)
 			{
 				info.filename = existingFileName;
+				PutDrawObjectsIntoItemGroups();
 				//! for debugging
 				//string sMsg = summary();
 				//MessageBox.Show(sMsg, "Summary", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -337,6 +382,40 @@ namespace LORUtils4
 
 			return errorStatus;
 		} // end ReadSequenceFile
+
+		private void PutDrawObjectsIntoItemGroups()
+		{
+			// Note: start at 1, not 0.  Viz members start IDs at 1, not 0
+			// ItemGroup member [0] is a dummy
+			for (int ig = 1; ig < VizItemGroups.Count; ig++)
+			{
+				LORVizItemGroup4 group = VizItemGroups[ig];
+				for (int n=1; n<group.AssignedObjectsNumbers.Length; n++)
+				{
+					int doi = group.AssignedObjectsNumbers[n];
+					//LORVizDrawObject4 ldo = AllMembers.ByObjectID[doi];
+					if (doi < VizDrawObjects.Count)
+					{
+						LORVizDrawObject4 ldo = VizDrawObjects[doi];
+						if (ldo != null)
+						{
+							Members.Add(ldo);
+							VizDrawObjects.Add(ldo);
+						}
+					}
+					else
+					{
+						string msg = "Draw Object with ID " + doi + " not found in VizDrawObjects for ItemGroup ";
+						msg += group.Name;
+						Fyle.BUG(msg);
+					}
+				}
+			}
+
+
+		}
+
+
 
 		public void Clear(bool areYouReallySureYouWantToDoThis)
 		{
@@ -356,21 +435,24 @@ namespace LORUtils4
 		public LORVizChannel4 ParseVizChannel(string lineIn)
 		{
 			LORVizChannel4 vch = new LORVizChannel4("");
-			//vch.SetParentViz(this);
-			vch.SetIndex(VizChannels.Count);
-			VizChannels.Add(vch);
-			Members.Add(vch);
+			vch.SetParent(this);
 			vch.Parse(lineIn);
+			VizChannels.Add(vch);
+			vch.SetIndex(VizChannels.Count-1);
+			AllMembers.Add(vch);
 			return vch;
 		}
 
 		public LORVizDrawObject4 ParseDrawObject(string lineIn)
 		{
 			LORVizDrawObject4 drob = new LORVizDrawObject4("");
-			//vch.SetParentViz(this);
-			drob.SetIndex(VizDrawObjects.Count);
-			VizDrawObjects.Add(drob);
+			drob.SetParent(this);
 			drob.Parse(lineIn);
+			while (VizDrawObjects.Count <= drob.Index )
+			{
+				VizDrawObjects.Add(null);
+			}
+			VizDrawObjects[drob.Index] = drob;
 			return drob;
 		}
 
@@ -414,6 +496,163 @@ namespace LORUtils4
 		{ return ""; }
 		public new void Parse(string lineIn)
 		{ }
+
+		public LORVizChannel4 CreateVizChannel(string theName)
+		{
+			// Does NOT check to see if a channel with this name already exists
+			// Therefore, allows for duplicate channel names (But they will have different SavedIndexes)
+			LORVizChannel4 chan;
+			chan = new LORVizChannel4(theName);
+			int newIID = AssignNextChannelID(chan);
+			chan.SetParent(this);
+			chan.Centiseconds = myCentiseconds;
+			chan.SetIndex(VizChannels.Count);
+			VizChannels.Add(chan);
+			AllMembers.Add(chan);
+			//myCentiseconds = Math.Max(myCentiseconds, chan.Centiseconds);
+			return chan;
+		}
+
+		public LORVizDrawObject4 CreateDrawObject(string theName)
+		{
+			// Does NOT check to see if a channel with this name already exists
+			// Therefore, allows for duplicate channel names (But they will have different SavedIndexes)
+			LORVizDrawObject4 drob;
+			drob = new LORVizDrawObject4(theName);
+			int newIID = AssignNextObjectID(drob);
+			drob.SetParent(this);
+			drob.Centiseconds = myCentiseconds;
+			drob.SetIndex(VizDrawObjects.Count);
+			VizDrawObjects.Add(drob);
+			AllMembers.Add(drob);
+			//myCentiseconds = Math.Max(myCentiseconds, chan.Centiseconds);
+			return drob;
+		}
+
+		public LORVizItemGroup4 CreateItemGroup(string theName)
+		{
+			// Does NOT check to see if a group with this name already exists
+			// Therefore, allows for duplicate group names (But they will have different SavedIndexes)
+			LORVizItemGroup4 grp;
+			grp = new LORVizItemGroup4(this, theName);
+			int newIID = AssignNextItemID(grp);
+			grp.SetParent(this);
+			//chg.Members.SetParent(this);
+			//chg.Members.Owner = chg;
+			grp.Centiseconds = myCentiseconds;
+			grp.SetIndex(VizItemGroups.Count);
+			VizItemGroups.Add(grp);
+			AllMembers.Add(grp);
+			//myCentiseconds = Math.Max(myCentiseconds, chg.Centiseconds);
+
+			return grp;
+		}
+
+		public LORVizChannel4 FindChannel(string theName, bool createIfNotFound=false)
+		{
+			LORVizChannel4 ret = null;
+			for (int v = 0; v < VizChannels.Count; v++)
+			{
+				if (theName == VizChannels[v].Name)
+				{
+					ret = VizChannels[v];
+					v = VizChannels.Count; // Escape loop
+				}
+			}
+			if ((ret== null) && createIfNotFound)
+			{
+				ret = CreateVizChannel(theName);
+			}
+			return ret;
+		}
+
+		public LORVizItemGroup4 FindItemGroup(string theName, bool createIfNotFound=false)
+		{
+			LORVizItemGroup4 ret = null;
+			for (int v = 0; v < VizItemGroups.Count; v++)
+			{
+				if (theName == VizItemGroups[v].Name)
+				{
+					ret = VizItemGroups[v];
+					v = VizItemGroups.Count; // Escape loop
+				}
+			}
+			if ((ret == null) && createIfNotFound)
+			{
+				ret = CreateItemGroup(theName);
+			}
+			return ret;
+		}
+
+		public LORVizDrawObject4 FindDrawObject(string theName, bool createIfNotFound=false)
+		{
+			LORVizDrawObject4 ret = null;
+			for (int v = 0; v < VizDrawObjects.Count; v++)
+			{
+				if (theName == VizDrawObjects[v].Name)
+				{
+					ret = VizDrawObjects[v];
+					v = VizDrawObjects.Count; // Escape loop
+				}
+			}
+			if ((ret == null) && createIfNotFound)
+			{
+				ret = CreateDrawObject(theName);
+			}
+			return ret;
+		}
+
+
+		private int AssignNextChannelID(LORVizChannel4 thePart)
+		{
+			if (thePart.SavedIndex < 0)
+			{
+				int newIID = AllMembers.HighestSavedIndex + 1;
+				thePart.SetSavedIndex(newIID);
+				AllMembers.Add(thePart);
+			}
+			return thePart.SavedIndex;
+		}
+
+		private int AssignNextItemID(LORVizItemGroup4 thePart)
+		{
+			if (thePart.SavedIndex < 0)
+			{
+				int newIID = AllMembers.HighestItemID + 1;
+				thePart.SetSavedIndex(newIID);
+				AllMembers.Add(thePart);
+			}
+			return thePart.SavedIndex;
+		}
+
+		private int AssignNextObjectID(LORVizDrawObject4 thePart)
+		{
+			if (thePart.SavedIndex < 0)
+			{
+				int newIID = AllMembers.HighestObjectID + 1;
+				thePart.SetSavedIndex(newIID);
+				AllMembers.Add(thePart);
+			}
+			return thePart.SavedIndex;
+		}
+
+
+		private int AssignNextAltChannelID(iLORMember4 thePart)
+		{
+			if (thePart.AltSavedIndex < 0)
+			{
+				int newASI = AllMembers.AltHighestSavedIndex + 1;
+				thePart.AltSavedIndex = newASI;
+				// May cause out of bounds exception, might need to add instead
+				AllMembers.ByAltSavedIndex[thePart.AltSavedIndex] = thePart;
+				AllMembers.AltHighestSavedIndex = newASI;
+			}
+			return thePart.AltSavedIndex;
+		}
+
+
+
+
 
 	} // end Visualization class
 } // end namespace LORUtils4

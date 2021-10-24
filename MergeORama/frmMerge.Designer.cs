@@ -30,8 +30,7 @@
 		{
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMerge));
-			this.treNewChannels = new System.Windows.Forms.TreeView();
-			this.imlTreeIcons = new System.Windows.Forms.ImageList(this.components);
+			Syncfusion.Windows.Forms.Tools.TreeNodeAdvStyleInfo treeNodeAdvStyleInfo1 = new Syncfusion.Windows.Forms.Tools.TreeNodeAdvStyleInfo();
 			this.label2 = new System.Windows.Forms.Label();
 			this.btnBrowseFirst = new System.Windows.Forms.Button();
 			this.txtFirstFile = new System.Windows.Forms.TextBox();
@@ -48,33 +47,13 @@
 			this.pnlStatus = new System.Windows.Forms.ToolStripStatusLabel();
 			this.pnlAbout = new System.Windows.Forms.ToolStripStatusLabel();
 			this.picAboutIcon = new System.Windows.Forms.PictureBox();
+			this.treeNewChannels = new Syncfusion.Windows.Forms.Tools.TreeViewAdv();
+			this.imlTreeIcons = new System.Windows.Forms.ImageList(this.components);
+			this.chkAutoLaunch = new System.Windows.Forms.CheckBox();
 			this.staStatus.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picAboutIcon)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.treeNewChannels)).BeginInit();
 			this.SuspendLayout();
-			// 
-			// treNewChannels
-			// 
-			this.treNewChannels.BackColor = System.Drawing.Color.White;
-			this.treNewChannels.ImageIndex = 0;
-			this.treNewChannels.ImageList = this.imlTreeIcons;
-			this.treNewChannels.Location = new System.Drawing.Point(12, 107);
-			this.treNewChannels.Name = "treNewChannels";
-			this.treNewChannels.SelectedImageIndex = 0;
-			this.treNewChannels.Size = new System.Drawing.Size(300, 404);
-			this.treNewChannels.TabIndex = 45;
-			this.treNewChannels.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treNewChannels_AfterSelect);
-			// 
-			// imlTreeIcons
-			// 
-			this.imlTreeIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imlTreeIcons.ImageStream")));
-			this.imlTreeIcons.TransparentColor = System.Drawing.Color.Transparent;
-			this.imlTreeIcons.Images.SetKeyName(0, "LORTrack4");
-			this.imlTreeIcons.Images.SetKeyName(1, "LORChannelGroup4");
-			this.imlTreeIcons.Images.SetKeyName(2, "LORRGBChannel4");
-			this.imlTreeIcons.Images.SetKeyName(3, "LORChannel4");
-			this.imlTreeIcons.Images.SetKeyName(4, "FF0000");
-			this.imlTreeIcons.Images.SetKeyName(5, "00FF00");
-			this.imlTreeIcons.Images.SetKeyName(6, "0000FF");
 			// 
 			// label2
 			// 
@@ -194,7 +173,7 @@
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlStatus.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
 			this.pnlStatus.Name = "pnlStatus";
-			this.pnlStatus.Size = new System.Drawing.Size(79, 19);
+			this.pnlStatus.Size = new System.Drawing.Size(212, 19);
 			this.pnlStatus.Spring = true;
 			// 
 			// pnlAbout
@@ -220,15 +199,107 @@
 			this.picAboutIcon.TabStop = false;
 			this.picAboutIcon.Visible = false;
 			// 
+			// treeNewChannels
+			// 
+			this.treeNewChannels.BackColor = System.Drawing.Color.White;
+			treeNodeAdvStyleInfo1.CheckBoxTickThickness = 1;
+			treeNodeAdvStyleInfo1.CheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+			treeNodeAdvStyleInfo1.EnsureDefaultOptionedChild = true;
+			treeNodeAdvStyleInfo1.IntermediateCheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+			treeNodeAdvStyleInfo1.OptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+			treeNodeAdvStyleInfo1.SelectedOptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
+			this.treeNewChannels.BaseStylePairs.AddRange(new Syncfusion.Windows.Forms.Tools.StyleNamePair[] {
+            new Syncfusion.Windows.Forms.Tools.StyleNamePair("Standard", treeNodeAdvStyleInfo1)});
+			this.treeNewChannels.BeforeTouchSize = new System.Drawing.Size(300, 400);
+			// 
+			// 
+			// 
+			this.treeNewChannels.HelpTextControl.BaseThemeName = null;
+			this.treeNewChannels.HelpTextControl.Location = new System.Drawing.Point(0, 0);
+			this.treeNewChannels.HelpTextControl.Name = "";
+			this.treeNewChannels.HelpTextControl.Size = new System.Drawing.Size(392, 112);
+			this.treeNewChannels.HelpTextControl.TabIndex = 0;
+			this.treeNewChannels.HelpTextControl.Visible = true;
+			this.treeNewChannels.InactiveSelectedNodeForeColor = System.Drawing.SystemColors.ControlText;
+			this.treeNewChannels.LeftImageList = this.imlTreeIcons;
+			this.treeNewChannels.Location = new System.Drawing.Point(12, 100);
+			this.treeNewChannels.MetroColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(165)))), ((int)(((byte)(220)))));
+			this.treeNewChannels.Name = "treeNewChannels";
+			this.treeNewChannels.NodeStateImageList = this.imlTreeIcons;
+			this.treeNewChannels.SelectedNodeForeColor = System.Drawing.SystemColors.HighlightText;
+			this.treeNewChannels.Size = new System.Drawing.Size(300, 400);
+			this.treeNewChannels.TabIndex = 131;
+			this.treeNewChannels.ThemeStyle.TreeNodeAdvStyle.CheckBoxTickThickness = 0;
+			this.treeNewChannels.ThemeStyle.TreeNodeAdvStyle.EnsureDefaultOptionedChild = true;
+			// 
+			// 
+			// 
+			this.treeNewChannels.ToolTipControl.BaseThemeName = null;
+			this.treeNewChannels.ToolTipControl.Location = new System.Drawing.Point(0, 0);
+			this.treeNewChannels.ToolTipControl.Name = "";
+			this.treeNewChannels.ToolTipControl.Size = new System.Drawing.Size(392, 112);
+			this.treeNewChannels.ToolTipControl.TabIndex = 0;
+			this.treeNewChannels.ToolTipControl.Visible = true;
+			// 
+			// imlTreeIcons
+			// 
+			this.imlTreeIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imlTreeIcons.ImageStream")));
+			this.imlTreeIcons.TransparentColor = System.Drawing.Color.Transparent;
+			this.imlTreeIcons.Images.SetKeyName(0, "Universe");
+			this.imlTreeIcons.Images.SetKeyName(1, "Controller");
+			this.imlTreeIcons.Images.SetKeyName(2, "Track");
+			this.imlTreeIcons.Images.SetKeyName(3, "Channel");
+			this.imlTreeIcons.Images.SetKeyName(4, "RGBChannel");
+			this.imlTreeIcons.Images.SetKeyName(5, "ChannelGroup");
+			this.imlTreeIcons.Images.SetKeyName(6, "CosmicDevice");
+			this.imlTreeIcons.Images.SetKeyName(7, "#400000");
+			this.imlTreeIcons.Images.SetKeyName(8, "#804040");
+			this.imlTreeIcons.Images.SetKeyName(9, "#FF0000");
+			this.imlTreeIcons.Images.SetKeyName(10, "#00FF00");
+			this.imlTreeIcons.Images.SetKeyName(11, "#0000FF");
+			this.imlTreeIcons.Images.SetKeyName(12, "#FFFFFF");
+			this.imlTreeIcons.Images.SetKeyName(13, "#000000");
+			this.imlTreeIcons.Images.SetKeyName(14, "#8000FF");
+			this.imlTreeIcons.Images.SetKeyName(15, "#FF8000");
+			this.imlTreeIcons.Images.SetKeyName(16, "#FFFF00");
+			this.imlTreeIcons.Images.SetKeyName(17, "#FF80FF");
+			this.imlTreeIcons.Images.SetKeyName(18, "#00FFFF");
+			this.imlTreeIcons.Images.SetKeyName(19, "#000080");
+			this.imlTreeIcons.Images.SetKeyName(20, "#008000");
+			this.imlTreeIcons.Images.SetKeyName(21, "#008080");
+			this.imlTreeIcons.Images.SetKeyName(22, "#8080FF");
+			this.imlTreeIcons.Images.SetKeyName(23, "#400080");
+			this.imlTreeIcons.Images.SetKeyName(24, "#404040");
+			this.imlTreeIcons.Images.SetKeyName(25, "#408080");
+			this.imlTreeIcons.Images.SetKeyName(26, "#800000");
+			this.imlTreeIcons.Images.SetKeyName(27, "#800080");
+			this.imlTreeIcons.Images.SetKeyName(28, "#808000");
+			this.imlTreeIcons.Images.SetKeyName(29, "#808080");
+			this.imlTreeIcons.Images.SetKeyName(30, "#C0C0C0");
+			this.imlTreeIcons.Images.SetKeyName(31, "#FF00FF");
+			// 
+			// chkAutoLaunch
+			// 
+			this.chkAutoLaunch.AutoSize = true;
+			this.chkAutoLaunch.Checked = true;
+			this.chkAutoLaunch.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkAutoLaunch.Location = new System.Drawing.Point(243, 525);
+			this.chkAutoLaunch.Name = "chkAutoLaunch";
+			this.chkAutoLaunch.Size = new System.Drawing.Size(62, 17);
+			this.chkAutoLaunch.TabIndex = 132;
+			this.chkAutoLaunch.Text = "Launch";
+			this.chkAutoLaunch.UseVisualStyleBackColor = true;
+			// 
 			// frmMerge
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(324, 578);
+			this.Controls.Add(this.chkAutoLaunch);
+			this.Controls.Add(this.treeNewChannels);
 			this.Controls.Add(this.staStatus);
 			this.Controls.Add(this.button1);
 			this.Controls.Add(this.btnSave);
-			this.Controls.Add(this.treNewChannels);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.btnBrowseFirst);
 			this.Controls.Add(this.txtFirstFile);
@@ -248,14 +319,13 @@
 			this.staStatus.ResumeLayout(false);
 			this.staStatus.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picAboutIcon)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.treeNewChannels)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
 		}
 
 		#endregion
-
-		private System.Windows.Forms.TreeView treNewChannels;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Button btnBrowseFirst;
 		private System.Windows.Forms.TextBox txtFirstFile;
@@ -264,7 +334,6 @@
 		private System.Windows.Forms.TextBox txtSecondFile;
 		private System.Windows.Forms.OpenFileDialog dlgFileOpen;
 		private System.Windows.Forms.SaveFileDialog dlgFileSave;
-		private System.Windows.Forms.ImageList imlTreeIcons;
 		private System.Windows.Forms.Button btnSave;
 		private System.Windows.Forms.Button button1;
 		private System.Windows.Forms.StatusStrip staStatus;
@@ -273,6 +342,9 @@
 		private System.Windows.Forms.ToolStripStatusLabel pnlStatus;
 		private System.Windows.Forms.ToolStripStatusLabel pnlAbout;
 		private System.Windows.Forms.PictureBox picAboutIcon;
+		private Syncfusion.Windows.Forms.Tools.TreeViewAdv treeNewChannels;
+		private System.Windows.Forms.ImageList imlTreeIcons;
+		private System.Windows.Forms.CheckBox chkAutoLaunch;
 	}
 }
 

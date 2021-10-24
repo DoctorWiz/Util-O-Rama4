@@ -11,14 +11,20 @@
     <Setting Name="WindowState" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="rgbeffects" Type="System.String" Scope="User">
+    <Setting Name="Filergbeffects" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\Users\Me\Documents\xLights\MyShow\xlights_rgbeffects.xml</Value>
     </Setting>
-    <Setting Name="Sequence" Type="System.String" Scope="User">
+    <Setting Name="FileSequence" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\Users\Me\Documents\Light-O-Rama\MySequence.lms</Value>
     </Setting>
-    <Setting Name="Spreadsheet" Type="System.String" Scope="User">
+    <Setting Name="FileDatabase" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\Users\Me\Documents\LOR-to-xLights_Channel_Comparison.csv</Value>
+    </Setting>
+    <Setting Name="FileVisualization" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="FileReport" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

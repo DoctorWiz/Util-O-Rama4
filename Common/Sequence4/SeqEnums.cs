@@ -43,23 +43,39 @@ namespace LORUtils4
 	public enum LORMemberType4
 	{
 		// * MEMBER TYPES *
-		None =					0,
-		Channel =				LORSeqEnums4.MEMBER_Channel,
-		RGBChannel =		LORSeqEnums4.MEMBER_RGBchannel,
-		ChannelGroup =	LORSeqEnums4.MEMBER_ChannelGroup,
-		Cosmic =				LORSeqEnums4.MEMBER_CosmicDevice,
-		Track =					LORSeqEnums4.MEMBER_Track,
-		Timings =				LORSeqEnums4.MEMBER_TimingGrid,
-		Sequence =			LORSeqEnums4.MEMBER_Sequence,
-		RegularOnly =		LORSeqEnums4.MEMBER_Channel & LORSeqEnums4.MEMBER_ChannelGroup & LORSeqEnums4.MEMBER_Track,
-		RGBonly =				LORSeqEnums4.MEMBER_RGBchannel & LORSeqEnums4.MEMBER_ChannelGroup & LORSeqEnums4.MEMBER_Track,
-		GroupsOnly =		LORSeqEnums4.MEMBER_ChannelGroup & LORSeqEnums4.MEMBER_Track,
-		Items =					LORSeqEnums4.MEMBER_Channel & LORSeqEnums4.MEMBER_RGBchannel & LORSeqEnums4.MEMBER_ChannelGroup,
-		FullTrack =			LORSeqEnums4.MEMBER_Channel & LORSeqEnums4.MEMBER_RGBchannel & LORSeqEnums4.MEMBER_ChannelGroup & LORSeqEnums4.MEMBER_Track,
+		None					=	0,
+		Channel				=	LORSeqEnums4.MEMBER_Channel,
+		RGBChannel		= LORSeqEnums4.MEMBER_RGBchannel,
+		ChannelGroup	=	LORSeqEnums4.MEMBER_ChannelGroup,
+		Cosmic				=	LORSeqEnums4.MEMBER_CosmicDevice,
+		Track					=	LORSeqEnums4.MEMBER_Track,
+		Timings				=	LORSeqEnums4.MEMBER_TimingGrid,
+		Sequence			=	LORSeqEnums4.MEMBER_Sequence,
+		RegularOnly		=	LORSeqEnums4.MEMBER_Channel |
+										LORSeqEnums4.MEMBER_ChannelGroup |
+										LORSeqEnums4.MEMBER_Track,
+		RGBonly				=	LORSeqEnums4.MEMBER_RGBchannel |
+										LORSeqEnums4.MEMBER_ChannelGroup |
+										LORSeqEnums4.MEMBER_Track,
+		GroupsOnly		=	LORSeqEnums4.MEMBER_ChannelGroup |
+										LORSeqEnums4.MEMBER_Track,
+		Items					=	LORSeqEnums4.MEMBER_Channel |
+										LORSeqEnums4.MEMBER_RGBchannel |
+										LORSeqEnums4.MEMBER_ChannelGroup |
+										LORSeqEnums4.MEMBER_CosmicDevice,
+		FullTrack			=	LORSeqEnums4.MEMBER_Channel |
+										LORSeqEnums4.MEMBER_RGBchannel |
+										LORSeqEnums4.MEMBER_ChannelGroup |
+										LORSeqEnums4.MEMBER_CosmicDevice |
+										LORSeqEnums4.MEMBER_Track,
 		Visualization	= LORSeqEnums4.MEMBER_Vizualization,
-		VizChannel4 =		LORSeqEnums4.MEMBER_VizChannel,
-		VizObject =			LORSeqEnums4.MEMBER_VizDrawObject
+		VizChannel		=	LORSeqEnums4.MEMBER_VizChannel,
+		VizDrawObject	=	LORSeqEnums4.MEMBER_VizDrawObject,
+		VizItemGroup	= LORSeqEnums4.MEMBER_VizItemGroup
 
+		// What is RegularOnly s'posed to be for?
+		// Should I include CosmicDevice in groups?
+		// What is RGBonly for, and why does it contain groups and tracks?
 	}
 
 	public static class LORSeqEnums4
@@ -75,6 +91,7 @@ namespace LORUtils4
 		public const int MEMBER_Vizualization = 256;
 		public const int MEMBER_VizChannel = 512;
 		public const int MEMBER_VizDrawObject = 1024;
+		public const int MEMBER_VizItemGroup = 2048;
 
 		public const string DEVICElor = "LOR";
 		public const string DEVICEdmx = "DMX Universe";
@@ -98,6 +115,7 @@ namespace LORUtils4
 		public const string OBJchannel = "Channel";
 		public const string OBJrgbChannel = "RGBChannel";
 		public const string OBJchannelGroup = "ChannelGroup";
+		public const string OBJcosmicDevice = "CosmicDevice";
 		public const string OBJtrack = "Track";
 		public const string OBJtimingGrid = "Timings";
 		public const string OBJsequence = "Sequence";
@@ -233,6 +251,14 @@ namespace LORUtils4
 			else if (typeName == OBJtimingGrid)
 			{
 				valueOut = LORMemberType4.Timings;
+			}
+			else if (typeName == OBJsequence)
+			{
+				valueOut = LORMemberType4.Sequence;
+			}
+			else if (typeName == OBJcosmicDevice)
+			{
+				valueOut = LORMemberType4.Cosmic;
 			}
 			return valueOut;
 		}
@@ -375,6 +401,9 @@ namespace LORUtils4
 					break;
 				case LORMemberType4.ChannelGroup:
 					valueOut = OBJchannelGroup;
+					break;
+				case LORMemberType4.Cosmic:
+					valueOut = OBJcosmicDevice;
 					break;
 				case LORMemberType4.Track:
 					valueOut = OBJtrack;

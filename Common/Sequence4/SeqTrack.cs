@@ -357,7 +357,7 @@ namespace LORUtils4
 			if (myParent != null)
 			{
 				LORSequence4 mySeq = (LORSequence4)myParent;
-				iLORMember4 newItem = mySeq.Members.FindBySavedIndex(itemSavedIndex);
+				iLORMember4 newItem = mySeq.AllMembers.FindBySavedIndex(itemSavedIndex);
 				if (newItem != null)
 				{
 					ret = AddItem(newItem);

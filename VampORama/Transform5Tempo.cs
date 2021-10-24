@@ -479,7 +479,7 @@ namespace UtilORama4
 				{
 					if (members[m].MemberType == LORMemberType4.Channel)
 					{
-						string mName = members.Items[m].Name;
+						string mName = Members.Items[m].Name;
 						if (mName.Length > 8)
 						{
 							if (mName.Substring(0, 6) == "Tempo ")

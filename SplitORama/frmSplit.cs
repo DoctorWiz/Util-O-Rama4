@@ -13,10 +13,20 @@ using System.Media;
 using LORUtils4;
 using FileHelper;
 using FuzzyString;
+using Syncfusion.Windows.Forms.Tools;
 
 
 namespace UtilORama4
 {
+	public struct SelectedMember
+	{
+		public LORMemberType4 MemberType;
+		public string Name;
+		public int SavedIndex;
+	}
+
+
+
 	public partial class frmSplit : Form
 	{
 		// I decided not to enum these, may change my mind later
@@ -38,10 +48,10 @@ namespace UtilORama4
 		public bool writeLog = true;
 
 		private string fileSeqCur = "";  // Currently loaded LORSequence4 File
-		private string fileSeqLast = ""; // Last LORSequence4 File Loaded
+		private string fileSequenceLast = ""; // Last LORSequence4 File Loaded
 		private string fileSeqSave = ""; // Last Saved Sequence
 		private string fileSelCur = ""; // Currently loaded Selections File
-		private string fileSelLast = "";
+		private string fileSelectionsLast = "";
 		private LORSequence4 seq = new LORSequence4();
 		private int nodeIndex = lutils.UNDEFINED;
 		private int selectionCount = 0;
@@ -61,13 +71,18 @@ namespace UtilORama4
 		private int gridSelCount = 0;
 		private bool[] gridItem_Checked = null;
 		private bool isWiz = Fyle.IsWizard || Fyle.IsAWizard;
+		private Properties.Settings heartOfTheSun = Properties.Settings.Default;
+		private bool shown = false;
+		private int selectableChannelCount = 0;
 
 		//private List<TreeNode>[] nodesBySI;
 		//private List<List<TreeNode>> nodesBySI = new List<List<TreeNode>>();
-		private List<TreeNode>[] nodesBySI;
+		//private List<TreeNodeAdv>[] nodesBySI;
 
-		private bool firstShown = false;
-		private TreeNode previousNode = null;
+		//private bool firstShown = false;
+		private TreeNodeAdv lastNode = null;
+		private TreeNodeAdv clickedNode = null;
+		//private TreeNodeAdv previousNode = null;
 
 		//private	string[] trackNames = null;
 		//private int[] trackNums = null;
@@ -84,6 +99,11 @@ namespace UtilORama4
 		private Color REGULARBACKGROUND = System.Drawing.Color.White;
 
 		private int treeClicks = 0;
+
+		private List<SelectedMember> memberSelections = new List<SelectedMember>();
+		private List<SelectedMember> unmatchedSelections = new List<SelectedMember>();
+
+
 
 		public frmSplit()
 		{
@@ -127,7 +147,7 @@ namespace UtilORama4
 			ImBusy(true);
 			if (remember)
 			{
-				fileSeqLast = fileSeqCur;
+				fileSequenceLast = fileSeqCur;
 				fileSeqCur = theFile;
 
 				Properties.Settings.Default.FileSeqLast = fileSeqCur;
@@ -137,8 +157,9 @@ namespace UtilORama4
 
 			txtSequenceFile.Text = Fyle.ShortenLongPath(theFile, 80);
 			seq.ReadSequenceFile(theFile);
+			selectableChannelCount = seq.Channels.Count - (seq.RGBchannels.Count * 2);
 			Array.Resize(ref gridItem_Checked, seq.TimingGrids.Count);
-			lutils.TreeFillChannels(treChannels, seq, ref nodesBySI, false, false);
+			TreeUtils.TreeFillChannels(treeChannels, seq, false, false);
 			FillGridList();
 			member = 1;
 			dirtySeq = false;
@@ -155,14 +176,14 @@ namespace UtilORama4
 			}
 			else
 			{
-				if (File.Exists(fileSelLast))
+				if (File.Exists(fileSelectionsLast))
 				{
 					string msg = "Load and apply the last selections file:'";
-					msg += Path.GetFileNameWithoutExtension(fileSelLast) + "'?";
+					msg += Path.GetFileNameWithoutExtension(fileSelectionsLast) + "'?";
 					DialogResult dr2 = MessageBox.Show(this, msg, "Apply Selections?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
 					if (dr2 == DialogResult.Yes)
 					{
-						LoadApplySelections(fileSelLast, true, useFuzzy);
+						LoadApplySelections(fileSelectionsLast, true, useFuzzy);
 					}
 				}
 			}
@@ -225,6 +246,7 @@ namespace UtilORama4
 
 			ImBusy(true);
 			RestoreFormPosition();
+			GetTheControlsFromTheHeartOfTheSun();
 			tempPath = Fyle.GetTempPath();
 			bool valid = false;
 
@@ -250,68 +272,70 @@ namespace UtilORama4
 
 
 
-			if (batchMode)
+			//txtSequenceFile.Text = Fyle.ShortenLongPath(fileSequenceLast, 80);
+			//txtSelectionsFile.Text = Fyle.ShortenLongPath(fileSelectionsLast, 80);
+
+			cmdNothing.Visible = isWiz;
+
+			treeChannels.OwnerDrawNodes = true; // .DrawMode = TreeViewDrawMode.OwnerDrawAll;
+
+			ImBusy(false);
+
+		}
+
+		private void FirstShow()
+		{
+			bool valid = false;
+			if (fileSequenceLast.Length > 6)
 			{
-				//TODO: Batch Mode
+				valid = Fyle.IsValidPath(fileSequenceLast, true);
 			}
-			else
+			if (!valid) fileSequenceLast = lutils.DefaultSequencesPath;
+			if (Fyle.Exists(fileSequenceLast))
 			{
-				if (batch_fileCount == 0)
-				{
-					// No files specified on command line
-					// Is the last file loaded from last run still valid?
-					fileSeqLast = Properties.Settings.Default.FileSeqLast;
-					if (fileSelLast.Length > 6)
-					{
-						valid = Fyle.IsValidPath(fileSeqLast, true);
-					}
-					if (!valid) fileSeqLast = lutils.DefaultSequencesPath;
-					if (File.Exists(fileSeqLast))
-					{
-						//seq.ReadSequenceFile(fileSeqLast);
-						//fileSeqCur = fileSeqLast;
-						//lutils.TreeFillChannels(treChannels, seq, nodesBySI);
-						//txtSequenceFile.Text = Fyle.ShortenLongPath(fileSeqCur, 80);
-					}
-				}
-				else
-				{
-					// 1 and only 1 file specified on command line
-					//seq.ReadSequenceFile(batch_fileList[0]);
-					fileSeqLast = batch_fileList[0];
-					//lutils.TreeFillChannels(treChannels, seq, nodesBySI);
-					Properties.Settings.Default.FileSeqLast = fileSeqLast;
-					Properties.Settings.Default.Save();
-				}
+				LoadSequence(fileSequenceLast, true);
 			}
 
 			if (cmdSelectionsFile.Length > 6)
 			{
-				fileSelLast = cmdSelectionsFile;
-				Properties.Settings.Default.FileSelLast = fileSelLast;
-				Properties.Settings.Default.Save();
+				if (seq != null)
+				{
+					if (seq.Channels.Count > 0)
+					{
+						if (Fyle.Exists(fileSelectionsLast))
+						{
+							string msg = "Load and Apply last selections file '";
+							msg += Path.GetFileNameWithoutExtension(fileSelectionsLast) + "'?";
+							DialogResult dr = MessageBox.Show(this, msg, "Restore previous selections?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+							if (dr == DialogResult.Yes)
+							{
+								LoadApplySelections(fileSelectionsLast, false, false);
+							}
+						}
+					}
+				}
 			}
-			else
-			{
-				fileSelLast = Properties.Settings.Default.FileSelLast;
-			}
-			valid = false;
-			if (fileSelLast.Length > 6)
-			{
-				valid = Fyle.IsValidPath(fileSelLast, true);
-			}
-			if (!valid) fileSelLast = lutils.DefaultChannelConfigsPath;
 
 
-			//txtSequenceFile.Text = Fyle.ShortenLongPath(fileSeqLast, 80);
-			//txtSelectionsFile.Text = Fyle.ShortenLongPath(fileSelLast, 80);
 
-			cmdNothing.Visible = isWiz;
 
-			treChannels.DrawMode = TreeViewDrawMode.OwnerDrawAll;
+		}
 
-			ImBusy(false);
 
+		private void GetTheControlsFromTheHeartOfTheSun()
+		{
+			fileSequenceLast = heartOfTheSun.FileSeqLast;  // Currently loaded LORSequence4 File
+			fileSelectionsLast = heartOfTheSun.FileSelLast;
+			chkAutoLaunch.Checked = heartOfTheSun.AutoLaunch;
+
+	}
+
+	private void SetTheControlsInTheHeartOfTheSun()
+		{
+			heartOfTheSun.FileSelLast = fileSelectionsLast;
+			heartOfTheSun.FileSeqLast = fileSequenceLast;
+			heartOfTheSun.AutoLaunch = chkAutoLaunch.Checked;
+			heartOfTheSun.Save();
 		}
 
 		private void ProcessCommandLine()
@@ -440,7 +464,7 @@ namespace UtilORama4
 
 					txtSequenceFile.Text = Fyle.ShortenLongPath(fileSeqCur, 80);
 					seq.ReadSequenceFile(fileSeqCur);
-					lutils.TreeFillChannels(treChannels, seq, ref nodesBySI, false, false);
+					TreeUtils.TreeFillChannels(treeChannels, seq, false, false);
 					member = 1;
 					dirtySeq = false;
 					ImBusy(false);
@@ -535,7 +559,10 @@ namespace UtilORama4
 			btnSaveSelections.Enabled = stuffToSave;
 			btnSaveSequence.Enabled = stuffToSave;
 			btnClear.Enabled = stuffToSave;
-			lblSelectionCount.Text = selectionCount.ToString() + " / " + gridSelCount.ToString();
+
+			string selText = selectionCount.ToString() + " of " + selectableChannelCount.ToString();
+			selText += " / " + gridSelCount.ToString() + " of " + seq.TimingGrids.Count.ToString();
+			lblSelectionCount.Text = selText;
 
 			return selectionCount;
 		}
@@ -543,7 +570,7 @@ namespace UtilORama4
 
 		private void LoadApplyPreviousSelections()
 		{
-			string lastSelFile = "fileSelLast.ChSel";
+			string lastSelFile = "fileSelectionsLast.ChSel";
 			string file = tempPath + lastSelFile;
 			if (File.Exists(file))
 			{
@@ -762,55 +789,57 @@ namespace UtilORama4
 			}
 		}
 
-		private void treChannels_AfterSelect(object sender, TreeViewEventArgs e)
+		private void treeChannels_AfterSelect(object sender, EventArgs e)
 		{
 			//! Debugging - Why is this event firinging seemingly more than it should?
 			treeClicks++;
 			lblTreeClicks.Text = treeClicks.ToString();
 
-
-			if (previousNode == null)
+			TreeNodeAdv eNode = treeChannels.SelectedNode;
+			if (eNode != null)
 			{
-				previousNode = e.Node;
-				UserSelectNode(e.Node);
-			}
-			else
-			{
-				if (previousNode != e.Node)
+				if (lastNode == null)
 				{
-					previousNode = e.Node;
-					UserSelectNode(e.Node);
+					lastNode = eNode;
+					//UserSelectNode(eNode);
 				}
-			}
+				else
+				{
+					if (lastNode != eNode)
+					{
+						lastNode = eNode;
+						//UserSelectNode(eNode);
+					}
+				}
 
-			if (e.Node.Tag != null)
-			{
-				iLORMember4 m = (iLORMember4)e.Node.Tag;
-				if (m.MemberType == LORMemberType4.Channel)
+				if (eNode.Tag != null)
 				{
-					LORChannel4 ch = (LORChannel4)m;
-					Bitmap bmp = lutils.RenderEffects(ch, 0, ch.Centiseconds, 300, 20, true);
-					picPreview.Visible = true;
-					picPreview.Image = bmp;
-					//picPreview.Refresh();
-				}
-				if (m.MemberType == LORMemberType4.RGBChannel)
-				{
-					LORRGBChannel4 rgb = (LORRGBChannel4)m;
-					Bitmap bmp = lutils.RenderEffects(rgb, 0, seq.Centiseconds, 300, 21, false);
-					picPreview.Image = bmp;
-					picPreview.Visible = true;
-				}
-				if ((m.MemberType == LORMemberType4.ChannelGroup) || (m.MemberType == LORMemberType4.Track))
-				{
-					picPreview.Visible = false;
+					iLORMember4 m = (iLORMember4)eNode.Tag;
+					if (m.MemberType == LORMemberType4.Channel)
+					{
+						LORChannel4 ch = (LORChannel4)m;
+						Bitmap bmp = lutils.RenderEffects(ch, 0, ch.Centiseconds, 300, 20, true);
+						picPreview.Visible = true;
+						picPreview.Image = bmp;
+						//picPreview.Refresh();
+					}
+					if (m.MemberType == LORMemberType4.RGBChannel)
+					{
+						LORRGBChannel4 rgb = (LORRGBChannel4)m;
+						Bitmap bmp = lutils.RenderEffects(rgb, 0, seq.Centiseconds, 300, 21, false);
+						picPreview.Image = bmp;
+						picPreview.Visible = true;
+					}
+					if ((m.MemberType == LORMemberType4.ChannelGroup) || (m.MemberType == LORMemberType4.Track))
+					{
+						picPreview.Visible = false;
+					}
 				}
 			}
-
 
 		}
 
-		private void UserSelectNode(TreeNode nOde)
+		private void UserSelectNode(TreeNodeAdv nOde)
 		{ 
 			iLORMember4 m = null;
 			bool ignoreRGB = false;
@@ -818,14 +847,19 @@ namespace UtilORama4
 			string foo = nOde.Text;  //! FOR DEBUGGING, REMOVE LATER
 			if (nOde.Parent != null)
 			{
-				iLORMember4 nt = (iLORMember4)nOde.Parent.Tag;
-				if (nt.MemberType == LORMemberType4.RGBChannel)
-				{
-					// If the node clicked on has a parent,
-					// and that parent is an LORRGBChannel4,
-					// Then this is an RGB sub channel,
-					// So IGNORE this click
-					ignoreRGB = true;
+				string parentName = nOde.Parent.Text;
+				// If clicking on a base node (track) the parent will be the tree and have no valid tag
+				if (nOde.Parent.Tag != null)
+				{ 
+					iLORMember4 nt = (iLORMember4)nOde.Parent.Tag;
+					if (nt.MemberType == LORMemberType4.RGBChannel)
+					{
+						// If the node clicked on has a parent,
+						// and that parent is an LORRGBChannel4,
+						// Then this is an RGB sub channel,
+						// So IGNORE this click
+						ignoreRGB = true;
+					}
 				}
 			}
 			if (!ignoreRGB)
@@ -859,294 +893,32 @@ namespace UtilORama4
 				}
 			}
 
-			treChannels.SelectedNode = null;
+			treeChannels.SelectedNode = null;
 			//txtSelectionsFile.Focus();
 
 		}
 
-		void SelectNode(TreeNode nOde, bool select)
+		void SelectNode(TreeNodeAdv nOde, bool select)
 		{
-			// Set this one
+			// Note: "Select" in this case only refers to clicking on it and highlighting it.
+			// does not refer to Checking or unchecking the box, for that see:
 			iLORMember4 m = (iLORMember4)nOde.Tag;
-			m.Selected = select;
-			HighlightNodeBackground(nOde, select);
-			//SelectChannel(ci.SavedIndex, select);
-			SelectChannel(nOde, select);
-			if (select)
-			{
-				IncrementSelectionCount(1);
-			}
-			else
-			{
-				IncrementSelectionCount(-1);
-			}
-			if (nOde.Nodes.Count > 0)
-			{
-				// And all seq.Members
-				SelectChildNodes(nOde.Nodes, select);
-			}
-			// and now parents
-			TreeNode pArent = nOde.Parent;
-			while (pArent != null)
-			{
-				iLORMember4 pm = (iLORMember4)pArent.Tag;
-				if (select)
-				{
-					// If turning on the select, turn on each parent
-					if (pm.Selected != select)
-					{
-						pm.Selected = select;
-						HighlightNodeBackground(pArent, select);
-						IncrementSelectionCount(1);
-					}
-				}
-				else
-				{
-					bool otherMembers = HasSelectedMembers(pArent);
-					if (otherMembers)
-					{
-						// Has other seq.Members that are still selected
-						// therefore, do not unhighlight it
-					}
-					else
-					{
-						// Has no remaining seq.Members selected
-						// OK to unhighlight it
-						if (pm.Selected != select)
-						{
-							pm.Selected = false;
-							HighlightNodeBackground(pArent, select);
-							IncrementSelectionCount(-1);
-						}
-					}
-				}
-				pArent = pArent.Parent;
-			}
+			TreeUtils.HiglightMemberBackground(m, select);
 		} // end highlight node
 
-		void SelectChildNodes(TreeNodeCollection nOdes, bool select)
-		{
-			foreach (TreeNode nOde in nOdes)
-			{
-				iLORMember4 m = (iLORMember4)nOde.Tag;
-				// Highlight all seq.Members
-				if (m.Selected != select)
-				{
-					m.Selected = select;
-					HighlightNodeBackground(nOde, select);
-					if (select)
-					{
-						IncrementSelectionCount(1);
-					}
-					else
-					{
-						IncrementSelectionCount(-1);
-					}
-					if (nOde.Nodes.Count > 0)
-					{
-						SelectChildNodes(nOde.Nodes, select);
-					}
-				}
-			}
-		} // end highlight child nodes
-
-		void SelectChannel(TreeNode nOde, bool select)
-		{
-			iLORMember4 m = (iLORMember4)nOde.Tag;
-			List<TreeNode> chNodes = nodesBySI[m.SavedIndex];
-			int selCount = 0;
-			bool selSome = false;
-
-			for (int cx=0; cx< chNodes.Count; cx++)
-			{
-				iLORMember4 m2 = (iLORMember4)chNodes[cx].Tag;
-				if (m2.Selected)
-				{
-					selCount++;
-				}
-			}
-			if (selCount > 0) selSome = true; else selSome = false;
-			//selSome = (selCount > 0);  //? Why doesn't this work?
-			for (int cx = 0; cx < chNodes.Count; cx++)
-			{
-				ItalisizeNode(chNodes[cx], selSome);
-			}
-		}
-
-
-		void SelectNodes(int nodeSI, bool select, bool andMembers)
-		{
-			iLORMember4 m;
-			List<TreeNode> qlist;
-
-			//if (nodesBySI[nodeSI]!= null)
-			if (nodeSI == lutils.UNDEFINED)
-			{
-				// WHY?
-				int xx = 1;
-			}
-			else
-			{
-				qlist = nodesBySI[nodeSI];
-				if (qlist.Count > 0)
-				{
-					//if (nodesBySI[nodeSI].Length > 0)
-					//if (nodesBySI[nodeSI])
-					//{
-					//foreach (TreeNode nOde in nodesBySI[nodeSI])
-					for (int q = 0; q < nodesBySI[nodeSI].Count; q++)
-					{
-						TreeNode nOde = nodesBySI[nodeSI][q];
-						m = (iLORMember4)nOde.Tag;
-						if (select)
-						{
-							if (!m.Selected) // sanity check, should not be checked
-							{
-								m.Selected = true;
-								IncrementSelectionCount(1);
-								nOde.ForeColor = Color.Yellow;
-								nOde.BackColor = Color.DarkBlue;
-								if (andMembers)
-								{
-									if (nOde.Nodes.Count > 0)
-									{
-										foreach (TreeNode childNode in nOde.Nodes)
-										{
-											m = (iLORMember4)childNode.Tag;
-											SelectNodes(m.SavedIndex, select, true);
-										}
-									}
-								}
-								if (nOde.Parent != null)
-								{
-									m = (iLORMember4)nOde.Parent.Tag;
-									SelectNodes(m.SavedIndex, select, false);
-								}
-							} // node.!checked
-						}
-						else // !select
-						{
-							if (m.Selected) // sanity check, should be checked
-							{
-								m.Selected = false;
-								IncrementSelectionCount(-1);
-								nOde.ForeColor = SystemColors.WindowText;
-								nOde.BackColor = SystemColors.Window;
-								if (andMembers)
-								{
-									if (nOde.Nodes.Count > 0)
-									{
-										foreach (TreeNode childNode in nOde.Nodes)
-										{
-											m = (iLORMember4)childNode.Tag;
-											SelectNodes(m.SavedIndex, select, true);
-										}
-									}
-								}
-								if (nOde.Parent != null)
-								{
-									if (!HasSelectedMembers(nOde.Parent))
-									{
-										m = (iLORMember4)nOde.Parent.Tag;
-										SelectNodes(m.SavedIndex, select, false);
-									}
-								}
-							} // node.checked
-						} // if (select)
-					} // foreach (TreeNode nOde in nodesBySI[nodeSI])
-						//}
-				} // nodesBySI[nodeSI].Count > 0
-				else
-				{
-					// nodesBySI[nodeSI].Count = 0
-					//? Why Not?
-					int x = 1;
-				}
-			}
-		} // end SelectNode
-
-		private bool HasSelectedMembers(TreeNode nOde)
-		{
-			bool ret = false;
-			if (nOde.Nodes.Count > 0)
-			{
-				foreach (TreeNode childNode in nOde.Nodes)
-				{
-					iLORMember4 m = (iLORMember4)childNode.Tag;
-					ret = m.Selected;
-					if (ret)
-					{
-						break;
-					}
-				}
-			}
-			return ret;
-		} // end HasSelectedMembers
-
-		#region Node Appearnce
-		private void ItalisizeNode(TreeNode nOde, bool italisize)
-		{
-			if (italisize)
-			{
-				nOde.NodeFont = new Font(treChannels.Font, FontStyle.Italic);
-							}
-			else
-			{
-				nOde.NodeFont = new Font(treChannels.Font, FontStyle.Regular);
-			}
-		}
-		private void EmboldenNode(TreeNode nOde, bool embolden)
-		{
-			if (embolden)
-			{
-				nOde.NodeFont = new Font(nOde.NodeFont, FontStyle.Bold);
-			}
-			else
-			{
-				nOde.NodeFont = new Font(nOde.NodeFont, FontStyle.Regular);
-			}
-		}
-		private void HighlightNodeBackground(TreeNode nOde, bool highlight)
-		{
-			if (highlight)
-			{
-				nOde.BackColor = HIGHLIGHTBACKGROUND;
-			}
-			else
-			{
-				nOde.BackColor = REGULARBACKGROUND;
-			}
-		}
-		private void ColorNodeText(TreeNode nOde, bool colorize)
-		{
-			if (colorize)
-			{
-				nOde.ForeColor = COLOREDTEXT;
-			}
-			else
-			{
-				nOde.ForeColor = REGULARTEXT;
-			}
-		}
-		#endregion
-
-		private void treChannels_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
-		{
-			//UserSelectNode(e.Node);
-		}
 
 		private void btnInvert_Click(object sender, EventArgs e)
 		{
 			//this.Cursor = Cursors.WaitCursor;
 			ImBusy(true);
-			InvertSelections(treChannels.Nodes);
+			InvertSelections(treeChannels.Nodes);
 			//this.Cursor = Cursors.Default;
 			ImBusy(false);
 		}
 
-		void InvertSelections(TreeNodeCollection nOdes)
+		void InvertSelections(TreeNodeAdvCollection nOdes)
 		{ 
-			foreach (TreeNode nOde in nOdes)
+			foreach (TreeNodeAdv nOde in nOdes)
 			{
 				iLORMember4 m = (iLORMember4)nOde.Tag;
 				if (m.MemberType == LORMemberType4.Channel)
@@ -1160,104 +932,7 @@ namespace UtilORama4
 			} // foreach nodes
 		} // end Invert Selection
 
-		private void CopySelectionsToSequence()
-		{
-			/*
-			// Clear any previous selections
-			for (int tr=0; tr< seq.Tracks.Count; tr++)
-			{
-				seq.Tracks[tr].Selected = false;
-			}
-			for (int tg = 0; tg < seq.TimingGrids.Count; tg++)
-			{
-				seq.TimingGrids[tg].Selected = false;
-			}
-			for (int chg=0; chg<seq.ChannelGroups.Count; chg++)
-			{
-				seq.ChannelGroups[chg].Selected = false;
-			}
-			for (int rch=0; rch< seq.RGBchannels.Count; rch++)
-			{
-				seq.RGBchannels[rch].Selected = false;
-			}
-			for (int ch=0; ch< seq.Channels.Count; ch++)
-			{
-				seq.Channels[ch].Selected = false;
-			}
-			for (int tg=0; tg<seq.TimingGrids.Count; tg++)
-			{
-				seq.TimingGrids[tg].Selected = false;
-			}
-
-			///*
-			// Select only timing grids used by selected tracks
-			foreach (TreeNode nOde in treChannels.Nodes)
-			{
-				if (nOde.Checked)
-				{
-					iLORMember4 nodeTag = (iLORMember4)nOde.Tag;
-					if (nodeTag.MemberType == LORMemberType4.Track)  // Just a sanity check, all first level nodes should be tracks
-					{
-						LORTrack4 t = seq.Tracks[nodeTag.Index];
-						//int tgIdx = t.timingGridObjIndex;
-						//for (int tg = 0; tg < seq.TimingGrids.Count; tg++)
-						//{
-						//	if (seq.TimingGrids[tg].saveID == tgIdx)
-						//	{
-						//		seq.TimingGrids[tg].Selected = true;
-						//	}
-						seq.TimingGrids[t.timingGrid.Index].Selected = true;
-						//}
-					}
-				}
-			}
-			// * /
-
-			//CopyNodeSelectionsToSequence(treChannels.Nodes);
-			*/
-		} // end CopySelectionToSequence
-
-		private void CopyNodeSelectionsToSequence(TreeNodeCollection nOdes)
-		{
-			/*
-			iLORMember4 nodeTag;
-
-			for (int i = 0; i < gridItem_Checked.Length; i++)
-			{
-				seq.TimingGrids[i].Selected = gridItem_Checked[i];
-			}
-
-			foreach (TreeNode nOde in nOdes)
-			{
-				if (nOde.Checked)
-				{
-					nodeTag = (iLORMember4)nOde.Tag;
-					if (nodeTag.MemberType == LORMemberType4.Track)
-					{
-						seq.Tracks[nodeTag.Index].Selected = nOde.Checked;
-					}
-					if (nodeTag.MemberType == LORMemberType4.Channel)
-					{
-						seq.Channels[nodeTag.Index].Selected = nOde.Checked;
-					}
-					if (nodeTag.MemberType == LORMemberType4.RGBChannel)
-					{
-						seq.RGBchannels[nodeTag.Index].Selected = nOde.Checked;
-					}
-					if (nodeTag.MemberType == LORMemberType4.ChannelGroup)
-					{
-						seq.ChannelGroups[nodeTag.Index].Selected = nOde.Checked;
-					}
-					if (nOde.Nodes.Count > 0)
-					{
-						CopyNodeSelectionsToSequence(nOde.Nodes);
-					}
-				} // loop thru nodes
-			}
-			*/
-
-
-		} // end CopyNodeSelectionToSequence
+		
 
 		private void btnSave_Click(object sender, EventArgs e)
 		{
@@ -1293,12 +968,12 @@ namespace UtilORama4
 			}
 			if (initDir.Length < 5)
 			{
-				if (fileSeqLast.Length > 5)
+				if (fileSequenceLast.Length > 5)
 				{
-					if (Directory.Exists(Path.GetDirectoryName(fileSeqLast)))
+					if (Directory.Exists(Path.GetDirectoryName(fileSequenceLast)))
 					{
-						initDir = Path.GetDirectoryName(fileSeqLast);
-						initFile = Path.GetFileNameWithoutExtension(fileSeqLast) + " Part " + member.ToString(); // + ext;
+						initDir = Path.GetDirectoryName(fileSequenceLast);
+						initFile = Path.GetFileNameWithoutExtension(fileSequenceLast) + " Part " + member.ToString(); // + ext;
 					}
 				}
 			}
@@ -1373,7 +1048,6 @@ namespace UtilORama4
 		private void SaveSequence(string newFilename)
 		{
 			ImBusy(true);
-			CopySelectionsToSequence();
 			//if (saveFormat == SAVEmixedDisplay)
 			//{
 				// normal default when not testing
@@ -1398,9 +1072,6 @@ namespace UtilORama4
 
 		private void btnSaveSelections_Click(object sender, EventArgs e)
 		{
-			dlgFileSave.DefaultExt = "ChSel";
-			dlgFileSave.Filter = "LORChannel4 Selections|*.ChSel";
-			dlgFileSave.FilterIndex = 0;
 			string initDir = "";
 			string initFile = "";
 			if (fileSelCur.Length > 4)
@@ -1417,11 +1088,11 @@ namespace UtilORama4
 				{
 					if (File.Exists(fileSeqCur))
 					{
-						initFile = Path.GetFileNameWithoutExtension(fileSeqCur) +"LORChannel4 Selections";
+						initFile = Path.GetFileNameWithoutExtension(fileSeqCur) + lutils.EXT_CHLIST;
 					}
 					if (initFile.Length < 5)
 					{
-						initFile = Path.GetFileNameWithoutExtension(fileSeqLast) + "LORChannel4 Selections";
+						initFile = Path.GetFileNameWithoutExtension(fileSequenceLast) + lutils.EXT_CHLIST;
 					}
 				}
 			}
@@ -1433,7 +1104,9 @@ namespace UtilORama4
 			dlgFileSave.InitialDirectory = initDir;
 			dlgFileSave.OverwritePrompt = false;
 			dlgFileSave.CheckPathExists = true;
-			dlgFileSave.DefaultExt = "ChSel";
+			dlgFileSave.DefaultExt = lutils.EXT_CHLIST;
+			dlgFileSave.Filter = lutils.FILE_CHLIST;
+			dlgFileSave.FilterIndex = 0;
 			dlgFileSave.SupportMultiDottedExtensions = true;
 			dlgFileSave.ValidateNames = true;
 			dlgFileSave.Title = "Save Channel Selections As...";
@@ -1477,52 +1150,106 @@ namespace UtilORama4
 			string lineOut = ""; // line to be written out, gets modified if necessary
 													 //int pos1 = lutils.UNDEFINED; // positions of certain key text in the line
 
-			SaveSelectionsToSelections(writer, treChannels.Nodes);
+			lineOut = lutils.FILEDESCR_CHLIST;
+			writer.WriteLine(lineOut);
+			lineOut = lutils.CSVHEAD_CHLIST;
+			writer.WriteLine(lineOut);
+
+
+			//TODO: Change LORSequence4 class so that .Members contains only its direct descendants- which are
+			//TODO:   tracks- to be consistant with ChannelGroups, Cosmic Devices, and Tracks.
+			//TODO:     ALL members of the sequence (including grandchildren and descendants) are now in .AllMembers
+			//TODO:       This change is in progress and partially complete.
+			//TODO: SaveSelectedChannels(writer, seq.Members);
+			foreach(LORTrack4 track in seq.Tracks)
+			{
+				if (track.Selected)
+				{
+					SaveSelectedMember(writer, track);
+				}
+				SaveSelectedMembers(writer, track.Members);
+			}
 
 			writer.Close();
 			dirtySel = false;
 			return ret;
 		} // end SaveSelections
 
-		private void SaveSelectionsToSelections(StreamWriter writer, TreeNodeCollection nOdes)
+		private void SaveSelectedMembers(StreamWriter writer, LORMembership4 members)
 		{
 			string lineOut = "";
-			iLORMember4 m;
-			foreach (TreeNode nOde in nOdes)
+			foreach (iLORMember4 member in members)
 			{
-				m = (iLORMember4)nOde.Tag;
-				if (m.Selected)
+				LORMemberType4 type = member.MemberType;
+				if (member.Selected)
 				{
-					LORMemberType4 type;
-					type = m.MemberType;
-					lineOut = m.MemberType.ToString() + DELIM1;
-					lineOut += m.Name + DELIM1;
-					lineOut += m.SavedIndex.ToString() + DELIM1;
-					lineOut += m.Index.ToString() + DELIM1;
 					if (type == LORMemberType4.Channel)
 					{
-						lineOut += seq.Channels[m.Index].output.ToString();
+						SaveSelectedMember(writer, member);
 					}
 					else
 					{
-						lineOut += "None" + DELIM4 + "-1" + DELIM4 + "-1" + DELIM4 + "-1"; // + DELIM2;
-					}
-
-					writer.WriteLine(lineOut);
-
-					if (nOde.Nodes.Count > 0)
+						if (type == LORMemberType4.RGBChannel)
+						{
+							SaveSelectedMember(writer, member);
+							LORRGBChannel4 rgbch = (LORRGBChannel4)member;
+							SaveSelectedMember(writer, rgbch.redChannel);
+							SaveSelectedMember(writer, rgbch.grnChannel);
+							SaveSelectedMember(writer, rgbch.bluChannel);
+						} // end is a RGB channel
+					} // End is a channel, or not
+				} // End member is selected
+				if (type == LORMemberType4.ChannelGroup)
+				{
+					if (member.Selected)
 					{
-						SaveSelectionsToSelections(writer, nOde.Nodes);
-					} // has seq.Members
-				} // node checked
-			} // loop thru nodes
-		} // end SaveSelectionsToSelections
+						SaveSelectedMember(writer, member);
+					}
+					LORChannelGroup4 group = (LORChannelGroup4)member;
+					SaveSelectedMembers(writer, group.Members);
+				}
+				else
+				{
+					if (type == LORMemberType4.Cosmic)
+					{
+						if (member.Selected)
+						{
+							SaveSelectedMember(writer, member);
+						}
+						LORCosmic4 cosmic = (LORCosmic4)member;
+						SaveSelectedMembers(writer, cosmic.Members);
+					} // end is a cosmic device
+				} // End is a channel group
+			} // end foreach member loop
+		}
+
+		private void SaveSelectedMember(StreamWriter writer, iLORMember4 member)
+		{
+			string lineOut = "";
+			if (member.Selected)
+			{
+				LORMemberType4 type = member.MemberType;
+				lineOut = type.ToString() + Fyle.COMMA;
+				lineOut += "\"" + lutils.XMLifyName(member.Name) + "\",";
+				lineOut += member.SavedIndex.ToString(); // + Fyle.DELIM6;
+				//lineOut += member.Index.ToString() + Fyle.DELIM6;
+				if (type == LORMemberType4.Channel)
+				{
+					//lineOut += seq.Channels[member.Index].output.ToString();
+				}
+				else
+				{
+					//lineOut += "None" + DELIM4 + "-1" + DELIM4 + "-1" + DELIM4 + "-1"; // + DELIM2;
+				}
+				writer.WriteLine(lineOut);
+			}
+		}
+
 
 		private void btnBrowseSelections_Click(object sender, EventArgs e)
 		{
-			dlgFileOpen.DefaultExt = "ChSel";
-			dlgFileOpen.Filter = "LORChannel4 Selections|*.ChSel";
-			dlgFileOpen.DefaultExt = "ChSelections";
+			dlgFileOpen.DefaultExt = lutils.EXT_CHLIST; // *.ChList
+			dlgFileOpen.Filter = lutils.FILE_CHLIST; // LORChannel4 Selections|*.ChSel
 			dlgFileOpen.FilterIndex = 0;
 			dlgFileOpen.CheckPathExists = true;
 			dlgFileOpen.SupportMultiDottedExtensions = true;
@@ -1612,10 +1339,11 @@ namespace UtilORama4
 
 		private int LoadApplySelections(string selFile, bool remember, bool fuzzy)
 		{
+			int noFind = 0;
 			ImBusy(true);
 			if (remember)
 			{
-				fileSelLast = fileSelCur;
+				fileSelectionsLast = fileSelCur;
 				fileSelCur = selFile;
 				txtSelectionsFile.Text = Path.GetFileName(fileSelCur);
 				Properties.Settings.Default.FileSelLast = fileSelCur;
@@ -1623,210 +1351,117 @@ namespace UtilORama4
 				dirtySel = false;
 			}
 			//btnSaveSelections.Enabled = dirtySelections;
-			int noFind = 0;
 
 			if (seq.Tracks.Count > 0)
 			{
 				int lineCount = 0;
 				string lineIn = ""; // line to be read in, gets parsed as requited
 				StreamReader reader;
-
-				//if (fuzzy)
-				//{
-				// get linecount for progress bar
 				reader = new StreamReader(selFile);
-				while ((lineIn = reader.ReadLine()) != null)
+				// Read (and throw away) the first line containing the file description
+				if (!reader.EndOfStream) lineIn = reader.ReadLine();
+				if (lineIn == lutils.FILEDESCR_CHLIST)
 				{
-					lineCount++;
-				}
-				reader.Close();
-				pnlProgress.Maximum = lineCount;
-				pnlProgress.Value = 0;
-				//}
-
-
-				//////////////////////////////////////////////
-				// PART ONE -	build sorted arrays of names //
-				////////////////////////////////////////////
-				FillNameLists();
-				seq.Members.ReIndex();
-				//Array.Sort(trackNames, trackNums);
-				//Array.Sort(channelGroupNames, channelGroupSIs);
-				//Array.Sort(rgbChannelNames, rgbChannelSIs);
-				//Array.Sort(channelNames, channelSIs);
-
-				//////////////////////////////////////////////
-				// PART TWO -	search sorted arrays of names //
-				////////////////////////////////////////////
-				int foundSI = lutils.UNDEFINED;
-				int foundIdx = lutils.UNDEFINED;
-				reader = new StreamReader(selFile);
-				string[] parts = null;
-				//string type = "";
-				LORMemberType4 objType = LORMemberType4.None;
-				string objName = "";
-				string output = "";
-				string prevSelection = "";
-				string[] childNodeNames = null;
-				TreeNode foundNode = null;
-				TreeNode prevNOde = null;
-				string prevParentText = "";
-				ClearSelections(treChannels.Nodes);
-
-				while ((lineIn = reader.ReadLine()) != null)
-				{
-					if (lineIn.Length > 7)
+					// Read (and throw away) the second line containing the file description
+					if (!reader.EndOfStream) lineIn = reader.ReadLine();
+					// Clear/Reset list of failed matches
+					unmatchedSelections = new List<SelectedMember>();
+					ClearSelections(treeChannels.Nodes);
+					// Now read the rest of the lines until EOF containing selections
+					while ((lineIn = reader.ReadLine()) != null)
 					{
-						parts = lineIn.Split(DELIM1);
-						if (parts.Length == 5)
+						lineCount++;
+						string[] parts = lineIn.Split(',');
+						if (parts.Length > 2)
 						{
-							objType = (LORMemberType4)Enum.Parse(typeof(LORMemberType4), parts[0]);
-							objName = parts[1];
-							foundNode = null;
-							foundIdx = lutils.UNDEFINED;
-							if (objType == LORMemberType4.Track)
+							// start by getting the type
+							string theType = parts[0];
+							LORMemberType4 itsType = LORSeqEnums4.EnumMemberType(theType);
+							// All previous selections were saved to the file including tracks and groups
+							// But we are only going to reselect regular channels, RGB channels, cosmic devices and timing grids
+							// because contents and submembers of tracks and groups may be different
+							if ((itsType == LORMemberType4.Channel) ||
+									(itsType == LORMemberType4.RGBChannel) ||
+									(itsType == LORMemberType4.Cosmic) ||
+									(itsType == LORMemberType4.Timings))
 							{
-								foundNode = FindNodeByName(treChannels.Nodes, objName, LORMemberType4.Track, fuzzy);
-								prevNOde = foundNode;
-							}
-							else
-							{
-								// else not a track
-								if (prevNOde != null)
-								{
-									if (prevNOde.Nodes.Count > 0)
-									{
-										// check the seq.Members of the previous node
-										foundNode = FindNodeByName(prevNOde.Nodes, objName, objType, fuzzy);
-									}
-									if (foundNode == null)
-									{
-										// not a child of the previous node
-										// check it's siblings
-										TreeNode prevParent = prevNOde.Parent;
-										while ((foundNode == null) && (prevParent != null))
-										{
-											if (prevParent.Text.CompareTo(prevParentText) == 0)
-											{
-												int xyz = 1;
-											}
-											prevParentText = prevParent.Text;
-											#if DEBUG
-												string dbgmsg = "Searching seq.Members of '" + prevParent.Text + "' for '" + objName + "'";
-												Console.WriteLine(dbgmsg);
-											#endif
-											foundNode = FindNodeByName(prevParent.Nodes, objName, objType, fuzzy);
-											if (foundNode == null)
-											{
-												//recurse backwards up the tree
-												prevParent = prevParent.Parent;
-											}
-										}
-									}
-									if (foundNode != null)
-									{
-										prevNOde = foundNode;
-									}
-									else
-									{
-										//TODO: Log not found
-										noFind++;
-										#if DEBUG
-											string foooo = objName;
-											System.Diagnostics.Debugger.Break();
-										#endif
-									}
-								} // previous node is not null
-							} // end if channel
-						} // line split into exactly 4 parts
-					} // end if length > 7
-					pnlProgress.Value = lineCount;
-					staStatus.Refresh();
-				} // end while more lines
+								string theName = parts[1];
+								string itsName = lutils.HumanizeName(theName);
+								string theSI = parts[2];
+								int itsSI = lutils.UNDEFINED;
+								int.TryParse(theSI, out itsSI);
+								iLORMember4 member = null;
 
+								// Try to find it by SavedIndex first since that's the fastest
+								// first, make sure SavedIndex isn't undefined, and within range
+								if ((itsSI >= 0) && (itsSI <= seq.AllMembers.HighestSavedIndex))
+								{
+									// Did we fine it?
+									member = seq.AllMembers.BySavedIndex[itsSI];
+									// did we get the type from the file, and does it match
+									if (member != null)
+									{
+										if (itsType == member.MemberType)
+										{
+											if (itsName == member.Name)
+											{
+												// Yay!  We got it!
+											}
+											else
+											{
+												// Wront one, nullify the previous find
+												member = null;
+											} // End name matches, or not
+										}
+										else
+										{
+											// does not match, so nullify our previous find
+											member = null;
+										} // End type matches, or not
+									} // end found SOMETHING by saved index
+								} // End saved index in range
+								if (member == null)
+								{
+									// Couldn't find it by SavedIndex?  No big deal and common
+									// problem.  Look for it the slow way, by name
+									member = seq.AllMembers.Find(itsName, itsType, false);
+								}
+								if (member == null)
+								{
+									// Still don't have it, oh well, sigh.  Keep track of failed matches
+									SelectedMember sm = new SelectedMember();
+									sm.MemberType = itsType;
+									sm.Name = itsName;
+									sm.SavedIndex = itsSI;
+									unmatchedSelections.Add(sm);
+								}
+								else
+								{
+									TreeUtils.SelectMember(member, true);
+								}
+							} // End channel, RGB, cosmic, or timing
+						} // End line has 3 or more parts (divided by commas)
+					} // End while reading more lines loop
+					// Rebuild the tree
+					//? is the the best way?  some other refresh possibly better?
+					TreeUtils.TreeFillChannels(treeChannels, seq, false, false);
+				} // end first line of file has proper descriptor
 				reader.Close();
-			}
+			} // End sequence has tracks
 			ImBusy(false);
 			return noFind;
 
 		} // end LoadApplySelections
 
-		private TreeNode FindNodeByName(TreeNodeCollection nOdes, string name, LORMemberType4 tableType, bool fuzzy)
-		{
-
-
-			TreeNode ret = null;
-			int foundIdx = lutils.UNDEFINED;
-			string[] childNodeNames = null;
-			Array.Resize(ref childNodeNames, nOdes.Count);
-			for (int n = 0; n < nOdes.Count; n++)
-			{
-				if (nOdes[n].Text.CompareTo(name) == 0)
-				{
-					iLORMember4 m = (iLORMember4)nOdes[n].Tag;
-					if (m.MemberType == tableType)
-					{
-						foundIdx = n;
-						m.Selected = true;
-						IncrementSelectionCount(1);
-						HighlightNodeBackground(nOdes[n], true);
-						SelectChannel(nOdes[n], true);
-						//prevNOde = treChannels.Nodes[n];
-						ret = nOdes[n];
-						n = nOdes.Count; // break out
-					}
-				}
-				else
-				{
-					childNodeNames[n] = nOdes[n].Text;
-				} // end found, or not
-			} // end loop thru child nodes
-			if (foundIdx == lutils.UNDEFINED)
-			{
-				if (fuzzy)
-				{
-					//foundIdx = lutils.FuzzyFindName(childNodeNames, name, minPrematchScore/100, minFinalMatchScore/100);
-					//foundIdx = FindByName(name, seq.Members, LORMemberType4.Items, prematchAlgorithm, minPrematchScore, finalAlgorithms, minFinalMatchScore, true);
-					iLORMember4 found = FindByName(name, seq.Members, tableType, prematchAlgorithm, minPrematchScore, finalAlgorithms, minFinalMatchScore, true);
-					if (found != null) foundIdx = found.SavedIndex;
-					if (foundIdx > lutils.UNDEFINED)
-					{
-						iLORMember4 m = (iLORMember4)nOdes[foundIdx].Tag;
-						//iLORMember4 nodeTag = (iLORMember4)nodesBySI[foundIdx];
-
-						if (m.MemberType == tableType)
-						{
-							m.Selected = true;
-							IncrementSelectionCount(1);
-							HighlightNodeBackground(nOdes[foundIdx], true);
-							SelectChannel(nOdes[foundIdx], true);
-							//prevNOde = nOdes[foundIdx];
-						}
-						else
-						{
-							foundIdx = lutils.UNDEFINED;
-						}
-					}
-				} // end use Fuzzu
-			} // exact match found
-			if (foundIdx == lutils.UNDEFINED)
-			{
-				// STILL not found
-				//prevNOde = null;
-				//TODO Log LORTrack4 Not Found
-				int qq = 1;
-			}
-			return ret;
-		}
-
+		
 		private void FillNameLists()
 		{
-			seq.Members.ReIndex();
+			seq.AllMembers.ReIndex();
 		}
 
-		private void ClearSelections(TreeNodeCollection nOdes)
+		private void ClearSelections(TreeNodeAdvCollection nOdes)
 		{
-			foreach (TreeNode nOde in nOdes)
+			foreach (TreeNodeAdv nOde in nOdes)
 			{
 				//if (nOde.Checked)
 				//
@@ -1835,17 +1470,15 @@ namespace UtilORama4
 				//	nOde.BackColor = SystemColors.Window;
 				//	IncrementSelectionCount(-1);
 				//}
-				HighlightNodeBackground(nOde, false);
-				ColorNodeText(nOde, false);
-				ItalisizeNode(nOde, false);
-				EmboldenNode(nOde, false);
-				//iLORMember4 nodeMem = (iLORMember4)nOde.Tag;
-				//nodeMem.Selected = false;
-				iLORMember4 m = (iLORMember4)nOde.Tag;
-				m.Selected = false;
-				if (nOde.Nodes.Count > 0)
+
+				if (nOde.Tag != null)
 				{
-					ClearSelections(nOde.Nodes);
+					iLORMember4 member = (iLORMember4)nOde.Tag;
+					TreeUtils.SelectMember							(member, false);
+					TreeUtils.HiglightMemberBackground	(member, false);
+					TreeUtils.ColorMemberText						(member, false);
+					TreeUtils.ItalisizeMember						(member, false);
+					TreeUtils.EmboldenMember						(member, false);
 				}
 			} // end for each node
 			selectionCount = 0;
@@ -1858,7 +1491,10 @@ namespace UtilORama4
 		private void pnlAbout_Click(object sender, EventArgs e)
 		{
 			ImBusy(true);
-			Form aboutBox = new frmAbout();
+			frmAbout aboutBox = new frmAbout();
+			// aboutBox.setIcon = picAboutIcon.Image;
+			aboutBox.Icon = this.Icon;
+			aboutBox.picIcon.Image = picAboutIcon.Image;
 			aboutBox.ShowDialog(this);
 			ImBusy(false);
 		}
@@ -1871,7 +1507,7 @@ namespace UtilORama4
 		private void btnClear_Click(object sender, EventArgs e)
 		{
 			ImBusy(true);
-			ClearSelections(treChannels.Nodes);
+			ClearSelections(treeChannels.Nodes);
 			selectionCount = IncrementSelectionCount(-selectionCount);
 			// make sure selectionCount is ZERO
 			Console.WriteLine(selectionCount);
@@ -1883,50 +1519,72 @@ namespace UtilORama4
 		{
 			ImBusy(true);
 			selectionCount = 0;
-			//foreach (TreeNode nOde in treChannels.Nodes)
-			//{
-			//	nOde.Checked = true;
-			//	iLORMember4 nodeMem = (iLORMember4)nOde.Tag;
-			//	nodeMem.Selected = true;
-			//	IncrementSelectionCount(1);
-			//	HighlightNodeBackground(nOde, true);
-			//	ColorNodeText(nOde, true);
-			//	SelectChildNodes(nOde.Nodes, true);
-			//}
-			SelectChildNodes(treChannels.Nodes, true);
-			
+			foreach (TreeNodeAdv nOde in treeChannels.Nodes)
+			{
+				if (nOde.Tag != null)
+				{
+					iLORMember4 member = (iLORMember4)nOde.Tag;
+					selectionCount += TreeUtils.SelectMember(member, true);
+				}
+			}
 			ImBusy(false);
 		}
 
 		private void lblSelectionCount_Click(object sender, EventArgs e)
 		{
+			List<string> names = new List<string>();
+			foreach(LORChannel4 chan in seq.Channels)
+			{
+				if (chan.Selected)
+				{
+					string suffix = chan.Name.Substring(chan.Name.Length - 4);
+					if ((suffix == " (R)") ||
+							(suffix == " (G)") ||
+							(suffix == " (B)"))
+					{
+						// RGB SubChannel; Ignore and do not add to list!
+					}
+					else
+					{
+						names.Add(chan.Name);
+					}
+				}
+			}
+			foreach(LORRGBChannel4 rgb in seq.RGBchannels)
+			{
+				if (rgb.Selected)
+				{
+					names.Add(rgb.Name);
+				}
+			}
+			string msg = "";
+			if (names.Count > 0)
+			{
+				names.Sort();
+				foreach (string name in names)
+				{
+					msg += name + "\r\n";
+				}
+			}
+			else
+			{
+				msg = "NONE!";
+			}
+			MessageBox.Show(this, msg, "Selected Channels", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
 		}
 
 		private void frmSplit_Paint(object sender, PaintEventArgs e)
 		{
-			if (!firstShown)
-			{
-				firstShown = true;
-				FirstShowing();
-			}
+			//if (!shown)
+			//{
+			//	FirstShow();
+			//	shown = true;
+			//}
 			Graphics g = e.Graphics;
 			Pen p = new Pen(Color.Gray, 1);
 			g.DrawRectangle(p, picPreview.Left - 1, picPreview.Top - 1, picPreview.Width + 1, picPreview.Height + 1);
 		}
-
-		private void FirstShowing()
-		{
-			if (File.Exists(fileSeqLast))
-			{
-				LoadSequence(fileSeqLast, false);
-			}
-			LoadApplyPreviousSelections();
-			
-
-		}
-
-
 
 		private void Event_DragDrop(object sender, DragEventArgs e)
 		{
@@ -2030,10 +1688,10 @@ namespace UtilORama4
 		public static iLORMember4 FindByName(string theName, LORMembership4 members)
 		{
 			iLORMember4 ret = null;
-			int idx = BinarySearch(theName, members.Items);
+			int idx = BinarySearch(theName, Members.Items);
 			if (idx > lutils.UNDEFINED)
 			{
-				ret = members.Items[idx];
+				ret = Members.Items[idx];
 			}
 			return ret;
 		}
@@ -2048,7 +1706,7 @@ namespace UtilORama4
 			double score;
 
 			// Go thru all objects
-			foreach (iLORMember4 child in members.Items)
+			foreach (iLORMember4 child in Members.Items)
 			{
 				if ((!child.Selected) || (!ignoreSelected))
 				{
@@ -2127,7 +1785,7 @@ namespace UtilORama4
 				for (int i = 0; i < count; i++)
 				{
 					// Get the ID, perform a more thorough final fuzzy match, and save the score
-					iLORMember4 child = seq.Members.BySavedIndex[SIs[i]];
+					iLORMember4 child = seq.AllMembers.BySavedIndex[SIs[i]];
 					score = theName.RankEquality(child.Name, finalAlgorithms);
 					scores[i] = score;
 				}
@@ -2137,7 +1795,7 @@ namespace UtilORama4
 				if (scores[count - 1] > minFinalMatch)
 				{
 					// Return the ID with the best qualifying final match
-					iLORMember4 ret = seq.Members.BySavedIndex[SIs[count - 1]];
+					iLORMember4 ret = seq.AllMembers.BySavedIndex[SIs[count - 1]];
 					// Get Name just for debugging
 					string msg = theName + " ~= " + ret.Name;
 				}
@@ -2250,5 +1908,116 @@ namespace UtilORama4
 			return bounds;
 
 		}
-	} // end frmSplit
+
+		private void treeChannels_AfterCheck(object sender, TreeNodeAdvEventArgs e)
+		{
+			TreeNodeAdv eNode = e.Node; // treeChannels.SelectedNode;
+			string foo = eNode.Text;
+			if (e.Action == TreeViewAdvAction.ByMouse)
+			{
+				if (eNode != null)
+				{
+					Node_AfterCheck(eNode);
+				}
+			}
+		} 
+
+		private void Node_AfterCheck(TreeNodeAdv nOde)
+		{
+			// Occurs immediately after the check state of a node changes
+			if (nOde.Tag != null)
+			{
+				iLORMember4 member = (iLORMember4)nOde.Tag;
+				if (member.Selected != nOde.Checked)
+				{
+					int iC = TreeUtils.SelectMember(member, !member.Selected);
+					//selectionCount += iC;
+					IncrementSelectionCount(iC);
+				}
+			}
+			lastNode = nOde;
+		}
+
+		private void treeChannels_Click(object sender, EventArgs e)
+		{
+			Point pt = treeChannels.PointToClient(Cursor.Position);
+			TreeNodeAdv node = treeChannels.GetNodeAtPoint(pt, true);
+			//if (node != null && node == treeChannels.SelectedNode)
+			if (node!=null)
+			{
+				//RaiseClick(node);
+				string foo = node.Text;
+				clickedNode = node;
+			}
+		}
+	
+
+		private void treeChannels_BeforeSelect(object sender, TreeViewAdvCancelableSelectionEventArgs args)
+		{
+			Point pt = treeChannels.PointToClient(Cursor.Position);
+			TreeNodeAdv node = treeChannels.GetNodeAtPoint(pt, true);
+			if (args.Action == TreeViewAdvAction.ByMouse && node == null)
+			{
+				args.Cancel = true;
+			}
+		}
+
+		void RaiseClick(TreeNodeAdv adv)
+		{
+			// please use your code here
+		}
+
+		private void lblNewSequence_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void frmSplit_Resize(object sender, EventArgs e)
+		{
+			int ofst = 416;
+			treeChannels.Height		= this.Height - ofst;
+			picPreview.Top				= treeChannels.Top		+ treeChannels.Height			+ 3;
+			lblTimingGrids.Top		= picPreview.Top			+ picPreview.Height				+ 3;
+			lstGrids.Top					= lblTimingGrids.Top	+ lblTimingGrids.Height		+ 3;
+			btnAll.Top						= lstGrids.Top				+ lstGrids.Height					+ 3;
+			lblNewSequence.Top		= btnAll.Top					+ btnAll.Height						+ 10;
+			txtFileNewSeq.Top			= lblNewSequence.Top	+ lblNewSequence.Height		+ 3;
+
+			btnInvert.Top				= btnAll.Top;
+			btnClear.Top				= btnAll.Top;
+			btnSaveSequence.Top	= txtFileNewSeq.Top;
+			chkAutoLaunch.Top = lblNewSequence.Top-1;
+
+			ofst = 50;
+			treeChannels.Width = this.Width - ofst;
+			picPreview.Width = treeChannels.Width;
+			lstGrids.Width = treeChannels.Width;
+
+			btnBrowseSequence.Left = treeChannels.Left + treeChannels.Width - btnBrowseSequence.Width;
+			btnBrowseSelections.Left = btnBrowseSequence.Left;
+			btnSaveSelections.Left = btnBrowseSequence.Left;
+			btnSaveSequence.Left = btnBrowseSequence.Left;
+
+			txtSequenceFile.Width = btnBrowseSelections.Left - txtSequenceFile.Left - 5;
+			txtSelectionsFile.Width = txtSequenceFile.Width;
+			txtFileNewSeq.Width = txtSequenceFile.Width;
+
+
+
+		}
+
+		private void frmSplit_Shown(object sender, EventArgs e)
+		{
+			if (!shown)
+			{
+				FirstShow();
+				shown = true;
+			}
+		}
+
+		private void lblSelections_Click(object sender, EventArgs e)
+		{
+			lblSelectionCount_Click(sender, e);
+		}
+	} // end form class
 } // end namespace UtilORama4

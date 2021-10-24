@@ -45,7 +45,7 @@ namespace UtilORama4
 			this.textBoxDescription.Text = AssemblyDescription;
 
 
-			labelSuite.Text = applicationName + labelSuite.Text;
+			labelSuite.Text = applicationName + "\r\n" + labelSuite.Text;
 			labelFreeware.Text = applicationName + labelFreeware.Text;
 
 			int major = 4;

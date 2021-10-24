@@ -31,14 +31,13 @@ namespace UtilORama4
 		{
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmList));
+			Syncfusion.Windows.Forms.Tools.TreeNodeAdvStyleInfo treeNodeAdvStyleInfo1 = new Syncfusion.Windows.Forms.Tools.TreeNodeAdvStyleInfo();
 			this.staStatus = new System.Windows.Forms.StatusStrip();
 			this.pnlHelp = new System.Windows.Forms.ToolStripStatusLabel();
 			this.pnlStatus = new System.Windows.Forms.ToolStripStatusLabel();
 			this.pnlAbout = new System.Windows.Forms.ToolStripStatusLabel();
 			this.btnOK = new System.Windows.Forms.Button();
 			this.picAboutIcon = new System.Windows.Forms.PictureBox();
-			this.treeChannelList = new System.Windows.Forms.TreeView();
-			this.imlTreeIcons = new System.Windows.Forms.ImageList(this.components);
 			this.btnUniverse = new System.Windows.Forms.Button();
 			this.btnController = new System.Windows.Forms.Button();
 			this.btnChannel = new System.Windows.Forms.Button();
@@ -49,8 +48,14 @@ namespace UtilORama4
 			this.btnWiz = new System.Windows.Forms.Button();
 			this.btnSave = new System.Windows.Forms.Button();
 			this.toolTips = new System.Windows.Forms.ToolTip(this.components);
+			this.btnExportSeq = new System.Windows.Forms.Button();
+			this.imlTreeIcons = new System.Windows.Forms.ImageList(this.components);
+			this.treeChannels = new Syncfusion.Windows.Forms.Tools.TreeViewAdv();
+			this.dlgFileOpen = new System.Windows.Forms.OpenFileDialog();
+			this.dlgFileSave = new System.Windows.Forms.SaveFileDialog();
 			this.staStatus.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picAboutIcon)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.treeChannels)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// staStatus
@@ -125,37 +130,6 @@ namespace UtilORama4
 			this.picAboutIcon.TabIndex = 68;
 			this.picAboutIcon.TabStop = false;
 			this.picAboutIcon.Visible = false;
-			// 
-			// treeChannelList
-			// 
-			this.treeChannelList.ImageIndex = 0;
-			this.treeChannelList.ImageList = this.imlTreeIcons;
-			this.treeChannelList.Location = new System.Drawing.Point(12, 12);
-			this.treeChannelList.Name = "treeChannelList";
-			this.treeChannelList.SelectedImageIndex = 0;
-			this.treeChannelList.Size = new System.Drawing.Size(375, 406);
-			this.treeChannelList.StateImageList = this.imlTreeIcons;
-			this.treeChannelList.TabIndex = 0;
-			this.treeChannelList.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeChannelList_AfterSelect);
-			this.treeChannelList.DoubleClick += new System.EventHandler(this.treeChannelList_DoubleClick);
-			this.treeChannelList.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.treeChannelList_KeyPress);
-			this.treeChannelList.KeyUp += new System.Windows.Forms.KeyEventHandler(this.treeChannelList_KeyUp);
-			// 
-			// imlTreeIcons
-			// 
-			this.imlTreeIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imlTreeIcons.ImageStream")));
-			this.imlTreeIcons.TransparentColor = System.Drawing.Color.Transparent;
-			this.imlTreeIcons.Images.SetKeyName(0, "Universe");
-			this.imlTreeIcons.Images.SetKeyName(1, "Controller");
-			this.imlTreeIcons.Images.SetKeyName(2, "#FF0000");
-			this.imlTreeIcons.Images.SetKeyName(3, "#00FF00");
-			this.imlTreeIcons.Images.SetKeyName(4, "#0000FF");
-			this.imlTreeIcons.Images.SetKeyName(5, "#FFFFFF");
-			this.imlTreeIcons.Images.SetKeyName(6, "#000000");
-			this.imlTreeIcons.Images.SetKeyName(7, "#FF8000");
-			this.imlTreeIcons.Images.SetKeyName(8, "#8000FF");
-			this.imlTreeIcons.Images.SetKeyName(9, "#804040");
-			this.imlTreeIcons.Images.SetKeyName(10, "#400000");
 			// 
 			// btnUniverse
 			// 
@@ -280,12 +254,118 @@ namespace UtilORama4
 			this.btnSave.UseVisualStyleBackColor = true;
 			this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
 			// 
+			// btnExportSeq
+			// 
+			this.btnExportSeq.Enabled = false;
+			this.btnExportSeq.Image = ((System.Drawing.Image)(resources.GetObject("btnExportSeq.Image")));
+			this.btnExportSeq.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.btnExportSeq.Location = new System.Drawing.Point(419, 288);
+			this.btnExportSeq.Name = "btnExportSeq";
+			this.btnExportSeq.Size = new System.Drawing.Size(75, 40);
+			this.btnExportSeq.TabIndex = 119;
+			this.btnExportSeq.Text = "Export\r\nSequence";
+			this.btnExportSeq.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.toolTips.SetToolTip(this.btnExportSeq, "Export everything to a .CSV Spreadsheet");
+			this.btnExportSeq.UseVisualStyleBackColor = true;
+			this.btnExportSeq.Visible = false;
+			// 
+			// imlTreeIcons
+			// 
+			this.imlTreeIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imlTreeIcons.ImageStream")));
+			this.imlTreeIcons.TransparentColor = System.Drawing.Color.Transparent;
+			this.imlTreeIcons.Images.SetKeyName(0, "Universe");
+			this.imlTreeIcons.Images.SetKeyName(1, "Controller");
+			this.imlTreeIcons.Images.SetKeyName(2, "Track");
+			this.imlTreeIcons.Images.SetKeyName(3, "Channel");
+			this.imlTreeIcons.Images.SetKeyName(4, "RGBChannel");
+			this.imlTreeIcons.Images.SetKeyName(5, "ChannelGroup");
+			this.imlTreeIcons.Images.SetKeyName(6, "CosmicDevice");
+			this.imlTreeIcons.Images.SetKeyName(7, "#400000");
+			this.imlTreeIcons.Images.SetKeyName(8, "#804040");
+			this.imlTreeIcons.Images.SetKeyName(9, "#FF0000");
+			this.imlTreeIcons.Images.SetKeyName(10, "#00FF00");
+			this.imlTreeIcons.Images.SetKeyName(11, "#0000FF");
+			this.imlTreeIcons.Images.SetKeyName(12, "#FFFFFF");
+			this.imlTreeIcons.Images.SetKeyName(13, "#000000");
+			this.imlTreeIcons.Images.SetKeyName(14, "#8000FF");
+			this.imlTreeIcons.Images.SetKeyName(15, "#FF8000");
+			this.imlTreeIcons.Images.SetKeyName(16, "#FFFF00");
+			this.imlTreeIcons.Images.SetKeyName(17, "#FF80FF");
+			this.imlTreeIcons.Images.SetKeyName(18, "#00FFFF");
+			this.imlTreeIcons.Images.SetKeyName(19, "#000080");
+			this.imlTreeIcons.Images.SetKeyName(20, "#008000");
+			this.imlTreeIcons.Images.SetKeyName(21, "#008080");
+			this.imlTreeIcons.Images.SetKeyName(22, "#8080FF");
+			this.imlTreeIcons.Images.SetKeyName(23, "#400080");
+			this.imlTreeIcons.Images.SetKeyName(24, "#404040");
+			this.imlTreeIcons.Images.SetKeyName(25, "#408080");
+			this.imlTreeIcons.Images.SetKeyName(26, "#800000");
+			this.imlTreeIcons.Images.SetKeyName(27, "#800080");
+			this.imlTreeIcons.Images.SetKeyName(28, "#808000");
+			this.imlTreeIcons.Images.SetKeyName(29, "#808080");
+			this.imlTreeIcons.Images.SetKeyName(30, "#C0C0C0");
+			this.imlTreeIcons.Images.SetKeyName(31, "#FF00FF");
+			// 
+			// treeChannels
+			// 
+			this.treeChannels.BackColor = System.Drawing.Color.White;
+			treeNodeAdvStyleInfo1.CheckBoxTickThickness = 1;
+			treeNodeAdvStyleInfo1.CheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+			treeNodeAdvStyleInfo1.EnsureDefaultOptionedChild = true;
+			treeNodeAdvStyleInfo1.IntermediateCheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+			treeNodeAdvStyleInfo1.OptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+			treeNodeAdvStyleInfo1.SelectedOptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
+			treeNodeAdvStyleInfo1.TextColor = System.Drawing.Color.Black;
+			this.treeChannels.BaseStylePairs.AddRange(new Syncfusion.Windows.Forms.Tools.StyleNamePair[] {
+            new Syncfusion.Windows.Forms.Tools.StyleNamePair("Standard", treeNodeAdvStyleInfo1)});
+			this.treeChannels.BeforeTouchSize = new System.Drawing.Size(360, 423);
+			this.treeChannels.ForeColor = System.Drawing.Color.Black;
+			// 
+			// 
+			// 
+			this.treeChannels.HelpTextControl.BaseThemeName = null;
+			this.treeChannels.HelpTextControl.Location = new System.Drawing.Point(0, 0);
+			this.treeChannels.HelpTextControl.Name = "";
+			this.treeChannels.HelpTextControl.Size = new System.Drawing.Size(392, 112);
+			this.treeChannels.HelpTextControl.TabIndex = 0;
+			this.treeChannels.HelpTextControl.Visible = true;
+			this.treeChannels.InactiveSelectedNodeForeColor = System.Drawing.SystemColors.ControlText;
+			this.treeChannels.LeftImageList = this.imlTreeIcons;
+			this.treeChannels.Location = new System.Drawing.Point(12, 12);
+			this.treeChannels.MetroColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(165)))), ((int)(((byte)(220)))));
+			this.treeChannels.Name = "treeChannels";
+			this.treeChannels.SelectedNodeForeColor = System.Drawing.SystemColors.HighlightText;
+			this.treeChannels.Size = new System.Drawing.Size(360, 423);
+			this.treeChannels.TabIndex = 118;
+			this.treeChannels.Text = "Source Channels";
+			this.treeChannels.ThemeStyle.TreeNodeAdvStyle.CheckBoxTickThickness = 0;
+			this.treeChannels.ThemeStyle.TreeNodeAdvStyle.EnsureDefaultOptionedChild = true;
+			// 
+			// 
+			// 
+			this.treeChannels.ToolTipControl.BaseThemeName = null;
+			this.treeChannels.ToolTipControl.Location = new System.Drawing.Point(0, 0);
+			this.treeChannels.ToolTipControl.Name = "";
+			this.treeChannels.ToolTipControl.Size = new System.Drawing.Size(392, 112);
+			this.treeChannels.ToolTipControl.TabIndex = 0;
+			this.treeChannels.ToolTipControl.Visible = true;
+			this.treeChannels.AfterSelect += new System.EventHandler(this.treeChannels_AfterSelect);
+			this.treeChannels.DoubleClick += new System.EventHandler(this.treeChannelList_DoubleClick);
+			this.treeChannels.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.treeChannels_KeyPress);
+			this.treeChannels.KeyUp += new System.Windows.Forms.KeyEventHandler(this.treeChannels_KeyUp);
+			// 
+			// dlgFileOpen
+			// 
+			this.dlgFileOpen.FileName = "openFileDialog1";
+			// 
 			// frmList
 			// 
 			this.AcceptButton = this.btnOK;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(489, 475);
+			this.Controls.Add(this.btnExportSeq);
+			this.Controls.Add(this.treeChannels);
 			this.Controls.Add(this.btnSave);
 			this.Controls.Add(this.btnWiz);
 			this.Controls.Add(this.btnFind);
@@ -295,7 +375,6 @@ namespace UtilORama4
 			this.Controls.Add(this.btnChannel);
 			this.Controls.Add(this.btnController);
 			this.Controls.Add(this.btnUniverse);
-			this.Controls.Add(this.treeChannelList);
 			this.Controls.Add(this.btnOK);
 			this.Controls.Add(this.staStatus);
 			this.Controls.Add(this.picAboutIcon);
@@ -313,6 +392,7 @@ namespace UtilORama4
 			this.staStatus.ResumeLayout(false);
 			this.staStatus.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picAboutIcon)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.treeChannels)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -326,8 +406,6 @@ namespace UtilORama4
 		private System.Windows.Forms.ToolStripStatusLabel pnlAbout;
 		private System.Windows.Forms.Button btnOK;
 		private System.Windows.Forms.PictureBox picAboutIcon;
-		private System.Windows.Forms.TreeView treeChannelList;
-		private System.Windows.Forms.ImageList imlTreeIcons;
 		private System.Windows.Forms.Button btnUniverse;
 		private System.Windows.Forms.Button btnController;
 		private System.Windows.Forms.Button btnChannel;
@@ -338,6 +416,11 @@ namespace UtilORama4
 		private System.Windows.Forms.Button btnWiz;
 		private System.Windows.Forms.Button btnSave;
 		private System.Windows.Forms.ToolTip toolTips;
+		private System.Windows.Forms.ImageList imlTreeIcons;
+		private Syncfusion.Windows.Forms.Tools.TreeViewAdv treeChannels;
+		private System.Windows.Forms.Button btnExportSeq;
+		private System.Windows.Forms.OpenFileDialog dlgFileOpen;
+		private System.Windows.Forms.SaveFileDialog dlgFileSave;
 	}
 }
 

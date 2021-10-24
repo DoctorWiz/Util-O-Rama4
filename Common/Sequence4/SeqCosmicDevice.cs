@@ -220,7 +220,7 @@ namespace LORUtils4
 			if (myParent != null)
 			{
 				LORSequence4 mySeq = (LORSequence4)myParent;
-				iLORMember4 newPart = mySeq.Members.BySavedIndex[itemSavedIndex];
+				iLORMember4 newPart = mySeq.AllMembers.BySavedIndex[itemSavedIndex];
 				ret = AddItem(newPart);
 			}
 			return ret;

@@ -13,6 +13,7 @@ using LORUtils4;
 using FileHelper;
 using xUtils;
 using FuzzyString;
+using ReadWriteCsv;
 
 
 namespace UtilORama4
@@ -22,7 +23,15 @@ namespace UtilORama4
 		private static Properties.Settings heartOfTheSun = Properties.Settings.Default;
 		private const string helpPage = "http://wizlights.com/utilorama/blankorama";
 
+		private string fileSequence = "";
+		private string pathDatabase = "";
+		private string fileVisualization = "";
+		public string filergbeffects = "";
+		public string fileReport = "";
+
+
 		LORSequence4 sequence = null;
+		LORVisualization4 visualization = null;
 		public List<LORChannel4> channelList = new List<LORChannel4>();
 		public List<LORRGBChannel4> RGBList = new List<LORRGBChannel4>();
 		public List<LORChannelGroup4> groupList = new List<LORChannelGroup4>();
@@ -31,7 +40,16 @@ namespace UtilORama4
 		public List<xRGBmodel> xRGBList = new List<xRGBmodel>();
 		public List<xPixels> xPixelList = new List<xPixels>();
 		public List<xModelGroup> xGroupList = new List<xModelGroup>();
+		private List<DMXUniverse> universes = new List<DMXUniverse>();
+		// Just creating a convenient reference to the static list in the DMXUniverse class
+		private List<DMXChannel> AllChannels = DMXUniverse.AllChannels;
+		// Just creating a convenient reference to the static list in the DMXChannel class
+		public List<DMXDevice> ChannelsDat = DMXChannel.Devices;
+		public List<DMXChannel> allDatChannels = new List<DMXChannel>();
+		public List<Matchup> matchups = new List<Matchup>();
+		public bool shown = false;
 
+		private int lastID = -1;
 
 		//double minPreMatch = 85; // Properties.Settings.Default.FuzzyMinPrematch;
 		//long preAlgorithm = FuzzyFunctions.USE_SUGGESTED_PREMATCH;
@@ -212,18 +230,84 @@ namespace UtilORama4
 
 		private void GetTheControlsFromTheHeartOfTheSun()
 		{
-			txtXFile.Text = heartOfTheSun.rgbeffects;
-			txtLORfile.Text = heartOfTheSun.Sequence;
-			txtSpreadsheet.Text = heartOfTheSun.Spreadsheet;
+			pathDatabase = heartOfTheSun.FileDatabase;
+			txtFileDatabase.Text = Path.GetDirectoryName(pathDatabase);
+			fileSequence = heartOfTheSun.FileSequence;
+			txtLORfile.Text = fileSequence;
+			fileVisualization = heartOfTheSun.FileVisualization;
+			txtFileVisual.Text = fileVisualization;
+			filergbeffects = heartOfTheSun.Filergbeffects;
+			txtXFile.Text = filergbeffects;
+			fileReport = heartOfTheSun.FileReport;
+			txtSpreadsheet.Text = fileReport;
 
-			if (File.Exists(txtXFile.Text))
-			{
-				CompilexLightsLists(txtXFile.Text);
-			}
+
 
 		}
 
-		public void ImBusy(bool busy)
+		private void FirstShow()
+		{
+			ImBusy(true);
+			if (Fyle.Exists(pathDatabase))
+			{
+				LoadData(pathDatabase);
+			}
+
+			if (Fyle.Exists(fileSequence))
+			{
+				LoadSequence(fileSequence);
+			}
+
+			if (Fyle.Exists(fileVisualization))
+			{
+				LoadVisualization(fileVisualization);
+			}
+
+			if (Fyle.Exists(txtXFile.Text))
+			{
+				LoadxLights(filergbeffects);
+			}
+
+			ImBusy(false);
+
+
+		}
+
+		private bool ReadyToCompare()
+		{
+			bool isC = false;
+			if (AllChannels.Count > 0)
+			{
+				if (sequence != null)
+				{
+					if (sequence.Channels.Count > 0) isC = true;
+				}
+				if (visualization != null)
+				{
+					if (visualization.VizChannels.Count > 0) isC = true;
+				}
+				if (xModelList.Count > 0) isC = true;
+			}
+			if (!isC)
+			{
+				if (sequence != null)
+				{
+					if (sequence.Channels.Count > 0)
+					{
+						if (visualization != null)
+						{
+							if (visualization.VizChannels.Count > 0)	isC = true;
+						}
+						if (xModelList.Count > 0) isC = true;
+					}
+				}
+			}
+			btnBrowseSheet.Enabled = isC;
+			if (isC) btnBrowseSheet.Focus();
+			return isC;
+		}
+
+		public void ImBusy(bool busy = true)
 		{
 			if (busy)
 			{
@@ -236,6 +320,12 @@ namespace UtilORama4
 				this.Enabled = true;
 			}
 		}
+
+		public void ImIdle(bool idle=true)
+		{
+			ImBusy(!idle);
+		}
+
 
 		private void pnlHelp_Click(object sender, EventArgs e)
 		{
@@ -441,27 +531,8 @@ namespace UtilORama4
 				// Check LOR directory
 				initDir = LORUtils4.lutils.DefaultSequencesPath;
 				if (Directory.Exists(initDir))
-				{
-					// Its there, does it have a Timings subdirectory
-					string d = initDir + "Timings\\";
-					if (Directory.Exists(d))
-					{
-						// Look for any timing files
-						string[] files = Directory.GetFiles(d, "*.xtiming");
-						if (files.Length > 0)
-						{
-							initDir = d;
-						}
-					}
-					else
-					{
-						// None in the Timings subdirectory, how about the LOR directory?
-						string[] files = Directory.GetFiles(d, "*.xtiming");
-						if (files.Length == 0)
-						{
-							initDir = "";
-						}
-					}
+				{ 
+					// Cool!  Good for us!
 				}
 			}
 			// Have we got something (anything!) yet?
@@ -489,12 +560,32 @@ namespace UtilORama4
 			DialogResult result = dlgFileOpen.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
-				txtXFile.Text = dlgFileOpen.FileName;
-				heartOfTheSun.rgbeffects = dlgFileOpen.FileName;
-				CompilexLightsLists(dlgFileOpen.FileName);
+				LoadxLights(dlgFileOpen.FileName);
 			} // end if (result = DialogResult.OK)
 
 		}
+
+		private int LoadxLights(string filexL)
+		{
+			int errs = 0;
+			ImBusy(true);
+			CompilexLightsLists(filexL);
+			if (xModelList.Count > 0)
+			{
+				filergbeffects = filexL;
+				txtXFile.Text = filergbeffects;
+				heartOfTheSun.Filergbeffects = filergbeffects;
+				heartOfTheSun.Save();
+				string txt = xModelList.Count.ToString() + "/" +
+										xGroupList.Count.ToString();
+				lblInfoxL.Text = txt;
+				if (Fyle.isWiz) lblInfoxL.Visible = true;
+				ReadyToCompare();
+			}
+			ImBusy(false);
+			return errs;
+		}
+
 
 		private void btnBrowseLOR_Click(object sender, EventArgs e)
 		{
@@ -560,44 +651,64 @@ namespace UtilORama4
 			DialogResult result = dlgFileOpen.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
-				ImBusy(true);
-				txtLORfile.Text = dlgFileOpen.FileName;
-				heartOfTheSun.Sequence = dlgFileOpen.FileName;
-				sequence = new LORSequence4(dlgFileOpen.FileName);
+				LoadSequence(dlgFileOpen.FileName);
+			} // end if (result = DialogResult.OK)
+
+
+		}
+
+		private void LoadSequence(string fileSeqName)
+		{
+			ImBusy(true);
+			sequence = new LORSequence4(fileSeqName);
+			if (sequence.Channels.Count > 0)
+			{
+				fileSequence = fileSeqName;
+				txtLORfile.Text = fileSequence;
+				heartOfTheSun.FileSequence = fileSequence;
+				heartOfTheSun.Save();
 				CompileLORlists(sequence);
 				string stat = channelList.Count.ToString() + " Channels, ";
 				stat += RGBList.Count.ToString() + " RGB Channels, and ";
 				stat += groupList.Count.ToString() + " Channel Groups.";
 				pnlStatus.Text = stat;
 
-				if (xModelList.Count > 0)
-				{
-					btnOK.Enabled = true;
-				}
-				ImBusy(false);
-				btnOK.Focus();
-			} // end if (result = DialogResult.OK)
-
-
+				stat = sequence.Tracks.Count.ToString() + "/" +
+							sequence.ChannelGroups.Count.ToString() + "/" +
+							sequence.RGBchannels.Count.ToString() + "/" +
+							sequence.Channels.Count.ToString() + "/" +
+							sequence.TimingGrids.Count.ToString();
+				lblInfoSeq.Text = stat;
+				if (Fyle.isWiz) lblInfoSeq.Visible = true;
+				ReadyToCompare();
+			}
+			ImBusy(false);
 		}
+
+
 
 		private void btnOK_Click(object sender, EventArgs e)
 		{
 			ImBusy(true);
-			int n = Compare();
+			string fileReport = "W:\\Documents\\Christmas\\2021\\Docs\\Compare-O-Rama Report.csv";
+			int n = CompareWithDat(fileReport);
 			pnlStatus.Text = "Comparison complete with " + n.ToString() + " matches.";
 			grpSpreadsheet.Enabled = true;
 			ImBusy(false);
 			btnBrowseSheet.Focus();
 		}
 
-		public int Compare()
+		public int CompareNoDat()
 		{
-
-
 			int exactMatches = 0;
 			int fuzzyMatches = 0;
 			string status = "";
+
+			
+
+
+
+
 
 			// LOR Channels to xLights Modesl or Model Groups, Exact Matches
 			//   Channels to Models first
@@ -605,8 +716,8 @@ namespace UtilORama4
 			{
 				string LORname = channelList[l].Name;
 				status = "Searching for " + LORname;
-				pnlStatus.Text = status;
-				staStatus.Refresh();
+				StatusUpdate(status);
+				
 				for (int x=0; x < xModelList.Count; x++)
 				{
 					string xName = xModelList[x].Name;
@@ -630,8 +741,8 @@ namespace UtilORama4
 			{
 				string LORname = channelList[l].Name;
 				status = "Searching for " + LORname;
-				pnlStatus.Text = status;
-				staStatus.Refresh();
+				StatusUpdate(status);
+				
 				for (int x = 0; x < xGroupList.Count; x++)
 				{
 					string xName = xGroupList[x].Name;
@@ -657,8 +768,8 @@ namespace UtilORama4
 				{
 					string LORname = channelList[l].Name;
 					status = "Fuzzy Searching for " + LORname;
-					pnlStatus.Text = status;
-					staStatus.Refresh();
+					StatusUpdate(status);
+					
 					double highScore = 0;
 					int highModelMatch = -1;
 					int highGroupMatch = -1;
@@ -757,8 +868,8 @@ namespace UtilORama4
 				{
 					string LORname = RGBList[l].Name;
 					status = "Fuzzy Searching for " + LORname;
-					pnlStatus.Text = status;
-					staStatus.Refresh();
+					StatusUpdate(status);
+					
 					double highScore = 0;
 					int highMatch = -1;
 					for (int x = 0; x < xRGBList.Count; x++)
@@ -821,8 +932,8 @@ namespace UtilORama4
 				{
 					string LORname = groupList[l].Name;
 					status = "Fuzzy Searching for " + LORname;
-					pnlStatus.Text = status;
-					staStatus.Refresh();
+					StatusUpdate(status);
+					
 					double highScore = 0;
 					int highMatch = -1;
 					for (int x = 0; x < xGroupList.Count; x++)
@@ -862,11 +973,725 @@ namespace UtilORama4
 			return (exactMatches + fuzzyMatches);
 		}
 
+		private void StatusUpdate(string msg)
+		{
+			pnlStatus.Text = msg;
+			staStatus.Refresh();
+		}
+
+
+		public int CompareWithDat(string reportName, bool includeExact = true)
+		{
+			int exactMatches = 0;
+			int fuzzyMatches = 0;
+			int lineCount = 0;
+			string status = "";
+
+			// Step 1: Database Channels to LOR Channels Exact Matches
+			for (int datIdx = 0; datIdx < allDatChannels.Count; datIdx++)
+			{
+				DMXChannel datChan = allDatChannels[datIdx];
+				string datName = datChan.Name;
+				Matchup mup = new Matchup();
+				mup.NameDat = datName;
+				mup.IndexDat = datIdx;
+				mup.OutputDat = datChan.DMXUniverse.ToString() + "/" +
+												datChan.DMXAddress.ToString() + "/" +
+												datChan.xLightsAddress.ToString();
+				mup.ColorDat = datChan.ColorHTML;
+
+				// Search Sequence Channels
+				status = "Searching Sequence for " + datName;
+				StatusUpdate(status);
+				
+				LORChannel4 chanLor = sequence.FindChannel(datName);
+				if (chanLor != null)
+				{
+					mup.NameLOR = chanLor.Name;
+					mup.IndexLOR = chanLor.Index;
+					mup.SavedIndex = chanLor.SavedIndex;
+					mup.OutputLOR = chanLor.UniverseNumber.ToString() + "/" +
+													chanLor.DMXAddress.ToString();
+					mup.ColorLOR = lutils.Color_LORtoHTML(chanLor.color);
+					mup.ExactLOR = true;
+					chanLor.ExactMatch = true;
+					chanLor.Selected = true;
+					chanLor.Tag = mup;
+					exactMatches++;
+				} // End if exact match found
+				matchups.Add(mup);
+			} // End loop thru database channels
+
+			// Step 2: Database Channels to LOR Channels Fuzzy Matches
+			for (int datIdx = 0; datIdx < ChannelsDat.Count; datIdx++)
+			{
+				string datName = ChannelsDat[datIdx].Name;
+				Matchup mup = matchups[datIdx];
+				if (mup.IndexLOR < 0)
+				{
+					status = "Fuzzy Searching Seqwuence for " + datName;
+					StatusUpdate(status);
+					
+
+					double highScore = 0;
+					int highMatch = -1;
+					for (int li = 0; li < sequence.Channels.Count; li++)
+					{
+						LORChannel4 chanLor = sequence.Channels[li];
+						if (!chanLor.Selected)
+						{
+							string LORname = chanLor.Name;
+							double preScore = datName.RankEquality(LORname, FuzzyFunctions.USE_SUGGESTED_PREMATCH);
+							// if the score is above the minimum PreMatch
+							if (preScore > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
+							{
+								double finalScore = datName.RankEquality(LORname, FuzzyFunctions.USE_SUGGESTED_FINALMATCH);
+								if (finalScore > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
+								{
+									if (finalScore > highScore)
+									{
+										highScore = finalScore;
+										highMatch = li;
+									} // > high score so far
+								} // >= min final match
+							} // >= min prematch
+						} // channel not selected, thus not matched
+					} // end loop thru sequence channels
+					if (highMatch >= 0)
+					{
+						if (highScore > 95)
+						{
+							LORChannel4 chanLor = sequence.Channels[highMatch];
+							mup.IndexLOR = chanLor.Index;
+							mup.SavedIndex = chanLor.SavedIndex;
+							mup.OutputLOR = chanLor.UniverseNumber.ToString() + "/" +
+															chanLor.DMXAddress.ToString();
+							mup.ColorLOR = lutils.Color_LORtoHTML(chanLor.color);
+							mup.ExactLOR = false;
+							chanLor.ExactMatch = false;
+							chanLor.Selected = true;
+							chanLor.Tag = mup;
+							fuzzyMatches++;
+
+						} // end if high enough final score
+					} // end if high match index
+				} // end if exact match not already found
+			} // end loop thru database channels
+
+			// Step 3: Database Channels to Viz Channels, Groups, Objects Exact Matches
+			if (visualization != null)
+			{
+				for (int datIdx = 0; datIdx < ChannelsDat.Count; datIdx++)
+				{
+					string datName = ChannelsDat[datIdx].Name;
+					Matchup mup = matchups[datIdx];
+					// Search Visualization Channels, Groups, Objects
+					status = "Searching Visualization for " + datName;
+					StatusUpdate(status);
+					
+					LORVizChannel4 vch = visualization.FindChannel(datName);
+					if (vch != null)
+					{
+						mup.IndexViz = vch.Index;
+						mup.NameViz = vch.Name;
+						mup.OutputDat = vch.UniverseNumber.ToString() + "/" +
+														vch.DMXAddress.ToString();
+						mup.ColorViz = lutils.Color_LORtoHTML(vch.color);
+						mup.TypeViz = 1;
+						mup.ExactViz = true;
+						vch.ExactMatch = true;
+						vch.Selected = true;
+						vch.Tag = mup;
+						exactMatches++;
+					}
+					if (vch == null)
+					{
+						LORVizItemGroup4 vgr = visualization.FindItemGroup(datName);
+						if (vgr != null)
+						{
+							mup.IndexViz = vgr.Index;
+							mup.NameViz = vgr.Name;
+							mup.OutputDat = vgr.UniverseNumber.ToString() + "/" +
+															vgr.DMXAddress.ToString();
+							//mup.ColorViz = 
+							mup.TypeViz = 2;
+							mup.ExactViz = true;
+							vgr.ExactMatch = true;
+							vgr.Selected = true;
+							vgr.Tag = mup;
+							exactMatches++;
+						}
+						if (vgr == null)
+						{
+							LORVizDrawObject4 vdo = visualization.FindDrawObject(datName);
+							if (vdo != null)
+							{
+								mup.IndexViz = vdo.Index;
+								mup.NameViz = vdo.Name;
+								mup.OutputDat = vdo.UniverseNumber.ToString() + "/" +
+																vdo.DMXAddress.ToString();
+								//mup.ColorViz = 
+								mup.TypeViz = 3;
+								mup.ExactViz = true;
+								vdo.ExactMatch = true;
+								vdo.Selected = true;
+								vdo.Tag = mup;
+								exactMatches++;
+							} // end if it matched something
+						}
+					}
+				} // end loop thru database channels
+
+				// Step 4: Database Channels to Viz Channels, Groups, and Objects-- Fuzzy Matches
+				for (int datIdx = 0; datIdx < ChannelsDat.Count; datIdx++)
+				{
+					string datName = ChannelsDat[datIdx].Name;
+					Matchup mup = matchups[datIdx];
+					if (mup.IndexViz < 0)
+					{
+						status = "Fuzzy Searching Visualization for " + datName;
+						StatusUpdate(status);
+						
+
+						double highScore = 0;
+						int highMatch = -1;
+						int matchType = -1;
+						for (int v = 0; v < visualization.VizChannels.Count; v++)
+						{
+							LORVizChannel4 member = visualization.VizChannels[v];
+							if (!member.Selected)
+							{
+								string vName = member.Name;
+								double preScore = datName.RankEquality(vName, FuzzyFunctions.USE_SUGGESTED_PREMATCH);
+								// if the score is above the minimum PreMatch
+								if (preScore > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
+								{
+									double finalScore = datName.RankEquality(vName, FuzzyFunctions.USE_SUGGESTED_FINALMATCH);
+									if (finalScore > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
+									{
+										if (finalScore > highScore)
+										{
+											highScore = finalScore;
+											highMatch = v;
+											matchType = 1;
+										} // > high score so far
+									} // >= min final match
+								} // >= min prematch
+							} // channel not selected, thus not matched
+						} // end loop thru VizChannels
+
+						for (int v = 0; v < visualization.VizItemGroups.Count; v++)
+						{
+							LORVizItemGroup4 member = visualization.VizItemGroups[v];
+							if (!member.Selected)
+							{
+								string vName = member.Name;
+								double preScore = datName.RankEquality(vName, FuzzyFunctions.USE_SUGGESTED_PREMATCH);
+								// if the score is above the minimum PreMatch
+								if (preScore > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
+								{
+									double finalScore = datName.RankEquality(vName, FuzzyFunctions.USE_SUGGESTED_FINALMATCH);
+									if (finalScore > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
+									{
+										if (finalScore > highScore)
+										{
+											highScore = finalScore;
+											highMatch = v;
+											matchType = 2;
+										} // > high score so far
+									} // >= min final match
+								} // >= min prematch
+							} // channel not selected, thus not matched
+						} // end loop thru VizItemGroups
+
+						for (int v = 0; v < visualization.VizDrawObjects.Count; v++)
+						{
+							LORVizDrawObject4 member = visualization.VizDrawObjects[v];
+							if (!member.Selected)
+							{
+								string vName = member.Name;
+								double preScore = datName.RankEquality(vName, FuzzyFunctions.USE_SUGGESTED_PREMATCH);
+								// if the score is above the minimum PreMatch
+								if (preScore > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
+								{
+									double finalScore = datName.RankEquality(vName, FuzzyFunctions.USE_SUGGESTED_FINALMATCH);
+									if (finalScore > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
+									{
+										if (finalScore > highScore)
+										{
+											highScore = finalScore;
+											highMatch = v;
+											matchType = 3;
+										} // > high score so far
+									} // >= min final match
+								} // >= min prematch
+							} // channel not selected, thus not matched
+						} // end loop thru VizDrawObjects
+
+
+						if (highMatch >= 0)
+						{
+							if (highScore > 95)
+							{
+								iLORMember4 member = null;
+								if (matchType == 1)
+								{
+									member = visualization.VizChannels[highMatch];
+									mup.ColorViz = lutils.Color_LORtoHTML(visualization.VizChannels[highMatch].color);
+								}
+								if (matchType == 2)
+								{
+									member = visualization.VizItemGroups[highMatch];
+								}
+								if (matchType == 1)
+								{
+									member = visualization.VizDrawObjects[highMatch];
+								}
+
+								mup.NameViz = member.Name;
+								mup.OutputViz = member.UniverseNumber.ToString() + "/" +
+																member.DMXAddress.ToString();
+								mup.IndexViz = highMatch;
+								mup.TypeViz = matchType;
+								mup.ExactViz = false;
+								member.ExactMatch = false;
+								member.Selected = true;
+								member.Tag = mup;
+								fuzzyMatches++;
+							} // end if high enough final score
+						} // end if high match index
+					} // end if exact match not already found
+				} // end loop thru database channels
+			} // end have a visualization
+
+			// Step 5: Database Channels to xLights Models & Groups Exact Matches
+			for (int datIdx = 0; datIdx < ChannelsDat.Count; datIdx++)
+			{
+				string datName = ChannelsDat[datIdx].Name;
+				Matchup mup = matchups[datIdx];
+				// xLights Models and ModelGroups
+				status = "Searching xLights for " + datName;
+				StatusUpdate(status);
+				
+				for (int x=0; x < xModelList.Count; x++)
+				{
+					string xName = xModelList[x].Name;
+					if (datName.CompareTo(xName) == 0)
+					{
+						mup.IndexxLights = x;
+						mup.OutputxLights = xModelList[x].StartChannel.ToString();
+						mup.ColorxLights = lutils.Color_NettoHTML(xModelList[x].Color);
+						mup.TypexLights = 1;
+						mup.ExactxLights = true;
+						xModelList[x].ExactMatch = true;
+						xModelList[x].Selected = true;
+						xModelList[x].Tag = mup;
+						exactMatches++;
+						// Force exit of loop
+						x = xModelList.Count;
+					}
+				}
+				if (mup.IndexViz < 0)
+				{
+					for (int x = 0; x < xGroupList.Count; x++)
+					{
+						string xName = xGroupList[x].Name;
+						if (datName.CompareTo(xName) == 0)
+						{
+							mup.IndexxLights = x;
+							mup.NamexLights = xGroupList[x].Name;
+							mup.OutputxLights = xGroupList[x].StartChannel.ToString();
+							//mup.ColorxLights = lutils.Color_NettoHTML(xGroupList[x].Color);
+							mup.TypexLights = 2;
+							mup.ExactxLights = true;
+							xModelList[x].ExactMatch = true;
+							xModelList[x].Selected = true;
+							xModelList[x].Tag = mup;
+							exactMatches++;
+							// Force exit of loop
+							x = xGroupList.Count;
+						}
+					}
+				}
+			}
+
+			// Step 6: Database Channels to xLights Models & Groups-- Fuzzy Matches
+			for (int datIdx = 0; datIdx < ChannelsDat.Count; datIdx++)
+			{
+				string datName = ChannelsDat[datIdx].Name;
+				Matchup mup = matchups[datIdx];
+				if (mup.IndexViz < 0)
+				{
+					status = "Fuzzy Searching xLights for " + datName;
+					StatusUpdate(status);
+					
+
+					double highScore = 0;
+					int highMatch = -1;
+					int matchType = -1;
+					for (int x = 0; x < xModelList.Count; x++)
+					{
+						xModel xm = xModelList[x];
+						if (!xm.Selected)
+						{
+							string xName = xm.Name;
+							double preScore = datName.RankEquality(xName, FuzzyFunctions.USE_SUGGESTED_PREMATCH);
+							// if the score is above the minimum PreMatch
+							if (preScore > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
+							{
+								double finalScore = datName.RankEquality(xName, FuzzyFunctions.USE_SUGGESTED_FINALMATCH);
+								if (finalScore > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
+								{
+									if (finalScore > highScore)
+									{
+										highScore = finalScore;
+										highMatch = x;
+										matchType = 1;
+									} // > high score so far
+								} // >= min final match
+							} // >= min prematch
+						} // channel not selected, thus not matched
+					} // end loop thru VizChannels
+
+					for (int x = 0; x < xGroupList.Count; x++)
+					{
+						xModelGroup xg = xGroupList[x];
+						if (!xg.Selected)
+						{
+							string xName = xGroupList[x].Name;
+							double preScore = datName.RankEquality(xName, FuzzyFunctions.USE_SUGGESTED_PREMATCH);
+							// if the score is above the minimum PreMatch
+							if (preScore > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
+							{
+								double finalScore = datName.RankEquality(xName, FuzzyFunctions.USE_SUGGESTED_FINALMATCH);
+								if (finalScore > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
+								{
+									if (finalScore > highScore)
+									{
+										highScore = finalScore;
+										highMatch = x;
+										matchType = 2;
+									} // > high score so far
+								} // >= min final match
+							} // >= min prematch
+						} // channel not selected, thus not matched
+					} // end loop thru VizItemGroups
+
+					if (highMatch >= 0)
+					{
+						if (highScore > 95)
+						{
+							xMember member = null;
+							if (matchType == 1)
+							{
+								member = xModelList[highMatch];
+							}
+							if (matchType == 2)
+							{
+								member = xGroupList[highMatch];
+							}
+
+							mup.IndexxLights = highMatch;
+							mup.TypexLights = matchType;
+							mup.ExactxLights = false;
+							member.ExactMatch = false;
+							member.Selected = true;
+							member.Tag = mup;
+							fuzzyMatches++;
+						} // end if high enough final score
+					} // end if high match index
+				} // end if exact match not already found
+			} // end loop thru database channels
+
+			// Part 7, add unmatched LOR Channels
+			for (int c=0; c< sequence.Channels.Count; c++)
+			{
+				LORChannel4 chan = sequence.Channels[c];
+				if (!chan.Selected)
+				{
+					Matchup mup = new Matchup();
+					mup.NameLOR = chan.Name;
+					mup.IndexLOR = chan.Index;
+					mup.SavedIndex = chan.SavedIndex;
+					mup.OutputLOR = chan.UniverseNumber.ToString() + "/" +
+						chan.DMXAddress.ToString();
+					mup.ColorLOR = lutils.Color_LORtoHTML(chan.color);
+					matchups.Add(mup);
+				}
+			}
+
+			// Part 8, add unmatched Viz Channels
+			for (int c = 0; c < visualization.VizChannels.Count; c++)
+			{
+				LORVizChannel4 chan = visualization.VizChannels[c];
+				if (!chan.Selected)
+				{
+					Matchup mup = new Matchup();
+					mup.NameViz	= chan.Name;
+					mup.IndexViz = chan.Index;
+					mup.TypeViz = 1;
+					mup.OutputViz = chan.UniverseNumber.ToString() + "/" +
+						chan.DMXAddress.ToString();
+					mup.ColorLOR = lutils.Color_LORtoHTML(chan.color);
+					matchups.Add(mup);
+				}
+			}
+			for (int c = 0; c < visualization.VizItemGroups.Count; c++)
+			{
+				LORVizItemGroup4 grp = visualization.VizItemGroups[c];
+				if (!grp.Selected)
+				{
+					Matchup mup = new Matchup();
+					mup.NameViz = grp.Name;
+					mup.IndexViz = grp.Index;
+					mup.TypeViz = 2;
+					mup.OutputViz = grp.UniverseNumber.ToString() + "/" +
+						grp.DMXAddress.ToString();
+					matchups.Add(mup);
+				}
+			}
+			for (int c = 0; c < visualization.VizDrawObjects.Count; c++)
+			{
+				LORVizDrawObject4 vdo = visualization.VizDrawObjects[c];
+				if (!vdo.Selected)
+				{
+					Matchup mup = new Matchup();
+					mup.NameViz = vdo.Name;
+					mup.IndexViz = vdo.Index;
+					mup.TypeViz = 3;
+					mup.OutputViz = vdo.UniverseNumber.ToString() + "/" +
+						vdo.DMXAddress.ToString();
+					matchups.Add(mup);
+				}
+			}
+
+			// Part 9, add unmatched xLights Models and groups
+			for (int c = 0; c < xModelList.Count; c++)
+			{
+				xModel chan = xModelList[c];
+				if (!chan.Selected)
+				{
+					Matchup mup = new Matchup();
+					mup.NamexLights = chan.Name;
+					mup.IndexxLights = c;
+					mup.TypexLights = 1;
+					mup.OutputxLights = chan.StartChannel;
+					mup.ColorLOR = lutils.Color_NettoHTML(chan.Color);
+					matchups.Add(mup);
+				}
+			}
+			for (int c = 0; c < xGroupList.Count; c++)
+			{
+				xModelGroup grp = xGroupList[c];
+				if (!grp.Selected)
+				{
+					Matchup mup = new Matchup();
+					mup.NamexLights = grp.Name;
+					mup.IndexxLights = c;
+					mup.TypexLights = 2;
+					mup.OutputxLights = grp.StartChannel;
+					matchups.Add(mup);
+				}
+			}
+
+
+			// Part 10, Build the CSV Report
+			//string fileReport = "W:\\Documents\\Christmas\\2021\\Docs\\Compare-O-Rama Report.csv";
+			StringBuilder lineOut = new StringBuilder();
+			StreamWriter writer = new StreamWriter(reportName);
+			string clr = "";
+
+			for (int m = 0; m < matchups.Count; m++)
+			{
+				Matchup mup = matchups[m];
+				bool writeMe = includeExact;
+				if (!mup.ExactLOR) writeMe = true;
+				if (visualization != null)
+				{
+					if (!mup.ExactViz) writeMe = true;
+				}
+				if (xModelList.Count > 0)
+				{
+					if (!mup.ExactxLights) writeMe = true;
+				}
+
+				if (writeMe)
+				{
+					// If matchup includes database (all the first ones will, later ones will not)
+					if (mup.IndexDat >= 0)
+					{
+						DMXChannel chan = allDatChannels[mup.IndexDat];
+						lineOut.Append(lutils.XMLifyName(mup.NameDat));
+						lineOut.Append(",");
+						lineOut.Append(mup.OutputDat);
+						lineOut.Append(",");
+						//lineOut.Append(chan.DMXController.LetterID);
+						//lineOut.Append("-");
+						//lineOut.Append(chan.OutputNum.ToString());
+						//lineOut.Append(",");
+						lineOut.Append(chan.ColorHTML);
+						lineOut.Append(",");
+						//lineOut.Append(chan.ColorName);
+						//lineOut.Append(",");
+					}
+					else
+					{
+						lineOut.Append(",,,");
+					}
+
+					// If matchup includes a LOR channel
+					if (mup.IndexLOR >= 0)
+					{
+						//LORChannel4 chan = sequence.Channels[mup.IndexLOR];
+						lineOut.Append(lutils.XMLifyName(mup.NameLOR));
+						lineOut.Append(",");
+						if (mup.IndexDat < 0)
+						{
+							lineOut.Append("NO MATCH NAME!");
+						}
+						else
+						{
+							if (mup.ExactLOR) lineOut.Append("Exact");
+							else lineOut.Append("Fuzzy");
+						}
+						lineOut.Append(",");
+						lineOut.Append(mup.OutputLOR);
+						lineOut.Append(",");
+						if (mup.IndexDat < 0)
+						{
+						}
+						else
+						{
+							int ip = mup.OutputDat.LastIndexOf("/");
+							string dout = mup.OutputDat.Substring(0, ip - 1);
+							if (dout == mup.ColorLOR) lineOut.Append("Match Output");
+							else lineOut.Append("NO MATCH Output");
+						}
+						lineOut.Append(",");
+						if (mup.IndexDat < 0)
+						{
+						}
+						else
+						{
+							lineOut.Append(mup.ColorLOR);
+							lineOut.Append(",");
+							if (mup.ColorDat == mup.ColorLOR) lineOut.Append("Match Color");
+							else lineOut.Append("NO MATCH Color");
+						}
+					}
+					else
+					{
+						lineOut.Append(",,,,,");
+					}
+
+					// If matchup includes a VIZ channel
+					if (mup.IndexViz >= 0)
+					{
+						//LORChannel4 chan = sequence.Channels[mup.IndexLOR];
+						lineOut.Append(lutils.XMLifyName(mup.NameViz));
+						lineOut.Append(",");
+						if (mup.IndexDat < 0)
+						{
+							lineOut.Append("NO MATCH NAME!");
+						}
+						else
+						{
+							if (mup.ExactLOR) lineOut.Append("Exact");
+							else lineOut.Append("Fuzzy");
+						}
+						lineOut.Append(",");
+						lineOut.Append(mup.OutputViz);
+						lineOut.Append(",");
+						if (mup.IndexDat < 0)
+						{
+						}
+						else
+						{
+							int ip = mup.OutputDat.LastIndexOf("/");
+							string dout = mup.OutputDat.Substring(0, ip - 1);
+							if (dout == mup.ColorLOR) lineOut.Append("Match Output");
+							else lineOut.Append("NO MATCH Output");
+						}
+						lineOut.Append(",");
+						if (mup.IndexDat < 0)
+						{
+						}
+						else
+						{
+							lineOut.Append(mup.ColorViz);
+							lineOut.Append(",");
+							if (mup.ColorDat == mup.ColorViz) lineOut.Append("Match Color");
+							else lineOut.Append("NO MATCH Color");
+						}
+					}
+					else
+					{
+						lineOut.Append(",,,,,");
+					}
+
+					// If matchup includes a xLights channel
+					if (mup.IndexxLights >= 0)
+					{
+						//LORChannel4 chan = sequence.Channels[mup.IndexLOR];
+						lineOut.Append(lutils.XMLifyName(mup.NamexLights));
+						lineOut.Append(",");
+						if (mup.IndexDat < 0)
+						{
+							lineOut.Append("NO MATCH NAME!");
+						}
+						else
+						{
+							if (mup.ExactLOR) lineOut.Append("Exact");
+							else lineOut.Append("Fuzzy");
+						}
+						lineOut.Append(",");
+						lineOut.Append(mup.OutputxLights);
+						lineOut.Append(",");
+						if (mup.IndexDat < 0)
+						{
+						}
+						else
+						{
+							int ip = mup.OutputDat.LastIndexOf("/");
+							string dout = mup.OutputDat.Substring(ip + 1);
+							if (dout == mup.ColorLOR) lineOut.Append("Match Output");
+							else lineOut.Append("NO MATCH Output");
+						}
+						lineOut.Append(",");
+						if (mup.IndexDat < 0)
+						{
+						}
+						else
+						{
+							lineOut.Append(mup.ColorxLights);
+							lineOut.Append(",");
+							if (mup.ColorDat == mup.ColorLOR) lineOut.Append("Match Color");
+							else lineOut.Append("NO MATCH Color");
+						}
+					}
+					else
+					{
+						lineOut.Append(",,,,,");
+					}
+
+					writer.WriteLine(lineOut.ToString());
+				} // WriteMe
+			}
+			writer.Close();
+
+			return (exactMatches + fuzzyMatches);
+		}
+
+
+
+
+
+
 		private void btnBrowseSheet_Click(object sender, EventArgs e)
 		{
 			bool stopLooking = false;
 
-			string lastSheet = heartOfTheSun.Spreadsheet;
+			string lastSheet = heartOfTheSun.FileDatabase;
 			string initDir = Path.GetDirectoryName(lastSheet);
 			// Start with last folder where a spreadsheet was saved
 			if (Directory.Exists(initDir))
@@ -908,12 +1733,18 @@ namespace UtilORama4
 				{
 
 					ImBusy(true);
-					string f = dlgFileSave.FileName;
-					txtSpreadsheet.Text = f;
-					heartOfTheSun.Spreadsheet = f;
-					int m = CompileSpreadsheet(f, true);
-					pnlStatus.Text = "Spreadsheet saved with " + m.ToString() + " lines.";
-					System.Diagnostics.Process.Start(@f);
+					int lineCount = 0;
+					fileReport = dlgFileSave.FileName;
+					txtSpreadsheet.Text = fileReport;
+					heartOfTheSun.FileReport = fileReport;
+					heartOfTheSun.Save();
+					//int m = CompileSpreadsheet(f, true);
+					if (AllChannels.Count > 0)
+					{
+						lineCount = CompareWithDat(fileReport, true);
+					}
+					pnlStatus.Text = "Spreadsheet saved with " + lineCount.ToString() + " lines.";
+					System.Diagnostics.Process.Start(@fileReport);
 					ImBusy(false);
 				}
 			} // end if (result = DialogResult.OK)
@@ -1101,5 +1932,539 @@ namespace UtilORama4
 			return name;
 		}
 
+		private void label2_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private string PathToDB(int year)
+		{
+			string ret = Fyle.DefaultDocumentsPath;
+			ret += "Christmas\\";
+			ret += year.ToString();
+			ret += "\\Docs\\ChannelDB\\";
+			return ret;
+		}
+
+		public int LoadData(string filePath)
+		{
+			ImBusy(true);
+			int errs = LoadUniverses(filePath);
+			errs += LoadControllers(filePath);
+			errs += LoadDevices(filePath);
+			errs += LoadChannels(filePath);
+			pathDatabase = filePath;
+			txtFileDatabase.Text = pathDatabase;
+			heartOfTheSun.FileDatabase = pathDatabase;
+			heartOfTheSun.Save();
+			string txt = universes.Count.ToString() + "/" +
+									DMXUniverse.AllControllers.Count.ToString() + "/" +					
+									AllChannels.Count.ToString();
+			lblInfoDat.Text = txt;
+			if (Fyle.isWiz) lblInfoDat.Visible = true;
+			ReadyToCompare();
+			ImBusy(false);
+
+			return errs;
+		}
+
+		public int LoadUniverses(string filePath)
+		{
+			int errs = 0;
+			string uniName = ""; // for debugging exceptions
+			string uniFile = filePath + "Universes.csv";
+			try
+			{
+				CsvFileReader reader = new CsvFileReader(uniFile);
+				CsvRow row = new CsvRow();
+				// Read and throw away first line which is headers;
+				reader.ReadRow(row);
+				while (reader.ReadRow(row))
+				{
+					try
+					{
+						DMXUniverse universe = new DMXUniverse();
+
+						int i = -1;
+						int.TryParse(row[0], out i);   // Field 0 Universe Number
+						universe.UniverseNumber = i;
+
+						universe.Name = row[1];  // Field 1 Name
+						uniName = universe.Name;  // For debugging exceptions
+						universe.Location = row[2]; // Field 2 Location
+						universe.Comment = row[3]; // Field 3 Comment
+
+						bool b = true;
+						bool.TryParse(row[4], out b); // Field 4 Active
+						universe.Active = b;
+
+						i = 512;
+						int.TryParse(row[5], out i);   // Field 5 Size Limit
+						universe.SizeLimit = i;
+
+						i = 1;
+						int.TryParse(row[6], out i);   // Field 6 xLights Start
+						universe.xLightsAddress = i;
+
+						universe.Connection = row[7];  // Field 7 Connection
+						lastID++;
+						universe.ID = lastID;
+						universes.Add(universe);
+					}
+					catch (Exception ex)
+					{
+						string msg = "Error " + ex.ToString() + " while reading Universe " + uniName;
+						if (Fyle.isWiz)
+						{
+							DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						}
+						errs++;
+					}
+				}
+				reader.Close();
+				universes.Sort();
+			}
+			catch (Exception ex)
+			{
+				string msg = "Error " + ex.ToString() + " while reading Universes file " + uniFile;
+				if (Fyle.isWiz)
+				{
+					DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+				errs++;
+			}
+			return errs;
+		}
+
+		public int LoadControllers(string filePath)
+		{
+			int errs = 0;
+			string ctlName = ""; // For debugging exceptions
+			if (universes.Count > 0)
+			{
+				string ctlFile = filePath + "Controllers.csv";
+				try
+				{
+					CsvFileReader reader = new CsvFileReader(ctlFile);
+					CsvRow row = new CsvRow();
+					// Read and throw away first line which is headers;
+					reader.ReadRow(row);
+					while (reader.ReadRow(row))
+					{
+						try
+						{
+							DMXController controller = new DMXController();
+							int universe = 1;
+							int.TryParse(row[0], out universe);   // Field 0 Universe Number
+
+							controller.LetterID = row[1];  // Field 1 Letter ID
+							controller.Name = row[2];  // Field 2 Name
+							ctlName = controller.Name; // For debugging exceptions
+							controller.Location = row[3]; // Field 3 Location
+							controller.Comment = row[4]; // Field 4 Comment
+
+							bool b = true;
+							bool.TryParse(row[5], out b); // Field 5 Active
+							controller.Active = b;
+
+							controller.ControllerBrand = row[6];
+							controller.ControllerModel = row[7];
+
+							int i = 16;
+							int.TryParse(row[8], out i);   // Field 8 Channel Count
+							controller.OutputCount = i;
+
+							i = 1;
+							int.TryParse(row[9], out i);   // Field 9 DMX Start LORChannel4
+							controller.DMXStartAddress = i;
+
+							i = 120;
+							int.TryParse(row[10], out i);   // Field 10 voltage
+							controller.Voltage = i;
+
+							bool uniFound = false;
+							for (int u = 0; u < universes.Count; u++)
+							{
+								if (universe == universes[u].UniverseNumber)
+								{
+									universes[u].DMXControllers.Add(controller);
+									DMXUniverse.AllControllers.Add(controller);
+									controller.DMXUniverse = universes[u];
+									uniFound = true;
+									u = universes.Count; // Exit loop
+								}
+							}
+							if (!uniFound)
+							{
+								string msg = "Universe not found for controller:" + controller.Name;
+								int qqqqq = 1;
+							}
+							lastID++;
+							controller.ID = lastID;
+						}
+						catch (Exception ex)
+						{
+							string msg = "Error " + ex.ToString() + " while reading Controller " + ctlName;
+							if (Fyle.isWiz)
+							{
+								DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+							}
+							errs++;
+						}
+					}
+
+					reader.Close();
+					for (int u = 0; u < universes.Count; u++)
+					{
+						universes[u].DMXControllers.Sort();
+					}
+				}
+				catch (Exception ex)
+				{
+					string msg = "Error " + ex.ToString() + " while reading Controllers file " + ctlFile;
+					if (Fyle.isWiz)
+					{
+						DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					}
+					errs++;
+
+				}
+			}
+			return errs;
+		}
+
+		public int LoadChannels(string filePath)
+		{
+			int errs = 0;
+			string chanName = ""; // for debugging exceptions
+			if (universes.Count > 0)
+			{
+				string chnFile = filePath + "Channels.csv";
+				try
+				{
+					CsvFileReader reader = new CsvFileReader(chnFile);
+					CsvRow row = new CsvRow();
+					// Read and throw away first line which is headers;
+					reader.ReadRow(row);
+					while (reader.ReadRow(row))
+					{
+						try
+						{
+							DMXChannel channel = new DMXChannel();
+							int uniNum = 1;
+							int.TryParse(row[0], out uniNum); // Field 0 = Universe Number
+
+							string ctlrLetter = row[1];       // Field 1 = Controller Letter
+
+							int i = 1;
+							int.TryParse(row[2], out i);
+							channel.OutputNum = i;               // Field 2 = LOROutput4 Number
+
+							channel.Name = row[3];                // Field 3 = Name
+							chanName = channel.Name;              // For debugging exceptions
+							channel.Location = row[4];            // Field 4 = Location
+							channel.Comment = row[5];             // Field 5 = Comment
+
+							bool b = true;
+							bool.TryParse(row[6], out b);     // Field 6 = Active
+							channel.Active = b;
+
+							int devID = -1;
+							int.TryParse(row[7], out devID);      // Field 7 = Channel Type
+
+
+
+							//! ONE TIME FIX
+							//if (devID == 0) devID = 22;
+
+
+
+
+
+							if (devID >= 0 && devID < ChannelsDat.Count)
+							{
+								//! Note: Devices should not yet be sorted by Display Order
+								//! Should still be sorted by ID
+								string dn = ChannelsDat[devID].Name;
+								channel.DMXDevice = ChannelsDat[devID];
+							}
+
+							string colhex = row[8];           // Field 8 = Color
+							if (chanName.Substring(0, 5).CompareTo("Eaves") == 0)
+							{
+								if (Fyle.isWiz)
+								{
+									string foo = colhex;
+								}
+							}
+							//Color color = System.Drawing.ColorTranslator.FromHtml(colhex);
+							Color color = LORUtils4.lutils.HexToColor(colhex);
+							channel.Color = color;
+
+							AllChannels.Add(channel);
+							allDatChannels.Add(channel);
+							bool ctlFound = false;
+							for (int u = 0; u < universes.Count; u++)
+							{
+								DMXUniverse universe = universes[u];
+								for (int c = 0; c < universe.DMXControllers.Count; c++)
+								{
+									if (ctlrLetter == universe.DMXControllers[c].LetterID)
+									{
+										channel.DMXController = universe.DMXControllers[c];
+										universe.DMXControllers[c].DMXChannels.Add(channel);
+										ctlFound = true;
+										c = universe.DMXControllers.Count;
+										u = universes.Count; // Exit loop
+									}
+								}
+							}
+							if (!ctlFound)
+							{
+								string msg = "Controller not found for channel " + channel.Name;
+								int qqq5 = 5;
+							}
+							lastID++;
+							channel.ID = lastID;
+						}
+						catch (Exception ex)
+						{
+							int ln = LORUtils4.lutils.ExceptionLineNumber(ex);
+							string msg = "Error on line " + ln.ToString() + "\r\n";
+							msg += ex.ToString() + " while reading Channel " + chanName;
+							if (Fyle.isWiz)
+							{
+								DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+							}
+							errs++;
+						}
+					}
+					reader.Close();
+					for (int u = 0; u < universes.Count; u++)
+					{
+						DMXUniverse universe = universes[u];
+						for (int c = 0; c < universe.DMXControllers.Count; c++)
+						{
+							universe.DMXControllers[c].DMXChannels.Sort();
+						}
+					}
+					// *NOW* we can sort the ChannelsDat by display order
+					ChannelsDat.Sort();
+				}
+				catch (Exception ex)
+				{
+					int ln = LORUtils4.lutils.ExceptionLineNumber(ex);
+					string msg = "Error " + ex.ToString() + " on line " + ln.ToString() + " while reading Channels file " + chnFile;
+					if (Fyle.isWiz)
+					{
+						DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					}
+					errs++;
+
+				}
+			}
+			return errs;
+		}
+
+		public int LoadDevices(string filePath)
+		{
+			int errs = 0;
+			string devName = ""; // for debugging exceptions
+			if (universes.Count > 0)
+			{
+				string chnFile = filePath + "Devices.csv";
+				try
+				{
+					CsvFileReader reader = new CsvFileReader(chnFile);
+					CsvRow row = new CsvRow();
+					// Read and throw away first line which is headers;
+					reader.ReadRow(row);
+					while (reader.ReadRow(row))
+					{
+						try
+						{
+							if (row.Count > 1)
+							{
+								int devID = -1;
+								int.TryParse(row[0], out devID); // Field 0 = Device ID
+								devName = row[1];   // Field 1 = Name
+								int ord = 0;
+								if (row.Count > 2)
+								{
+									int.TryParse(row[2], out ord); // Field 2 = OutputNum Number
+								}
+								DMXDevice device = new DMXDevice(devName, devID, ord);
+								ChannelsDat.Add(device);
+							}
+						}
+						catch (Exception ex)
+						{
+							int ln = LORUtils4.lutils.ExceptionLineNumber(ex);
+							string msg = "Error on line " + ln.ToString() + "\r\n";
+							msg += ex.ToString() + " while reading Channel " + devName;
+							if (Fyle.isWiz)
+							{
+								DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+							}
+							errs++;
+						}
+					}
+					reader.Close();
+				}
+				catch (Exception ex)
+				{
+					int ln = LORUtils4.lutils.ExceptionLineNumber(ex);
+					string msg = "Error " + ex.ToString() + " on line " + ln.ToString() + " while reading Channels file " + chnFile;
+					if (Fyle.isWiz)
+					{
+						DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					}
+					errs++;
+				}
+			}
+			int dc = ChannelsDat.Count;
+			//! No! do not sort [by display order] yet!  Leave sorted by order added which is also by ID until AFTER the channels have been
+			//! loaded, THEN sort by display order
+			//ChannelsDat.Sort();
+			return errs;
+		}
+
+		private void btnBrowseDatabase_Click(object sender, EventArgs e)
+		{
+			bool stopLooking = false;
+			// Start with LOR Showtime directory
+			string initDir = Path.GetDirectoryName(pathDatabase);
+			if (Directory.Exists(initDir))
+			{
+			}
+			else
+			{
+				// Last path is no longer valid, try the user documents folder
+				string d = "";
+				initDir = Fyle.DefaultDocumentsPath;
+				if (Directory.Exists(initDir))
+				{
+					// Its there, does it have a Christmas subdirectory
+					d = initDir + "Christmas\\";
+					if (Directory.Exists(d))
+					{
+						initDir = d;
+					}
+					// Is there a year folder
+					d = initDir + DateTime.Now.Year.ToString() + "\\";
+					if (Directory.Exists(d))
+					{
+						initDir = d;
+					}
+					// Is there a Docs folder
+					d = initDir + "Docs\\";
+					if (Directory.Exists(d))
+					{
+						initDir = d;
+					}
+					d = initDir + "ChannelDB\\";
+					if (Directory.Exists(d))
+					{
+						initDir = d;
+					}
+				}
+			}
+
+			string filt = "Channel Database (Channels.csv)|Channels.csv";
+
+			dlgFileOpen.Filter = filt;
+			dlgFileOpen.FilterIndex = 0;
+			dlgFileOpen.DefaultExt = "*.csv";
+			dlgFileOpen.InitialDirectory = initDir;
+			dlgFileOpen.FileName = "Channels.csv";
+			dlgFileOpen.CheckFileExists = true;
+			dlgFileOpen.CheckPathExists = true;
+			dlgFileOpen.Multiselect = false;
+			dlgFileOpen.Title = "Select the Channel Database";
+			DialogResult result = dlgFileOpen.ShowDialog(this);
+			if (result == DialogResult.OK)
+			{
+				string dbPath = Path.GetDirectoryName(dlgFileOpen.FileName) + "\\";
+				LoadData(dbPath);
+				//btnOK.Focus();
+			} // end if (result = DialogResult.OK)
+		}
+
+		private void btnBrowseViz_Click(object sender, EventArgs e)
+		{
+			bool stopLooking = false;
+			// Start with LOR Showtime directory
+			string initDir = LORUtils4.lutils.DefaultSequencesPath;
+			if (Directory.Exists(initDir))
+			{
+				// If it exists, see if it has a Sequences subdirectory
+				string d = initDir + "\\Visualizations";
+				if (Directory.Exists(d))
+				{
+					// If yes, use that
+					initDir = d;
+				}
+			}
+			// Have we got something (anything!) yet?
+			if (!Directory.Exists(initDir))
+			{
+				// Last Gasp, go the for the user's documents folder
+				initDir = Fyle.DefaultDocumentsPath;
+			}
+
+			string initFile = "";
+			string filt = lutils.FILE_LEE;
+			
+			dlgFileOpen.Filter = filt;
+			dlgFileOpen.FilterIndex = 0;
+			dlgFileOpen.DefaultExt = "*.lee";
+			dlgFileOpen.InitialDirectory = initDir;
+			dlgFileOpen.FileName = initFile;
+			dlgFileOpen.CheckFileExists = true;
+			dlgFileOpen.CheckPathExists = true;
+			dlgFileOpen.Multiselect = false;
+			dlgFileOpen.Title = "Select the Visualization File...";
+			DialogResult result = dlgFileOpen.ShowDialog(this);
+			if (result == DialogResult.OK)
+			{
+				LoadVisualization(dlgFileOpen.FileName);
+				//btnOK.Focus();
+			} // end if (result = DialogResult.OK)
+
+
+		}
+
+		public int LoadVisualization(string fileVizName)
+		{
+			int errs = 0;
+			ImBusy(true);
+
+
+			visualization = new LORVisualization4(fileVizName);
+			if (visualization.VizChannels.Count > 0)
+			{
+				fileVisualization = fileVizName;
+				txtFileVisual.Text = fileVisualization;
+				heartOfTheSun.FileVisualization = fileVisualization;
+				heartOfTheSun.Save();
+				string txt = visualization.VizItemGroups.Count.ToString() + "/" +
+										visualization.VizDrawObjects.Count.ToString() + "/" +
+										visualization.VizChannels.Count.ToString();
+				lblInfoViz.Text = txt;
+				if (Fyle.isWiz) lblInfoViz.Visible = true;
+				ReadyToCompare();
+			}
+			ImBusy(false);
+			return errs;
+		}
+
+		private void frmCompare_Shown(object sender, EventArgs e)
+		{
+			if (!shown)
+			{
+				FirstShow();
+				shown = true;
+			}
+		}
 	}
 }

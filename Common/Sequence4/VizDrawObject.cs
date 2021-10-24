@@ -17,7 +17,7 @@ namespace LORUtils4
 		public bool isRGB = false;
 		public int BulbSize = lutils.UNDEFINED;
 		public int BulbSpacing = lutils.UNDEFINED;
-		public string Comment = "";
+		//public string Comment = ""; // Now included in base class
 		public int BulbShape = lutils.UNDEFINED;  //? Enum?
 		public int ZOrder = 0;
 		public int AssignedItem = lutils.UNDEFINED;
@@ -81,7 +81,7 @@ namespace LORUtils4
 			}
 		}
 		public new LORMemberType4 MemberType
-		{ get { return LORMemberType4.VizObject; } }
+		{ get { return LORMemberType4.VizDrawObject; } }
 
 
 		public new int UniverseNumber
@@ -126,6 +126,7 @@ namespace LORUtils4
 
 			myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
 			mySavedIndex = lutils.getKeyValue(lineIn, LORVisualization4.FIELDvizID);
+			myIndex = mySavedIndex;
 			BulbSpacing = lutils.getKeyValue(lineIn, FIELDbulbSpacing);
 			Comment = lutils.HumanizeName(lutils.getKeyWord(lineIn, FIELDcomment));
 			BulbShape = lutils.getKeyValue(lineIn, FIELDbulbShape);
@@ -137,6 +138,15 @@ namespace LORUtils4
 			MaxOpacity = lutils.getKeyValue(lineIn, FIELDmaxOpacity);
 
 		}
+
+		public int DrawObjectID
+		{
+			get
+			{
+				return mySavedIndex;
+			}
+		}
+
 
 		public new string LineOut()
 		{

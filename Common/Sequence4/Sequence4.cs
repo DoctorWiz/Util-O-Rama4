@@ -62,8 +62,14 @@ namespace LORUtils4
 		public const int ERROR_UnsupportedVersion = 114;
 		public const int ERROR_UnexpectedData = 50;
 
-		//public LORSequenceType4 sequenceType = LORSequenceType4.Undefined;
-		public LORMembership4 Members = null;
+		
+		// members should only contain tracks, which are the only DIRECT descendants, in
+		// keeping with ChannelGroups, Tracks, and Cosmic Parent items
+		public LORMembership4 members = null;
+		// AllMembers contain ALL the regular members including Channels and RGBChannels and
+		// ChannelGroups which are not DIRECT descendants of the sequence (only Tracks are)
+		public LORMembership4 AllMembers = null;
+
 		public List<LORChannel4> Channels = new List<LORChannel4>();
 		public List<LORRGBChannel4> RGBchannels = new List<LORRGBChannel4>();
 		public List<LORChannelGroup4> ChannelGroups = new List<LORChannelGroup4>();
@@ -259,7 +265,8 @@ namespace LORUtils4
 		public LORSequence4()
 		{
 			//! DEFAULT CONSTRUCTOR
-			this.Members = new LORMembership4(this);
+			this.members = new LORMembership4(this);
+			this.AllMembers = new LORMembership4(this);
 			//this.Members.SetParent(this);
 			this.info = new LORSeqInfo4(this);
 			this.animation = new LORAnimation4(this);
@@ -269,7 +276,8 @@ namespace LORUtils4
 
 		public LORSequence4(string theFilename)
 		{
-			this.Members = new LORMembership4(this);
+			this.members = new LORMembership4(this);
+			this.AllMembers = new LORMembership4(this);
 			//this.Members.SetParent(this);
 			this.info = new LORSeqInfo4(this);
 			this.animation = new LORAnimation4(this);
@@ -491,7 +499,7 @@ namespace LORUtils4
 
 														// RED
 														int csi = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
-														LORChannel4 ch = (LORChannel4)Members.BySavedIndex[csi];
+														LORChannel4 ch = (LORChannel4)AllMembers.BySavedIndex[csi];
 														lastRGBchannel.redChannel = ch;
 														ch.rgbChild = LORRGBChild4.Red;
 														ch.rgbParent = lastRGBchannel;
@@ -500,7 +508,7 @@ namespace LORUtils4
 
 														// GREEN
 														csi = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
-														ch = (LORChannel4)Members.BySavedIndex[csi];
+														ch = (LORChannel4)AllMembers.BySavedIndex[csi];
 														lastRGBchannel.grnChannel = ch;
 														ch.rgbChild = LORRGBChild4.Green;
 														ch.rgbParent = lastRGBchannel;
@@ -509,7 +517,7 @@ namespace LORUtils4
 
 														// BLUE
 														csi = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
-														ch = (LORChannel4)Members.BySavedIndex[csi];
+														ch = (LORChannel4)AllMembers.BySavedIndex[csi];
 														lastRGBchannel.bluChannel = ch;
 														ch.rgbChild = LORRGBChild4.Blue;
 														ch.rgbParent = lastRGBchannel;
@@ -540,7 +548,7 @@ namespace LORUtils4
 																while (li > 0)
 																{
 																	int isl = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
-																	lastGroup.Members.Add(Members.BySavedIndex[isl]);
+																	lastGroup.Members.Add(AllMembers.BySavedIndex[isl]);
 																	//savedIndexes[isl].parents.Add(lastGroup.SavedIndex);
 
 																	lineIn = reader.ReadLine();
@@ -575,7 +583,7 @@ namespace LORUtils4
 																		while (li > 0)
 																		{
 																			int isl = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
-																			iLORMember4 mm = Members.BySavedIndex[isl]
+																			iLORMember4 mm = AllMembers.BySavedIndex[isl]
 ;																			lastCosmic.Members.Add(mm);
 
 																			lineIn = reader.ReadLine();
@@ -599,7 +607,7 @@ namespace LORUtils4
 		/////////////////////
 																		#region LORTrack4 Item
 																		int si = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
-																		lastTrack.Members.Add(Members.BySavedIndex[si]);
+																		lastTrack.Members.Add(AllMembers.BySavedIndex[si]);
 																		#endregion // LORTrack4 Item
 																	}
 																	else // Not a regular channel
@@ -642,9 +650,9 @@ namespace LORUtils4
 																					int isi = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
 																					//lastTrack.itemSavedIndexes.Add(isi);
 																					if (isi == 2189) System.Diagnostics.Debugger.Break();
-																					if (isi <= Members.HighestSavedIndex)
+																					if (isi <= AllMembers.HighestSavedIndex)
 																					{
-																						iLORMember4 SIMem = Members.BySavedIndex[isi];
+																						iLORMember4 SIMem = AllMembers.BySavedIndex[isi];
 																						if (SIMem != null)
 																						{
 																							lastTrack.Members.Add(SIMem);
@@ -770,7 +778,7 @@ namespace LORUtils4
 											emsg += "on line " + lineCount.ToString() + " at position " + li.ToString() + lutils.CRLF;
 											emsg += "Line Is:" + lineIn + lutils.CRLF;
 											emsg += "in code line " + sf.GetFileLineNumber() + lutils.CRLF;
-											emsg += "Last SavedIndex = " + Members.HighestSavedIndex.ToString();
+											emsg += "Last SavedIndex = " + AllMembers.HighestSavedIndex.ToString();
 											info.LastError.fileLine = lineCount;
 											info.LastError.linePos = li;
 											info.LastError.codeLine = sf.GetFileLineNumber();
@@ -797,7 +805,7 @@ namespace LORUtils4
 								info.createdAt = creation;
 								info.lastModified = info.file_saved;
 								MakeDirty(false);
-								Members.ReIndex();
+								AllMembers.ReIndex();
 							} // end second line is sequence info
 						} // end has a second line
 					} // end first line was xml info
@@ -864,7 +872,7 @@ namespace LORUtils4
 			//bySavedIndex.AltHighestSavedIndex = lutils.UNDEFINED;
 			//bySavedIndex.altSaveID = lutils.UNDEFINED;
 			//altSavedIndexes = null;
-			Members.ResetWritten();
+			AllMembers.ResetWritten();
 			//Array.Resize(ref altSavedIndexes, highestSavedIndex + 3);
 			//Array.Resize(ref altSaveIDs, TimingGrids.Count + 1);
 			string ext = Path.GetExtension(newFileName).ToLower();
@@ -1354,7 +1362,7 @@ namespace LORUtils4
 		{
 			int ret = lutils.UNDEFINED;
 
-			iLORMember4 member = Members.BySavedIndex[SavedIndex];
+			iLORMember4 member = AllMembers.BySavedIndex[SavedIndex];
 			if (!member.Written)
 			{
 				if (!selectedOnly || member.Selected)
@@ -1498,10 +1506,10 @@ namespace LORUtils4
 
 
 
-		public string GetItemName(int SavedIndex)
+		public string GetMemberName(int SavedIndex)
 		{
 			string nameOut = "";
-			iLORMember4 member = Members.BySavedIndex[SavedIndex];
+			iLORMember4 member = AllMembers.BySavedIndex[SavedIndex];
 			if (member != null)
 			{
 				nameOut = member.Name;
@@ -1515,7 +1523,8 @@ namespace LORUtils4
 			{
 				// Zero these out from any previous run
 				lineCount = 0;
-				this.Members = new LORMembership4(this);
+				this.members = new LORMembership4(this);
+				this.AllMembers = new LORMembership4(this);
 				//this.Members.SetParent(this);
 				this.info = new LORSeqInfo4(this);
 				this.animation = new LORAnimation4(this);
@@ -1543,7 +1552,7 @@ namespace LORUtils4
 			sMsg += "       Timing Grids: " + TimingGrids.Count.ToString() + lutils.CRLF;
 			sMsg += "             Tracks: " + Tracks.Count.ToString() + lutils.CRLF;
 			sMsg += "       Centiseconds: " + Centiseconds.ToString() + lutils.CRLF;
-			sMsg += "Highest Saved Index: " + Members.HighestSavedIndex.ToString() + lutils.CRLF;
+			sMsg += "Highest Saved Index: " + AllMembers.HighestSavedIndex.ToString() + lutils.CRLF;
 			return sMsg;
 		}
 
@@ -2164,7 +2173,7 @@ namespace LORUtils4
 		public LORChannel4 FindChannel(int SavedIndex)
 		{
 			LORChannel4 ret = null;
-			iLORMember4 member = Members.BySavedIndex[SavedIndex];
+			iLORMember4 member = AllMembers.BySavedIndex[SavedIndex];
 			if (member != null)
 			{
 				if (member.MemberType == LORMemberType4.Channel)
@@ -2178,7 +2187,7 @@ namespace LORUtils4
 		public LORChannel4 FindChannel(string channelName, bool createIfNotFound = false)
 		{
 			LORChannel4 ret = null;
-			iLORMember4 member = Members.Find(channelName, LORMemberType4.Channel, false);
+			iLORMember4 member = AllMembers.Find(channelName, LORMemberType4.Channel, false);
 			if (member != null)
 			{
 				ret = (LORChannel4)member;
@@ -2189,7 +2198,7 @@ namespace LORUtils4
 				ret = CreateChannel(channelName);
 				ret.Centiseconds = myCentiseconds;
 				Channels.Add(ret);
-				Members.Add(ret);
+				AllMembers.Add(ret);
 			}
 			return ret;
 		}
@@ -2243,7 +2252,7 @@ namespace LORUtils4
 		public LORRGBChannel4 FindRGBChannel(int SavedIndex)
 		{
 			LORRGBChannel4 ret = null;
-			iLORMember4 member = Members.BySavedIndex[SavedIndex];
+			iLORMember4 member = AllMembers.BySavedIndex[SavedIndex];
 			if (member != null)
 			{
 				if (member.MemberType == LORMemberType4.RGBChannel)
@@ -2257,7 +2266,7 @@ namespace LORUtils4
 		public LORRGBChannel4 FindRGBChannel(string rgbChannelName, bool createIfNotFound = false)
 		{
 			LORRGBChannel4 ret = null;
-			iLORMember4 member = Members.Find(rgbChannelName, LORMemberType4.RGBChannel, false);
+			iLORMember4 member = AllMembers.Find(rgbChannelName, LORMemberType4.RGBChannel, false);
 			if (member != null)
 			{
 				ret = (LORRGBChannel4)member;
@@ -2286,7 +2295,7 @@ namespace LORUtils4
 					//int si = Sequence.Members.HighestSavedIndex + 1;
 					ret.Centiseconds = myCentiseconds;
 					//Channels.Add(ret);
-					Members.Add(ret);
+					AllMembers.Add(ret);
 				}
 			}
 
@@ -2360,7 +2369,7 @@ namespace LORUtils4
 		public LORChannelGroup4 FindChannelGroup(int SavedIndex)
 		{
 			LORChannelGroup4 ret = null;
-			iLORMember4 member = Members.BySavedIndex[SavedIndex];
+			iLORMember4 member = AllMembers.BySavedIndex[SavedIndex];
 			if (member != null)
 			{
 				if (member.MemberType == LORMemberType4.ChannelGroup)
@@ -2421,7 +2430,7 @@ namespace LORUtils4
 		public LORChannelGroup4 FindChannelGroup(string channelGroupName, bool createIfNotFound = false)
 		{
 			LORChannelGroup4 ret = null;
-			iLORMember4 member = Members.Find(channelGroupName, LORMemberType4.ChannelGroup, false);
+			iLORMember4 member = AllMembers.Find(channelGroupName, LORMemberType4.ChannelGroup, false);
 			if (member != null)
 			{
 				ret = (LORChannelGroup4)member;
@@ -2434,7 +2443,7 @@ namespace LORUtils4
 					ret = CreateChannelGroup(channelGroupName);
 					ret.Centiseconds = myCentiseconds;
 					ChannelGroups.Add(ret);
-					Members.Add(ret);
+					AllMembers.Add(ret);
 				}
 			}
 			return ret;
@@ -2443,7 +2452,7 @@ namespace LORUtils4
 		public LORTrack4 FindTrack(string trackName, bool createIfNotFound = false)
 		{
 			LORTrack4 ret = null;
-			iLORMember4 member = Members.Find(trackName, LORMemberType4.Track, false);
+			iLORMember4 member = AllMembers.Find(trackName, LORMemberType4.Track, false);
 			if (member != null)
 			{
 				ret = (LORTrack4)member;
@@ -2598,7 +2607,7 @@ namespace LORUtils4
 				}
 			} // end Channels loop
 
-			if (tot != Members.HighestSavedIndex + 1)
+			if (tot != AllMembers.HighestSavedIndex + 1)
 			{
 				errs++;
 			}
@@ -2939,7 +2948,7 @@ namespace LORUtils4
 			chan.SetIndex(Channels.Count);
 			Channels.Add(chan);
 			chan.Parse(lineIn);
-			Members.Add(chan);
+			AllMembers.Add(chan);
 			myCentiseconds = Math.Max(myCentiseconds, chan.Centiseconds);
 			return chan;
 		}
@@ -2955,7 +2964,7 @@ namespace LORUtils4
 			chan.Centiseconds = myCentiseconds;
 			chan.SetIndex(Channels.Count);
 			Channels.Add(chan);
-			Members.Add(chan);
+			AllMembers.Add(chan);
 			//myCentiseconds = Math.Max(myCentiseconds, chan.Centiseconds);
 			return chan;
 		}
@@ -2967,7 +2976,7 @@ namespace LORUtils4
 			rch.SetIndex(RGBchannels.Count);
 			RGBchannels.Add(rch);
 			rch.Parse(lineIn);
-			Members.Add(rch);
+			AllMembers.Add(rch);
 			myCentiseconds = Math.Max(myCentiseconds, rch.Centiseconds);
 			return rch;
 		}
@@ -2983,7 +2992,7 @@ namespace LORUtils4
 			rch.Centiseconds = myCentiseconds;
 			rch.SetIndex(RGBchannels.Count);
 			RGBchannels.Add(rch);
-			Members.Add(rch);
+			AllMembers.Add(rch);
 			//myCentiseconds = Math.Max(myCentiseconds, rch.Centiseconds);
 			return rch;
 		}
@@ -2996,7 +3005,7 @@ namespace LORUtils4
 			chg.SetIndex(ChannelGroups.Count);
 			chg.Parse(lineIn);
 			ChannelGroups.Add(chg);
-			Members.Add(chg);
+			AllMembers.Add(chg);
 			myCentiseconds = Math.Max(myCentiseconds, chg.Centiseconds);
 			return chg;
 		}
@@ -3009,7 +3018,7 @@ namespace LORUtils4
 			cos.SetIndex(CosmicDevices.Count);
 			cos.Parse(lineIn);
 			CosmicDevices.Add(cos);
-			Members.Add(cos);
+			AllMembers.Add(cos);
 			myCentiseconds = Math.Max(myCentiseconds, cos.Centiseconds);
 			return cos;
 		}
@@ -3027,7 +3036,7 @@ namespace LORUtils4
 			chg.Centiseconds = myCentiseconds;
 			chg.SetIndex(ChannelGroups.Count);
 			ChannelGroups.Add(chg);
-			Members.Add(chg);
+			AllMembers.Add(chg);
 			//myCentiseconds = Math.Max(myCentiseconds, chg.Centiseconds);
 
 			return chg;
@@ -3046,7 +3055,7 @@ namespace LORUtils4
 			dev.Centiseconds = myCentiseconds;
 			dev.SetIndex(CosmicDevices.Count);
 			CosmicDevices.Add(dev);
-			Members.Add(dev);
+			AllMembers.Add(dev);
 			//myCentiseconds = Math.Max(myCentiseconds, dev.Centiseconds);
 
 			return dev;
@@ -3086,7 +3095,8 @@ namespace LORUtils4
 				tr.AltSavedIndex = lutils.UNDEFINED;
 			}
 			myCentiseconds = Math.Max(myCentiseconds, tr.Centiseconds);
-			Members.Add(tr);
+			AllMembers.Add(tr);
+			members.Add(tr);
 			return tr;
 		}
 
@@ -3108,7 +3118,8 @@ namespace LORUtils4
 				tr.timingGrid = TimingGrids[0];
 			}
 			myCentiseconds = Math.Max(myCentiseconds, tr.Centiseconds);
-			Members.Add(tr);
+			AllMembers.Add(tr);
+			members.Add(tr);
 			return tr;
 		}
 
@@ -3157,9 +3168,9 @@ namespace LORUtils4
 		{
 			if (thePart.SavedIndex < 0)
 			{
-				int newSI = Members.HighestSavedIndex + 1;
+				int newSI = AllMembers.HighestSavedIndex + 1;
 				thePart.SetSavedIndex(newSI);
-				Members.Add(thePart);
+				AllMembers.Add(thePart);
 			}
 			return thePart.SavedIndex;
 		}
@@ -3168,11 +3179,11 @@ namespace LORUtils4
 		{
 			if (thePart.AltSavedIndex < 0)
 			{
-				int newASI = Members.AltHighestSavedIndex + 1;
+				int newASI = AllMembers.AltHighestSavedIndex + 1;
 				thePart.AltSavedIndex = newASI;
 				// May cause out of bounds exception, might need to add instead
-				Members.ByAltSavedIndex[thePart.AltSavedIndex] = thePart;
-				Members.AltHighestSavedIndex = newASI;
+				AllMembers.ByAltSavedIndex[thePart.AltSavedIndex] = thePart;
+				AllMembers.AltHighestSavedIndex = newASI;
 			}
 			return thePart.AltSavedIndex;
 		}
@@ -3181,9 +3192,9 @@ namespace LORUtils4
 		{
 			if (theGrid.SaveID < 0)
 			{
-				int newSI = Members.HighestSaveID + 1;
+				int newSI = AllMembers.HighestSaveID + 1;
 				theGrid.SaveID = newSI;
-				Members.Add(theGrid);
+				AllMembers.Add(theGrid);
 			}
 			return theGrid.SaveID;
 		}
@@ -3192,10 +3203,10 @@ namespace LORUtils4
 		{
 			if (theGrid.AltSavedIndex < 0)
 			{
-				int newASI = Members.AltHighestSaveID + 1;
+				int newASI = AllMembers.AltHighestSaveID + 1;
 				theGrid.AltSaveID = newASI;
-				Members.ByAltSaveID.Add(theGrid);
-				Members.AltHighestSaveID = newASI;
+				AllMembers.ByAltSaveID.Add(theGrid);
+				AllMembers.AltHighestSaveID = newASI;
 			}
 			return theGrid.AltSaveID;
 		}
@@ -3210,13 +3221,13 @@ namespace LORUtils4
 			seqOut.info = info.Clone();
 			seqOut.LORSequenceType4 = LORSequenceType4;
 			seqOut.videoUsage = videoUsage;
-			for (int idx = 0; idx < Members.BySavedIndex.Count; idx++)
+			for (int idx = 0; idx < AllMembers.BySavedIndex.Count; idx++)
 			{
-				LORMemberType4 mt = Members.BySavedIndex[idx].MemberType;
+				LORMemberType4 mt = AllMembers.BySavedIndex[idx].MemberType;
 				if (mt == LORMemberType4.Channel)
 				{
-					LORChannel4 newCh = (LORChannel4)Members.BySavedIndex[idx].Clone();
-					seqOut.Members.Add(newCh);
+					LORChannel4 newCh = (LORChannel4)AllMembers.BySavedIndex[idx].Clone();
+					seqOut.AllMembers.Add(newCh);
 				}
 			}
 			return seqOut;
@@ -3279,15 +3290,15 @@ namespace LORUtils4
 			get
 			{
 				int longest = 0;
-				for (int i=0; i< Members.Count; i++)
+				for (int i=0; i< AllMembers.Count; i++)
 				{
-					if (Members[i].Centiseconds > longest)
+					if (AllMembers[i].Centiseconds > longest)
 					{
-						longest = Members[i].Centiseconds;
+						longest = AllMembers[i].Centiseconds;
 					}
 					if (longest > lutils.MAXCentiseconds)
 					{
-						string m = "WARNING!  Member " + Members[i].Name + " is over 60 minutes!";
+						string m = "WARNING!  Member " + AllMembers[i].Name + " is over 60 minutes!";
 						Fyle.WriteLogEntry(m, "Warning");
 						if (Debugger.IsAttached)
 						{
@@ -3296,7 +3307,7 @@ namespace LORUtils4
 					}
 					if (longest > myCentiseconds)
 					{
-						string m = "ERROR!  Member " + Members[i].Name + " is longer than the sequence!";
+						string m = "ERROR!  Member " + AllMembers[i].Name + " is longer than the sequence!";
 						Fyle.WriteLogEntry(m, "Error");
 						if (Debugger.IsAttached)
 						{

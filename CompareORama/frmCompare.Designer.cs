@@ -34,27 +34,41 @@ namespace UtilORama4
 			this.pnlHelp = new System.Windows.Forms.ToolStripStatusLabel();
 			this.pnlStatus = new System.Windows.Forms.ToolStripStatusLabel();
 			this.pnlAbout = new System.Windows.Forms.ToolStripStatusLabel();
-			this.btnOK = new System.Windows.Forms.Button();
 			this.picAboutIcon = new System.Windows.Forms.PictureBox();
 			this.grpSeqFile = new System.Windows.Forms.GroupBox();
+			this.lblInfoViz = new System.Windows.Forms.Label();
+			this.lblInfoSeq = new System.Windows.Forms.Label();
+			this.label5 = new System.Windows.Forms.Label();
+			this.btnBrowseViz = new System.Windows.Forms.Button();
+			this.txtFileVisual = new System.Windows.Forms.TextBox();
 			this.label2 = new System.Windows.Forms.Label();
-			this.btnBrowseLOR = new System.Windows.Forms.Button();
+			this.btnBrowseSequence = new System.Windows.Forms.Button();
 			this.txtLORfile = new System.Windows.Forms.TextBox();
 			this.grpxLights = new System.Windows.Forms.GroupBox();
+			this.lblInfoxL = new System.Windows.Forms.Label();
 			this.txtXFile = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.btnBrowseX = new System.Windows.Forms.Button();
 			this.grpSpreadsheet = new System.Windows.Forms.GroupBox();
+			this.lblInfoSheet = new System.Windows.Forms.Label();
 			this.txtSpreadsheet = new System.Windows.Forms.TextBox();
 			this.label3 = new System.Windows.Forms.Label();
 			this.btnBrowseSheet = new System.Windows.Forms.Button();
 			this.dlgFileOpen = new System.Windows.Forms.OpenFileDialog();
 			this.dlgFileSave = new System.Windows.Forms.SaveFileDialog();
+			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.lblInfoDat = new System.Windows.Forms.Label();
+			this.lblPathData = new System.Windows.Forms.Label();
+			this.btnBrowseDatabase = new System.Windows.Forms.Button();
+			this.txtFileDatabase = new System.Windows.Forms.TextBox();
+			this.picDivider = new System.Windows.Forms.PictureBox();
 			this.staStatus.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picAboutIcon)).BeginInit();
 			this.grpSeqFile.SuspendLayout();
 			this.grpxLights.SuspendLayout();
 			this.grpSpreadsheet.SuspendLayout();
+			this.groupBox1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.picDivider)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// staStatus
@@ -64,7 +78,7 @@ namespace UtilORama4
             this.pnlHelp,
             this.pnlStatus,
             this.pnlAbout});
-			this.staStatus.Location = new System.Drawing.Point(0, 301);
+			this.staStatus.Location = new System.Drawing.Point(0, 447);
 			this.staStatus.Name = "staStatus";
 			this.staStatus.Size = new System.Drawing.Size(455, 24);
 			this.staStatus.TabIndex = 4;
@@ -106,22 +120,11 @@ namespace UtilORama4
 			this.pnlAbout.Text = "About...";
 			this.pnlAbout.Click += new System.EventHandler(this.pnlAbout_Click);
 			// 
-			// btnOK
-			// 
-			this.btnOK.Enabled = false;
-			this.btnOK.Location = new System.Drawing.Point(168, 172);
-			this.btnOK.Name = "btnOK";
-			this.btnOK.Size = new System.Drawing.Size(75, 23);
-			this.btnOK.TabIndex = 2;
-			this.btnOK.Text = "Compare...";
-			this.btnOK.UseVisualStyleBackColor = true;
-			this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
-			// 
 			// picAboutIcon
 			// 
 			this.picAboutIcon.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("picAboutIcon.BackgroundImage")));
 			this.picAboutIcon.Image = ((System.Drawing.Image)(resources.GetObject("picAboutIcon.Image")));
-			this.picAboutIcon.Location = new System.Drawing.Point(790, 17);
+			this.picAboutIcon.Location = new System.Drawing.Point(790, 207);
 			this.picAboutIcon.Name = "picAboutIcon";
 			this.picAboutIcon.Size = new System.Drawing.Size(128, 128);
 			this.picAboutIcon.TabIndex = 68;
@@ -130,15 +133,74 @@ namespace UtilORama4
 			// 
 			// grpSeqFile
 			// 
+			this.grpSeqFile.Controls.Add(this.lblInfoViz);
+			this.grpSeqFile.Controls.Add(this.lblInfoSeq);
+			this.grpSeqFile.Controls.Add(this.label5);
+			this.grpSeqFile.Controls.Add(this.btnBrowseViz);
+			this.grpSeqFile.Controls.Add(this.txtFileVisual);
 			this.grpSeqFile.Controls.Add(this.label2);
-			this.grpSeqFile.Controls.Add(this.btnBrowseLOR);
+			this.grpSeqFile.Controls.Add(this.btnBrowseSequence);
 			this.grpSeqFile.Controls.Add(this.txtLORfile);
-			this.grpSeqFile.Location = new System.Drawing.Point(13, 12);
+			this.grpSeqFile.Location = new System.Drawing.Point(12, 111);
 			this.grpSeqFile.Name = "grpSeqFile";
-			this.grpSeqFile.Size = new System.Drawing.Size(432, 74);
-			this.grpSeqFile.TabIndex = 0;
+			this.grpSeqFile.Size = new System.Drawing.Size(433, 125);
+			this.grpSeqFile.TabIndex = 1;
 			this.grpSeqFile.TabStop = false;
 			this.grpSeqFile.Text = "LOR Channel Configuration";
+			// 
+			// lblInfoViz
+			// 
+			this.lblInfoViz.AutoSize = true;
+			this.lblInfoViz.Font = new System.Drawing.Font("Cascadia Code PL", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblInfoViz.ForeColor = System.Drawing.Color.MediumPurple;
+			this.lblInfoViz.Location = new System.Drawing.Point(238, 74);
+			this.lblInfoViz.Name = "lblInfoViz";
+			this.lblInfoViz.Size = new System.Drawing.Size(55, 15);
+			this.lblInfoViz.TabIndex = 5;
+			this.lblInfoViz.Text = "00/00/00";
+			this.lblInfoViz.Visible = false;
+			// 
+			// lblInfoSeq
+			// 
+			this.lblInfoSeq.AutoSize = true;
+			this.lblInfoSeq.Font = new System.Drawing.Font("Cascadia Code PL", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblInfoSeq.ForeColor = System.Drawing.Color.MediumPurple;
+			this.lblInfoSeq.Location = new System.Drawing.Point(238, 22);
+			this.lblInfoSeq.Name = "lblInfoSeq";
+			this.lblInfoSeq.Size = new System.Drawing.Size(55, 15);
+			this.lblInfoSeq.TabIndex = 1;
+			this.lblInfoSeq.Text = "00/00/00";
+			this.lblInfoSeq.Visible = false;
+			// 
+			// label5
+			// 
+			this.label5.AutoSize = true;
+			this.label5.Location = new System.Drawing.Point(6, 76);
+			this.label5.Name = "label5";
+			this.label5.Size = new System.Drawing.Size(98, 13);
+			this.label5.TabIndex = 4;
+			this.label5.Text = "LOR Visualizer File:";
+			// 
+			// btnBrowseViz
+			// 
+			this.btnBrowseViz.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnBrowseViz.Location = new System.Drawing.Point(380, 95);
+			this.btnBrowseViz.Name = "btnBrowseViz";
+			this.btnBrowseViz.Size = new System.Drawing.Size(46, 21);
+			this.btnBrowseViz.TabIndex = 7;
+			this.btnBrowseViz.Text = "...";
+			this.btnBrowseViz.UseVisualStyleBackColor = true;
+			this.btnBrowseViz.Click += new System.EventHandler(this.btnBrowseViz_Click);
+			// 
+			// txtFileVisual
+			// 
+			this.txtFileVisual.Location = new System.Drawing.Point(6, 95);
+			this.txtFileVisual.Name = "txtFileVisual";
+			this.txtFileVisual.ReadOnly = true;
+			this.txtFileVisual.Size = new System.Drawing.Size(368, 20);
+			this.txtFileVisual.TabIndex = 6;
+			this.txtFileVisual.TabStop = false;
+			this.txtFileVisual.Text = "C:\\Users\\Me\\Documents\\Light-O-Rama\\Visualizations\\MyHouse.lee";
 			// 
 			// label2
 			// 
@@ -148,17 +210,18 @@ namespace UtilORama4
 			this.label2.Size = new System.Drawing.Size(103, 13);
 			this.label2.TabIndex = 0;
 			this.label2.Text = "LOR Sequence File:";
+			this.label2.Click += new System.EventHandler(this.label2_Click);
 			// 
-			// btnBrowseLOR
+			// btnBrowseSequence
 			// 
-			this.btnBrowseLOR.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnBrowseLOR.Location = new System.Drawing.Point(380, 43);
-			this.btnBrowseLOR.Name = "btnBrowseLOR";
-			this.btnBrowseLOR.Size = new System.Drawing.Size(46, 21);
-			this.btnBrowseLOR.TabIndex = 2;
-			this.btnBrowseLOR.Text = "...";
-			this.btnBrowseLOR.UseVisualStyleBackColor = true;
-			this.btnBrowseLOR.Click += new System.EventHandler(this.btnBrowseLOR_Click);
+			this.btnBrowseSequence.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnBrowseSequence.Location = new System.Drawing.Point(380, 43);
+			this.btnBrowseSequence.Name = "btnBrowseSequence";
+			this.btnBrowseSequence.Size = new System.Drawing.Size(46, 21);
+			this.btnBrowseSequence.TabIndex = 3;
+			this.btnBrowseSequence.Text = "...";
+			this.btnBrowseSequence.UseVisualStyleBackColor = true;
+			this.btnBrowseSequence.Click += new System.EventHandler(this.btnBrowseLOR_Click);
 			// 
 			// txtLORfile
 			// 
@@ -166,22 +229,35 @@ namespace UtilORama4
 			this.txtLORfile.Name = "txtLORfile";
 			this.txtLORfile.ReadOnly = true;
 			this.txtLORfile.Size = new System.Drawing.Size(368, 20);
-			this.txtLORfile.TabIndex = 1;
+			this.txtLORfile.TabIndex = 2;
 			this.txtLORfile.TabStop = false;
 			this.txtLORfile.Text = "C:\\Users\\Me\\Documents\\Light-O-Rama\\MySequence.lms";
 			this.txtLORfile.TextChanged += new System.EventHandler(this.txtLORfile_TextChanged);
 			// 
 			// grpxLights
 			// 
+			this.grpxLights.Controls.Add(this.lblInfoxL);
 			this.grpxLights.Controls.Add(this.txtXFile);
 			this.grpxLights.Controls.Add(this.label1);
 			this.grpxLights.Controls.Add(this.btnBrowseX);
-			this.grpxLights.Location = new System.Drawing.Point(12, 92);
+			this.grpxLights.Location = new System.Drawing.Point(12, 242);
 			this.grpxLights.Name = "grpxLights";
 			this.grpxLights.Size = new System.Drawing.Size(433, 74);
-			this.grpxLights.TabIndex = 1;
+			this.grpxLights.TabIndex = 2;
 			this.grpxLights.TabStop = false;
 			this.grpxLights.Text = "xLights Configuration";
+			// 
+			// lblInfoxL
+			// 
+			this.lblInfoxL.AutoSize = true;
+			this.lblInfoxL.Font = new System.Drawing.Font("Cascadia Code PL", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblInfoxL.ForeColor = System.Drawing.Color.MediumPurple;
+			this.lblInfoxL.Location = new System.Drawing.Point(238, 22);
+			this.lblInfoxL.Name = "lblInfoxL";
+			this.lblInfoxL.Size = new System.Drawing.Size(55, 15);
+			this.lblInfoxL.TabIndex = 1;
+			this.lblInfoxL.Text = "00/00/00";
+			this.lblInfoxL.Visible = false;
 			// 
 			// txtXFile
 			// 
@@ -189,7 +265,7 @@ namespace UtilORama4
 			this.txtXFile.Name = "txtXFile";
 			this.txtXFile.ReadOnly = true;
 			this.txtXFile.Size = new System.Drawing.Size(368, 20);
-			this.txtXFile.TabIndex = 1;
+			this.txtXFile.TabIndex = 2;
 			this.txtXFile.TabStop = false;
 			this.txtXFile.Text = "C:\\Users\\Me\\Documents\\xLights\\MyShow\\xlights_rgbeffects.xml";
 			// 
@@ -208,23 +284,36 @@ namespace UtilORama4
 			this.btnBrowseX.Location = new System.Drawing.Point(381, 40);
 			this.btnBrowseX.Name = "btnBrowseX";
 			this.btnBrowseX.Size = new System.Drawing.Size(46, 21);
-			this.btnBrowseX.TabIndex = 2;
+			this.btnBrowseX.TabIndex = 3;
 			this.btnBrowseX.Text = "...";
 			this.btnBrowseX.UseVisualStyleBackColor = true;
 			this.btnBrowseX.Click += new System.EventHandler(this.btnBrowseX_Click);
 			// 
 			// grpSpreadsheet
 			// 
+			this.grpSpreadsheet.Controls.Add(this.lblInfoSheet);
 			this.grpSpreadsheet.Controls.Add(this.txtSpreadsheet);
 			this.grpSpreadsheet.Controls.Add(this.label3);
 			this.grpSpreadsheet.Controls.Add(this.btnBrowseSheet);
 			this.grpSpreadsheet.Enabled = false;
-			this.grpSpreadsheet.Location = new System.Drawing.Point(12, 214);
+			this.grpSpreadsheet.Location = new System.Drawing.Point(12, 363);
 			this.grpSpreadsheet.Name = "grpSpreadsheet";
 			this.grpSpreadsheet.Size = new System.Drawing.Size(433, 74);
 			this.grpSpreadsheet.TabIndex = 3;
 			this.grpSpreadsheet.TabStop = false;
 			this.grpSpreadsheet.Text = "Save to Spreadsheet";
+			// 
+			// lblInfoSheet
+			// 
+			this.lblInfoSheet.AutoSize = true;
+			this.lblInfoSheet.Font = new System.Drawing.Font("Cascadia Code PL", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblInfoSheet.ForeColor = System.Drawing.Color.MediumPurple;
+			this.lblInfoSheet.Location = new System.Drawing.Point(238, 22);
+			this.lblInfoSheet.Name = "lblInfoSheet";
+			this.lblInfoSheet.Size = new System.Drawing.Size(55, 15);
+			this.lblInfoSheet.TabIndex = 2;
+			this.lblInfoSheet.Text = "00/00/00";
+			this.lblInfoSheet.Visible = false;
 			// 
 			// txtSpreadsheet
 			// 
@@ -251,7 +340,7 @@ namespace UtilORama4
 			this.btnBrowseSheet.Location = new System.Drawing.Point(381, 40);
 			this.btnBrowseSheet.Name = "btnBrowseSheet";
 			this.btnBrowseSheet.Size = new System.Drawing.Size(46, 21);
-			this.btnBrowseSheet.TabIndex = 2;
+			this.btnBrowseSheet.TabIndex = 3;
 			this.btnBrowseSheet.Text = "...";
 			this.btnBrowseSheet.UseVisualStyleBackColor = true;
 			this.btnBrowseSheet.Click += new System.EventHandler(this.btnBrowseSheet_Click);
@@ -260,16 +349,80 @@ namespace UtilORama4
 			// 
 			this.dlgFileOpen.FileName = "openFileDialog1";
 			// 
+			// groupBox1
+			// 
+			this.groupBox1.Controls.Add(this.lblInfoDat);
+			this.groupBox1.Controls.Add(this.lblPathData);
+			this.groupBox1.Controls.Add(this.btnBrowseDatabase);
+			this.groupBox1.Controls.Add(this.txtFileDatabase);
+			this.groupBox1.Location = new System.Drawing.Point(12, 21);
+			this.groupBox1.Name = "groupBox1";
+			this.groupBox1.Size = new System.Drawing.Size(433, 74);
+			this.groupBox1.TabIndex = 0;
+			this.groupBox1.TabStop = false;
+			this.groupBox1.Text = "Util-O-Rama Master Channel Database";
+			// 
+			// lblInfoDat
+			// 
+			this.lblInfoDat.AutoSize = true;
+			this.lblInfoDat.Font = new System.Drawing.Font("Cascadia Code PL", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblInfoDat.ForeColor = System.Drawing.Color.MediumPurple;
+			this.lblInfoDat.Location = new System.Drawing.Point(238, 24);
+			this.lblInfoDat.Name = "lblInfoDat";
+			this.lblInfoDat.Size = new System.Drawing.Size(55, 15);
+			this.lblInfoDat.TabIndex = 1;
+			this.lblInfoDat.Text = "00/00/00";
+			this.lblInfoDat.Visible = false;
+			// 
+			// lblPathData
+			// 
+			this.lblPathData.AutoSize = true;
+			this.lblPathData.Location = new System.Drawing.Point(6, 24);
+			this.lblPathData.Name = "lblPathData";
+			this.lblPathData.Size = new System.Drawing.Size(81, 13);
+			this.lblPathData.TabIndex = 0;
+			this.lblPathData.Text = "Database Path:";
+			// 
+			// btnBrowseDatabase
+			// 
+			this.btnBrowseDatabase.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnBrowseDatabase.Location = new System.Drawing.Point(380, 43);
+			this.btnBrowseDatabase.Name = "btnBrowseDatabase";
+			this.btnBrowseDatabase.Size = new System.Drawing.Size(46, 21);
+			this.btnBrowseDatabase.TabIndex = 3;
+			this.btnBrowseDatabase.Text = "...";
+			this.btnBrowseDatabase.UseVisualStyleBackColor = true;
+			this.btnBrowseDatabase.Click += new System.EventHandler(this.btnBrowseDatabase_Click);
+			// 
+			// txtFileDatabase
+			// 
+			this.txtFileDatabase.Location = new System.Drawing.Point(6, 43);
+			this.txtFileDatabase.Name = "txtFileDatabase";
+			this.txtFileDatabase.ReadOnly = true;
+			this.txtFileDatabase.Size = new System.Drawing.Size(368, 20);
+			this.txtFileDatabase.TabIndex = 2;
+			this.txtFileDatabase.TabStop = false;
+			this.txtFileDatabase.Text = "C:\\Users\\Me\\Documents\\Util-O-Rama\\ChannelDB";
+			// 
+			// picDivider
+			// 
+			this.picDivider.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+			this.picDivider.Location = new System.Drawing.Point(12, 331);
+			this.picDivider.Name = "picDivider";
+			this.picDivider.Size = new System.Drawing.Size(433, 4);
+			this.picDivider.TabIndex = 70;
+			this.picDivider.TabStop = false;
+			// 
 			// frmCompare
 			// 
-			this.AcceptButton = this.btnOK;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(455, 325);
+			this.ClientSize = new System.Drawing.Size(455, 471);
+			this.Controls.Add(this.picDivider);
+			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.grpSpreadsheet);
 			this.Controls.Add(this.grpSeqFile);
 			this.Controls.Add(this.grpxLights);
-			this.Controls.Add(this.btnOK);
 			this.Controls.Add(this.staStatus);
 			this.Controls.Add(this.picAboutIcon);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
@@ -279,6 +432,7 @@ namespace UtilORama4
 			this.Text = "Compare-O-Rama";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmBlank_FormClosing);
 			this.Load += new System.EventHandler(this.frmBlank_Load);
+			this.Shown += new System.EventHandler(this.frmCompare_Shown);
 			this.staStatus.ResumeLayout(false);
 			this.staStatus.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picAboutIcon)).EndInit();
@@ -288,6 +442,9 @@ namespace UtilORama4
 			this.grpxLights.PerformLayout();
 			this.grpSpreadsheet.ResumeLayout(false);
 			this.grpSpreadsheet.PerformLayout();
+			this.groupBox1.ResumeLayout(false);
+			this.groupBox1.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.picDivider)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -299,11 +456,10 @@ namespace UtilORama4
 		private System.Windows.Forms.ToolStripStatusLabel pnlHelp;
 		private System.Windows.Forms.ToolStripStatusLabel pnlStatus;
 		private System.Windows.Forms.ToolStripStatusLabel pnlAbout;
-		private System.Windows.Forms.Button btnOK;
 		private System.Windows.Forms.PictureBox picAboutIcon;
 		private System.Windows.Forms.GroupBox grpSeqFile;
 		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.Button btnBrowseLOR;
+		private System.Windows.Forms.Button btnBrowseSequence;
 		private System.Windows.Forms.TextBox txtLORfile;
 		private System.Windows.Forms.GroupBox grpxLights;
 		private System.Windows.Forms.Label label1;
@@ -315,6 +471,19 @@ namespace UtilORama4
 		private System.Windows.Forms.Button btnBrowseSheet;
 		private System.Windows.Forms.OpenFileDialog dlgFileOpen;
 		private System.Windows.Forms.SaveFileDialog dlgFileSave;
+		private System.Windows.Forms.GroupBox groupBox1;
+		private System.Windows.Forms.Label lblPathData;
+		private System.Windows.Forms.Button btnBrowseDatabase;
+		private System.Windows.Forms.TextBox txtFileDatabase;
+		private System.Windows.Forms.Label label5;
+		private System.Windows.Forms.Button btnBrowseViz;
+		private System.Windows.Forms.TextBox txtFileVisual;
+		private System.Windows.Forms.Label lblInfoViz;
+		private System.Windows.Forms.Label lblInfoSeq;
+		private System.Windows.Forms.Label lblInfoxL;
+		private System.Windows.Forms.Label lblInfoDat;
+		private System.Windows.Forms.Label lblInfoSheet;
+		private System.Windows.Forms.PictureBox picDivider;
 	}
 }
 
