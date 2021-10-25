@@ -11,6 +11,12 @@ namespace LORUtils4
 {
 	public class LORVisualization4 : LORMemberBase4, iLORMember4, IComparable<iLORMember4>
 	{
+		// Sub-Member Heirarchy:
+		//	Visualization has ItemGroups,
+		//   ItemGroups have DrawObjects,
+		//    DrawObjects have 1 or 3 VizChannels,
+		//     (1 for single-color, 3 for RGB).
+		
 		public static readonly string TABLEvisualization = "LViz";
 		public static readonly string TABLEdrawPoint = "DrawPoint";
 		public static readonly string TABLEdrawPoints = "DrawPoints";
@@ -50,7 +56,7 @@ namespace LORUtils4
 
 		public int errorStatus = 0;
 		public LORSeqInfo4 info = null;
-		public LOROutput4 output = new LOROutput4();
+		//public LOROutput4 output = new LOROutput4();
 		public int lineCount = 0;
 		public List<LORVizItemGroup4> VizItemGroups = new List<LORVizItemGroup4>();
 		public List<LORVizDrawObject4> VizDrawObjects = new List<LORVizDrawObject4>();
@@ -71,6 +77,7 @@ namespace LORUtils4
 			base.SetParent(this);
 			AllMembers = new LORMembership4(this);
 			Members = new LORMembership4(this);
+			MakeDummies();
 			myName = "$_UNNAMED_$";
 		}
 
@@ -80,6 +87,7 @@ namespace LORUtils4
 			base.SetParent(this);
 			AllMembers = new LORMembership4(this);
 			Members = new LORMembership4(this);
+			MakeDummies();
 			myName = fileName;
 			ReadVisualizationFile(fileName);
 		}
@@ -87,20 +95,33 @@ namespace LORUtils4
 		private void MakeDummies()
 		{
 			// SavedIndices and SaveIDs in Sequences start at 0. Cool! Great! No Prob!
-			// But Channels, Groups, and DrawObjects in Visualizations start at 1 (Grrrrr)
+			// But VizChannels, ItemGroups, and DrawObjects in Visualizations start at 1 (Grrrrr)
 			// So add a dummy object at the [0] start of the lists
+
+			// Create a dummy channel and put it at the start of the channel list
 			LORVizChannel4 lvc = new LORVizChannel4("\0\0DUMMY VIZCHANNEL AT INDEX [0] - DO NOT USE!");
 			lvc.SetIndex(0);
 			lvc.SetSavedIndex(0);
 			lvc.SetParent(myParent);
+			VizChannels.Add(lvc);
+			// Create a dummy DrawObject and put it at the start of the list
 			LORVizDrawObject4 lvdo = new LORVizDrawObject4("\0\0DUMMY VIZDRAWOBJECT AT INDEX [0] - DO NOT USE!");
 			lvdo.SetIndex(0);
 			lvdo.SetSavedIndex(0);
 			lvdo.SetParent(myParent);
+			// Assign the dummy channel to the dummy drawobject
+			lvdo.redChannel = lvc;
+			VizDrawObjects.Add(lvdo);
+			// Create a dummy itemgroup and put it at the start of the list
 			LORVizItemGroup4 lvig = new LORVizItemGroup4("\0\0DUMMY VIZITEMGROUP AT INDEX [0] - DO NOT USE!");
 			lvig.SetIndex(0);
 			lvig.SetSavedIndex(0);
 			lvig.SetParent(myParent);
+			// Add the dummy drawobject to the dummy itemgroup membership
+			lvig.Members.Add(lvdo);
+			VizItemGroups.Add(lvig);
+			// Add the dummy itemgroup to the Visualizations members at index [0]
+			Members.Add(lvig);
 
 		}
 
@@ -346,6 +367,7 @@ namespace LORUtils4
 							info.createdAt = creation;
 							info.lastModified = info.file_saved;
 							MakeDirty(false);
+							AllMembers.ReIndex();
 							//Members.ReIndex();
 						} // end second line is sequence info
 					} // end has a second line
@@ -407,7 +429,7 @@ namespace LORUtils4
 					{
 						string msg = "Draw Object with ID " + doi + " not found in VizDrawObjects for ItemGroup ";
 						msg += group.Name;
-						Fyle.BUG(msg);
+						//Fyle.BUG(msg);
 					}
 				}
 			}
@@ -456,25 +478,7 @@ namespace LORUtils4
 			return drob;
 		}
 
-
-		public new int CompareTo(iLORMember4 other)
-		{
-			int result = 0;
-			
-			if (LORMembership4.sortMode == LORMembership4.SORTbyOutput)
-			{
-				LORChannel4 ch = (LORChannel4)other;
-				output.ToString().CompareTo(ch.output.ToString());
-			}
-			else
-			{
-				result = base.CompareTo(other);
-			}
-
-			return result;
-		}
-
-		public new iLORMember4 Clone()
+		public override iLORMember4 Clone()
 		{
 			LORVisualization4 newViz = (LORVisualization4)Clone();
 			newViz.info = info.Clone();
@@ -485,16 +489,16 @@ namespace LORUtils4
 			return newViz;
 		}
 
-		public new iLORMember4 Clone(string newName)
+		public override iLORMember4 Clone(string newName)
 		{
 			LORVisualization4 ret = (LORVisualization4)this.Clone();
 			ChangeName(newName);
 			return ret;
 		}
 
-		public new string LineOut()
+		public override string LineOut()
 		{ return ""; }
-		public new void Parse(string lineIn)
+		public override void Parse(string lineIn)
 		{ }
 
 		public LORVizChannel4 CreateVizChannel(string theName)
@@ -548,60 +552,38 @@ namespace LORUtils4
 			return grp;
 		}
 
-		public LORVizChannel4 FindChannel(string theName, bool createIfNotFound=false)
+		public LORVizChannel4 FindChannel(string channelName, bool createIfNotFound = false)
 		{
 			LORVizChannel4 ret = null;
-			for (int v = 0; v < VizChannels.Count; v++)
+			iLORMember4 member = AllMembers.FindByName(channelName, LORMemberType4.VizChannel, createIfNotFound);
+			if (member != null)
 			{
-				if (theName == VizChannels[v].Name)
-				{
-					ret = VizChannels[v];
-					v = VizChannels.Count; // Escape loop
-				}
-			}
-			if ((ret== null) && createIfNotFound)
-			{
-				ret = CreateVizChannel(theName);
+				ret = (LORVizChannel4)member;
 			}
 			return ret;
 		}
 
-		public LORVizItemGroup4 FindItemGroup(string theName, bool createIfNotFound=false)
+		public LORVizItemGroup4 FindItemGroup(string groupName, bool createIfNotFound = false)
 		{
 			LORVizItemGroup4 ret = null;
-			for (int v = 0; v < VizItemGroups.Count; v++)
+			iLORMember4 member = AllMembers.FindByName(groupName, LORMemberType4.VizItemGroup, createIfNotFound);
+			if (member != null)
 			{
-				if (theName == VizItemGroups[v].Name)
-				{
-					ret = VizItemGroups[v];
-					v = VizItemGroups.Count; // Escape loop
-				}
-			}
-			if ((ret == null) && createIfNotFound)
-			{
-				ret = CreateItemGroup(theName);
+				ret = (LORVizItemGroup4)member;
 			}
 			return ret;
 		}
 
-		public LORVizDrawObject4 FindDrawObject(string theName, bool createIfNotFound=false)
+		public LORVizDrawObject4 FindDrawObject(string objectName, bool createIfNotFound = false)
 		{
 			LORVizDrawObject4 ret = null;
-			for (int v = 0; v < VizDrawObjects.Count; v++)
+			iLORMember4 member = AllMembers.FindByName(objectName, LORMemberType4.VizDrawObject, createIfNotFound);
+			if (member != null)
 			{
-				if (theName == VizDrawObjects[v].Name)
-				{
-					ret = VizDrawObjects[v];
-					v = VizDrawObjects.Count; // Escape loop
-				}
-			}
-			if ((ret == null) && createIfNotFound)
-			{
-				ret = CreateDrawObject(theName);
+				ret = (LORVizDrawObject4)member;
 			}
 			return ret;
 		}
-
 
 		private int AssignNextChannelID(LORVizChannel4 thePart)
 		{
@@ -650,6 +632,17 @@ namespace LORUtils4
 			return thePart.AltSavedIndex;
 		}
 
+		public override int color
+		{
+			get { return lutils.LORCOLOR_MULTI; }
+			set { int ignore = value; }
+		}
+
+		public override System.Drawing.Color Color
+		{
+			get { return lutils.Color_LORtoNet(this.color); }
+			set { System.Drawing.Color ignore = value; }
+		}
 
 
 

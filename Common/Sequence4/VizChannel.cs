@@ -15,8 +15,8 @@ namespace LORUtils4
 	{
 		//private const string STARTchannel = lutils.STFLD + lutils.TABLEchannel + lutils.FIELDname;
 
-		public int color = 0;
-		public LOROutput4 output = new LOROutput4();
+		//public int color = 0;
+		public LOROutput4 output = null;
 		public LORRGBChild4 rgbChild = LORRGBChild4.None;
 		public LORVizDrawObject4 DrawObject = null;
 		//public List<LOREffect4> effects = new List<LOREffect4>();
@@ -38,6 +38,7 @@ namespace LORUtils4
 		public LORVizChannel4(string theName, int theVizID)
 		{
 			myName = theName;
+			output = new LOROutput4(this);
 			mySavedIndex = theVizID;
 		}
 
@@ -61,7 +62,7 @@ namespace LORUtils4
 
 
 		//! PROPERTIES, METHODS, ETC.
-		public new int CompareTo(iLORMember4 other)
+		public override int CompareTo(iLORMember4 other)
 		{
 			int result = 0;
 			if (LORMembership4.sortMode == LORMembership4.SORTbyOutput)
@@ -101,7 +102,7 @@ namespace LORUtils4
 			}
 		}
 
-		public int AltSaveID
+		public int AltItemID
 		{
 			get
 			{
@@ -116,7 +117,7 @@ namespace LORUtils4
 		}
 
 
-		public new int Centiseconds
+		public override int Centiseconds
 		{
 			get
 			{
@@ -138,7 +139,7 @@ namespace LORUtils4
 		}
 
 
-		public new LORMemberType4 MemberType
+		public override LORMemberType4 MemberType
 		{
 			get
 			{
@@ -147,29 +148,38 @@ namespace LORUtils4
 		}
 
 		// I'm not a big fan of case sensitivity, but I'm gonna take advantage of it here
-		// color with lower c is the LOR color, a 32 bit int in BGR order
-		// Color with capital C is the .Net Color object
-		public Color Color
+		// color with lower c is the LOR color, a 24 bit int in BGR order
+		// Color with capital C is the .Net Color object 32 bit in ARGB order
+		public override int color
+		{
+			get { return mycolor; }
+			set { mycolor = value; }
+		}
+
+		public override Color Color
 		{
 			get
 			{
-				return lutils.Color_LORtoNet(color);
+				return lutils.Color_LORtoNet(mycolor);
 			}
 			set
 			{
-				color = lutils.Color_NettoLOR(value);
+				mycolor = lutils.Color_NettoLOR(value);
 			}
 
 		}
 
-		public new void Parse(string lineIn)
+		public override void Parse(string lineIn)
 		{
 			//LORSequence4 Parent = ID.Parent;
 			myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
 			ItemID = lutils.getKeyValue(lineIn, LORVisualization4.FIELDvizID);
 			color = lutils.getKeyValue(lineIn, LORVisualization4.FIELDvizColor);
 			//myCentiseconds = lutils.getKeyValue(lineIn, lutils.FIELDcentiseconds);
-			output.Parse(lineIn);
+			if (output == null)
+			{ output = new LOROutput4(this, lineIn); }
+			else
+			{ output.Parse(lineIn); }
 			SubType = lutils.getKeyValue(lineIn, FIELDsubType);
 			SubParam = lutils.getKeyValue(lineIn, FIELDsubParam);
 			colors[0] = lutils.getKeyValue(lineIn, FIELDmultiColor + "1");
@@ -181,7 +191,7 @@ namespace LORUtils4
 			if (myParent != null) myParent.MakeDirty(true);
 		}
 
-		public new string LineOut()
+		public override string LineOut()
 		{
 			// <LORChannel4 ID="1" Name="M5 Center Bushes (G) [L1.10]"
 			// LORDeviceType4 ="1" Network="0"
@@ -232,9 +242,9 @@ namespace LORUtils4
 			return ret.ToString();
 		}
 
-		public new int UniverseNumber
+		public override int UniverseNumber
 		{ get { return output.UniverseNumber; } }
-		public new int DMXAddress
+		public override int DMXAddress
 		{ get { return output.channel; } }
 
 
@@ -292,9 +302,9 @@ namespace LORUtils4
 
 		}
 
-		public new iLORMember4 Clone()
+		public override iLORMember4 Clone()
 		{
-			LORVizChannel4 vch = (LORVizChannel4)Clone();
+			LORVizChannel4 vch = (LORVizChannel4)base.Clone();
 			vch.output = output.Clone();
 			vch.Owner = Owner;
 			vch.color = color;
@@ -308,7 +318,7 @@ namespace LORUtils4
 			return vch;
 		}
 
-		public new iLORMember4 Clone(string newName)
+		public override iLORMember4 Clone(string newName)
 		{
 			LORVizChannel4 vch = (LORVizChannel4)this.Clone();
 			ChangeName(newName);

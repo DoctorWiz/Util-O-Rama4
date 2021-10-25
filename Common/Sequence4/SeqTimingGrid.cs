@@ -61,7 +61,7 @@ namespace LORUtils4
 		}
 
 
-		public new LORMemberType4 MemberType
+		public override LORMemberType4 MemberType
 		{
 			get
 			{
@@ -70,7 +70,7 @@ namespace LORUtils4
 		}
 
 
-		public new string LineOut()
+		public override string LineOut()
 		{
 			StringBuilder ret = new StringBuilder();
 
@@ -118,7 +118,7 @@ namespace LORUtils4
 			return ret.ToString();
 		}
 
-		public new void Parse(string lineIn)
+		public override void Parse(string lineIn)
 		{
 			myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
 			mySavedIndex = lutils.getKeyValue(lineIn, FIELDsaveID);
@@ -129,7 +129,7 @@ namespace LORUtils4
 		}
 
 
-		public new iLORMember4 Clone()
+		public override iLORMember4 Clone()
 		{
 			LORTimings4 grid = (LORTimings4)Clone();
 			grid.LORTimingGridType4 = this.LORTimingGridType4;
@@ -144,7 +144,7 @@ namespace LORUtils4
 			return grid;
 		}
 
-		public new iLORMember4 Clone(string newName)
+		public override iLORMember4 Clone(string newName)
 		{
 			LORTimings4 grid = (LORTimings4)this.Clone();
 			ChangeName(newName);
@@ -259,7 +259,7 @@ namespace LORUtils4
 				return lutils.UNDEFINED;
 			}
 		}
-		public new int DMXAddress
+		public override int DMXAddress
 		{
 			get
 			{

@@ -31,9 +31,9 @@ namespace UtilORama4
 		// Just creating a convenient reference to the static list in the DMXUniverse class
 		private List<DMXChannel> AllChannels = DMXUniverse.AllChannels;
 
-		//public List<DMXDevice> devices = new List<DMXDevice>();
+		//public List<DMXDevice> deviceTypes = new List<DMXDevice>();
 		// Just creating a convenient reference to the static list in the DMXChannel class
-		public List<DMXDevice> devices = DMXChannel.Devices;
+		public List<DMXDeviceType> deviceTypes = DMXChannel.DeviceTypes;
 		private const string myTitle = "Chan-O-Rama  Channel Manager";
 
 		private string lastFile = "";
@@ -522,12 +522,12 @@ namespace UtilORama4
 
 
 
-							if (devID >= 0 && devID < devices.Count)
+							if (devID >= 0 && devID < deviceTypes.Count)
 							{
 								//! Note: Devices should not yet be sorted by Display Order
 								//! Should still be sorted by ID
-								string dn = devices[devID].Name;
-								channel.DMXDevice = devices[devID];
+								string dn = deviceTypes[devID].Name;
+								channel.DeviceType = deviceTypes[devID];
 							}
 
 							string colhex = row[8];           // Field 8 = Color
@@ -588,8 +588,8 @@ namespace UtilORama4
 							universe.DMXControllers[c].DMXChannels.Sort();
 						}
 					}
-					// *NOW* we can sort the devices by display order
-					devices.Sort();
+					// *NOW* we can sort the deviceTypes by display order
+					deviceTypes.Sort();
 				}
 				catch (Exception ex)
 				{
@@ -633,8 +633,8 @@ namespace UtilORama4
 								{
 									int.TryParse(row[2], out ord); // Field 2 = LOROutput4 Number
 								}
-								DMXDevice device = new DMXDevice(devName, devID, ord);
-								devices.Add(device);
+								DMXDeviceType deviceType = new DMXDeviceType(devName, devID, ord);
+								deviceTypes.Add(deviceType);
 							}
 						}
 						catch (Exception ex)
@@ -662,10 +662,10 @@ namespace UtilORama4
 					errs++;
 				}
 			}
-			int dc = devices.Count;
+			int dc = deviceTypes.Count;
 			//! No! do not sort [by display order] yet!  Leave sorted by order added which is also by ID until AFTER the channels have been
 			//! loaded, THEN sort by display order
-			//devices.Sort();
+			//deviceTypes.Sort();
 			return errs;
 		}
 
@@ -855,7 +855,7 @@ namespace UtilORama4
 						row.Add(channel.Location);                              // Field 4
 						row.Add(channel.Comment);                               // Field 5
 						row.Add(channel.Active.ToString());                     // Field 6
-						row.Add(channel.DMXDevice.ID.ToString());         // Field 7
+						row.Add(channel.DeviceType.ID.ToString());         // Field 7
 						row.Add(LORUtils4.lutils.ColorToHex(channel.Color));                // Field 8
 
 						writer.WriteRow(row);
@@ -1258,7 +1258,7 @@ namespace UtilORama4
 			frmChannel chanForm = new frmChannel(channelClone, universes);
 			//chanForm.AllChannels = AllChannels;
 			//chanForm.universes = universes;
-			//chanForm.devices = devices;
+			//chanForm.deviceTypes = deviceTypes;
 			try
 			{
 				// For some strange reason I can't figure out---
@@ -1370,7 +1370,7 @@ namespace UtilORama4
 					frmChannel chanForm = new frmChannel(newChan, universes);
 					//chanForm.AllChannels = AllChannels;
 					//chanForm.universes = universes;
-					//chanForm.devices = devices;
+					//chanForm.deviceTypes = deviceTypes;
 					DialogResult dr = chanForm.ShowDialog(this);
 					if (dr == DialogResult.OK)
 					{
@@ -1629,7 +1629,7 @@ namespace UtilORama4
 										row.Add(channel.xLightsAddress.ToString());  // Field 4 - xLights Address
 										row.Add(channel.Active.ToString());          // Field 5 - Active
 										row.Add(channel.Name);                       // Field 6 - Name
-										row.Add(channel.DMXDevice.Name);              // Field 7 - Type
+										row.Add(channel.DeviceType.Name);              // Field 7 - Type
 										row.Add(LORUtils4.lutils.ColorToHex(channel.Color));    // Field 8 - Color
 										row.Add(channel.Location);                   // Field 9 - Location
 										row.Add(channel.Comment);                    // Field 10 - comment

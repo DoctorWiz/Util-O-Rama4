@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 namespace LORUtils4
 {
 	public enum LORDeviceType4
-	{ None=lutils.UNDEFINED, LOR=1, DMX=7, Digital=3, LORCosmic4=2, Dasher=4 };
+	{ None=lutils.UNDEFINED, LOR=1, DMX=7, Digital=3, Cosmic=2, Dasher=4 };
 
 	//public enum LOREffectType4 { None=lutils.UNDEFINED, Intensity=1, Shimmer, Twinkle, DMX }
 	public enum LOREffectType4 { None = lutils.UNDEFINED, Intensity = 1, Shimmer, Twinkle, DMX, Constant, FadeUp, FadeDown }
@@ -153,7 +153,7 @@ namespace LORUtils4
 			}
 			else if (deviceName == DEVICEcosmic)
 			{
-				valueOut = LORDeviceType4.LORCosmic4;
+				valueOut = LORDeviceType4.Cosmic;
 			}
 			else if (deviceName == "")
 			{
@@ -285,7 +285,7 @@ namespace LORUtils4
 					valueOut = DEVICEdigital;
 					break;
 
-				case LORDeviceType4.LORCosmic4:
+				case LORDeviceType4.Cosmic:
 					valueOut = DEVICEcosmic;
 					break;
 

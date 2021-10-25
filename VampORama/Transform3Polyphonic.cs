@@ -390,7 +390,7 @@ namespace UtilORama4
 
 			// Part 1
 			// Get Track, Polyphonic Group, Octave Groups, and Poly Channels
-			polyGroup = Annotator.Sequence.FindChannelGroup(transformName, Annotator.VampTrack.Members, true);
+			polyGroup = Annotator.VampTrack.Members.FindChannelGroup(transformName, true);
 			Array.Resize(ref polyChannels, polyCount);
 			LORChannelGroup4 octoGroup = null;
 			for (int n = 0; n < polyCount; n++)
@@ -398,14 +398,14 @@ namespace UtilORama4
 				int g2 = (int)n / 12;
 				if (g2 != grpNum)
 				{
-					octoGroup = Annotator.Sequence.FindChannelGroup(PolyGroupNamePrefix + MusicalNotation.octaveNamesA[g2], polyGroup.Members, true); ;
+					octoGroup = polyGroup.Members.FindChannelGroup(PolyGroupNamePrefix + MusicalNotation.octaveNamesA[g2], true); ;
 					grpNum = g2;
 				}
 				string noteName = n.ToString();
 				if (LabelType == vamps.LabelType.NoteNamesASCII)		noteName = MusicalNotation.noteNamesASCII[n];
 				if (LabelType == vamps.LabelType.NoteNamesUnicode) noteName = MusicalNotation.noteNamesUnicode[n];
 
-				LORChannel4 chs = Annotator.Sequence.FindChannel(PolyNoteNamePrefix + noteName, octoGroup.Members, true, true);
+				LORChannel4 chs = octoGroup.Members.FindChannel(PolyNoteNamePrefix + noteName, true, true);
 				chs.color = SequenceFunctions.ChannelColor(n);
 				chs.effects.Clear();
 				polyChannels[n] = chs;

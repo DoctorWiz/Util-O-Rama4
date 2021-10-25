@@ -311,7 +311,7 @@ namespace UtilORama4
 			StringBuilder txt = new StringBuilder();
 			for (int c=0; c< controller.DMXChannels.Count; c++)
 			{
-				txt.Append(controller.DMXChannels[c].LOROutput4.ToString());
+				txt.Append(controller.DMXChannels[c].OutputNum.ToString());
 				txt.Append(": ");
 				txt.Append(controller.DMXChannels[c].Name);
 				txt.Append("\r\n");

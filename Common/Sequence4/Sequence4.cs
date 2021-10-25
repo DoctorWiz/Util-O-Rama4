@@ -104,7 +104,7 @@ namespace LORUtils4
 
 		#region iLORMember4 Interface
 
-		public new int Centiseconds
+		public override int Centiseconds
 		{
 			get
 			{
@@ -202,7 +202,7 @@ namespace LORUtils4
 		}
 
 
-		public new  LORMemberType4 MemberType
+		public override  LORMemberType4 MemberType
 		{
 			get
 			{
@@ -211,7 +211,7 @@ namespace LORUtils4
 		}
 
 		
-		public new string LineOut()
+		public override string LineOut()
 		{
 			string ret = "";
 			// Implemented primarily for compatibility with 'iLORMember4' interface
@@ -219,7 +219,7 @@ namespace LORUtils4
 			return ret;
 		}
 
-		public new void Parse(string lineIn)
+		public override void Parse(string lineIn)
 		{
 			ReadSequenceFile(lineIn);
 		}
@@ -1483,7 +1483,7 @@ namespace LORUtils4
 		#endregion
 
 
-		public new iLORMember4 Parent
+		public override iLORMember4 Parent
 		{
 			get
 			{
@@ -2184,26 +2184,22 @@ namespace LORUtils4
 			return ret;
 		} // end FindChannel
 
-		public LORChannel4 FindChannel(string channelName, bool createIfNotFound = false)
+		public LORChannel4 FindChannel(string channelName, bool createIfNotFound = false, bool clearEffects = false)
 		{
 			LORChannel4 ret = null;
-			iLORMember4 member = AllMembers.Find(channelName, LORMemberType4.Channel, false);
+			iLORMember4 member = AllMembers.FindByName(channelName, LORMemberType4.Channel, createIfNotFound);
 			if (member != null)
 			{
 				ret = (LORChannel4)member;
-			}
-			if (ret == null)
-			{
-				//int si = Sequence.Members.HighestSavedIndex + 1;
-				ret = CreateChannel(channelName);
-				ret.Centiseconds = myCentiseconds;
-				Channels.Add(ret);
-				AllMembers.Add(ret);
+				if (clearEffects)
+				{
+					ret.effects.Clear();
+				}
 			}
 			return ret;
 		}
 
-		public LORChannel4 FindChannel(string channelName, LORMembership4 memberList, bool clearEffects = false, bool createIfNotFound = false)
+		public LORChannel4 DEPRECIATED_FindChannel(string channelName, LORMembership4 memberList, bool clearEffects = false, bool createIfNotFound = false)
 		{
 			// Gets existing channel specified by Name if it already exists in the group
 			// Creates it if it does not
@@ -2263,46 +2259,28 @@ namespace LORUtils4
 			return ret;
 		} // end FindrgbChannel
 
-		public LORRGBChannel4 FindRGBChannel(string rgbChannelName, bool createIfNotFound = false)
+		public LORRGBChannel4 FindRGBChannel(string rgbChannelName, bool createIfNotFound = false, bool clearEffects = false)
 		{
 			LORRGBChannel4 ret = null;
-			iLORMember4 member = AllMembers.Find(rgbChannelName, LORMemberType4.RGBChannel, false);
-			if (member != null)
+			iLORMember4 member = AllMembers.FindByName(rgbChannelName, LORMemberType4.RGBChannel, createIfNotFound);
+			if (member!=null)
 			{
-				ret = (LORRGBChannel4)member;
-			}
-
-			if (ret == null)
-			{
-				if (createIfNotFound)
+				if (member.MemberType==LORMemberType4.RGBChannel)
 				{
-					LORChannel4 redCh = FindChannel(rgbChannelName + " (R)", true);
-					redCh.color = lutils.LORCOLOR_RED;
-					LORChannel4 grnCh = FindChannel(rgbChannelName + " (G)", true);
-					grnCh.color = lutils.LORCOLOR_GRN;
-					LORChannel4 bluCh = FindChannel(rgbChannelName + " (B)", true);
-					bluCh.color = lutils.LORCOLOR_BLU;
-					ret = CreateRGBchannel(rgbChannelName);
-					ret.redChannel = redCh;
-					ret.grnChannel = grnCh;
-					ret.bluChannel = bluCh;
-					redCh.rgbChild = LORRGBChild4.Red;
-					grnCh.rgbChild = LORRGBChild4.Green;
-					bluCh.rgbChild = LORRGBChild4.Blue;
-					redCh.rgbParent = ret;
-					grnCh.rgbParent = ret;
-					bluCh.rgbParent = ret;
-					//int si = Sequence.Members.HighestSavedIndex + 1;
-					ret.Centiseconds = myCentiseconds;
-					//Channels.Add(ret);
-					AllMembers.Add(ret);
+					ret = (LORRGBChannel4)member;
+					if (clearEffects)
+					{
+						ret.redChannel.effects.Clear();
+						ret.grnChannel.effects.Clear();
+						ret.redChannel.effects.Clear();
+					}
 				}
 			}
 
 			return ret;
 		}
 
-		public LORRGBChannel4 FindRGBChannel(string rgbChannelName, LORMembership4 memberList, bool clearEffects = false, bool createIfNotFound = false)
+		public LORRGBChannel4 DEPRECIATED_FindRGBChannel(string rgbChannelName, LORMembership4 memberList, bool clearEffects = false, bool createIfNotFound = false)
 		{
 			// Gets existing channel specified by Name if it already exists in the group
 			// Creates it if it does not
@@ -2380,7 +2358,7 @@ namespace LORUtils4
 			return ret;
 		} // end FindChannelGroup
 
-		public LORChannelGroup4 FindChannelGroup(string channelGroupName, LORMembership4 memberList, bool createIfNotFound = false)
+		public LORChannelGroup4 DEPRECIATED_FindChannelGroup(string channelGroupName, LORMembership4 memberList, bool createIfNotFound = false)
 		{
 			// Gets existing group specified by Name if it already exists in the track or group
 			// Creates it if it does not
@@ -2430,21 +2408,10 @@ namespace LORUtils4
 		public LORChannelGroup4 FindChannelGroup(string channelGroupName, bool createIfNotFound = false)
 		{
 			LORChannelGroup4 ret = null;
-			iLORMember4 member = AllMembers.Find(channelGroupName, LORMemberType4.ChannelGroup, false);
+			iLORMember4 member = AllMembers.FindByName(channelGroupName, LORMemberType4.ChannelGroup, createIfNotFound);
 			if (member != null)
 			{
 				ret = (LORChannelGroup4)member;
-			}
-			if (ret == null)
-			{
-				// Not found, create it?
-				if (createIfNotFound)
-				{
-					ret = CreateChannelGroup(channelGroupName);
-					ret.Centiseconds = myCentiseconds;
-					ChannelGroups.Add(ret);
-					AllMembers.Add(ret);
-				}
 			}
 			return ret;
 		}
@@ -2452,29 +2419,10 @@ namespace LORUtils4
 		public LORTrack4 FindTrack(string trackName, bool createIfNotFound = false)
 		{
 			LORTrack4 ret = null;
-			iLORMember4 member = AllMembers.Find(trackName, LORMemberType4.Track, false);
+			iLORMember4 member = AllMembers.FindByName(trackName, LORMemberType4.Track, createIfNotFound);
 			if (member != null)
 			{
 				ret = (LORTrack4)member;
-			}
-			else
-			{
-				for (int tr = 0; tr < Tracks.Count; tr++)
-				{
-					if (Tracks[tr].Name == trackName)
-					{
-						ret = Tracks[tr];
-						tr = Tracks.Count; // break
-					}
-				}
-			}
-			if (ret == null)
-			{
-				if (createIfNotFound)
-				{
-					ret = CreateTrack(trackName);
-					//Tracks.Add(ret);
-				}
 			}
 			return ret;
 		}
@@ -2943,11 +2891,11 @@ namespace LORUtils4
 
 		public LORChannel4 ParseChannel(string lineIn)
 		{
-			LORChannel4 chan = new LORChannel4("");
+			LORChannel4 chan = new LORChannel4(lineIn);
 			chan.SetParent(this);
 			chan.SetIndex(Channels.Count);
 			Channels.Add(chan);
-			chan.Parse(lineIn);
+			//chan.Parse(lineIn);
 			AllMembers.Add(chan);
 			myCentiseconds = Math.Max(myCentiseconds, chan.Centiseconds);
 			return chan;
@@ -3155,7 +3103,7 @@ namespace LORUtils4
 			return tg;
 		}
 
-		public new void MakeDirty(bool dirtyState)
+		public override void MakeDirty(bool dirtyState)
 		{
 			if (dirtyState)
 			{
@@ -3211,7 +3159,7 @@ namespace LORUtils4
 			return theGrid.AltSaveID;
 		}
 
-		public new iLORMember4 Clone()
+		public override iLORMember4 Clone()
 		{
 			LORSequence4 seqOut = (LORSequence4)Clone();
 			seqOut.animation = animation.Clone();
@@ -3233,7 +3181,7 @@ namespace LORUtils4
 			return seqOut;
 		}
 
-		public new iLORMember4 Clone(string newName)
+		public override iLORMember4 Clone(string newName)
 		{
 			LORSequence4 seqOut = (LORSequence4)this.Clone();
 			ChangeName(newName);
@@ -3403,6 +3351,17 @@ namespace LORUtils4
 			}
 		} // End Last Timing
 
+		public override int color
+		{
+			get { return lutils.LORCOLOR_MULTI; }
+			set { int ignore = value; }
+		}
+
+		public override System.Drawing.Color Color
+		{
+			get { return lutils.Color_LORtoNet(this.color); }
+			set { System.Drawing.Color ignore = value; }
+		}
 
 
 		// END SEQUENCE CLASS

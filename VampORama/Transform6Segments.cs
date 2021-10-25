@@ -332,18 +332,18 @@ namespace UtilORama4
 
 			// Part 1
 			// Get the Vamp Track and create the Segments Channels
-			segmentGroup = Annotator.Sequence.FindChannelGroup(transformName,Annotator.VampTrack.Members, true);
+			segmentGroup = Annotator.VampTrack.Members.FindChannelGroup(transformName, true);
 			//? segmentGroup = sequence.FindChannelGroup(transformName, vampTrack.Members, true); //? Try shortcuts...
 			// Be careful not to confuse these---
 			// SegmentChannel is a single channel containing ramp/fade effects for each segment
 			// segmentChannels is a set of channels each containing on-off effects for a different segment
-			SegmentChannel = Annotator.Sequence.FindChannel("Segments", segmentGroup.Members, true, true);
+			SegmentChannel = segmentGroup.Members.FindChannel("Segments", true, true);
 			//? SegmentChannel = sequence.FindChannel("Segments", segmentGroup.Members, true, true); //? Try shortcut...
 			for (int c = 0; c < segmentCount; c++)
 			{
 				//	string chName = "Segment " + (c + 1).ToString(); 
 				string chName = "Segment " + (char)(c + 65); // I think I like this better
-				segmentChannels[c] = Annotator.Sequence.FindChannel(chName, segmentGroup.Members, true, true);
+				segmentChannels[c] = segmentGroup.Members.FindChannel(chName, true, true);
 				//? segmentChannels[c] = sequence.FindChannel(chName, segmentGroup.Members, true, true); //? Try shortcut...
 				segmentChannels[c].color = SequenceFunctions.ChannelColor(c);
 			}

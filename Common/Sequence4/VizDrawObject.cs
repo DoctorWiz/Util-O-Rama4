@@ -80,11 +80,11 @@ namespace LORUtils4
 				myAltSavedIndex = value;
 			}
 		}
-		public new LORMemberType4 MemberType
+		public override LORMemberType4 MemberType
 		{ get { return LORMemberType4.VizDrawObject; } }
 
 
-		public new int UniverseNumber
+		public override int UniverseNumber
 		{
 			get
 			{
@@ -97,7 +97,7 @@ namespace LORUtils4
 			}
 		}
 
-		public new int DMXAddress
+		public override int DMXAddress
 		{
 			get
 			{
@@ -110,7 +110,7 @@ namespace LORUtils4
 			}
 		}
 
-		public new void Parse(string lineIn)
+		public override void Parse(string lineIn)
 		{
 			// <LORVizDrawObject4 ID="141"
 			// Name ="Pixel 154 / S2.004 / U3.010-012" BulbSize="1"
@@ -148,7 +148,7 @@ namespace LORUtils4
 		}
 
 
-		public new string LineOut()
+		public override string LineOut()
 		{
 			StringBuilder ret = new StringBuilder();
 
@@ -183,7 +183,7 @@ namespace LORUtils4
 			return ret.ToString();
 		}
 
-		public new iLORMember4 Clone()
+		public override iLORMember4 Clone()
 		{
 			LORVizDrawObject4 newDO = (LORVizDrawObject4)Clone();
 			newDO.isRGB = isRGB;
@@ -204,12 +204,34 @@ namespace LORUtils4
 			return newDO;
 		}
 
-		public new iLORMember4 Clone(string newName)
+		public override iLORMember4 Clone(string newName)
 		{
 			iLORMember4 newDO = (LORVizDrawObject4)this.Clone();
 			newDO.ChangeName(newName);
 			return newDO;
 		}
+
+		public override int color
+		{
+			get
+			{
+				if (isRGB)
+				{ return lutils.LORCOLOR_RGB; }
+				else
+				{ return redChannel.color; }
+			}
+			set { int ignore = value; }
+		}
+
+		public override Color Color
+		{
+			get { return lutils.Color_LORtoNet(this.color); }
+			set { Color ignore = value; }
+		}
+
+
+
+
 
 
 	} // End LORVizDrawObject4 class

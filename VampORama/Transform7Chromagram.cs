@@ -331,11 +331,11 @@ private static LORChannelGroup4 chromaGroup = null;
 			//Channel chan;
 			//int octave = 0;
 			//int lastOctave = 0;
-			chromaGroup = Annotator.Sequence.FindChannelGroup(transformName, Annotator.VampTrack.Members, true);
+			chromaGroup = Annotator.VampTrack.Members.FindChannelGroup(transformName, true);
 			Array.Resize(ref chromaChannels, chroCount);
 			for (int n = 0; n < chroCount; n++)
 			{
-				LORChannel4 chan = Annotator.Sequence.FindChannel(prefix + MusicalNotation.chromaNamesASCII[n], chromaGroup.Members, true, true);
+				LORChannel4 chan = chromaGroup.Members.FindChannel(prefix + MusicalNotation.chromaNamesASCII[n], true, true);
 				chan.color = SequenceFunctions.ChannelColor(n);
 				//chan.identity.Centiseconds = seq.totalCentiseconds;
 				chromaChannels[n] = chan;

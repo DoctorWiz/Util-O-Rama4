@@ -446,7 +446,7 @@ namespace UtilORama4
 				Properties.Settings.Default.filepathBase = fi.DirectoryName;
 				Properties.Settings.Default.filenameSource = filenameSource;
 				Properties.Settings.Default.Save();
-				TreeUtils.TreeFillChannels(treeSource, seqSource, ref nodesBySI, false, false);
+				TreeUtils.TreeFillChannels(treeSource, seqSource, false, false);
 				UpdateTreeFormatting(TabRules[tabChannels.SelectedIndex]);
 				//TODO: Re-select current tab, trigging refresh of the tree checkboxes, etc.
 			}
@@ -838,9 +838,9 @@ namespace UtilORama4
 				Properties.Settings.Default.Save();
 				Properties.Settings.Default.Upgrade();
 				Properties.Settings.Default.Save();
-				if (seqSource.Members.Items.Count > 1)
+				if (seqSource.AllMembers.Items.Count > 1)
 				{
-					if (seqSource.Members.Items.Count > 1)
+					if (seqSource.AllMembers.Items.Count > 1)
 					{
 						LoadApplyMapFile(filenameMap);
 					}
@@ -979,10 +979,10 @@ namespace UtilORama4
 			try
 			{
 				// Is saved index within valid range
-				if (savedIndex <= seqSource.Members.HighestSavedIndex)
+				if (savedIndex <= seqSource.AllMembers.HighestSavedIndex)
 				{
 					// Get the member at that saved index
-					iLORMember4 member = seqSource.Members.BySavedIndex[savedIndex];
+					iLORMember4 member = seqSource.AllMembers.BySavedIndex[savedIndex];
 					// did we get Something, and is that something a channel?
 					if (member != null)
 					{
@@ -1022,10 +1022,10 @@ namespace UtilORama4
 			try
 			{
 				// Is saved index within valid range
-				if (savedIndex <= seqSource.Members.HighestSavedIndex)
+				if (savedIndex <= seqSource.AllMembers.HighestSavedIndex)
 				{
 					// Get the member at that saved index
-					iLORMember4 member = seqSource.Members.BySavedIndex[savedIndex];
+					iLORMember4 member = seqSource.AllMembers.BySavedIndex[savedIndex];
 					// did we get Something, and is that something a RGB Channel?
 					if (member != null)
 					{

@@ -30,8 +30,8 @@ namespace UtilORama4
 		//private int myOutput = 1;
 		protected int myOutput = 1;
 		//public ChannelType ChannelType = ChannelType.SingleLight;
-		public static List<DMXDevice> Devices = new List<DMXDevice>();
-		public DMXDevice DMXDevice = new DMXDevice("Unclassified", 0, 999);
+		public static List<DMXDeviceType> DeviceTypes = new List<DMXDeviceType>();
+		public DMXDeviceType DeviceType = new DMXDeviceType("Unclassified", 0, 999);
 		protected bool isEditing = false;
 		protected bool isDirty = false;
 		protected bool nameIsBad = true;
@@ -67,7 +67,7 @@ namespace UtilORama4
 			Color = otherChannel.Color;
 			DMXController = otherChannel.DMXController;
 			OutputNum = otherChannel.myOutput;
-			DMXDevice = otherChannel.DMXDevice;
+			DeviceType = otherChannel.DeviceType;
 			isEditing = otherChannel.isEditing;
 			//nameIsBad				= otherChannel.nameIsBad;
 			//isDirty = otherChannel.isDirty;
@@ -337,7 +337,7 @@ namespace UtilORama4
 			newChan.Color					= Color;
 			newChan.DMXController = DMXController;
 			newChan.OutputNum			= myOutput;
-			newChan.DMXDevice = DMXDevice;
+			newChan.DeviceType = DeviceType;
 			newChan.isEditing				= isEditing;
 			//newChan.nameIsBad				= nameIsBad;
 			//newChan.BadOutput			= BadOutput;
@@ -358,7 +358,7 @@ namespace UtilORama4
 			Color = otherChannel.Color;
 			DMXController = otherChannel.DMXController;
 			OutputNum = otherChannel.myOutput;
-			DMXDevice = otherChannel.DMXDevice;
+			DeviceType = otherChannel.DeviceType;
 			isEditing = otherChannel.isEditing;
 			//nameIsBad				= otherChannel.nameIsBad;
 			//isDirty = otherChannel.isDirty;
@@ -378,7 +378,7 @@ namespace UtilORama4
 			else if (Color.ToArgb() != otherChannel.Color.ToArgb())		eq = false;
 			//DMXController = otherChannel.DMXController;
 			else if (myOutput			!= otherChannel.myOutput)				eq = false;
-			else if (DMXDevice.ID		!= otherChannel.DMXDevice.ID)			eq = false;
+			else if (DeviceType.ID		!= otherChannel.DeviceType.ID)			eq = false;
 			else if (isEditing				!= otherChannel.isEditing)					eq = false;
 			//else if (nameIsBad				!= otherChannel.nameIsBad)					eq = false;
 			//else if (BadOutput			!= otherChannel.BadOutput)				eq = false;

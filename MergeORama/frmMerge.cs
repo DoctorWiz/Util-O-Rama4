@@ -334,7 +334,7 @@ namespace UtilORama4
 
 			txtFirstFile.Text = Fyle.ShortenLongPath(lastFile1, 80);
 			seqOne.ReadSequenceFile(lastFile1);
-			TreeUtils.TreeFillChannels(treeNewChannels, seqOne, ref siNodes, false, true);
+			TreeUtils.TreeFillChannels(treeNewChannels, seqOne, false, true);
 			seqNew = seqOne;
 		}
 
@@ -385,7 +385,7 @@ namespace UtilORama4
 					seqTwo.ReadSequenceFile(lastFile2);
 					MergeSequences();
 
-					TreeUtils.TreeFillChannels(treeNewChannels, seqNew, ref siNodes, false, true);
+					TreeUtils.TreeFillChannels(treeNewChannels, seqNew, false, true);
 					ImBusy(false);
 					btnSave.Enabled = true;
 				}
@@ -447,7 +447,7 @@ namespace UtilORama4
 					{
 						found = true; // Reset to default
 						// Search for it, do NOT create if not found
-						destGrid = (LORTimings4)seqNew.Members.Find(sourceGrid.Name, LORMemberType4.Timings, false);
+						destGrid = (LORTimings4)seqNew.AllMembers.FindByName(sourceGrid.Name, LORMemberType4.Timings, false);
 						if (destGrid == null) // no match found
 						{
 							found = false;
@@ -533,7 +533,7 @@ namespace UtilORama4
 					if (mergeTracksByName)
 					{
 						found = true; // reset to default
-						destTrack = (LORTrack4)seqNew.Members.Find(sourceTrack.Name, LORMemberType4.Track, false);
+						destTrack = (LORTrack4)seqNew.AllMembers.FindByName(sourceTrack.Name, LORMemberType4.Track, false);
 						if (destTrack == null) // no matching name found
 						{
 							found = false;
@@ -622,7 +622,7 @@ namespace UtilORama4
 				{
 					// No timing grid with matching name found, so add this one
 					// Create a new timing grid and copy the name and type
-					int newSaveID = seqNew.Members.HighestSaveID + 1;
+					int newSaveID = seqNew.AllMembers.HighestSaveID + 1;
 
 					LORTimings4 tGrid = seqNew.CreateTimingGrid(seqTwo.TimingGrids[timings2Idx].Name);
 					//tGrid.type = seqTwo.TimingGrids[timings2Idx].type;
@@ -837,7 +837,7 @@ namespace UtilORama4
 					found = true; // reset to default
 					LORChannel4 destCh = null; // placeholder
 					LORRGBChannel4 sourceRGB = (LORRGBChannel4)sourceMember;
-					LORRGBChannel4 destRGB = (LORRGBChannel4)destMembers.Find(sourceRGB.Name, LORMemberType4.RGBChannel, false);
+					LORRGBChannel4 destRGB = (LORRGBChannel4)destMembers.FindRGBChannel(sourceRGB.Name, false);
 					if (destRGB == null)
 					{
 						found = false;
@@ -874,7 +874,7 @@ namespace UtilORama4
 					LORChannelGroup4 sourceGroup = (LORChannelGroup4)sourceMember;
 					
 					//LORChannelGroup4 destGroup = (LORChannelGroup4)destMembers.Find(sourceGroup.Name, LORMemberType4.ChannelGroup, true);
-					LORChannelGroup4 destGroup = seqNew.FindChannelGroup(sourceGroup.Name, destMembers, true);
+					LORChannelGroup4 destGroup = destMembers.FindChannelGroup(sourceGroup.Name, true);
 
 
 
@@ -894,7 +894,7 @@ namespace UtilORama4
 		private LORChannel4 MergeChannel(LORChannel4 sourceCh, LORMembership4 destMembers)
 		{
 			bool found = true; // reset to default
-			LORChannel4 destCh = (LORChannel4)destMembers.Find(sourceCh.Name, LORMemberType4.Channel, false);
+			LORChannel4 destCh = (LORChannel4)destMembers.FindChannel(sourceCh.Name, false);
 
 			if (destCh == null)
 			{
@@ -930,11 +930,11 @@ namespace UtilORama4
 
 		private void MergeRGBchildren(LORRGBChannel4 sourceRGB, LORRGBChannel4 destRGB)
 		{
-			LORChannel4 destCh = MergeChannel(sourceRGB.redChannel, seqNew.Members);
+			LORChannel4 destCh = MergeChannel(sourceRGB.redChannel, seqNew.AllMembers);
 			destRGB.redChannel = destCh;
-			destCh = MergeChannel(sourceRGB.grnChannel, seqNew.Members);
+			destCh = MergeChannel(sourceRGB.grnChannel, seqNew.AllMembers);
 			destRGB.grnChannel = destCh;
-			destCh = MergeChannel(sourceRGB.bluChannel, seqNew.Members);
+			destCh = MergeChannel(sourceRGB.bluChannel, seqNew.AllMembers);
 			destRGB.bluChannel = destCh;
 		}
 

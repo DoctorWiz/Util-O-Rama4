@@ -57,7 +57,7 @@ namespace LORUtils4
 
 
 		//! OTHER PROPERTIES, METHODS, ETC.
-		public new int Centiseconds
+		public override int Centiseconds
 		{
 			get
 			{
@@ -129,7 +129,20 @@ namespace LORUtils4
 			}
 		}
 
-		public new LORMemberType4 MemberType
+		public override int color
+		{
+			get { return lutils.LORCOLOR_RGB; }
+			set { int ignore = value; }
+		}
+
+		public override Color Color
+		{
+			get { return lutils.Color_LORtoNet(this.color); }
+			set { Color ignore = value; }
+		}
+
+
+		public override LORMemberType4 MemberType
 		{
 			get
 			{
@@ -137,12 +150,12 @@ namespace LORUtils4
 			}
 		}
 
-		public new string LineOut()
+		public override string LineOut()
 		{
 			return LineOut(false, false, LORMemberType4.FullTrack);
 		}
 
-		public new void Parse(string lineIn)
+		public override void Parse(string lineIn)
 		{
 			myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
 			mySavedIndex = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
@@ -151,7 +164,7 @@ namespace LORUtils4
 		}
 
 
-		public new iLORMember4 Clone()
+		public override iLORMember4 Clone()
 		{
 			LORRGBChannel4 rgb = (LORRGBChannel4)this.Clone();
 			rgb.redChannel = (LORChannel4)redChannel.Clone();
@@ -160,7 +173,7 @@ namespace LORUtils4
 			return rgb;
 		}
 
-		public new iLORMember4 Clone(string newName)
+		public override iLORMember4 Clone(string newName)
 		{
 			LORRGBChannel4 rgb = (LORRGBChannel4)this.Clone();  //   new LORRGBChannel4(newName, lutils.UNDEFINED);
 			rgb.ChangeName(newName);
@@ -270,7 +283,7 @@ namespace LORUtils4
 			return ret.ToString();
 		} // end LineOut
 
-		public new int UniverseNumber
+		public override int UniverseNumber
 		{
 			get
 			{
@@ -282,7 +295,7 @@ namespace LORUtils4
 				return ret;
 			}
 		}
-		public new int DMXAddress
+		public override int DMXAddress
 		{
 			get
 			{

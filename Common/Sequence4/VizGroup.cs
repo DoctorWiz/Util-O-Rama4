@@ -57,11 +57,13 @@ namespace LORUtils4
 		public LORVizItemGroup4()
 		{
 			Members = new LORMembership4(this);
+			MakeDummies();
 		}
 
 		public LORVizItemGroup4(string lineIn)
 		{
 			Members = new LORMembership4(this);
+			MakeDirty();
 			Parse(lineIn);
 		}
 
@@ -71,9 +73,25 @@ namespace LORUtils4
 			base.SetParent(parent);
 			myParent = parent;
 			Members = new LORMembership4(this);
+			MakeDummies();
 			Parse(lineIn);
 
 		}
+
+		private void MakeDummies()
+		{
+			// SavedIndices and SaveIDs in Sequences start at 0. Cool! Great! No Prob!
+			// But Channels, Groups, and DrawObjects in Visualizations start at 1 (Grrrrr)
+			// So add a dummy object at the [0] start of the lists
+			LORVizDrawObject4 lvdo = new LORVizDrawObject4("\0\0DUMMY VIZDRAWOBJECT AT INDEX [0] - DO NOT USE!");
+			lvdo.SetIndex(0);
+			lvdo.SetSavedIndex(0);
+			lvdo.SetParent(myParent);
+			Members.Add(lvdo);
+
+		}
+
+
 
 		public int VizID
 		{
@@ -95,7 +113,7 @@ namespace LORUtils4
 			}
 		}
 
-		public new int UniverseNumber
+		public override int UniverseNumber
 		{
 			get
 			{
@@ -107,7 +125,7 @@ namespace LORUtils4
 				return un;
 			}
 		}
-		public new int DMXAddress
+		public override int DMXAddress
 		{
 			get
 			{
@@ -120,7 +138,7 @@ namespace LORUtils4
 			}
 		}
 
-		public new LORMemberType4 MemberType
+		public override LORMemberType4 MemberType
 		{
 			get
 			{
@@ -128,7 +146,7 @@ namespace LORUtils4
 			}
 		}
 
-		public new int CompareTo(iLORMember4 other)
+		public override int CompareTo(iLORMember4 other)
 		{
 			int result = 1; // By default I win!
 			
@@ -151,7 +169,7 @@ namespace LORUtils4
 			return result;
 		}
 		
-		public new iLORMember4 Clone()
+		public override iLORMember4 Clone()
 		{
 			LORVizItemGroup4 newGrp = (LORVizItemGroup4)Clone();
 			newGrp.parentVisualization = parentVisualization;
@@ -163,7 +181,7 @@ namespace LORUtils4
 			return newGrp;
 		}
 
-		public new iLORMember4 Clone(string newName)
+		public override iLORMember4 Clone(string newName)
 		{
 			LORVizItemGroup4 newGrp = (LORVizItemGroup4)this.Clone();
 			newGrp.ChangeName(newName);
@@ -176,7 +194,7 @@ namespace LORUtils4
 		//	return "";
 		//}
 
-		public new void Parse(string lineIn)
+		public override void Parse(string lineIn)
 		{
 			mySavedIndex = lutils.getKeyValue(lineIn, LORVisualization4.FIELDvizID);
 			myIndex = mySavedIndex;
@@ -224,6 +242,30 @@ namespace LORUtils4
 			} // End While KeepGoing
 		} // End ParseAssignedObjectNumbers
 
+		public override int color
+		{
+			get
+			{
+				if (Members.Count > 0)
+				{
+					return Members[0].color;
+				}
+				else
+				{
+					return 0;
+				}
+			}
+			set
+			{
+				int ignore = value;
+			}
+		}
+
+		public override Color Color
+		{
+			get { return lutils.Color_LORtoNet(this.color); }
+			set { Color ignore = value; }
+		}
 
 
 	} // End Class LORVizItemGroup4

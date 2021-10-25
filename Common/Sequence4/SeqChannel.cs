@@ -14,8 +14,8 @@ namespace LORUtils4
 	public class LORChannel4 : LORMemberBase4, iLORMember4, IComparable<iLORMember4>
 	{
 		private const string STARTchannel = lutils.STFLD + lutils.TABLEchannel + lutils.FIELDname;
-		public int color = 0;
-		public LOROutput4 output = new LOROutput4();
+		//public int color = 0;
+		public LOROutput4 output = null;
 		public LORRGBChild4 rgbChild = LORRGBChild4.None;
 		public LORRGBChannel4 rgbParent = null;
 		public List<LOREffect4> effects = new List<LOREffect4>();
@@ -25,10 +25,13 @@ namespace LORUtils4
 		public LORChannel4(string theName, int theSavedIndex)
 		{
 			myName = theName;
+			output = new LOROutput4(this);
 			mySavedIndex = theSavedIndex;
 		}
+		
 		public LORChannel4(string lineIn)
 		{
+			output = new LOROutput4(this);
 			string seek = lutils.STFLD + lutils.TABLEchannel + lutils.FIELDname;
 			//int pos = lineIn.IndexOf(seek);
 			int pos = lutils.ContainsKey(lineIn, seek);
@@ -48,7 +51,7 @@ namespace LORUtils4
 
 		//! METHODS, PROPERTIES, ETC.
 
-		public new LORMemberType4 MemberType
+		public override LORMemberType4 MemberType
 		{
 			get
 			{
@@ -56,7 +59,24 @@ namespace LORUtils4
 			}
 		}
 
-		public new int CompareTo(iLORMember4 other)
+		public override int UniverseNumber
+		{ 
+			get
+			{ 
+				return output.UniverseNumber;
+			}
+		}
+		public override int DMXAddress
+		{
+			get
+			{ 
+				return output.DMXAddress;
+			}
+		}
+
+
+
+		public override int CompareTo(iLORMember4 other)
 		{
 			int result = 0;
 			if (LORMembership4.sortMode == LORMembership4.SORTbyOutput)
@@ -82,7 +102,7 @@ namespace LORUtils4
 
 		// I'm not a big fan of case sensitivity, but I'm gonna take advantage of it here
 		// color with lower c is the LOR color, a 32 bit int in BGR order
-		// Color with capital C is the .Net Color object (aka Web Color)
+		// Color with capital C is the .Net Color object (aka Web Color)(In ARGB order)
 		public Color Color
 		{
 			get
@@ -96,12 +116,12 @@ namespace LORUtils4
 
 		}
 
-		public new string LineOut()
+		public override string LineOut()
 		{
 			return LineOut(false);
 		}
 
-		public new void Parse(string lineIn)
+		public override void Parse(string lineIn)
 		{
 			//LORSequence4 Parent = ID.Parent;
 			myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
@@ -118,7 +138,7 @@ namespace LORUtils4
 			//if (myParent != null) myParent.MakeDirty(true);
 		}
 
-		public new iLORMember4 Clone()
+		public override iLORMember4 Clone()
 		{
 			// See Also: Clone(), CopyTo(), and CopyFrom()
 			LORChannel4 chan = (LORChannel4)base.Clone();
@@ -130,7 +150,7 @@ namespace LORUtils4
 			return chan;
 		}
 
-		public new iLORMember4 Clone(string newName)
+		public override iLORMember4 Clone(string newName)
 		{
 			//LORChannel4 chan = new LORChannel4(newName, lutils.UNDEFINED);
 			LORChannel4 chan = (LORChannel4)base.Clone();
@@ -331,5 +351,12 @@ namespace LORUtils4
 
 		//TODO: add RemoveEffect procedure
 		//TODO: add SortEffects procedure (by startCentisecond)
+
+
+
+
+
+
+
 	} // end channel
 }

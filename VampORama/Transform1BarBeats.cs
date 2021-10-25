@@ -639,8 +639,8 @@ namespace UtilORama4
 					int tec = timings.effects.Count;
 					//int bpb = Annotator.BeatsPerBar;
 					string tname = timings.Name.Substring(6, 4);
-					LORChannelGroup4 beatGroup = Annotator.Sequence.FindChannelGroup("Bars and Beats", Annotator.VampTrack.Members, true);
-					LORChannel4 chan = Annotator.Sequence.FindChannel(beatName, beatGroup.Members, true, true);
+					LORChannelGroup4 beatGroup = Annotator.VampTrack.Members.FindChannelGroup("Bars and Beats", true);
+					LORChannel4 chan = Annotator.Sequence.AllMembers.FindChannel(beatName, true, true);
 					errs = SequenceFunctions.ImportBeatChannel(chan, timings, divider);
 				}
 			}

@@ -27,6 +27,8 @@ namespace LORUtils4
 		public const Int32 LORCOLOR_BLU = 0xFF0000; // 16711680; // 0xFF0000
 		public const Int32 LORCOLOR_BLK = 0;
 		public const Int32 LORCOLOR_WHT = 0xFFFFFF;
+		public const int LORCOLOR_RGB = 0x000040;
+		public const int LORCOLOR_MULTI = 0x404080;
 
 		public const int ADDshimmer = 0x200;
 		public const int ADDtwinkle = 0x400;

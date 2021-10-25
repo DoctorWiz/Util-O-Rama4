@@ -481,39 +481,6 @@ namespace UtilORama4
 
 		private void btnEaves_Click(object sender, EventArgs e)
 		{
-
-			//LORRGBChannel4 oef = (LORRGBChannel4)seqSource.Members.Find("Strip 1 Pixel 150 [U2.448-450]", LORMemberType4.RGBChannel, false);
-			LORRGBChannel4 se = (LORRGBChannel4)seqSource.Members.Find("Eave Pixel 001 / S1.170 / U2.508-510", LORMemberType4.RGBChannel, false);
-			LORRGBChannel4 me = (LORRGBChannel4)seqMaster.Members.Find("Eave Pixel 001 / S1.170 / U2.508-510", LORMemberType4.RGBChannel, false);
-
-			int masIdx = me.Index;
-			int srcIdx = se.Index; // = oef.Index;
-
-
-
-			for (int l = 0; l < 600; l++)
-			{
-				int mSI = seqMaster.RGBchannels[masIdx].SavedIndex;
-				int sSI = seqSource.RGBchannels[srcIdx].SavedIndex;
-				MapMembers(mSI, sSI, true, true);
-				masIdx++;
-				srcIdx++;
-			}
-
-
-			se = (LORRGBChannel4)seqSource.Members.Find("Eave Pixel 172 / S2.002 / U3.004-006", LORMemberType4.RGBChannel, false);
-			LORRGBChannel4 mf = (LORRGBChannel4)seqMaster.Members.Find("Fence Pixel 01-01 [U11.496-498]", LORMemberType4.RGBChannel, false);
-
-			srcIdx = se.Index; // + 171;
-			masIdx = mf.Index;
-			for (int l = 0; l < 336; l++)
-			{
-				int mSI = seqMaster.RGBchannels[masIdx].SavedIndex;
-				int sSI = seqSource.RGBchannels[srcIdx].SavedIndex;
-				MapMembers(mSI, sSI, true, true);
-				masIdx++;
-				srcIdx++;
-			}
 		}
 
 		private void treeMaster_AfterSelect(object sender, EventArgs e)

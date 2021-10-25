@@ -371,8 +371,8 @@ namespace UtilORama4
 
 			// Part 1
 			// Get the Vamp Track and create the Tempo Channel
-			tempoGroup = Annotator.Sequence.FindChannelGroup(transformName,Annotator.VampTrack.Members, true);
-			tempoRGBChannel = Annotator.Sequence.FindRGBChannel(transformName, tempoGroup.Members, true, true);
+			tempoGroup = Annotator.VampTrack.Members.FindChannelGroup(transformName, true);
+			tempoRGBChannel = tempoGroup.Members.FindRGBChannel(transformName, true, true);
 			tempoChannel = FindTempoChannel(tempoGroup.Members, true, true);
 			
 			tempoRGBChannel.redChannel.effects.Clear();
@@ -479,7 +479,7 @@ namespace UtilORama4
 				{
 					if (members[m].MemberType == LORMemberType4.Channel)
 					{
-						string mName = Members.Items[m].Name;
+						string mName = members.Items[m].Name;
 						if (mName.Length > 8)
 						{
 							if (mName.Substring(0, 6) == "Tempo ")

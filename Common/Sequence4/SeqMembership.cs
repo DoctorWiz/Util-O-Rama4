@@ -862,96 +862,101 @@ namespace LORUtils4
 			myBySaveIDList = new List<LORTimings4>();
 			myByAltSaveIDList = new List<LORTimings4>();
 
-			for (int i = 0; i < myMembers.Count; i++)
+			try
 			{
-				iLORMember4 member = myMembers[i];
+				for (int i = 0; i < myMembers.Count; i++)
+				{
+					iLORMember4 member = myMembers[i];
 
-				int n = 2;
-				string itemName = member.Name;
-				// Check for blank name (common with Tracks and TimingGrids if not changed/set by the user)
-				if (itemName == "")
-				{
-					// Make up a name based on type and index
-					itemName = LORSeqEnums4.MemberName(member.MemberType) + " " + member.Index.ToString();
-				}
-				// Check for duplicate names
-				while (myByNameDictionary.ContainsKey(itemName))
-				{
-					// Append a number
-					itemName = member.Name + " ‹" + n.ToString() + "›";
-					n++;
-				}
-				myByNameDictionary.Add(itemName, member);
-				myEverythingCount++;
-
-				if (member.MemberType == LORMemberType4.Channel)
-				{
-					//byAlphaChannelNames.Add(member);
-					//channelNames[myChannelCount] = member;
-					myByAltSavedIndexList.Add(member);
-					myChannelCount++;
-				}
-				else
-				{
-					if (member.MemberType == LORMemberType4.RGBChannel)
+					int n = 2;
+					string itemName = member.Name;
+					// Check for blank name (common with Tracks and TimingGrids if not changed/set by the user)
+					if (itemName == "")
 					{
-						//byAlphaRGBchannelNames.Add(member);
-						//rgbChannelNames[myRGBChannelCount] = member;
+						// Make up a name based on type and index
+						itemName = LORSeqEnums4.MemberName(member.MemberType) + " " + member.Index.ToString();
+					}
+					// Check for duplicate names
+					while (myByNameDictionary.ContainsKey(itemName))
+					{
+						// Append a number
+						itemName = member.Name + " ‹" + n.ToString() + "›";
+						n++;
+					}
+					myByNameDictionary.Add(itemName, member);
+					myEverythingCount++;
+
+					if (member.MemberType == LORMemberType4.Channel)
+					{
+						//byAlphaChannelNames.Add(member);
+						//channelNames[myChannelCount] = member;
 						myByAltSavedIndexList.Add(member);
-						myRGBChannelCount++;
+						myChannelCount++;
 					}
 					else
 					{
-						if (member.MemberType == LORMemberType4.ChannelGroup)
+						if (member.MemberType == LORMemberType4.RGBChannel)
 						{
-							//byAlphaChannelGroupNames.Add(member);
-							//channelGroupNames[myChannelGroupCount] = member;
+							//byAlphaRGBchannelNames.Add(member);
+							//rgbChannelNames[myRGBChannelCount] = member;
 							myByAltSavedIndexList.Add(member);
-							myChannelGroupCount++;
+							myRGBChannelCount++;
 						}
 						else
 						{
-							if (member.MemberType == LORMemberType4.Cosmic)
+							if (member.MemberType == LORMemberType4.ChannelGroup)
 							{
 								//byAlphaChannelGroupNames.Add(member);
 								//channelGroupNames[myChannelGroupCount] = member;
 								myByAltSavedIndexList.Add(member);
-								myCosmicDeviceCount++;
+								myChannelGroupCount++;
 							}
 							else
 							{
-								if (member.MemberType == LORMemberType4.Track)
+								if (member.MemberType == LORMemberType4.Cosmic)
 								{
-									//byAlphaTrackNames.Add(member);
-									//trackNames[myTrackCount] = member;
+									//byAlphaChannelGroupNames.Add(member);
+									//channelGroupNames[myChannelGroupCount] = member;
 									myByAltSavedIndexList.Add(member);
-									myTrackCount++;
+									myCosmicDeviceCount++;
 								}
 								else
 								{
-									if (member.MemberType == LORMemberType4.Timings)
+									if (member.MemberType == LORMemberType4.Track)
 									{
-										//byAlphaTimingGridNames.Add(member);
-										//timingGridNames[myTimingGridCount] = member;
+										//byAlphaTrackNames.Add(member);
+										//trackNames[myTrackCount] = member;
 										myByAltSavedIndexList.Add(member);
-										LORTimings4 tg = (LORTimings4)member;
-										myBySaveIDList.Add(tg);
-										myByAltSaveIDList.Add(tg);
-										myTimingGridCount++;
+										myTrackCount++;
+									}
+									else
+									{
+										if (member.MemberType == LORMemberType4.Timings)
+										{
+											//byAlphaTimingGridNames.Add(member);
+											//timingGridNames[myTimingGridCount] = member;
+											myByAltSavedIndexList.Add(member);
+											LORTimings4 tg = (LORTimings4)member;
+											myBySaveIDList.Add(tg);
+											myByAltSaveIDList.Add(tg);
+											myTimingGridCount++;
+										}
 									}
 								}
 							}
 						}
 					}
-				}
-			} // end foreach
+				} // end foreach
+			}
+			catch(Exception ex)
+			{
+				string msg = "Error Reindexing Membership\r\n\r\n";
+				msg += ex.Message;
+				Fyle.BUG(msg);
+			}
 
 			// Sort 'em all!
 			sortMode = SORTbySavedIndex;
-
-
-
-
 			//System.Diagnostics.Debugger.Break();
 			// Sort is failing, supposedly because array elements are not set (null/empty)
 			//  -- but a quick check of 'Locals' doesn't show any empties
@@ -983,135 +988,116 @@ namespace LORUtils4
 
 
 		// LORMembership4.find(name, type, create)
-		public iLORMember4 Find(string theName, LORMemberType4 theType, bool createIfNotFound = false)
+		public iLORMember4 FindByName(string theName, LORMemberType4 theType, bool createIfNotFound = false)
 		{
-#if DEBUG
+			//iLORMember4 ret = null;
+			#if DEBUG
 			string msg = "LORMembership4.find(" + theName + ", ";
 			msg += theType.ToString() + ", " + createIfNotFound.ToString() + ")";
 			Debug.WriteLine(msg);
-#endif
-			//LORSequence4 mySeq = (LORSequence4)Parent;
-			iLORMember4 ret = null;
-			if (ret==null)
+			#endif
+
+
+			if (myByNameDictionary.TryGetValue(theName, out iLORMember4 ret))
+			{
+				// Found the name, is the type correct?
+				if (ret.MemberType != theType)
+				{
+					ret = null;
+				}
+			}
+			if ((ret == null) && createIfNotFound)
 			{
 				if (myParent == null)
 				{
 					if (myParent.MemberType == LORMemberType4.Sequence)
-					{ 
+					{
 						LORSequence4 parentSeq = (LORSequence4)Parent;
 						if (theType == LORMemberType4.Channel)
 						{
-							if (myChannelCount > 0)
-							{
-								ret = FindByName(theName, theType);
-							}
-							if ((ret == null) && createIfNotFound)
-							{
-								ret = parentSeq.CreateChannel(theName);
-								Add(ret);
-							}
+							ret = parentSeq.CreateChannel(theName);
+							Add(ret);
 						}
 						if (theType == LORMemberType4.RGBChannel)
 						{
-							if (myRGBChannelCount > 0)
-							{
-								ret = FindByName(theName, theType);
-							}
-							if ((ret == null) && createIfNotFound)
-							{
-								ret = parentSeq.CreateRGBchannel(theName);
-								Add(ret);
-							}
+							ret = parentSeq.CreateRGBchannel(theName);
+							Add(ret);
 						}
 						if (theType == LORMemberType4.ChannelGroup)
 						{
-							if (myChannelGroupCount > 0)
-							{
-								ret = FindByName(theName, theType);
-							}
-							if ((ret == null) && createIfNotFound)
-							{
-								ret = parentSeq.CreateChannelGroup(theName);
-								Add(ret);
-							}
+							ret = parentSeq.CreateChannelGroup(theName);
+							Add(ret);
 						}
 						if (theType == LORMemberType4.Cosmic)
 						{
-							if (myCosmicDeviceCount > 0)
-							{
-								ret = FindByName(theName, theType);
-							}
-							if ((ret == null) && createIfNotFound)
-							{
-								ret = parentSeq.CreateCosmicDevice(theName);
-								Add(ret);
-							}
+							ret = parentSeq.CreateCosmicDevice(theName);
+							Add(ret);
 						}
 						if (theType == LORMemberType4.Timings)
 						{
-							if (myTimingGridCount > 0)
-							{
-								ret = FindByName(theName, theType);
-							}
-							if ((ret == null) && createIfNotFound)
-							{
-								ret = parentSeq.CreateTimingGrid(theName);
-								Add(ret);
-							}
+							ret = parentSeq.CreateTimingGrid(theName);
+							Add(ret);
 						}
 						if (theType == LORMemberType4.Track)
 						{
-							if (myTrackCount > 0)
-							{
-								ret = FindByName(theName, theType);
-							}
-							if ((ret == null) && createIfNotFound)
-							{
-								ret = parentSeq.CreateTrack(theName);
-								Add(ret);
-							}
+							ret = parentSeq.CreateTrack(theName);
+							Add(ret);
 						}
-					}
+					} // End if parent is sequence
 
 					if (myParent.MemberType == LORMemberType4.Visualization)
 					{
 						LORVisualization4 parentViz = (LORVisualization4)Parent;
 						if (theType == LORMemberType4.VizChannel)
 						{
-							if (myVizChannelCount > 0)
-							{
-								ret = FindByName(theName, theType);
-							}
-							if ((ret == null) && createIfNotFound)
-							{
-								ret = parentViz.CreateVizChannel(theName);
-								Add(ret);
-							}
+							ret = parentViz.CreateVizChannel(theName);
+							Add(ret);
 						}
 						if (theType == LORMemberType4.VizDrawObject)
 						{
-							if (myVizDrawObjectCount > 0)
-							{
-								ret = FindByName(theName, theType);
-							}
-							if ((ret == null) && createIfNotFound)
-							{
-								ret = parentViz.CreateDrawObject(theName);
-								Add(ret);
-							}
+							ret = parentViz.CreateDrawObject(theName);
+							Add(ret);
 						}
 						if (theType == LORMemberType4.VizItemGroup)
 						{
-							if (myVizItemGroupCount > 0)
-							{
-								ret = FindByName(theName, theType);
-							}
-							if ((ret == null) && createIfNotFound)
-							{
-								ret = parentViz.CreateItemGroup(theName);
-								Add(ret);
-							}
-						}
+							ret = parentViz.CreateItemGroup(theName);
+							Add(ret);
+						} // End if VizItemGroup
+					} // End if parent is Visualization
+				} // End if parent isn't null
+			} // End if find by name returned null and CreateIfNotFound is true
+			return ret;
+		}
+
+		public LORChannel4 FindChannel(string channelName, bool createIfNotFound = false, bool clearEffects = false)
+		{
+			LORChannel4 ret = null;
+			iLORMember4 member = FindByName(channelName, LORMemberType4.Channel, createIfNotFound);
+			if (member != null)
+			{
+				ret = (LORChannel4)member;
+				if (clearEffects)
+				{
+					ret.effects.Clear();
+				}
+			}
+			return ret;
+		}
+
+		public LORRGBChannel4 FindRGBChannel(string rgbChannelName, bool createIfNotFound = false, bool clearEffects = false)
+		{
+			LORRGBChannel4 ret = null;
+			iLORMember4 member = FindByName(rgbChannelName, LORMemberType4.RGBChannel, createIfNotFound);
+			if (member != null)
+			{
+				if (member.MemberType == LORMemberType4.RGBChannel)
+				{
+					ret = (LORRGBChannel4)member;
+					if (clearEffects)
+					{
+						ret.redChannel.effects.Clear();
+						ret.grnChannel.effects.Clear();
+						ret.redChannel.effects.Clear();
 					}
 				}
 			}
@@ -1119,7 +1105,60 @@ namespace LORUtils4
 			return ret;
 		}
 
+		public LORChannelGroup4 FindChannelGroup(string channelGroupName, bool createIfNotFound = false)
+		{
+			LORChannelGroup4 ret = null;
+			iLORMember4 member = FindByName(channelGroupName, LORMemberType4.ChannelGroup, createIfNotFound);
+			if (member != null)
+			{
+				ret = (LORChannelGroup4)member;
+			}
+			return ret;
+		}
 
+		public LORTrack4 FindTrack(string trackName, bool createIfNotFound = false)
+		{
+			LORTrack4 ret = null;
+			iLORMember4 member = FindByName(trackName, LORMemberType4.Track, createIfNotFound);
+			if (member != null)
+			{
+				ret = (LORTrack4)member;
+			}
+			return ret;
+		}
+
+		public LORVizChannel4 FindVizChannel(string channelName, bool createIfNotFound = false)
+		{
+			LORVizChannel4 ret = null;
+			iLORMember4 member = FindByName(channelName, LORMemberType4.Channel, createIfNotFound);
+			if (member != null)
+			{
+				ret = (LORVizChannel4)member;
+			}
+			return ret;
+		}
+
+		public LORVizDrawObject4 FindVizDrawObject(string drawObjectName, bool createIfNotFound = false)
+		{
+			LORVizDrawObject4 ret = null;
+			iLORMember4 member = FindByName(drawObjectName, LORMemberType4.RGBChannel, createIfNotFound);
+			if (member != null)
+			{
+				ret = (LORVizDrawObject4)member;
+			}
+			return ret;
+		}
+
+		public LORVizItemGroup4 FindVizItemGroup(string itemGroupName, bool createIfNotFound = false)
+		{
+			LORVizItemGroup4 ret = null;
+			iLORMember4 member = FindByName(itemGroupName, LORMemberType4.ChannelGroup, createIfNotFound);
+			if (member != null)
+			{
+				ret = (LORVizItemGroup4)member;
+			}
+			return ret;
+		}
 
 		public iLORMember4 FindBySavedIndex(int theSavedIndex)
 		{
@@ -1127,21 +1166,7 @@ namespace LORUtils4
 			return ret;
 		}
 
-		private iLORMember4 FindByName(string theName, LORMemberType4 PartType)
-		{
-			//iLORMember4 ret = null;
-			//ret = FindByName(theName, PartType, 0, 0, 0, 0, false);
-			if (myByNameDictionary.TryGetValue(theName, out iLORMember4 ret))
-			{
-				// Found the name, is the type correct?
-				if (ret.MemberType != PartType)
-				{
-					ret = null;
-				}
-			}
-			return ret;
-		}
-
+		/*
 		private static iLORMember4 FindByName(string theName, List<iLORMember4> Members)
 		{
 			iLORMember4 ret = null;
@@ -1180,6 +1205,7 @@ namespace LORUtils4
 			}
 			return index;
 		}
+		*/
 
 		public void ResetWritten()
 		{

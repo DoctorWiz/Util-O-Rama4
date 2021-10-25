@@ -17,6 +17,8 @@ namespace LORUtils4
 		protected int myIndex = lutils.UNDEFINED;
 		protected int mySavedIndex = lutils.UNDEFINED;
 		protected int myAltSavedIndex = lutils.UNDEFINED;
+		protected int mycolor = 0; // Note: LOR color, 12-bit int in BGR order
+															 // Do not confuse with .Net or HTML color, 16 bits in ARGB order
 		protected iLORMember4 myParent = null;
 		protected bool imSelected = false;
 		protected bool isDirty = false;
@@ -58,7 +60,7 @@ namespace LORUtils4
 			MakeDirty(true);
 		}
 
-		public int Centiseconds
+		public virtual int Centiseconds
 		{
 			get
 			{
@@ -128,7 +130,15 @@ namespace LORUtils4
 		public int AltSavedIndex
 		{	get	{	return myAltSavedIndex;	}	set	{	myAltSavedIndex = value; } }
 
-		public iLORMember4 Parent
+		// Important difference-- color with lower case c is LOR color, 12-bit int in BGR order
+		public virtual int color
+		{ get { return mycolor; } set { mycolor = value; } }
+		// Whereas Color property with capital C returns the .Net or HTML color in ARGB order
+		public virtual Color Color
+		{ get { return lutils.Color_LORtoNet(mycolor); } set { mycolor = lutils.Color_NettoLOR(value); } }
+
+
+		public virtual iLORMember4 Parent
 		{	get	{	return myParent; } }
 		// Note: Parent property does not have a 'set'.  Uses SetParent() instead-- because this property is
 		// usually only set once and not usually changed thereafter
@@ -166,7 +176,7 @@ namespace LORUtils4
 		{	get	{	return isDirty;	}	}
 		// Note: Dirty flag is read-only.  Uses MakeDirty() instead-- to set it
 		// and optionally to clear it.
-		public void MakeDirty(bool dirtyState = true)
+		public virtual void MakeDirty(bool dirtyState = true)
 		{
 			isDirty = dirtyState;
 			if (dirtyState)
@@ -183,37 +193,51 @@ namespace LORUtils4
 
 		// This property is included here to be part of the base interface
 		// But every subclass should override it and return their own value
-		public LORMemberType4 MemberType
+		public virtual LORMemberType4 MemberType
 		{	get	{	return LORMemberType4.None;	}	}
 
-		public int CompareTo(iLORMember4 other)
+		public virtual int CompareTo(iLORMember4 other)
 		{
 			int result = 0;
 			//if (parentSequence.Members.sortMode == LORMembership4.SORTbySavedIndex)
-			if (LORMembership4.sortMode == LORMembership4.SORTbySavedIndex)
+			if (other == null)
 			{
-				result = mySavedIndex.CompareTo(other.SavedIndex);
+				result = 1;
+				//string msg = "Why are we comparing " + this.Name + " to null?";
+				//msg+= "\r\nClick Cancel, step thru code, check call stack!";
+				//Fyle.BUG(msg);
+				
+				//! TODO: Find out why we are getting null members in visualizations
+				//! This is an ugly kludgy fix in the meantime
+				LORMemberBase4 bass = new LORMemberBase4();
+				other = bass;
 			}
-			else
-			{
-				if (LORMembership4.sortMode == LORMembership4.SORTbyName)
+			else {
+				if (LORMembership4.sortMode == LORMembership4.SORTbySavedIndex)
 				{
-					result = myName.CompareTo(other.Name);
+					result = mySavedIndex.CompareTo(other.SavedIndex);
 				}
 				else
 				{
-					if (LORMembership4.sortMode == LORMembership4.SORTbyAltSavedIndex)
+					if (LORMembership4.sortMode == LORMembership4.SORTbyName)
 					{
-						result = myAltSavedIndex.CompareTo(other.AltSavedIndex);
+						result = myName.CompareTo(other.Name);
 					}
 					else
 					{
-						if (LORMembership4.sortMode == LORMembership4.SORTbyOutput)
+						if (LORMembership4.sortMode == LORMembership4.SORTbyAltSavedIndex)
 						{
-							result = UniverseNumber.CompareTo(other.UniverseNumber);
-							if (result == 0)
+							result = myAltSavedIndex.CompareTo(other.AltSavedIndex);
+						}
+						else
+						{
+							if (LORMembership4.sortMode == LORMembership4.SORTbyOutput)
 							{
-								result = DMXAddress.CompareTo(other.DMXAddress);
+								result = UniverseNumber.CompareTo(other.UniverseNumber);
+								if (result == 0)
+								{
+									result = DMXAddress.CompareTo(other.DMXAddress);
+								}
 							}
 						}
 					}
@@ -224,7 +248,7 @@ namespace LORUtils4
 
 		// This function is included here to be part of the base interface
 		// But every subclass should override it and return their own value
-		public string LineOut()
+		public virtual string LineOut()
 		{
 			return "";
 		}
@@ -238,7 +262,7 @@ namespace LORUtils4
 
 		// This function is included here to be a skeleton for the base interface
 		// But every subclass should override it and return their own value
-		public void Parse(string lineIn)
+		public virtual void Parse(string lineIn)
 		{
 			//LORSequence4 Parent = ID.Parent;
 			myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
@@ -258,14 +282,12 @@ namespace LORUtils4
 			}
 		}
 
-		public iLORMember4 Clone()
+		public virtual iLORMember4 Clone()
 		{
-			// See Also: Clone(), CopyTo(), and CopyFrom()
-			LORChannel4 chan = (LORChannel4)this.Clone(myName);
-			return chan;
+			return this.Clone(myName);
 		}
 
-		public iLORMember4 Clone(string newName)
+		public virtual iLORMember4 Clone(string newName)
 		{
 			LORMemberBase4 mbr = new LORMemberBase4(newName, lutils.UNDEFINED);
 			mbr.myCentiseconds = myCentiseconds;
@@ -325,9 +347,9 @@ namespace LORUtils4
 		
 		// Properties are read-only and overridden by subclasses to pull the correct values from the appropriate
 		// locations.  Included in base class only as a placeholder.  (No way to set them in base class)
-		public int UniverseNumber
+		public virtual int UniverseNumber
 		{	get	{	return myUniverseNumber; } }
-		public int DMXAddress
+		public virtual int DMXAddress
 		{	get	{	return myDMXAddress; } }
 
 		// Not supported by ShowTime, and not saved along with the sequence file.  Included only for temporary use in Util-O-Rama

@@ -104,15 +104,17 @@ namespace LORUtils4
 		private static readonly string FIELDController = " Controller";
 
 		// TODO Add properties and methods to access these
-		protected LORChannel4 ownerChannel = null;
+		protected iLORMember4 myOwner = null;
 		protected bool isDirty = false;
 
-		public LOROutput4()
+		public LOROutput4(iLORMember4 theOwner)
 		{
 			// Default Constructor
+			myOwner = theOwner;
 		}
-		public LOROutput4(string lineIn)
+		public LOROutput4(iLORMember4 theOwner, string lineIn)
 		{
+			myOwner = theOwner;
 			Parse(lineIn);
 		}
 
@@ -219,26 +221,23 @@ namespace LORUtils4
 			//System.Diagnostics.Debugger.Break();
 			//string keywd = lutils.getKeyWord(lineIn, LORVizChannel4.FIELDsubParam);
 			//string keywd = lutils.getKeyWord(lineIn, LORChannel4.FIELDcolor);
-			int idt = lineIn.IndexOf(FIELDdeviceType);  // Check for "deviceType" (lower case)
+			int idt = lineIn.IndexOf(FIELDdeviceType);  // Check for "deviceType" (lower case) (Sequences)
 																									//if (keywd.Length == 0)
 			if (idt > 0)
 			{
 				//isViz = false;
 				string dev = lutils.getKeyWord(lineIn, FIELDdeviceType); // Note: deviceType is NOT capitalized and is a String
 				deviceType = LORSeqEnums4.EnumDevice(dev);
-
-				// for LOR, this is the unit, for DMX it's not used
-				unit = lutils.getKeyValue(lineIn, FIELDunit);
-
 				// for LOR, this is the network, for DMX it is the UniverseNumber
 				network = lutils.getKeyValue(lineIn, FIELDnetwork);
-
 				// for LOR, this is the channel, for DMX this is the DMXAddress
 				circuit = lutils.getKeyValue(lineIn, FIELDcircuit);
+				// for LOR, this is the unit, for DMX it's not used
+				unit = lutils.getKeyValue(lineIn, FIELDunit);
 			}
 			else
 			{
-				idt = lineIn.IndexOf(FIELDDeviceType);  // Check for "DeviceType" (upper case)
+				idt = lineIn.IndexOf(FIELDDeviceType);  // Check for "DeviceType" (upper case) (Visualizations)
 				if (idt > 0)
 				{
 					isViz = true;
@@ -360,13 +359,27 @@ namespace LORUtils4
 			get
 			{
 				string n = "";
-				if (network < 0)
+				if (deviceType == LORDeviceType4.DMX)
 				{
-					n= "Regular";
+					n = "DMX512";
 				}
 				else
 				{
-					n= "Aux" + (char)(64 + network);
+					if (deviceType == LORDeviceType4.LOR)
+					{
+						if (network < 0)
+						{
+							n = "Regular";
+						}
+						else
+						{
+							n = "Aux" + (char)(64 + network);
+						}
+					}
+					else
+					{
+						n = LORSeqEnums4.DeviceName(deviceType);
+					}
 				}
 				return n;
 			}
@@ -374,11 +387,12 @@ namespace LORUtils4
 
 		public LOROutput4 Clone()
 		{
-			LOROutput4 oout = new LOROutput4();
-			oout.circuit = circuit;
+			LOROutput4 oout	= new LOROutput4(myOwner);
 			oout.deviceType = deviceType;
-			oout.network = network;
-			oout.unit = unit;
+			oout.circuit		= circuit;
+			oout.network		= network;
+			oout.unit				= unit;
+			oout.isViz			= isViz;
 			return oout;
 		}
 

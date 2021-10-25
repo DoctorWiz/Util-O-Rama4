@@ -16,7 +16,7 @@ namespace UtilORama4
 	{
 		public List<DMXUniverse> universes = null;
 		//public List<DMXChannel> AllChannels = null;
-		//public List<DMXDevice> Devices = null;
+		//public List<DMXDevice> DeviceTypes = null;
 		public DMXChannel channel = null;
 		public bool dirty = false;
 		public bool loading = true;
@@ -65,10 +65,10 @@ namespace UtilORama4
 		{
 			cboType.Items.Clear();
 			//cboType.DataSource = Enum.GetValues(typeof(ChannelType));
-			for (int d=0; d< DMXChannel.Devices.Count; d++)
+			for (int d=0; d< DMXChannel.DeviceTypes.Count; d++)
 			{
-				string dn = DMXChannel.Devices[d].Name;
-				cboType.Items.Add(DMXChannel.Devices[d]);
+				string dn = DMXChannel.DeviceTypes[d].Name;
+				cboType.Items.Add(DMXChannel.DeviceTypes[d]);
 			}
 
 
@@ -109,13 +109,13 @@ namespace UtilORama4
 			chkActive.Checked = chan.Active;
 			//picColor.BackColor = chan.Color;
 			SetColor(chan.Color);
-			int devID = chan.DMXDevice.ID;
+			int devID = chan.DeviceType.ID;
 
 			if (devID > 0 && devID < cboType.Items.Count)
 			{
 				for (int d = 0; d < cboType.Items.Count; d++)
 				{
-					DMXDevice de = (DMXDevice)cboType.Items[d];
+					DMXDeviceType de = (DMXDeviceType)cboType.Items[d];
 					string dn = de.Name;
 					if (de.ID == devID)
 					{
@@ -124,7 +124,7 @@ namespace UtilORama4
 					}
 				}
 			}
-			numOutput.Value = chan.Output;
+			numOutput.Value = chan.OutputNum;
 			if (chan.DMXController != null)
 			{
 				for (int i=0; i< cboController.Items.Count; i++)
@@ -405,9 +405,9 @@ namespace UtilORama4
 				// Did it really even change?
 				// Cast from decimal type used by NumUpDown control to int
 				int newVal = (int)numOutput.Value;
-				if (channel.LOROutput4 != newVal)
+				if (channel.OutputNum != newVal)
 				{
-					channel.LOROutput4 = newVal;
+					channel.OutputNum = newVal;
 					OutputChange();
 				}
 			}
@@ -422,7 +422,7 @@ namespace UtilORama4
 			tipText = "Select the output # on this controller that this channel is connected to.";
 			tipTool.SetToolTip(numOutput, tipText);
 			tipTool.SetToolTip(lblOutput, tipText);
-			channel.LOROutput4 = (int)numOutput.Value;
+			channel.OutputNum = (int)numOutput.Value;
 			if (channel.BadOutput)
 			{
 				tipText = "Warning: This channel shares the same address as\r\n" + duplicates;
@@ -483,9 +483,9 @@ namespace UtilORama4
 				{
 					if (cboType.SelectedItem != null)
 					{
-						DMXDevice device = (DMXDevice)cboType.SelectedItem;
+						DMXDeviceType device = (DMXDeviceType)cboType.SelectedItem;
 						string dn = device.Name;
-						channel.DMXDevice = device;
+						channel.DeviceType = device;
 						MakeDirty(true);
 					}
 				}

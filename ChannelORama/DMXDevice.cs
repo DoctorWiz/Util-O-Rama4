@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace UtilORama4
 {
-	public class DMXDevice : IComparable<DMXDevice>
+	public class DMXDeviceType : IComparable<DMXDeviceType>
 	{
 		protected int myID = -1;
 		protected string myName = "";
 		public int DisplayOrder;
 
-		public DMXDevice()
+		public DMXDeviceType()
 		{ 
 		}
 
-		public DMXDevice(string theName, int theID, int theOrder)
+		public DMXDeviceType(string theName, int theID, int theOrder)
 		{
 			myName = theName.Trim();
 			myID = theID;
@@ -26,7 +26,7 @@ namespace UtilORama4
 		public int ID { get {return myID;} set{myID = value; }}
 		public string Name { get { return myName;} set { myName = value; } }
 
-		public int CompareTo(DMXDevice otherDevice)
+		public int CompareTo(DMXDeviceType otherDevice)
 		{
 			int ret = 0;
 			if (DisplayOrder > otherDevice.DisplayOrder) ret = 1;

@@ -58,7 +58,7 @@ namespace LORUtils4
 
 
 		//! PROPERTIES, METHODS, ETC.
-		public new int Centiseconds
+		public override int Centiseconds
 		{
 			get
 			{
@@ -129,7 +129,7 @@ namespace LORUtils4
 			}
 		}
 
-		public new LORMemberType4 MemberType
+		public override LORMemberType4 MemberType
 		{
 			get
 			{
@@ -137,12 +137,12 @@ namespace LORUtils4
 			}
 		}
 
-		public new string LineOut()
+		public override string LineOut()
 		{
 			return LineOut(false);
 		}
 
-		public new void Parse(string lineIn)
+		public override void Parse(string lineIn)
 		{
 			myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
 			if (myName.IndexOf("inese 27") > 0)
@@ -158,14 +158,14 @@ namespace LORUtils4
 		}
 
 
-		public new iLORMember4 Clone()
+		public override iLORMember4 Clone()
 		{
 			LORChannelGroup4 grp = (LORChannelGroup4)Clone();
 			grp.Members = Members;
 			return grp;
 		}
 
-		public new iLORMember4 Clone(string newName)
+		public override iLORMember4 Clone(string newName)
 		{
 			// Returns an EMPTY group with same name, index, centiseconds, etc.
 			LORChannelGroup4 grp = (LORChannelGroup4)Clone();
@@ -282,7 +282,7 @@ namespace LORUtils4
 			return ret;
 		}
 
-		public new int UniverseNumber
+		public override int UniverseNumber
 		{
 			get
 			{
@@ -296,7 +296,7 @@ namespace LORUtils4
 				}
 			}
 		}
-		public new int DMXAddress
+		public override int DMXAddress
 		{
 			get
 			{
@@ -309,6 +309,31 @@ namespace LORUtils4
 					return 0;
 				}
 			}
+		}
+
+		public override int color
+		{
+			get
+			{
+				if (Members.Count > 0)
+				{
+					return Members[0].color;
+				}
+				else
+				{
+					return 0;
+				}
+			}
+			set
+			{
+				int ignore = value;
+			}
+		}
+
+		public override Color Color
+		{
+			get { return lutils.Color_LORtoNet(this.color); }
+			set { Color ignore = value; }
 		}
 
 		//TODO: add RemoveItem procedure

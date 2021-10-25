@@ -453,7 +453,7 @@ namespace UtilORama4
 				{
 					if (Annotator.UseRamps)
 					{
-						LORChannel4 chan = Annotator.Sequence.FindChannel(transformName, Annotator.VampTrack.Members, true, true);
+						LORChannel4 chan = Annotator.VampTrack.Members.FindChannel(transformName, true, true);
 						chan.color = lutils.Color_NettoLOR(System.Drawing.Color.DarkViolet);
 						SequenceFunctions.ImportNoteChannel(chan, xNoteOnsets);
 					}

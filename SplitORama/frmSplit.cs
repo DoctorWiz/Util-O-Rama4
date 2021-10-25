@@ -1424,7 +1424,7 @@ namespace UtilORama4
 								{
 									// Couldn't find it by SavedIndex?  No big deal and common
 									// problem.  Look for it the slow way, by name
-									member = seq.AllMembers.Find(itsName, itsType, false);
+									member = seq.AllMembers.FindByName(itsName, itsType, false);
 								}
 								if (member == null)
 								{
@@ -1688,10 +1688,10 @@ namespace UtilORama4
 		public static iLORMember4 FindByName(string theName, LORMembership4 members)
 		{
 			iLORMember4 ret = null;
-			int idx = BinarySearch(theName, Members.Items);
+			int idx = BinarySearch(theName, members.Items);
 			if (idx > lutils.UNDEFINED)
 			{
-				ret = Members.Items[idx];
+				ret = members.Items[idx];
 			}
 			return ret;
 		}
@@ -1706,7 +1706,7 @@ namespace UtilORama4
 			double score;
 
 			// Go thru all objects
-			foreach (iLORMember4 child in Members.Items)
+			foreach (iLORMember4 child in members.Items)
 			{
 				if ((!child.Selected) || (!ignoreSelected))
 				{

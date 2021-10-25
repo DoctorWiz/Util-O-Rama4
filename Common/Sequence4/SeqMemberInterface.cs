@@ -25,6 +25,10 @@ namespace LORUtils4
 		void SetSavedIndex(int theSavedIndex);
 		int AltSavedIndex
 		{	get; set;	}
+		int color
+		{ get; set; }
+		Color Color
+		{ get; set; }
 		iLORMember4 Parent
 		{	get; }
 		void SetParent(iLORMember4 newParent);

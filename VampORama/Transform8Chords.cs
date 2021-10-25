@@ -385,7 +385,7 @@ namespace UtilORama4
 
 			// Part 1
 			// Get Track, Polyphonic Group, Octave Groups, and Poly Channels
-			chordGroup = Annotator.Sequence.FindChannelGroup(transformName, Annotator.VampTrack.Members, true);
+			chordGroup = Annotator.VampTrack.Members.FindChannelGroup(transformName, true);
 			Array.Resize(ref chordChannels, chordCount);
 			LORChannelGroup4 octoGroup = null;
 			for (int n = 0; n < chordCount; n++)
@@ -393,14 +393,14 @@ namespace UtilORama4
 				int g2 = (int)n / 12;
 				if (g2 != grpNum)
 				{
-					octoGroup = Annotator.Sequence.FindChannelGroup(PolyGroupNamePrefix + MusicalNotation.octaveNamesA[g2], chordGroup.Members, true); ;
+					octoGroup = chordGroup.Members.FindChannelGroup(PolyGroupNamePrefix + MusicalNotation.octaveNamesA[g2], true);
 					grpNum = g2;
 				}
 				string noteName = n.ToString();
 				if (LabelType == vamps.LabelType.NoteNamesASCII) noteName = MusicalNotation.noteNamesASCII[n];
 				if (LabelType == vamps.LabelType.NoteNamesUnicode) noteName = MusicalNotation.noteNamesUnicode[n];
 
-				LORChannel4 chs = Annotator.Sequence.FindChannel(PolyNoteNamePrefix + noteName, octoGroup.Members, true, true);
+				LORChannel4 chs =octoGroup.Members.FindChannel(PolyNoteNamePrefix + noteName, true, true);
 				chs.color = SequenceFunctions.ChannelColor(n);
 				chs.effects.Clear();
 				chordChannels[n] = chs;
@@ -528,7 +528,7 @@ namespace UtilORama4
 					int chordCount = 128;
 					if (LabelType == vamps.LabelType.NoteNamesASCII) chordCount = MusicalNotation.noteNamesASCII.Length;
 					if (LabelType == vamps.LabelType.NoteNamesUnicode) chordCount = MusicalNotation.noteNamesUnicode.Length;
-					chordGroup = Annotator.Sequence.FindChannelGroup(transformName, Annotator.VampTrack.Members, true);
+					chordGroup = Annotator.VampTrack.Members.FindChannelGroup(transformName, true);
 					Array.Resize(ref chordChannels, chordCount);
 					LORChannelGroup4 octoGroup = null;
 					for (int n = 0; n < chordCount; n++)
@@ -536,14 +536,14 @@ namespace UtilORama4
 						int g2 = (int)n / 12;
 						if (g2 != grpNum)
 						{
-							octoGroup = Annotator.Sequence.FindChannelGroup(PolyGroupNamePrefix + MusicalNotation.octaveNamesA[g2], chordGroup.Members, true); ;
+							octoGroup = chordGroup.Members.FindChannelGroup(PolyGroupNamePrefix + MusicalNotation.octaveNamesA[g2], true); ;
 							grpNum = g2;
 						}
 						string noteName = n.ToString();
 						if (LabelType == vamps.LabelType.NoteNamesASCII) noteName = MusicalNotation.noteNamesASCII[n];
 						if (LabelType == vamps.LabelType.NoteNamesUnicode) noteName = MusicalNotation.noteNamesUnicode[n];
 
-						LORChannel4 chs = Annotator.Sequence.FindChannel(PolyNoteNamePrefix + noteName, octoGroup.Members, true, true);
+						LORChannel4 chs = octoGroup.Members.FindChannel(PolyNoteNamePrefix + noteName, true, true);
 						chs.color = SequenceFunctions.ChannelColor(n);
 						chs.effects.Clear();
 						chordChannels[n] = chs;
@@ -632,7 +632,7 @@ namespace UtilORama4
 					string cName = "";
 					// Part 1
 					// Get Track and Chord Group
-					chordGroup = Annotator.Sequence.FindChannelGroup(transformName, Annotator.VampTrack.Members, true);
+					chordGroup = Annotator.VampTrack.Members.FindChannelGroup(transformName, true);
 
 					StreamReader reader = new StreamReader(resultsFile);
 					// First, lets get the first line of the file which has the start time of the first chord
@@ -675,7 +675,7 @@ namespace UtilORama4
 									csStart = (int)Math.Round(msStart / 10D);
 									csEnd = (int)Math.Round(msEnd / 10D);
 
-									LORChannel4 chordChan = Annotator.Sequence.FindChannel(cName, chordGroup.Members, true, true);
+									LORChannel4 chordChan = chordGroup.Members.FindChannel(cName, true, true);
 									chordChan.color = ChordColor(cName);
 									// Create new LOR Effect with these values, add to timings list
 									LOREffect4 eft = null;
@@ -710,7 +710,7 @@ namespace UtilORama4
 							csStart = (int)Math.Round(msStart / 10D);
 							csEnd = (int)Math.Round(msEnd / 10D);
 
-							LORChannel4 chordChan = Annotator.Sequence.FindChannel(cName, chordGroup.Members, true, true);
+							LORChannel4 chordChan = chordGroup.Members.FindChannel(cName, true, true);
 							chordChan.color = ChordColor(cName);
 							// Create new LOR Effect with these values, add to timings list
 							LOREffect4 eft = null;

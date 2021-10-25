@@ -124,15 +124,17 @@ namespace LORUtils4
 		private static readonly string FIELDController = " Controller";
 
 		// TODO Add properties and methods to access these
-		protected LORChannel4 ownerChannel = null;
+		protected iLORMember4 myOwner = null;
 		protected bool isDirty = false;
 
-		public LOROutput4()
+		public LOROutput4(iLORMember4 theOwner)
 		{
 			// Default Constructor
+			myOwner = theOwner;
 		}
-		public LOROutput4(string lineIn)
+		public LOROutput4(iLORMember4 theOwner, string lineIn)
 		{
+			myOwner = theOwner;
 			Parse(lineIn);
 		}
 
@@ -394,7 +396,7 @@ namespace LORUtils4
 
 		public LOROutput4 Clone()
 		{
-			LOROutput4 oout = new LOROutput4();
+			LOROutput4 oout = new LOROutput4(myOwner);
 			oout.circuit = circuit;
 			oout.deviceType = deviceType;
 			oout.network = network;

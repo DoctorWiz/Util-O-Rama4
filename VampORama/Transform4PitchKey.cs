@@ -377,7 +377,7 @@ namespace UtilORama4
 			// Part 1
 			// Get the Vamp Track, and the PitchKey Group,
 			// and create the Key Channels
-			pitchKeyGroup = Annotator.Sequence.FindChannelGroup(transformName, Annotator.VampTrack.Members, true);
+			pitchKeyGroup = Annotator.VampTrack.Members.FindChannelGroup(transformName, true);
 			Array.Resize(ref pitchKeyChannels, keyCount);
 			for (int n = 1; n < keyCount; n++)
 			{
@@ -387,7 +387,7 @@ namespace UtilORama4
 				if (LabelType == vamps.LabelType.KeyNamesASCII)	 keyName = MusicalNotation.keyNamesASCII[n];
 				if (LabelType == vamps.LabelType.KeyNamesUnicode) keyName = MusicalNotation.keyNamesUnicode[n];
 
-				LORChannel4 chs = Annotator.Sequence.FindChannel(PitchKeyNamePrefix + keyName, pitchKeyGroup.Members, true, true);
+				LORChannel4 chs = pitchKeyGroup.Members.FindChannel(PitchKeyNamePrefix + keyName, true, true);
 				chs.color = SequenceFunctions.ChannelColor(n-1);
 				chs.effects.Clear();
 				pitchKeyChannels[n] = chs;
