@@ -527,7 +527,7 @@ namespace UtilORama4
 						else
 						{
 							// Not enough, make one
-							destTrack = seqNew.CreateTrack(sourceTrack.Name);
+							destTrack = seqNew.CreateNewTrack(sourceTrack.Name);
 						}
 					}
 					if (mergeTracksByName)
@@ -537,7 +537,7 @@ namespace UtilORama4
 						if (destTrack == null) // no matching name found
 						{
 							found = false;
-							destTrack = seqNew.CreateTrack(sourceTrack.Name);
+							destTrack = seqNew.CreateNewTrack(sourceTrack.Name);
 						}
 						else // matching name found!
 						{
@@ -545,7 +545,7 @@ namespace UtilORama4
 					}
 					if (appendTracks)
 					{
-						destTrack = seqNew.CreateTrack(sourceTrack.Name);
+						destTrack = seqNew.CreateNewTrack(sourceTrack.Name);
 					}
 					MergeMembers(destTrack.Members, sourceTrack.Members);
 
@@ -706,7 +706,7 @@ namespace UtilORama4
 						groupMap.Add(gm);
 						if (matchedExGroupsIdx == lutils.UNDEFINED)
 						{
-							LORChannelGroup4 group3 = seqNew.CreateChannelGroup(group2.Name);
+							LORChannelGroup4 group3 = seqNew.CreateNewChannelGroup(group2.Name);
 							gm = new Map(group3, newGroup);
 							groupMap.Add(gm);
 						}
@@ -841,7 +841,7 @@ namespace UtilORama4
 					if (destRGB == null)
 					{
 						found = false;
-						destRGB = seqNew.CreateRGBchannel(sourceRGB.Name);
+						destRGB = seqNew.CreateNewRGBChannel(sourceRGB.Name);
 						destMembers.Add(destRGB);
 
 						MergeRGBchildren(sourceRGB, destRGB);
@@ -854,14 +854,14 @@ namespace UtilORama4
 						}
 						if (duplicateNameAction == ACTIONkeepBoth)
 						{
-							destRGB = seqNew.CreateRGBchannel(sourceRGB.Name);
+							destRGB = seqNew.CreateNewRGBChannel(sourceRGB.Name);
 							destMembers.Add(destRGB);
 
 							MergeRGBchildren(sourceRGB, destRGB);
 						}
 						if (duplicateNameAction == ACTIONaddNumber)
 						{
-							destRGB = seqNew.CreateRGBchannel(sourceRGB.Name + " (2)");
+							destRGB = seqNew.CreateNewRGBChannel(sourceRGB.Name + " (2)");
 							destMembers.Add(destRGB);
 
 							MergeRGBchildren(sourceRGB, destRGB);
@@ -899,7 +899,7 @@ namespace UtilORama4
 			if (destCh == null)
 			{
 				found = false;
-				destCh = seqNew.CreateChannel(sourceCh.Name);
+				destCh = seqNew.CreateNewChannel(sourceCh.Name);
 				destMembers.Add(destCh);
 				destCh.CopyFrom(sourceCh, mergeEffects);
 			}
@@ -911,12 +911,12 @@ namespace UtilORama4
 				}
 				if (duplicateNameAction == ACTIONkeepBoth)
 				{
-					destCh = seqNew.CreateChannel(sourceCh.Name);
+					destCh = seqNew.CreateNewChannel(sourceCh.Name);
 					destMembers.Add(destCh);
 				}
 				if (duplicateNameAction == ACTIONaddNumber)
 				{
-					destCh = seqNew.CreateChannel(sourceCh.Name + " (2)");
+					destCh = seqNew.CreateNewChannel(sourceCh.Name + " (2)");
 					destMembers.Add(destCh);
 				}
 

@@ -502,7 +502,7 @@ namespace LORUtils4
 			// const string ERRitem = ", Items #";
 			// const string ERRline = ", Line #";
 
-			for (int t = 0; t < seq.Tracks.Count; t++)
+			for (int t = 1; t < seq.Tracks.Count; t++)
 			{
 				level = 0;
 				LORTrack4 theTrack = seq.Tracks[t];
@@ -583,7 +583,7 @@ namespace LORUtils4
 				iLORMember4 member = theTrack.Members.Items[ti];
 				if (member != null)
 				{
-					int si = member.SavedIndex;
+					int si = member.ID;
 					if (member.MemberType == LORMemberType4.ChannelGroup)
 					{
 						c += DisplayOrderBuildGroup(seq, (LORChannelGroup4)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
@@ -625,7 +625,7 @@ namespace LORUtils4
 				//try
 				//{
 				iLORMember4 member = theGroup.Members.Items[gi];
-				int si = member.SavedIndex;
+				int si = member.ID;
 				if (member.MemberType == LORMemberType4.ChannelGroup)
 				{
 					c += DisplayOrderBuildGroup(seq, (LORChannelGroup4)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
@@ -689,7 +689,7 @@ namespace LORUtils4
 				//try
 				//{
 				iLORMember4 member = theDevice.Members.Items[gi];
-				int si = member.SavedIndex;
+				int si = member.ID;
 				if (member.MemberType == LORMemberType4.ChannelGroup)
 				{
 					c += DisplayOrderBuildGroup(seq, (LORChannelGroup4)member, level + 1, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
@@ -788,7 +788,7 @@ namespace LORUtils4
 		{
 			string colorID = Color_LORtoHTML(LORcolorVal);
 			// Convert rearranged hex value a real color
-			Color theColor = System.Drawing.ColorTranslator.FromHtml("#" + colorID);
+			Color theColor = System.Drawing.ColorTranslator.FromHtml(colorID);
 			return theColor;
 		}
 
@@ -984,6 +984,12 @@ namespace LORUtils4
 
 		#region RenderEffects
 
+		public static void RenderEffects(iLORMember4 member,ref PictureBox preview,bool useRamps)
+		{
+			preview.Image = RenderEffects(member, 0, member.Centiseconds, preview.Width, preview.Height, useRamps);
+		}
+
+
 		public static Bitmap RenderEffects(iLORMember4 member, int startCentiseconds, int endCentiseconds, int width, int height, bool useRamps)
 		{
 			// Create a temporary working bitmap
@@ -1104,7 +1110,29 @@ namespace LORUtils4
 						}
 					}
 				}
-			} // end channel has effects
+			}
+			else // NO effects!
+			{
+				//Size boxsz = new Size(width, height);
+				Rectangle boxrect = new Rectangle(0, 0, width, height);
+				Font fnt = new Font("Arial", 8, FontStyle.Italic);
+				string msg = "(No Effects)";
+				//TextFormatFlags flags = TextFormatFlags.NoPadding;
+				//Size txtsize = TextRenderer(gr, msg, fnt, boxsz);
+				//int x = (width - txtsize.Width) / 2;
+				//int y = (height - txtsize.Height) / 2;
+				br = new SolidBrush(Color.Black);
+				StringFormat strfmt = new StringFormat();
+				strfmt.Alignment = StringAlignment.Center;
+				strfmt.LineAlignment = StringAlignment.Center;
+				gr.DrawString(msg, fnt, br, boxrect, strfmt);
+
+				fnt.Dispose();
+
+			} // end channel has effects, or not
+			br.Dispose();
+			p.Dispose();
+			gr.Dispose();
 
 			return bmp;
 		}
@@ -1175,216 +1203,234 @@ namespace LORUtils4
 			int[] bLevels = null;
 			Array.Resize(ref bLevels, width);
 			int thirdHt = height / 3;
+			int toteffcount = rgb.redChannel.effects.Count +
+												rgb.grnChannel.effects.Count +
+												rgb.bluChannel.effects.Count;
 
-			if (rgb.redChannel.effects.Count > 0)
-			{
-				rLevels = PlotLevels(rgb.redChannel, startCentiseconds, endCentiseconds, width);
-			}
-			if (rgb.grnChannel.effects.Count > 0)
-			{
-				gLevels = PlotLevels(rgb.grnChannel, startCentiseconds, endCentiseconds, width);
-			}
-			if (rgb.bluChannel.effects.Count > 0)
-			{
-				bLevels = PlotLevels(rgb.bluChannel, startCentiseconds, endCentiseconds, width);
-			}
 
-			for (int x = 0; x < width; x++)
+			if (toteffcount > 0)
 			{
-				//Debug.Write(levels[x].ToString() + " ");
-				//bool shimmer = ((levels[x] & lutils.ADDshimmer) > 0);
-				//bool twinkle = ((levels[x] & lutils.ADDtwinkle) > 0);
-				//levels[x] &= 0x0FF;
-				if (useRamps)
+				if (rgb.redChannel.effects.Count > 0)
 				{
-					// * * R E D * *
-					Pen p = new Pen(Color.Red, 1);
-					Brush br = new SolidBrush(Color.Red);
-					bool shimmer = ((rLevels[x] & lutils.ADDshimmer) > 0);
-					bool twinkle = ((rLevels[x] & lutils.ADDtwinkle) > 0);
-					rLevels[x] &= 0x0FF;
-					int ll = rLevels[x] * thirdHt;
-					int lineLen = ll / 100 + 1;
-					if (shimmer)
-					{
-						for (int n = 0; n < lineLen; n++)
-						{
-							int m = (n + x) % 6;
-							if (m < 2)
-							{
-								gr.FillRectangle(br, x, height - n, 1, 1);
-							}
-						}
-					}
-					else if (twinkle)
-					{
-						for (int n = 0; n < lineLen; n++)
-						{
-							int m = (n + x) % 6;
-							if (m < 1)
-							{
-								gr.FillRectangle(br, x, height - n, 1, 1);
-							}
-							m = (x - n + 25000) % 6;
-							if (m < 1)
-							{
-								gr.FillRectangle(br, x, height - n, 1, 1);
-							}
-
-						}
-					}
-					else
-					{
-						gr.DrawLine(p, x, height - 1, x, height - lineLen);
-					}
-					// END RED
-
-					// * * G R E E N * *
-					p = new Pen(Color.Green, 1);
-					br = new SolidBrush(Color.Green);
-					shimmer = ((rLevels[x] & lutils.ADDshimmer) > 0);
-					twinkle = ((rLevels[x] & lutils.ADDtwinkle) > 0);
-					rLevels[x] &= 0x0FF;
-					ll = rLevels[x] * thirdHt;
-					lineLen = ll / 100 + 1;
-					if (shimmer)
-					{
-						for (int n = 0; n < lineLen; n++)
-						{
-							int m = (n + x) % 6;
-							if (m < 2)
-							{
-								gr.FillRectangle(br, x, thirdHt + height - n, 1, 1);
-							}
-						}
-					}
-					else if (twinkle)
-					{
-						for (int n = 0; n < lineLen; n++)
-						{
-							int m = (n + x) % 6;
-							if (m < 1)
-							{
-								gr.FillRectangle(br, x, thirdHt + height - n, 1, 1);
-							}
-							m = (x - n + 25000) % 6;
-							if (m < 1)
-							{
-								gr.FillRectangle(br, x, thirdHt + height - n, 1, 1);
-							}
-
-						}
-					}
-					else
-					{
-						gr.DrawLine(p, x, height - 1, x, thirdHt + height - lineLen);
-					}
-					// END GREEN
-
-					// * * B L U E * *
-					p = new Pen(Color.Red, 1);
-					br = new SolidBrush(Color.Red);
-					shimmer = ((rLevels[x] & lutils.ADDshimmer) > 0);
-					twinkle = ((rLevels[x] & lutils.ADDtwinkle) > 0);
-					rLevels[x] &= 0x0FF;
-					ll = rLevels[x] * thirdHt;
-					lineLen = ll / 100 + 1;
-					if (shimmer)
-					{
-						for (int n = 0; n < lineLen; n++)
-						{
-							int m = (n + x) % 6;
-							if (m < 2)
-							{
-								gr.FillRectangle(br, x, thirdHt + thirdHt + height - n, 1, 1);
-							}
-						}
-					}
-					else if (twinkle)
-					{
-						for (int n = 0; n < lineLen; n++)
-						{
-							int m = (n + x) % 6;
-							if (m < 1)
-							{
-								gr.FillRectangle(br, x, thirdHt + thirdHt + height - n, 1, 1);
-							}
-							m = (x - n + 25000) % 6;
-							if (m < 1)
-							{
-								gr.FillRectangle(br, x, height - n, 1, 1);
-							}
-
-						}
-					}
-					else
-					{
-						gr.DrawLine(p, x, height - 1, x, thirdHt + thirdHt + height - lineLen);
-					}
-					// END BLUE
-
+					rLevels = PlotLevels(rgb.redChannel, startCentiseconds, endCentiseconds, width);
 				}
-				else // use fades instead of ramps
+				if (rgb.grnChannel.effects.Count > 0)
 				{
-					int R = rLevels[x];
-					int G = gLevels[x];
-					int B = bLevels[x];
-
-					// Shimmer and Twinkle
-					if (R >= ADDtwinkle)
-					{
-						R -= ADDtwinkle;
-						R /= 2;
-					}
-					if (R >= ADDshimmer)
-					{
-						R -= ADDshimmer;
-						R /= 2;
-					}
-					if (R > 100)
-					{
-						R = 100;
-					}
-					if (G >= ADDtwinkle)
-					{
-						G -= ADDtwinkle;
-						G /= 2;
-					}
-					if (G >= ADDshimmer)
-					{
-						G -= ADDshimmer;
-						G /= 2;
-					}
-					if (G > 100)
-					{
-						G = 100;
-					}
-					if (B >= ADDtwinkle)
-					{
-						B -= ADDtwinkle;
-						B /= 2;
-					}
-					if (B >= ADDshimmer)
-					{
-						B -= ADDshimmer;
-						B /= 2;
-					}
-					if (B > 100)
-					{
-						B= 100;
-					}
-
-					int r = (int)((float)R * 2.55F);
-					int g = (int)((float)G * 2.55F);
-					int b = (int)((float)B * 2.55F);
-
-
-
-					Color c = Color.FromArgb(r, g, b);
-					Pen p = new Pen(c, 1);
-					gr.DrawLine(p, x, 0, x, height - 1);
+					gLevels = PlotLevels(rgb.grnChannel, startCentiseconds, endCentiseconds, width);
 				}
-			} // end For X Coord (Horiz)
+				if (rgb.bluChannel.effects.Count > 0)
+				{
+					bLevels = PlotLevels(rgb.bluChannel, startCentiseconds, endCentiseconds, width);
+				}
+
+				for (int x = 0; x < width; x++)
+				{
+					//Debug.Write(levels[x].ToString() + " ");
+					//bool shimmer = ((levels[x] & lutils.ADDshimmer) > 0);
+					//bool twinkle = ((levels[x] & lutils.ADDtwinkle) > 0);
+					//levels[x] &= 0x0FF;
+					if (useRamps)
+					{
+						// * * R E D * *
+						Pen p = new Pen(Color.Red, 1);
+						Brush br = new SolidBrush(Color.Red);
+						bool shimmer = ((rLevels[x] & lutils.ADDshimmer) > 0);
+						bool twinkle = ((rLevels[x] & lutils.ADDtwinkle) > 0);
+						rLevels[x] &= 0x0FF;
+						int ll = rLevels[x] * thirdHt;
+						int lineLen = ll / 100 + 1;
+						if (shimmer)
+						{
+							for (int n = 0; n < lineLen; n++)
+							{
+								int m = (n + x) % 6;
+								if (m < 2)
+								{
+									gr.FillRectangle(br, x, height - n, 1, 1);
+								}
+							}
+						}
+						else if (twinkle)
+						{
+							for (int n = 0; n < lineLen; n++)
+							{
+								int m = (n + x) % 6;
+								if (m < 1)
+								{
+									gr.FillRectangle(br, x, height - n, 1, 1);
+								}
+								m = (x - n + 25000) % 6;
+								if (m < 1)
+								{
+									gr.FillRectangle(br, x, height - n, 1, 1);
+								}
+
+							}
+						}
+						else
+						{
+							gr.DrawLine(p, x, height - 1, x, height - lineLen);
+						}
+						// END RED
+
+						// * * G R E E N * *
+						p = new Pen(Color.Green, 1);
+						br = new SolidBrush(Color.Green);
+						shimmer = ((rLevels[x] & lutils.ADDshimmer) > 0);
+						twinkle = ((rLevels[x] & lutils.ADDtwinkle) > 0);
+						rLevels[x] &= 0x0FF;
+						ll = rLevels[x] * thirdHt;
+						lineLen = ll / 100 + 1;
+						if (shimmer)
+						{
+							for (int n = 0; n < lineLen; n++)
+							{
+								int m = (n + x) % 6;
+								if (m < 2)
+								{
+									gr.FillRectangle(br, x, thirdHt + height - n, 1, 1);
+								}
+							}
+						}
+						else if (twinkle)
+						{
+							for (int n = 0; n < lineLen; n++)
+							{
+								int m = (n + x) % 6;
+								if (m < 1)
+								{
+									gr.FillRectangle(br, x, thirdHt + height - n, 1, 1);
+								}
+								m = (x - n + 25000) % 6;
+								if (m < 1)
+								{
+									gr.FillRectangle(br, x, thirdHt + height - n, 1, 1);
+								}
+
+							}
+						}
+						else
+						{
+							gr.DrawLine(p, x, height - 1, x, thirdHt + height - lineLen);
+						}
+						// END GREEN
+
+						// * * B L U E * *
+						p = new Pen(Color.Red, 1);
+						br = new SolidBrush(Color.Red);
+						shimmer = ((rLevels[x] & lutils.ADDshimmer) > 0);
+						twinkle = ((rLevels[x] & lutils.ADDtwinkle) > 0);
+						rLevels[x] &= 0x0FF;
+						ll = rLevels[x] * thirdHt;
+						lineLen = ll / 100 + 1;
+						if (shimmer)
+						{
+							for (int n = 0; n < lineLen; n++)
+							{
+								int m = (n + x) % 6;
+								if (m < 2)
+								{
+									gr.FillRectangle(br, x, thirdHt + thirdHt + height - n, 1, 1);
+								}
+							}
+						}
+						else if (twinkle)
+						{
+							for (int n = 0; n < lineLen; n++)
+							{
+								int m = (n + x) % 6;
+								if (m < 1)
+								{
+									gr.FillRectangle(br, x, thirdHt + thirdHt + height - n, 1, 1);
+								}
+								m = (x - n + 25000) % 6;
+								if (m < 1)
+								{
+									gr.FillRectangle(br, x, height - n, 1, 1);
+								}
+
+							}
+						}
+						else
+						{
+							gr.DrawLine(p, x, height - 1, x, thirdHt + thirdHt + height - lineLen);
+						}
+						// END BLUE
+
+					}
+					else // use fades instead of ramps
+					{
+						int R = rLevels[x];
+						int G = gLevels[x];
+						int B = bLevels[x];
+
+						// Shimmer and Twinkle
+						if (R >= ADDtwinkle)
+						{
+							R -= ADDtwinkle;
+							R /= 2;
+						}
+						if (R >= ADDshimmer)
+						{
+							R -= ADDshimmer;
+							R /= 2;
+						}
+						if (R > 100)
+						{
+							R = 100;
+						}
+						if (G >= ADDtwinkle)
+						{
+							G -= ADDtwinkle;
+							G /= 2;
+						}
+						if (G >= ADDshimmer)
+						{
+							G -= ADDshimmer;
+							G /= 2;
+						}
+						if (G > 100)
+						{
+							G = 100;
+						}
+						if (B >= ADDtwinkle)
+						{
+							B -= ADDtwinkle;
+							B /= 2;
+						}
+						if (B >= ADDshimmer)
+						{
+							B -= ADDshimmer;
+							B /= 2;
+						}
+						if (B > 100)
+						{
+							B = 100;
+						}
+
+						int r = (int)((float)R * 2.55F);
+						int g = (int)((float)G * 2.55F);
+						int b = (int)((float)B * 2.55F);
+
+
+
+						Color c = Color.FromArgb(r, g, b);
+						Pen p = new Pen(c, 1);
+						gr.DrawLine(p, x, 0, x, height - 1);
+					}
+				} // end For X Coord (Horiz)
+			}
+			else // NO effects on any of the 3 subchannels
+			{
+				Rectangle boxrect = new Rectangle(0, 0, width, height);
+				Font fnt = new Font("Arial", 8, FontStyle.Italic);
+				string msg = "(No Effects)";
+				Brush br = new SolidBrush(Color.White);
+				StringFormat strfmt = new StringFormat();
+				strfmt.Alignment = StringAlignment.Center;
+				strfmt.LineAlignment = StringAlignment.Center;
+				gr.DrawString(msg, fnt, br, boxrect, strfmt);
+			} // End effects count, or not
 			return bmp;
 		}
 

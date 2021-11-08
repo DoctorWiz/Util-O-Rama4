@@ -888,7 +888,7 @@ namespace UtilORama4
 					else // New sequence
 					{
 						LORTrack4 LORtrack = seq.FindTrack("Time-O-Rama");
-						LORChannel4 LORchannel = new LORChannel4(cboLORItem.Text);
+						LORChannel4 LORchannel = seq.CreateNewChannel(cboLORItem.Text);
 						LORtrack.Members.Add(LORchannel);
 						ConvertxTimingsToLORchannel(txtXFile.Text, LORchannel);
 					}

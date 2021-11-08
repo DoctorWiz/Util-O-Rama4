@@ -20,11 +20,14 @@ namespace LORUtils4
 		int Index
 		{	get; }
 		void SetIndex(int theIndex);
-		int SavedIndex
-		{	get; }
-		void SetSavedIndex(int theSavedIndex);
-		int AltSavedIndex
+		int ID		{	get; }
+		void SetID(int newID);
+		int AltID
 		{	get; set;	}
+		int SavedIndex
+		{ get; }
+		void SetSavedIndex(int theSavedIndex);
+		
 		int color
 		{ get; set; }
 		Color Color
@@ -63,7 +66,7 @@ namespace LORUtils4
 		{	get; }
 		string Comment
 		{ get; set; }
-		int RuleID
+		int ZCount
 		{ get; set; }
 
 	}

@@ -39,13 +39,9 @@ namespace LORUtils4
 		private static readonly string FIELDchannelType = " Channel_Type";
 		private static readonly string FIELDmaxOpacity = " Max_Opacity";
 
-		public LORVizDrawObject4()
+		public LORVizDrawObject4(iLORMember4 theParent, string lineIn)
 		{
-			// Default contstructor
-		}
-
-		public LORVizDrawObject4(string lineIn)
-		{
+			myParent = theParent;
 			Parse(lineIn);
 		}
 
@@ -61,37 +57,37 @@ namespace LORUtils4
 			}
 		}
 
-		public int VizID
-		{
-			get
-			{
-				return mySavedIndex;
-			}
-		}
-
-		public int AltVizID
-		{
-			get
-			{
-				return myAltSavedIndex;
-			}
-			set
-			{
-				myAltSavedIndex = value;
-			}
-		}
+		public int DrawObjectID
+		{	get	{	return myID;	} }
+		public void SetDrawObjectID(int newObjectID)
+		{ myID = newObjectID; }
+		public int AltDrawObjectID
+		{	get	{	return myAltID;	}	set	{	myAltID = value;	}	}
 		public override LORMemberType4 MemberType
 		{ get { return LORMemberType4.VizDrawObject; } }
-
 
 		public override int UniverseNumber
 		{
 			get
 			{
 				int ret = lutils.UNDEFINED;
-				if (redChannel != null)
+				if (redChannel == null)
 				{
-					ret = redChannel.output.UniverseNumber;
+					string m1 = "WTF does DrawObject '" + myName + "' not have a red channel?!";
+					Fyle.BUG(m1);
+				}
+				else
+				{
+					string redName = redChannel.Name;
+					if (redChannel.output == null)
+					{
+						string m2 = "WTF does " + myName + "'s red channel '" + redName + "' not have an output?!?";
+						//Fyle.BUG(m2);
+					}
+					else
+					{
+						ret = redChannel.output.UniverseNumber;
+					}
 				}
 				return ret;
 			}
@@ -102,9 +98,23 @@ namespace LORUtils4
 			get
 			{
 				int ret = lutils.UNDEFINED;
-				if (redChannel != null)
+				if (redChannel == null)
 				{
-					ret = redChannel.output.DMXAddress;
+					string m1 = "WTF does DrawObject '" + myName + "' not have a red channel?!";
+					Fyle.BUG(m1);
+				}
+				else
+				{
+					string redName = redChannel.Name;
+					if (redChannel.output == null)
+					{
+						string m2 = "WTF does " + myName + "'s red channel '" + redName + "' not have an output?!?";
+						//Fyle.BUG(m2);
+					}
+					else
+					{
+						ret = redChannel.output.DMXAddress;
+					}
 				}
 				return ret;
 			}
@@ -125,8 +135,8 @@ namespace LORUtils4
 			// Max_Opacity ="0">
 
 			myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
-			mySavedIndex = lutils.getKeyValue(lineIn, LORVisualization4.FIELDvizID);
-			myIndex = mySavedIndex;
+			myID = lutils.getKeyValue(lineIn, LORVisualization4.FIELDvizID);
+			myIndex = myID;
 			BulbSpacing = lutils.getKeyValue(lineIn, FIELDbulbSpacing);
 			Comment = lutils.HumanizeName(lutils.getKeyWord(lineIn, FIELDcomment));
 			BulbShape = lutils.getKeyValue(lineIn, FIELDbulbShape);
@@ -139,13 +149,6 @@ namespace LORUtils4
 
 		}
 
-		public int DrawObjectID
-		{
-			get
-			{
-				return mySavedIndex;
-			}
-		}
 
 
 		public override string LineOut()
@@ -154,7 +157,7 @@ namespace LORUtils4
 
 			ret.Append(lutils.StartTable(LORVisualization4.TABLEdrawObject, 2));
 
-			ret.Append(lutils.SetKey(LORVisualization4.FIELDvizID, VizID));
+			ret.Append(lutils.SetKey(LORVisualization4.FIELDvizID, DrawObjectID));
 			ret.Append(lutils.SetKey(LORVisualization4.FIELDvizName, lutils.XMLifyName(myName)));
 			ret.Append(lutils.SetKey(FIELDbulbSpacing, BulbSpacing));
 			ret.Append(lutils.SetKey(FIELDcomment, Comment));
@@ -218,7 +221,16 @@ namespace LORUtils4
 				if (isRGB)
 				{ return lutils.LORCOLOR_RGB; }
 				else
-				{ return redChannel.color; }
+				{
+					if (redChannel != null)
+					{
+						return redChannel.color;
+					}
+					else
+					{
+						return 0;
+					}
+				}
 			}
 			set { int ignore = value; }
 		}

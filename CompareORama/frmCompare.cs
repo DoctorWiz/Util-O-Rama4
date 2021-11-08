@@ -14,6 +14,7 @@ using FileHelper;
 using xUtils;
 using FuzzyString;
 using ReadWriteCsv;
+using DarkMode;
 
 
 namespace UtilORama4
@@ -67,6 +68,7 @@ namespace UtilORama4
 		{
 			RestoreFormPosition();
 			GetTheControlsFromTheHeartOfTheSun();
+			DarkMode.DarkMode.SetDarkMode(this, true);
 		}
 
 		private void frmBlank_FormClosing(object sender, FormClosingEventArgs e)
@@ -471,8 +473,14 @@ namespace UtilORama4
 						{
 							mbrType = xMemberType.Model; // Default
 							string st = xutils.getKeyWord(lineIn, "StringType");
-							//TODO Get its color!
 							xModel xch = new xModel(theName);
+							//TODO Get its color!
+							string hColor = xutils.getKeyWord(lineIn, "CustomColor");
+							if (hColor.Length == 7)
+							{
+								xch.Color = xutils.ColorHTMLtoNet(hColor);
+							}
+							xch.StartChannel = xutils.getKeyWord(lineIn, "StartChannel");
 							xModelList.Add(xch);
 							count++;
 							member = xch;
@@ -487,6 +495,8 @@ namespace UtilORama4
 								xPixels xpx = new xPixels(theName);
 								xPixelList.Add(xpx);
 								//count++;
+								xpx.StartChannel = xutils.getKeyWord(lineIn, "StartChannel");
+								xpx.Color = Color.FromArgb(128, 64, 64);
 								member = xpx;
 							}
 							else // not pixels
@@ -499,6 +509,8 @@ namespace UtilORama4
 									xRGBmodel xrgb = new xRGBmodel(theName);
 									xRGBList.Add(xrgb);
 									count++;
+									xrgb.StartChannel = xutils.getKeyWord(lineIn, "StartChannel");
+									xrgb.Color = Color.FromArgb(64, 0, 0);
 									member = xrgb;
 								}
 							}
@@ -980,6 +992,7 @@ namespace UtilORama4
 			int fuzzyMatches = 0;
 			int lineCount = 0;
 			string status = "";
+			string outInfo = "";
 			ImBusy(true);
 			// Step 1: Database Channels to LOR Channels Exact Matches
 			for (int datIdx = 0; datIdx < datChannels.Count; datIdx++)
@@ -989,9 +1002,10 @@ namespace UtilORama4
 				Matchup mup = new Matchup();
 				mup.NameDat = datName;
 				mup.IndexDat = datIdx;
-				mup.OutputDat = datChan.UniverseNumber.ToString() + "/" +
-												datChan.DMXAddress.ToString() + "/" +
-												datChan.xLightsAddress.ToString();
+				outInfo = datChan.UniverseNumber.ToString() + "/" +
+									datChan.DMXAddress.ToString() + "/" +
+									datChan.xLightsAddress.ToString();
+				mup.OutputDat = outInfo;
 				mup.ColorDat = datChan.ColorHTML;
 
 				// Search Sequence Channels
@@ -1004,8 +1018,9 @@ namespace UtilORama4
 					mup.NameLOR = chanLor.Name;
 					mup.IndexLOR = chanLor.Index;
 					mup.SavedIndex = chanLor.SavedIndex;
-					mup.OutputLOR = chanLor.UniverseNumber.ToString() + "/" +
-													chanLor.DMXAddress.ToString();
+					outInfo = chanLor.UniverseNumber.ToString() + "/" +
+										chanLor.DMXAddress.ToString();
+					mup.OutputLOR = outInfo;
 					mup.ColorLOR = lutils.Color_LORtoHTML(chanLor.color);
 					mup.ExactLOR = true;
 					chanLor.ExactMatch = true;
@@ -1058,8 +1073,9 @@ namespace UtilORama4
 							LORChannel4 chanLor = sequence.Channels[highMatch];
 							mup.IndexLOR = chanLor.Index;
 							mup.SavedIndex = chanLor.SavedIndex;
-							mup.OutputLOR = chanLor.UniverseNumber.ToString() + "/" +
-															chanLor.DMXAddress.ToString();
+							outInfo = chanLor.UniverseNumber.ToString() + "/" +
+												chanLor.DMXAddress.ToString();
+							mup.OutputLOR = outInfo;
 							mup.ColorLOR = lutils.Color_LORtoHTML(chanLor.color);
 							mup.ExactLOR = false;
 							chanLor.ExactMatch = false;
@@ -1083,13 +1099,14 @@ namespace UtilORama4
 					status = "Searching Visualization for " + datName;
 					StatusUpdate(status);
 
-					LORVizChannel4 vch = visualization.FindChannel(datName);
+					LORVizChannel4 vch = visualization.FindVizChannel(datName, false);
 					if (vch != null)
 					{
 						mup.IndexViz = vch.Index;
 						mup.NameViz = vch.Name;
-						mup.OutputDat = vch.UniverseNumber.ToString() + "/" +
-														vch.DMXAddress.ToString();
+						outInfo = vch.UniverseNumber.ToString() + "/" +
+											vch.DMXAddress.ToString();
+						mup.OutputViz = outInfo;
 						mup.ColorViz = lutils.Color_LORtoHTML(vch.color);
 						mup.TypeViz = 1;
 						mup.ExactViz = true;
@@ -1105,9 +1122,10 @@ namespace UtilORama4
 						{
 							mup.IndexViz = vdo.Index;
 							mup.NameViz = vdo.Name;
-							mup.OutputDat = vdo.UniverseNumber.ToString() + "/" +
-															vdo.DMXAddress.ToString();
-							//mup.ColorViz = 
+							outInfo = vdo.UniverseNumber.ToString() + "/" +
+												vdo.DMXAddress.ToString();
+							mup.OutputViz = outInfo;
+							mup.ColorViz = lutils.Color_LORtoHTML(vdo.color);
 							mup.TypeViz = 3;
 							mup.ExactViz = true;
 							vdo.ExactMatch = true;
@@ -1122,9 +1140,10 @@ namespace UtilORama4
 							{
 								mup.IndexViz = vgr.Index;
 								mup.NameViz = vgr.Name;
-								mup.OutputDat = vgr.UniverseNumber.ToString() + "/" +
-																vgr.DMXAddress.ToString();
-								//mup.ColorViz = 
+								outInfo = vgr.UniverseNumber.ToString() + "/" +
+													vgr.DMXAddress.ToString();
+								mup.OutputViz = outInfo;
+								mup.ColorViz = lutils.Color_LORtoHTML(vgr.color);
 								mup.TypeViz = 2;
 								mup.ExactViz = true;
 								vgr.ExactMatch = true;
@@ -1231,7 +1250,6 @@ namespace UtilORama4
 								if (matchType == 1)
 								{
 									member = visualization.VizChannels[highMatch];
-									mup.ColorViz = lutils.Color_LORtoHTML(visualization.VizChannels[highMatch].color);
 								}
 								if (matchType == 2)
 								{
@@ -1243,8 +1261,10 @@ namespace UtilORama4
 								}
 
 								mup.NameViz = member.Name;
-								mup.OutputViz = member.UniverseNumber.ToString() + "/" +
-																member.DMXAddress.ToString();
+								outInfo = member.UniverseNumber.ToString() + "/" +
+													member.DMXAddress.ToString();
+								mup.OutputViz = outInfo;
+								mup.ColorViz = lutils.Color_LORtoHTML(member.color);
 								mup.IndexViz = highMatch;
 								mup.TypeViz = matchType;
 								mup.ExactViz = false;
@@ -1261,58 +1281,72 @@ namespace UtilORama4
 			// Step 5: Database Channels to xLights Models & Groups Exact Matches
 			for (int datIdx = 0; datIdx < datChannels.Count; datIdx++)
 			{
+				bool skip = false;
 				string datName = datChannels[datIdx].Name;
-				Matchup mup = matchups[datIdx];
-				// xLights Models and ModelGroups
-				status = "Searching xLights for " + datName;
-				StatusUpdate(status);
+				string dName = datName;
+				//if (dName.EndSubstring(4) == " (R)") dName.Replace(" (R)", " (RGB)");
+				//if (dName.EndSubstring(4) == " (G)") skip = true;
+				//if (dName.EndSubstring(4) == " (B)") skip = true;
+				if (!skip)
+				{
+					Matchup mup = matchups[datIdx];
+					// xLights Models and ModelGroups
+					status = "Searching xLights for " + datName;
+					StatusUpdate(status);
 
-				for (int x = 0; x < xModelList.Count; x++)
-				{
-					string xName = xModelList[x].Name;
-					if (datName.CompareTo(xName) == 0)
+					for (int x = 0; x < xModelList.Count; x++)
 					{
-						mup.IndexxLights = x;
-						mup.OutputxLights = xModelList[x].StartChannel.ToString();
-						mup.ColorxLights = lutils.Color_NettoHTML(xModelList[x].Color);
-						mup.TypexLights = 1;
-						mup.ExactxLights = true;
-						xModelList[x].ExactMatch = true;
-						xModelList[x].Selected = true;
-						xModelList[x].Tag = mup;
-						exactMatches++;
-						// Force exit of loop
-						x = xModelList.Count;
-					}
-				}
-				if (mup.IndexxLights < 0)
-				{
-					for (int x = 0; x < xGroupList.Count; x++)
-					{
-						string xName = xGroupList[x].Name;
-						if (datName.CompareTo(xName) == 0)
+						string xName = xModelList[x].Name;
+						if (dName.CompareTo(xName) == 0)
 						{
 							mup.IndexxLights = x;
-							mup.NamexLights = xGroupList[x].Name;
-							mup.OutputxLights = xGroupList[x].StartChannel.ToString();
-							//mup.ColorxLights = lutils.Color_NettoHTML(xGroupList[x].Color);
-							mup.TypexLights = 2;
+							outInfo = xModelList[x].StartChannel.ToString();
+							mup.OutputxLights = outInfo;
+							mup.ColorxLights = lutils.Color_NettoHTML(xModelList[x].Color);
+							mup.TypexLights = 1;
 							mup.ExactxLights = true;
 							xModelList[x].ExactMatch = true;
 							xModelList[x].Selected = true;
 							xModelList[x].Tag = mup;
 							exactMatches++;
 							// Force exit of loop
-							x = xGroupList.Count;
+							x = xModelList.Count;
 						}
 					}
-				}
-			}
+					if (mup.IndexxLights < 0)
+					{
+						for (int x = 0; x < xGroupList.Count; x++)
+						{
+							string xName = xGroupList[x].Name;
+							if (dName.CompareTo(xName) == 0)
+							{
+								mup.IndexxLights = x;
+								mup.NamexLights = xGroupList[x].Name;
+								outInfo = xGroupList[x].StartChannel.ToString();
+								mup.OutputxLights = outInfo;
+								mup.ColorxLights = lutils.Color_NettoHTML(xGroupList[x].Color);
+								mup.TypexLights = 2;
+								mup.ExactxLights = true;
+								xModelList[x].ExactMatch = true;
+								xModelList[x].Selected = true;
+								xModelList[x].Tag = mup;
+								exactMatches++;
+								// Force exit of loop
+								x = xGroupList.Count;
+							}
+						}
+					}
+				} // skip blue and green
+			} // dat channel loop
 
 			// Step 6: Database Channels to xLights Models & Groups-- Fuzzy Matches
 			for (int datIdx = 0; datIdx < datChannels.Count; datIdx++)
 			{
 				string datName = datChannels[datIdx].Name;
+				string dName = datName;
+				if (dName.EndSubstring(4) == " (R)") dName.Replace(" (R)", " (RGB)");
+				if (dName.EndSubstring(4) == " (G)") dName.Replace(" (R)", " (RGB)");
+				if (dName.EndSubstring(4) == " (B)") dName.Replace(" (R)", " (RGB)");
 				Matchup mup = matchups[datIdx];
 				if (mup.IndexViz < 0)
 				{
@@ -1329,11 +1363,11 @@ namespace UtilORama4
 						if (!xm.Selected)
 						{
 							string xName = xm.Name;
-							double preScore = datName.RankEquality(xName, FuzzyFunctions.USE_SUGGESTED_PREMATCH);
+							double preScore = dName.RankEquality(xName, FuzzyFunctions.USE_SUGGESTED_PREMATCH);
 							// if the score is above the minimum PreMatch
 							if (preScore > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
 							{
-								double finalScore = datName.RankEquality(xName, FuzzyFunctions.USE_SUGGESTED_FINALMATCH);
+								double finalScore = dName.RankEquality(xName, FuzzyFunctions.USE_SUGGESTED_FINALMATCH);
 								if (finalScore > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
 								{
 									if (finalScore > highScore)
@@ -1353,11 +1387,11 @@ namespace UtilORama4
 						if (!xg.Selected)
 						{
 							string xName = xGroupList[x].Name;
-							double preScore = datName.RankEquality(xName, FuzzyFunctions.USE_SUGGESTED_PREMATCH);
+							double preScore = dName.RankEquality(xName, FuzzyFunctions.USE_SUGGESTED_PREMATCH);
 							// if the score is above the minimum PreMatch
 							if (preScore > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
 							{
-								double finalScore = datName.RankEquality(xName, FuzzyFunctions.USE_SUGGESTED_FINALMATCH);
+								double finalScore = dName.RankEquality(xName, FuzzyFunctions.USE_SUGGESTED_FINALMATCH);
 								if (finalScore > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
 								{
 									if (finalScore > highScore)
@@ -1387,6 +1421,9 @@ namespace UtilORama4
 
 							mup.IndexxLights = highMatch;
 							mup.TypexLights = matchType;
+							outInfo = member.StartChannel;
+							mup.OutputxLights = outInfo;
+							mup.ColorxLights = lutils.Color_NettoHTML(member.Color);
 							mup.ExactxLights = false;
 							member.ExactMatch = false;
 							member.Selected = true;
@@ -1398,9 +1435,9 @@ namespace UtilORama4
 			} // end loop thru database channels
 
 			// Part 7, add unmatched LOR Channels
-			for (int c = 0; c < sequence.Channels.Count; c++)
+			for (int cl = 0; cl < sequence.Channels.Count; cl++)
 			{
-				LORChannel4 chan = sequence.Channels[c];
+				LORChannel4 chan = sequence.Channels[cl];
 				if (!chan.Selected)
 				{
 					Matchup mup = new Matchup();
@@ -1415,7 +1452,9 @@ namespace UtilORama4
 			}
 
 			// Part 8, add unmatched Viz Channels
-			for (int c = 1; c < visualization.VizChannels.Count; c++)
+			int c = 0;
+			while(true==false)
+			//for (int c = 1; c < visualization.VizChannels.Count; c++)
 			{
 				LORVizChannel4 chan = visualization.VizChannels[c];
 				if (!chan.Selected)
@@ -1430,7 +1469,8 @@ namespace UtilORama4
 					matchups.Add(mup);
 				}
 			}
-			for (int c = 1; c < visualization.VizItemGroups.Count; c++)
+			while(true==false)
+			//for (int c = 1; c < visualization.VizItemGroups.Count; c++)
 			{
 				LORVizItemGroup4 grp = visualization.VizItemGroups[c];
 				if (!grp.Selected)
@@ -1444,7 +1484,8 @@ namespace UtilORama4
 					matchups.Add(mup);
 				}
 			}
-			for (int c = 1; c < visualization.VizDrawObjects.Count; c++)
+			while(true==false)
+			//for (int c = 1; c < visualization.VizDrawObjects.Count; c++)
 			{
 				LORVizDrawObject4 vdo = visualization.VizDrawObjects[c];
 				if (!vdo.Selected)
@@ -1460,7 +1501,8 @@ namespace UtilORama4
 			}
 
 			// Part 9, add unmatched xLights Models and groups
-			for (int c = 0; c < xModelList.Count; c++)
+			while(true==false)
+			//for (int c = 0; c < xModelList.Count; c++)
 			{
 				xModel chan = xModelList[c];
 				if (!chan.Selected)
@@ -1474,7 +1516,8 @@ namespace UtilORama4
 					matchups.Add(mup);
 				}
 			}
-			for (int c = 0; c < xGroupList.Count; c++)
+			while(true==false)
+			//for (int c = 0; c < xGroupList.Count; c++)
 			{
 				xModelGroup grp = xGroupList[c];
 				if (!grp.Selected)
@@ -1580,8 +1623,8 @@ namespace UtilORama4
 						{
 							int ip = mup.OutputDat.LastIndexOf("/");
 							string dout = mup.OutputDat.Substring(0, ip);
-							if (dout == mup.OutputLOR) lineOut.Append("True"); // Field 6, Column G
-							else lineOut.Append("FALSE!");
+							if (dout == mup.OutputLOR) lineOut.Append("Yes"); // Field 6, Column G
+							else lineOut.Append("NO!");
 						}
 						lineOut.Append(",");
 
@@ -1593,8 +1636,8 @@ namespace UtilORama4
 						}
 						else
 						{
-							if (mup.ColorDat == mup.ColorLOR) lineOut.Append("True");
-							else lineOut.Append("FALSE!");
+							if (mup.ColorDat == mup.ColorLOR) lineOut.Append("Yes");
+							else lineOut.Append("NO!");
 						}
 						lineOut.Append(",");
 					}
@@ -1635,9 +1678,9 @@ namespace UtilORama4
 						else
 						{
 							int ip = mup.OutputDat.LastIndexOf("/");
-							string dout = mup.OutputDat.Substring(0, ip - 1);
-							if (dout == mup.ColorLOR) lineOut.Append("True");
-							else lineOut.Append("FALSE!");
+							string dout = mup.OutputDat.Substring(0, ip);
+							if (dout == mup.OutputViz) lineOut.Append("Yes"); // Field 6, Column G
+							else lineOut.Append("NO!");
 						}
 						lineOut.Append(",");
 
@@ -1649,8 +1692,8 @@ namespace UtilORama4
 						}
 						else
 						{
-							if (mup.ColorDat == mup.ColorViz) lineOut.Append("True");
-							else lineOut.Append("FALSE!");
+							if (mup.ColorDat == mup.ColorViz) lineOut.Append("Yes");
+							else lineOut.Append("NO!");
 						}
 						lineOut.Append(",");
 					}
@@ -1679,7 +1722,7 @@ namespace UtilORama4
 						
 						// xLights Type
 						if (mup.TypexLights == 1) lineOut.Append("Model,");
-						if (mup.TypexLights == 3) lineOut.Append("Group,");
+						if (mup.TypexLights == 2) lineOut.Append("Group,");
 						
 						// xLights Output
 						lineOut.Append(mup.OutputxLights);
@@ -1689,10 +1732,19 @@ namespace UtilORama4
 						}
 						else
 						{
-							int ip = mup.OutputDat.LastIndexOf("/");
-							string dout = mup.OutputDat.Substring(ip + 1);
-							if (dout == mup.ColorLOR) lineOut.Append("True");
-							else lineOut.Append("FALSE!");
+							string sc1 = "";
+							if (mup.OutputxLights.Length > 0) sc1=   mup.OutputxLights.Substring(0, 1);
+							if ((sc1=="") || (sc1 == "@") || (sc1=="&"))
+							{
+								lineOut.Append("?");
+							}
+							else
+							{ 
+								int ip = mup.OutputDat.LastIndexOf("/");
+								string dout = mup.OutputDat.Substring(ip + 1);
+								if (dout == mup.OutputxLights) lineOut.Append("Yes");
+								else lineOut.Append("NO!");
+							}
 						}
 						lineOut.Append(",");
 
@@ -1704,8 +1756,12 @@ namespace UtilORama4
 						}
 						else
 						{
-							if (mup.ColorDat == mup.ColorxLights) lineOut.Append("True;");
-							else lineOut.Append("FALSE!");
+							if (mup.ColorxLights.Length == 9)
+							{
+								string xc = "#" + mup.ColorxLights.Substring(3);
+								if (mup.ColorDat == xc) lineOut.Append("Yes");
+								else lineOut.Append("NO!");
+							}
 						}
 						lineOut.Append(",");
 					}
@@ -2481,7 +2537,7 @@ namespace UtilORama4
 			ImBusy(true);
 
 
-			visualization = new LORVisualization4(fileVizName);
+			visualization = new LORVisualization4(null, fileVizName);
 			if (visualization.VizChannels.Count > 0)
 			{
 				fileVisualization = fileVizName;
@@ -2492,7 +2548,12 @@ namespace UtilORama4
 										visualization.VizDrawObjects.Count.ToString() + "/" +
 										visualization.VizChannels.Count.ToString();
 				lblInfoViz.Text = txt;
-				if (Fyle.isWiz) lblInfoViz.Visible = true;
+				//if (Fyle.isWiz) lblInfoViz.Visible = true;
+				//string fo = "Visualization file now opened and read in.\r\n";
+				//fo += "About to check it's 'tegrity.";
+				//MessageBox.Show(this, fo, "Vizzzzzz", MessageBoxButtons.OK, MessageBoxIcon.Information);
+				//Fyle.MakeNoise(Fyle.Noises.Kalimbra);
+				//VizTegrity();
 				ReadyToCompare();
 			}
 			ImBusy(false);
@@ -2508,7 +2569,15 @@ namespace UtilORama4
 			}
 		}
 
-
+		private void VizTegrity()
+		{
+			string theReport = visualization.Tegrity();
+			string theFile = "W:\\Documents\\Christmas\\2021\\Docs\\VizTegrity Report.txt";
+			StreamWriter w = new StreamWriter(theFile);
+			w.Write(theReport);
+			w.Close();
+			Fyle.LaunchFile(theFile);
+		}
 
 	}
 }

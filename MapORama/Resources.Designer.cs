@@ -144,9 +144,9 @@ namespace UtilORama4 {
         /// <summary>
         ///   Looks up a localized string similar to LORChannel4 Configs (*.lcc)|*.lcc|Musical Sequences (*.lms)|*.lms|Animated Sequences (*.las)|*.las.
         /// </summary>
-        internal static string OpenDialogFilter_Master {
+        internal static string OpenDialogFilter_Dest {
             get {
-                return ResourceManager.GetString("OpenDialogFilter_Master", resourceCulture);
+                return ResourceManager.GetString("OpenDialogFilter_Dest", resourceCulture);
             }
         }
         

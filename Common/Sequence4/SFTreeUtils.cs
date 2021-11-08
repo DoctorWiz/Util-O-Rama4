@@ -271,7 +271,7 @@ namespace LORUtils4
 
 			if (group.Nodes != null)
 			{
-				nodeList = (List<TreeNodeAdv>)group.Tag;
+				nodeList = (List<TreeNodeAdv>)group.Nodes;
 			}
 			else
 			{
@@ -879,7 +879,7 @@ namespace LORUtils4
 			}
 		}
 
-		public static void HiglightMemberBackground(iLORMember4 member, bool highlight)
+		public static void HighlightMemberBackground(iLORMember4 member, bool highlight)
 		{
 			if (member.Nodes != null)
 			{
@@ -913,6 +913,25 @@ namespace LORUtils4
 					HighlightNodeBackground(nOde, backColor);
 				}
 			}
+		}
+		
+		public static void HighlightMember(iLORMember4 member, Color foreColor, Color backColor)
+		{
+			if (member.Nodes != null)
+			{
+				List<TreeNodeAdv> nodeList = (List<TreeNodeAdv>)member.Nodes;
+				foreach (TreeNodeAdv node in nodeList)
+				{
+					node.TextColor = foreColor;
+					node.Background = new Syncfusion.Drawing.BrushInfo(backColor);
+				}
+			}
+		}
+
+		public static void HighlightNode(TreeNodeAdv node, Color foreColor, Color backColor)
+		{
+			node.TextColor = foreColor;
+			node.Background = new Syncfusion.Drawing.BrushInfo(backColor);
 		}
 
 		public static void HighlightNodeBackground(TreeNodeAdv nOde, Color backColor)
@@ -965,7 +984,22 @@ namespace LORUtils4
 
 		#endregion
 
-
+		public static void ClearAllNodes(TreeNodeAdvCollection nodes)
+		{
+			foreach (TreeNodeAdv node in nodes)
+			{
+				HighlightNode(node, Color.Black, Color.White);
+				node.Checked = false;
+				node.ResetFont();
+				if (node.Nodes != null)
+				{
+					if (node.Nodes.Count > 0)
+					{
+						ClearAllNodes(node.Nodes);
+					}
+				}
+			}
+		}
 
 
 

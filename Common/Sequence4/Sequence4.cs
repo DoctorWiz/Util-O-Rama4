@@ -81,6 +81,10 @@ namespace LORUtils4
 		public int videoUsage = 0;
 		public int errorStatus = 0;
 		public int lineCount = 0;
+		//public int HighestSaveID = lutils.UNDEFINED;
+		public int HighestAltSaveID = lutils.UNDEFINED;
+		//public int HighestTrackIndex = lutils.UNDEFINED;
+		public int HighestAltTrackNumber = lutils.UNDEFINED;
 
 		// For now at least, this will remain false, therefore ALL timing grids will ALWAYS get written
 		private bool WriteSelectedGridsOnly = false;
@@ -101,6 +105,33 @@ namespace LORUtils4
 		}
 
 		public static bool debugMode = Fyle.DebugMode;
+
+		#region Constructors
+		public LORSequence4()
+		{
+			//! DEFAULT CONSTRUCTOR
+			this.members = new LORMembership4(this);
+			this.AllMembers = new LORMembership4(this);
+			//this.Members.SetParent(this);
+			this.info = new LORSeqInfo4(this);
+			this.animation = new LORAnimation4(this);
+			this.info.sequenceType = LORSequenceType4.Animated;
+			//Members.SetParentSequence(this);
+		}
+
+		public LORSequence4(string theFilename)
+		{
+			this.members = new LORMembership4(this);
+			this.AllMembers = new LORMembership4(this);
+			//this.Members.SetParent(this);
+			this.info = new LORSeqInfo4(this);
+			this.animation = new LORAnimation4(this);
+			//Members.SetParentSequence(this);
+			ReadSequenceFile(theFilename);
+		}
+		#endregion
+
+
 
 		#region iLORMember4 Interface
 
@@ -261,30 +292,6 @@ namespace LORUtils4
 
 
 
-		#region Constructors
-		public LORSequence4()
-		{
-			//! DEFAULT CONSTRUCTOR
-			this.members = new LORMembership4(this);
-			this.AllMembers = new LORMembership4(this);
-			//this.Members.SetParent(this);
-			this.info = new LORSeqInfo4(this);
-			this.animation = new LORAnimation4(this);
-			this.info.sequenceType = LORSequenceType4.Animated;
-			//Members.SetParentSequence(this);
-		}
-
-		public LORSequence4(string theFilename)
-		{
-			this.members = new LORMembership4(this);
-			this.AllMembers = new LORMembership4(this);
-			//this.Members.SetParent(this);
-			this.info = new LORSeqInfo4(this);
-			this.animation = new LORAnimation4(this);
-			//Members.SetParentSequence(this);
-			ReadSequenceFile(theFilename);
-		}
-		#endregion
 
 		public LORSequenceType4 LORSequenceType4
 		{
@@ -477,7 +484,7 @@ namespace LORUtils4
 		///   REGULAR CHANNEL   ///
 		//////////////////////////
 														#region Regular LORChannel4
-														lastChannel = ParseChannel(lineIn);
+														lastChannel = CreateNewChannel(lineIn);
 														#endregion // Regular LORChannel4
 													}
 													else // Not a regular channel
@@ -491,7 +498,7 @@ namespace LORUtils4
 		///   RGB CHANNEL   ///
 		//////////////////////
 															#region RGB LORChannel4
-															lastRGBchannel = ParseRGBchannel(lineIn);
+															lastRGBchannel = CreateNewRGBChannel(lineIn);
 														lineIn = reader.ReadLine();
 														lineCount++;
 														lineIn = reader.ReadLine();
@@ -534,7 +541,7 @@ namespace LORUtils4
 		///   CHANNEL GROUP   ///
 		////////////////////////
 																#region Channel Group
-																lastGroup = ParseChannelGroup(lineIn);
+																lastGroup = CreateNewChannelGroup(lineIn);
 															//li = lineIn.IndexOf(lutils.ENDFLD);
 															li = lutils.ContainsKey(lineIn, lutils.ENDFLD);
 															if (li < 0)
@@ -569,7 +576,7 @@ namespace LORUtils4
 		///   COSMIC COLOR DEVICE   ///
 		//////////////////////////////
 																	#region Cosmic Color Device
-																	lastCosmic = ParseCosmicDevice(lineIn);
+																	lastCosmic = CreateNewCosmicDevice(lineIn);
 																	li = lutils.ContainsKey(lineIn, lutils.ENDFLD);
 																	if (li < 0)
 																	{
@@ -625,7 +632,7 @@ namespace LORUtils4
 		///   TRACK   ///
 		////////////////
 																			#region LORTrack4
-																			lastTrack = ParseTrack(lineIn);
+																			lastTrack = CreateNewTrack(lineIn);
 																			//for (int tg = 0; tg < TimingGrids.Count; tg++)
 																			//{
 																			//lastTrack.timingGrid == Members.bySaveID[TimingGrids[tg].SaveID];
@@ -689,7 +696,7 @@ namespace LORUtils4
 		///   TIMING GRID   ///
 		//////////////////////
 																				#region Timing Grid
-																				lastGrid = ParseTimingGrid(lineIn);
+																				lastGrid = CreateNewTimingGrid(lineIn);
 																				if (lastGrid.LORTimingGridType4 == LORTimingGridType4.Freeform)
 																				{
 																					lineIn = reader.ReadLine();
@@ -866,7 +873,7 @@ namespace LORUtils4
 
 		public int WriteSequenceFile_DisplayOrder(string newFileName, bool selectedOnly, bool noEffects)
 		{
-			List<int> masterSIs = new List<int>();
+			List<int> destSIs = new List<int>();
 			//int altSI = lutils.UNDEFINED;
 			updatedTrack[] updatedTracks = new updatedTrack[Tracks.Count];
 			//bySavedIndex.AltHighestSavedIndex = lutils.UNDEFINED;
@@ -887,7 +894,7 @@ namespace LORUtils4
 			// Write the Timing Grids
 			if (WriteSelectedGridsOnly)
 			{
-				//! First, A LORTrack4->LORTimings4 renumbering
+				//! First, A Track->Timings renumbering
 				// Timing Grids do not get Written to the file yet
 				// But we must renumber the saveIDs
 				// Assign new altSaveIDs in the order they appear in the Tracks
@@ -907,7 +914,7 @@ namespace LORUtils4
 							else
 							{
 								// Create one
-								LORTimings4 ntg = CreateTimingGrid("Fixed Grid .05");
+								LORTimings4 ntg = CreateNewTimingGrid("Fixed Grid .05");
 								ntg.spacing = 5;
 								theTrack.timingGrid = ntg;
 							}
@@ -1065,7 +1072,7 @@ namespace LORUtils4
 			{
 				if ((!selectedOnly) || (theRGBchannel.Selected))
 				{
-					if ((itemTypes == LORMemberType4.Items) || (itemTypes == LORMemberType4.Items) || (itemTypes == LORMemberType4.Channel))
+					if ((itemTypes == LORMemberType4.Items) || (itemTypes == LORMemberType4.Channel))
 					{
 						//theRGBchannel.LineOut(selectedOnly, noEffects, LORMemberType4.Channel);
 						//lineOut = theRGBchannel.redChannel.LineOut(noEffects);
@@ -1077,7 +1084,7 @@ namespace LORUtils4
 						//writer.WriteLine(lineOut);
 					}
 
-					if ((itemTypes == LORMemberType4.Items) || (itemTypes == LORMemberType4.Items) || (itemTypes == LORMemberType4.RGBChannel))
+					if ((itemTypes == LORMemberType4.Items) || (itemTypes == LORMemberType4.RGBChannel))
 					{
 						//theRGBchannel.AltSavedIndex = bySavedIndex.GetNextAltSavedIndex(theRGBchannel.SavedIndex);
 						int altSI = AssignNextAltSavedIndex(theRGBchannel);
@@ -1210,7 +1217,7 @@ namespace LORUtils4
 			writer.WriteLine(lineOut);
 
 
-			return theTrack.AltSavedIndex;
+			return theTrack.AltTrackNumber;
 		}
 
 		private List<int> WriteListItems(LORMembership4 itemIDs, bool selectedOnly, bool noEffects, LORMemberType4 itemTypes)
@@ -1286,26 +1293,26 @@ namespace LORUtils4
 			return altSIs;
 		}
 
-		private int WriteItemsList(LORMembership4 itemIDs, bool selectedOnly, LORMemberType4 itemTypes)
+		private int WriteItemsList(LORMembership4 subMembers, bool selectedOnly, LORMemberType4 itemTypes)
 		{
 			// NOTE: This writes out the list of items in a membership list.
 			// It is NOT recursive.
 			// This does NOT write the the individual items, that was handled previously by the counterpart to this, 'WriteListItems'
 
-			//if (itemIDs.Owner.Name.IndexOf("ng Parts") > 0) System.Diagnostics.Debugger.Break();
-			//if (itemIDs.Owner.Name.IndexOf("lyphonic") > 0) System.Diagnostics.Debugger.Break();
+			//if (subMembers.Owner.Name.IndexOf("ng Parts") > 0) System.Diagnostics.Debugger.Break();
+			//if (subMembers.Owner.Name.IndexOf("lyphonic") > 0) System.Diagnostics.Debugger.Break();
 
 			int count = 0;
 			string leader = lutils.LEVEL4 + lutils.STFLD;
 
 
 			string lineOut = lutils.LEVEL3 + lutils.STFLD;
-			if (itemIDs.Owner.MemberType == LORMemberType4.Track)
+			if (subMembers.Owner.MemberType == LORMemberType4.Track)
 			{
 				lineOut += lutils.TABLEchannel;
 				leader += lutils.TABLEchannel;
 			}
-			if (itemIDs.Owner.MemberType == LORMemberType4.ChannelGroup)
+			if (subMembers.Owner.MemberType == LORMemberType4.ChannelGroup)
 			{
 				lineOut += LORSequence4.TABLEchannelGroup;
 				leader += LORSequence4.TABLEchannelGroup;
@@ -1313,18 +1320,18 @@ namespace LORUtils4
 			lineOut += lutils.PLURAL + lutils.FINFLD + lutils.CRLF;
 
 			// LORLoop4 thru all items in membership list
-			foreach (iLORMember4 subID in itemIDs.Items)
+			foreach (iLORMember4 subMember in subMembers.Items)
 			{
 				//if (subID.Name.IndexOf("lyphonic") > 0) System.Diagnostics.Debugger.Break();
 
-				if (subID.Written)  // The item itself should have already been written!
+				if (subMember.Written)  // The item itself should have already been written!
 				{
-					bool sel = subID.Selected;
+					bool sel = subMember.Selected;
 					if (!selectedOnly || sel)
 					{
-						if ((itemTypes == subID.MemberType) || (itemTypes == LORMemberType4.Items))
+						if ((itemTypes == subMember.MemberType) || (itemTypes == LORMemberType4.Items))
 						{
-							int siAlt = subID.AltSavedIndex;
+							int siAlt = subMember.AltID;
 							if (siAlt > lutils.UNDEFINED)
 							{
 								lineOut += leader;
@@ -1339,11 +1346,11 @@ namespace LORUtils4
 
 			// Close the list of items
 			lineOut += lutils.LEVEL3 + lutils.FINTBL;
-			if (itemIDs.Owner.MemberType == LORMemberType4.Track)
+			if (subMembers.Owner.MemberType == LORMemberType4.Track)
 			{
 				lineOut += lutils.TABLEchannel;
 			}
-			if (itemIDs.Owner.MemberType == LORMemberType4.ChannelGroup)
+			if (subMembers.Owner.MemberType == LORMemberType4.ChannelGroup)
 			{
 				lineOut += LORSequence4.TABLEchannelGroup;
 			}
@@ -1410,7 +1417,7 @@ namespace LORUtils4
 			int altSI = AssignNextAltSaveID(theGrid);
 			lineOut = theGrid.LineOut();
 			writer.WriteLine(lineOut);
-			return theGrid.AltSavedIndex;
+			return theGrid.AltSaveID;
 
 		} // end writeTimingGrids
 
@@ -1471,12 +1478,12 @@ namespace LORUtils4
 			}
 			foreach (LORTrack4 tr in Tracks)
 			{
-				tr.AltSavedIndex = lutils.UNDEFINED;
+				tr.AltTrackNumber = lutils.UNDEFINED;
 			}
 			foreach (LORTimings4 tg in TimingGrids)
 			{
 				//tg.Written = false;
-				tg.AltSavedIndex = lutils.UNDEFINED;
+				tg.AltSaveID = lutils.UNDEFINED;
 			}
 		} // end ClearWrittenFlags
 
@@ -2046,8 +2053,8 @@ namespace LORUtils4
 			//int curGridItem = 0;
 			//int curTrack = 0;
 			//int curTrackItem = 0;
-			int[] masterSIs = new int[1];
-			//int masterSI = lutils.UNDEFINED;
+			int[] destSIs = new int[1];
+			//int destSI = lutils.UNDEFINED;
 			updatedTrack[] updatedTracks = new updatedTrack[Tracks.Count];
 
 			lineOut = info.xmlInfo;
@@ -2074,7 +2081,7 @@ namespace LORUtils4
 			{
 				for (int ti = 0; ti < Tracks[trk].Members.Count; ti++)
 				{
-					int si = Tracks[trk].Members.Items[ti].SavedIndex;
+					int si = Tracks[trk].Members.Items[ti].ID;
 					ParseItemsToClipboard(si);
 				} // end for track items loop
 			} // end for Tracks loop
@@ -2233,7 +2240,7 @@ namespace LORUtils4
 				if (createIfNotFound)
 				{
 					//int si = Sequence.Members.HighestSavedIndex + 1;
-					ret = CreateChannel(channelName);
+					ret = CreateNewChannel(channelName);
 					ret.Centiseconds = myCentiseconds;
 					//Channels.Add(ret);
 					memberList.Add(ret);
@@ -2324,7 +2331,7 @@ namespace LORUtils4
 						grnCh.effects.Clear();
 						redCh.effects.Clear();
 					}
-					ret = CreateRGBchannel(rgbChannelName);
+					ret = CreateNewRGBChannel(rgbChannelName);
 					ret.redChannel = redCh;
 					ret.grnChannel = grnCh;
 					ret.bluChannel = bluCh;
@@ -2393,7 +2400,7 @@ namespace LORUtils4
 				// Not found, create it?
 				if (createIfNotFound)
 				{
-					ret = CreateChannelGroup(channelGroupName);
+					ret = CreateNewChannelGroup(channelGroupName);
 					ret.Centiseconds = myCentiseconds;
 					//ChannelGroups.Add(ret);
 					memberList.Add(ret);
@@ -2450,7 +2457,7 @@ namespace LORUtils4
 			{
 				if (createIfNotFound)
 				{
-					ret = CreateTimingGrid(timingGridName);
+					ret = CreateNewTimingGrid(timingGridName);
 					//TimingGrids.Add(ret);
 				}
 			}
@@ -2840,7 +2847,7 @@ namespace LORUtils4
 
 			int ret = lutils.UNDEFINED;
 			int bot = 0;
-			int top = Tracks.Count - 1;
+			int top = Tracks.Count-1;
 			int mid = ((top - bot) / 2) + bot;
 
 			while (top > bot)
@@ -2889,220 +2896,92 @@ namespace LORUtils4
 			return copiedCount;
 		}
 
-		public LORChannel4 ParseChannel(string lineIn)
+		public LORChannel4 CreateNewChannel(string lineIn)
 		{
-			LORChannel4 chan = new LORChannel4(lineIn);
-			chan.SetParent(this);
+			// Does NOT check to see if a channel with this name already exists
+			// Therefore, allows for duplicate channel names (But they will have different SavedIndexes)
+			LORChannel4 chan = new LORChannel4(this, lineIn);
+			int newSI = AssignNextSavedIndex(chan);
 			chan.SetIndex(Channels.Count);
 			Channels.Add(chan);
-			//chan.Parse(lineIn);
 			AllMembers.Add(chan);
 			myCentiseconds = Math.Max(myCentiseconds, chan.Centiseconds);
 			return chan;
 		}
 
-		public LORChannel4 CreateChannel(string theName)
+		public LORRGBChannel4 CreateNewRGBChannel(string lineIn)
 		{
-			// Does NOT check to see if a channel with this name already exists
-			// Therefore, allows for duplicate channel names (But they will have different SavedIndexes)
-			LORChannel4 chan;
-			chan = new LORChannel4(theName);
-			int newSI = AssignNextSavedIndex(chan);
-			chan.SetParent(this);
-			chan.Centiseconds = myCentiseconds;
-			chan.SetIndex(Channels.Count);
-			Channels.Add(chan);
-			AllMembers.Add(chan);
-			//myCentiseconds = Math.Max(myCentiseconds, chan.Centiseconds);
-			return chan;
-		}
-
-		public LORRGBChannel4 ParseRGBchannel(string lineIn)
-		{
-			LORRGBChannel4 rch = new LORRGBChannel4("");
-			rch.SetParent(this);
+			// Does NOT check to see if a rgb channel with this name already exists
+			// Therefore, allows for duplicate rgb channel names (But they will have different SavedIndexes)
+			LORRGBChannel4 rch = new LORRGBChannel4(this, lineIn);
+			int newSI = AssignNextSavedIndex(rch);
 			rch.SetIndex(RGBchannels.Count);
 			RGBchannels.Add(rch);
-			rch.Parse(lineIn);
 			AllMembers.Add(rch);
 			myCentiseconds = Math.Max(myCentiseconds, rch.Centiseconds);
 			return rch;
 		}
 
-		public LORRGBChannel4 CreateRGBchannel(string theName)
+		public LORChannelGroup4 CreateNewChannelGroup(string lineIn)
 		{
-			// Does NOT check to see if a channel with this name already exists
-			// Therefore, allows for duplicate channel names (But they will have different SavedIndexes)
-			LORRGBChannel4 rch;
-			rch = new LORRGBChannel4(theName, lutils.UNDEFINED);
-			int newSI = AssignNextSavedIndex(rch);
-			rch.SetParent(this);
-			rch.Centiseconds = myCentiseconds;
-			rch.SetIndex(RGBchannels.Count);
-			RGBchannels.Add(rch);
-			AllMembers.Add(rch);
-			//myCentiseconds = Math.Max(myCentiseconds, rch.Centiseconds);
-			return rch;
-		}
-
-		public LORChannelGroup4 ParseChannelGroup(string lineIn)
-		{
-			LORChannelGroup4 chg = new LORChannelGroup4("");
-			chg.SetParent(this);
-			//chg.Members.SetParent(this);
+			LORChannelGroup4 chg = new LORChannelGroup4(this, lineIn);
+			int newSI = AssignNextSavedIndex(chg);
 			chg.SetIndex(ChannelGroups.Count);
-			chg.Parse(lineIn);
 			ChannelGroups.Add(chg);
 			AllMembers.Add(chg);
 			myCentiseconds = Math.Max(myCentiseconds, chg.Centiseconds);
 			return chg;
 		}
 
-		public LORCosmic4 ParseCosmicDevice(string lineIn)
+		public LORCosmic4 CreateNewCosmicDevice(string lineIn)
 		{
-			LORCosmic4 cos = new LORCosmic4("");
-			cos.SetParent(this);
-			//cos.Members.SetParent(this);
+			LORCosmic4 cos = new LORCosmic4(this, lineIn);
+			int newSI = AssignNextSavedIndex(cos);
 			cos.SetIndex(CosmicDevices.Count);
-			cos.Parse(lineIn);
 			CosmicDevices.Add(cos);
 			AllMembers.Add(cos);
 			myCentiseconds = Math.Max(myCentiseconds, cos.Centiseconds);
 			return cos;
 		}
 
-		public LORChannelGroup4 CreateChannelGroup(string theName)
+		public LORTrack4 CreateNewTrack(string lineIn)
 		{
-			// Does NOT check to see if a group with this name already exists
-			// Therefore, allows for duplicate group names (But they will have different SavedIndexes)
-			LORChannelGroup4 chg;
-			chg = new LORChannelGroup4(theName, lutils.UNDEFINED);
-			int newSI = AssignNextSavedIndex(chg);
-			chg.SetParent(this);
-			//chg.Members.SetParent(this);
-			//chg.Members.Owner = chg;
-			chg.Centiseconds = myCentiseconds;
-			chg.SetIndex(ChannelGroups.Count);
-			ChannelGroups.Add(chg);
-			AllMembers.Add(chg);
-			//myCentiseconds = Math.Max(myCentiseconds, chg.Centiseconds);
-
-			return chg;
-		}
-
-		public LORCosmic4 CreateCosmicDevice(string theName)
-		{
-			// Does NOT check to see if a device with this name already exists
-			// Therefore, allows for duplicate device names (But they will have different SavedIndexes)
-			LORCosmic4 dev;
-			dev = new LORCosmic4(theName, lutils.UNDEFINED);
-			int newSI = AssignNextSavedIndex(dev);
-			dev.SetParent(this);
-			//dev.Members.SetParent(this);
-			//dev.Members.Owner = dev;
-			dev.Centiseconds = myCentiseconds;
-			dev.SetIndex(CosmicDevices.Count);
-			CosmicDevices.Add(dev);
-			AllMembers.Add(dev);
-			//myCentiseconds = Math.Max(myCentiseconds, dev.Centiseconds);
-
-			return dev;
-		}
-
-		public LORTrack4 ParseTrack(string lineIn)
-		{
-			LORTrack4 tr = new LORTrack4("");
-			tr.SetParent(this);
-			//tr.Members.SetParent(this);
+			LORTrack4 tr = new LORTrack4(this, lineIn);
+			//if (Tracks.Count == 0) Tracks.Add(null);
 			tr.SetIndex(Tracks.Count);
+			tr.SetID(Tracks.Count);
+			tr.SetTrackNumber(Tracks.Count + 1);
 			Tracks.Add(tr);
-			tr.Parse(lineIn);
-			if (myAltSavedIndex > lutils.UNDEFINED)
+			if ((tr.AltID >= 0) && (tr.AltID < TimingGrids.Count))
 			{
-				// AltSavedIndex has been temporarily set to the track's LORTimings4's SaveID
-				// So get the specified LORTimings4 by it's SaveID
-				//iLORMember4 tg = Members.bySaveID[tr.AltSavedIndex];
-				LORTimings4 tg = null;
-				for (int i =0; i< TimingGrids.Count; i++)
-				{
-					if (TimingGrids[i].SaveID == tr.AltSavedIndex)
-					{
-						tg = TimingGrids[i];
-						i = TimingGrids.Count; // force exit of loop
-					}
-				}
-				if (tg == null)
-				{
-					string msg ="Timing Grid with SaveID " + tr.AltSavedIndex.ToString() + " not found!";
-					System.Diagnostics.Debugger.Break();
-
-				}
-				// And assign it to the track
-				tr.timingGrid = (LORTimings4)tg;
-				// Clear the AltSavedIndex which was temporarily holding the SaveID of the LORTimings4
-				tr.AltSavedIndex = lutils.UNDEFINED;
+				tr.timingGrid = TimingGrids[tr.AltID];
 			}
-			myCentiseconds = Math.Max(myCentiseconds, tr.Centiseconds);
-			AllMembers.Add(tr);
-			members.Add(tr);
-			return tr;
-		}
-
-		public LORTrack4 CreateTrack(string theName)
-		{
-			// Does NOT check to see if a track with this name already exists
-			// Therefore, allows for duplicate track names (But they will have different track numbers)
-			LORTrack4 tr = new LORTrack4(theName);
-			tr.SetParent(this);
-			//tr.Members.SetParent(this);
-			//tr.Members.Owner = tr;
-			tr.Centiseconds = myCentiseconds;
-			tr.SetIndex(Tracks.Count);
-			Tracks.Add(tr);
-			//tr.TrackNumber = Tracks.Count;
-			if (TimingGrids.Count > 0)
+			else
 			{
-				//! Is this gonna cause a problem later?
 				tr.timingGrid = TimingGrids[0];
 			}
+			// Clear the AltSavedIndex which was temporarily holding the SaveID of the LORTimings4
+			tr.AltID = lutils.UNDEFINED;
 			myCentiseconds = Math.Max(myCentiseconds, tr.Centiseconds);
-			AllMembers.Add(tr);
+			//? AllMembers.Add(tr);
 			members.Add(tr);
 			return tr;
 		}
 
-		public LORTimings4 ParseTimingGrid(string lineIn)
+		public LORTimings4 CreateNewTimingGrid(string lineIn)
 		{
-			LORTimings4 tg = new LORTimings4("");
-			tg.SetParent(this);
-			//int newSI = AssignNextSaveID(tg);
+			LORTimings4 tg = new LORTimings4(this, lineIn);
+			int newSI = AssignNextSaveID(tg);
 			//tg.SaveID = newSI;
 			tg.SetIndex(TimingGrids.Count);
 			TimingGrids.Add(tg);
 			tg.Parse(lineIn);
+			myCentiseconds = Math.Max(myCentiseconds, tg.Centiseconds);
 			//Members.Add(tg);
 			return tg;
 		}
 
 		// LORSequence4.CreateTimingGrid(name)
-		public LORTimings4 CreateTimingGrid(string theName)
-		{
-#if DEBUG
-			string msg = "LORSequence4.CreateTimingGrid(" + theName + ")";
-			Debug.WriteLine(msg);
-#endif
-			// Does NOT check to see if a grid with this name already exists
-			// Therefore, allows for duplicate grid names (But they will have different SaveIDs)
-			LORTimings4 tg = new LORTimings4(theName);
-			tg.SetParent(this);
-			int newSI = AssignNextSaveID(tg);
-			tg.Centiseconds = myCentiseconds;
-			tg.SetIndex(TimingGrids.Count);
-			TimingGrids.Add(tg); // Handled in Members.Add called from AssignNextSaveID
-			//Members.Add(tg);
-			return tg;
-		}
-
 		public override void MakeDirty(bool dirtyState)
 		{
 			if (dirtyState)
@@ -3114,50 +2993,96 @@ namespace LORUtils4
 
 		private int AssignNextSavedIndex(iLORMember4 thePart)
 		{
-			if (thePart.SavedIndex < 0)
+			if (thePart.ID < 0)
 			{
 				int newSI = AllMembers.HighestSavedIndex + 1;
-				thePart.SetSavedIndex(newSI);
-				AllMembers.Add(thePart);
+				thePart.SetID(newSI);
+				//AllMembers.Add(thePart);
 			}
-			return thePart.SavedIndex;
+			return thePart.ID;
 		}
 
 		private int AssignNextAltSavedIndex(iLORMember4 thePart)
 		{
-			if (thePart.AltSavedIndex < 0)
+			if (thePart.AltID < 0)
 			{
-				int newASI = AllMembers.AltHighestSavedIndex + 1;
-				thePart.AltSavedIndex = newASI;
-				// May cause out of bounds exception, might need to add instead
-				AllMembers.ByAltSavedIndex[thePart.AltSavedIndex] = thePart;
-				AllMembers.AltHighestSavedIndex = newASI;
+				int newASI = AllMembers.HighestAltSavedIndex + 1;
+				thePart.AltID = newASI;
+				// May cause out of range exception, might need to add instead
+				while (AllMembers.ByAltSavedIndex.Count <= newASI)
+				{
+					AllMembers.ByAltSavedIndex.Add(null);
+				}
+				AllMembers.ByAltSavedIndex[thePart.AltID] = thePart;
+				AllMembers.HighestAltSavedIndex = newASI;
 			}
-			return thePart.AltSavedIndex;
+			return thePart.AltID;
 		}
 
 		private int AssignNextSaveID(LORTimings4 theGrid)
 		{
 			if (theGrid.SaveID < 0)
 			{
-				int newSI = AllMembers.HighestSaveID + 1;
-				theGrid.SaveID = newSI;
-				AllMembers.Add(theGrid);
+				int newSI = TimingGrids.Count;
+				theGrid.SetSaveID(newSI);
+				//AllMembers.Add(theGrid);
 			}
 			return theGrid.SaveID;
 		}
 
 		private int AssignNextAltSaveID(LORTimings4 theGrid)
 		{
-			if (theGrid.AltSavedIndex < 0)
+			if (theGrid.AltSaveID < 0)
 			{
-				int newASI = AllMembers.AltHighestSaveID + 1;
+				int newASI = HighestAltSaveID + 1;
 				theGrid.AltSaveID = newASI;
-				AllMembers.ByAltSaveID.Add(theGrid);
-				AllMembers.AltHighestSaveID = newASI;
+				//AllMembers.ByAltSaveID.Add(theGrid);
+				HighestAltSaveID = newASI;
 			}
 			return theGrid.AltSaveID;
 		}
+
+		private int AssignNextTrackNumber(LORTrack4 theTrack)
+		{
+			if (theTrack.TrackNumber < 1)
+			{
+				int newTN = Tracks.Count-1;
+				theTrack.SetTrackNumber(newTN);
+				theTrack.SetIndex(newTN);
+
+			}
+			return Tracks.Count;
+		}
+
+		private int AssignNextAltTrackIndex(LORTrack4 theTrack)
+		{
+			if (theTrack.AltID < 0)
+			{
+				int newATN =HighestAltTrackNumber + 1;
+				theTrack.AltTrackNumber = newATN;
+			}
+			return theTrack.AltTrackNumber;
+		}
+
+		public int HighestSaveID
+		{
+			get
+			{
+				// Remember, Timing Grids start at -> 0 <-
+				return TimingGrids.Count - 1;
+			}
+		}
+
+		public int HighestTrackNumber
+		{
+			get
+			{
+				// Remember, Tracks start counting at -> 1 <- (not zero)
+				return Tracks.Count - 1;
+			}
+		}
+
+
 
 		public override iLORMember4 Clone()
 		{

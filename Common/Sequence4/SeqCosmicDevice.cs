@@ -29,28 +29,15 @@ namespace LORUtils4
 		public LORCosmic4(string theName, int theSavedIndex)
 		{
 			myName = theName;
-			mySavedIndex = theSavedIndex;
+			myID = theSavedIndex;
 			Members = new LORMembership4(this);
 		}
 
-		public LORCosmic4(string lineIn)
+		public LORCosmic4(iLORMember4 theParent, string lineIn)
 		{
-			//int li = lineIn.IndexOf(STARTchannelGroup);
+			myParent = theParent;
 			Members = new LORMembership4(this);
-			string seek = lutils.STFLD + LORSequence4.TABLEcosmicDevice + lutils.FIELDtotalCentiseconds;
-			//int pos = lineIn.IndexOf(seek);
-			int pos = lutils.ContainsKey(lineIn, seek);
-			if (pos > 0)
-			{
-				Parse(lineIn);
-			}
-			else
-			{
-				if (lineIn.Length > 1)
-				{
-					myName = lineIn;
-				}
-			}
+			Parse(lineIn);
 		}
 
 
@@ -97,12 +84,24 @@ namespace LORUtils4
 
 		public override void Parse(string lineIn)
 		{
-			myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
-			mySavedIndex = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
-			Members = new LORMembership4(this);
-			//Members = new LORMembership4(this);
-			myCentiseconds = lutils.getKeyValue(lineIn, lutils.FIELDtotalCentiseconds);
-			if (myParent != null) myParent.MakeDirty(true);
+			string seek = lutils.STFLD + LORSequence4.TABLEcosmicDevice + lutils.FIELDtotalCentiseconds;
+			//int pos = lineIn.IndexOf(seek);
+			int pos = lutils.ContainsKey(lineIn, seek);
+			if (pos > 0)
+			{
+				myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
+				myID = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
+				//Members = new LORMembership4(this);
+				myCentiseconds = lutils.getKeyValue(lineIn, lutils.FIELDtotalCentiseconds);
+			}
+			else
+			{
+				if (lineIn.Length > 1)
+				{
+					myName = lineIn;
+				}
+			}
+			//if (myParent != null) myParent.MakeDirty(true);
 		}
 
 		public override iLORMember4 Clone()
@@ -141,7 +140,7 @@ namespace LORUtils4
 
 			ret.Append(lutils.FIELDsavedIndex);
 			ret.Append(lutils.FIELDEQ);
-			ret.Append(myAltSavedIndex.ToString());
+			ret.Append(myAltID.ToString());
 			ret.Append(lutils.ENDQT);
 			ret.Append(lutils.FINFLD);
 
@@ -153,8 +152,8 @@ namespace LORUtils4
 
 			foreach (iLORMember4 member in Members.Items)
 			{
-				int osi = member.SavedIndex;
-				int asi = member.AltSavedIndex;
+				int osi = member.ID;
+				int asi = member.AltID;
 				if (asi > lutils.UNDEFINED)
 				{
 					ret.Append(lutils.CRLF);
@@ -191,7 +190,7 @@ namespace LORUtils4
 			bool alreadyAdded = false;
 			for (int i = 0; i < Members.Count; i++)
 			{
-				if (newPart.SavedIndex == Members.Items[i].SavedIndex)
+				if (newPart.ID == Members.Items[i].ID)
 				{
 					//TODO: Using saved index, look up Name of item being added
 					string sMsg = newPart.Name + " has already been added to this Channel Group '" + myName + "'.";
@@ -201,7 +200,7 @@ namespace LORUtils4
 						//TODO: Make this just a warning, put "add" code below into an else block
 						//TODO: Do the same with Tracks
 						alreadyAdded = true;
-					retSI = newPart.SavedIndex;
+					retSI = newPart.ID;
 					i = Members.Count; // Break out of loop
 				}
 			}
@@ -254,6 +253,14 @@ namespace LORUtils4
 				}
 			}
 		}
+
+		//public int SavedIndex
+		//{ get { return myID; } }
+		//public void SetSavedIndex(int newSavedIndex)
+		//{ myID = newSavedIndex; }
+		//public int AltSavedIndex
+		//{ get { return myAltID; } set { myAltID = value; } }
+
 		//TODO: add RemoveItem procedure
 	}
 }

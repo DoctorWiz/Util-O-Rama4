@@ -130,17 +130,23 @@
     <Compile Include="..\..\COMMON\csv.cs">
       <Link>csv.cs</Link>
     </Compile>
+    <Compile Include="..\..\COMMON\DarkMode.cs">
+      <Link>DarkMode.cs</Link>
+    </Compile>
     <Compile Include="..\..\COMMON\FileHelper.cs">
       <Link>FileHelper.cs</Link>
     </Compile>
     <Compile Include="..\ChannelORama\DMXChannel.cs">
       <Link>DMXChannel.cs</Link>
+      <DependentUpon>DMXUniverse.cs</DependentUpon>
     </Compile>
     <Compile Include="..\ChannelORama\DMXController.cs">
       <Link>DMXController.cs</Link>
+      <DependentUpon>DMXUniverse.cs</DependentUpon>
     </Compile>
     <Compile Include="..\ChannelORama\DMXDevice.cs">
       <Link>DMXDevice.cs</Link>
+      <DependentUpon>DMXUniverse.cs</DependentUpon>
     </Compile>
     <Compile Include="..\ChannelORama\DMXUniverse.cs">
       <Link>DMXUniverse.cs</Link>

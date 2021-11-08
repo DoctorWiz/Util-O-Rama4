@@ -138,7 +138,7 @@
   <data name="MSG_Tracks" xml:space="preserve">
     <value>Tracks can only be mapped to other tracks, and ONLY if they have the exact same number of regular channels, RGB channels, and channel groups, and in the exact same order.</value>
   </data>
-  <data name="OpenDialogFilter_Master" xml:space="preserve">
+  <data name="OpenDialogFilter_Dest" xml:space="preserve">
     <value>LORChannel4 Configs (*.lcc)|*.lcc|Musical Sequences (*.lms)|*.lms|Animated Sequences (*.las)|*.las</value>
   </data>
   <data name="OpenDialogFilter_Source" xml:space="preserve">

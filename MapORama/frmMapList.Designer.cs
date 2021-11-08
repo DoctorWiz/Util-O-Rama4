@@ -32,7 +32,7 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMapList));
 			this.lstMap = new System.Windows.Forms.ListView();
 			this.hedSource = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-			this.hedMaster = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.hedDest = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.button1 = new System.Windows.Forms.Button();
 			this.chkUnmapped = new System.Windows.Forms.CheckBox();
 			this.imlTreeIcons = new System.Windows.Forms.ImageList(this.components);
@@ -44,7 +44,7 @@
 			// 
 			this.lstMap.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.hedSource,
-            this.hedMaster});
+            this.hedDest});
 			this.lstMap.FullRowSelect = true;
 			this.lstMap.GridLines = true;
 			this.lstMap.Location = new System.Drawing.Point(27, 29);
@@ -63,10 +63,10 @@
 			this.hedSource.Text = "Source LORChannel4";
 			this.hedSource.Width = 319;
 			// 
-			// hedMaster
+			// hedDest
 			// 
-			this.hedMaster.Text = "Destination LORChannel4";
-			this.hedMaster.Width = 321;
+			this.hedDest.Text = "Destination LORChannel4";
+			this.hedDest.Width = 321;
 			// 
 			// button1
 			// 
@@ -150,7 +150,7 @@
 
 		public System.Windows.Forms.ListView lstMap;
 		private System.Windows.Forms.ColumnHeader hedSource;
-		private System.Windows.Forms.ColumnHeader hedMaster;
+		private System.Windows.Forms.ColumnHeader hedDest;
 		private System.Windows.Forms.Button button1;
 		public System.Windows.Forms.CheckBox chkUnmapped;
 		private System.Windows.Forms.ImageList imlTreeIcons;

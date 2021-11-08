@@ -496,7 +496,7 @@ namespace UtilORama4
 				}
 				if (createIfNotFound)
 				{
-					tempoCh = Annotator.Sequence.CreateChannel("TempoChannel"); // Temporary name
+					tempoCh = Annotator.Sequence.CreateNewChannel("TempoChannel"); // Temporary name
 					tempoCh.color = 0xA00050; // Dark purple
 					members.Add(tempoCh);
 				}

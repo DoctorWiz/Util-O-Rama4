@@ -15,8 +15,8 @@ namespace LORUtils4
 		protected string myName = "";
 		protected int myCentiseconds = lutils.UNDEFINED;
 		protected int myIndex = lutils.UNDEFINED;
-		protected int mySavedIndex = lutils.UNDEFINED;
-		protected int myAltSavedIndex = lutils.UNDEFINED;
+		protected int myID = lutils.UNDEFINED;
+		protected int myAltID = lutils.UNDEFINED;
 		protected int mycolor = 0; // Note: LOR color, 12-bit int in BGR order
 															 // Do not confuse with .Net or HTML color, 16 bits in ARGB order
 		protected iLORMember4 myParent = null;
@@ -24,30 +24,28 @@ namespace LORUtils4
 		protected bool isDirty = false;
 		protected bool isExactMatch = false;
 		protected object myTag = null; // General Purpose Object
-		protected object myNodes = null;
-		
 		// Note: Mapped to is used by Map-O-Rama and possibly by other utils in the future
-		// Only holds a single member so only works for master-to-source mapping
-		// source-to-master mapping may include multiple members, and is stored in a List<iLORmember4> stored in the Tag property
+		// Only holds a single member so only works for destination to source mapping
+		// source-to-destination mapping may include multiple members, and is stored in a List<iLORmember4> stored in the Tag property
 		protected iLORMember4 mappedTo = null;
 
+		// Holds a List<TreeNodeAdv> but is not defined that way, so that this base member is NOT dependant on
+		// SyncFusion's TreeViewAdv in projects that don't use it.
+		protected object myNodes = null;
 		protected int myUniverseNumber = lutils.UNDEFINED;
 		protected int myDMXAddress = lutils.UNDEFINED;
 		protected string myComment = ""; // Not really a comment somuch as a general purpose temporary string.
 		protected int miscNumber = 0; // General purpose temporary integer.  Use varies according to utility and function.
 
 		public LORMemberBase4()
+		// Necessary to be the base member of other members
+		// Should never be called directly!
 		{ }
 
-		public LORMemberBase4(string theName)
+		public LORMemberBase4(iLORMember4 theParent, string lineIn)
 		{
-			myName = theName;
-		}
-
-		public LORMemberBase4(string theName, int savedIndex)
-		{
-			myName = theName;
-			mySavedIndex = savedIndex;
+			myParent = theParent;
+			Parse(lineIn);
 		}
 
 		public string Name
@@ -117,18 +115,26 @@ namespace LORUtils4
 			//MakeDirty(true);
 		}
 
-		public int SavedIndex
-		{	get	{	return mySavedIndex; } }
+		public int ID
+		{	get	{	return myID; } }
 		// Note: SavedIndex property does not have a 'set'.  Uses SetSavedIndex() instead-- because this property is
 		// usually only set once and not usually changed thereafter.
-		public void SetSavedIndex(int theSavedIndex)
+		public void SetID(int newID)
 		{
-			mySavedIndex = theSavedIndex;
-			MakeDirty(true);
+			myID = newID;
+			//MakeDirty(true);
 		}
 
+		public int AltID
+		{	get	{	return myAltID;	}	set	{	myAltID = value; } }
+
+		public int SavedIndex
+		{ get { return myID; } }
+		public void SetSavedIndex(int newSavedIndex)
+		{ myID = newSavedIndex; }
+
 		public int AltSavedIndex
-		{	get	{	return myAltSavedIndex;	}	set	{	myAltSavedIndex = value; } }
+		{ get { return myAltID; } set { myAltID = value; } }
 
 		// Important difference-- color with lower case c is LOR color, 12-bit int in BGR order
 		public virtual int color
@@ -209,13 +215,13 @@ namespace LORUtils4
 				
 				//! TODO: Find out why we are getting null members in visualizations
 				//! This is an ugly kludgy fix in the meantime
-				LORMemberBase4 bass = new LORMemberBase4();
+				LORMemberBase4 bass = new LORMemberBase4(this,"WTF");
 				other = bass;
 			}
 			else {
-				if (LORMembership4.sortMode == LORMembership4.SORTbySavedIndex)
+				if (LORMembership4.sortMode == LORMembership4.SORTbyID)
 				{
-					result = mySavedIndex.CompareTo(other.SavedIndex);
+					result = myID.CompareTo(other.ID);
 				}
 				else
 				{
@@ -225,9 +231,9 @@ namespace LORUtils4
 					}
 					else
 					{
-						if (LORMembership4.sortMode == LORMembership4.SORTbyAltSavedIndex)
+						if (LORMembership4.sortMode == LORMembership4.SORTbyAltID)
 						{
-							result = myAltSavedIndex.CompareTo(other.AltSavedIndex);
+							result = myID.CompareTo(other.AltID);
 						}
 						else
 						{
@@ -264,10 +270,20 @@ namespace LORUtils4
 		// But every subclass should override it and return their own value
 		public virtual void Parse(string lineIn)
 		{
-			//LORSequence4 Parent = ID.Parent;
-			myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
-			mySavedIndex = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
-			myCentiseconds = lutils.getKeyValue(lineIn, lutils.FIELDcentiseconds);
+			int nu = lineIn.IndexOf(" Name=\"");
+			int nl = lineIn.IndexOf(" name=\"");
+			if ((nu + nl) > 0)
+			{
+				//LORSequence4 Parent = ID.Parent;
+				myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
+				if (myName.Length == 0) myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, " Name"));
+				myID = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
+				myCentiseconds = lutils.getKeyValue(lineIn, lutils.FIELDcentiseconds);
+			}
+			else
+			{
+				myName = lineIn;
+			}
 			//if (myParent != null) myParent.MakeDirty(true);
 		}
 
@@ -277,7 +293,7 @@ namespace LORUtils4
 			{
 				// Sneaky trick: Uses AltSavedIndex to tell if it has been renumbered and thus written
 				bool r = false;
-				if (myAltSavedIndex > lutils.UNDEFINED) r = true;
+				if (myAltID > lutils.UNDEFINED) r = true;
 				return r;
 			}
 		}
@@ -289,11 +305,11 @@ namespace LORUtils4
 
 		public virtual iLORMember4 Clone(string newName)
 		{
-			LORMemberBase4 mbr = new LORMemberBase4(newName, lutils.UNDEFINED);
+			LORMemberBase4 mbr = new LORMemberBase4(myParent, newName);
 			mbr.myCentiseconds = myCentiseconds;
 			mbr.myIndex = myIndex;
-			mbr.mySavedIndex = mySavedIndex;
-			mbr.myAltSavedIndex = myAltSavedIndex;
+			mbr.myID = myID;
+			mbr.myAltID = myAltID;
 			mbr.imSelected = imSelected;
 			mbr.Tag = myTag;
 			mbr.myNodes = myNodes;
@@ -313,7 +329,7 @@ namespace LORUtils4
 		// Intended to normally hold a List<TreeNodeAdv> (List of SyncFusion TreeView Nodes)
 		// But not specifically typed here so as not to require SyncFusion if not used
 		public object Nodes
-		{ get { return myTag; } set { myTag = value; } }
+		{ get { return myNodes; } set { myNodes = value; } }
 
 		public iLORMember4 MapTo
 		{
@@ -323,22 +339,25 @@ namespace LORUtils4
 			}
 			set
 			{
-				// Hmmmmmmm, do I really want to enforce this??
-				if (value.MemberType == this.MemberType)
+				if (value != null)
 				{
-					mappedTo = value;
-				}
-				else
-				{
-					string msg = "Why are you trying to map a " + LORSeqEnums4.MemberName(value.MemberType);
-					msg += " a " + LORSeqEnums4.MemberName(this.MemberType) + " ?!?";
-					//Fyle.BUG(msg);
-					Debug.WriteLine(msg);
-					Fyle.MakeNoise(Fyle.Noises.Pop);
-					// Now that I've been warned, go ahead and do it anyway.
-					// (Unless I tell the debugger to step over this next line...)
-					//mappedTo = value;
-				}
+					// Hmmmmmmm, do I really want to enforce this??
+					if (value.MemberType == this.MemberType)
+					{
+						mappedTo = value;
+					}
+					else
+					{
+						string msg = "Why are you trying to map a " + LORSeqEnums4.MemberName(value.MemberType);
+						msg += " a " + LORSeqEnums4.MemberName(this.MemberType) + " ?!?";
+						//Fyle.BUG(msg);
+						Debug.WriteLine(msg);
+						Fyle.MakeNoise(Fyle.Noises.Pop);
+						// Now that I've been warned, go ahead and do it anyway.
+						// (Unless I tell the debugger to step over this next line...)
+						//mappedTo = value;
+					} // Type Match
+				} // Not Null
 			}
 		}
 
@@ -355,7 +374,7 @@ namespace LORUtils4
 		// Not supported by ShowTime, and not saved along with the sequence file.  Included only for temporary use in Util-O-Rama
 		public string Comment
 		{ get { return myComment; } set { myComment = value; } }
-		public int RuleID
+		public int ZCount
 		{ get { return miscNumber; } set { miscNumber = value; } }
 
 	}// End class LORMemberBase4

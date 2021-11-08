@@ -1,11 +1,11 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="MapORama.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="UtilORama4.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="BasePath" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="LastMasterFile" Type="System.String" Scope="User">
+    <Setting Name="LastDestFile" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="Left" Type="System.Int32" Scope="User">
@@ -63,6 +63,9 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="AutoLaunch" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="UseRamps" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>

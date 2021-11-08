@@ -20,46 +20,20 @@ namespace LORUtils4
 		public const string FIELDspacing = " spacing";
 
 		//! CONSTRUCTORS
-		public LORTimings4(string lineIn)
+		public LORTimings4(iLORMember4 theParent, string lineIn)
 		{
+			myParent = theParent;
+			Parse(lineIn);
+
+
 #if DEBUG
 			//string msg = "LORTimings4.LORTimings4(" + lineIn + ") // Constructor";
 			//Debug.WriteLine(msg);
 #endif
-			string seek = lutils.STFLD + LORSequence4.TABLEtimingGrid + FIELDsaveID;
-			//int pos = lineIn.IndexOf(seek);
-			int pos = lutils.ContainsKey(lineIn, seek);
-			if (pos > 0)
-			{
-				Parse(lineIn);
-			}
-			else
-			{
-				myName = lineIn;
-			}
-		}
-
-		public LORTimings4(string theName, int theSaveID)
-		{
-			myName = theName;
-			mySavedIndex = theSaveID;
 		}
 
 
 		//! PROPERTIES, METHODS, ETC.
-
-		public int AltSaveID
-		{
-			get
-			{
-				return myAltSavedIndex;
-			}
-			set
-			{
-				myAltSavedIndex = Math.Abs(value);
-			}
-		}
-
 
 		public override LORMemberType4 MemberType
 		{
@@ -78,7 +52,7 @@ namespace LORUtils4
 			ret.Append(lutils.STFLD);
 			ret.Append(LORSequence4.TABLEtimingGrid);
 
-			ret.Append(lutils.SetKey(FIELDsaveID, myAltSavedIndex));
+			ret.Append(lutils.SetKey(FIELDsaveID, myAltID));
 			if (myName.Length > 1)
 			{
 				ret.Append(lutils.SetKey(lutils.FIELDname, lutils.XMLifyName(myName)));
@@ -120,11 +94,21 @@ namespace LORUtils4
 
 		public override void Parse(string lineIn)
 		{
-			myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
-			mySavedIndex = lutils.getKeyValue(lineIn, FIELDsaveID);
-			Centiseconds = lutils.getKeyValue(lineIn, lutils.FIELDcentiseconds);
-			this.LORTimingGridType4 = LORSeqEnums4.EnumGridType(lutils.getKeyWord(lineIn, lutils.FIELDtype));
-			spacing = lutils.getKeyValue(lineIn, FIELDspacing);
+			string seek = lutils.STFLD + LORSequence4.TABLEtimingGrid + FIELDsaveID;
+			//int pos = lineIn.IndexOf(seek);
+			int pos = lutils.ContainsKey(lineIn, seek);
+			if (pos > 0)
+			{
+				myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
+				myID = lutils.getKeyValue(lineIn, FIELDsaveID);
+				Centiseconds = lutils.getKeyValue(lineIn, lutils.FIELDcentiseconds);
+				this.LORTimingGridType4 = LORSeqEnums4.EnumGridType(lutils.getKeyWord(lineIn, lutils.FIELDtype));
+				spacing = lutils.getKeyValue(lineIn, FIELDspacing);
+			}
+			else
+			{
+				myName = lineIn;
+			}
 			//if (myParent != null) myParent.MakeDirty(true);
 		}
 
@@ -156,17 +140,18 @@ namespace LORUtils4
 		{
 			get
 			{
-				return mySavedIndex;
-			}
-			set
-			{
-				mySavedIndex = value;
-				//if (myParent != null) myParent.MakeDirty(true);
-				//System.Diagnostics.Debugger.Break();
+				return myID;
 			}
 		}
 
+		public void SetSaveID(int newSaveID)
+		{
+			myID = newSaveID;
+			myIndex = newSaveID;
+		}
 
+		public int AltSaveID
+		{ get { return myAltID; } set { myAltID = value; }	}
 
 
 		public void AddTiming(int time)

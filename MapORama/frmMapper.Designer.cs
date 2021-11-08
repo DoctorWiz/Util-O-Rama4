@@ -29,20 +29,22 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			Syncfusion.Windows.Forms.Tools.TreeNodeAdvStyleInfo treeNodeAdvStyleInfo1 = new Syncfusion.Windows.Forms.Tools.TreeNodeAdvStyleInfo();
+			Syncfusion.Windows.Forms.Tools.TreeNodeAdvStyleInfo treeNodeAdvStyleInfo3 = new Syncfusion.Windows.Forms.Tools.TreeNodeAdvStyleInfo();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmRemapper));
-			Syncfusion.Windows.Forms.Tools.TreeNodeAdvStyleInfo treeNodeAdvStyleInfo2 = new Syncfusion.Windows.Forms.Tools.TreeNodeAdvStyleInfo();
+			Syncfusion.Windows.Forms.Tools.TreeNodeAdvStyleInfo treeNodeAdvStyleInfo1 = new Syncfusion.Windows.Forms.Tools.TreeNodeAdvStyleInfo();
 			this.pnlAll = new System.Windows.Forms.Panel();
-			this.lblMasterHasEffects = new System.Windows.Forms.Label();
-			this.treeMaster = new Syncfusion.Windows.Forms.Tools.TreeViewAdv();
+			this.chkRamps = new System.Windows.Forms.CheckBox();
+			this.label1 = new System.Windows.Forms.Label();
+			this.lblDestHasEffects = new System.Windows.Forms.Label();
+			this.treeDest = new Syncfusion.Windows.Forms.Tools.TreeViewAdv();
 			this.imlTreeIcons = new System.Windows.Forms.ImageList(this.components);
 			this.treeSource = new Syncfusion.Windows.Forms.Tools.TreeViewAdv();
-			this.lblMasterMappedTo = new System.Windows.Forms.Label();
+			this.lblDestMappedTo = new System.Windows.Forms.Label();
 			this.lblSourceMappedTo = new System.Windows.Forms.Label();
 			this.pnlMapWarn = new System.Windows.Forms.Panel();
 			this.btnMap = new System.Windows.Forms.Button();
 			this.pnlOverwrite = new System.Windows.Forms.Panel();
-			this.picPreviewMaster = new System.Windows.Forms.PictureBox();
+			this.picPreviewDest = new System.Windows.Forms.PictureBox();
 			this.picPreviewSource = new System.Windows.Forms.PictureBox();
 			this.lblMapped = new System.Windows.Forms.Label();
 			this.lblMappedCount = new System.Windows.Forms.Label();
@@ -51,15 +53,15 @@
 			this.btnAutoMap = new System.Windows.Forms.Button();
 			this.btnSummary = new System.Windows.Forms.Button();
 			this.btnUnmap = new System.Windows.Forms.Button();
-			this.lblMasterTree = new System.Windows.Forms.Label();
+			this.lblDestTree = new System.Windows.Forms.Label();
 			this.lblSourceTree = new System.Windows.Forms.Label();
-			this.lblMasterFile = new System.Windows.Forms.Label();
-			this.btnBrowseMaster = new System.Windows.Forms.Button();
-			this.txtMasterFile = new System.Windows.Forms.TextBox();
+			this.lblDestFile = new System.Windows.Forms.Label();
+			this.btnBrowseDest = new System.Windows.Forms.Button();
+			this.txtDestFile = new System.Windows.Forms.TextBox();
 			this.lblSourceFile = new System.Windows.Forms.Label();
 			this.btnBrowseSource = new System.Windows.Forms.Button();
 			this.txtSourceFile = new System.Windows.Forms.TextBox();
-			this.lblMasterAlreadyMapped = new System.Windows.Forms.Label();
+			this.lblDestAlreadyMapped = new System.Windows.Forms.Label();
 			this.picAboutIcon = new System.Windows.Forms.PictureBox();
 			this.chkCopyBeats = new System.Windows.Forms.CheckBox();
 			this.chkAutoLaunch = new System.Windows.Forms.CheckBox();
@@ -76,7 +78,7 @@
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
 			this.mnuFileOpen = new System.Windows.Forms.ToolStripMenuItem();
-			this.mnuOpenMaster = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuOpenDest = new System.Windows.Forms.ToolStripMenuItem();
 			this.mnuOpenSource = new System.Windows.Forms.ToolStripMenuItem();
 			this.mnuOpenMap = new System.Windows.Forms.ToolStripMenuItem();
 			this.mnuFileSaveAs = new System.Windows.Forms.ToolStripMenuItem();
@@ -108,12 +110,13 @@
 			this.pnlProgress = new System.Windows.Forms.ToolStripProgressBar();
 			this.pnlStatus = new System.Windows.Forms.ToolStripStatusLabel();
 			this.pnlAbout = new System.Windows.Forms.ToolStripStatusLabel();
+			this.chkFuzzy = new System.Windows.Forms.CheckBox();
 			this.pnlAll.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.treeMaster)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.treeDest)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.treeSource)).BeginInit();
 			this.pnlMapWarn.SuspendLayout();
 			this.pnlOverwrite.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.picPreviewMaster)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.picPreviewDest)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.picPreviewSource)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.picAboutIcon)).BeginInit();
 			this.pnlMessage.SuspendLayout();
@@ -125,10 +128,12 @@
 			// 
 			// pnlAll
 			// 
-			this.pnlAll.Controls.Add(this.lblMasterHasEffects);
-			this.pnlAll.Controls.Add(this.treeMaster);
+			this.pnlAll.Controls.Add(this.chkRamps);
+			this.pnlAll.Controls.Add(this.label1);
+			this.pnlAll.Controls.Add(this.lblDestHasEffects);
+			this.pnlAll.Controls.Add(this.treeDest);
 			this.pnlAll.Controls.Add(this.treeSource);
-			this.pnlAll.Controls.Add(this.lblMasterMappedTo);
+			this.pnlAll.Controls.Add(this.lblDestMappedTo);
 			this.pnlAll.Controls.Add(this.lblSourceMappedTo);
 			this.pnlAll.Controls.Add(this.pnlMapWarn);
 			this.pnlAll.Controls.Add(this.pnlOverwrite);
@@ -140,15 +145,15 @@
 			this.pnlAll.Controls.Add(this.btnAutoMap);
 			this.pnlAll.Controls.Add(this.btnSummary);
 			this.pnlAll.Controls.Add(this.btnUnmap);
-			this.pnlAll.Controls.Add(this.lblMasterTree);
+			this.pnlAll.Controls.Add(this.lblDestTree);
 			this.pnlAll.Controls.Add(this.lblSourceTree);
-			this.pnlAll.Controls.Add(this.lblMasterFile);
-			this.pnlAll.Controls.Add(this.btnBrowseMaster);
-			this.pnlAll.Controls.Add(this.txtMasterFile);
+			this.pnlAll.Controls.Add(this.lblDestFile);
+			this.pnlAll.Controls.Add(this.btnBrowseDest);
+			this.pnlAll.Controls.Add(this.txtDestFile);
 			this.pnlAll.Controls.Add(this.lblSourceFile);
 			this.pnlAll.Controls.Add(this.btnBrowseSource);
 			this.pnlAll.Controls.Add(this.txtSourceFile);
-			this.pnlAll.Controls.Add(this.lblMasterAlreadyMapped);
+			this.pnlAll.Controls.Add(this.lblDestAlreadyMapped);
 			this.pnlAll.Controls.Add(this.picAboutIcon);
 			this.pnlAll.Location = new System.Drawing.Point(0, 26);
 			this.pnlAll.Name = "pnlAll";
@@ -159,68 +164,88 @@
 			this.pnlAll.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlAll_Paint);
 			this.pnlAll.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlAll_MouseMove);
 			// 
-			// lblMasterHasEffects
+			// chkRamps
 			// 
-			this.lblMasterHasEffects.AllowDrop = true;
-			this.lblMasterHasEffects.Anchor = System.Windows.Forms.AnchorStyles.Top;
-			this.lblMasterHasEffects.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblMasterHasEffects.ForeColor = System.Drawing.Color.DarkRed;
-			this.lblMasterHasEffects.Location = new System.Drawing.Point(324, 174);
-			this.lblMasterHasEffects.Name = "lblMasterHasEffects";
-			this.lblMasterHasEffects.Size = new System.Drawing.Size(85, 27);
-			this.lblMasterHasEffects.TabIndex = 119;
-			this.lblMasterHasEffects.Text = "Destination already has effects";
-			this.lblMasterHasEffects.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-			this.ttip.SetToolTip(this.lblMasterHasEffects, "This destination channel already has effects.  They will be erased and overwritte" +
+			this.chkRamps.AutoSize = true;
+			this.chkRamps.Location = new System.Drawing.Point(328, 540);
+			this.chkRamps.Name = "chkRamps";
+			this.chkRamps.Size = new System.Drawing.Size(81, 17);
+			this.chkRamps.TabIndex = 131;
+			this.chkRamps.Text = "Use Ramps";
+			this.chkRamps.UseVisualStyleBackColor = true;
+			// 
+			// label1
+			// 
+			this.label1.AllowDrop = true;
+			this.label1.AutoSize = true;
+			this.label1.ForeColor = System.Drawing.Color.Orange;
+			this.label1.Location = new System.Drawing.Point(552, 16);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(45, 13);
+			this.label1.TabIndex = 130;
+			this.label1.Text = "(Master)";
+			// 
+			// lblDestHasEffects
+			// 
+			this.lblDestHasEffects.AllowDrop = true;
+			this.lblDestHasEffects.Anchor = System.Windows.Forms.AnchorStyles.Top;
+			this.lblDestHasEffects.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblDestHasEffects.ForeColor = System.Drawing.Color.DarkRed;
+			this.lblDestHasEffects.Location = new System.Drawing.Point(324, 174);
+			this.lblDestHasEffects.Name = "lblDestHasEffects";
+			this.lblDestHasEffects.Size = new System.Drawing.Size(85, 27);
+			this.lblDestHasEffects.TabIndex = 119;
+			this.lblDestHasEffects.Text = "Destination already has effects";
+			this.lblDestHasEffects.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+			this.ttip.SetToolTip(this.lblDestHasEffects, "This destination channel already has effects.  They will be erased and overwritte" +
         "n with the effects from the mapped source channel.");
-			this.lblMasterHasEffects.Visible = false;
+			this.lblDestHasEffects.Visible = false;
 			// 
-			// treeMaster
+			// treeDest
 			// 
-			this.treeMaster.BackColor = System.Drawing.Color.White;
-			treeNodeAdvStyleInfo1.CheckBoxTickThickness = 1;
-			treeNodeAdvStyleInfo1.CheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-			treeNodeAdvStyleInfo1.EnsureDefaultOptionedChild = true;
-			treeNodeAdvStyleInfo1.IntermediateCheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-			treeNodeAdvStyleInfo1.OptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-			treeNodeAdvStyleInfo1.SelectedOptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
-			treeNodeAdvStyleInfo1.TextColor = System.Drawing.Color.Black;
-			this.treeMaster.BaseStylePairs.AddRange(new Syncfusion.Windows.Forms.Tools.StyleNamePair[] {
-            new Syncfusion.Windows.Forms.Tools.StyleNamePair("Standard", treeNodeAdvStyleInfo1)});
-			this.treeMaster.BeforeTouchSize = new System.Drawing.Size(300, 433);
-			this.treeMaster.ForeColor = System.Drawing.Color.Black;
-			// 
-			// 
-			// 
-			this.treeMaster.HelpTextControl.BaseThemeName = null;
-			this.treeMaster.HelpTextControl.Location = new System.Drawing.Point(0, 0);
-			this.treeMaster.HelpTextControl.Name = "";
-			this.treeMaster.HelpTextControl.Size = new System.Drawing.Size(392, 112);
-			this.treeMaster.HelpTextControl.TabIndex = 0;
-			this.treeMaster.HelpTextControl.Visible = true;
-			this.treeMaster.InactiveSelectedNodeForeColor = System.Drawing.SystemColors.ControlText;
-			this.treeMaster.LeftImageList = this.imlTreeIcons;
-			this.treeMaster.Location = new System.Drawing.Point(415, 99);
-			this.treeMaster.MetroColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(165)))), ((int)(((byte)(220)))));
-			this.treeMaster.Name = "treeMaster";
-			this.treeMaster.NodeStateImageList = this.imlTreeIcons;
-			this.treeMaster.SelectedNodeForeColor = System.Drawing.SystemColors.HighlightText;
-			this.treeMaster.Size = new System.Drawing.Size(300, 433);
-			this.treeMaster.TabIndex = 118;
-			this.treeMaster.Text = "Destination Channels";
-			this.treeMaster.ThemeStyle.TreeNodeAdvStyle.CheckBoxTickThickness = 0;
-			this.treeMaster.ThemeStyle.TreeNodeAdvStyle.EnsureDefaultOptionedChild = true;
+			this.treeDest.BackColor = System.Drawing.Color.White;
+			treeNodeAdvStyleInfo3.CheckBoxTickThickness = 1;
+			treeNodeAdvStyleInfo3.CheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+			treeNodeAdvStyleInfo3.EnsureDefaultOptionedChild = true;
+			treeNodeAdvStyleInfo3.IntermediateCheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+			treeNodeAdvStyleInfo3.OptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+			treeNodeAdvStyleInfo3.SelectedOptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
+			treeNodeAdvStyleInfo3.TextColor = System.Drawing.Color.Black;
+			this.treeDest.BaseStylePairs.AddRange(new Syncfusion.Windows.Forms.Tools.StyleNamePair[] {
+            new Syncfusion.Windows.Forms.Tools.StyleNamePair("Standard", treeNodeAdvStyleInfo3)});
+			this.treeDest.BeforeTouchSize = new System.Drawing.Size(300, 433);
+			this.treeDest.ForeColor = System.Drawing.Color.Black;
 			// 
 			// 
 			// 
-			this.treeMaster.ToolTipControl.BaseThemeName = null;
-			this.treeMaster.ToolTipControl.Location = new System.Drawing.Point(0, 0);
-			this.treeMaster.ToolTipControl.Name = "";
-			this.treeMaster.ToolTipControl.Size = new System.Drawing.Size(392, 112);
-			this.treeMaster.ToolTipControl.TabIndex = 0;
-			this.treeMaster.ToolTipControl.Visible = true;
-			this.treeMaster.AfterSelect += new System.EventHandler(this.treeMaster_AfterSelect);
-			this.treeMaster.Click += new System.EventHandler(this.treeMaster_Click);
+			this.treeDest.HelpTextControl.BaseThemeName = null;
+			this.treeDest.HelpTextControl.Location = new System.Drawing.Point(0, 0);
+			this.treeDest.HelpTextControl.Name = "";
+			this.treeDest.HelpTextControl.Size = new System.Drawing.Size(392, 112);
+			this.treeDest.HelpTextControl.TabIndex = 0;
+			this.treeDest.HelpTextControl.Visible = true;
+			this.treeDest.InactiveSelectedNodeForeColor = System.Drawing.Color.Black;
+			this.treeDest.LeftImageList = this.imlTreeIcons;
+			this.treeDest.Location = new System.Drawing.Point(415, 99);
+			this.treeDest.MetroColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(165)))), ((int)(((byte)(220)))));
+			this.treeDest.Name = "treeDest";
+			this.treeDest.NodeStateImageList = this.imlTreeIcons;
+			this.treeDest.SelectedNodeForeColor = System.Drawing.Color.White;
+			this.treeDest.Size = new System.Drawing.Size(300, 433);
+			this.treeDest.TabIndex = 118;
+			this.treeDest.Text = "Destination Channels";
+			this.treeDest.ThemeStyle.TreeNodeAdvStyle.CheckBoxTickThickness = 0;
+			this.treeDest.ThemeStyle.TreeNodeAdvStyle.EnsureDefaultOptionedChild = true;
+			// 
+			// 
+			// 
+			this.treeDest.ToolTipControl.BaseThemeName = null;
+			this.treeDest.ToolTipControl.Location = new System.Drawing.Point(0, 0);
+			this.treeDest.ToolTipControl.Name = "";
+			this.treeDest.ToolTipControl.Size = new System.Drawing.Size(392, 112);
+			this.treeDest.ToolTipControl.TabIndex = 0;
+			this.treeDest.ToolTipControl.Visible = true;
+			this.treeDest.AfterSelect += new System.EventHandler(this.treeDest_AfterSelect);
 			// 
 			// imlTreeIcons
 			// 
@@ -262,15 +287,15 @@
 			// treeSource
 			// 
 			this.treeSource.BackColor = System.Drawing.Color.White;
-			treeNodeAdvStyleInfo2.CheckBoxTickThickness = 1;
-			treeNodeAdvStyleInfo2.CheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-			treeNodeAdvStyleInfo2.EnsureDefaultOptionedChild = true;
-			treeNodeAdvStyleInfo2.IntermediateCheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-			treeNodeAdvStyleInfo2.OptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-			treeNodeAdvStyleInfo2.SelectedOptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
-			treeNodeAdvStyleInfo2.TextColor = System.Drawing.Color.Black;
+			treeNodeAdvStyleInfo1.CheckBoxTickThickness = 1;
+			treeNodeAdvStyleInfo1.CheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+			treeNodeAdvStyleInfo1.EnsureDefaultOptionedChild = true;
+			treeNodeAdvStyleInfo1.IntermediateCheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+			treeNodeAdvStyleInfo1.OptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+			treeNodeAdvStyleInfo1.SelectedOptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
+			treeNodeAdvStyleInfo1.TextColor = System.Drawing.Color.Black;
 			this.treeSource.BaseStylePairs.AddRange(new Syncfusion.Windows.Forms.Tools.StyleNamePair[] {
-            new Syncfusion.Windows.Forms.Tools.StyleNamePair("Standard", treeNodeAdvStyleInfo2)});
+            new Syncfusion.Windows.Forms.Tools.StyleNamePair("Standard", treeNodeAdvStyleInfo1)});
 			this.treeSource.BeforeTouchSize = new System.Drawing.Size(300, 433);
 			this.treeSource.ForeColor = System.Drawing.Color.Black;
 			// 
@@ -282,12 +307,12 @@
 			this.treeSource.HelpTextControl.Size = new System.Drawing.Size(392, 112);
 			this.treeSource.HelpTextControl.TabIndex = 0;
 			this.treeSource.HelpTextControl.Visible = true;
-			this.treeSource.InactiveSelectedNodeForeColor = System.Drawing.SystemColors.ControlText;
+			this.treeSource.InactiveSelectedNodeForeColor = System.Drawing.Color.Black;
 			this.treeSource.LeftImageList = this.imlTreeIcons;
 			this.treeSource.Location = new System.Drawing.Point(15, 99);
 			this.treeSource.MetroColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(165)))), ((int)(((byte)(220)))));
 			this.treeSource.Name = "treeSource";
-			this.treeSource.SelectedNodeForeColor = System.Drawing.SystemColors.HighlightText;
+			this.treeSource.SelectedNodeForeColor = System.Drawing.Color.White;
 			this.treeSource.Size = new System.Drawing.Size(300, 433);
 			this.treeSource.TabIndex = 117;
 			this.treeSource.Text = "Source Channels";
@@ -304,17 +329,17 @@
 			this.treeSource.ToolTipControl.Visible = true;
 			this.treeSource.AfterSelect += new System.EventHandler(this.treeSource_AfterSelect);
 			// 
-			// lblMasterMappedTo
+			// lblDestMappedTo
 			// 
-			this.lblMasterMappedTo.AllowDrop = true;
-			this.lblMasterMappedTo.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblMasterMappedTo.ForeColor = System.Drawing.Color.DarkMagenta;
-			this.lblMasterMappedTo.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.lblMasterMappedTo.Location = new System.Drawing.Point(415, 560);
-			this.lblMasterMappedTo.Name = "lblMasterMappedTo";
-			this.lblMasterMappedTo.Size = new System.Drawing.Size(300, 45);
-			this.lblMasterMappedTo.TabIndex = 116;
-			this.lblMasterMappedTo.Text = "Mapped";
+			this.lblDestMappedTo.AllowDrop = true;
+			this.lblDestMappedTo.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblDestMappedTo.ForeColor = System.Drawing.Color.DarkMagenta;
+			this.lblDestMappedTo.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.lblDestMappedTo.Location = new System.Drawing.Point(415, 560);
+			this.lblDestMappedTo.Name = "lblDestMappedTo";
+			this.lblDestMappedTo.Size = new System.Drawing.Size(300, 45);
+			this.lblDestMappedTo.TabIndex = 116;
+			this.lblDestMappedTo.Text = "Mapped";
 			// 
 			// lblSourceMappedTo
 			// 
@@ -350,23 +375,23 @@
 			// 
 			// pnlOverwrite
 			// 
-			this.pnlOverwrite.Controls.Add(this.picPreviewMaster);
+			this.pnlOverwrite.Controls.Add(this.picPreviewDest);
 			this.pnlOverwrite.Location = new System.Drawing.Point(414, 536);
 			this.pnlOverwrite.Name = "pnlOverwrite";
 			this.pnlOverwrite.Size = new System.Drawing.Size(302, 22);
 			this.pnlOverwrite.TabIndex = 113;
 			this.pnlOverwrite.Visible = false;
 			// 
-			// picPreviewMaster
+			// picPreviewDest
 			// 
-			this.picPreviewMaster.BackColor = System.Drawing.Color.Tan;
-			this.picPreviewMaster.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.picPreviewMaster.Location = new System.Drawing.Point(1, 1);
-			this.picPreviewMaster.Name = "picPreviewMaster";
-			this.picPreviewMaster.Size = new System.Drawing.Size(300, 20);
-			this.picPreviewMaster.TabIndex = 113;
-			this.picPreviewMaster.TabStop = false;
-			this.picPreviewMaster.Visible = false;
+			this.picPreviewDest.BackColor = System.Drawing.Color.Tan;
+			this.picPreviewDest.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.picPreviewDest.Location = new System.Drawing.Point(1, 1);
+			this.picPreviewDest.Name = "picPreviewDest";
+			this.picPreviewDest.Size = new System.Drawing.Size(300, 20);
+			this.picPreviewDest.TabIndex = 113;
+			this.picPreviewDest.TabStop = false;
+			this.picPreviewDest.Visible = false;
 			// 
 			// picPreviewSource
 			// 
@@ -385,12 +410,12 @@
 			this.lblMapped.Font = new System.Drawing.Font("DejaVu Sans Mono", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.lblMapped.ForeColor = System.Drawing.Color.DarkMagenta;
 			this.lblMapped.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.lblMapped.Location = new System.Drawing.Point(324, 330);
+			this.lblMapped.Location = new System.Drawing.Point(308, 452);
 			this.lblMapped.Name = "lblMapped";
-			this.lblMapped.Size = new System.Drawing.Size(81, 12);
+			this.lblMapped.Size = new System.Drawing.Size(111, 49);
 			this.lblMapped.TabIndex = 52;
 			this.lblMapped.Text = "Mapped";
-			this.lblMapped.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.lblMapped.TextAlign = System.Drawing.ContentAlignment.TopCenter;
 			// 
 			// lblMappedCount
 			// 
@@ -398,7 +423,7 @@
 			this.lblMappedCount.Font = new System.Drawing.Font("DejaVu Sans Mono", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.lblMappedCount.ForeColor = System.Drawing.Color.DarkMagenta;
 			this.lblMappedCount.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.lblMappedCount.Location = new System.Drawing.Point(324, 318);
+			this.lblMappedCount.Location = new System.Drawing.Point(318, 489);
 			this.lblMappedCount.Name = "lblMappedCount";
 			this.lblMappedCount.Size = new System.Drawing.Size(81, 12);
 			this.lblMappedCount.TabIndex = 51;
@@ -407,7 +432,7 @@
 			// 
 			// btnEaves
 			// 
-			this.btnEaves.Location = new System.Drawing.Point(355, 263);
+			this.btnEaves.Location = new System.Drawing.Point(327, 490);
 			this.btnEaves.Name = "btnEaves";
 			this.btnEaves.Size = new System.Drawing.Size(32, 32);
 			this.btnEaves.TabIndex = 50;
@@ -421,7 +446,7 @@
 			this.lblDebug.AutoSize = true;
 			this.lblDebug.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.lblDebug.ForeColor = System.Drawing.Color.BlueViolet;
-			this.lblDebug.Location = new System.Drawing.Point(324, 497);
+			this.lblDebug.Location = new System.Drawing.Point(362, 520);
 			this.lblDebug.Name = "lblDebug";
 			this.lblDebug.Size = new System.Drawing.Size(41, 12);
 			this.lblDebug.TabIndex = 49;
@@ -447,7 +472,7 @@
 			// 
 			this.btnSummary.AllowDrop = true;
 			this.btnSummary.Enabled = false;
-			this.btnSummary.Location = new System.Drawing.Point(327, 406);
+			this.btnSummary.Location = new System.Drawing.Point(326, 263);
 			this.btnSummary.Name = "btnSummary";
 			this.btnSummary.Size = new System.Drawing.Size(76, 29);
 			this.btnSummary.TabIndex = 39;
@@ -471,17 +496,17 @@
 			this.btnUnmap.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
 			this.btnUnmap.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
 			// 
-			// lblMasterTree
+			// lblDestTree
 			// 
-			this.lblMasterTree.AllowDrop = true;
-			this.lblMasterTree.AutoSize = true;
-			this.lblMasterTree.Location = new System.Drawing.Point(415, 72);
-			this.lblMasterTree.Name = "lblMasterTree";
-			this.lblMasterTree.Size = new System.Drawing.Size(101, 13);
-			this.lblMasterTree.TabIndex = 30;
-			this.lblMasterTree.Text = "Channels to copy to";
-			this.lblMasterTree.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
-			this.lblMasterTree.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
+			this.lblDestTree.AllowDrop = true;
+			this.lblDestTree.AutoSize = true;
+			this.lblDestTree.Location = new System.Drawing.Point(415, 72);
+			this.lblDestTree.Name = "lblDestTree";
+			this.lblDestTree.Size = new System.Drawing.Size(101, 13);
+			this.lblDestTree.TabIndex = 30;
+			this.lblDestTree.Text = "Channels to copy to";
+			this.lblDestTree.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
+			this.lblDestTree.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
 			// 
 			// lblSourceTree
 			// 
@@ -495,41 +520,41 @@
 			this.lblSourceTree.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
 			this.lblSourceTree.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
 			// 
-			// lblMasterFile
+			// lblDestFile
 			// 
-			this.lblMasterFile.AllowDrop = true;
-			this.lblMasterFile.AutoSize = true;
-			this.lblMasterFile.Location = new System.Drawing.Point(415, 16);
-			this.lblMasterFile.Name = "lblMasterFile";
-			this.lblMasterFile.Size = new System.Drawing.Size(131, 13);
-			this.lblMasterFile.TabIndex = 25;
-			this.lblMasterFile.Text = "Destination Sequence File";
-			this.lblMasterFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
-			this.lblMasterFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
+			this.lblDestFile.AllowDrop = true;
+			this.lblDestFile.AutoSize = true;
+			this.lblDestFile.Location = new System.Drawing.Point(415, 16);
+			this.lblDestFile.Name = "lblDestFile";
+			this.lblDestFile.Size = new System.Drawing.Size(131, 13);
+			this.lblDestFile.TabIndex = 25;
+			this.lblDestFile.Text = "Destination Sequence File";
+			this.lblDestFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
+			this.lblDestFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
 			// 
-			// btnBrowseMaster
+			// btnBrowseDest
 			// 
-			this.btnBrowseMaster.AllowDrop = true;
-			this.btnBrowseMaster.Location = new System.Drawing.Point(721, 40);
-			this.btnBrowseMaster.Name = "btnBrowseMaster";
-			this.btnBrowseMaster.Size = new System.Drawing.Size(36, 20);
-			this.btnBrowseMaster.TabIndex = 24;
-			this.btnBrowseMaster.Text = "...";
-			this.btnBrowseMaster.UseVisualStyleBackColor = true;
-			this.btnBrowseMaster.Click += new System.EventHandler(this.btnBrowseMaster_Click);
-			this.btnBrowseMaster.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
-			this.btnBrowseMaster.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
+			this.btnBrowseDest.AllowDrop = true;
+			this.btnBrowseDest.Location = new System.Drawing.Point(721, 40);
+			this.btnBrowseDest.Name = "btnBrowseDest";
+			this.btnBrowseDest.Size = new System.Drawing.Size(36, 20);
+			this.btnBrowseDest.TabIndex = 24;
+			this.btnBrowseDest.Text = "...";
+			this.btnBrowseDest.UseVisualStyleBackColor = true;
+			this.btnBrowseDest.Click += new System.EventHandler(this.btnBrowseDest_Click);
+			this.btnBrowseDest.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
+			this.btnBrowseDest.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
 			// 
-			// txtMasterFile
+			// txtDestFile
 			// 
-			this.txtMasterFile.AllowDrop = true;
-			this.txtMasterFile.Enabled = false;
-			this.txtMasterFile.Location = new System.Drawing.Point(415, 40);
-			this.txtMasterFile.Name = "txtMasterFile";
-			this.txtMasterFile.Size = new System.Drawing.Size(300, 20);
-			this.txtMasterFile.TabIndex = 23;
-			this.txtMasterFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
-			this.txtMasterFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
+			this.txtDestFile.AllowDrop = true;
+			this.txtDestFile.Enabled = false;
+			this.txtDestFile.Location = new System.Drawing.Point(415, 40);
+			this.txtDestFile.Name = "txtDestFile";
+			this.txtDestFile.Size = new System.Drawing.Size(300, 20);
+			this.txtDestFile.TabIndex = 23;
+			this.txtDestFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
+			this.txtDestFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
 			// 
 			// lblSourceFile
 			// 
@@ -567,37 +592,36 @@
 			this.txtSourceFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
 			this.txtSourceFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
 			// 
-			// lblMasterAlreadyMapped
+			// lblDestAlreadyMapped
 			// 
-			this.lblMasterAlreadyMapped.AllowDrop = true;
-			this.lblMasterAlreadyMapped.Anchor = System.Windows.Forms.AnchorStyles.Top;
-			this.lblMasterAlreadyMapped.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblMasterAlreadyMapped.ForeColor = System.Drawing.Color.DarkOrange;
-			this.lblMasterAlreadyMapped.Location = new System.Drawing.Point(309, 201);
-			this.lblMasterAlreadyMapped.Name = "lblMasterAlreadyMapped";
-			this.lblMasterAlreadyMapped.Size = new System.Drawing.Size(110, 27);
-			this.lblMasterAlreadyMapped.TabIndex = 120;
-			this.lblMasterAlreadyMapped.Text = "Destination already mapped to other source";
-			this.lblMasterAlreadyMapped.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-			this.ttip.SetToolTip(this.lblMasterAlreadyMapped, resources.GetString("lblMasterAlreadyMapped.ToolTip"));
-			this.lblMasterAlreadyMapped.Visible = false;
+			this.lblDestAlreadyMapped.AllowDrop = true;
+			this.lblDestAlreadyMapped.Anchor = System.Windows.Forms.AnchorStyles.Top;
+			this.lblDestAlreadyMapped.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblDestAlreadyMapped.ForeColor = System.Drawing.Color.DarkOrange;
+			this.lblDestAlreadyMapped.Location = new System.Drawing.Point(309, 201);
+			this.lblDestAlreadyMapped.Name = "lblDestAlreadyMapped";
+			this.lblDestAlreadyMapped.Size = new System.Drawing.Size(110, 27);
+			this.lblDestAlreadyMapped.TabIndex = 120;
+			this.lblDestAlreadyMapped.Text = "Destination already mapped to other source";
+			this.lblDestAlreadyMapped.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+			this.ttip.SetToolTip(this.lblDestAlreadyMapped, resources.GetString("lblDestAlreadyMapped.ToolTip"));
+			this.lblDestAlreadyMapped.Visible = false;
 			// 
 			// picAboutIcon
 			// 
 			this.picAboutIcon.Image = ((System.Drawing.Image)(resources.GetObject("picAboutIcon.Image")));
-			this.picAboutIcon.Location = new System.Drawing.Point(697, 470);
+			this.picAboutIcon.Location = new System.Drawing.Point(298, 312);
 			this.picAboutIcon.Name = "picAboutIcon";
 			this.picAboutIcon.Size = new System.Drawing.Size(128, 128);
 			this.picAboutIcon.TabIndex = 129;
 			this.picAboutIcon.TabStop = false;
-			this.picAboutIcon.Visible = false;
 			// 
 			// chkCopyBeats
 			// 
 			this.chkCopyBeats.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
 			this.chkCopyBeats.Checked = true;
 			this.chkCopyBeats.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkCopyBeats.Location = new System.Drawing.Point(18, 680);
+			this.chkCopyBeats.Location = new System.Drawing.Point(15, 691);
 			this.chkCopyBeats.Name = "chkCopyBeats";
 			this.chkCopyBeats.Size = new System.Drawing.Size(250, 60);
 			this.chkCopyBeats.TabIndex = 48;
@@ -770,20 +794,20 @@
 			// mnuFileOpen
 			// 
 			this.mnuFileOpen.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuOpenMaster,
+            this.mnuOpenDest,
             this.mnuOpenSource,
             this.mnuOpenMap});
 			this.mnuFileOpen.Name = "mnuFileOpen";
 			this.mnuFileOpen.Size = new System.Drawing.Size(135, 22);
 			this.mnuFileOpen.Text = "&Open";
 			// 
-			// mnuOpenMaster
+			// mnuOpenDest
 			// 
-			this.mnuOpenMaster.Name = "mnuOpenMaster";
-			this.mnuOpenMaster.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
-			this.mnuOpenMaster.Size = new System.Drawing.Size(233, 22);
-			this.mnuOpenMaster.Text = "&Destination Sequence";
-			this.mnuOpenMaster.Click += new System.EventHandler(this.mnuOpenMaster_Click);
+			this.mnuOpenDest.Name = "mnuOpenDest";
+			this.mnuOpenDest.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
+			this.mnuOpenDest.Size = new System.Drawing.Size(233, 22);
+			this.mnuOpenDest.Text = "&Destination Sequence";
+			this.mnuOpenDest.Click += new System.EventHandler(this.mnuOpenDest_Click);
 			// 
 			// mnuOpenSource
 			// 
@@ -1042,12 +1066,24 @@
 			this.pnlAbout.Text = "About...";
 			this.pnlAbout.Click += new System.EventHandler(this.pnlAbout_Click);
 			// 
+			// chkFuzzy
+			// 
+			this.chkFuzzy.AutoSize = true;
+			this.chkFuzzy.Font = new System.Drawing.Font("Fuzzed", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.chkFuzzy.Location = new System.Drawing.Point(94, 667);
+			this.chkFuzzy.Name = "chkFuzzy";
+			this.chkFuzzy.Size = new System.Drawing.Size(113, 18);
+			this.chkFuzzy.TabIndex = 109;
+			this.chkFuzzy.Text = "Fuzzy Match";
+			this.chkFuzzy.UseVisualStyleBackColor = true;
+			// 
 			// frmRemapper
 			// 
 			this.AllowDrop = true;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(761, 756);
+			this.Controls.Add(this.chkFuzzy);
 			this.Controls.Add(this.menuStrip1);
 			this.Controls.Add(this.staStatus);
 			this.Controls.Add(this.pnlAll);
@@ -1074,11 +1110,11 @@
 			this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.frmRemapper_MouseMove);
 			this.pnlAll.ResumeLayout(false);
 			this.pnlAll.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.treeMaster)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.treeDest)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.treeSource)).EndInit();
 			this.pnlMapWarn.ResumeLayout(false);
 			this.pnlOverwrite.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.picPreviewMaster)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.picPreviewDest)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.picPreviewSource)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.picAboutIcon)).EndInit();
 			this.pnlMessage.ResumeLayout(false);
@@ -1101,11 +1137,11 @@
 		private System.Windows.Forms.Button btnLoadMap;
 		private System.Windows.Forms.Button btnUnmap;
 		private System.Windows.Forms.Button btnSaveNewSeq;
-		private System.Windows.Forms.Label lblMasterTree;
+		private System.Windows.Forms.Label lblDestTree;
 		private System.Windows.Forms.Label lblSourceTree;
-		private System.Windows.Forms.Label lblMasterFile;
-		private System.Windows.Forms.Button btnBrowseMaster;
-		private System.Windows.Forms.TextBox txtMasterFile;
+		private System.Windows.Forms.Label lblDestFile;
+		private System.Windows.Forms.Button btnBrowseDest;
+		private System.Windows.Forms.TextBox txtDestFile;
 		private System.Windows.Forms.Label lblSourceFile;
 		private System.Windows.Forms.Button btnBrowseSource;
 		private System.Windows.Forms.TextBox txtSourceFile;
@@ -1116,7 +1152,7 @@
 		private System.Windows.Forms.MenuStrip menuStrip1;
 		private System.Windows.Forms.ToolStripMenuItem mnuFile;
 		private System.Windows.Forms.ToolStripMenuItem mnuFileOpen;
-		private System.Windows.Forms.ToolStripMenuItem mnuOpenMaster;
+		private System.Windows.Forms.ToolStripMenuItem mnuOpenDest;
 		private System.Windows.Forms.ToolStripMenuItem mnuOpenSource;
 		private System.Windows.Forms.ToolStripMenuItem mnuFileSaveAs;
 		private System.Windows.Forms.ToolStripMenuItem mnuSaveNewSequence;
@@ -1160,17 +1196,20 @@
 		private System.Windows.Forms.Label lblMappedCount;
 		private System.Windows.Forms.PictureBox picPreviewSource;
 		private System.Windows.Forms.Panel pnlOverwrite;
-		private System.Windows.Forms.PictureBox picPreviewMaster;
+		private System.Windows.Forms.PictureBox picPreviewDest;
 		private System.Windows.Forms.Panel pnlMapWarn;
 		private System.Windows.Forms.Button btnMap;
-		private System.Windows.Forms.Label lblMasterMappedTo;
+		private System.Windows.Forms.Label lblDestMappedTo;
 		private System.Windows.Forms.Label lblSourceMappedTo;
 		private Syncfusion.Windows.Forms.Tools.TreeViewAdv treeSource;
-		private Syncfusion.Windows.Forms.Tools.TreeViewAdv treeMaster;
-		private System.Windows.Forms.Label lblMasterHasEffects;
-		private System.Windows.Forms.Label lblMasterAlreadyMapped;
+		private Syncfusion.Windows.Forms.Tools.TreeViewAdv treeDest;
+		private System.Windows.Forms.Label lblDestHasEffects;
+		private System.Windows.Forms.Label lblDestAlreadyMapped;
 		private System.Windows.Forms.PictureBox picAboutIcon;
 		private System.Windows.Forms.ImageList imlTreeIcons;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.CheckBox chkFuzzy;
+		private System.Windows.Forms.CheckBox chkRamps;
 	}
 }
 

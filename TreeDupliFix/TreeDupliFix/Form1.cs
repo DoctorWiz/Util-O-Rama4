@@ -53,7 +53,7 @@ namespace UtilORama4
 			int ix = 0;
 
 			// Select Everything
-			for (int i = 0; i < seq.Tracks.Count; i++)
+			for (int i = 1; i < seq.Tracks.Count; i++)
 			{
 				seq.Tracks[i].Selected = true;
 			}

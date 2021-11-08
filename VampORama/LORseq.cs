@@ -315,7 +315,7 @@ namespace UtilORama4
 
 			if (seq.Channels.Count < 1)
 			{
-				LORChannel4 ch = seq.CreateChannel("null");
+				LORChannel4 ch = seq.CreateNewChannel("null");
 				seq.Tracks[0].Members.Add(ch);
 			}
 

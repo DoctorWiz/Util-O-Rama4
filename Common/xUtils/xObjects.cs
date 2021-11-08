@@ -42,6 +42,9 @@ namespace xUtils
 		string StartChannel
 		{ get; set; }
 
+		Color Color
+		{ get; set; }
+
 	} // End Interface xMember
 
 
@@ -178,6 +181,11 @@ namespace xUtils
 			set { isSelected = value; }
 		}
 
+		public Color Color
+		{
+			get { return LORUtils4.lutils.Color_LORtoNet( LORUtils4.lutils.LORCOLOR_RGB); }
+			set { Color ignore = value; }
+		}
 		public bool ExactMatch
 		{
 			get { return matchExact; }
@@ -279,6 +287,11 @@ namespace xUtils
 			set { startChannel = value; }
 		}
 
+		public Color Color
+		{
+			get { return LORUtils4.lutils.Color_LORtoNet(LORUtils4.lutils.LORCOLOR_RGB); }
+			set { Color ignore = value; }
+		}
 
 	}
 
@@ -382,6 +395,25 @@ namespace xUtils
 			}
 		}
 
+		public Color Color
+		{
+			get
+			{
+				Color clr = Color.Black;
+				if (xMembers != null)
+				{
+					if (xMembers.Count > 0)
+					{
+						clr = xMembers[0].Color;
+					}
+				}
+				return clr;
+			}
+			set
+			{
+				// Throw away
+			}
+		}
 
 	}
 

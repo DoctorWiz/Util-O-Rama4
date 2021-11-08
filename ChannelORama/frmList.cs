@@ -79,7 +79,7 @@ namespace UtilORama4
 
 
 			xSeq = new xRGBEffects();
-			lViz = new LORVisualization4(vizFile);
+			lViz = new LORVisualization4(null, vizFile);
 
 			int ccc = lViz.VizChannels.Count;
 			int ddd = lViz.VizDrawObjects.Count;
@@ -612,7 +612,7 @@ namespace UtilORama4
 			string devName = ""; // for debugging exceptions
 			if (universes.Count > 0)
 			{
-				string chnFile = filePath + "Devices.csv";
+				string chnFile = filePath + "DeviceTypes.csv";
 				try
 				{
 					CsvFileReader reader = new CsvFileReader(chnFile);

@@ -562,18 +562,18 @@ namespace StringORama
 			sectionName += ".001-U" + (universeNum + 1).ToString() + ".";
 			sectionName += (166 * 3).ToString() + "]";
 			int tknum = int.Parse(txtTrack.Text);
-			LORTrack4 trak = seq.CreateTrack(sectionName);
+			LORTrack4 trak = seq.CreateNewTrack(sectionName);
 
 			sectionName = baseName + "s by Section [U" + universeNum.ToString();
 			sectionName += ".001-U" + (universeNum + 1).ToString() + ".";
 			sectionName += (166 * 3).ToString() + "]";
-			LORChannelGroup4 grpSects =  seq.CreateChannelGroup(sectionName);
+			LORChannelGroup4 grpSects =  seq.CreateNewChannelGroup(sectionName);
 			trak.AddItem(grpSects);
 
 			sectionName = baseName + "s by rgbCh # [U" + universeNum.ToString();
 			sectionName += ".001-U" + (universeNum + 1).ToString() + ".";
 			sectionName += (166 * 3).ToString() + "]";
-			LORChannelGroup4 grpPixels = seq.CreateChannelGroup(sectionName);
+			LORChannelGroup4 grpPixels = seq.CreateNewChannelGroup(sectionName);
 			trak.AddItem(grpPixels);
 
 			
@@ -619,7 +619,7 @@ namespace StringORama
 			for (int pxl = 0; pxl < pixelsPerSect; pxl++)
 			{
 				string grName = sectionName + "s #" + (pxl+1).ToString("00") + "s";
-				LORChannelGroup4 theGroup = seq.CreateChannelGroup(grName);
+				LORChannelGroup4 theGroup = seq.CreateNewChannelGroup(grName);
 				for (int s=0; s< sections; s++)
 				{
 					theGroup.AddItem(chanMatrix[s, pxl]);
@@ -658,18 +658,18 @@ namespace StringORama
 			sectionName += ".001-U" + (universeNum).ToString() + ".";
 			sectionName += (64 * 3).ToString() + "]";
 			int tknum = int.Parse(txtTrack.Text);
-			LORTrack4 trak = seq.CreateTrack(sectionName);
+			LORTrack4 trak = seq.CreateNewTrack(sectionName);
 
 			sectionName = baseName + " by Column [U" + universeNum.ToString();
 			sectionName += ".001-U" + (universeNum).ToString() + ".";
 			sectionName += (64 * 3).ToString() + "]";
-			LORChannelGroup4 grpCols = seq.CreateChannelGroup(sectionName);
+			LORChannelGroup4 grpCols = seq.CreateNewChannelGroup(sectionName);
 			trak.AddItem(grpCols);
 
 			sectionName = baseName + " by Row [U" + universeNum.ToString();
 			sectionName += ".001-U" + (universeNum).ToString() + ".";
 			sectionName += (64 * 3).ToString() + "]";
-			LORChannelGroup4 grpRows = seq.CreateChannelGroup(sectionName);
+			LORChannelGroup4 grpRows = seq.CreateNewChannelGroup(sectionName);
 			trak.AddItem(grpRows);
 
 
@@ -702,7 +702,7 @@ namespace StringORama
 			for (int r = 0; r < airRows; r++)
 			{
 				string grName = sectionName + " Row " + (r).ToString("0");
-				LORChannelGroup4 theGroup = seq.CreateChannelGroup(grName);
+				LORChannelGroup4 theGroup = seq.CreateNewChannelGroup(grName);
 				for (int c = 0; c < airCols; c++)
 				{
 					theGroup.AddItem(chanMatrix[c, r]);
@@ -745,18 +745,18 @@ namespace StringORama
 			sectionName += ".001-U" + (universeNum + 1).ToString() + ".";
 			sectionName += (MAX_CH_PER_UNIV).ToString() + "]";
 			int tknum = int.Parse(txtTrack.Text);
-			LORTrack4 trak = seq.CreateTrack(sectionName);
+			LORTrack4 trak = seq.CreateNewTrack(sectionName);
 
 			sectionName = baseName + "s by Row [U" + universeNum.ToString();
 			sectionName += ".001-U" + (universeNum + 1).ToString() + ".";
 			sectionName += (MAX_CH_PER_UNIV).ToString() + "]";
-			LORChannelGroup4 grpRows = seq.CreateChannelGroup(sectionName);
+			LORChannelGroup4 grpRows = seq.CreateNewChannelGroup(sectionName);
 			trak.AddItem(grpRows);
 
 			sectionName = baseName + "s by Section [U" + universeNum.ToString();
 			sectionName += ".001-U" + (universeNum + 1).ToString() + ".";
 			sectionName += (MAX_CH_PER_UNIV).ToString() + "]";
-			LORChannelGroup4 grpCols = seq.CreateChannelGroup(sectionName);
+			LORChannelGroup4 grpCols = seq.CreateNewChannelGroup(sectionName);
 			trak.AddItem(grpCols);
 
 
@@ -800,7 +800,7 @@ namespace StringORama
 			for (int col = 0; col < cols; col++)
 			{
 				string grName = sectionName + "s Column " + col.ToString("00");
-				LORChannelGroup4 theGroup = seq.CreateChannelGroup(grName);
+				LORChannelGroup4 theGroup = seq.CreateNewChannelGroup(grName);
 				for (int row = 0; row < rows; row++)
 				{
 					for (int pix = 0; pix < pixelsPerSect; pix++)
@@ -877,18 +877,18 @@ namespace StringORama
 			sectionName += ".001-U" + (universeNum + 1).ToString() + ".";
 			sectionName += (MAX_CH_PER_UNIV).ToString() + "]";
 			int tknum = int.Parse(txtTrack.Text);
-			LORTrack4 trak = seq.CreateTrack(sectionName);
+			LORTrack4 trak = seq.CreateNewTrack(sectionName);
 
 			sectionName = baseName + "s by Row [U" + universeNum.ToString();
 			sectionName += ".001-U" + (universeNum + 1).ToString() + ".";
 			sectionName += (MAX_CH_PER_UNIV).ToString() + "]";
-			LORChannelGroup4 grpRows = seq.CreateChannelGroup(sectionName);
+			LORChannelGroup4 grpRows = seq.CreateNewChannelGroup(sectionName);
 			trak.AddItem(grpRows);
 
 			sectionName = baseName + "s by Section [U" + universeNum.ToString();
 			sectionName += ".001-U" + (universeNum + 1).ToString() + ".";
 			sectionName += (MAX_CH_PER_UNIV).ToString() + "]";
-			LORChannelGroup4 grpCols = seq.CreateChannelGroup(sectionName);
+			LORChannelGroup4 grpCols = seq.CreateNewChannelGroup(sectionName);
 			trak.AddItem(grpCols);
 
 			int direction = 1; // forward, set to -1 for reverse
@@ -929,7 +929,7 @@ namespace StringORama
 			for (int pxl = 0; pxl < pixelsPerRow; pxl++)
 			{
 				string grName = sectionName + "s Section " + pxl.ToString("00");
-				LORChannelGroup4 theGroup = seq.CreateChannelGroup(grName);
+				LORChannelGroup4 theGroup = seq.CreateNewChannelGroup(grName);
 				for (int row = 0; row < rows; row++)
 				{
 					theGroup.AddItem(chanMatrix[row, pxl]);
@@ -963,7 +963,7 @@ namespace StringORama
 			{
 				grName += chanNum.ToString("000") + "-" + (chanNum + pixelsPerSect * 3 + 2).ToString("000") + "]";
 			}
-			LORChannelGroup4 thisGroup = seq.CreateChannelGroup(grName);
+			LORChannelGroup4 thisGroup = seq.CreateNewChannelGroup(grName);
 
 			for (int pxl = 0; pxl < pixelsPerSect; pxl++)
 			{
@@ -1001,7 +1001,7 @@ namespace StringORama
 			{
 				grName += chanNum.ToString("000") + "-" + (chanNum + airRows * 3 + 2).ToString("000") + "]";
 			}
-			LORChannelGroup4 thisGroup = seq.CreateChannelGroup(grName);
+			LORChannelGroup4 thisGroup = seq.CreateNewChannelGroup(grName);
 
 			for (int r = 0; r < airRows; r++)
 			{
@@ -1043,7 +1043,7 @@ namespace StringORama
 			{
 				grName += chanNum.ToString("000") + "-" + (chanNum + pixelsPerRow * 3 + 2).ToString("000") + "]";
 			}
-			LORChannelGroup4 thisGroup = seq.CreateChannelGroup(grName);
+			LORChannelGroup4 thisGroup = seq.CreateNewChannelGroup(grName);
 
 			for (int col = 7; col >= 0; col--)
 			{
@@ -1083,12 +1083,12 @@ namespace StringORama
 			//{
 				pxName += chanNum.ToString("000") + "-" + (chanNum + 2).ToString("000") + "]";
 			//}
-			LORRGBChannel4 theRGBch = seq.CreateRGBchannel(pxName);
+			LORRGBChannel4 theRGBch = seq.CreateNewRGBChannel(pxName);
 
 			if (chOrder == 1) // RGB Order
 			{
 				chName = baseName + " [U" + universeNum.ToString() + "." + chanNum.ToString("000") + "] (R)";
-				LORChannel4 redChannel = seq.CreateChannel(chName);
+				LORChannel4 redChannel = seq.CreateNewChannel(chName);
 				redChannel.output.deviceType = LORDeviceType4.DMX;
 				redChannel.output.network = universeNum;
 				redChannel.color = lutils.LORCOLOR_RED;
@@ -1098,7 +1098,7 @@ namespace StringORama
 				chanNum++;
 
 				chName = baseName + " [U" + universeNum.ToString() + "." + chanNum.ToString("000") + "] (G)";
-				LORChannel4 grnChannel = seq.CreateChannel(chName);
+				LORChannel4 grnChannel = seq.CreateNewChannel(chName);
 				grnChannel.output.deviceType = LORDeviceType4.DMX;
 				grnChannel.output.network = universeNum;
 				grnChannel.color = lutils.LORCOLOR_GRN;
@@ -1108,7 +1108,7 @@ namespace StringORama
 				chanNum++;
 
 				chName = baseName + " [U" + universeNum.ToString() + "." + chanNum.ToString("000") + "] (B)";
-				LORChannel4 bluChannel = seq.CreateChannel(chName);
+				LORChannel4 bluChannel = seq.CreateNewChannel(chName);
 				bluChannel.output.deviceType = LORDeviceType4.DMX;
 				bluChannel.output.network = universeNum;
 				bluChannel.color = lutils.LORCOLOR_BLU;
@@ -1158,12 +1158,12 @@ namespace StringORama
 			//{
 			pxName += chanNum.ToString("000") + "-" + (chanNum + 2).ToString("000") + "]";
 			//}
-			LORRGBChannel4 theRGBch = seq.CreateRGBchannel(pxName);
+			LORRGBChannel4 theRGBch = seq.CreateNewRGBChannel(pxName);
 
 			if (chOrder == 1) // RGB Order
 			{
 				chName += " [U" + universeNum.ToString() + "." + chanNum.ToString("000") + "] (R)";
-				LORChannel4 redChannel = seq.CreateChannel(chName);
+				LORChannel4 redChannel = seq.CreateNewChannel(chName);
 				redChannel.output.deviceType = LORDeviceType4.DMX;
 				redChannel.output.network = universeNum;
 				redChannel.color = lutils.LORCOLOR_RED;
@@ -1173,7 +1173,7 @@ namespace StringORama
 				chanNum++;
 
 				chName += " [U" + universeNum.ToString() + "." + chanNum.ToString("000") + "] (G)";
-				LORChannel4 grnChannel = seq.CreateChannel(chName);
+				LORChannel4 grnChannel = seq.CreateNewChannel(chName);
 				grnChannel.output.deviceType = LORDeviceType4.DMX;
 				grnChannel.output.network = universeNum;
 				grnChannel.color = lutils.LORCOLOR_GRN;
@@ -1183,7 +1183,7 @@ namespace StringORama
 				chanNum++;
 
 				chName += " [U" + universeNum.ToString() + "." + chanNum.ToString("000") + "] (R)";
-				LORChannel4 bluChannel = seq.CreateChannel(chName);
+				LORChannel4 bluChannel = seq.CreateNewChannel(chName);
 				bluChannel.output.deviceType = LORDeviceType4.DMX;
 				bluChannel.output.network = universeNum;
 				bluChannel.color = lutils.LORCOLOR_BLU;
@@ -1196,7 +1196,7 @@ namespace StringORama
 			if (chOrder == 2) // GRB Order
 			{
 				chName += " [U" + universeNum.ToString() + "." + chanNum.ToString("000") + "] (G)";
-				LORChannel4 grnChannel = seq.CreateChannel(chName);
+				LORChannel4 grnChannel = seq.CreateNewChannel(chName);
 				grnChannel.output.deviceType = LORDeviceType4.DMX;
 				grnChannel.output.network = universeNum;
 				grnChannel.color = lutils.LORCOLOR_GRN;
@@ -1206,7 +1206,7 @@ namespace StringORama
 				chanNum++;
 
 				chName += " [U" + universeNum.ToString() + "." + chanNum.ToString("000") + "] (R)";
-				LORChannel4 redChannel = seq.CreateChannel(chName);
+				LORChannel4 redChannel = seq.CreateNewChannel(chName);
 				redChannel.output.deviceType = LORDeviceType4.DMX;
 				redChannel.output.network = universeNum;
 				redChannel.color = lutils.LORCOLOR_RED;
@@ -1216,7 +1216,7 @@ namespace StringORama
 				chanNum++;
 
 				chName += " [U" + universeNum.ToString() + "." + chanNum.ToString("000") + "] (R)";
-				LORChannel4 bluChannel = seq.CreateChannel(chName);
+				LORChannel4 bluChannel = seq.CreateNewChannel(chName);
 				bluChannel.output.deviceType = LORDeviceType4.DMX;
 				bluChannel.output.network = universeNum;
 				bluChannel.color = lutils.LORCOLOR_BLU;

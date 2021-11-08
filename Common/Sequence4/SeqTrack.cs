@@ -30,20 +30,11 @@ namespace LORUtils4
 		public LORTimings4 timingGrid = null;
 
 		//! CONSTRUCTOR
-		public LORTrack4(string lineIn)
+		public LORTrack4(iLORMember4 theParent, string lineIn)
 		{
+			myParent = theParent;
 			Members = new LORMembership4(this);
-			string seek = lutils.STFLD + LORSequence4.TABLEtrack + lutils.FIELDtotalCentiseconds;
-			//int pos = lineIn.IndexOf(seek);
-			int pos = lutils.ContainsKey(lineIn, seek);
-			if (pos > 0)
-			{
-				Parse(lineIn);
-			}
-			else
-			{
-				myName = lineIn;
-			}
+			Parse(lineIn);
 		}
 
 
@@ -134,47 +125,47 @@ namespace LORUtils4
 
 		public override void Parse(string lineIn)
 		{
-			this.Members = new LORMembership4(this);
-			myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
-			//mySavedIndex = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
-			myCentiseconds = lutils.getKeyValue(lineIn, lutils.FIELDtotalCentiseconds);
-			int tempGridSaveID = lutils.getKeyValue(lineIn, LORSequence4.TABLEtimingGrid);
-			if (myParent == null)
+			string seek = lutils.STFLD + LORSequence4.TABLEtrack + lutils.FIELDtotalCentiseconds;
+			//int pos = lineIn.IndexOf(seek);
+			int pos = lutils.ContainsKey(lineIn, seek);
+			if (pos > 0)
 			{
-				// If the parent has not been assigned yet, there is no way to get ahold of the grid
-				// So temporarily set the AltSavedIndex to this LORTrack4's LORTimings4's SaveID
-				//myAltSavedIndex = tempGridSaveID;
+				myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
+				//mySavedIndex = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
+				myCentiseconds = lutils.getKeyValue(lineIn, lutils.FIELDtotalCentiseconds);
 			}
 			else
 			{
-				if (tempGridSaveID < 0)
-				{
-					// For Channel Configs, there will be no timing grid
-					timingGrid = null;
-				}
-				else
-				{
-					// Assign the LORTimings4 based on the SaveID
-					//iLORMember4 member = myParent.Members.bySaveID[tempGridSaveID];
-					LORTimings4 tg = null;
-					LORSequence4 mySeq = (LORSequence4)myParent;
-					for (int i = 0; i < mySeq.TimingGrids.Count; i++)
-					{
-						if (mySeq.TimingGrids[i].SaveID == tempGridSaveID)
-						{
-							tg = mySeq.TimingGrids[i];
-							i = mySeq.TimingGrids.Count; // Loopus Interruptus
-						}
-					}
-					if (tg == null)
-					{
-						string msg = "ERROR: Timing Grid with SaveID of " + tempGridSaveID.ToString() + " not found!";
-						System.Diagnostics.Debugger.Break();
-					}
-					timingGrid = tg;
-				}
+				myName = lineIn;
 			}
-			if (myParent != null) myParent.MakeDirty(true);
+			int tempGridSaveID = lutils.getKeyValue(lineIn, LORSequence4.TABLEtimingGrid);
+			if (tempGridSaveID < 0)
+			{
+				// For Channel Configs, there will be no timing grid
+				timingGrid = null;
+			}
+			else
+			{
+				// Assign the LORTimings4 based on the SaveID
+				//iLORMember4 member = myParent.Members.bySaveID[tempGridSaveID];
+				LORTimings4 tg = null;
+				LORSequence4 mySeq = (LORSequence4)myParent;
+				for (int i = 0; i < mySeq.TimingGrids.Count; i++)
+				{
+					if (mySeq.TimingGrids[i].SaveID == tempGridSaveID)
+					{
+						tg = mySeq.TimingGrids[i];
+						i = mySeq.TimingGrids.Count; // Loopus Interruptus
+					}
+				}
+				if (tg == null)
+				{
+					string msg = "ERROR: Timing Grid with SaveID of " + tempGridSaveID.ToString() + " not found!";
+					System.Diagnostics.Debugger.Break();
+				}
+				timingGrid = tg;
+			}
+			//if (myParent != null) myParent.MakeDirty(true);
 		}
 
 
@@ -197,7 +188,7 @@ namespace LORUtils4
 			get
 			{
 				// LORTrack4 numbers are one based, the index is zero based, so just add 1 to the index for the track number
-				return myIndex + 1;
+				return myID;
 			}
 			// Read-Only!
 			//set
@@ -206,6 +197,15 @@ namespace LORUtils4
 			//	if (myParent != null) myParent.MakeDirty(true);
 			//}
 		}
+
+		public void SetTrackNumber(int newNumber)
+		{
+			myID = newNumber;
+			myIndex = newNumber;
+		}
+
+		public int AltTrackNumber
+		{ get { return myAltID; } set { myAltID = value; } }
 
 
 		public string LineOut(bool selectedOnly)
@@ -226,7 +226,7 @@ namespace LORUtils4
 			ret.Append(myCentiseconds.ToString());
 			ret.Append(lutils.ENDQT);
 
-			int altID = timingGrid.AltSavedIndex;
+			int altID = timingGrid.AltSaveID;
 			ret.Append(lutils.SPC);
 			ret.Append(LORSequence4.TABLEtimingGrid);
 			ret.Append(lutils.FIELDEQ);
@@ -256,11 +256,11 @@ namespace LORUtils4
 				if (!selectedOnly || sel)
 				{
 					// Write out the links to the items
-					//masterSI = updatedTracks[trackIndex].newSavedIndexes[iti];
+					//destSI = updatedTracks[trackIndex].newSavedIndexes[iti];
 
 					//if (subID.Name.IndexOf("lyphonic") > 0) System.Diagnostics.Debugger.Break();
 
-					int siAlt = subID.AltSavedIndex;
+					int siAlt = subID.AltID;
 					if (siAlt > lutils.UNDEFINED)
 					{
 						ret.Append(lutils.CRLF);
@@ -329,7 +329,7 @@ namespace LORUtils4
 			bool alreadyAdded = false;
 			for (int i = 0; i < Members.Count; i++)
 			{
-				if (newPart.SavedIndex == Members.Items[i].SavedIndex)
+				if (newPart.ID == Members.Items[i].ID)
 				{
 					//TODO: Using saved index, look up Name of item being added
 					string sMsg = newPart.Name + " has already been added to this LORTrack4 '" + myName + "'.";
@@ -339,7 +339,7 @@ namespace LORUtils4
 						//TODO: Make this just a warning, put "add" code below into an else block
 						//TODO: Do the same with Tracks
 						alreadyAdded = true;
-					retSI = newPart.SavedIndex;
+					retSI = newPart.ID;
 					i = Members.Count; // Break out of loop
 				}
 			}

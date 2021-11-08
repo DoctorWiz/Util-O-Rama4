@@ -54,19 +54,6 @@ namespace LORUtils4
 		// SuperStar since it is very expensive!  So I can just write out all these defaults in one go.
 		public static readonly string FIELDS_SS_DEFAULTS = " SSWU=\"0\" SSFF=\"\" SSReverseOrder=\"False\" SSForceRowColumn=\"False\" SSRow=\"0\" SSColumn=\"0\" SSUseMyOrder=\"False\" SSStar=\"False\" SSMatrixInd=\"0\" SSPropColorTemp=\"0\"";
 
-		public LORVizItemGroup4()
-		{
-			Members = new LORMembership4(this);
-			MakeDummies();
-		}
-
-		public LORVizItemGroup4(string lineIn)
-		{
-			Members = new LORMembership4(this);
-			MakeDirty();
-			Parse(lineIn);
-		}
-
 		public LORVizItemGroup4(iLORMember4 parent, string lineIn)
 		{
 			
@@ -80,47 +67,39 @@ namespace LORUtils4
 
 		private void MakeDummies()
 		{
-			// SavedIndices and SaveIDs in Sequences start at 0. Cool! Great! No Prob!
-			// But Channels, Groups, and DrawObjects in Visualizations start at 1 (Grrrrr)
-			// So add a dummy object at the [0] start of the lists
-			LORVizDrawObject4 lvdo = new LORVizDrawObject4("\0\0DUMMY VIZDRAWOBJECT AT INDEX [0] - DO NOT USE!");
-			lvdo.SetIndex(0);
-			lvdo.SetSavedIndex(0);
-			lvdo.SetParent(myParent);
-			Members.Add(lvdo);
-
-		}
-
-
-
-		public int VizID
-		{
-			get
+			if (Members.Count == 0)
 			{
-				return mySavedIndex;
+				// SavedIndices and SaveIDs in Sequences start at 0. Cool! Great! No Prob!
+				// But Channels, Groups, and DrawObjects in Visualizations start at 1 (Grrrrr)
+				// So add a dummy object at the [0] start of the lists
+				LORVisualization4 vp = (LORVisualization4)myParent;
+
+
+				LORVizDrawObject4 lvdo = new LORVizDrawObject4(myParent, "DUMMY");
+				lvdo.SetIndex(0);
+				lvdo.SetID(0);
+
+
+
+				//LORVizDrawObject4 lvdo = vp.VizDrawObjects[0];
+				Members.Add(lvdo);
 			}
 		}
 
-		public int AltVizID
-		{
-			get
-			{
-				return myAltSavedIndex;
-			}
-			set
-			{
-				myAltSavedIndex = value;
-			}
-		}
-
+		public int ItemID
+		{ get { return myID; } }
+		public void SetItemID(int newItemID)
+		{ myID = newItemID; }
+		public int AltItemID
+		{ get { return myAltID; } set { myAltID = value; } }
 		public override int UniverseNumber
 		{
 			get
 			{
 				int un = lutils.UNDEFINED;
-				if (Members.Count > 0)
+				if (Members.Count > 1)
 				{
-					un = Members.Items[0].UniverseNumber;
+					un = Members.Items[1].UniverseNumber;
 				}
 				return un;
 			}
@@ -130,9 +109,9 @@ namespace LORUtils4
 			get
 			{
 				int da = lutils.UNDEFINED;
-				if (Members.Count > 0)
+				if (Members.Count > 1)
 				{
-					da = Members.Items[0].DMXAddress;
+					da = Members.Items[1].DMXAddress;
 				}
 				return da;
 			}
@@ -196,15 +175,12 @@ namespace LORUtils4
 
 		public override void Parse(string lineIn)
 		{
-			mySavedIndex = lutils.getKeyValue(lineIn, LORVisualization4.FIELDvizID);
-			myIndex = mySavedIndex;
+			myID = lutils.getKeyValue(lineIn, LORVisualization4.FIELDvizID);
+			myIndex = myID-1;
 			myName = lutils.getKeyWord(lineIn, lutils.FIELDname);
 			Locked = lutils.getKeyState(lineIn, FIELDLocked);
 			Comment = lutils.getKeyWord(lineIn, FIELDComment);
 		}
-
-		public int ItemID
-		{	get	{ return mySavedIndex; }	}
 
 
 		public void ParseAssignedObjectNumbers(StreamReader reader)
@@ -246,9 +222,9 @@ namespace LORUtils4
 		{
 			get
 			{
-				if (Members.Count > 0)
+				if (Members.Count > 1)
 				{
-					return Members[0].color;
+					return Members[1].color;
 				}
 				else
 				{

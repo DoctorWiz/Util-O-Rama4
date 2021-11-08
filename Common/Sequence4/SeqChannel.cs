@@ -22,13 +22,22 @@ namespace LORUtils4
 		public const string FIELDcolor = " color";
 
 		//! CONSTRUCTORS
-		public LORChannel4(string theName, int theSavedIndex)
+		/*public LORChannel4(string theName, int theSavedIndex)
 		{
 			myName = theName;
 			output = new LOROutput4(this);
 			mySavedIndex = theSavedIndex;
 		}
-		
+		*/
+		public LORChannel4(iLORMember4 theParent, string lineIn)
+		{
+			myParent = theParent;
+			output = new LOROutput4(this);
+			Parse(lineIn);
+		}
+
+
+		/*
 		public LORChannel4(string lineIn)
 		{
 			output = new LOROutput4(this);
@@ -47,34 +56,23 @@ namespace LORUtils4
 				}
 			}
 		}
-
+		*/
 
 		//! METHODS, PROPERTIES, ETC.
 
 		public override LORMemberType4 MemberType
-		{
-			get
-			{
-				return LORMemberType4.Channel;
-			}
-		}
-
+		{	get	{	return LORMemberType4.Channel;	}	}
 		public override int UniverseNumber
-		{ 
-			get
-			{ 
-				return output.UniverseNumber;
-			}
-		}
+		{ get	{ return output.UniverseNumber;	}	}
 		public override int DMXAddress
-		{
-			get
-			{ 
-				return output.DMXAddress;
-			}
-		}
+		{	get	{ return output.DMXAddress;	} }
 
-
+		//public int SavedIndex
+		//{ get { return myID; } }
+		//public void SetSavedIndex(int newSavedIndex)
+		//{ myID = newSavedIndex; }
+		//public int AltSavedIndex
+		//{ get { return myAltID;} set { myAltID = value; } }
 
 		public override int CompareTo(iLORMember4 other)
 		{
@@ -123,18 +121,30 @@ namespace LORUtils4
 
 		public override void Parse(string lineIn)
 		{
-			//LORSequence4 Parent = ID.Parent;
-			myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
-			mySavedIndex = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
-			color = (int)lutils.getKeyValue(lineIn, FIELDcolor);
-			myCentiseconds = lutils.getKeyValue(lineIn, lutils.FIELDcentiseconds);
-			
-			//! NOT supported by ShowTime.  Will not exist in sequence files saved from ShowTime (return blank "")
-			// Preserved only in sequence files saved in Util-O-Rama
-			// Only intended for temporary use within Util-O-Rama anyway so no big deal
-			myComment = lutils.getKeyWord(lineIn, lutils.FIELDcomment);
+			string seek = lutils.STFLD + lutils.TABLEchannel + lutils.FIELDname;
+			int pos = lutils.ContainsKey(lineIn, seek);
+			if (pos > 0)
+			{
+				myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
+				myID = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
+				color = (int)lutils.getKeyValue(lineIn, FIELDcolor);
+				myCentiseconds = lutils.getKeyValue(lineIn, lutils.FIELDcentiseconds);
 
-			output.Parse(lineIn);
+				//! NOT supported by ShowTime.  Will not exist in sequence files saved from ShowTime (return blank "")
+				// Preserved only in sequence files saved in Util-O-Rama
+				// Only intended for temporary use within Util-O-Rama anyway so no big deal
+				myComment = lutils.getKeyWord(lineIn, lutils.FIELDcomment);
+
+				output.Parse(lineIn);
+			}
+			else
+			{
+				if (lineIn.Length > 0)
+				{
+					myName = lineIn;
+				}
+			}
+			//LORSequence4 Parent = ID.Parent;
 			//if (myParent != null) myParent.MakeDirty(true);
 		}
 
@@ -195,7 +205,7 @@ namespace LORUtils4
 
 			ret.Append(lutils.FIELDsavedIndex);
 			ret.Append(lutils.FIELDEQ);
-			ret.Append(myAltSavedIndex.ToString());
+			ret.Append(myAltID.ToString());
 			ret.Append(lutils.ENDQT);
 
 
@@ -285,7 +295,7 @@ namespace LORUtils4
 		{
 			// See Also: Duplicate()
 			//int nextSI = ID.Parent.Members.highestSavedIndex + 1;
-			LORChannel4 ret = new LORChannel4(myName, lutils.UNDEFINED);
+			LORChannel4 ret = new LORChannel4(this, myName);
 			ret.color = color;
 			ret.output = output;
 			ret.rgbChild = rgbChild;

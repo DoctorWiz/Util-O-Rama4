@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+//using System.Windows.Media;
 using System.Drawing;
 using System.IO;
 using System.Media;
@@ -940,6 +941,12 @@ namespace xUtils
 			ret.Append(ENDQT);
 
 			return ret.ToString();
+		}
+
+		public static Color ColorHTMLtoNet(string htmlCode)
+		{
+			Color color = System.Drawing.ColorTranslator.FromHtml(htmlCode);
+			return color;
 		}
 
 		public static string StartTable(string tableName, int level)

@@ -488,7 +488,7 @@ namespace UtilORama4
 				}
 				if (newGrid == null)
 				{
-					newGrid = seqNew.ParseTimingGrid(sourceGrid.LineOut());
+					newGrid = seqNew.CreateNewTimingGrid(sourceGrid.LineOut());
 				}
 				newGrid.CopyTimings(sourceGrid.timings, false);
 			}
@@ -653,7 +653,7 @@ namespace UtilORama4
 				writer.WriteLine(lineOut);
 				for (int c = 0; c < seqSource.Channels.Count; c++)
 				{
-					int q = seqSource.Channels[c].RuleID & RULE_DIM;
+					int q = seqSource.Channels[c].ZCount & RULE_DIM;
 					if (q == RULE_DIM)
 					{
 						lineOut = seqSource.Channels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.Channels[c].Name;
@@ -665,7 +665,7 @@ namespace UtilORama4
 				writer.WriteLine(lineOut);
 				for (int c = 0; c < seqSource.RGBchannels.Count; c++)
 				{
-					int q = seqSource.RGBchannels[c].RuleID & RULE_DIM;
+					int q = seqSource.RGBchannels[c].ZCount & RULE_DIM;
 					if (q == RULE_DIM)
 					{
 						lineOut = seqSource.RGBchannels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.RGBchannels[c].Name;
@@ -681,7 +681,7 @@ namespace UtilORama4
 				writer.WriteLine(lineOut);
 				for (int c = 0; c < seqSource.Channels.Count; c++)
 				{
-					int q = seqSource.Channels[c].RuleID & RULE_TRIM;
+					int q = seqSource.Channels[c].ZCount & RULE_TRIM;
 					if (q == RULE_TRIM)
 					{
 						lineOut = seqSource.Channels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.Channels[c].Name;
@@ -693,7 +693,7 @@ namespace UtilORama4
 				writer.WriteLine(lineOut);
 				for (int c = 0; c < seqSource.RGBchannels.Count; c++)
 				{
-					int q = seqSource.RGBchannels[c].RuleID & RULE_TRIM;
+					int q = seqSource.RGBchannels[c].ZCount & RULE_TRIM;
 					if (q == RULE_TRIM)
 					{
 						lineOut = seqSource.RGBchannels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.RGBchannels[c].Name;
@@ -709,7 +709,7 @@ namespace UtilORama4
 				writer.WriteLine(lineOut);
 				for (int c = 0; c < seqSource.Channels.Count; c++)
 				{
-					int q = seqSource.Channels[c].RuleID & RULE_ONOFF;
+					int q = seqSource.Channels[c].ZCount & RULE_ONOFF;
 					if (q == RULE_ONOFF)
 					{
 						lineOut = seqSource.Channels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.Channels[c].Name;
@@ -721,7 +721,7 @@ namespace UtilORama4
 				writer.WriteLine(lineOut);
 				for (int c = 0; c < seqSource.RGBchannels.Count; c++)
 				{
-					int q = seqSource.RGBchannels[c].RuleID & RULE_ONOFF;
+					int q = seqSource.RGBchannels[c].ZCount & RULE_ONOFF;
 					if (q == RULE_ONOFF)
 					{
 						lineOut = seqSource.RGBchannels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.RGBchannels[c].Name;
@@ -737,7 +737,7 @@ namespace UtilORama4
 				writer.WriteLine(lineOut);
 				for (int c = 0; c < seqSource.Channels.Count; c++)
 				{
-					int q = seqSource.Channels[c].RuleID & RULE_MINTIME;
+					int q = seqSource.Channels[c].ZCount & RULE_MINTIME;
 					if (q == RULE_MINTIME)
 					{
 						lineOut = seqSource.Channels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.Channels[c].Name;
@@ -749,7 +749,7 @@ namespace UtilORama4
 				writer.WriteLine(lineOut);
 				for (int c = 0; c < seqSource.RGBchannels.Count; c++)
 				{
-					int q = seqSource.RGBchannels[c].RuleID & RULE_ONOFF;
+					int q = seqSource.RGBchannels[c].ZCount & RULE_ONOFF;
 					if (q == RULE_ONOFF)
 					{
 						lineOut = seqSource.RGBchannels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.RGBchannels[c].Name;
@@ -767,7 +767,7 @@ namespace UtilORama4
 				writer.WriteLine(lineOut);
 				for (int c = 0; c < seqSource.Channels.Count; c++)
 				{
-					if (seqSource.Channels[c].RuleID == RULE_NOCHANGE)
+					if (seqSource.Channels[c].ZCount == RULE_NOCHANGE)
 					{
 						lineOut = seqSource.Channels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.Channels[c].Name;
 						writer.WriteLine(lineOut);
@@ -778,7 +778,7 @@ namespace UtilORama4
 				writer.WriteLine(lineOut);
 				for (int c = 0; c < seqSource.RGBchannels.Count; c++)
 				{
-					if (seqSource.RGBchannels[c].RuleID == RULE_NOCHANGE)
+					if (seqSource.RGBchannels[c].ZCount == RULE_NOCHANGE)
 					{
 						lineOut = seqSource.RGBchannels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.RGBchannels[c].Name;
 						writer.WriteLine(lineOut);
@@ -950,7 +950,7 @@ namespace UtilORama4
 											rgbchan = FindRGBChannel(si, name);
 											if (rgbchan != null)
 											{
-												rgbchan.RuleID = rgbchan.RuleID | rule;
+												rgbchan.ZCount = rgbchan.ZCount | rule;
 											}
 										}
 										else
@@ -958,7 +958,7 @@ namespace UtilORama4
 											chan = FindChannel(si, name);
 											if (chan != null)
 											{
-												chan.RuleID = chan.RuleID | rule;
+												chan.ZCount = chan.ZCount | rule;
 											}
 										}
 									}
@@ -2304,7 +2304,7 @@ namespace UtilORama4
 				}
 				else
 				{
-					int rules = member.RuleID;
+					int rules = member.ZCount;
 					node.TextColor = ruleColors[rules];
 				}
 				//If it has clones
@@ -2350,7 +2350,7 @@ namespace UtilORama4
 			if (node.Tag != null)
 			{
 				iLORMember4 member = (iLORMember4)node.Tag;
-				int nodeRule = member.RuleID;
+				int nodeRule = member.ZCount;
 				if ((member.MemberType == LORMemberType4.Channel) ||
 					(member.MemberType == LORMemberType4.RGBChannel))
 				{
@@ -2443,10 +2443,10 @@ namespace UtilORama4
 		private int SetMemberRules(iLORMember4 member, int newRule, bool isChecked)
 		{
 			// Return old rules
-			int ret = member.RuleID;
+			int ret = member.ZCount;
 			// What is the CURRENT rule and MinTime of this member (before change)
-			int rul = member.RuleID & 3;
-			int mtime = member.RuleID & RULE_MINTIME;
+			int rul = member.ZCount & 3;
+			int mtime = member.ZCount & RULE_MINTIME;
 			// If its one of the 3 exclusive rules
 			if ((newRule == RULE_DIM) ||
 				(newRule == RULE_TRIM) ||
@@ -2455,13 +2455,13 @@ namespace UtilORama4
 				if (isChecked)
 				{
 					// Set the new rule, preserving MinTime if set
-					member.RuleID = newRule | mtime;
+					member.ZCount = newRule | mtime;
 				}
 				else
 				{
 					// Clear the rule but preserve MinTime if set
-					member.RuleID = RULE_NOCHANGE | mtime;
-					// (RULE_NOCHANGE = 0 so just member.RuleID = mtime would have worked,
+					member.ZCount = RULE_NOCHANGE | mtime;
+					// (RULE_NOCHANGE = 0 so just member.ZCount = mtime would have worked,
 					// but this way its more obvious whats going on)
 				}
 				// If its the MinTime rule (which is not exclusive)
@@ -2470,12 +2470,12 @@ namespace UtilORama4
 					if (isChecked)
 					{
 						// Add the MinTime bit, preserving any previous other rules
-						member.RuleID = rul | RULE_MINTIME;
+						member.ZCount = rul | RULE_MINTIME;
 					}
 					else
 					{
 						// Erase the MinTime bit by setting it to just the other rule (if any)
-						member.RuleID = rul;
+						member.ZCount = rul;
 					}
 				}
 				if (newRule == RULE_NOCHANGE)
@@ -2483,13 +2483,13 @@ namespace UtilORama4
 					if (isChecked)
 					{
 						// Clear any other rules including exclusive Dim, Trim, and OnOff, as well as Mintime
-						member.RuleID = RULE_NOCHANGE;
+						member.ZCount = RULE_NOCHANGE;
 					}
 					else
 					{
 						// You can't turn off nothing, so what do we do here?
 						// Assume clear
-						member.RuleID = RULE_NOCHANGE;
+						member.ZCount = RULE_NOCHANGE;
 					}
 				}
 
@@ -2497,9 +2497,9 @@ namespace UtilORama4
 				{
 					// If an RGB channel, copy it to the 3 subchannels
 					LORRGBChannel4 rgbCh = (LORRGBChannel4)member;
-					rgbCh.redChannel.RuleID = rgbCh.RuleID;
-					rgbCh.grnChannel.RuleID = rgbCh.RuleID;
-					rgbCh.bluChannel.RuleID = rgbCh.RuleID;
+					rgbCh.redChannel.ZCount = rgbCh.ZCount;
+					rgbCh.grnChannel.ZCount = rgbCh.ZCount;
+					rgbCh.bluChannel.ZCount = rgbCh.ZCount;
 				}
 				// If a group or a track, we need to recurse
 				if (member.MemberType == LORMemberType4.ChannelGroup)
@@ -2550,7 +2550,7 @@ namespace UtilORama4
 						(theRule == RULE_ONOFF))
 					{
 						// mask out MinTime
-						int mr = member.RuleID & 3;
+						int mr = member.ZCount & 3;
 						// Does rule match
 						if (mr==theRule)
 						{
@@ -2575,7 +2575,7 @@ namespace UtilORama4
 						if (theRule == RULE_MINTIME)
 						{
 							// mask out other rules
-							int mr = member.RuleID & 4;
+							int mr = member.ZCount & 4;
 							// does rule match?
 							if (mr == theRule)
 							{
@@ -2600,7 +2600,7 @@ namespace UtilORama4
 							if (theRule == RULE_NOCHANGE)
 							{
 								// NO masking
-								int mr = member.RuleID;
+								int mr = member.ZCount;
 								// Does it match the rule number (NoChange) (reminder: its zero by the way)
 								if (mr == theRule)
 								{

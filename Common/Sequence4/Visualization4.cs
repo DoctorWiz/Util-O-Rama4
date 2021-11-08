@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 using FileHelper;
 
 namespace LORUtils4
@@ -69,19 +70,13 @@ namespace LORUtils4
 		// All Members contains ItemGroups, DrawObjects, and VizChannels
 		public LORMembership4 AllMembers = null;
 		//public List<Prop> Props = new List<Prop>();
+		private int highestSavedIndex = lutils.UNDEFINED;
 
 
-		public LORVisualization4()
-		{
-			// I'm my own grandpa
-			base.SetParent(this);
-			AllMembers = new LORMembership4(this);
-			Members = new LORMembership4(this);
-			MakeDummies();
-			myName = "$_UNNAMED_$";
-		}
+		private StringBuilder reportBuilder = new StringBuilder();
 
-	public LORVisualization4(string fileName)
+
+	public LORVisualization4(iLORMember4 NullParentIgnoreThis, string fileName)
 		{
 			// I'm my own grandpa
 			base.SetParent(this);
@@ -99,29 +94,32 @@ namespace LORUtils4
 			// So add a dummy object at the [0] start of the lists
 
 			// Create a dummy channel and put it at the start of the channel list
-			LORVizChannel4 lvc = new LORVizChannel4("\0\0DUMMY VIZCHANNEL AT INDEX [0] - DO NOT USE!");
+			LORVizChannel4 lvc = new LORVizChannel4(this, "### DUMMY VIZCHANNEL AT INDEX [0] - DO NOT USE!");
 			lvc.SetIndex(0);
-			lvc.SetSavedIndex(0);
-			lvc.SetParent(myParent);
-			VizChannels.Add(lvc);
+			lvc.SetID(0);
+			lvc.SetParent(this);
 			// Create a dummy DrawObject and put it at the start of the list
-			LORVizDrawObject4 lvdo = new LORVizDrawObject4("\0\0DUMMY VIZDRAWOBJECT AT INDEX [0] - DO NOT USE!");
+			LORVizDrawObject4 lvdo = new LORVizDrawObject4(this, "### DUMMY VIZDRAWOBJECT AT INDEX [0] - DO NOT USE!");
 			lvdo.SetIndex(0);
-			lvdo.SetSavedIndex(0);
-			lvdo.SetParent(myParent);
+			lvdo.SetID(0);
+			lvdo.SetParent(this);
 			// Assign the dummy channel to the dummy drawobject
 			lvdo.redChannel = lvc;
-			VizDrawObjects.Add(lvdo);
 			// Create a dummy itemgroup and put it at the start of the list
-			LORVizItemGroup4 lvig = new LORVizItemGroup4("\0\0DUMMY VIZITEMGROUP AT INDEX [0] - DO NOT USE!");
+			LORVizItemGroup4 lvig = new LORVizItemGroup4(this, "### DUMMY VIZITEMGROUP AT INDEX [0] - DO NOT USE!");
 			lvig.SetIndex(0);
-			lvig.SetSavedIndex(0);
-			lvig.SetParent(myParent);
+			lvig.SetID(0);
 			// Add the dummy drawobject to the dummy itemgroup membership
-			lvig.Members.Add(lvdo);
-			VizItemGroups.Add(lvig);
+			//lvig.Members.Add(lvdo);
 			// Add the dummy itemgroup to the Visualizations members at index [0]
-			Members.Add(lvig);
+			//Members.Add(lvig);
+
+			LORMemberBase4 lmb = new LORMemberBase4(this, "### DUMMY LORMEMBER AT INDEX [0] - DO NOT USE!");
+			lmb.SetIndex(0);
+			lmb.SetID(0);
+			AllMembers.Add(lmb);
+
+
 
 		}
 
@@ -223,9 +221,7 @@ namespace LORUtils4
 										if (li > 0)
 										{
 										//TODO: Save it!	
-										lastDrawObject = ParseDrawObject(lineIn);
-											lastDrawObject.SetParent(this);
-											AllMembers.Add(lastDrawObject);
+										lastDrawObject = CreateNewDrawObject(lineIn);
 										}
 										else // Not a LORVizDrawObject4
 										{
@@ -233,13 +229,13 @@ namespace LORUtils4
 											li = lutils.ContainsKey(lineIn, STARTvizChannel);
 											if (li > 0)
 											{
-												lastVizChannel = ParseVizChannel(lineIn);
-												lastVizChannel.SetParent(this);
+												lastVizChannel = CreateNewVizChannel(lineIn);
+												//lastVizChannel.SetParent(this);
 												lastVizChannel.DrawObject = lastDrawObject;
-												AllMembers.Add(lastVizChannel);
+												//AllMembers.Add(lastVizChannel);
 												if (lastDrawObject.redChannel == null)
 												{
-													if (lastVizChannel.SavedIndex == 1)
+													if (lastVizChannel.ItemID == 1)
 													{
 														lastDrawObject.subChannel = lastVizChannel;
 													}
@@ -253,7 +249,7 @@ namespace LORUtils4
 												{
 													if (lastDrawObject.grnChannel == null)
 													{
-														if (lastVizChannel.SavedIndex == 2)
+														if (lastVizChannel.ItemID == 2)
 														{
 															lastDrawObject.isRGB = true;
 															lastDrawObject.redChannel.rgbChild = LORRGBChild4.Red;
@@ -270,7 +266,7 @@ namespace LORUtils4
 													{
 														if (lastDrawObject.bluChannel == null)
 														{
-															if (lastVizChannel.SavedIndex == 3)
+															if (lastVizChannel.ItemID == 3)
 															{
 																lastDrawObject.bluChannel = lastVizChannel;
 																lastDrawObject.bluChannel.rgbChild = LORRGBChild4.Blue;
@@ -319,15 +315,13 @@ namespace LORUtils4
 															li = lutils.ContainsKey(lineIn, STARTitem);
 															if (li > 0)
 															{
-																LORVizItemGroup4 newGrp = new LORVizItemGroup4(this, lineIn);
+																LORVizItemGroup4 newGrp = CreateNewItemGroup(lineIn);
 																newGrp.ParseAssignedObjectNumbers(reader);
 																while (VizItemGroups.Count <= newGrp.Index)
 																{
 																	VizItemGroups.Add(null);
 																}
 																VizItemGroups[newGrp.Index] = newGrp;
-																Members.Add(newGrp);
-																AllMembers.Add(newGrp);
 															}
 															else
 															{
@@ -412,6 +406,16 @@ namespace LORUtils4
 			for (int ig = 1; ig < VizItemGroups.Count; ig++)
 			{
 				LORVizItemGroup4 group = VizItemGroups[ig];
+				group.Members.Clear();
+
+				LORVizDrawObject4 lvdo = new LORVizDrawObject4(this, "DUMMY");
+				lvdo.SetID(0);
+				lvdo.SetIndex(0);
+				//group.Members[0] = lvdo;
+				VizDrawObjects[0] = lvdo;
+
+
+				group.Members.Add(VizDrawObjects[0]);
 				for (int n=1; n<group.AssignedObjectsNumbers.Length; n++)
 				{
 					int doi = group.AssignedObjectsNumbers[n];
@@ -421,8 +425,12 @@ namespace LORUtils4
 						LORVizDrawObject4 ldo = VizDrawObjects[doi];
 						if (ldo != null)
 						{
-							Members.Add(ldo);
-							VizDrawObjects.Add(ldo);
+							while (group.Members.Count <= n)
+							{
+								group.Members.Add(ldo);
+							}
+							group.Members[n] = ldo;
+							//VizDrawObjects.Add(ldo);
 						}
 					}
 					else
@@ -446,6 +454,12 @@ namespace LORUtils4
 				// Zero these out from any previous run
 				lineCount = 0;
 				VizChannels = new List<LORVizChannel4>();
+				VizDrawObjects = new List<LORVizDrawObject4>();
+				VizItemGroups = new List<LORVizItemGroup4>();
+				Members = new LORMembership4(this);
+				AllMembers = new LORMembership4(this);
+				MakeDummies();
+
 				//Props = new List<Prop>();
 				this.info = new LORSeqInfo4(null);
 				
@@ -454,29 +468,7 @@ namespace LORUtils4
 			} // end Are You Sure
 		} // end Clear Sequence
 
-		public LORVizChannel4 ParseVizChannel(string lineIn)
-		{
-			LORVizChannel4 vch = new LORVizChannel4("");
-			vch.SetParent(this);
-			vch.Parse(lineIn);
-			VizChannels.Add(vch);
-			vch.SetIndex(VizChannels.Count-1);
-			AllMembers.Add(vch);
-			return vch;
-		}
-
-		public LORVizDrawObject4 ParseDrawObject(string lineIn)
-		{
-			LORVizDrawObject4 drob = new LORVizDrawObject4("");
-			drob.SetParent(this);
-			drob.Parse(lineIn);
-			while (VizDrawObjects.Count <= drob.Index )
-			{
-				VizDrawObjects.Add(null);
-			}
-			VizDrawObjects[drob.Index] = drob;
-			return drob;
-		}
+				
 
 		public override iLORMember4 Clone()
 		{
@@ -501,58 +493,53 @@ namespace LORUtils4
 		public override void Parse(string lineIn)
 		{ }
 
-		public LORVizChannel4 CreateVizChannel(string theName)
+		public LORVizChannel4 CreateNewVizChannel(string lineIn)
 		{
-			// Does NOT check to see if a channel with this name already exists
-			// Therefore, allows for duplicate channel names (But they will have different SavedIndexes)
-			LORVizChannel4 chan;
-			chan = new LORVizChannel4(theName);
-			int newIID = AssignNextChannelID(chan);
-			chan.SetParent(this);
-			chan.Centiseconds = myCentiseconds;
-			chan.SetIndex(VizChannels.Count);
-			VizChannels.Add(chan);
-			AllMembers.Add(chan);
-			//myCentiseconds = Math.Max(myCentiseconds, chan.Centiseconds);
-			return chan;
+			LORVizChannel4 vch = new LORVizChannel4(this, lineIn);
+			VizChannels.Add(vch);
+			vch.SetIndex(VizChannels.Count - 1);
+			highestSavedIndex++;
+			vch.SetSavedIndex(highestSavedIndex);
+			//AllMembers.Add(vch);
+			return vch;
 		}
 
-		public LORVizDrawObject4 CreateDrawObject(string theName)
+		public LORVizDrawObject4 CreateNewDrawObject(string lineIn)
 		{
-			// Does NOT check to see if a channel with this name already exists
-			// Therefore, allows for duplicate channel names (But they will have different SavedIndexes)
-			LORVizDrawObject4 drob;
-			drob = new LORVizDrawObject4(theName);
-			int newIID = AssignNextObjectID(drob);
-			drob.SetParent(this);
-			drob.Centiseconds = myCentiseconds;
-			drob.SetIndex(VizDrawObjects.Count);
-			VizDrawObjects.Add(drob);
-			AllMembers.Add(drob);
+			LORVizDrawObject4 drob = new LORVizDrawObject4(this, lineIn);
+			while (VizDrawObjects.Count <= drob.DrawObjectID)
+			{
+				VizDrawObjects.Add(null);
+			}
+			VizDrawObjects[drob.DrawObjectID] = drob;
+			drob.SetIndex(drob.DrawObjectID);
+			//AllMembers.Add(drob);
+			drob.SetIndex(drob.DrawObjectID);
 			//myCentiseconds = Math.Max(myCentiseconds, chan.Centiseconds);
 			return drob;
 		}
 
-		public LORVizItemGroup4 CreateItemGroup(string theName)
+		public LORVizItemGroup4 CreateNewItemGroup(string lineIn)
 		{
-			// Does NOT check to see if a group with this name already exists
-			// Therefore, allows for duplicate group names (But they will have different SavedIndexes)
-			LORVizItemGroup4 grp;
-			grp = new LORVizItemGroup4(this, theName);
-			int newIID = AssignNextItemID(grp);
-			grp.SetParent(this);
-			//chg.Members.SetParent(this);
-			//chg.Members.Owner = chg;
-			grp.Centiseconds = myCentiseconds;
-			grp.SetIndex(VizItemGroups.Count);
-			VizItemGroups.Add(grp);
-			AllMembers.Add(grp);
-			//myCentiseconds = Math.Max(myCentiseconds, chg.Centiseconds);
-
-			return grp;
+			LORVizItemGroup4 group = new LORVizItemGroup4(this, lineIn);
+			group.SetIndex(group.ItemID);
+			while (VizItemGroups.Count <= group.ItemID)
+			{
+				VizItemGroups.Add(null);
+			}
+			VizItemGroups[group.ItemID] = group;
+			while (Members.Count <= group.ItemID)
+			{
+				LORMemberBase4 mem = new LORMemberBase4(this,"\tDUMMY");
+				mem.SetID(0);
+				mem.SetIndex(0);
+				Members.Add(mem);
+			}
+			Members[group.ItemID] = group;
+			return group;
 		}
 
-		public LORVizChannel4 FindChannel(string channelName, bool createIfNotFound = false)
+		public LORVizChannel4 FindVizChannel(string channelName, bool createIfNotFound = false)
 		{
 			LORVizChannel4 ret = null;
 			iLORMember4 member = AllMembers.FindByName(channelName, LORMemberType4.VizChannel, createIfNotFound);
@@ -585,52 +572,6 @@ namespace LORUtils4
 			return ret;
 		}
 
-		private int AssignNextChannelID(LORVizChannel4 thePart)
-		{
-			if (thePart.SavedIndex < 0)
-			{
-				int newIID = AllMembers.HighestSavedIndex + 1;
-				thePart.SetSavedIndex(newIID);
-				AllMembers.Add(thePart);
-			}
-			return thePart.SavedIndex;
-		}
-
-		private int AssignNextItemID(LORVizItemGroup4 thePart)
-		{
-			if (thePart.SavedIndex < 0)
-			{
-				int newIID = AllMembers.HighestItemID + 1;
-				thePart.SetSavedIndex(newIID);
-				AllMembers.Add(thePart);
-			}
-			return thePart.SavedIndex;
-		}
-
-		private int AssignNextObjectID(LORVizDrawObject4 thePart)
-		{
-			if (thePart.SavedIndex < 0)
-			{
-				int newIID = AllMembers.HighestObjectID + 1;
-				thePart.SetSavedIndex(newIID);
-				AllMembers.Add(thePart);
-			}
-			return thePart.SavedIndex;
-		}
-
-
-		private int AssignNextAltChannelID(iLORMember4 thePart)
-		{
-			if (thePart.AltSavedIndex < 0)
-			{
-				int newASI = AllMembers.AltHighestSavedIndex + 1;
-				thePart.AltSavedIndex = newASI;
-				// May cause out of bounds exception, might need to add instead
-				AllMembers.ByAltSavedIndex[thePart.AltSavedIndex] = thePart;
-				AllMembers.AltHighestSavedIndex = newASI;
-			}
-			return thePart.AltSavedIndex;
-		}
 
 		public override int color
 		{
@@ -643,6 +584,398 @@ namespace LORUtils4
 			get { return lutils.Color_LORtoNet(this.color); }
 			set { System.Drawing.Color ignore = value; }
 		}
+
+		public string Tegrity()
+		{
+			reportBuilder = new StringBuilder(); // Clear, Reset
+			int te = 0; // Total Errors
+			int ie = 0; // Item Errors
+			string l = "";
+
+			l = "-Viz FileName is '" + myName + "'.";
+			r(l);
+			//! CHANNELS
+			l = "-Viz has " + (VizChannels.Count - 1).ToString() + " Channels.";
+			r(l);
+			if (VizChannels[0] == null)
+			{
+				l = "!Channel[0] is null.";
+				te++;
+			}
+			else
+			{
+				int p = VizChannels[0].Name.IndexOf("DUMMY");
+				if (p > 0)
+				{
+					l = "-Channel[0] is the dummy channel.";
+				}
+				else
+				{
+					l = "!Channel[0] is " + VizChannels[0].Name;
+					te++;
+				}
+			}
+			r(l);
+			for (int c = 1; c < VizChannels.Count; c++)
+			{
+				ie = 0;
+				LORVizChannel4 ch = VizChannels[c];
+				if (ch == null)
+				{
+					l = "!Channel [" + c.ToString() + "] is null.";
+					r(l);
+					ie++;
+				}
+				else
+				{
+					string n = "Channel[" + c.ToString() + "] " + ch.Name + " - ";
+					if (ch.Name.Length < 1)
+					{
+						l = "!" + n + "Has no name.";
+						r(l);
+						ie++;
+					}
+					//if (ch.ItemID != c)
+					//{
+					//	l = "!" + n + "ItemID is " + ch.ItemID.ToString();
+					//	r(l);
+					//	ie++;
+					//}
+					if (ch.Parent == null)
+					{
+						l = "!" + n + "Has no parent.";
+						r(l);
+						ie++;
+					}
+					if (ch.Owner == null)
+					{
+						l = "!" + n + "Has no owner.";
+						r(l);
+						ie++;
+					}
+					if ((ch.UniverseNumber < 1) || (ch.DMXAddress < 1))
+					{
+						l = "!" + n + "Has invalid address of " + ch.UniverseNumber.ToString() + "/" + ch.DMXAddress.ToString();
+						r(l);
+						ie++;
+					}
+					if (ch.color < 0)
+					{
+						l = "!" + n + "Has no color.";
+						r(l);
+						ie++;
+					}
+				} // End is null
+				te += ie;
+			} // End loop thru channels
+
+			//! DRAW OBJECTS
+			l = "-Viz has " + (VizDrawObjects.Count - 1).ToString() + " DrawObjects.";
+			r(l);
+			if (VizDrawObjects[0] == null)
+			{
+				l = "!DrawObject[0] is null.";
+				te++;
+			}
+			else
+			{
+				int p = VizDrawObjects[0].Name.IndexOf("DUMMY");
+				if (p > 0)
+				{
+					l = "-DrawObject[0] is the dummy object.";
+				}
+				else
+				{
+					l = "!DrawObject[0] is NOT the dummy object, it is '" + VizDrawObjects[0].Name + "'.";
+					te++;
+				}
+			}
+			r(l);
+			for (int c = 1; c < VizDrawObjects.Count; c++)
+			{
+				ie = 0;
+				LORVizDrawObject4 ob = VizDrawObjects[c];
+				if (ob == null)
+				{
+					l = "!DrawObject[" + c.ToString() + "] is null.";
+					r(l);
+					ie++;
+				}
+				else
+				{
+					string n = "DrawObject[" + c.ToString() + "] " + ob.Name + " - ";
+					if (ob.Name.Length < 1)
+					{
+						l = "!" + n + "Has no name.";
+						r(l);
+						ie++;
+					}
+					if (ob.DrawObjectID != c)
+					{
+						l = "!" + n + "DrawObjectID is " + ob.DrawObjectID.ToString() + " (Should be " + c.ToString() + ")";;
+						r(l);
+						ie++;
+					}
+					if (ob.Parent == null)
+					{
+						l = "!" + n + "Has no parent.";
+						r(l);
+						ie++;
+					}
+					if ((ob.UniverseNumber < 1) || (ob.DMXAddress < 1))
+					{
+						l = "!" + n + "Has invalid address of " + ob.UniverseNumber.ToString() + "/" + ob.DMXAddress.ToString();
+						r(l);
+						ie++;
+					}
+					if (ob.isRGB)
+					{
+						if (ob.redChannel == null)
+						{
+							l = "!" + n + "Is RGB and has no Red Channel";
+							r(l);
+							ie++;
+						}
+						else
+						{
+							if (ob.redChannel.Name.Length < 2)
+							{
+								l = "!" + n + "Is RGB and Red Channel has no name.";
+								r(l);
+								ie++;
+							}
+							if (ob.color < 0)
+							{
+								l = "!" + n + "is RGB but Red Channel isn't Red.";
+								r(l);
+								ie++;
+							}
+							if (ob.redChannel.output == null)
+							{
+								l = "!" + n + "Is RGB and Red Channel has no Output.";
+								r(l);
+								ie++;
+							}
+							else
+							{
+								if (ob.redChannel.output.DMXAddress < 1)
+								{
+									l = "!" + n + "Is RGB and Red Channel has DMX Address.";
+									r(l);
+									ie++;
+								}
+							}
+						}
+						if (ob.grnChannel == null)
+						{
+							l = "!" + n + "... and has no Green Channel";
+							r(l);
+							ie++;
+						}
+						if (ob.bluChannel == null)
+						{
+							l = "!" + n + "... and has no Blue Channel";
+							r(l);
+							ie++;
+						}
+					}
+					else
+					{
+						if (ob.subChannel == null)
+						{
+							l = "!" + n + "Is not RGB and has no Sub-Channel";
+							r(l);
+							ie++;
+						}
+						else
+						{
+							if (ob.redChannel.Name.Length < 2)
+							{
+								l = "!" + n + "Is not RGB and Sub-Channel has no name.";
+								r(l);
+								ie++;
+							}
+							if (ob.color < 0)
+							{
+								l = "!" + n + "Sub-Channel has no color.";
+								r(l);
+								ie++;
+							}
+							if (ob.redChannel.output == null)
+							{
+								l = "!" + n + "Is not RGB and Sub-Channel has no Output.";
+								r(l);
+								ie++;
+							}
+							else
+							{
+								if (ob.redChannel.output.DMXAddress < 1)
+								{
+									l = "!" + n + "Is not RGB and Sub-Channel has DMX Address.";
+									r(l);
+									ie++;
+								}
+							}
+						}
+					}
+
+				} // End is null
+				te += ie;
+			} // End loop thru DrawObjects
+
+			//! ITEM GROUPS
+			l = "-It has " + (VizItemGroups.Count - 1).ToString() + " Item Groups.";
+			r(l);
+			if (VizItemGroups[0] == null)
+			{
+				l = "!ItemGroup[0] is null.";
+				te++;
+			}
+			else
+			{
+				int p = VizItemGroups[0].Name.IndexOf("DUMMY");
+				if (p > 0)
+				{
+					l = "-ItemGroup[0] is the dummy group.";
+				}
+				else
+				{
+					l = "!ItemGroup[0] is NOT the dummy group, it is '" + VizItemGroups[0].Name + "'.";
+					te++;
+				}
+			}
+			r(l);
+			for (int c = 1; c < VizItemGroups.Count; c++)
+			{
+				ie = 0;
+				LORVizItemGroup4 ig = VizItemGroups[c];
+				if (ig == null)
+				{
+					l = "!ItemGroup[" + c.ToString() + "] is null.";
+					r(l);
+					ie++;
+				}
+				else
+				{
+					string n = "ItemGroup[" + c.ToString() + "] " + ig.Name + " - ";
+					if (ig.Name.Length < 1)
+					{
+						l = "!" + n + "Has no name.";
+						r(l);
+						ie++;
+					}
+					if (ig.ItemID != c)
+					{
+						l = "!" + n + "ItemID is " + ig.ItemID.ToString() + " (Should be " + c.ToString() + ")";
+
+						r(l);
+						ie++;
+					}
+					if (ig.Parent == null)
+					{
+						l = "!" + n + "Has no parent.";
+						r(l);
+						ie++;
+					}
+					if ((ig.UniverseNumber < 1) || (ig.DMXAddress < 1))
+					{
+						l = "!" + n + "Has invalid address of " + ig.UniverseNumber.ToString() + "/" + ig.DMXAddress.ToString();
+						r(l);
+						ie++;
+					}
+					if (ig.color < 0)
+					{
+						l = "!" + n + "Has no color.";
+						r(l);
+						ie++;
+					}
+
+					if (ig.AssignedObjectsNumbers.Length < 2)
+					{
+						l = "!" + n + "Has no AssignedObjectNumbers.";
+						r(l);
+						ie++;
+					}
+					if (ig.Members.Count < 2)
+					{
+						l = "!" + n + "Has no Assigned DrawObject Members.";
+						r(l);
+						ie++;
+					}
+					if (ig.AssignedObjectsNumbers.Length != ig.Members.Count)
+					{
+						l = "!" + n + "AssignedObjectNumbers count (" + ig.AssignedObjectsNumbers.Length.ToString();
+						l+= ") does not match Members Count {" +ig.Members.Count.ToString() + ").";
+						r(l);
+						ie++;
+						l = " * ";
+						for (int b=0; b< ig.Members.Count; b++)
+						{
+							l += ig.Members[b].Name + ", ";
+						}
+						r(l);
+					}
+					if (ig.AssignedObjectsNumbers.Length > 0)
+					{
+						if (ig.AssignedObjectsNumbers[0] != 0)
+						{
+							l = "!" + n + "AssignedObjectNumbers[0] != the Dummy Channel.";
+							r(l);
+							ie++;
+						}
+						for (int a = 1; a < ig.AssignedObjectsNumbers.Length; a++)
+						{
+							if (ig.Members[a] == null)
+							{
+								l = "!" + n + "Assigned Object Members[" + a.ToString() + "] is null.";
+								r(l);
+								ie++;
+							}
+							else
+							{
+								iLORMember4 mbr = ig.Members[a];
+								if (mbr.MemberType != LORMemberType4.VizDrawObject)
+								{
+									l = "!" + n + "Assigned Object Members[" + a.ToString() + "] '";
+									l += mbr.Name + "' is not a DrawObject.";
+									r(l);
+									ie++;
+								}
+								else
+								{
+									LORVizDrawObject4 ob = (LORVizDrawObject4)mbr;
+									if (ig.AssignedObjectsNumbers[a] != ob.DrawObjectID)
+									{
+										l = "!" + n + "Assigned Object Members[" + a.ToString() + "] '";
+										l += mbr.Name + "' DrawObjectID (" + ob.DrawObjectID.ToString();
+										l += ") does not match AssignedObjectNumber " + ig.AssignedObjectsNumbers[a];
+										r(l);
+										ie++;
+									} // End ID mismatch
+								} // Member not DrawObject
+							} // Member is null
+						} // Loop thru assignedobjectnumbers
+					} // has assignedobjectnumbers
+				} // End is null
+				te += ie;
+			} // End loop thru Groups
+			l = "- Total Errors =" + te.ToString();
+			r(l);
+
+			return reportBuilder.ToString();
+		}
+
+		private void r(string line)
+		{
+			reportBuilder.Append(line);
+			reportBuilder.Append("\r\n");
+		}
+
+
+
+
+
+
 
 
 

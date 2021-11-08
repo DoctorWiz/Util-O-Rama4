@@ -33,18 +33,21 @@ namespace LORUtils4
 		public static readonly string FIELDsubParam = " Sub_Parm";
 		public static readonly string FIELDmultiColor = " Multi_";
 		private static readonly string FIELDled = " LED";
+		// ItemID NOT to be confused with SavedIndex!
+		// VizChannels do NOT have unique SavedIndexes according to the file
+		// Insead they should be 1, 2, or 3
+		// 1 = the sub-channel for a single color draw object, or
+		// 1 = the red channel for an RGB draw object
+		// 2 and 3 are the blue and green channels for an RGB draw object
+		private int myItemID = lutils.UNDEFINED;
 
 		//! CONSTRUCTORS
-		public LORVizChannel4(string theName, int theVizID)
-		{
-			myName = theName;
-			output = new LOROutput4(this);
-			mySavedIndex = theVizID;
-		}
 
-		public LORVizChannel4(string lineIn)
+		public LORVizChannel4(iLORMember4 theParent, string lineIn)
 		{
-			string seek = lutils.STFLD + lutils.TABLEchannel + lutils.FIELDname + lutils.FIELDEQ;
+			myParent = theParent;
+			//string seek = lutils.STFLD + lutils.TABLEchannel + lutils.FIELDname + lutils.FIELDEQ;
+			string seek = "<Channel ID=";
 			//int pos = lineIn.IndexOf(seek);
 			int pos = lutils.ContainsKey(lineIn, seek);
 			if (pos > 0)
@@ -59,6 +62,7 @@ namespace LORUtils4
 				}
 			}
 		}
+
 
 
 		//! PROPERTIES, METHODS, ETC.
@@ -88,34 +92,39 @@ namespace LORUtils4
 			return result;
 		}
 
+		public int ChannelID
+		{
+			// ItemID NOT to be confused with SavedIndex!
+			// VizChannels do NOT have unique SavedIndexes according to the file
+			// Insead they should be 1, 2, or 3
+			// 1 = the sub-channel for a single color draw object, or
+			// 1 = the red channel for an RGB draw object
+			// 2 and 3 are the blue and green channels for an RGB draw object
+			get
+			{
+				return myItemID;
+			}
+			set
+			{
+				myItemID = value;
+				//if (myParent != null) myParent.MakeDirty(true);
+				//System.Diagnostics.Debugger.Break();
+			}
+		}
+		// VizChannels don't really have a SavedIndex, or any other unique ID by default
+		// Instead they belong to one- and only one- DrawObject
+		// But to retain similarity to Sequence Channels, we are going to assign a unique SavedIndex
+		//public int SavedIndex
+		//{ get { return myID; } }
+		//public void SetSavedIndex(int newSavedIndex)
+		//{ myID = newSavedIndex; }
+		//public int AltSavedIndex
+		//{ get { return myAltID; } set { myAltID = value; } }
+
 		public int ItemID
-		{
-			get
-			{
-				return mySavedIndex;
-			}
-			set
-			{
-				mySavedIndex = value;
-				//if (myParent != null) myParent.MakeDirty(true);
-				//System.Diagnostics.Debugger.Break();
-			}
-		}
-
-		public int AltItemID
-		{
-			get
-			{
-				return myAltSavedIndex;
-			}
-			set
-			{
-				myAltSavedIndex = value;
-				//if (myParent != null) myParent.MakeDirty(true);
-				//System.Diagnostics.Debugger.Break();
-			}
-		}
-
+		{ get { return myItemID; } }
+		public void SetItemID(int newID)
+		{ myItemID = newID; }
 
 		public override int Centiseconds
 		{
@@ -173,7 +182,7 @@ namespace LORUtils4
 		{
 			//LORSequence4 Parent = ID.Parent;
 			myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
-			ItemID = lutils.getKeyValue(lineIn, LORVisualization4.FIELDvizID);
+			myItemID = lutils.getKeyValue(lineIn, LORVisualization4.FIELDvizID);
 			color = lutils.getKeyValue(lineIn, LORVisualization4.FIELDvizColor);
 			//myCentiseconds = lutils.getKeyValue(lineIn, lutils.FIELDcentiseconds);
 			if (output == null)
@@ -205,7 +214,7 @@ namespace LORUtils4
 
 			ret.Append(lutils.StartTable(LORVisualization4.TABLEvizChannel, 2));
 
-			ret.Append(lutils.SetKey(LORVisualization4.FIELDvizID, ItemID));
+			ret.Append(lutils.SetKey(LORVisualization4.FIELDvizID, myItemID));
 			ret.Append(lutils.SetKey(LORVisualization4.FIELDvizName, lutils.XMLifyName(myName)));
 			ret.Append(output.LineOut());
 			ret.Append(lutils.SetKey(LORVisualization4.FIELDvizColor, (int)color));
@@ -246,7 +255,6 @@ namespace LORUtils4
 		{ get { return output.UniverseNumber; } }
 		public override int DMXAddress
 		{ get { return output.channel; } }
-
 
 		public void CloneTo(LORVizChannel4 destination)
 		{
@@ -330,7 +338,7 @@ namespace LORUtils4
 		{
 			// See Also: Duplicate()
 			//int nextSI = ID.Parent.Members.highestSavedIndex + 1;
-			LORChannel4 ret = new LORChannel4(myName, lutils.UNDEFINED);
+			LORChannel4 ret = new LORChannel4(this, myName);
 			ret.color = color;
 			ret.output.deviceType = output.deviceType;
 			ret.output.circuit = output.circuit;

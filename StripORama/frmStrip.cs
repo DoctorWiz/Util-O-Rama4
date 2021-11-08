@@ -663,7 +663,7 @@ namespace StripORama
 				chName += " / S" + stripNum.ToString() + "." + stripStart.ToString("000") + "-" + stripEnd.ToString("000");
 				chName += " / U" + universeNum.ToString() + "." + stripStart.ToString("000") + "-" + dmxCount.ToString("000") + ")";
 			}
-			LORChannelGroup4 stripGroup = seq.CreateChannelGroup(chName);
+			LORChannelGroup4 stripGroup = seq.CreateNewChannelGroup(chName);
 
 			///////////////////////////////////////////////////////////
 			// MAKE AN INITIAL CHANNEL GROUP FOR THE PIXEL GROUPING //
@@ -713,7 +713,7 @@ namespace StripORama
 			chName += " Keywdels " + pixNumFirst.ToString("000") + "-" + pixNumLast.ToString("000");
 			chName += " / S" + stripNum.ToString() + "." + stripNumFirst.ToString("000") + "-" + stripNumLast.ToString("000");
 			chName += " / U" + universeNum.ToString() + "." + dmxChFirst.ToString("000") + "-" + dmxChLast.ToString("000") + ")";
-			LORChannelGroup4 pixelGroup = seq.CreateChannelGroup(chName);
+			LORChannelGroup4 pixelGroup = seq.CreateNewChannelGroup(chName);
 			stripGroup.AddItem(pixelGroup);
 
 
@@ -772,7 +772,7 @@ namespace StripORama
 					chName = prfx + "Keywdel " + pixelNum.ToString("000");
 					chName += " (R) / S" + stripNum.ToString() + "." + stripKeywdel.ToString("000");
 					chName += " / U" + universeNum.ToString() + "." + uch.ToString("000");
-					redChannel = seq.CreateChannel(chName);
+					redChannel = seq.CreateNewChannel(chName);
 					redChannel.output.circuit = uch;
 					RGBFirstDMXchannel = uch;
 					uch++;
@@ -781,14 +781,14 @@ namespace StripORama
 					chName = prfx + "Keywdel " + pixelNum.ToString("000");
 					chName += " (G) / S" + stripNum.ToString() + "." + stripKeywdel.ToString("000");
 					chName += " / U" + universeNum.ToString() + "." + uch.ToString("000");
-					grnChannel = seq.CreateChannel(chName);
+					grnChannel = seq.CreateNewChannel(chName);
 					grnChannel.output.circuit = uch;
 					uch++;
 
 					chName = prfx + "Keywdel " + pixelNum.ToString("000");
 					chName += " (B) / S" + stripNum.ToString() + "." + stripKeywdel.ToString("000");
 					chName += " / U" + universeNum.ToString() + "." + uch.ToString("000");
-					bluChannel = seq.CreateChannel(chName);
+					bluChannel = seq.CreateNewChannel(chName);
 					bluChannel.output.circuit = uch;
 					RGBLastDMXchannel = uch;
 					uch++;
@@ -800,7 +800,7 @@ namespace StripORama
 					chName = prfx + "Keywdel " + pixelNum.ToString("000");
 					chName += " (G) / S" + stripNum.ToString() + "." + stripKeywdel.ToString("000");
 					chName += " / U" + universeNum.ToString() + "." + uch.ToString("000");
-					grnChannel = seq.CreateChannel(chName);
+					grnChannel = seq.CreateNewChannel(chName);
 					grnChannel.output.circuit = uch;
 					RGBFirstDMXchannel = uch;
 					uch++;
@@ -809,7 +809,7 @@ namespace StripORama
 					chName = prfx + "Keywdel " + pixelNum.ToString("000");
 					chName += " (R) / S" + stripNum.ToString() + "." + stripKeywdel.ToString("000");
 					chName += " / U" + universeNum.ToString() + "." + uch.ToString("000");
-					redChannel = seq.CreateChannel(chName);
+					redChannel = seq.CreateNewChannel(chName);
 					redChannel.output.circuit = uch;
 					uch++;
 
@@ -817,7 +817,7 @@ namespace StripORama
 					chName = prfx + "Keywdel " + pixelNum.ToString("000");
 					chName += " (B) / S" + stripNum.ToString() + "." + stripKeywdel.ToString("000");
 					chName += " / U" + universeNum.ToString() + "." + uch.ToString("000");
-					bluChannel = seq.CreateChannel(chName);
+					bluChannel = seq.CreateNewChannel(chName);
 					bluChannel.output.circuit = uch;
 					RGBLastDMXchannel = uch;
 					uch++;
@@ -839,7 +839,7 @@ namespace StripORama
 				chName = prfx + "Keywdel " + pixelNum.ToString("000");
 				chName += " / S" + stripNum.ToString() + "." + stripKeywdel.ToString("000");
 				chName += " / U" + universeNum.ToString() + "." + RGBFirstDMXchannel.ToString("000") + "-" + RGBLastDMXchannel.ToString("000");
-				LORRGBChannel4 RGB_Channel = seq.CreateRGBchannel(chName);
+				LORRGBChannel4 RGB_Channel = seq.CreateNewRGBChannel(chName);
 				RGB_Channel.redChannel = redChannel;
 				RGB_Channel.grnChannel = grnChannel;
 				RGB_Channel.bluChannel = bluChannel;
@@ -895,7 +895,7 @@ namespace StripORama
 						chName += " Keywdels " + pixNumFirst.ToString("000") + "-" + pixNumLast.ToString("000");
 						chName += " / S" + stripNum.ToString() + "." + stripNumFirst.ToString("000") + "-" + stripNumLast.ToString("000");
 						chName += " / U" + universeNum.ToString() + "." + dmxChFirst.ToString("000") + "-" + dmxChLast.ToString("000") + ")";
-						pixelGroup = seq.CreateChannelGroup(chName);
+						pixelGroup = seq.CreateNewChannelGroup(chName);
 						stripGroup.AddItem(pixelGroup);
 
 						pixNumFirst = pixNumLast + 1;

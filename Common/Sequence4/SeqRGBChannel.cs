@@ -24,6 +24,7 @@ namespace LORUtils4
 		public LORChannel4 bluChannel = null;
 
 		//! CONSTRUCTOR(s)
+		/*
 		public LORRGBChannel4(string lineIn)
 		{
 			string seek = lutils.STFLD + LORSequence4.TABLErgbChannel + lutils.FIELDtotalCentiseconds;
@@ -38,7 +39,14 @@ namespace LORUtils4
 				myName = lineIn;
 			}
 		}
+		*/
+		public LORRGBChannel4(iLORMember4 theParent, string lineIn)
+		{
+			myParent = theParent;
+			Parse(lineIn);
+		}
 
+		/*
 		public LORRGBChannel4(string lineIn, int theSavedIndex)
 		{
 			string seek = lutils.STFLD + LORSequence4.TABLErgbChannel + lutils.FIELDtotalCentiseconds;
@@ -54,7 +62,7 @@ namespace LORUtils4
 			}
 			SetSavedIndex(theSavedIndex);
 		}
-
+		*/
 
 		//! OTHER PROPERTIES, METHODS, ETC.
 		public override int Centiseconds
@@ -157,10 +165,19 @@ namespace LORUtils4
 
 		public override void Parse(string lineIn)
 		{
-			myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
-			mySavedIndex = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
-			myCentiseconds = lutils.getKeyValue(lineIn, lutils.FIELDtotalCentiseconds);
-			//if (parentSequence != null) parentSequence.MakeDirty(true);
+			string seek = lutils.STFLD + LORSequence4.TABLErgbChannel + lutils.FIELDtotalCentiseconds;
+			int pos = lutils.ContainsKey(lineIn, seek);
+			if (pos > 0)
+			{
+				myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
+				myID = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
+				myCentiseconds = lutils.getKeyValue(lineIn, lutils.FIELDtotalCentiseconds);
+			}
+			else
+			{
+				myName = lineIn;
+			}
+			//if (myParent != null) myParent.MakeDirty(true);
 		}
 
 
@@ -216,7 +233,7 @@ namespace LORUtils4
 
 				ret.Append(lutils.FIELDsavedIndex);
 				ret.Append(lutils.FIELDEQ);
-				ret.Append(myAltSavedIndex.ToString());
+				ret.Append(myAltID.ToString());
 				ret.Append(lutils.ENDQT);
 
 				ret.Append(lutils.FINFLD);
@@ -307,6 +324,15 @@ namespace LORUtils4
 				return ret;
 			}
 		}
+
+		//public int SavedIndex
+		//{ get { return myID; } }
+		//public void SetSavedIndex(int newSavedIndex)
+		//{ myID = newSavedIndex; }
+		//public int AltSavedIndex
+		//{ get { return myAltID; } set { myAltID = value; } }
+
+
 
 	} // end LORRGBChannel4 Class
 }

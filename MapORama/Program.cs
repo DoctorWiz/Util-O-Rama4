@@ -24,7 +24,7 @@ namespace UtilORama4
 	public class MapInfo
 	{
 		public iLORMember4 Source = null;
-		public iLORMember4 Master = null;
+		public iLORMember4 Dest = null;
 	}
 
 }

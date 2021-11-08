@@ -38,12 +38,12 @@ namespace UtilORama4.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string LastMasterFile {
+        public string LastDestFile {
             get {
-                return ((string)(this["LastMasterFile"]));
+                return ((string)(this["LastDestFile"]));
             }
             set {
-                this["LastMasterFile"] = value;
+                this["LastDestFile"] = value;
             }
         }
         
@@ -272,6 +272,18 @@ namespace UtilORama4.Properties {
             }
             set {
                 this["AutoLaunch"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UseRamps {
+            get {
+                return ((bool)(this["UseRamps"]));
+            }
+            set {
+                this["UseRamps"] = value;
             }
         }
     }
