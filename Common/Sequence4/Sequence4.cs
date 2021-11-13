@@ -65,7 +65,7 @@ namespace LORUtils4
 		
 		// members should only contain tracks, which are the only DIRECT descendants, in
 		// keeping with ChannelGroups, Tracks, and Cosmic Parent items
-		public LORMembership4 members = null;
+		public LORMembership4 Members = null;
 		// AllMembers contain ALL the regular members including Channels and RGBChannels and
 		// ChannelGroups which are not DIRECT descendants of the sequence (only Tracks are)
 		public LORMembership4 AllMembers = null;
@@ -110,7 +110,8 @@ namespace LORUtils4
 		public LORSequence4()
 		{
 			//! DEFAULT CONSTRUCTOR
-			this.members = new LORMembership4(this);
+			myName = "(New Sequence)";
+			this.Members = new LORMembership4(this);
 			this.AllMembers = new LORMembership4(this);
 			//this.Members.SetParent(this);
 			this.info = new LORSeqInfo4(this);
@@ -119,15 +120,23 @@ namespace LORUtils4
 			//Members.SetParentSequence(this);
 		}
 
-		public LORSequence4(string theFilename)
+		public LORSequence4(string lineIn)
 		{
-			this.members = new LORMembership4(this);
+			myName = lineIn;
+			this.Members = new LORMembership4(this);
 			this.AllMembers = new LORMembership4(this);
 			//this.Members.SetParent(this);
 			this.info = new LORSeqInfo4(this);
 			this.animation = new LORAnimation4(this);
 			//Members.SetParentSequence(this);
-			ReadSequenceFile(theFilename);
+			string theExtension = lineIn.EndSubstring(4).ToLower();
+			if ((theExtension == lutils.EXT_LAS) || (theExtension== lutils.EXT_LMS))
+			{
+				if (Fyle.Exists(lineIn))
+				{
+					ReadSequenceFile(lineIn);
+				}
+			}
 		}
 		#endregion
 
@@ -697,7 +706,7 @@ namespace LORUtils4
 		//////////////////////
 																				#region Timing Grid
 																				lastGrid = CreateNewTimingGrid(lineIn);
-																				if (lastGrid.LORTimingGridType4 == LORTimingGridType4.Freeform)
+																				if (lastGrid.TimingGridType == LORTimingGridType4.Freeform)
 																				{
 																					lineIn = reader.ReadLine();
 																					lineCount++;
@@ -1530,7 +1539,7 @@ namespace LORUtils4
 			{
 				// Zero these out from any previous run
 				lineCount = 0;
-				this.members = new LORMembership4(this);
+				this.Members = new LORMembership4(this);
 				this.AllMembers = new LORMembership4(this);
 				//this.Members.SetParent(this);
 				this.info = new LORSeqInfo4(this);
@@ -1752,7 +1761,7 @@ namespace LORUtils4
 			for (int i = 0; i < TimingGrids.Count; i++)
 			{
 				TimingGrids[i].Centiseconds = newCentiseconds;
-				if (TimingGrids[i].LORTimingGridType4 == LORTimingGridType4.Freeform)
+				if (TimingGrids[i].TimingGridType == LORTimingGridType4.Freeform)
 				{
 					int t = TimingGrids[i].timings.Count -1;
 					while (t >= 0)
@@ -2426,7 +2435,9 @@ namespace LORUtils4
 		public LORTrack4 FindTrack(string trackName, bool createIfNotFound = false)
 		{
 			LORTrack4 ret = null;
-			iLORMember4 member = AllMembers.FindByName(trackName, LORMemberType4.Track, createIfNotFound);
+			// This no longer works because Tracks are no longer in AllMembers because they don't have a SavedIndex
+			//iLORMember4 member = AllMembers.FindByName(trackName, LORMemberType4.Track, createIfNotFound);
+			iLORMember4 member = Members.FindByName(trackName, LORMemberType4.Track, createIfNotFound);
 			if (member != null)
 			{
 				ret = (LORTrack4)member;
@@ -2958,13 +2969,19 @@ namespace LORUtils4
 			}
 			else
 			{
+				if (TimingGrids.Count < 1)
+				{
+					LORTimings4 tempGrid = CreateNewTimingGrid("Fixed 0.10");
+					tempGrid.TimingGridType = LORTimingGridType4.FixedGrid;
+					tempGrid.spacing = 10;
+				}
 				tr.timingGrid = TimingGrids[0];
 			}
 			// Clear the AltSavedIndex which was temporarily holding the SaveID of the LORTimings4
 			tr.AltID = lutils.UNDEFINED;
 			myCentiseconds = Math.Max(myCentiseconds, tr.Centiseconds);
 			//? AllMembers.Add(tr);
-			members.Add(tr);
+			Members.Add(tr);
 			return tr;
 		}
 
@@ -2973,9 +2990,9 @@ namespace LORUtils4
 			LORTimings4 tg = new LORTimings4(this, lineIn);
 			int newSI = AssignNextSaveID(tg);
 			//tg.SaveID = newSI;
-			tg.SetIndex(TimingGrids.Count);
+			//tg.SetIndex(TimingGrids.Count);
 			TimingGrids.Add(tg);
-			tg.Parse(lineIn);
+			//tg.Parse(lineIn);
 			myCentiseconds = Math.Max(myCentiseconds, tg.Centiseconds);
 			//Members.Add(tg);
 			return tg;
@@ -3240,7 +3257,7 @@ namespace LORUtils4
 				int last = 0;
 				for (int i = 0; i < TimingGrids.Count; i++)
 				{
-					if (TimingGrids[i].LORTimingGridType4 == LORTimingGridType4.Freeform)
+					if (TimingGrids[i].TimingGridType == LORTimingGridType4.Freeform)
 					{
 						if (TimingGrids[i].timings.Count > 0)
 						{

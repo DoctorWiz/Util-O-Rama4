@@ -28,7 +28,6 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
 			Syncfusion.Windows.Forms.Tools.TreeNodeAdvStyleInfo treeNodeAdvStyleInfo2 = new Syncfusion.Windows.Forms.Tools.TreeNodeAdvStyleInfo();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSplit));
 			this.btnSaveSequence = new System.Windows.Forms.Button();
@@ -44,7 +43,7 @@
 			this.btnSaveSelections = new System.Windows.Forms.Button();
 			this.lblSelectionCount = new System.Windows.Forms.Label();
 			this.cmdNothing = new System.Windows.Forms.Button();
-			this.ttip = new System.Windows.Forms.ToolTip(this.components);
+			this.ttip = new System.Windows.Forms.ToolTip();
 			this.staStatus = new System.Windows.Forms.StatusStrip();
 			this.pnlHelp = new System.Windows.Forms.ToolStripStatusLabel();
 			this.pnlProgress = new System.Windows.Forms.ToolStripProgressBar();
@@ -62,7 +61,7 @@
 			this.lstGrids = new System.Windows.Forms.ListBox();
 			this.picPreview = new System.Windows.Forms.PictureBox();
 			this.treeChannels = new Syncfusion.Windows.Forms.Tools.TreeViewAdv();
-			this.imlTreeIcons = new System.Windows.Forms.ImageList(this.components);
+			this.imlTreeIcons = new System.Windows.Forms.ImageList();
 			this.picAboutIcon = new System.Windows.Forms.PictureBox();
 			this.txtFileNewSeq = new System.Windows.Forms.TextBox();
 			this.chkAutoLaunch = new System.Windows.Forms.CheckBox();
@@ -255,7 +254,7 @@
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlStatus.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
 			this.pnlStatus.Name = "pnlStatus";
-			this.pnlStatus.Size = new System.Drawing.Size(222, 19);
+			this.pnlStatus.Size = new System.Drawing.Size(120, 19);
 			this.pnlStatus.Spring = true;
 			// 
 			// pnlAbout

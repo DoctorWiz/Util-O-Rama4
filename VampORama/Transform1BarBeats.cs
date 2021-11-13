@@ -640,7 +640,8 @@ namespace UtilORama4
 					//int bpb = Annotator.BeatsPerBar;
 					string tname = timings.Name.Substring(6, 4);
 					LORChannelGroup4 beatGroup = Annotator.VampTrack.Members.FindChannelGroup("Bars and Beats", true);
-					LORChannel4 chan = Annotator.Sequence.AllMembers.FindChannel(beatName, true, true);
+					//LORChannel4 chan = Annotator.Sequence.AllMembers.FindChannel(beatName, true, true);
+					LORChannel4 chan = beatGroup.Members.FindChannel(beatName, true, true);
 					errs = SequenceFunctions.ImportBeatChannel(chan, timings, divider);
 				}
 			}

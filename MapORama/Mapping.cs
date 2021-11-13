@@ -977,8 +977,7 @@ namespace UtilORama4
 					mapData = lineIn.Split(',');
 					if (mapData.Length == 5)
 					{
-						theType = mapData[0];
-						theType = theType.Substring(0, 4).ToLower();
+						theType = mapData[0].ToLower();
 						destType = LORMemberType4.None; // Reset default
 						destName = lutils.HumanizeName(mapData[1]).ToLower();
 						destSI = lutils.UNDEFINED; // Reset default
@@ -988,7 +987,7 @@ namespace UtilORama4
 						int.TryParse(mapData[4], out sourceSI);
 						switch (theType)
 						{
-							case "chan":
+							case "channel":
 								destType = LORMemberType4.Channel;
 								if ((destSI >= 0) && (destSI < seqDest.AllMembers.HighestSavedIndex))
 								{
@@ -1034,7 +1033,7 @@ namespace UtilORama4
 									}
 								}
 								break;
-							case "rgbc":
+							case "rgbchannel":
 								destType = LORMemberType4.RGBChannel;
 								if ((destSI >= 0) && (destSI < seqDest.AllMembers.HighestSavedIndex))
 								{
@@ -1080,7 +1079,7 @@ namespace UtilORama4
 									}
 								}
 								break;
-							case "grou":
+							case "channelgroup":
 								destType = LORMemberType4.ChannelGroup;
 								if ((destSI >= 0) && (destSI < seqDest.AllMembers.HighestSavedIndex))
 								{
@@ -1126,10 +1125,10 @@ namespace UtilORama4
 									}
 								}
 								break;
-							case "cosm":
+							case "cosmicdevice":
 								destType = LORMemberType4.Cosmic;
 								break;
-							case "trac":
+							case "track":
 								destType = LORMemberType4.Track;
 								if ((destSI >= 0) && (destSI < seqDest.AllMembers.HighestSavedIndex))
 								{
@@ -1355,9 +1354,17 @@ namespace UtilORama4
 			ImBusy(true);
 			string xt = Path.GetExtension(sourceFile).ToLower();
 			dlgFileSave.DefaultExt = xt;
-			dlgFileSave.Filter = lutils.FILT_SAVE_EITHER;
+			if (xt == lutils.EXT_LAS)
+			{
+				dlgFileSave.Filter = lutils.FILE_LAS;
+			}
+			if (xt == lutils.EXT_LMS)
+			{
+				dlgFileSave.Filter = lutils.FILE_LMS;
+			}
+			//dlgFileSave.Filter = lutils.FILT_SAVE_EITHER;
 			dlgFileSave.FilterIndex = 0;
-			if (xt.CompareTo(lutils.EXT_LAS) == 0) dlgFileSave.FilterIndex = 1;
+			//if (xt.CompareTo(lutils.EXT_LAS) == 0) dlgFileSave.FilterIndex = 1;
 			string initDir = SeqFolder;
 			string initFile = "";
 			if (sourceFile.Length > 4)
@@ -2409,11 +2416,14 @@ namespace UtilORama4
 			string tiptxt = "";
 			btnMap.Enabled = false;
 			btnUnmap.Enabled = false;
+			lblDestAlreadyMapped.Visible = false;
+			lblDestHasEffects.Visible = false;
+			pnlOverwrite.Visible = false;
 			ttip.SetToolTip(btnMap, tiptxt);
 			ttip.SetToolTip(btnUnmap, tiptxt);
-			if (currentSourceMember != null)
+			if (currentDestMember != null)
 			{
-				if (currentDestMember != null)
+				if (currentSourceMember != null)
 				{
 					if (currentSourceMember.MemberType == currentDestMember.MemberType)
 					{
@@ -2447,6 +2457,20 @@ namespace UtilORama4
 								tiptxt += " to " + currentDestMember.Name;
 								ttip.SetToolTip(btnMap, tiptxt);
 
+								if (currentDestMember.MapTo != null)
+								{
+									lblDestAlreadyMapped.Visible = true;
+								}
+								if (currentDestMember.MemberType == LORMemberType4.Channel)
+								{
+									LORChannel4 ch = (LORChannel4)currentDestMember;
+									if (ch.effects.Count > 0)
+									{
+										lblDestHasEffects.Visible = true;
+										pnlOverwrite.Visible = true;
+									}
+								}
+
 
 							}
 
@@ -2467,6 +2491,7 @@ namespace UtilORama4
 					}
 
 				}
+
 			}
 
 			if (mappedDestChannelsCount > 0)
@@ -2574,9 +2599,13 @@ namespace UtilORama4
 				// Is the destination already mapped to something else?
 				if (destMember.MapTo != null)
 					{
-						// Remove prior mapping
-						//! Recurse
-						success = UnMapMembers(destMember.MapTo, destMember, andChildren);
+						// Is it mapped correctly already?
+						if (destMember.MapTo.ID != sourceMember.ID)
+						{
+							// Remove prior mapping
+							//! Recurse
+							success = UnMapMembers(destMember.MapTo, destMember, andChildren);
+						}
 					}
 					// Use new MapTo property of the destination to hold a reference to the source
 					destMember.MapTo = sourceMember;
@@ -2584,6 +2613,12 @@ namespace UtilORama4
 					// Instead use Tag property to hold a list of members
 					destMapList.Add(destMember);
 					sourceMember.ZCount = destMapList.Count;
+
+				//? Do I need to put the destMapList back into the tag again?
+				sourceMember.Tag = destMapList;
+
+
+
 					// Set selected flags as quick easy way to check if they are mampped
 					destMember.Selected = true;
 					sourceMember.Selected = true;
@@ -2736,11 +2771,11 @@ namespace UtilORama4
 		private bool UnMapMembers(iLORMember4 sourceMember, iLORMember4 destMember, bool andChildren = true)
 		{
 			bool success = false;
-			if ((!sourceMember.Selected) && (!destMember.Selected))
+			if ((sourceMember.Selected) && (destMember.Selected))
 			{
 				if (sourceMember.MemberType == destMember.MemberType)
 				{
-					if (destMember.MapTo == null)
+					if (destMember.MapTo != null)
 					{
 						if (destMember.MapTo.ID == sourceMember.ID)
 						{

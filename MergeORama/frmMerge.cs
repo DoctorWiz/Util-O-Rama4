@@ -11,6 +11,7 @@ using System.IO;
 using LORUtils4;
 using FileHelper;
 using Microsoft.Win32;
+using Syncfusion.Windows.Forms.Tools;
 
 namespace UtilORama4
 {
@@ -21,9 +22,9 @@ namespace UtilORama4
 		private string lastFile1 = "";
 		private string lastFile2 = "";
 		private string lastNewFile = "";
-		private LORSequence4 seqOne = new LORSequence4();
-		private LORSequence4 seqNew;
-		private LORSequence4 seqTwo = new LORSequence4();
+		private LORSequence4 seqOne = new LORSequence4("(Sequence One");
+		private LORSequence4 seqNew = null; //new LORSequence4("(New Sequence");
+		private LORSequence4 seqTwo = new LORSequence4("(Sequence Two");
 
 		private const byte ACTIONkeepFirst = 1;
 		private const byte ACTIONuseSecond = 2;
@@ -41,7 +42,7 @@ namespace UtilORama4
 		private string numberFormat = " (#)";
 		private bool isWiz = Fyle.IsWizard || Fyle.IsAWizard;
 		private static Properties.Settings heartOfTheSun = Properties.Settings.Default;
-
+		private int brk = 0;
 
 		private List<Syncfusion.Windows.Forms.Tools.TreeNodeAdv>[] siNodes = null;
 
@@ -409,6 +410,9 @@ namespace UtilORama4
 				
 		}
 
+		////////////////////////////////////////////
+		//!  *   M E R G E   S E Q U E N C E S   //
+		//////////////////////////////////////////
 		private void MergeSequences()
 		{
 
@@ -451,21 +455,21 @@ namespace UtilORama4
 						if (destGrid == null) // no match found
 						{
 							found = false;
-							destGrid = seqNew.CreateTimingGrid(sourceGrid.Name);
+							destGrid = seqNew.CreateNewTimingGrid(sourceGrid.Name);
 						}
 						else // match found!
 						{
 							// Check for conflicting types and warn user
-							if (sourceGrid.LORTimingGridType4 == LORTimingGridType4.FixedGrid)
+							if (sourceGrid.TimingGridType == LORTimingGridType4.FixedGrid)
 							{
-								if (destGrid.LORTimingGridType4 == LORTimingGridType4.Freeform)
+								if (destGrid.TimingGridType == LORTimingGridType4.Freeform)
 								{
 									GridMismatchError(sourceGrid.Name);
 								}
 							}
-							if (sourceGrid.LORTimingGridType4 == LORTimingGridType4.Freeform)
+							if (sourceGrid.TimingGridType == LORTimingGridType4.Freeform)
 							{
-								if (destGrid.LORTimingGridType4 == LORTimingGridType4.FixedGrid)
+								if (destGrid.TimingGridType == LORTimingGridType4.FixedGrid)
 								{
 									GridMismatchError(sourceGrid.Name);
 								}
@@ -473,11 +477,11 @@ namespace UtilORama4
 							// What to do if match is found?
 							if (duplicateNameAction == ACTIONkeepBoth)
 							{
-								destGrid = seqNew.CreateTimingGrid(sourceGrid.Name);
+								destGrid = seqNew.CreateNewTimingGrid(sourceGrid.Name);
 							}
 							if (duplicateNameAction == ACTIONaddNumber)
 							{
-								destGrid = seqNew.CreateTimingGrid(sourceGrid.Name + " (2)");
+								destGrid = seqNew.CreateNewTimingGrid(sourceGrid.Name + " (2)");
 							}
 							if (duplicateNameAction == ACTIONuseSecond)
 							{
@@ -487,17 +491,17 @@ namespace UtilORama4
 					}
 					else // Append
 					{
-						destGrid = seqNew.CreateTimingGrid(sourceGrid.Name);
-						destGrid.LORTimingGridType4 = sourceGrid.LORTimingGridType4;
+						destGrid = seqNew.CreateNewTimingGrid(sourceGrid.Name);
+						destGrid.TimingGridType = sourceGrid.TimingGridType;
 					} // Enbd if merge or append
 
 					// if not found, or any action other than keep first
 					if (!found || (duplicateNameAction != ACTIONkeepFirst))
 					{
 						// Copy type, spacing and timings
-						destGrid.LORTimingGridType4 = sourceGrid.LORTimingGridType4;
+						destGrid.TimingGridType = sourceGrid.TimingGridType;
 						destGrid.spacing = sourceGrid.spacing;
-						if (destGrid.LORTimingGridType4 == LORTimingGridType4.Freeform)
+						if (destGrid.TimingGridType == LORTimingGridType4.Freeform)
 						{
 							destGrid.CopyTimings(sourceGrid.timings, false);
 						}
@@ -533,9 +537,12 @@ namespace UtilORama4
 					if (mergeTracksByName)
 					{
 						found = true; // reset to default
-						destTrack = (LORTrack4)seqNew.AllMembers.FindByName(sourceTrack.Name, LORMemberType4.Track, false);
+						//destTrack = (LORTrack4)seqNew.AllMembers.FindByName(sourceTrack.Name, LORMemberType4.Track, true);
+						//destTrack = seqNew.AllMembers.FindTrack(sourceTrack.Name, true);
+						destTrack = seqNew.FindTrack(sourceTrack.Name, true);
 						if (destTrack == null) // no matching name found
 						{
+							if (Fyle.isWiz) brk = 1;
 							found = false;
 							destTrack = seqNew.CreateNewTrack(sourceTrack.Name);
 						}
@@ -556,6 +563,128 @@ namespace UtilORama4
 			seqNew.CentiFix();
 		}
 
+
+		////////////////////////////////////////////
+		//!  *   M E R G E   S E Q U E N C E S   //
+		//////////////////////////////////////////
+		private void MergeMembers(LORMembership4 destMembers, LORMembership4 sourceMembers)
+		{
+			bool found = true;
+			
+			// May be called recursively
+			//foreach (iLORMember4 sourceMember in sourceMembers) // foreach and enumerable not working, fix!
+			// Loop thru all members in the source
+			for (int smi=0; smi<sourceMembers.Count; smi++)
+			{
+				// Get the current one
+				iLORMember4 sourceMember = sourceMembers[smi];
+				switch (sourceMember.MemberType)
+				{
+					case LORMemberType4.Channel:
+						LORChannel4 sourceCh = (LORChannel4)sourceMember;
+						LORChannel4 destCh = MergeChannel(sourceCh, destMembers);
+						break;
+
+					case LORMemberType4.RGBChannel:
+						found = true; // reset to default
+						//LORChannel4 destCh = null; // placeholder
+						LORRGBChannel4 sourceRGB = (LORRGBChannel4)sourceMember;
+						LORRGBChannel4 destRGB = (LORRGBChannel4)destMembers.FindRGBChannel(sourceRGB.Name, true);
+						if (destRGB == null)
+						{
+							if (Fyle.isWiz) brk = 1;
+							found = false;
+							destRGB = seqNew.CreateNewRGBChannel(sourceRGB.Name);
+							destMembers.Add(destRGB);
+
+							MergeRGBchildren(sourceRGB, destRGB);
+						}
+						else
+						{
+							if (duplicateNameAction == ACTIONuseSecond)
+							{
+								MergeRGBchildren(sourceRGB, destRGB);
+							}
+							if (duplicateNameAction == ACTIONkeepBoth)
+							{
+								destRGB = seqNew.CreateNewRGBChannel(sourceRGB.Name);
+								destMembers.Add(destRGB);
+
+								MergeRGBchildren(sourceRGB, destRGB);
+							}
+							if (duplicateNameAction == ACTIONaddNumber)
+							{
+								destRGB = seqNew.CreateNewRGBChannel(sourceRGB.Name + " (2)");
+								destMembers.Add(destRGB);
+
+								MergeRGBchildren(sourceRGB, destRGB);
+							}
+						}
+						break;
+
+					case LORMemberType4.ChannelGroup:
+						LORChannelGroup4 sourceGroup = (LORChannelGroup4)sourceMember;
+					
+						//LORChannelGroup4 destGroup = (LORChannelGroup4)destMembers.Find(sourceGroup.Name, LORMemberType4.ChannelGroup, true);
+						LORChannelGroup4 destGroup = destMembers.FindChannelGroup(sourceGroup.Name, true);
+						// Should only happen once
+						//if (destGroup.SavedIndex == 31) System.Diagnostics.Debugger.Break();
+						//! Recurse
+						MergeMembers(destGroup.Members, sourceGroup.Members);
+						break;
+				} // End switch
+			} // end loop thru 2nd Sequence's LORTrack4 Items
+		}
+
+		private LORChannel4 MergeChannel(LORChannel4 sourceCh, LORMembership4 destMembers)
+		{
+			bool found = true; // reset to default
+			LORChannel4 destCh = (LORChannel4)destMembers.FindChannel(sourceCh.Name, true);
+
+			if (destCh == null)
+			{
+				if (Fyle.isWiz) brk = 1;
+				found = false;
+				destCh = seqNew.CreateNewChannel(sourceCh.Name);
+				destMembers.Add(destCh);
+				destCh.CopyFrom(sourceCh, mergeEffects);
+			}
+			else
+			{
+				if (duplicateNameAction == ACTIONuseSecond)
+				{
+					//destCh = (LORChannel4)destMember;
+				}
+				if (duplicateNameAction == ACTIONkeepBoth)
+				{
+					destCh = seqNew.CreateNewChannel(sourceCh.Name);
+					destMembers.Add(destCh);
+				}
+				if (duplicateNameAction == ACTIONaddNumber)
+				{
+					destCh = seqNew.CreateNewChannel(sourceCh.Name + " (2)");
+					destMembers.Add(destCh);
+				}
+
+				if (duplicateNameAction == ACTIONkeepFirst)
+				{
+					destCh.CopyFrom(sourceCh, mergeEffects);
+				}
+			}
+			return destCh;
+		}
+
+		private void MergeRGBchildren(LORRGBChannel4 sourceRGB, LORRGBChannel4 destRGB)
+		{
+			LORChannel4 destCh = MergeChannel(sourceRGB.redChannel, seqNew.AllMembers);
+			destRGB.redChannel = destCh;
+			destCh = MergeChannel(sourceRGB.grnChannel, seqNew.AllMembers);
+			destRGB.grnChannel = destCh;
+			destCh = MergeChannel(sourceRGB.bluChannel, seqNew.AllMembers);
+			destRGB.bluChannel = destCh;
+		}
+
+
 		private void GridMismatchError(string gridName)
 		{
 			//? Not sure what to do here
@@ -567,8 +696,6 @@ namespace UtilORama4
 			MessageBox.Show(this, sMsg, "Grid Conflict", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
 		}
-
-
 		private void OldMergeSequences()
 		{
 			mergeTracks = Properties.Settings.Default.MergeTracks;
@@ -622,9 +749,9 @@ namespace UtilORama4
 				{
 					// No timing grid with matching name found, so add this one
 					// Create a new timing grid and copy the name and type
-					int newSaveID = seqNew.AllMembers.HighestSaveID + 1;
+					int newSaveID = seqNew.AllMembers.HighestItemID + 1; // .HighestSaveID + 1;
 
-					LORTimings4 tGrid = seqNew.CreateTimingGrid(seqTwo.TimingGrids[timings2Idx].Name);
+					LORTimings4 tGrid = seqNew.CreateNewTimingGrid(seqTwo.TimingGrids[timings2Idx].Name);
 					//tGrid.type = seqTwo.TimingGrids[timings2Idx].type;
 					tGrid.spacing = seqTwo.TimingGrids[timings2Idx].spacing;
 					// Create a new array for timings, and copy them
@@ -739,7 +866,6 @@ namespace UtilORama4
 
 
 		}
-
 		private void MergeTimingGrids(LORTimings4 destGrid, LORTimings4 sourceGrid)
 		{
 			int t2Idx = 0;
@@ -791,7 +917,7 @@ namespace UtilORama4
 					// Sequence2 and New Sequence have timing grids with the same name
 					// but in the New Sequence the grid is empty, and in Sequence2 it is not
 					// Names match, but are they the same type?  (might be why it's empty)
-					if (sourceGrid.LORTimingGridType4 == destGrid.LORTimingGridType4)
+					if (sourceGrid.TimingGridType == destGrid.TimingGridType)
 					{
 						// So--- Add all of them
 						//destGrid.itemCount = sourceGrid.itemCount;
@@ -816,135 +942,11 @@ namespace UtilORama4
 				} // end new timing grid has timings (or not)
 			} // end 2nd timing grid had items
 		}
-
-		private void MergeMembers(LORMembership4 destMembers, LORMembership4 sourceMembers)
-		{
-			bool found = true;
-			
-			// May be called recursively
-			//foreach (iLORMember4 sourceMember in sourceMembers) // foreach and enumerable not working, fix!
-			for (int smi=0; smi<sourceMembers.Count; smi++)
-			{
-				iLORMember4 sourceMember = sourceMembers[smi];
-				if (sourceMember.MemberType == LORMemberType4.Channel)
-				{
-					LORChannel4 sourceCh = (LORChannel4)sourceMember;
-					LORChannel4 destCh = MergeChannel(sourceCh, destMembers);
-				}
-
-				if (sourceMember.MemberType == LORMemberType4.RGBChannel)
-				{
-					found = true; // reset to default
-					LORChannel4 destCh = null; // placeholder
-					LORRGBChannel4 sourceRGB = (LORRGBChannel4)sourceMember;
-					LORRGBChannel4 destRGB = (LORRGBChannel4)destMembers.FindRGBChannel(sourceRGB.Name, false);
-					if (destRGB == null)
-					{
-						found = false;
-						destRGB = seqNew.CreateNewRGBChannel(sourceRGB.Name);
-						destMembers.Add(destRGB);
-
-						MergeRGBchildren(sourceRGB, destRGB);
-					}
-					else
-					{
-						if (duplicateNameAction == ACTIONuseSecond)
-						{
-							MergeRGBchildren(sourceRGB, destRGB);
-						}
-						if (duplicateNameAction == ACTIONkeepBoth)
-						{
-							destRGB = seqNew.CreateNewRGBChannel(sourceRGB.Name);
-							destMembers.Add(destRGB);
-
-							MergeRGBchildren(sourceRGB, destRGB);
-						}
-						if (duplicateNameAction == ACTIONaddNumber)
-						{
-							destRGB = seqNew.CreateNewRGBChannel(sourceRGB.Name + " (2)");
-							destMembers.Add(destRGB);
-
-							MergeRGBchildren(sourceRGB, destRGB);
-						}
-					}
-				}
-
-				if (sourceMember.MemberType == LORMemberType4.ChannelGroup)
-				{
-					LORChannelGroup4 sourceGroup = (LORChannelGroup4)sourceMember;
-					
-					//LORChannelGroup4 destGroup = (LORChannelGroup4)destMembers.Find(sourceGroup.Name, LORMemberType4.ChannelGroup, true);
-					LORChannelGroup4 destGroup = destMembers.FindChannelGroup(sourceGroup.Name, true);
-
-
-
-					// Should only happen once
-					//if (destGroup.SavedIndex == 31) System.Diagnostics.Debugger.Break();
-
-
-
-
-
-					//Recurse
-					MergeMembers(destGroup.Members, sourceGroup.Members);
-				}
-			} // end loop thru 2nd Sequence's LORTrack4 Items
-		}
-
-		private LORChannel4 MergeChannel(LORChannel4 sourceCh, LORMembership4 destMembers)
-		{
-			bool found = true; // reset to default
-			LORChannel4 destCh = (LORChannel4)destMembers.FindChannel(sourceCh.Name, false);
-
-			if (destCh == null)
-			{
-				found = false;
-				destCh = seqNew.CreateNewChannel(sourceCh.Name);
-				destMembers.Add(destCh);
-				destCh.CopyFrom(sourceCh, mergeEffects);
-			}
-			else
-			{
-				if (duplicateNameAction == ACTIONuseSecond)
-				{
-					//destCh = (LORChannel4)destMember;
-				}
-				if (duplicateNameAction == ACTIONkeepBoth)
-				{
-					destCh = seqNew.CreateNewChannel(sourceCh.Name);
-					destMembers.Add(destCh);
-				}
-				if (duplicateNameAction == ACTIONaddNumber)
-				{
-					destCh = seqNew.CreateNewChannel(sourceCh.Name + " (2)");
-					destMembers.Add(destCh);
-				}
-
-				if (duplicateNameAction != ACTIONkeepFirst)
-				{
-					destCh.CopyFrom(sourceCh, mergeEffects);
-				}
-			}
-			return destCh;
-		}
-
-		private void MergeRGBchildren(LORRGBChannel4 sourceRGB, LORRGBChannel4 destRGB)
-		{
-			LORChannel4 destCh = MergeChannel(sourceRGB.redChannel, seqNew.AllMembers);
-			destRGB.redChannel = destCh;
-			destCh = MergeChannel(sourceRGB.grnChannel, seqNew.AllMembers);
-			destRGB.grnChannel = destCh;
-			destCh = MergeChannel(sourceRGB.bluChannel, seqNew.AllMembers);
-			destRGB.bluChannel = destCh;
-		}
-
-
 		private void button1_Click(object sender, EventArgs e)
 		{
 			seqOne.WriteSequenceFile("D:\\Light-O-Rama\\2017 Betty\\rewritten_norm.las");
 			seqOne.WriteSequenceFile_DisplayOrder("D:\\Light-O-Rama\\2017 Betty\\rewritten_disp.las");
 		}
-
 		private void btnSave_Click(object sender, EventArgs e)
 		{
 			string initDir = "";
@@ -993,7 +995,6 @@ namespace UtilORama4
 
 
 		}
-
 		private DialogResult GetMergeOptions()
 		{
 
@@ -1008,12 +1009,10 @@ namespace UtilORama4
 			return dr;
 			
 		}
-
 		private void treNewChannels_AfterSelect(object sender, TreeViewEventArgs e)
 		{
 
 		}
-
 		private void SetOptions()
 		{
 			mergeTracks = Properties.Settings.Default.MergeTracks;
@@ -1036,7 +1035,6 @@ namespace UtilORama4
 			numberFormat = Properties.Settings.Default.AddNumberFormat;
 
 		}
-
 		private void pnlAbout_Click(object sender, EventArgs e)
 		{
 			ImBusy(true);
@@ -1047,7 +1045,53 @@ namespace UtilORama4
 			ImBusy(false);
 		}
 
+		private void treeNewChannels_AfterSelect(object sender, EventArgs e)
+		{
+			if (treeNewChannels.SelectedNode != null)
+			{
+				Node_Click(treeNewChannels.SelectedNode);
+			}
+		}
 
+		private void Node_Click(TreeNodeAdv node)
+		{
+			if (node.Tag != null)
+			{
+				iLORMember4 member = (iLORMember4)node.Tag;
+				Member_Click(member);
+			}
+		}
+
+		private void Member_Click(iLORMember4 member)
+		{
+			switch(member.MemberType)
+			{
+				case LORMemberType4.Channel:
+					lutils.RenderEffects(member, ref picPreview, true);
+					picPreview.Visible = true;
+					break;
+				case LORMemberType4.RGBChannel:
+					lutils.RenderEffects(member, ref picPreview, false);
+					picPreview.Visible = true;
+					break;
+				case LORMemberType4.Track:
+					picPreview.Visible = false;
+					break;
+				case LORMemberType4.ChannelGroup:
+					picPreview.Visible = false;
+					break;
+				case LORMemberType4.Cosmic:
+					picPreview.Visible = false;
+					break;
+
+
+			}
+		}
+
+		private void treeNewChannels_Click(object sender, EventArgs e)
+		{
+
+		}
 	}
 
 }

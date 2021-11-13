@@ -375,6 +375,7 @@
 			// 
 			// pnlOverwrite
 			// 
+			this.pnlOverwrite.BackColor = System.Drawing.Color.Red;
 			this.pnlOverwrite.Controls.Add(this.picPreviewDest);
 			this.pnlOverwrite.Location = new System.Drawing.Point(414, 536);
 			this.pnlOverwrite.Name = "pnlOverwrite";
@@ -384,7 +385,7 @@
 			// 
 			// picPreviewDest
 			// 
-			this.picPreviewDest.BackColor = System.Drawing.Color.Tan;
+			this.picPreviewDest.BackColor = System.Drawing.Color.Silver;
 			this.picPreviewDest.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.picPreviewDest.Location = new System.Drawing.Point(1, 1);
 			this.picPreviewDest.Name = "picPreviewDest";
@@ -395,7 +396,7 @@
 			// 
 			// picPreviewSource
 			// 
-			this.picPreviewSource.BackColor = System.Drawing.Color.Tan;
+			this.picPreviewSource.BackColor = System.Drawing.Color.Silver;
 			this.picPreviewSource.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.picPreviewSource.Location = new System.Drawing.Point(15, 538);
 			this.picPreviewSource.Name = "picPreviewSource";

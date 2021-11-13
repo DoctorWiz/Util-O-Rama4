@@ -50,9 +50,13 @@
 			this.treeNewChannels = new Syncfusion.Windows.Forms.Tools.TreeViewAdv();
 			this.imlTreeIcons = new System.Windows.Forms.ImageList(this.components);
 			this.chkAutoLaunch = new System.Windows.Forms.CheckBox();
+			this.label3 = new System.Windows.Forms.Label();
+			this.label4 = new System.Windows.Forms.Label();
+			this.picPreview = new System.Windows.Forms.PictureBox();
 			this.staStatus.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picAboutIcon)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.treeNewChannels)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.picPreview)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// label2
@@ -132,6 +136,7 @@
 			this.button1.TabIndex = 48;
 			this.button1.Text = "button1";
 			this.button1.UseVisualStyleBackColor = true;
+			this.button1.Visible = false;
 			this.button1.Click += new System.EventHandler(this.button1_Click);
 			// 
 			// staStatus
@@ -210,7 +215,7 @@
 			treeNodeAdvStyleInfo1.SelectedOptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
 			this.treeNewChannels.BaseStylePairs.AddRange(new Syncfusion.Windows.Forms.Tools.StyleNamePair[] {
             new Syncfusion.Windows.Forms.Tools.StyleNamePair("Standard", treeNodeAdvStyleInfo1)});
-			this.treeNewChannels.BeforeTouchSize = new System.Drawing.Size(300, 400);
+			this.treeNewChannels.BeforeTouchSize = new System.Drawing.Size(300, 348);
 			// 
 			// 
 			// 
@@ -227,7 +232,7 @@
 			this.treeNewChannels.Name = "treeNewChannels";
 			this.treeNewChannels.NodeStateImageList = this.imlTreeIcons;
 			this.treeNewChannels.SelectedNodeForeColor = System.Drawing.SystemColors.HighlightText;
-			this.treeNewChannels.Size = new System.Drawing.Size(300, 400);
+			this.treeNewChannels.Size = new System.Drawing.Size(300, 348);
 			this.treeNewChannels.TabIndex = 131;
 			this.treeNewChannels.ThemeStyle.TreeNodeAdvStyle.CheckBoxTickThickness = 0;
 			this.treeNewChannels.ThemeStyle.TreeNodeAdvStyle.EnsureDefaultOptionedChild = true;
@@ -240,6 +245,8 @@
 			this.treeNewChannels.ToolTipControl.Size = new System.Drawing.Size(392, 112);
 			this.treeNewChannels.ToolTipControl.TabIndex = 0;
 			this.treeNewChannels.ToolTipControl.Visible = true;
+			this.treeNewChannels.AfterSelect += new System.EventHandler(this.treeNewChannels_AfterSelect);
+			this.treeNewChannels.Click += new System.EventHandler(this.treeNewChannels_Click);
 			// 
 			// imlTreeIcons
 			// 
@@ -290,11 +297,47 @@
 			this.chkAutoLaunch.Text = "Launch";
 			this.chkAutoLaunch.UseVisualStyleBackColor = true;
 			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label3.ForeColor = System.Drawing.Color.OrangeRed;
+			this.label3.Location = new System.Drawing.Point(186, 9);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(58, 12);
+			this.label3.TabIndex = 133;
+			this.label3.Text = "(Destination)";
+			// 
+			// label4
+			// 
+			this.label4.AutoSize = true;
+			this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label4.ForeColor = System.Drawing.Color.OrangeRed;
+			this.label4.Location = new System.Drawing.Point(186, 48);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(40, 12);
+			this.label4.TabIndex = 134;
+			this.label4.Text = "(Source)";
+			// 
+			// picPreview
+			// 
+			this.picPreview.BackColor = System.Drawing.Color.Silver;
+			this.picPreview.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.picPreview.Location = new System.Drawing.Point(12, 454);
+			this.picPreview.Name = "picPreview";
+			this.picPreview.Size = new System.Drawing.Size(300, 32);
+			this.picPreview.TabIndex = 135;
+			this.picPreview.TabStop = false;
+			this.picPreview.Visible = false;
+			// 
 			// frmMerge
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(324, 578);
+			this.Controls.Add(this.picPreview);
+			this.Controls.Add(this.label4);
+			this.Controls.Add(this.label3);
 			this.Controls.Add(this.chkAutoLaunch);
 			this.Controls.Add(this.treeNewChannels);
 			this.Controls.Add(this.staStatus);
@@ -320,6 +363,7 @@
 			this.staStatus.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picAboutIcon)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.treeNewChannels)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.picPreview)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -345,6 +389,9 @@
 		private Syncfusion.Windows.Forms.Tools.TreeViewAdv treeNewChannels;
 		private System.Windows.Forms.ImageList imlTreeIcons;
 		private System.Windows.Forms.CheckBox chkAutoLaunch;
+		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.PictureBox picPreview;
 	}
 }
 

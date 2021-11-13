@@ -567,9 +567,14 @@ namespace LORUtils4
 				while ((myByIDList.Count - 1) < newMember.ID)
 				{
 					myByIDList.Add(null);
-					myByAltIDList.Add(null);
+					//myByAltIDList.Add(null);
 				}
 				myByIDList[newMemberID] = newMember;
+				while ((myByAltIDList.Count - 1) < newMember.ID)
+				{
+					//myByIDList.Add(null);
+					myByAltIDList.Add(null);
+				}
 				myByAltIDList[newMemberID] = newMember;
 			}
 
@@ -936,7 +941,7 @@ namespace LORUtils4
 			}
 			if ((ret == null) && createIfNotFound)
 			{
-				if (myParent == null)
+				if (myParent != null)
 				{
 					if (myParent.MemberType == LORMemberType4.Sequence)
 					{
@@ -948,8 +953,24 @@ namespace LORUtils4
 						}
 						if (theType == LORMemberType4.RGBChannel)
 						{
-							ret = parentSeq.CreateNewRGBChannel(theName);
-							Add(ret);
+							LORRGBChannel4 grp = parentSeq.CreateNewRGBChannel(theName);
+
+							LORChannel4 ch = parentSeq.CreateNewChannel(theName + " (R)");
+							ch.color = lutils.LORCOLOR_RED;
+							ch.rgbChild = LORRGBChild4.Red;
+							grp.redChannel = ch;
+							ch = parentSeq.CreateNewChannel(theName + " (G)");
+							ch.color = lutils.LORCOLOR_GRN;
+							ch.rgbChild = LORRGBChild4.Green;
+							grp.grnChannel = ch;
+							ch = parentSeq.CreateNewChannel(theName + " (B)");
+							ch.color = lutils.LORCOLOR_BLU;
+							ch.rgbChild = LORRGBChild4.Blue;
+							grp.bluChannel = ch;
+
+
+							Add(grp);
+							ret = grp;
 						}
 						if (theType == LORMemberType4.ChannelGroup)
 						{
@@ -1008,6 +1029,12 @@ namespace LORUtils4
 					ret.effects.Clear();
 				}
 			}
+			else
+			{
+				LORSequence4 sq = (LORSequence4)myParent;
+				ret = sq.CreateNewChannel(channelName);
+				this.Add(ret);
+			}
 			return ret;
 		}
 		public LORRGBChannel4 FindRGBChannel(string rgbChannelName, bool createIfNotFound = false, bool clearEffects = false)
@@ -1027,6 +1054,10 @@ namespace LORUtils4
 					}
 				}
 			}
+			else
+			{
+				System.Diagnostics.Debugger.Break();
+			}
 
 			return ret;
 		}
@@ -1037,6 +1068,11 @@ namespace LORUtils4
 			if (member != null)
 			{
 				ret = (LORChannelGroup4)member;
+			}
+			else
+			{
+				LORSequence4 seq = (LORSequence4)myParent;
+				ret = seq.CreateNewChannelGroup(channelGroupName);
 			}
 			return ret;
 		}

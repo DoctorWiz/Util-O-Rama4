@@ -49,7 +49,7 @@ namespace UtilORama4
 				beatGrid.timings.Clear();
 			}
 			int tc = xEffects.effects.Count;
-			beatGrid.LORTimingGridType4 = LORTimingGridType4.Freeform;
+			beatGrid.TimingGridType = LORTimingGridType4.Freeform;
 			for (int q = 0; q < xEffects.effects.Count; q++)
 			{
 				xEffect xef = xEffects.effects[q];

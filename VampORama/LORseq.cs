@@ -133,6 +133,7 @@ namespace UtilORama4
 				if (ex == ".lms")
 				{
 					LORSequence4 existSeq = new LORSequence4(fileCurrent);
+					seq = existSeq;
 					Annotator.Init(existSeq);
 					//fileAudioOriginal = seq.info.music.File;
 					//txtFileAudio.Text = Path.GetFileNameWithoutExtension(fileAudioOriginal);
@@ -144,9 +145,9 @@ namespace UtilORama4
 
 					//centiseconds = SequenceFunctions.ms2cs(audioData.Duration);
 					int cs = (int)Math.Round(Annotator.songTimeMS / 10D);
-					cs = Math.Max(cs, seq.Centiseconds);
+					cs = Math.Max(cs, existSeq.Centiseconds);
 					//centiseconds = cs;
-					seq.Centiseconds = cs;
+					existSeq.Centiseconds = cs;
 
 					//! ImportVampsToSequence();
 					//ExportSelectedTimings_ToLOR

@@ -12,7 +12,7 @@ namespace LORUtils4
 {
 	public class LORTimings4 : LORMemberBase4, iLORMember4, IComparable<iLORMember4>
 	{
-		public LORUtils4.LORTimingGridType4 LORTimingGridType4 = LORUtils4.LORTimingGridType4.None;
+		public LORUtils4.LORTimingGridType4 TimingGridType = LORUtils4.LORTimingGridType4.None;
 		public int spacing = lutils.UNDEFINED;
 		public List<int> timings = new List<int>();
 		public const string FIELDsaveID = " saveID";
@@ -57,16 +57,16 @@ namespace LORUtils4
 			{
 				ret.Append(lutils.SetKey(lutils.FIELDname, lutils.XMLifyName(myName)));
 			}
-			ret.Append(lutils.SetKey(lutils.FIELDtype, LORSeqEnums4.TimingName(this.LORTimingGridType4)));
+			ret.Append(lutils.SetKey(lutils.FIELDtype, LORSeqEnums4.TimingName(this.TimingGridType)));
 			if (spacing > 1)
 			{
 				ret.Append(lutils.SetKey(FIELDspacing, spacing));
 			}
-			if (this.LORTimingGridType4 == LORUtils4.LORTimingGridType4.FixedGrid)
+			if (this.TimingGridType == LORUtils4.LORTimingGridType4.FixedGrid)
 			{
 				ret.Append(lutils.ENDFLD);
 			}
-			else if (this.LORTimingGridType4 == LORUtils4.LORTimingGridType4.Freeform)
+			else if (this.TimingGridType == LORUtils4.LORTimingGridType4.Freeform)
 			{
 				ret.Append(lutils.FINFLD);
 
@@ -102,7 +102,7 @@ namespace LORUtils4
 				myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
 				myID = lutils.getKeyValue(lineIn, FIELDsaveID);
 				Centiseconds = lutils.getKeyValue(lineIn, lutils.FIELDcentiseconds);
-				this.LORTimingGridType4 = LORSeqEnums4.EnumGridType(lutils.getKeyWord(lineIn, lutils.FIELDtype));
+				this.TimingGridType = LORSeqEnums4.EnumGridType(lutils.getKeyWord(lineIn, lutils.FIELDtype));
 				spacing = lutils.getKeyValue(lineIn, FIELDspacing);
 			}
 			else
@@ -116,9 +116,9 @@ namespace LORUtils4
 		public override iLORMember4 Clone()
 		{
 			LORTimings4 grid = (LORTimings4)Clone();
-			grid.LORTimingGridType4 = this.LORTimingGridType4;
+			grid.TimingGridType = this.TimingGridType;
 			grid.spacing = spacing;
-			if (this.LORTimingGridType4 == LORUtils4.LORTimingGridType4.Freeform)
+			if (this.TimingGridType == LORUtils4.LORTimingGridType4.Freeform)
 			{
 				foreach (int time in timings)
 				{
