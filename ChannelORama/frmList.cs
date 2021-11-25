@@ -294,8 +294,9 @@ namespace UtilORama4
 
 		private string PathToDB(int year)
 		{
-			string ret = Fyle.DefaultDocumentsPath;
-			ret += "Christmas\\";
+			//string ret = Fyle.DefaultDocumentsPath;
+			string ret = "X:";
+			//ret += "Christmas\\";
 			ret += year.ToString();
 			ret += "\\Docs\\ChannelDB\\";
 			return ret;

@@ -152,6 +152,9 @@ namespace LORUtils4
 			}
 		}
 
+		public int Count
+		{ get { return Members.Count; } }
+
 
 		public override iLORMember4 Clone()
 		{

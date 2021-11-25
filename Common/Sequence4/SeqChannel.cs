@@ -173,8 +173,15 @@ namespace LORUtils4
 			List<LOREffect4> newList = new List<LOREffect4>();
 			foreach (LOREffect4 ef in effects)
 			{
-				LOREffect4 F = ef.Clone();
-				newList.Add(F);
+				if (ef.endCentisecond > ef.startCentisecond)
+				{
+					LOREffect4 F = ef.Clone();
+					newList.Add(F);
+				}
+				else
+				{
+					Fyle.MakeNoise(Fyle.Noises.Pop);
+				}
 			}
 			return newList;
 		}

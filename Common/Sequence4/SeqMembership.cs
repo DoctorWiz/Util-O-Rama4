@@ -1056,7 +1056,9 @@ namespace LORUtils4
 			}
 			else
 			{
-				System.Diagnostics.Debugger.Break();
+				LORSequence4 psq = (LORSequence4)myParent;
+				LORRGBChannel4 newrgb = psq.CreateNewRGBChannel(rgbChannelName, true);
+				this.Add(newrgb);
 			}
 
 			return ret;

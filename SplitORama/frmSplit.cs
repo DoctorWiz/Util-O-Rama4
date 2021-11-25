@@ -197,7 +197,7 @@ namespace UtilORama4
 				LORTimings4 theGrid = seq.TimingGrids[tg];
 				descr = theGrid.Name;
 				descr += " \t";
-				if (theGrid.LORTimingGridType4 == LORTimingGridType4.FixedGrid)
+				if (theGrid.TimingGridType == LORTimingGridType4.FixedGrid)
 				{
 					descr += "Fixed: ";
 					string tmg = lutils.FormatTime(theGrid.spacing);
@@ -213,7 +213,7 @@ namespace UtilORama4
 						}
 					}
 				}
-				if (theGrid.LORTimingGridType4 == LORTimingGridType4.Freeform)
+				if (theGrid.TimingGridType == LORTimingGridType4.Freeform)
 				{
 					descr += "Freeform: \t";
 					for (int x=0; x<3; x++)
@@ -903,7 +903,8 @@ namespace UtilORama4
 			// Note: "Select" in this case only refers to clicking on it and highlighting it.
 			// does not refer to Checking or unchecking the box, for that see:
 			iLORMember4 m = (iLORMember4)nOde.Tag;
-			TreeUtils.HiglightMemberBackground(m, select);
+			//TreeUtils.HiglightMemberBackground(m, select);
+			TreeUtils.HighlightMember(m, TreeUtils.textHighlightColor, TreeUtils.backgroundHighlightColor);
 		} // end highlight node
 
 
@@ -1475,7 +1476,8 @@ namespace UtilORama4
 				{
 					iLORMember4 member = (iLORMember4)nOde.Tag;
 					TreeUtils.SelectMember							(member, false);
-					TreeUtils.HiglightMemberBackground	(member, false);
+					//TreeUtils.HiglightMemberBackground	(member, false);
+					TreeUtils.HighlightMember(member, TreeUtils.textNormalColor, TreeUtils.backgroundNormalColor);
 					TreeUtils.ColorMemberText						(member, false);
 					TreeUtils.ItalisizeMember						(member, false);
 					TreeUtils.EmboldenMember						(member, false);

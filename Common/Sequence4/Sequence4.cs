@@ -2920,16 +2920,33 @@ namespace LORUtils4
 			return chan;
 		}
 
-		public LORRGBChannel4 CreateNewRGBChannel(string lineIn)
+		public LORRGBChannel4 CreateNewRGBChannel(string lineIn, bool andChildren = false)
 		{
 			// Does NOT check to see if a rgb channel with this name already exists
 			// Therefore, allows for duplicate rgb channel names (But they will have different SavedIndexes)
+			//! Important: This does NOT create the 3 child regular channels for Red, Green, and Blue.
+			
 			LORRGBChannel4 rch = new LORRGBChannel4(this, lineIn);
 			int newSI = AssignNextSavedIndex(rch);
 			rch.SetIndex(RGBchannels.Count);
 			RGBchannels.Add(rch);
 			AllMembers.Add(rch);
 			myCentiseconds = Math.Max(myCentiseconds, rch.Centiseconds);
+			if (andChildren)
+			{
+				LORChannel4 ch = CreateNewChannel(rch.Name + " (R)");
+				ch.rgbChild = LORRGBChild4.Red;
+				ch.color = lutils.LORCOLOR_RED;
+				rch.redChannel = ch;
+				ch = CreateNewChannel(rch.Name + " (G)");
+				ch.rgbChild = LORRGBChild4.Green;
+				ch.color = lutils.LORCOLOR_GRN;
+				rch.grnChannel = ch;
+				ch = CreateNewChannel(rch.Name + " (B)");
+				ch.rgbChild = LORRGBChild4.Blue;
+				ch.color = lutils.LORCOLOR_BLU;
+				rch.bluChannel = ch;
+			}
 			return rch;
 		}
 

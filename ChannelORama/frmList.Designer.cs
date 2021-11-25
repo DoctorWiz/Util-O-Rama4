@@ -122,7 +122,7 @@ namespace UtilORama4
 			// 
 			// picAboutIcon
 			// 
-			this.picAboutIcon.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("picAboutIcon.BackgroundImage")));
+			this.picAboutIcon.ErrorImage = null;
 			this.picAboutIcon.Image = ((System.Drawing.Image)(resources.GetObject("picAboutIcon.Image")));
 			this.picAboutIcon.Location = new System.Drawing.Point(419, 355);
 			this.picAboutIcon.Name = "picAboutIcon";

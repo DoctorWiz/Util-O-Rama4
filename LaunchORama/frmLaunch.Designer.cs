@@ -325,6 +325,7 @@ namespace UtilORama4
 			// 
 			// btnRGB
 			// 
+			this.btnRGB.Enabled = false;
 			this.btnRGB.Image = ((System.Drawing.Image)(resources.GetObject("btnRGB.Image")));
 			this.btnRGB.Location = new System.Drawing.Point(10, 316);
 			this.btnRGB.Name = "btnRGB";
@@ -348,6 +349,7 @@ namespace UtilORama4
 			// 
 			// btnSparkle
 			// 
+			this.btnSparkle.Enabled = false;
 			this.btnSparkle.Image = ((System.Drawing.Image)(resources.GetObject("btnSparkle.Image")));
 			this.btnSparkle.Location = new System.Drawing.Point(131, 316);
 			this.btnSparkle.Name = "btnSparkle";

@@ -430,9 +430,12 @@ namespace LORUtils4
 				// Raise Error to Debugger
 				System.Diagnostics.Debugger.Break();
 			}
-			this.EffectType = effectType;
-			myStartCentisecond = startTime;
-			myEndCentisecond = endTime;
+			else
+			{
+				this.EffectType = effectType;
+				myStartCentisecond = startTime;
+				myEndCentisecond = endTime;
+			}
 		}
 		public LOREffect4(LOREffectType4 effectType, int startTime, int endTime, int intensity)
 		{
@@ -441,10 +444,13 @@ namespace LORUtils4
 				// Raise Error to Debugger
 				System.Diagnostics.Debugger.Break();
 			}
-			this.EffectType = effectType;
-			myStartCentisecond = startTime;
-			myEndCentisecond = endTime;
-			Intensity = intensity;
+			else
+			{
+				this.EffectType = effectType;
+				myStartCentisecond = startTime;
+				myEndCentisecond = endTime;
+				Intensity = intensity;
+			}
 		}
 
 		public LOREffect4(LOREffectType4 effectType, int startTime, int endTime, int start_Intensity, int end_Intensity)
@@ -454,11 +460,14 @@ namespace LORUtils4
 				// Raise Error to Debugger
 				System.Diagnostics.Debugger.Break();
 			}
-			this.EffectType = effectType;
-			myStartCentisecond = startTime;
-			myEndCentisecond = endTime;
-			startIntensity = start_Intensity;
-			endIntensity = end_Intensity;
+			else
+			{
+				this.EffectType = effectType;
+				myStartCentisecond = startTime;
+				myEndCentisecond = endTime;
+				startIntensity = start_Intensity;
+				endIntensity = end_Intensity;
+			}
 		}
 
 

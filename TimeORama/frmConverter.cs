@@ -419,6 +419,11 @@ namespace UtilORama4
 				DialogResult result = dlgFileOpen.ShowDialog(this);
 				if (result == DialogResult.OK)
 				{
+					ConvertTimings(dlgFileOpen.FileName);
+					
+					
+					
+					/*
 					txtXFile.Text = dlgFileOpen.FileName;
 					xChosen = true;
 					gotx = true;
@@ -439,6 +444,7 @@ namespace UtilORama4
 					if (timeTracks.Length == 1) stats += n.ToString() + " timings."; else stats = n.ToString() + " timings (total).";
 					pnlStatus.Text = stats;
 					grpLOR.Enabled = true;
+					*/
 				} // end if (result = DialogResult.OK)
 			}
 			else // LORtoX Create New
@@ -479,7 +485,7 @@ namespace UtilORama4
 							cboLORItem.Text = xName;
 							for (int i = 0; i < seq.TimingGrids.Count; i++)
 							{
-								if (seq.TimingGrids[i].LORTimingGridType4 == LORTimingGridType4.Freeform)
+								if (seq.TimingGrids[i].TimingGridType == LORTimingGridType4.Freeform)
 								{
 									cboLORItem.Items.Add(seq.TimingGrids[i].Name);
 								}
@@ -985,9 +991,9 @@ namespace UtilORama4
 						{
 							match = true;
 						}
-						if (grid.LORTimingGridType4 == LORTimingGridType4.FixedGrid)
+						if (grid.TimingGridType == LORTimingGridType4.FixedGrid)
 						{
-							if (uniqueGrids[u].LORTimingGridType4 == LORTimingGridType4.FixedGrid)
+							if (uniqueGrids[u].TimingGridType == LORTimingGridType4.FixedGrid)
 							{
 								if (grid.spacing == uniqueGrids[u].spacing)
 								{
@@ -1014,5 +1020,140 @@ namespace UtilORama4
 		{
 
 		}
+
+		public void ConvertTimings(string xFile)
+		{
+			string lineIn = "";
+			string lineOut = "";
+			int stime = 0;
+			int etime = 0;
+			int ctime = 0;
+			int saveID = 12;
+			int poz1 = -1;
+			int poz2 = -1;
+			int subSec = 0;
+			int lineCount = 0;  // of the file being read
+			string lFile = Path.GetDirectoryName(xFile) + "\\";
+			lFile += Path.GetFileNameWithoutExtension(xFile);
+			lFile += ".LorTime";
+			StreamReader reader = new StreamReader(xFile);
+			StreamWriter writer = new StreamWriter(lFile);
+
+			lineOut = "\t<timingGrids>";
+			//writer.WriteLine(lineOut);
+			lineIn = reader.ReadLine(); // ?xml version
+			lineIn = reader.ReadLine(); // <timings>
+			lineIn = reader.ReadLine();
+			lineCount = 3;
+			while (poz1 < 0)
+			{
+				string tname = xutils.getKeyWord(lineIn, "name");
+				lineOut = "\t\t<timingGrid saveID=\"" + saveID.ToString() + "\" name=\"" + tname;
+				lineOut += "\" type=\"freeform\">";
+				writer.WriteLine(lineOut);
+				subSec = 0; // Reset
+				poz2 = -1; // Reset
+				etime = 0; // Reset
+				saveID++;
+				lineIn = reader.ReadLine(); // <EffectLayer>
+				lineCount++;
+				while (poz2 < 0)
+				{
+					// Have we reached the end of this timing track or sub-track?
+					poz2 = lineIn.IndexOf("</EffectLayer>");
+					if (poz2 < 0)
+					{
+						// Nope, not yet, still got timings to process
+						// Get starttime in milliseconds.
+						stime = xutils.getKeyValue(lineIn, "starttime");
+						// Is it higher than the last (if any) end time?
+						if (stime > etime)
+						{
+							// convert it to centiseconds
+							ctime = (int)Math.Round(stime / 10D);
+							// write the starttime in centiseconds to the LOR timing file
+							lineOut = "\t\t\t<timing centisecond=\"" + ctime.ToString() + "\"/>";
+							writer.WriteLine(lineOut);
+						}
+						// Get the endtime in milliseconds and convert it to centiseconds
+						etime = xutils.getKeyValue(lineIn, "endtime");
+						ctime = (int)Math.Round(etime / 10D);
+						// write the endtime in centiseconds to the LOR timing file
+						lineOut = "\t\t\t<timing centisecond=\"" + ctime.ToString() + "\"/>";
+						writer.WriteLine(lineOut);
+
+						// Grab the next line for the next pass
+						lineIn = reader.ReadLine();
+						lineCount++;
+					}
+					else // lineIn.IndexOf("</EffectLayer>")
+					{ 
+						// Yep, /EffectLayer found, so end of this section
+						// Close out the LOR timing track
+						lineOut = "\t\t</timingGrid>";
+						writer.WriteLine(lineOut);
+
+						// Get next line after </EffectLayer>
+						lineIn = reader.ReadLine();
+						lineCount++;
+						// Was it a standalone track, or part of a lyric track?
+						poz1 = lineIn.IndexOf("</timing>");
+						if (poz1 >= 0)
+						{
+							// It was a standalone track, or it was the end of the last subsection of a Lyric track
+							// Get the next line, which is either the start of the next timing track and
+							//  will contain it's name, or the end of file and will contain </timings>
+							lineIn = reader.ReadLine(); // <timing name=... or </timings>
+							lineCount++;
+							// Have we reached the end?
+							poz1 = lineIn.IndexOf("</timings>");
+							// If we found it, poz1 will == 0
+							//						 and poz2 will == 2 (because we found </EffectLayer> above
+							// This will cause the inner while loop to exit (2 !< 0)
+							// And will also cause the first while loop to exit (0 !< 0)
+							// If we DIDN'T find it, poz1 will = -1
+							// so inner while will exit, but outer while will continue looping
+							// start of outer loop gets the name of the next section
+							int wik = 0; // Break here for testing
+						}
+						else
+						{
+							// If it wasn't </timing> then it should have been <EffectLayer>
+							string foo = lineIn; // Break here for testing
+							// It was a subsection of a Lyric track, and there is at least one more subsection left
+							// Starting the next subsection of a Lyric track
+							string t2name = tname;
+							if (subSec == 0)
+							{
+								t2name += " Words";
+							}
+							if (subSec == 1)
+							{
+								t2name += " Phonemes";
+							}
+							// Start next LOR timing track
+							lineOut = "\t\t<timingGrid saveID=\"" + saveID.ToString() + "\" name=\"" + t2name;
+							lineOut += "\" type=\"freeform\">";
+							writer.WriteLine(lineOut);
+							saveID++;
+							subSec++;
+							poz2 = -1; // Keep this inner loop going
+						} // END /timing found, or not.  Starting new timing track, or new sub-section
+					} // END /EffectLayer found, or not.  End of timing track
+				} // Inner while loop.  Was /EffectLayer found on previous pass?
+			} // Outer while loop.  Was /timing or /timings found on previous pass?
+			
+			// Done!  No more timing tracks in the xLights source file
+			// Close out the LOR file
+			lineOut = "\t</timingGrids>";
+			//writer.WriteLine(lineOut);
+			writer.Close();
+			reader.Close();
+		}
+
+
+
+
+
 	}
 }

@@ -3052,38 +3052,42 @@ namespace UtilORama4
 				{
 					case LORMemberType4.Channel:
 						LORChannel4 sourceCh = (LORChannel4)member;
-						LORChannel4 destCh = (LORChannel4)destParts.FindChannel(sourceCh.Name, false);
-						if (destCh == null)
-						{
-							destCh = seqDest.CreateNewChannel(sourceCh.Name);
+						LORChannel4 destCh = (LORChannel4)destParts.FindChannel(sourceCh.Name, true);
+						//if (destCh == null)
+						//{
+						//	destCh = seqDest.CreateNewChannel(sourceCh.Name);
 							//destCh = seqDest.CreateNewChannel(sourceCh.LineOut());
-						}
+						//}
 						CopyChannel(sourceCh, destCh);
-						destParts.Items.Add(destCh);
+						//destParts.Items.Add(destCh);
+						//destParts.Add(destCh);
 						break;
 					case LORMemberType4.RGBChannel:
 						LORRGBChannel4 sourceRGB = (LORRGBChannel4)member;
-						LORRGBChannel4 destRGB = (LORRGBChannel4)destParts.FindRGBChannel(sourceRGB.Name, false);
-						if (destRGB == null)
-						{
-							destRGB = seqDest.CreateNewRGBChannel(sourceRGB.Name);
-						}
+						LORRGBChannel4 destRGB = (LORRGBChannel4)destParts.FindRGBChannel(sourceRGB.Name, true);
+						//if (destRGB == null)
+						//{
+						//	destRGB = seqDest.CreateNewRGBChannel(sourceRGB.Name);
+						//}
 						CopyRGBchannel(sourceRGB, destRGB);
-						destParts.Items.Add(destRGB);
+						//destParts.Items.Add(destRGB);
+						//destParts.Add(destRGB);
 						break;
 					case LORMemberType4.ChannelGroup:
 						LORChannelGroup4 sourceGroup = (LORChannelGroup4)member;
-						LORChannelGroup4 destGroup = (LORChannelGroup4)destParts.FindChannelGroup(sourceGroup.Name, false);
-						if (destGroup == null)
-						{
-							destGroup = seqDest.CreateNewChannelGroup(sourceGroup.Name);
-						}
+						LORChannelGroup4 destGroup = (LORChannelGroup4)destParts.FindChannelGroup(sourceGroup.Name, true);
+						//if (destGroup == null)
+						//{
+						//	destGroup = seqDest.CreateNewChannelGroup(sourceGroup.Name);
+						//}
+						//! Recurse!
 						CopyItems(sourceGroup.Members, destGroup.Members);
-						destParts.Items.Add(destGroup);
+						//destParts.Add(destGroup);
 						break;
 				}
 			}
 		}
+
 		private LORChannel4 CopyChannel(LORChannel4 sourceChannel, LORChannel4 destChannel)
 		{
 			// Assume the name was set when destChannel was constructed
