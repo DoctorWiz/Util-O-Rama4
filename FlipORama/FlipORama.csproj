@@ -1,0 +1,208 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BBD2ACE8-891C-4112-84E3-C1686DBCAE68}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>UtilORama4</RootNamespace>
+    <AssemblyName>Flip-O-Rama</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Syncfusion.Grid.Base, Version=19.2460.0.62, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.Grid.Base.19.2.0.62\lib\net46\Syncfusion.Grid.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.Grid.Windows, Version=19.2460.0.62, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.Grid.Windows.19.2.0.62\lib\net46\Syncfusion.Grid.Windows.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.Licensing, Version=19.2460.0.62, Culture=neutral, PublicKeyToken=632609b4d040f6b4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.Licensing.19.2.0.62\lib\net46\Syncfusion.Licensing.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.Shared.Base, Version=19.2460.0.62, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.Shared.Base.19.2.0.62\lib\net46\Syncfusion.Shared.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.Shared.Windows, Version=19.2460.0.62, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.Shared.Windows.19.2.0.62\lib\net46\Syncfusion.Shared.Windows.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.SpellChecker.Base, Version=19.2460.0.62, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.SpellChecker.Base.19.2.0.62\lib\net46\Syncfusion.SpellChecker.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.Tools.Base, Version=19.2460.0.62, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.Tools.Base.19.2.0.62\lib\net46\Syncfusion.Tools.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.Tools.Windows, Version=19.2460.0.62, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.Tools.Windows.19.2.0.62\lib\net46\Syncfusion.Tools.Windows.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\COMMON\FileHelper.cs">
+      <Link>FileHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\About\About.cs">
+      <Link>About.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\Common\About\About.designer.cs">
+      <Link>About.designer.cs</Link>
+      <DependentUpon>About.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\LORUtils.cs">
+      <Link>LORUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqChannel.cs">
+      <Link>SeqChannel.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqChannelGroup.cs">
+      <Link>SeqChannelGroup.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqCosmicDevice.cs">
+      <Link>SeqCosmicDevice.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqEnums.cs">
+      <Link>SeqEnums.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqMemberBase.cs">
+      <Link>SeqMemberBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqMemberInterface.cs">
+      <Link>SeqMemberInterface.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqMembership.cs">
+      <Link>SeqMembership.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqRGBChannel.cs">
+      <Link>SeqRGBChannel.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqSubs.cs">
+      <Link>SeqSubs.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqTimingGrid.cs">
+      <Link>SeqTimingGrid.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SeqTrack.cs">
+      <Link>SeqTrack.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\Sequence4.cs">
+      <Link>Sequence4.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\SFTreeUtils.cs">
+      <Link>SFTreeUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\Visualization4.cs">
+      <Link>Visualization4.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\VizChannel.cs">
+      <Link>VizChannel.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\VizDrawObject.cs">
+      <Link>VizDrawObject.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Sequence4\VizGroup.cs">
+      <Link>VizGroup.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\xUtils\xTimings.cs">
+      <Link>xTimings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\xUtils\xUtils.cs">
+      <Link>xUtils.cs</Link>
+    </Compile>
+    <Compile Include="frmFlip.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmFlip.Designer.cs">
+      <DependentUpon>frmFlip.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="..\Common\About\About.resx">
+      <Link>About.resx</Link>
+      <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmFlip.resx">
+      <DependentUpon>frmFlip.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

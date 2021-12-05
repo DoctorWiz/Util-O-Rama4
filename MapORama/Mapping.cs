@@ -2896,13 +2896,13 @@ namespace UtilORama4
 									else
 									{
 										// Child counts don't match!
-										System.Diagnostics.Debugger.Break();
+										//System.Diagnostics.Debugger.Break();
 									}
 								}
 								else
 								{
 									// Could not fetch destination members!
-									System.Diagnostics.Debugger.Break();
+									//System.Diagnostics.Debugger.Break();
 								} // Member Type
 						} // End destination.MapTo = sourceMember
 					} // End destination MapTo !null
@@ -2922,7 +2922,7 @@ namespace UtilORama4
 			else
 			{
 				// source and/or destination is not selected
-				System.Diagnostics.Debugger.Break();
+				//System.Diagnostics.Debugger.Break();
 			} // End source & destination selected
 			if (success) MakeDirty();
 			UpdateUI();

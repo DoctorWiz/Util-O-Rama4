@@ -766,13 +766,19 @@ namespace UtilORama4
 		}
 		private void treeDest_AfterSelect(object sender, EventArgs e)
 		{
-			TreeNodeAdv newDestNode = treeDest.SelectedNode;
-			DestNode_Click(newDestNode);
+			if (treeDest.SelectedNode != null)
+			{
+				TreeNodeAdv newDestNode = treeDest.SelectedNode;
+				DestNode_Click(newDestNode);
+			}
 		}
 		private void treeSource_AfterSelect(object sender, EventArgs e)
 		{
-			TreeNodeAdv newSourceNode = treeSource.SelectedNode;
-			SourceNode_Click(newSourceNode);
+			if (treeSource.SelectedNode != null)
+			{
+				TreeNodeAdv newSourceNode = treeSource.SelectedNode;
+				SourceNode_Click(newSourceNode);
+			}
 		} // end class frmRemapper
 		private void frmRemapper_MouseMove(object sender, MouseEventArgs e)
 		{
