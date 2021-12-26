@@ -18,10 +18,23 @@ namespace UtilORama4
 	{
 		private static Properties.Settings heartOfTheSun = Properties.Settings.Default;
 		private const string helpPage = "http://wizlights.com/utilorama/launchorama";
+		private string basePath = "";
+		private bool inIDE = false;
 
 		public frmLaunch()
 		{
 			InitializeComponent();
+			inIDE = Fyle.InIDE;
+			if (inIDE)
+			{
+				basePath = Path.GetDirectoryName( Application.ExecutablePath) + "\\";
+			}
+			else
+			{
+				basePath = Path.GetDirectoryName(Application.ExecutablePath);
+				// Continue processing, until we get the base path for the Util-O-Rama source code
+
+			}
 		}
 
 		private void frmLaunch_Load(object sender, EventArgs e)
@@ -232,15 +245,31 @@ namespace UtilORama4
 
 		private void LaunchApp(string appName)
 		{
+			string app = "";
 			// Prepare to activate!
-			Fyle.MakeNoise(Fyle.Noises.Activate);
 			// If NOT running in the IDE
-			if (!Debugger.IsAttached)
+			//if (!Debugger.IsAttached)
+			//{
+			// get full path and app name and run it!
+			//if (Fyle.InIDE)
+			//{
+				app = Application.ExecutablePath.ToLower();
+				app = app.Replace("launch", appName);
+			//}
+			//else
+			//{
+			//	app = basePath + appName + "orama.exe";
+			//}
+			if (File.Exists(app))
 			{
-				// get full path and app name and run it!
-				string app = Application.ExecutablePath + appName + "orama.exe";
+				Fyle.MakeNoise(Fyle.Noises.Activate);
 				Fyle.LaunchFile(app);
 			}
+			else
+			{
+				Fyle.MakeNoise(Fyle.Noises.WahWahWah);
+			}
+			//}
 		}
 
 		private void btnMerge_Click(object sender, EventArgs e)
@@ -291,7 +320,7 @@ namespace UtilORama4
 
 		private void btnInfo_Click(object sender, EventArgs e)
 		{
-			LaunchApp("inf");
+			LaunchApp("info");
 		}
 
 		private void lblMap_Click(object sender, EventArgs e)
@@ -357,6 +386,23 @@ namespace UtilORama4
 		private void lblLight_Click(object sender, EventArgs e)
 		{
 			btnLight_Click(sender, e);
+		}
+
+		public string WhereIsApp(string which)
+		{
+			string ret = "";
+			switch(which)
+			{
+
+			}
+
+			return ret;
+		}
+
+
+		private void picAboutIcon_Click(object sender, EventArgs e)
+		{
+
 		}
 	}
 }

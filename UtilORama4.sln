@@ -32,7 +32,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompareORama", "CompareORam
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlankORama", "BlankORama\BlankORama.csproj", "{4E26FC58-7311-1173-8F84-19252E5593F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChanORama", "ChannelORama\ChanORama.csproj", "{625B1D42-4E48-4DD5-AD91-F83C26D07BBB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChannelORama", "ChannelORama\ChannelORama.csproj", "{625B1D42-4E48-4DD5-AD91-F83C26D07BBB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DimORama", "DimORama\DimORama.csproj", "{A6369B9A-7311-4019-B946-E323C279CD06}"
 EndProject

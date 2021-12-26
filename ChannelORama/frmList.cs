@@ -887,6 +887,77 @@ namespace UtilORama4
 
 		private void frmList_Shown(object sender, EventArgs e)
 		{
+			bool gotData = false;
+			int errs = 0;
+
+			if (!formShown)
+			{
+				dbPath = Properties.Settings.Default.DBPath;
+				if (dbPath.Length > 6)
+				{
+					if (Fyle.IsValidPath(dbPath))
+					{
+						string testFile = dbPath + "Channels.csv";
+						if (Fyle.Exists(testFile))
+						{
+							gotData = true;
+						}
+					}
+				}
+
+				if (!gotData)
+				{
+					year = DateTime.Now.Year;  // Get it and store it so don't have to keep looking it back up
+					dbPath = PathToDB(year);  // Get and save this too
+					dlgFileOpen.InitialDirectory = dbPath;
+					dlgFileOpen.Filter = "Channels.csv|Channels.csv";
+					dlgFileOpen.DefaultExt = "csv";
+					dlgFileOpen.Title = "Location of Channel Database";
+					dlgFileOpen.CheckPathExists = true;
+					dlgFileOpen.FileName = "Channels.csv";
+
+
+					DialogResult dr = dlgFileOpen.ShowDialog();
+					if (dr== DialogResult.OK)
+					{
+						if (Fyle.Exists(dlgFileOpen.FileName))
+						{
+							dbPath = Path.GetDirectoryName(dlgFileOpen.FileName) + "\\";
+							Properties.Settings.Default.DBPath = dbPath;
+							Properties.Settings.Default.Save();
+							gotData = true;
+						}
+						else
+						{
+							//TODO: Handle file not found, perhaps prompt to create new database?
+						}
+					}
+					else
+					{
+						//TODO: Handle file open dialog canceled
+					}
+				}
+				if (gotData)
+				{
+					errs = LoadData(dbPath);
+					if (universes.Count > 0)
+					{
+						BuildTree();
+						btnCompareLOR.Enabled = true;
+						btnComparex.Enabled = true;
+						btnReport.Enabled = true;
+					}
+				}
+				else
+				{
+					//TODO: Handle still not having data, perhaps prompt to create new database?
+				}
+				formShown = true;
+			}
+		}
+		
+		private void frmList_Shown_Old(object sender, EventArgs e)
+		{
 			if (!formShown)
 			{
 				year = DateTime.Now.Year;  // Get it and store it so don't have to keep looking it back up
@@ -900,8 +971,8 @@ namespace UtilORama4
 				else
 				{
 					string msg = "Data files not found in folder " + dbPath;
-					msg += ".  If you have never used LORChannel4-O-Rama, create some Universes, Controllers, and Channels.  ";
-					msg += "If you have used LORChannel4-O-Rama in previous years, create a folder for this year's data and ";
+					msg += ".  If you have never used Channel-O-Rama, create some Universes, Controllers, and Channels.  ";
+					msg += "If you have used Channel-O-Rama in previous years, create a folder for this year's data and ";
 					msg += "copy last year's data to it as a starting point.  If you have already used it this year and ";
 					msg += "think you should have data with Universe, Controllers, and Channels, please check the path ";
 					msg += dbPath + " and make sure it exists, has not been deleted or moved, and that it contains 3 ";

@@ -613,8 +613,8 @@ namespace LORUtils4
 																{
 																	//! Track Items
 																	//li = lineIn.IndexOf(STARTtrackItem);
-																	if (lineCount == 972) System.Diagnostics.Debugger.Break();
-																	if (lineCount == 200) System.Diagnostics.Debugger.Break();
+																	//if (lineCount == 972) System.Diagnostics.Debugger.Break();
+																	//if (lineCount == 200) System.Diagnostics.Debugger.Break();
 																	li = lutils.ContainsKey(lineIn, STARTtrackItem);
 																	if (li > 0)
 																	{

@@ -22,7 +22,7 @@ namespace UtilORama4
 		// Colors are 0 = 0xFF0000; Red, 1 = 0xFF7F00; Orange, 2 = 0xFFFF00; Yellow, 3 = 0x7FFF00; Yellow-Green, 4 = 0x00FF00; Green,
 		// 5 = 0x00FF7F; Green-Cyan, 6 = 0x00FFFF; Cyan, 7 = 0x007FFF; Cyan-Blue, 8 = 0x0000FF; Blue, 9 = 0x7F00FF; Blu-Magenta,
 		// 10 = 0xFF00FF; Magenta, and 11 = 0xFF007F; Magenta-Red
-
+		
 
 
 	static SequenceFunctions()

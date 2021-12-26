@@ -74,7 +74,7 @@ namespace UtilORama4
             this.pnlAbout});
 			this.staStatus.Location = new System.Drawing.Point(0, 463);
 			this.staStatus.Name = "staStatus";
-			this.staStatus.Size = new System.Drawing.Size(498, 24);
+			this.staStatus.Size = new System.Drawing.Size(495, 24);
 			this.staStatus.TabIndex = 63;
 			// 
 			// pnlHelp
@@ -98,7 +98,7 @@ namespace UtilORama4
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlStatus.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
 			this.pnlStatus.Name = "pnlStatus";
-			this.pnlStatus.Size = new System.Drawing.Size(386, 19);
+			this.pnlStatus.Size = new System.Drawing.Size(383, 19);
 			this.pnlStatus.Spring = true;
 			// 
 			// pnlAbout
@@ -118,12 +118,13 @@ namespace UtilORama4
 			// 
 			this.picAboutIcon.ErrorImage = null;
 			this.picAboutIcon.Image = ((System.Drawing.Image)(resources.GetObject("picAboutIcon.Image")));
-			this.picAboutIcon.Location = new System.Drawing.Point(549, 444);
+			this.picAboutIcon.Location = new System.Drawing.Point(603, 163);
 			this.picAboutIcon.Name = "picAboutIcon";
 			this.picAboutIcon.Size = new System.Drawing.Size(128, 121);
 			this.picAboutIcon.TabIndex = 68;
 			this.picAboutIcon.TabStop = false;
 			this.picAboutIcon.Visible = false;
+			this.picAboutIcon.Click += new System.EventHandler(this.picAboutIcon_Click);
 			// 
 			// btnMap
 			// 
@@ -409,7 +410,7 @@ namespace UtilORama4
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(498, 487);
+			this.ClientSize = new System.Drawing.Size(495, 487);
 			this.Controls.Add(this.lblLight);
 			this.Controls.Add(this.btnLight);
 			this.Controls.Add(this.lblDim);
