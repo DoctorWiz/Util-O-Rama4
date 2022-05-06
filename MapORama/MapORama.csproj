@@ -1,20 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D13E7270-DC0C-43B7-AB48-11D649989DE5}</ProjectGuid>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>UtilORama4</RootNamespace>
     <AssemblyName>Map-O-Rama</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-		<LangVersion>8.0</LangVersion>
-		<Nullable>enable</Nullable>
-    <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFrameworkProfile />
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>C:\Users\Wizard\ActiveDocuments\SourceCode\Windows\UtilORama4\MapORama\Publish\</PublishUrl>
     <Install>true</Install>
@@ -31,25 +22,12 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Map-O-Rama.ico</ApplicationIcon>
@@ -69,23 +47,12 @@
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
   </PropertyGroup>
-  <PropertyGroup />
   <PropertyGroup>
     <SignManifests>false</SignManifests>
   </PropertyGroup>
-  <PropertyGroup />
-  <PropertyGroup />
   <ItemGroup>
     <Compile Include="..\..\COMMON\FileHelper.cs">
       <Link>FileHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\About\About.cs">
-      <Link>About.cs</Link>
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="..\Common\About\About.designer.cs">
-      <Link>About.designer.cs</Link>
-      <DependentUpon>About.cs</DependentUpon>
     </Compile>
     <Compile Include="..\Common\Sequence4\LORUtils.cs">
       <Link>LORUtils.cs</Link>
@@ -154,79 +121,6 @@
       <Link>VizGroup.cs</Link>
       <DependentUpon>LORUtils.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmMapper.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmMapper.Designer.cs">
-      <DependentUpon>frmMapper.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Mapping.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SeqSubs.cs" />
-    <Compile Include="Options.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Options.Designer.cs">
-      <DependentUpon>Options.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmMapList.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmMapList.Designer.cs">
-      <DependentUpon>frmMapList.cs</DependentUpon>
-    </Compile>
-    <EmbeddedResource Include="..\Common\About\About.resx">
-      <Link>About.resx</Link>
-      <DependentUpon>About.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmMapper.resx">
-      <DependentUpon>frmMapper.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Options.resx">
-      <DependentUpon>Options.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmMapList.resx">
-      <DependentUpon>frmMapList.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <EmbeddedResource Include="Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <None Include="packages.config" />
-    <None Include="Properties\app.manifest" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Map-O-Rama.ico" />
@@ -242,47 +136,19 @@
     <Reference Include="FuzzyString">
       <HintPath>..\..\Libraries\FuzzyString\obj\Release\FuzzyString.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="ProgressODoom">
       <HintPath>D:\!MyDocs\SourceCode\Windows\Controls\ProgressODoom\bin\Release\ProgressODoom.dll</HintPath>
     </Reference>
-    <Reference Include="Syncfusion.Grid.Base, Version=19.2460.0.44, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>C:\Program Files (x86)\Syncfusion\Essential Studio\Windows\19.2.0.44\precompiledassemblies\4.6\Syncfusion.Grid.Base.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Syncfusion.Grid.Windows, Version=19.2460.0.44, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>C:\Program Files (x86)\Syncfusion\Essential Studio\Windows\19.2.0.44\precompiledassemblies\4.6\Syncfusion.Grid.Windows.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Syncfusion.Shared.Base, Version=19.2460.0.44, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>C:\Program Files (x86)\Syncfusion\Essential Studio\Windows\19.2.0.44\precompiledassemblies\4.6\Syncfusion.Shared.Base.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Syncfusion.Shared.Windows, Version=19.2460.0.44, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>C:\Program Files (x86)\Syncfusion\Essential Studio\Windows\19.2.0.44\precompiledassemblies\4.6\Syncfusion.Shared.Windows.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Syncfusion.Tools.Base, Version=19.2460.0.44, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>C:\Program Files (x86)\Syncfusion\Essential Studio\Windows\19.2.0.44\precompiledassemblies\4.6\Syncfusion.Tools.Base.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Syncfusion.Tools.Windows, Version=19.2460.0.44, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>C:\Program Files (x86)\Syncfusion\Essential Studio\Windows\19.2.0.44\precompiledassemblies\4.6\Syncfusion.Tools.Windows.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Deployment" />
+    <Reference Include="System.Data.OracleClient" />
     <Reference Include="System.Design" />
-    <Reference Include="System.DirectoryServices" />
-    <Reference Include="System.DirectoryServices.AccountManagement" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Net" />
     <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.XML" />
-    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Speech" />
+    <Reference Include="System.Transactions" />
     <Reference Include="ToggleSwitch">
       <HintPath>D:\!MyDocs\SourceCode\Windows\Controls\ToggleSwitch\ToggleSwitch\bin\Release\ToggleSwitch.dll</HintPath>
     </Reference>
@@ -299,12 +165,123 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.Win32.SystemEvents" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
+    <PackageReference Include="PostSharp" Version="6.10.9" />
+    <PackageReference Include="Syncfusion.BulletGraph.Windows" Version="20.1.0.48" />
+    <PackageReference Include="Syncfusion.Diagram.Utility.Windows" Version="20.1.0.48" />
+    <PackageReference Include="Syncfusion.Edit.Windows" Version="20.1.0.48" />
+    <PackageReference Include="Syncfusion.Gauge.Windows" Version="20.1.0.48" />
+    <PackageReference Include="Syncfusion.GridHelperClasses.Windows" Version="20.1.0.48" />
+    <PackageReference Include="Syncfusion.Grouping.Windows" Version="20.1.0.48" />
+    <PackageReference Include="Syncfusion.SfBarcode.Windows" Version="20.1.0.48" />
+    <PackageReference Include="Syncfusion.SfDataGrid.WinForms" Version="20.1.0.48" />
+    <PackageReference Include="Syncfusion.TreeMap.Windows" Version="20.1.0.48" />
+    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="6.0.1" />
+    <PackageReference Include="System.DirectoryServices.Protocols" Version="6.0.1" />
+    <PackageReference Include="System.DirectoryServices.Protocols" Version="6.0.1" />
+    <PackageReference Include="System.Runtime" Version="4.3.1" />
+    <PackageReference Include="System.ServiceModel.Federation" Version="4.8.1" />
+    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.310801">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Backup1\About.cs" />
+    <Compile Remove="Backup1\About.Designer.cs" />
+    <Compile Remove="Backup1\Backup\About.cs" />
+    <Compile Remove="Backup1\Backup\About.Designer.cs" />
+    <Compile Remove="Backup1\Backup\MapList.cs" />
+    <Compile Remove="Backup1\Backup\MapList.Designer.cs" />
+    <Compile Remove="Backup1\Backup\Mapper.cs" />
+    <Compile Remove="Backup1\Backup\Mapper.Designer.cs" />
+    <Compile Remove="Backup1\Backup\Mapping.cs" />
+    <Compile Remove="Backup1\Backup\obj\Debug\.NETFramework,Version=v4.6.2.AssemblyAttributes.cs" />
+    <Compile Remove="Backup1\Backup\obj\Debug\.NETFramework,Version=v4.7.2.AssemblyAttributes.cs" />
+    <Compile Remove="Backup1\Backup\obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Remove="Backup1\Backup\obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Remove="Backup1\Backup\obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
+    <Compile Remove="Backup1\Backup\obj\Release\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Remove="Backup1\Backup\obj\Release\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Remove="Backup1\Backup\obj\Release\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
+    <Compile Remove="Backup1\Backup\Options.cs" />
+    <Compile Remove="Backup1\Backup\Options.Designer.cs" />
+    <Compile Remove="Backup1\Backup\Program.cs" />
+    <Compile Remove="Backup1\Backup\Properties\AssemblyInfo.cs" />
+    <Compile Remove="Backup1\Backup\Properties\Resources.Designer.cs" />
+    <Compile Remove="Backup1\Backup\Properties\Settings.Designer.cs" />
+    <Compile Remove="Backup1\Backup\Resources.Designer.cs" />
+    <Compile Remove="Backup1\Backup\SeqSubs.cs" />
+    <Compile Remove="Backup1\MapList.cs" />
+    <Compile Remove="Backup1\MapList.Designer.cs" />
+    <Compile Remove="Backup1\Mapper.cs" />
+    <Compile Remove="Backup1\Mapper.Designer.cs" />
+    <Compile Remove="Backup1\Mapping.cs" />
+    <Compile Remove="Backup1\obj\Debug\.NETFramework,Version=v4.6.2.AssemblyAttributes.cs" />
+    <Compile Remove="Backup1\obj\Debug\.NETFramework,Version=v4.7.2.AssemblyAttributes.cs" />
+    <Compile Remove="Backup1\obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Remove="Backup1\obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Remove="Backup1\obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
+    <Compile Remove="Backup1\obj\Release\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Remove="Backup1\obj\Release\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Remove="Backup1\obj\Release\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
+    <Compile Remove="Backup1\Options.cs" />
+    <Compile Remove="Backup1\Options.Designer.cs" />
+    <Compile Remove="Backup1\Program.cs" />
+    <Compile Remove="Backup1\Properties\AssemblyInfo.cs" />
+    <Compile Remove="Backup1\Properties\Resources.Designer.cs" />
+    <Compile Remove="Backup1\Properties\Settings.Designer.cs" />
+    <Compile Remove="Backup1\Resources.Designer.cs" />
+    <Compile Remove="Backup1\SeqSubs.cs" />
+    <Compile Remove="Backup\About.cs" />
+    <Compile Remove="Backup\About.Designer.cs" />
+    <Compile Remove="Backup\MapList.cs" />
+    <Compile Remove="Backup\MapList.Designer.cs" />
+    <Compile Remove="Backup\Mapper.cs" />
+    <Compile Remove="Backup\Mapper.Designer.cs" />
+    <Compile Remove="Backup\Mapping.cs" />
+    <Compile Remove="Backup\obj\Debug\.NETFramework,Version=v4.6.2.AssemblyAttributes.cs" />
+    <Compile Remove="Backup\obj\Debug\.NETFramework,Version=v4.7.2.AssemblyAttributes.cs" />
+    <Compile Remove="Backup\obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Remove="Backup\obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Remove="Backup\obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
+    <Compile Remove="Backup\obj\Release\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Remove="Backup\obj\Release\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Remove="Backup\obj\Release\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
+    <Compile Remove="Backup\Options.cs" />
+    <Compile Remove="Backup\Options.Designer.cs" />
+    <Compile Remove="Backup\Program.cs" />
+    <Compile Remove="Backup\Properties\AssemblyInfo.cs" />
+    <Compile Remove="Backup\Properties\Resources.Designer.cs" />
+    <Compile Remove="Backup\Properties\Settings.Designer.cs" />
+    <Compile Remove="Backup\Resources.Designer.cs" />
+    <Compile Remove="Backup\SeqSubs.cs" />
+    <Compile Remove="DEADCODEMapping.cs" />
+    <Compile Remove="OldAbout.cs" />
+    <Compile Remove="OldAbout.Designer.cs" />
+    <EmbeddedResource Remove="Backup1\About.resx" />
+    <EmbeddedResource Remove="Backup1\Backup\About.resx" />
+    <EmbeddedResource Remove="Backup1\Backup\MapList.resx" />
+    <EmbeddedResource Remove="Backup1\Backup\Mapper.resx" />
+    <EmbeddedResource Remove="Backup1\Backup\Options.resx" />
+    <EmbeddedResource Remove="Backup1\Backup\Properties\Resources.resx" />
+    <EmbeddedResource Remove="Backup1\Backup\Resources.resx" />
+    <EmbeddedResource Remove="Backup1\MapList.resx" />
+    <EmbeddedResource Remove="Backup1\Mapper.resx" />
+    <EmbeddedResource Remove="Backup1\Options.resx" />
+    <EmbeddedResource Remove="Backup1\Properties\Resources.resx" />
+    <EmbeddedResource Remove="Backup1\Resources.resx" />
+    <EmbeddedResource Remove="Backup\About.resx" />
+    <EmbeddedResource Remove="Backup\MapList.resx" />
+    <EmbeddedResource Remove="Backup\Mapper.resx" />
+    <EmbeddedResource Remove="Backup\Options.resx" />
+    <EmbeddedResource Remove="Backup\Properties\Resources.resx" />
+    <EmbeddedResource Remove="Backup\Resources.resx" />
+    <EmbeddedResource Remove="OldAbout.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
 </Project>

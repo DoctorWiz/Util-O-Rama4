@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Doctor 🧙 Wizard and W⚡zlights Software")]
 [assembly: AssemblyProduct("Vamp-O-Rama")]
-[assembly: AssemblyCopyright("Copyright © 2021+ by Doctor 🧙 Wizard and W⚡zlights Software")]
+[assembly: AssemblyCopyright("Copyright © 2022+ by Doctor 🧙 Wizard and W⚡zlights Software")]
 [assembly: AssemblyTrademark("Util-O-Rama is a trademark of Doctor 🧙 Wizard and W⚡zlights Software")]
 [assembly: AssemblyCulture("")]
 

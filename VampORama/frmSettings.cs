@@ -32,14 +32,14 @@ namespace UtilORama4
 		private const int TABIDXtimess = 0;
 		private const int TABIDXtracks = 1;
 		private const int TABIDXsave = 2;
-		private const string TABKEYtimess   = "tabGrids";
-		private const string TABKEYtracks  = "tabTracks";
-		private const string TABKEYsave    = "tabSave";
-		private const string TABKEYpoly    = "tabPoly";
+		private const string TABKEYtimess = "tabGrids";
+		private const string TABKEYtracks = "tabTracks";
+		private const string TABKEYsave = "tabSave";
+		private const string TABKEYpoly = "tabPoly";
 		private const string TABKEYspectro = "tabSpectro";
-		private const string TABKEYonsets  = "tabOnsets";
-		private const string TABKEYbeats   = "tabBeats";
-		private const string TABKEYchroma  = "tabChroma";
+		private const string TABKEYonsets = "tabOnsets";
+		private const string TABKEYbeats = "tabBeats";
+		private const string TABKEYchroma = "tabChroma";
 		private const string TABKEYsegment = "tabSegment";
 
 
@@ -123,7 +123,7 @@ namespace UtilORama4
 				brBrowserMsg.Navigate(appPath + "\\NeedSonicAnnotatorORama.htm");
 			}
 
-		
+
 			if (newMode < SHOWannotatorIzer)
 			{
 				Point homePoint = new Point(0, 6);
@@ -501,7 +501,7 @@ namespace UtilORama4
 
 		}
 
-		public void SetTheControlsForTheHeartOfTheSun() // Little nod to the Incredible Pink Floyd
+		public void SetTheControlsForTheuserSettings() // Little nod to the Incredible Pink Floyd
 		{
 			SetTimeSignature(timeSignature);
 			txtGridBeatX.Text = timesBeatsX.ToString();

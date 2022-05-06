@@ -1,20 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{553F85E5-6AF8-4185-ACFE-68BF3DCBB3FD}</ProjectGuid>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
     <RootNamespace>UtilORama4</RootNamespace>
     <AssemblyName>Split-O-Rama</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-		<LangVersion>8.0</LangVersion>
-		<Nullable>enable</Nullable>
-    <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -29,26 +21,12 @@
     <ApplicationVersion>0.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Split Light Bulb.ico</ApplicationIcon>
@@ -59,14 +37,6 @@
   <ItemGroup>
     <Compile Include="..\..\COMMON\FileHelper.cs">
       <Link>FileHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\About\About.cs">
-      <Link>About.cs</Link>
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="..\Common\About\About.designer.cs">
-      <Link>About.designer.cs</Link>
-      <DependentUpon>About.cs</DependentUpon>
     </Compile>
     <Compile Include="..\Common\Sequence4\LORUtils.cs">
       <Link>LORUtils.cs</Link>
@@ -139,55 +109,6 @@
       <Link>VizGroup.cs</Link>
       <DependentUpon>LORUtils.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormUtils.cs" />
-    <Compile Include="frmSplit.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmSplit.Designer.cs">
-      <DependentUpon>frmSplit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="license.cs" />
-    <Compile Include="frmOptions.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmOptions.Designer.cs">
-      <DependentUpon>frmOptions.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="..\Common\About\About.resx">
-      <Link>About.resx</Link>
-      <DependentUpon>About.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmSplit.resx">
-      <DependentUpon>frmSplit.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmOptions.resx">
-      <DependentUpon>frmOptions.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Split Light Bulb.ico" />
@@ -196,46 +117,12 @@
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Syncfusion.Grid.Base, Version=19.2460.0.44, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>C:\Program Files (x86)\Syncfusion\Essential Studio\Windows\19.2.0.44\precompiledassemblies\4.6\Syncfusion.Grid.Base.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Syncfusion.Grid.Windows, Version=19.2460.0.44, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>C:\Program Files (x86)\Syncfusion\Essential Studio\Windows\19.2.0.44\precompiledassemblies\4.6\Syncfusion.Grid.Windows.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Syncfusion.Shared.Base, Version=19.2460.0.44, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>C:\Program Files (x86)\Syncfusion\Essential Studio\Windows\19.2.0.44\precompiledassemblies\4.6\Syncfusion.Shared.Base.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Syncfusion.Shared.Windows, Version=19.2460.0.44, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>C:\Program Files (x86)\Syncfusion\Essential Studio\Windows\19.2.0.44\precompiledassemblies\4.6\Syncfusion.Shared.Windows.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Syncfusion.SpellChecker.Base, Version=19.2460.0.44, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89">
-      <HintPath>C:\Program Files (x86)\Syncfusion\Essential Studio\Windows\19.2.0.44\precompiledassemblies\4.6\Syncfusion.SpellChecker.Base.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Syncfusion.Tools.Base, Version=19.2460.0.44, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>C:\Program Files (x86)\Syncfusion\Essential Studio\Windows\19.2.0.44\precompiledassemblies\4.6\Syncfusion.Tools.Base.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Syncfusion.Tools.Windows, Version=19.2460.0.44, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>C:\Program Files (x86)\Syncfusion\Essential Studio\Windows\19.2.0.44\precompiledassemblies\4.6\Syncfusion.Tools.Windows.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Deployment" />
+    <Reference Include="System.Data.OracleClient" />
     <Reference Include="System.Design" />
-    <Reference Include="System.DirectoryServices" />
-    <Reference Include="System.DirectoryServices.AccountManagement" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.XML" />
-    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Transactions" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
@@ -250,10 +137,62 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common\FuzzyString\FuzzyString.csproj">
-      <Project>{2aaa900b-64fb-4874-9444-64ae33aca970}</Project>
-      <Name>FuzzyString</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\Common\FuzzyString\FuzzyString.csproj" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="PostSharp" Version="6.10.9" />
+    <PackageReference Include="Syncfusion.BulletGraph.Windows" Version="20.1.0.48" />
+    <PackageReference Include="Syncfusion.Diagram.Utility.Windows" Version="20.1.0.48" />
+    <PackageReference Include="Syncfusion.Edit.Windows" Version="20.1.0.48" />
+    <PackageReference Include="Syncfusion.Gauge.Windows" Version="20.1.0.48" />
+    <PackageReference Include="Syncfusion.GridHelperClasses.Windows" Version="20.1.0.48" />
+    <PackageReference Include="Syncfusion.Grouping.Windows" Version="20.1.0.48" />
+    <PackageReference Include="Syncfusion.SfBarcode.Windows" Version="20.1.0.48" />
+    <PackageReference Include="Syncfusion.SfListView.WinForms" Version="20.1.0.48" />
+    <PackageReference Include="Syncfusion.TreeMap.Windows" Version="20.1.0.48" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.310801">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Backup\About.cs" />
+    <Compile Remove="Backup\About.Designer.cs" />
+    <Compile Remove="Backup\Class1.cs" />
+    <Compile Remove="Backup\Class2.cs" />
+    <Compile Remove="Backup\foo_frmAboutBox.cs" />
+    <Compile Remove="Backup\foo_frmAboutBox.Designer.cs" />
+    <Compile Remove="Backup\FormUtils.cs" />
+    <Compile Remove="Backup\frmAbout.cs" />
+    <Compile Remove="Backup\frmAbout.Designer.cs" />
+    <Compile Remove="Backup\frmOptions.cs" />
+    <Compile Remove="Backup\frmOptions.Designer.cs" />
+    <Compile Remove="Backup\frmSplit.cs" />
+    <Compile Remove="Backup\frmSplit.Designer.cs" />
+    <Compile Remove="Backup\license.cs" />
+    <Compile Remove="Backup\obj\Debug\.NETFramework,Version=v4.5.2.AssemblyAttributes.cs" />
+    <Compile Remove="Backup\obj\Debug\.NETFramework,Version=v4.6.2.AssemblyAttributes.cs" />
+    <Compile Remove="Backup\obj\Debug\.NETFramework,Version=v4.7.2.AssemblyAttributes.cs" />
+    <Compile Remove="Backup\obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Remove="Backup\obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Remove="Backup\obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
+    <Compile Remove="Backup\obj\Release\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Remove="Backup\obj\Release\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Remove="Backup\obj\Release\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
+    <Compile Remove="Backup\Program.cs" />
+    <Compile Remove="Backup\Properties\AssemblyInfo.cs" />
+    <Compile Remove="Backup\Properties\Resources.Designer.cs" />
+    <Compile Remove="Backup\Properties\Settings.Designer.cs" />
+    <Compile Remove="Backup\XfrmOptions.cs" />
+    <Compile Remove="Backup\XfrmOptions.Designer.cs" />
+    <EmbeddedResource Remove="Backup\About.resx" />
+    <EmbeddedResource Remove="Backup\foo_frmAboutBox.resx" />
+    <EmbeddedResource Remove="Backup\frmAbout.resx" />
+    <EmbeddedResource Remove="Backup\frmOptions.resx" />
+    <EmbeddedResource Remove="Backup\frmSplit.resx" />
+    <EmbeddedResource Remove="Backup\Properties\Resources.resx" />
+    <EmbeddedResource Remove="Backup\XfrmOptions.resx" />
+  </ItemGroup>
 </Project>

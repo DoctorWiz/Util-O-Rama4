@@ -5,7 +5,8 @@ using System.Text;
 //using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-using LORUtils4; using FileHelper;
+using LORUtils4;
+using FileHelper;
 using xUtilities;
 
 namespace UtilORama4
@@ -32,19 +33,19 @@ namespace UtilORama4
 		public static xTimings xBeatsHalf = Annotator.xBeatsHalf; // new xTimings(beatsHalfName);
 		public static xTimings xBeatsThird = Annotator.xBeatsThird; // new xTimings(beatsThirdName);
 		public static xTimings xBeatsQuarter = Annotator.xBeatsQuarter; // new xTimings(beatsQuarterName);
-		//public static xTimings xFrames = Annotator.xFrames; // new xTimings(framesName);
-																												//public static int BeatsPerBar = 4;
-																												//public static int FirstBeat = 1;
-																												//public bool ReuseResults = false;
-																												//public int totalCentiseconds = 0;
-																												//public int totalMilliseconds = 0;
+																																		//public static xTimings xFrames = Annotator.xFrames; // new xTimings(framesName);
+																																		//public static int BeatsPerBar = 4;
+																																		//public static int FirstBeat = 1;
+																																		//public bool ReuseResults = false;
+																																		//public int totalCentiseconds = 0;
+																																		//public int totalMilliseconds = 0;
 		public static string ResultsName = "BarsAndBeats.csv";
 		public static string FileResults = Annotator.TempPath + ResultsName;
 		public static vamps.AlignmentType AlignmentType = vamps.AlignmentType.FPS40; // Default
 		public static vamps.LabelType LabelType = vamps.LabelType.Numbers;
 		//private Annotator myAnnotator = null;
 
-		public static readonly string[] availablePluginNames = {	"Queen Mary Bar and Beat Tracker",
+		public static readonly string[] availablePluginNames = {  "Queen Mary Bar and Beat Tracker",
 																											"Queen Mary Tempo and Beat Tracker",
 																											"BeatRoot Beat Tracker",
 																											// Does not work with latest Sonic Annotator, and 32-bit only (for older Annotator)
@@ -140,7 +141,7 @@ namespace UtilORama4
 			//string vampParams = availablePluginCodes[pluginIndex];
 			string pathConfigs = AppDomain.CurrentDomain.BaseDirectory + "VampConfigs\\";
 			//string pathWork = Path.GetDirectoryName(fileSong) + "\\";
-	
+
 			int lineCount = 0;
 			string lineIn = "";
 			StreamReader reader;
@@ -163,7 +164,12 @@ namespace UtilORama4
 							lineIn = reader.ReadLine();
 							if (lineCount == 7)
 							{
-								lineIn = lineIn.Replace("557", Annotator.StepSize.ToString());
+								lineIn = lineIn.Replace("512", Annotator.StepSize.ToString());
+							}
+							if (lineCount == 8)
+							{
+								int ss2 = Annotator.StepSize * 2;
+								lineIn = lineIn.Replace("1024", ss2.ToString());
 							}
 							if (lineCount == 16)
 							{
@@ -317,10 +323,10 @@ namespace UtilORama4
 				AlignmentType = alignmentType;
 				Annotator.SetAlignment(alignmentType);
 
-				xBars					= new xTimings("Bars" + " (Whole notes, (" + Annotator.BeatsPerBar.ToString() + " Quarter notes))");
-				xBeatsFull		= new xTimings(beatsFullName);
-				xBeatsHalf		= new xTimings(beatsHalfName);
-				xBeatsThird		= new xTimings(beatsThirdName);
+				xBars = new xTimings("Bars" + " (Whole notes, (" + Annotator.BeatsPerBar.ToString() + " Quarter notes))");
+				xBeatsFull = new xTimings(beatsFullName);
+				xBeatsHalf = new xTimings(beatsHalfName);
+				xBeatsThird = new xTimings(beatsThirdName);
 				xBeatsQuarter = new xTimings(beatsQuarterName);
 				//xFrames				= new xTimings("Frames");
 
@@ -355,14 +361,14 @@ namespace UtilORama4
 						// FULL BEATS - QUARTER NOTES
 						millisecs = Annotator.AlignTime(millisecs);
 						beatLength = millisecs - lastBeat;
-						xBeatsFull.Add(countBeats.ToString(), lastBeat, millisecs,countBeats);
+						xBeatsFull.Add(countBeats.ToString(), lastBeat, millisecs, countBeats);
 						countBeats++;
 
 						// BARS
 						if (countBeats > maxBeats)
 						{
 							countBeats = 1;
-							xBars.Add(countBars.ToString(), lastBar, millisecs,countBars);
+							xBars.Add(countBars.ToString(), lastBar, millisecs, countBars);
 							countBars++;
 							lastBar = millisecs;
 						}
@@ -370,7 +376,7 @@ namespace UtilORama4
 						// HALF BEATS - EIGHTH NOTES
 						subBeat = lastBeat + (beatLength / 2);
 						subBeat = Annotator.AlignTime(subBeat);
-						xBeatsHalf.Add(countHalves.ToString(), lastBeat, subBeat,countHalves);
+						xBeatsHalf.Add(countHalves.ToString(), lastBeat, subBeat, countHalves);
 						countHalves++;
 
 						xBeatsHalf.Add(countHalves.ToString(), subBeat, millisecs, countHalves);
@@ -417,7 +423,7 @@ namespace UtilORama4
 						lastBeat = millisecs;
 						onsetCount++;
 					} // end line contains a period
-					//TODO Raise Progress Bar Event
+						//TODO Raise Progress Bar Event
 				} // end while loop more lines remaining
 
 				reader.Close();
@@ -447,7 +453,7 @@ namespace UtilORama4
 				// subtract first starttime from last
 				int barTime = xBars.effects[xBars.effects.Count - 1].starttime - xBars.effects[0].starttime;
 				// Divide by the count-1
-				AverageBarMS = (int)Math.Round(barTime / (double)(xBars.effects.Count)-1);
+				AverageBarMS = (int)Math.Round(barTime / (double)(xBars.effects.Count) - 1);
 				Annotator.AverageBarMS = AverageBarMS;
 			}
 			// If at least 2 full beats, calculate the average, same as above
@@ -528,7 +534,7 @@ namespace UtilORama4
 		{
 			// Ignore the timings passed in, and use the ones already cached for Bars and Beats
 			// (Other transforms will use the one passed in)
-			
+
 			//SequenceFunctions.Sequence = sequence;
 			int errs = 0;
 
@@ -603,26 +609,26 @@ namespace UtilORama4
 			int errs = 0;
 			if (Annotator.UseRamps)
 			{
-				errs += xTimingToLORChannels(xBars,					lutils.Color_NettoLOR(System.Drawing.Color.Red));
-				errs += xTimingToLORChannels(xBeatsFull,		lutils.Color_NettoLOR(System.Drawing.Color.DarkOrange));
-				errs += xTimingToLORChannels(xBeatsHalf,		lutils.Color_NettoLOR(System.Drawing.Color.Gold));
-				errs += xTimingToLORChannels(xBeatsThird,		lutils.Color_NettoLOR(System.Drawing.Color.Lime));
+				errs += xTimingToLORChannels(xBars, lutils.Color_NettoLOR(System.Drawing.Color.Red));
+				errs += xTimingToLORChannels(xBeatsFull, lutils.Color_NettoLOR(System.Drawing.Color.DarkOrange));
+				errs += xTimingToLORChannels(xBeatsHalf, lutils.Color_NettoLOR(System.Drawing.Color.Gold));
+				errs += xTimingToLORChannels(xBeatsThird, lutils.Color_NettoLOR(System.Drawing.Color.Lime));
 				errs += xTimingToLORChannels(xBeatsQuarter, lutils.Color_NettoLOR(System.Drawing.Color.Blue));
 			}
 			else
 			{
 				// Actually Bars
-				errs += xTimingToLORChannels(xBeatsQuarter,	lutils.Color_NettoLOR(System.Drawing.Color.Red),				xBars.Name, Annotator.BeatsPerBar * 4);
+				errs += xTimingToLORChannels(xBeatsQuarter, lutils.Color_NettoLOR(System.Drawing.Color.Red), xBars.Name, Annotator.BeatsPerBar * 4);
 				// Actually Full Beats
-				errs += xTimingToLORChannels(xBeatsQuarter,	lutils.Color_NettoLOR(System.Drawing.Color.DarkOrange), xBeatsFull.Name, Annotator.BeatsPerBar);
+				errs += xTimingToLORChannels(xBeatsQuarter, lutils.Color_NettoLOR(System.Drawing.Color.DarkOrange), xBeatsFull.Name, Annotator.BeatsPerBar);
 				// Actually Half Beats
-				errs += xTimingToLORChannels(xBeatsQuarter,	lutils.Color_NettoLOR(System.Drawing.Color.Gold),				xBeatsHalf.Name, 2);
+				errs += xTimingToLORChannels(xBeatsQuarter, lutils.Color_NettoLOR(System.Drawing.Color.Gold), xBeatsHalf.Name, 2);
 				// Third Beats
-				errs += xTimingToLORChannels(xBeatsThird,		lutils.Color_NettoLOR(System.Drawing.Color.Lime));
+				errs += xTimingToLORChannels(xBeatsThird, lutils.Color_NettoLOR(System.Drawing.Color.Lime));
 				// Finally, Quarter Beats
-				errs += xTimingToLORChannels(xBeatsQuarter,	lutils.Color_NettoLOR(System.Drawing.Color.Blue));
+				errs += xTimingToLORChannels(xBeatsQuarter, lutils.Color_NettoLOR(System.Drawing.Color.Blue));
 			}
-			
+
 			return errs;
 		}
 

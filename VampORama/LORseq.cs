@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Media;
-using LORUtils4; using FileHelper;
+using LORUtils4;
+using FileHelper;
 using xUtilities;
 
 using System.Diagnostics;
@@ -23,7 +24,7 @@ namespace UtilORama4
 		private LORTrack4 vampTrack = null;
 		//private int centiseconds = 0;
 		private string fileSeqName = "";
-		private MRU mruSequences = new MRU(heartOfTheSun, "sequence", 9);
+		private MRU mruSequences = new MRU(userSettings, "sequence", 9);
 
 		private bool SaveAsNewSequence()
 		{
@@ -162,7 +163,7 @@ namespace UtilORama4
 				//btnBrowseAudio.Focus();
 
 			}
-			return success; 
+			return success;
 		}
 
 		private bool SaveSequence(string newFilename)

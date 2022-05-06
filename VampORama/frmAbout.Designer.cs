@@ -59,12 +59,12 @@
 			// labelVersion
 			// 
 			this.labelVersion.AutoSize = true;
-			this.labelVersion.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelVersion.Location = new System.Drawing.Point(150, 47);
-			this.labelVersion.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
-			this.labelVersion.MaximumSize = new System.Drawing.Size(0, 17);
+			this.labelVersion.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.labelVersion.Location = new System.Drawing.Point(175, 54);
+			this.labelVersion.Margin = new System.Windows.Forms.Padding(7, 0, 4, 0);
+			this.labelVersion.MaximumSize = new System.Drawing.Size(0, 20);
 			this.labelVersion.Name = "labelVersion";
-			this.labelVersion.Size = new System.Drawing.Size(57, 17);
+			this.labelVersion.Size = new System.Drawing.Size(57, 19);
 			this.labelVersion.TabIndex = 25;
 			this.labelVersion.Text = "Version";
 			this.labelVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -72,21 +72,22 @@
 			// labelCopyright
 			// 
 			this.labelCopyright.AutoSize = true;
-			this.labelCopyright.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelCopyright.Location = new System.Drawing.Point(150, 75);
-			this.labelCopyright.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
+			this.labelCopyright.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.labelCopyright.Location = new System.Drawing.Point(175, 87);
+			this.labelCopyright.Margin = new System.Windows.Forms.Padding(7, 0, 4, 0);
 			this.labelCopyright.Name = "labelCopyright";
 			this.labelCopyright.Size = new System.Drawing.Size(151, 19);
 			this.labelCopyright.TabIndex = 28;
-			this.labelCopyright.Text = "Copyright © 2021+ by";
+			this.labelCopyright.Text = "Copyright © 2022+ by";
 			// 
 			// okButton
 			// 
 			this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.okButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.okButton.Location = new System.Drawing.Point(348, 319);
+			this.okButton.Location = new System.Drawing.Point(406, 368);
+			this.okButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.okButton.Name = "okButton";
-			this.okButton.Size = new System.Drawing.Size(75, 23);
+			this.okButton.Size = new System.Drawing.Size(88, 27);
 			this.okButton.TabIndex = 31;
 			this.okButton.Text = "&OK";
 			this.okButton.Click += new System.EventHandler(this.okButton_Click_1);
@@ -94,7 +95,8 @@
 			// picIcon
 			// 
 			this.picIcon.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("picIcon.BackgroundImage")));
-			this.picIcon.Location = new System.Drawing.Point(12, 12);
+			this.picIcon.Location = new System.Drawing.Point(14, 14);
+			this.picIcon.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.picIcon.Name = "picIcon";
 			this.picIcon.Size = new System.Drawing.Size(128, 128);
 			this.picIcon.TabIndex = 32;
@@ -106,9 +108,9 @@
 			// labelProductName
 			// 
 			this.labelProductName.AutoSize = true;
-			this.labelProductName.Font = new System.Drawing.Font("Calibri", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelProductName.Location = new System.Drawing.Point(149, 12);
-			this.labelProductName.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
+			this.labelProductName.Font = new System.Drawing.Font("Calibri", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point);
+			this.labelProductName.Location = new System.Drawing.Point(174, 14);
+			this.labelProductName.Margin = new System.Windows.Forms.Padding(7, 0, 4, 0);
 			this.labelProductName.Name = "labelProductName";
 			this.labelProductName.Size = new System.Drawing.Size(144, 26);
 			this.labelProductName.TabIndex = 27;
@@ -118,33 +120,36 @@
 			// textBoxDescription
 			// 
 			this.textBoxDescription.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.textBoxDescription.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.textBoxDescription.Location = new System.Drawing.Point(152, 88);
+			this.textBoxDescription.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.textBoxDescription.Location = new System.Drawing.Point(177, 102);
+			this.textBoxDescription.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.textBoxDescription.Multiline = true;
 			this.textBoxDescription.Name = "textBoxDescription";
 			this.textBoxDescription.ReadOnly = true;
-			this.textBoxDescription.Size = new System.Drawing.Size(207, 57);
+			this.textBoxDescription.Size = new System.Drawing.Size(241, 66);
 			this.textBoxDescription.TabIndex = 33;
 			this.textBoxDescription.Visible = false;
 			// 
 			// labelCompanyName
 			// 
 			this.labelCompanyName.AutoSize = true;
-			this.labelCompanyName.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelCompanyName.Location = new System.Drawing.Point(280, 102);
+			this.labelCompanyName.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.labelCompanyName.Location = new System.Drawing.Point(327, 118);
+			this.labelCompanyName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelCompanyName.Name = "labelCompanyName";
-			this.labelCompanyName.Size = new System.Drawing.Size(131, 19);
+			this.labelCompanyName.Size = new System.Drawing.Size(142, 19);
 			this.labelCompanyName.TabIndex = 34;
 			this.labelCompanyName.TabStop = true;
-			this.labelCompanyName.Text = "W⚡zster Software";
+			this.labelCompanyName.Text = "W⚡zlights Software";
 			this.labelCompanyName.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.labelCompanyName_LinkClicked);
 			// 
 			// labelAuthorName
 			// 
 			this.labelAuthorName.AutoEllipsis = true;
 			this.labelAuthorName.AutoSize = true;
-			this.labelAuthorName.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelAuthorName.Location = new System.Drawing.Point(150, 102);
+			this.labelAuthorName.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.labelAuthorName.Location = new System.Drawing.Point(175, 118);
+			this.labelAuthorName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelAuthorName.Name = "labelAuthorName";
 			this.labelAuthorName.Size = new System.Drawing.Size(101, 19);
 			this.labelAuthorName.TabIndex = 35;
@@ -155,8 +160,9 @@
 			// labelAnd
 			// 
 			this.labelAnd.AutoSize = true;
-			this.labelAnd.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelAnd.Location = new System.Drawing.Point(248, 102);
+			this.labelAnd.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.labelAnd.Location = new System.Drawing.Point(289, 118);
+			this.labelAnd.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelAnd.Name = "labelAnd";
 			this.labelAnd.Size = new System.Drawing.Size(33, 19);
 			this.labelAnd.TabIndex = 36;
@@ -164,18 +170,20 @@
 			// 
 			// labelFreeware
 			// 
-			this.labelFreeware.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelFreeware.Location = new System.Drawing.Point(12, 162);
+			this.labelFreeware.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.labelFreeware.Location = new System.Drawing.Point(14, 187);
+			this.labelFreeware.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelFreeware.Name = "labelFreeware";
-			this.labelFreeware.Size = new System.Drawing.Size(380, 17);
+			this.labelFreeware.Size = new System.Drawing.Size(443, 20);
 			this.labelFreeware.TabIndex = 37;
 			this.labelFreeware.Text = " is released as FREEWARE for the benefit";
 			// 
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label3.Location = new System.Drawing.Point(12, 210);
+			this.label3.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.label3.Location = new System.Drawing.Point(14, 242);
+			this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(314, 15);
 			this.label3.TabIndex = 40;
@@ -184,8 +192,9 @@
 			// labelGPL
 			// 
 			this.labelGPL.AutoSize = true;
-			this.labelGPL.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelGPL.Location = new System.Drawing.Point(332, 210);
+			this.labelGPL.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.labelGPL.Location = new System.Drawing.Point(387, 242);
+			this.labelGPL.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelGPL.Name = "labelGPL";
 			this.labelGPL.Size = new System.Drawing.Size(35, 15);
 			this.labelGPL.TabIndex = 41;
@@ -196,10 +205,11 @@
 			// 
 			// label4
 			// 
-			this.label4.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label4.Location = new System.Drawing.Point(12, 233);
+			this.label4.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.label4.Location = new System.Drawing.Point(14, 269);
+			this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(398, 39);
+			this.label4.Size = new System.Drawing.Size(464, 45);
 			this.label4.TabIndex = 42;
 			this.label4.Text = "For more information, or to submit bug reports, ideas, suggestions, cool sequence" +
     "s, or good dirty jokes, please contact Doctor Wizard at:";
@@ -207,10 +217,11 @@
 			// 
 			// lblEmail
 			// 
-			this.lblEmail.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblEmail.Location = new System.Drawing.Point(23, 262);
+			this.lblEmail.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point);
+			this.lblEmail.Location = new System.Drawing.Point(27, 302);
+			this.lblEmail.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblEmail.Name = "lblEmail";
-			this.lblEmail.Size = new System.Drawing.Size(184, 16);
+			this.lblEmail.Size = new System.Drawing.Size(215, 18);
 			this.lblEmail.TabIndex = 43;
 			this.lblEmail.TabStop = true;
 			this.lblEmail.Text = "dev.utilorama@wizster.com";
@@ -219,7 +230,8 @@
 			// picGPL
 			// 
 			this.picGPL.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("picGPL.BackgroundImage")));
-			this.picGPL.Location = new System.Drawing.Point(332, 204);
+			this.picGPL.Location = new System.Drawing.Point(387, 235);
+			this.picGPL.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.picGPL.Name = "picGPL";
 			this.picGPL.Size = new System.Drawing.Size(64, 26);
 			this.picGPL.TabIndex = 44;
@@ -232,9 +244,10 @@
 			// 
 			this.picxLights.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("picxLights.BackgroundImage")));
 			this.picxLights.InitialImage = ((System.Drawing.Image)(resources.GetObject("picxLights.InitialImage")));
-			this.picxLights.Location = new System.Drawing.Point(184, 181);
+			this.picxLights.Location = new System.Drawing.Point(188, 209);
+			this.picxLights.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.picxLights.Name = "picxLights";
-			this.picxLights.Size = new System.Drawing.Size(85, 28);
+			this.picxLights.Size = new System.Drawing.Size(85, 26);
 			this.picxLights.TabIndex = 45;
 			this.picxLights.TabStop = false;
 			this.picxLights.Click += new System.EventHandler(this.picxLights_Click);
@@ -243,10 +256,11 @@
 			// 
 			// labelSuite
 			// 
-			this.labelSuite.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelSuite.Location = new System.Drawing.Point(310, 12);
+			this.labelSuite.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
+			this.labelSuite.Location = new System.Drawing.Point(362, 14);
+			this.labelSuite.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelSuite.Name = "labelSuite";
-			this.labelSuite.Size = new System.Drawing.Size(113, 35);
+			this.labelSuite.Size = new System.Drawing.Size(132, 40);
 			this.labelSuite.TabIndex = 46;
 			this.labelSuite.Text = " is a member of the";
 			// 
@@ -254,8 +268,9 @@
 			// 
 			this.labelUtils.AutoEllipsis = true;
 			this.labelUtils.AutoSize = true;
-			this.labelUtils.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelUtils.Location = new System.Drawing.Point(310, 40);
+			this.labelUtils.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
+			this.labelUtils.Location = new System.Drawing.Point(362, 46);
+			this.labelUtils.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelUtils.Name = "labelUtils";
 			this.labelUtils.Size = new System.Drawing.Size(70, 14);
 			this.labelUtils.TabIndex = 47;
@@ -266,37 +281,41 @@
 			// 
 			// label5
 			// 
-			this.label5.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label5.Location = new System.Drawing.Point(380, 40);
+			this.label5.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
+			this.label5.Location = new System.Drawing.Point(443, 46);
+			this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(35, 14);
+			this.label5.Size = new System.Drawing.Size(41, 16);
 			this.label5.TabIndex = 48;
 			this.label5.Text = "Suite";
 			this.label5.Click += new System.EventHandler(this.label5_Click);
 			// 
 			// lblCommunity
 			// 
-			this.lblCommunity.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblCommunity.Location = new System.Drawing.Point(12, 181);
+			this.lblCommunity.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblCommunity.Location = new System.Drawing.Point(14, 209);
+			this.lblCommunity.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblCommunity.Name = "lblCommunity";
-			this.lblCommunity.Size = new System.Drawing.Size(380, 17);
+			this.lblCommunity.Size = new System.Drawing.Size(443, 20);
 			this.lblCommunity.TabIndex = 49;
 			this.lblCommunity.Text = "of the                         and                         community.";
 			// 
 			// lblDisclaimer
 			// 
-			this.lblDisclaimer.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblDisclaimer.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
 			this.lblDisclaimer.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-			this.lblDisclaimer.Location = new System.Drawing.Point(9, 292);
+			this.lblDisclaimer.Location = new System.Drawing.Point(10, 337);
+			this.lblDisclaimer.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblDisclaimer.Name = "lblDisclaimer";
-			this.lblDisclaimer.Size = new System.Drawing.Size(333, 57);
+			this.lblDisclaimer.Size = new System.Drawing.Size(388, 66);
 			this.lblDisclaimer.TabIndex = 50;
 			this.lblDisclaimer.Text = resources.GetString("lblDisclaimer.Text");
 			// 
 			// picLOR
 			// 
 			this.picLOR.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("picLOR.BackgroundImage")));
-			this.picLOR.Location = new System.Drawing.Point(59, 182);
+			this.picLOR.Location = new System.Drawing.Point(60, 210);
+			this.picLOR.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.picLOR.Name = "picLOR";
 			this.picLOR.Size = new System.Drawing.Size(90, 19);
 			this.picLOR.TabIndex = 51;
@@ -304,9 +323,9 @@
 			// 
 			// frmAbout
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(435, 354);
+			this.ClientSize = new System.Drawing.Size(507, 408);
 			this.Controls.Add(this.picLOR);
 			this.Controls.Add(this.lblDisclaimer);
 			this.Controls.Add(this.label5);
@@ -331,10 +350,11 @@
 			this.Controls.Add(this.lblCommunity);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "frmAbout";
-			this.Padding = new System.Windows.Forms.Padding(9);
+			this.Padding = new System.Windows.Forms.Padding(10, 10, 10, 10);
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "About Program";

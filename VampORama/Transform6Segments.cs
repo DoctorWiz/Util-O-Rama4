@@ -11,7 +11,7 @@ using FileHelper;
 using xUtilities;
 
 namespace UtilORama4
-{ 
+{
 	//////////////////
 	//! T E M P O  //
 	////////////////
@@ -42,12 +42,12 @@ namespace UtilORama4
 		public static string SegmentsGroupNamePrefix = "";
 		public static string ResultsName = "Segments.csv";
 		public static string FileResults = Annotator.TempPath + ResultsName;
-		
+
 		//TODO Implement these in all the other Vamp Transform classes
 		//TODO Implement these in frmVamp.FillCombos
 		public const vamps.AlignmentType DefaultAlignment = vamps.AlignmentType.Bars;
 		public const vamps.LabelType DefaultLabels = vamps.LabelType.Numbers;
-		
+
 		public static xTimings xSegments = new xTimings(transformName);
 		public static xTimings alignTimes = null;
 		//public static labelType labelType = labelType.none;
@@ -65,7 +65,7 @@ namespace UtilORama4
 		public static readonly string[] filesAvailableConfigs = { "vamp_qm-vamp-plugins_qm-segmenter_segmentation.n3",
 																															"vamp:bbc-vamp-plugins:bbc-speechmusic-segmenter:segmentation",
 																															"vamp_segmentino_segmentino_segmentation" };
-		
+
 		public static readonly vamps.AlignmentType[] allowableAlignments = { vamps.AlignmentType.None,
 																																					vamps.AlignmentType.FPS20,
 																																					vamps.AlignmentType.FPS30,
@@ -130,7 +130,7 @@ namespace UtilORama4
 		}
 
 
-		public static int PrepareToVamp(string fileSong, int pluginIndex,	int detectionMethod = METHOD1domain)
+		public static int PrepareToVamp(string fileSong, int pluginIndex, int detectionMethod = METHOD1domain)
 		{
 			// Song file should have already been copied to the temp folder and named song.mp3
 			// Annotator will use the same folder the song is in for it's files
@@ -176,7 +176,12 @@ namespace UtilORama4
 							lineIn = reader.ReadLine();
 							if (lineCount == 7)
 							{
-								lineIn = lineIn.Replace("441", Annotator.StepSize.ToString());
+								lineIn = lineIn.Replace("512", Annotator.StepSize.ToString());
+							}
+							if (lineCount == 8)
+							{
+								int ss2 = Annotator.StepSize * 2;
+								lineIn = lineIn.Replace("1024", ss2.ToString());
 							}
 							writer.WriteLine(lineIn);
 						}
@@ -371,7 +376,7 @@ namespace UtilORama4
 							}
 							else
 							{
-								LOREffect4 eftR = new LOREffect4(LOREffectType4.FadeDown, csStart, csEnd, 100,0);
+								LOREffect4 eftR = new LOREffect4(LOREffectType4.FadeDown, csStart, csEnd, 100, 0);
 								LOREffect4 eftO = new LOREffect4(LOREffectType4.Intensity, csStart, csEnd, 100);
 								int segNo = timing.Number;
 								if ((segNo < 1) || (segNo > segmentCount))

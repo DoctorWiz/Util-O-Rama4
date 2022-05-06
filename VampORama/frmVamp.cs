@@ -65,9 +65,9 @@ namespace UtilORama4
 		private string originalExt = "";
 		private string newFile = "";
 		//int milliseconds = 0;
-		private static Properties.Settings heartOfTheSun = Properties.Settings.Default;
-		private MRU mruTimings = new MRU(heartOfTheSun, "filesTiming", 10);
-		private MRU mruAudio = new MRU(heartOfTheSun, "filesAudio", 10);
+		private static Properties.Settings userSettings = Properties.Settings.Default;
+		private MRU mruTimings = new MRU(userSettings, "filesTiming", 10);
+		private MRU mruAudio = new MRU(userSettings, "filesAudio", 10);
 		//private List<xTimings> timingsList = new List<xTimings>();
 		private const string OutputTitle = "Sonic Annotator Output Log";
 		private const string ProcTitle = "Analyzing ";
@@ -95,7 +95,7 @@ namespace UtilORama4
 		public bool busy = true;
 		public bool vamping = false;
 		public bool analyzed = false;
-		
+
 
 		public bool lightORamaInstalled = false;
 		public bool xLightsInstalled = false;
@@ -183,7 +183,7 @@ namespace UtilORama4
 		private void InitForm()
 		{
 			ImBusy(true);
-			
+
 			string[] args = Environment.GetCommandLineArgs();
 			for (int i = 0; i < args.Length; i++)
 			{
@@ -243,7 +243,7 @@ namespace UtilORama4
 
 			if (debugMode)
 			{
-				chkReuse.Checked = heartOfTheSun.reuseFiles;
+				chkReuse.Checked = userSettings.reuseFiles;
 			}
 			chkReuse.Visible = debugMode;
 			lblWorkFolder.Visible = debugMode;
@@ -279,7 +279,7 @@ namespace UtilORama4
 			//machineSettingsDir = baseDir + mySubDir;
 			//if (!Directory.Exists(machineSettingsDir)) Directory.CreateDirectory(machineSettingsDir);
 
-			// mruAudio = new MRU(heartOfTheSun, "Audio", 10);
+			// mruAudio = new MRU(userSettings, "Audio", 10);
 			//mruAudio.ReadFromConfig(Properties.Settings.Default);
 			//mruAudio.Validate();
 			string f = mruAudio.GetItem(0);
@@ -288,7 +288,8 @@ namespace UtilORama4
 			{
 				f = Path.GetDirectoryName(fileAudioLast);
 			}
-			else {
+			else
+			{
 				f = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
 			}
 			pathAudio = f;
@@ -308,7 +309,7 @@ namespace UtilORama4
 
 
 
-			//mruTimings = new MRU(heartOfTheSun, "Timings", 10);
+			//mruTimings = new MRU(userSettings, "Timings", 10);
 			//mruTimings.ReadFromConfig();
 			//mruTimings.Validate();
 			f = mruTimings.GetItem(0);
@@ -318,7 +319,7 @@ namespace UtilORama4
 			}
 			pathTimingsLast = f;
 
-			GetTheControlsForTheHeartOfTheSun();
+			RestoreUserSettings();
 
 			if (!chkReuse.Checked)
 			{
@@ -333,14 +334,14 @@ namespace UtilORama4
 
 			//TODO: These may get overridden by command line arguments (not yet supported)
 			//! EXAMPLES FROM SPLIT-O-RAMA
-			//useFuzzy = heartOfTheSun.useFuzzy;
-			//minPreMatchScore = heartOfTheSun.preMatchScore;
-			//saveFormat = heartOfTheSun.SaveFormat;
+			//useFuzzy = userSettings.useFuzzy;
+			//minPreMatchScore = userSettings.preMatchScore;
+			//saveFormat = userSettings.SaveFormat;
 			//if ((minPreMatchScore < 500) || (minPreMatchScore > 1000))
 			//{
 			//	minPreMatchScore = 800;
 			//}
-			//minFinalMatchScore = heartOfTheSun.finalMatchScore;
+			//minFinalMatchScore = userSettings.finalMatchScore;
 			//if ((minFinalMatchScore < 500) || (minFinalMatchScore > 1000))
 			//{
 			//	minFinalMatchScore = 950;
@@ -360,7 +361,7 @@ namespace UtilORama4
 				{
 					// No files specified on command line
 					// Is the last file loaded from last run still valid?
-					//string fileTimingsLast = heartOfTheSun.fileTimingsLast;
+					//string fileTimingsLast = userSettings.fileTimingsLast;
 					//if (System.IO.File.Exists(fileTimingsLast))
 					//{
 					//Annotator.Sequence.ReadSequenceFile(fileSeqLast);
@@ -381,8 +382,8 @@ namespace UtilORama4
 					//Annotator.Sequence.ReadSequenceFile(batch_fileList[0]);
 					//fileSeqLast = batch_fileList[0];
 					//lutils.FillChannels(treChannels, seq, siNodes);
-					//heartOfTheSun.fileTimingsLast = fileSeqLast;
-					//heartOfTheSun.Save();
+					//userSettings.fileTimingsLast = fileSeqLast;
+					//userSettings.Save();
 				}
 			}
 
@@ -409,7 +410,7 @@ namespace UtilORama4
 				btnBrowseAudio.PerformClick();
 			}
 
-			
+
 
 			ImBusy(false);
 
@@ -420,15 +421,17 @@ namespace UtilORama4
 		///////////////////////////////////////////////////////////////////////////////////
 		/// Restore the saved last state of the form controls from Properties.Settings ///
 		/////////////////////////////////////////////////////////////////////////////////
-		private void GetTheControlsForTheHeartOfTheSun()
+		private void RestoreUserSettings()
 		{
 			SetTheControlsToDefaults();
 			bool foo = false;
 
-			fileAudioLast = heartOfTheSun.fileAudioLast;
-			chkLOR.Checked = heartOfTheSun.UseLOR;
-			chkxLights.Checked = heartOfTheSun.UsexLights;
-			chkAutolaunch.Checked = heartOfTheSun.autoLaunch;
+			fileAudioLast = userSettings.fileAudioLast;
+			chkLOR.Checked = userSettings.UseLOR;
+			chkxLights.Checked = userSettings.UsexLights;
+			chkAutolaunch.Checked = userSettings.autoLaunch;
+			optOnePer.Checked = userSettings.xTimesIndiv;
+			chkChromagram.Checked = userSettings.doChromagram;
 			FillCombos();
 
 			RecallLastFile();
@@ -438,33 +441,35 @@ namespace UtilORama4
 		/// Save the current state of the form controls into Properties.Settings ///
 		///       (Heart of the Sun = Properties.Settings)											///
 		//////////////////////////////////////////////////////////////////////////
-		private void SetTheControlsForTheHeartOfTheSun() //! And a huge nod to Pink Floyd!
+		private void SaveUserSettings()
 		{
-			Properties.Settings heartOfTheSun = Properties.Settings.Default;
+			//Properties.Settings userSettings = Properties.Settings.Default;
 
-			heartOfTheSun.methodBarsBeats = cboMethodBarsBeats.Text;
+			userSettings.methodBarsBeats = cboMethodBarsBeats.Text;
 			if (swTrackBeat.Checked)
-			{ heartOfTheSun.timeSignature = 3; }
+			{ userSettings.timeSignature = 3; }
 			else
-			{ heartOfTheSun.timeSignature = 4; }
-			heartOfTheSun.startBeat = Int32.Parse(txtStartBeat.Text); // startBeat;
-			heartOfTheSun.detectBars = cboDetectBarBeats.Text;
-			heartOfTheSun.whiteBarsBeats = chkWhiten.Checked;
+			{ userSettings.timeSignature = 4; }
+			userSettings.startBeat = Int32.Parse(txtStartBeat.Text); // startBeat;
+			userSettings.detectBars = cboDetectBarBeats.Text;
+			userSettings.whiteBarsBeats = chkWhiten.Checked;
 
-			heartOfTheSun.fileAudioLast = fileAudioLast;
+			userSettings.fileAudioLast = fileAudioLast;
 
-			heartOfTheSun.UseLOR = chkLOR.Checked;
-			heartOfTheSun.UsexLights = chkxLights.Checked;
-			heartOfTheSun.autoLaunch = chkAutolaunch.Checked;
+			userSettings.UseLOR = chkLOR.Checked;
+			userSettings.UsexLights = chkxLights.Checked;
+			userSettings.autoLaunch = chkAutolaunch.Checked;
+			userSettings.doChromagram = chkChromagram.Checked;
+			userSettings.xTimesIndiv = optOnePer.Checked;
 
 			SaveCombos();
 
-			heartOfTheSun.Save();
+			userSettings.Save();
 
 			mruAudio.AddNew(fileAudioLast);
 			if (mruAudio.appSettings == null)
 			{
-				mruAudio.appSettings = heartOfTheSun;
+				mruAudio.appSettings = userSettings;
 			}
 			mruAudio.SaveToConfig();
 
@@ -472,7 +477,7 @@ namespace UtilORama4
 
 		private void RecallLastFile()
 		{
-			fileAudioLast = heartOfTheSun.MRUfilesAudio0;
+			fileAudioLast = userSettings.MRUfilesAudio0;
 			if (System.IO.File.Exists(fileAudioLast))
 			{
 				txtFileAudio.Text = Path.GetFileName(fileAudioLast);
@@ -495,19 +500,19 @@ namespace UtilORama4
 			if (hasChanged)
 			{
 				fileAudioLast = theFileAudio;
-				heartOfTheSun.MRUfilesAudio0 = fileAudioLast;
+				userSettings.MRUfilesAudio0 = fileAudioLast;
 				if (System.IO.File.Exists(fileAudioLast))
 				{
 					string sv = Path.GetFileNameWithoutExtension(fileAudioLast);
 
 					sv += ".xtiming";
 					txtSaveNamexL.Text = sv;
-					//heartOfTheSun.filePhooLast = sv;
+					//userSettings.filePhooLast = sv;
 
-					//heartOfTheSun.fileAudioLast = fileAudioLast;
+					//userSettings.fileAudioLast = fileAudioLast;
 				}
 				txtFileAudio.Text = ShortenPath(fileAudioLast, 100);
-				//heartOfTheSun.Save();
+				//userSettings.Save();
 			}
 
 			bool enable = false;
@@ -648,8 +653,8 @@ namespace UtilORama4
 					string fileCurrent = batch_fileList[0];
 
 					FileInfo fi = new FileInfo(fileCurrent);
-					heartOfTheSun.fileTimingsLast = fileCurrent;
-					heartOfTheSun.Save();
+					userSettings.fileTimingsLast = fileCurrent;
+					userSettings.Save();
 
 					txtFileAudio.Text = ShrinkPath(fileCurrent, 80);
 					//xUtils.FillChannels(treChannels, seq, siNodes, false, false);
@@ -779,7 +784,7 @@ namespace UtilORama4
 						}
 					}
 					//CloseForm();
-					SetTheControlsForTheHeartOfTheSun();
+					SaveUserSettings();
 				}
 				else
 				{
@@ -794,7 +799,7 @@ namespace UtilORama4
 					int errs = xUtils.ClearTempDir(tempPath);
 				}
 				//CloseForm();
-				SetTheControlsForTheHeartOfTheSun();
+				SaveUserSettings();
 			}
 			//CloseForm();
 
@@ -803,7 +808,7 @@ namespace UtilORama4
 		private void CloseForm()
 		{
 			SaveFormPosition();
-			//SetTheControlsForTheHeartOfTheSun();
+			//SaveUserSettings();
 			//this.Close();
 			//Application.Exit();
 		}
@@ -824,10 +829,10 @@ namespace UtilORama4
 
 			// Save it for later!
 			int x = this.Left;
-			heartOfTheSun.Location = myLoc;
-			heartOfTheSun.Size = mySize;
-			heartOfTheSun.WindowState = (int)myState;
-			heartOfTheSun.Save();
+			userSettings.Location = myLoc;
+			userSettings.Size = mySize;
+			userSettings.WindowState = (int)myState;
+			userSettings.Save();
 		} // End SaveFormPostion
 
 		private void RestoreFormPosition()
@@ -849,15 +854,15 @@ namespace UtilORama4
 			// Alternative 1: Position it entirely in the screen containing
 			// the top left corner
 
-			Point savedLoc = heartOfTheSun.Location;
-			Size savedSize = heartOfTheSun.Size;
+			Point savedLoc = userSettings.Location;
+			Size savedSize = userSettings.Size;
 			if (this.FormBorderStyle != FormBorderStyle.Sizable)
 			{
 				savedSize = new Size(this.Width, this.Height);
 				this.MinimumSize = this.Size;
 				this.MaximumSize = this.Size;
 			}
-			FormWindowState savedState = (FormWindowState)heartOfTheSun.WindowState;
+			FormWindowState savedState = (FormWindowState)userSettings.WindowState;
 			int x = savedLoc.X; // Default to saved postion and size, will override if necessary
 			int y = savedLoc.Y;
 			int w = savedSize.Width;
@@ -1035,14 +1040,14 @@ namespace UtilORama4
 				timeSignature = options.timeSignature; // 3 = 3/4 time, 4 = 4/4 time
 				useSaveFormat = options.useSaveFormat;
 
-				//heartOfTheSun.phoo9 = useRampsBeats;
-				//heartOfTheSun.phoo2 = useRampsPoly;
-				//heartOfTheSun.phoo6 = useOctaveGrouping;
-				heartOfTheSun.timeSignature = timeSignature;
-				//heartOfTheSun.phoo8 = trackBeatsX;
+				//userSettings.phoo9 = useRampsBeats;
+				//userSettings.phoo2 = useRampsPoly;
+				//userSettings.phoo6 = useOctaveGrouping;
+				userSettings.timeSignature = timeSignature;
+				//userSettings.phoo8 = trackBeatsX;
 				// Time signature does not get saved, reverts back to default 4/4 next time program is run
-				//heartOfTheSun.timeSignature = timeSignature; // 3 = 3/4 time, 4 = 4/4 time
-				//heartOfTheSun.phoo3 = useSaveFormat;
+				//userSettings.timeSignature = timeSignature; // 3 = 3/4 time, 4 = 4/4 time
+				//userSettings.phoo3 = useSaveFormat;
 
 
 			}
@@ -1103,7 +1108,7 @@ namespace UtilORama4
 					//TODO: Try to fix unicode filename problem
 
 					audioData = ReadAudioTags(vFilename, MP3file);
-					
+
 					TimeSpan audioTime = audioData.Duration;
 					int ms = audioTime.Minutes * 60000;
 					ms += audioTime.Seconds * 1000;
@@ -1183,8 +1188,8 @@ namespace UtilORama4
 			{
 				Fyle.BUG("TagLib failed to read the friggin' file tags!");
 			}
-			
-			
+
+
 			FileInfo oFile = new FileInfo(vsFilename);
 			Musik.AudioInfo tAudio = new Musik.AudioInfo();
 			//int dRate = 0;
@@ -1347,7 +1352,7 @@ namespace UtilORama4
 		{
 			int ms = milliseconds;
 			int min = ms / 60000;
-			 ms -= min * 60000;
+			ms -= min * 60000;
 			int sec = ms / 1000;
 			ms -= sec * 1000;
 			int cs = (int)Math.Round(ms / 10D);
@@ -1422,7 +1427,7 @@ namespace UtilORama4
 
 		private void ConfirmAnnotator()
 		{
-			annotatorProgram = heartOfTheSun.annotatorProgram;
+			annotatorProgram = userSettings.annotatorProgram;
 			if (!System.IO.File.Exists(annotatorProgram))
 			//if (true) // For Testing
 			{
@@ -1476,15 +1481,15 @@ namespace UtilORama4
 						{
 							annotatorProgram = anoFile;
 
-							if (heartOfTheSun.annotatorProgram.Length < 6)
+							if (userSettings.annotatorProgram.Length < 6)
 							{
-								heartOfTheSun.Upgrade();
-								heartOfTheSun.Save();
+								userSettings.Upgrade();
+								userSettings.Save();
 							}
 
 
-							heartOfTheSun.annotatorProgram = annotatorProgram;
-							heartOfTheSun.Save();
+							userSettings.annotatorProgram = annotatorProgram;
+							userSettings.Save();
 
 						}
 
@@ -1530,10 +1535,10 @@ namespace UtilORama4
 				//useRampsPoly = setForm.useRampsPoly;
 				useSaveFormat = setForm.useSaveFormat;
 
-				//heartOfTheSun.phoo6 = useOctaveGrouping;
-				//heartOfTheSun.phoo2 = useRampsPoly;
-				//heartOfTheSun.phoo3 = useSaveFormat;
-				heartOfTheSun.Save();
+				//userSettings.phoo6 = useOctaveGrouping;
+				//userSettings.phoo2 = useRampsPoly;
+				//userSettings.phoo3 = useSaveFormat;
+				userSettings.Save();
 			}
 
 
@@ -1717,7 +1722,7 @@ namespace UtilORama4
 				ImVamping(true);
 				StatusUpdate("Preparing and Analyzing Audio File");
 				// Remember all current user settings, options, selections, etc. on the main form
-				SetTheControlsForTheHeartOfTheSun();
+				SaveUserSettings();
 
 				// First, do we need to re-prep the audio file?
 				bool rePrepAudio = false; // create flag, default false
@@ -1776,7 +1781,7 @@ namespace UtilORama4
 				if (!chkReuse.Checked) rePrepTimes = true;
 				rePrepTimes = true; //! Manual Override for debugging!
 				if (rePrepTimes)
-				{ 
+				{
 					ProcessSelectedVamps();
 					Fyle.MakeNoise(Fyle.Noises.TaDa);
 					success = true; // TODO make sure it really was successfull
@@ -2138,10 +2143,10 @@ namespace UtilORama4
 			// Save Filename for next time (really only need the path, but...)
 			fileTimingsLast = fileName;
 			txtSaveNamexL.Text = ShortenPath(fileName, 100);
-			heartOfTheSun.fileTimingsLast = fileTimingsLast;
+			userSettings.fileTimingsLast = fileTimingsLast;
 
-			if (optMultiPer.Checked) heartOfTheSun.saveFormat = 2;
-			else heartOfTheSun.saveFormat = 1;
+			if (optMultiPer.Checked) userSettings.saveFormat = 2;
+			else userSettings.saveFormat = 1;
 			mruTimings.AddNew(fileName);
 			mruTimings.SaveToConfig();
 			// Get path and name for export files
@@ -2214,7 +2219,7 @@ namespace UtilORama4
 					}
 				}
 			} // End Bars and Beats
-			
+
 			//! NOTE ONSETS
 			// Note: Returns, effectively, the same timing grid as 'Polyphonic Transcription' (if selected)
 			if (chkNoteOnsets.Checked)
@@ -2552,7 +2557,7 @@ namespace UtilORama4
 		}
 
 		private void SetTheControlsToDefaults()
-		{ 
+		{
 			cboMethodBarsBeats.SelectedIndex = 0;
 			swTrackBeat.Checked = false;
 			timeSignature = 4;
@@ -2607,7 +2612,7 @@ namespace UtilORama4
 		private int SetCombo(ComboBox cboSetting, string selection)
 		{
 			int i1 = cboSetting.FindStringExact(selection);
-			if (i1<0)
+			if (i1 < 0)
 			{
 				if (selection.Length > 3)
 				{
@@ -2623,19 +2628,19 @@ namespace UtilORama4
 					}
 				}
 			}
-			if (i1>=0)
+			if (i1 >= 0)
 			{
 				cboSetting.SelectedIndex = i1;
 			}
-			if (cboSetting.SelectedIndex < 0)	cboSetting.SelectedIndex = 0;
-			
+			if (cboSetting.SelectedIndex < 0) cboSetting.SelectedIndex = 0;
+
 			return i1;
 		}
 
 		private void chkReuse_CheckedChanged(object sender, EventArgs e)
 		{
-			heartOfTheSun.reuseFiles = chkReuse.Checked;
-			heartOfTheSun.Save();
+			userSettings.reuseFiles = chkReuse.Checked;
+			userSettings.Save();
 		}
 
 		private void tmrAni_Tick(object sender, EventArgs e)
@@ -2791,7 +2796,7 @@ namespace UtilORama4
 
 		private void pictureBox2_Click(object sender, EventArgs e)
 		{
-			
+
 		}
 
 		private void chkLOR_CheckedChanged(object sender, EventArgs e)
@@ -2883,7 +2888,7 @@ namespace UtilORama4
 			if (chkLOR.Checked) cboAlignBarBeats.Items.Add(vamps.AlignmentName(vamps.AlignmentType.FPS30));
 			if (chkxLights.Checked) cboAlignBarBeats.Items.Add(vamps.AlignmentName(vamps.AlignmentType.FPS40));
 			if (chkLOR.Checked) cboAlignBarBeats.Items.Add(vamps.AlignmentName(vamps.AlignmentType.FPS60));
-			SetCombo(cboAlignBarBeats, heartOfTheSun.alignBarsBeats);
+			SetCombo(cboAlignBarBeats, userSettings.alignBarsBeats);
 
 			cboAlignOnsets.Items.Clear();
 			if (chkLOR.Checked) cboAlignOnsets.Items.Add(vamps.AlignmentName(vamps.AlignmentType.FPS10));
@@ -2895,7 +2900,7 @@ namespace UtilORama4
 			cboAlignOnsets.Items.Add(vamps.AlignmentName(vamps.AlignmentType.BeatsHalf));
 			cboAlignOnsets.Items.Add(vamps.AlignmentName(vamps.AlignmentType.BeatsThird));
 			cboAlignOnsets.Items.Add(vamps.AlignmentName(vamps.AlignmentType.BeatsQuarter));
-			SetCombo(cboAlignOnsets, heartOfTheSun.alignBarsBeats);
+			SetCombo(cboAlignOnsets, userSettings.alignBarsBeats);
 		}
 
 
@@ -2929,7 +2934,7 @@ namespace UtilORama4
 		private void cboOnsetsPlugin_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			//TODO Move this to TransformNoteOnsets class
-			
+
 			/*int plugin = cboMethodOnsets.SelectedIndex;
 			switch (plugin)
 			{
@@ -3047,30 +3052,30 @@ namespace UtilORama4
 		}
 	}
 
-		/*
-		public void Log2Console(Level level, string MsgLine)
+	/*
+	public void Log2Console(Level level, string MsgLine)
+	{
+		try
 		{
-			try
+			if (consoleWindow == null)
 			{
-				if (consoleWindow == null)
-				{
-					consoleWindow = new frmConsole();
-					consoleWindow.Show(this);
-					consoleWindow.logConsole.Items.Clear();
-					this.Refresh();
-				}
+				consoleWindow = new frmConsole();
+				consoleWindow.Show(this);
+				consoleWindow.logConsole.Items.Clear();
+				this.Refresh();
 			}
-			catch
-			{ }
-			try
-			{
-				consoleWindow.Log(level, MsgLine);
-				consoleWindow.Refresh();
-			}
-			catch
-			{ }
-
 		}
-		*/
-	} // End Form Partial Class
-//}// end namespace UtilORama4
+		catch
+		{ }
+		try
+		{
+			consoleWindow.Log(level, MsgLine);
+			consoleWindow.Refresh();
+		}
+		catch
+		{ }
+
+	}
+	*/
+} // End Form Partial Class
+	//}// end namespace UtilORama4

@@ -16,6 +16,7 @@ namespace UtilORama4
 		{
 			//Register Syncfusion license
 			Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NTA1ODQyQDMxMzkyZTMyMmUzMFcvK28wb1dYbHprcmZjU1pDMzdDMXp1WDdXd09ORTNkSThyZWxtVitudW89"); Application.EnableVisualStyles();
+			Application.SetHighDpiMode(HighDpiMode.SystemAware);
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new frmDim());
 		}

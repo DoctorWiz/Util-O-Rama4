@@ -11,7 +11,7 @@ using FileHelper;
 using xUtilities;
 
 namespace UtilORama4
-{ 
+{
 	//////////////////
 	//! T E M P O  //
 	////////////////
@@ -43,12 +43,12 @@ namespace UtilORama4
 		public static string TempoGroupNamePrefix = "";
 		public static string ResultsName = "Tempo.csv";
 		public static string FileResults = Annotator.TempPath + ResultsName;
-		
+
 		//TODO Implement these in all the other Vamp Transform classes
 		//TODO Implement these in frmVamp.FillCombos
 		public const vamps.AlignmentType DefaultAlignment = vamps.AlignmentType.Bars;
 		public const vamps.LabelType DefaultLabels = vamps.LabelType.BPM;
-		
+
 		public static xTimings xTempo = new xTimings(transformName);
 		public static vamps.LabelType LabelType = vamps.LabelType.BPM;
 		public static vamps.AlignmentType AlignmentType = vamps.AlignmentType.Bars; // Defaults
@@ -61,13 +61,13 @@ namespace UtilORama4
 		public static readonly string[] availablePluginCodes = {"vamp:qm-vamp-plugins:qm-tempotracker:tempo",
 																														"vamp:bbc-vamp-plugins:bbc-rhythm:tempo",
 																														"vamp:vamp-aubio:aubiotempo:tempo",
-																														"vamp:tempogram:tempogram:cyclicTempogram"	};
+																														"vamp:tempogram:tempogram:cyclicTempogram"  };
 
 		public static readonly string[] filesAvailableConfigs = { "vamp_qm-vamp-plugins_qm-tempotracker_tempo.n3",
 																															"vamp_bbc-vamp-plugins_bbc-rhythm_tempo.n3",
 																															"vamp_nnls-chroma_chordino_chordnotes.n3",
 																															"vamp_tempogram_tempogram_cyclicTempogram.n3" };
-		
+
 		public static readonly vamps.AlignmentType[] allowableAlignments = { vamps.AlignmentType.None,
 																																					vamps.AlignmentType.FPS20,
 																																					vamps.AlignmentType.FPS30,
@@ -125,7 +125,7 @@ namespace UtilORama4
 		}
 
 
-		public static int PrepareToVamp(string fileSong, int pluginIndex,	int detectionMethod = METHOD1domain)
+		public static int PrepareToVamp(string fileSong, int pluginIndex, int detectionMethod = METHOD1domain)
 		{
 			// Song file should have already been copied to the temp folder and named song.mp3
 			// Annotator will use the same folder the song is in for it's files
@@ -169,9 +169,14 @@ namespace UtilORama4
 						{
 							lineCount++;
 							lineIn = reader.ReadLine();
-							if (lineCount == 7)
+							if (lineCount == 14)
 							{
-								lineIn = lineIn.Replace("441", Annotator.StepSize.ToString());
+								lineIn = lineIn.Replace("512", Annotator.StepSize.ToString());
+							}
+							if (lineCount == 15)
+							{
+								int ss2 = Annotator.StepSize * 2;
+								lineIn = lineIn.Replace("1024", ss2.ToString());
 							}
 							writer.WriteLine(lineIn);
 						}
@@ -242,7 +247,7 @@ namespace UtilORama4
 			AlignmentType = alignmentType;
 			Annotator.SetAlignment(alignmentType);
 
-			string msg  = "\r\n\r\n### PROCESSING TEMPO CHANGES ####################################";
+			string msg = "\r\n\r\n### PROCESSING TEMPO CHANGES ####################################";
 			Debug.WriteLine(msg);
 
 			pcount = 0; // reset for re-use
@@ -267,7 +272,7 @@ namespace UtilORama4
 					string strbpm = parts[1];
 					Double.TryParse(strbpm, out rawbpm);
 					bpm = (int)Math.Round(rawbpm);
-					if ((bpm < 10) || (bpm>250)) // Data integrity check
+					if ((bpm < 10) || (bpm > 250)) // Data integrity check
 					{
 						// In theory, it's possible to have a verrry high or low BPM, but really really really unlikely
 						Fyle.BUG("Invalid BPM!");
@@ -374,7 +379,7 @@ namespace UtilORama4
 			tempoGroup = Annotator.VampTrack.Members.FindChannelGroup(transformName, true);
 			tempoRGBChannel = tempoGroup.Members.FindRGBChannel(transformName, true, true);
 			tempoChannel = FindTempoChannel(tempoGroup.Members, true, true);
-			
+
 			tempoRGBChannel.redChannel.effects.Clear();
 			tempoRGBChannel.grnChannel.effects.Clear();
 			tempoRGBChannel.bluChannel.effects.Clear();

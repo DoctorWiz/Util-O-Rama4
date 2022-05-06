@@ -1,132 +1,95 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2AAA900B-64FB-4874-9444-64AE33ACA970}</ProjectGuid>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FuzzyString</RootNamespace>
-    <AssemblyName>FuzzyString</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-		<LangVersion>8.0</LangVersion>
-		<Nullable>enable</Nullable>
-    <FileAlignment>512</FileAlignment>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
-    <TargetFrameworkProfile />
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>true</RunCodeAnalysis>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <PlatformTarget>x64</PlatformTarget>
+    <Optimize>True</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <Optimize>True</Optimize>
     <DefineConstants>
     </DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>FuzzyP.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
     <AssemblyOriginatorKeyFile>FuzzyStringStrongKey.pfx</AssemblyOriginatorKeyFile>
+    <Copyright>Copyright © 2022+ by Doctor Wizard 🧙 and W⚡zlights Software</Copyright>
+    <PackageProjectUrl>http://wizlights.com/utilorama/</PackageProjectUrl>
+    <PackageTags>String,Fuzzy,Matching</PackageTags>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <AssemblyVersion>4.0.0.0</AssemblyVersion>
+    <FileVersion>4.0.0.0</FileVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System.Data.OracleClient" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Transactions" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbstractStringMetric.cs" />
-    <Compile Include="AbstractSubstitutionCost.cs" />
-    <Compile Include="ApproximatelyEquals.cs" />
-    <Compile Include="BlockDistance.cs" />
-    <Compile Include="ChapmanLengthDeviation.cs" />
-    <Compile Include="ChapmanMeanLength.cs" />
-    <Compile Include="CosineSimilarity.cs" />
-    <Compile Include="DamerauLevenshteinDistance.cs" />
-    <Compile Include="DiffMatch.cs" />
-    <Compile Include="DummyStopTermHandler.cs" />
-    <Compile Include="FuzzyStringComparisonTolerance.cs" />
-    <Compile Include="HammingDistance.cs" />
-    <Compile Include="ICharacterSubstitution.cs" />
-    <Compile Include="IStringMetric.cs" />
-    <Compile Include="ISubstitutionCost.cs" />
-    <Compile Include="ITermHandler.cs" />
-    <Compile Include="JaccardDistance.cs" />
-    <Compile Include="Jaro.cs" />
-    <Compile Include="JaroWinkler.cs" />
-    <Compile Include="Levenshtein2.cs" />
-    <Compile Include="LevenshteinDistance.cs" />
-    <Compile Include="LongestCommonSubsequence.cs" />
-    <Compile Include="LongestCommonSubstring.cs" />
-    <Compile Include="MathFunctions.cs" />
-    <Compile Include="MetricLCS.cs" />
-    <Compile Include="NeedlemanWunch.cs" />
-    <Compile Include="NGram.cs" />
-    <Compile Include="Operations.cs" />
-    <Compile Include="OptimalStringAlignment.cs" />
-    <Compile Include="OverlapCoefficient.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-    <Compile Include="QGram.cs" />
-    <Compile Include="RankEquality.cs" />
-    <Compile Include="RatcliffObershelpSimilarity.cs" />
-    <Compile Include="ShingleBased.cs" />
-    <Compile Include="Sift4.cs" />
-    <Compile Include="SorensenDiceDistance.cs" />
-    <Compile Include="SubCostRange0To1.cs" />
-    <Compile Include="SubCostRange5ToMinus3.cs" />
-    <Compile Include="TokeniserUtilities!1.cs" />
-    <Compile Include="TokeniserWhitespace.cs" />
-    <Compile Include="WeightedLevenshtein.cs" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="PostSharp" Version="6.10.9" />
+    <PackageReference Include="Syncfusion.BulletGraph.Windows" Version="20.1.0.48" />
+    <PackageReference Include="Syncfusion.Diagram.Utility.Windows" Version="20.1.0.48" />
+    <PackageReference Include="Syncfusion.Edit.Windows" Version="20.1.0.48" />
+    <PackageReference Include="Syncfusion.Gauge.Windows" Version="20.1.0.48" />
+    <PackageReference Include="Syncfusion.GridHelperClasses.Windows" Version="20.1.0.48" />
+    <PackageReference Include="Syncfusion.Grouping.Windows" Version="20.1.0.48" />
+    <PackageReference Include="Syncfusion.SfBarcode.Windows" Version="20.1.0.48" />
+    <PackageReference Include="Syncfusion.SfListView.WinForms" Version="20.1.0.48" />
+    <PackageReference Include="Syncfusion.TreeMap.Windows" Version="20.1.0.48" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.310801">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Fuzzy.ico" />
-    <Content Include="FuzzyP.ico" />
-    <Content Include="Resources\License.txt" />
+    <Compile Remove="Cosine.cs" />
+    <Compile Remove="EuclideanDistance.cs" />
+    <Compile Remove="FuzzyStringComparisonOptions.cs" />
+    <Compile Remove="FuzzyStringConsole\obj\Release\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Remove="FuzzyStringConsole\obj\Release\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Remove="FuzzyStringConsole\obj\Release\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
+    <Compile Remove="FuzzyStringConsole\Program.cs" />
+    <Compile Remove="FuzzyStringConsole\Properties\AssemblyInfo.cs" />
+    <Compile Remove="ITokeniser.cs" />
+    <Compile Remove="JaroDistance.cs" />
+    <Compile Remove="JaroWinklerDistance.cs" />
+    <Compile Remove="MatchingCoefficient.cs" />
+    <Compile Remove="MongeElkan.cs" />
+    <Compile Remove="NeedlemanWunsch.cs" />
+    <Compile Remove="obj.bak\Debug\net48\.NETFramework,Version=v4.8.AssemblyAttributes.cs" />
+    <Compile Remove="Similarity.cs" />
+    <Compile Remove="SmithWaterman.cs" />
+    <Compile Remove="SmithWatermanGotoh.cs" />
+    <Compile Remove="SmithWatermanGotohWindowedAffine.cs" />
+    <Compile Remove="SmithWaterman_1.cs" />
+    <Compile Remove="SorensenDice2.cs" />
+    <Compile Remove="TanimotoCoefficient.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="FuzzyStringStrongKey.pfx" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
+    <None Remove="abstract-yellow-fluffy-isolated-sphere-cropped.jpg" />
+    <None Remove="abstract-yellow-fluffy-isolated-sphere.jpg" />
+    <None Remove="desktop.ini" />
+    <None Remove="FuzzyString.obj.7z" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
 </Project>

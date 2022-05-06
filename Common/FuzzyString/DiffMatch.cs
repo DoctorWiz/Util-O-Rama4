@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
-using System.Web;
 
 namespace FuzzyString
 {
@@ -1638,7 +1637,8 @@ namespace FuzzyString
 			StringBuilder text = new StringBuilder();
 			foreach (Diff aDiff in diffs)
 			{
-				switch (aDiff.operation)
+				/*
+				 * switch (aDiff.operation)
 				{
 					case Operation.INSERT:
 						text.Append("+").Append(HttpUtility.UrlEncode(aDiff.text,
@@ -1651,6 +1651,7 @@ namespace FuzzyString
 						text.Append("=").Append(aDiff.text.Length).Append("\t");
 						break;
 				}
+				*/
 			}
 			string delta = text.ToString();
 			if (delta.Length != 0)
@@ -1692,7 +1693,7 @@ namespace FuzzyString
 						// decode would change all "+" to " "
 						param = param.Replace("+", "%2b");
 
-						param = HttpUtility.UrlDecode(param, new UTF8Encoding(false, true));
+						//param = HttpUtility.UrlDecode(param, new UTF8Encoding(false, true));
 						//} catch (UnsupportedEncodingException e) {
 						//  // Not likely on modern system.
 						//  throw new Error("This system does not support UTF-8.", e);
@@ -2616,7 +2617,7 @@ namespace FuzzyString
 					}
 					line = text[textPointer].Substring(1);
 					line = line.Replace("+", "%2b");
-					line = HttpUtility.UrlDecode(line, new UTF8Encoding(false, true));
+					//line = HttpUtility.UrlDecode(line, new UTF8Encoding(false, true));
 					if (sign == '-')
 					{
 						// Deletion.

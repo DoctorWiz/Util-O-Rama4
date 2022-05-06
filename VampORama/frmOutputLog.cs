@@ -15,8 +15,10 @@ namespace UtilORama4
 	public partial class frmOutputLog : Form
 	{
 		private bool firstPaint = false;
-		
-		
+		private bool firstResize = false;
+		private bool firstShow = false;
+
+
 		Form ownerForm = null;
 		public frmOutputLog()
 		{
@@ -67,7 +69,7 @@ namespace UtilORama4
 
 			// Save it for later!
 			int x = this.Left;
-			 
+
 			Properties.Settings.Default.OutputLocation = myLoc;
 			Properties.Settings.Default.OutputSize = mySize;
 			Properties.Settings.Default.OutputWindowState = (int)myState;
@@ -272,7 +274,7 @@ namespace UtilORama4
 				e.Cancel = true;
 			}
 			SaveFormPosition(); // Even if cancelling
-			// Do Nothing?
+													// Do Nothing?
 		}
 
 		private void btnSaveLog_Click(object sender, EventArgs e)
@@ -324,7 +326,11 @@ namespace UtilORama4
 
 		private void frmOutputLog_Shown(object sender, EventArgs e)
 		{
-			//RestoreFormPosition();
+			if (!firstShow)
+			{
+				firstShow = true;
+				frmOutputLog_Resize(this, null);
+			}
 		}
 
 		private void frmOutputLog_Paint(object sender, PaintEventArgs e)

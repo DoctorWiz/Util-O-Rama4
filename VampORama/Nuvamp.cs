@@ -14,7 +14,8 @@ using System.Configuration;
 using System.Threading;
 using Microsoft.Win32;
 using xUtilities;
-using LORUtils4; using FileHelper;
+using LORUtils4;
+using FileHelper;
 using Musik;
 //using Ini;
 using TagLib;
@@ -71,21 +72,21 @@ namespace UtilORama4
 			{
 				cboAlignBarBeats.Items.Add(vamps.AlignmentName(alType));
 			}
-			SetCombo(cboMethodBarsBeats, heartOfTheSun.methodBarsBeats);
-			timeSignature = heartOfTheSun.timeSignature;
+			SetCombo(cboMethodBarsBeats, userSettings.methodBarsBeats);
+			timeSignature = userSettings.timeSignature;
 			if (timeSignature == 3) swTrackBeat.Checked = true; else swTrackBeat.Checked = false;
-			startBeat = heartOfTheSun.startBeat;
+			startBeat = userSettings.startBeat;
 			txtStartBeat.Text = startBeat.ToString();
 			vscStartBeat.Value = (5 - startBeat);
-			SetCombo(cboDetectBarBeats, heartOfTheSun.detectBars);
-			chkWhiten.Checked = heartOfTheSun.whiteBarsBeats;
-			chkBars.Checked = heartOfTheSun.doBars;
-			chkBeatsFull.Checked = heartOfTheSun.DoBeatsFull;
-			chkBeatsHalf.Checked = heartOfTheSun.doBeatsHalf;
-			chkBeatsThird.Checked = heartOfTheSun.doBeatsThird;
-			chkBeatsQuarter.Checked = heartOfTheSun.doBeatsQuarter;
-			SetCombo(cboAlignBarBeats, heartOfTheSun.alignBarsBeats);
-			SetCombo(cboLabelsBarBeats, heartOfTheSun.labelBarBeats);
+			SetCombo(cboDetectBarBeats, userSettings.detectBars);
+			chkWhiten.Checked = userSettings.whiteBarsBeats;
+			chkBars.Checked = userSettings.doBars;
+			chkBeatsFull.Checked = userSettings.DoBeatsFull;
+			chkBeatsHalf.Checked = userSettings.doBeatsHalf;
+			chkBeatsThird.Checked = userSettings.doBeatsThird;
+			chkBeatsQuarter.Checked = userSettings.doBeatsQuarter;
+			SetCombo(cboAlignBarBeats, userSettings.alignBarsBeats);
+			SetCombo(cboLabelsBarBeats, userSettings.labelBarBeats);
 
 			///////////////////
 			//! Note Onsets //
@@ -105,15 +106,15 @@ namespace UtilORama4
 			{
 				cboAlignOnsets.Items.Add(vamps.AlignmentName(alType));
 			}
-			SetCombo(cboMethodOnsets, heartOfTheSun.methodOnsets);
-			SetCombo(cboOnsetsDetect, heartOfTheSun.detectOnsets);
-			vscSensitivity.Value = heartOfTheSun.sensitivityOnsets;
-			chkWhiten.Checked = heartOfTheSun.whiteOnsets;
-			chkNoteOnsets.Checked = heartOfTheSun.doOnsets;
-			SetCombo(cboLabelsOnsets, heartOfTheSun.labelOnsets);
-			SetCombo(cboAlignOnsets, heartOfTheSun.alignOnsets);
-			SetCombo(cboStepSize, heartOfTheSun.stepSize);
-			swRamps.Checked = heartOfTheSun.Ramps;
+			SetCombo(cboMethodOnsets, userSettings.methodOnsets);
+			SetCombo(cboOnsetsDetect, userSettings.detectOnsets);
+			vscSensitivity.Value = userSettings.sensitivityOnsets;
+			chkWhiten.Checked = userSettings.whiteOnsets;
+			chkNoteOnsets.Checked = userSettings.doOnsets;
+			SetCombo(cboLabelsOnsets, userSettings.labelOnsets);
+			SetCombo(cboAlignOnsets, userSettings.alignOnsets);
+			SetCombo(cboStepSize, userSettings.stepSize);
+			swRamps.Checked = userSettings.Ramps;
 
 			////////////////////////////////
 			//! Polyphonic Transcription //
@@ -133,10 +134,10 @@ namespace UtilORama4
 			{
 				cboAlignPolyphonic.Items.Add(vamps.AlignmentName(alType));
 			}
-			SetCombo(cboMethodPolyphonic, heartOfTheSun.methodTranscribe);
-			chkPolyphonic.Checked = heartOfTheSun.doTranscribe;
-			SetCombo(cboLabelsPolyphonic, heartOfTheSun.labelTranscribe);
-			SetCombo(cboAlignPolyphonic, heartOfTheSun.alignTranscribe);
+			SetCombo(cboMethodPolyphonic, userSettings.methodTranscribe);
+			chkPolyphonic.Checked = userSettings.doTranscribe;
+			SetCombo(cboLabelsPolyphonic, userSettings.labelTranscribe);
+			SetCombo(cboAlignPolyphonic, userSettings.alignTranscribe);
 
 			/////////////////////
 			//! Pitch and Key //
@@ -156,10 +157,10 @@ namespace UtilORama4
 			{
 				cboAlignPitchKey.Items.Add(vamps.AlignmentName(alType));
 			}
-			SetCombo(cboMethodPitchKey, heartOfTheSun.methodPitchKey);
-			chkPitchKey.Checked = heartOfTheSun.doPitchKey;
-			SetCombo(cboLabelsPitchKey, heartOfTheSun.labelPitchKey);
-			SetCombo(cboAlignPitchKey, heartOfTheSun.alignPitchKey);
+			SetCombo(cboMethodPitchKey, userSettings.methodPitchKey);
+			chkPitchKey.Checked = userSettings.doPitchKey;
+			SetCombo(cboLabelsPitchKey, userSettings.labelPitchKey);
+			SetCombo(cboAlignPitchKey, userSettings.alignPitchKey);
 
 			///////////////////
 			//!  T E M P O  //
@@ -179,10 +180,10 @@ namespace UtilORama4
 			{
 				cboAlignTempo.Items.Add(vamps.AlignmentName(alType));
 			}
-			SetCombo(cboMethodTempo, heartOfTheSun.methodTempo);
-			chkTempo.Checked = heartOfTheSun.doTempo;
-			SetCombo(cboLabelsTempo, heartOfTheSun.labelTempo);
-			SetCombo(cboAlignTempo, heartOfTheSun.alignTempo);
+			SetCombo(cboMethodTempo, userSettings.methodTempo);
+			chkTempo.Checked = userSettings.doTempo;
+			SetCombo(cboLabelsTempo, userSettings.labelTempo);
+			SetCombo(cboAlignTempo, userSettings.alignTempo);
 
 
 			///////////////////
@@ -203,10 +204,10 @@ namespace UtilORama4
 			{
 				cboAlignSegments.Items.Add(vamps.AlignmentName(alType));
 			}
-			chkSegments.Checked = heartOfTheSun.doSegments;
-			SetCombo(cboAlignSegments, heartOfTheSun.alignSegments);
-			SetCombo(cboMethodSegments, heartOfTheSun.methodSegments);
-			SetCombo(cboLabelsSegments, heartOfTheSun.labelSegments);
+			chkSegments.Checked = userSettings.doSegments;
+			SetCombo(cboAlignSegments, userSettings.alignSegments);
+			SetCombo(cboMethodSegments, userSettings.methodSegments);
+			SetCombo(cboLabelsSegments, userSettings.labelSegments);
 
 			////////////////////
 			//!  Chromagram  //
@@ -226,10 +227,10 @@ namespace UtilORama4
 			{
 				cboAlignChromagram.Items.Add(vamps.AlignmentName(alType));
 			}
-			chkChromathing.Checked = heartOfTheSun.doChromagram;
-			SetCombo(cboAlignChromagram, heartOfTheSun.alignChromagram);
-			SetCombo(cboMethodChromagram, heartOfTheSun.methodChromagram);
-			SetCombo(cboLabelsChromagram, heartOfTheSun.labelChromagram);
+			chkChromathing.Checked = userSettings.doChromagram;
+			SetCombo(cboAlignChromagram, userSettings.alignChromagram);
+			SetCombo(cboMethodChromagram, userSettings.methodChromagram);
+			SetCombo(cboLabelsChromagram, userSettings.labelChromagram);
 
 			/////////////////////////
 			//!  Chords Chords  //
@@ -249,76 +250,76 @@ namespace UtilORama4
 			{
 				cboAlignChords.Items.Add(vamps.AlignmentName(alType));
 			}
-			chkChords.Checked = heartOfTheSun.doChords;
-			SetCombo(cboAlignChords, heartOfTheSun.alignChords);
-			SetCombo(cboMethodChords, heartOfTheSun.methodChords);
-			SetCombo(cboLabelsChords, heartOfTheSun.labelChords);
+			chkChords.Checked = userSettings.doChords;
+			SetCombo(cboAlignChords, userSettings.alignChords);
+			SetCombo(cboMethodChords, userSettings.methodChords);
+			SetCombo(cboLabelsChords, userSettings.labelChords);
 
 		}
 
 		private void SaveCombos()
 		{
 			//! Bars and Beats
-			heartOfTheSun.doBars = chkBars.Checked;
-			heartOfTheSun.DoBeatsFull = chkBeatsFull.Checked;
-			heartOfTheSun.doBeatsHalf = chkBeatsHalf.Checked;
-			heartOfTheSun.doBeatsThird = chkBeatsThird.Checked;
-			heartOfTheSun.doBeatsQuarter = chkBeatsQuarter.Checked;
-			heartOfTheSun.labelBarBeats = cboLabelsBarBeats.Text;
-			heartOfTheSun.alignBarsBeats = cboAlignBarBeats.Text;
-			heartOfTheSun.Ramps = swRamps.Checked;
+			userSettings.doBars = chkBars.Checked;
+			userSettings.DoBeatsFull = chkBeatsFull.Checked;
+			userSettings.doBeatsHalf = chkBeatsHalf.Checked;
+			userSettings.doBeatsThird = chkBeatsThird.Checked;
+			userSettings.doBeatsQuarter = chkBeatsQuarter.Checked;
+			userSettings.labelBarBeats = cboLabelsBarBeats.Text;
+			userSettings.alignBarsBeats = cboAlignBarBeats.Text;
+			userSettings.Ramps = swRamps.Checked;
 
 			//! Note Onsets
-			heartOfTheSun.methodOnsets = cboMethodOnsets.Text;
-			heartOfTheSun.detectOnsets = cboOnsetsDetect.Text;
-			heartOfTheSun.sensitivityOnsets = vscSensitivity.Value;
-			heartOfTheSun.whiteOnsets = chkWhiten.Checked;
-			heartOfTheSun.doOnsets = chkNoteOnsets.Checked;
-			heartOfTheSun.labelOnsets = cboLabelsOnsets.Text;
-			heartOfTheSun.alignOnsets = cboAlignOnsets.Text;
-			heartOfTheSun.stepSize = cboStepSize.Text;
+			userSettings.methodOnsets = cboMethodOnsets.Text;
+			userSettings.detectOnsets = cboOnsetsDetect.Text;
+			userSettings.sensitivityOnsets = vscSensitivity.Value;
+			userSettings.whiteOnsets = chkWhiten.Checked;
+			userSettings.doOnsets = chkNoteOnsets.Checked;
+			userSettings.labelOnsets = cboLabelsOnsets.Text;
+			userSettings.alignOnsets = cboAlignOnsets.Text;
+			userSettings.stepSize = cboStepSize.Text;
 
 			//! Polyphonic Transcription
-			heartOfTheSun.methodTranscribe = cboMethodPolyphonic.Text;
-			heartOfTheSun.doTranscribe = chkPolyphonic.Checked;
-			heartOfTheSun.labelTranscribe = cboLabelsPolyphonic.Text;
-			heartOfTheSun.alignTranscribe = cboAlignPolyphonic.Text;
+			userSettings.methodTranscribe = cboMethodPolyphonic.Text;
+			userSettings.doTranscribe = chkPolyphonic.Checked;
+			userSettings.labelTranscribe = cboLabelsPolyphonic.Text;
+			userSettings.alignTranscribe = cboAlignPolyphonic.Text;
 
 			//! Pitch & Key
-			heartOfTheSun.methodPitchKey = cboMethodPitchKey.Text;
-			heartOfTheSun.doPitchKey = chkPitchKey.Checked;
-			heartOfTheSun.labelPitchKey = cboLabelsPitchKey.Text;
-			heartOfTheSun.alignPitchKey = cboAlignPitchKey.Text;
+			userSettings.methodPitchKey = cboMethodPitchKey.Text;
+			userSettings.doPitchKey = chkPitchKey.Checked;
+			userSettings.labelPitchKey = cboLabelsPitchKey.Text;
+			userSettings.alignPitchKey = cboAlignPitchKey.Text;
 
 			//! Tempo
-			heartOfTheSun.methodTempo = cboMethodTempo.Text;
-			heartOfTheSun.doTempo = chkTempo.Checked;
-			heartOfTheSun.labelTempo = cboLabelsTempo.Text;
-			heartOfTheSun.alignTempo = cboAlignTempo.Text;
+			userSettings.methodTempo = cboMethodTempo.Text;
+			userSettings.doTempo = chkTempo.Checked;
+			userSettings.labelTempo = cboLabelsTempo.Text;
+			userSettings.alignTempo = cboAlignTempo.Text;
 
 			//! Segments
-			heartOfTheSun.doSegments = chkSegments.Checked;
-			heartOfTheSun.methodSegments = cboMethodSegments.Text;
-			heartOfTheSun.alignSegments = cboAlignSegments.Text;
-			heartOfTheSun.labelSegments = cboLabelsSegments.Text;
+			userSettings.doSegments = chkSegments.Checked;
+			userSettings.methodSegments = cboMethodSegments.Text;
+			userSettings.alignSegments = cboAlignSegments.Text;
+			userSettings.labelSegments = cboLabelsSegments.Text;
 
 			//! Chromagram
-			heartOfTheSun.doChromagram = chkChromathing.Checked;
-			heartOfTheSun.methodChromagram = cboMethodChromagram.Text;
-			heartOfTheSun.alignChromagram = cboAlignChromagram.Text;
-			heartOfTheSun.labelChromagram = cboLabelsChromagram.Text;
+			userSettings.doChromagram = chkChromathing.Checked;
+			userSettings.methodChromagram = cboMethodChromagram.Text;
+			userSettings.alignChromagram = cboAlignChromagram.Text;
+			userSettings.labelChromagram = cboLabelsChromagram.Text;
 
 			//! Chords
-			heartOfTheSun.doChords = chkChords.Checked;
-			heartOfTheSun.methodChords = cboMethodChords.Text;
-			heartOfTheSun.alignChords = cboAlignChords.Text;
-			heartOfTheSun.labelChords = cboLabelsChords.Text;
+			userSettings.doChords = chkChords.Checked;
+			userSettings.methodChords = cboMethodChords.Text;
+			userSettings.alignChords = cboAlignChords.Text;
+			userSettings.labelChords = cboLabelsChords.Text;
 
 			//! Spectrum
-			//heartOfTheSun.methodSpectrum = cboMethodChromagram.Text;
-			//heartOfTheSun.doSpectrum = chkChromagram.Checked;
-			//heartOfTheSun.labelSpectrum = cboLabelsChromagram.Text;
-			//heartOfTheSun.alignSpectrum = cboAlignChromagram.Text;
+			//userSettings.methodSpectrum = cboMethodChromagram.Text;
+			//userSettings.doSpectrum = chkChromagram.Checked;
+			//userSettings.labelSpectrum = cboLabelsChromagram.Text;
+			//userSettings.alignSpectrum = cboAlignChromagram.Text;
 		}
 
 
@@ -339,7 +340,7 @@ namespace UtilORama4
 			//Annotator.UseRamps = swRamps.Checked;
 			Annotator.FirstBeat = Int32.Parse(txtStartBeat.Text);
 			//Annotator.WorkPath = pathWork;
-			
+
 
 
 			//!/////////////////
@@ -353,9 +354,9 @@ namespace UtilORama4
 				{
 					StatusUpdate("Annotating Bars and Beats");
 					if (logWindow != null) logWindow.Text = OutputTitle + " - Bars and Beats";
-					msg = "**********************";	OutputText(msg);
-					msg = "**  BARS and BEATS  **";	OutputText(msg);
-					msg = "**********************";	OutputText(msg);
+					msg = "**********************"; OutputText(msg);
+					msg = "**  BARS and BEATS  **"; OutputText(msg);
+					msg = "**********************"; OutputText(msg);
 					int pluginIndex = cboMethodBarsBeats.SelectedIndex;
 					int detectionMethod = cboDetectBarBeats.SelectedIndex;
 					//whiten = chkWhiteBarBeats.Checked;
@@ -380,7 +381,7 @@ namespace UtilORama4
 			}
 			lblVampTime.Text = FormatSongTime(Annotator.TotalCentiseconds); lblSongTime.Refresh();
 
-			 
+
 			//!////////////////
 			//! NOTE ONSETS //
 			//!/////////////
@@ -586,7 +587,7 @@ namespace UtilORama4
 			//Annotator.UseRamps = swRamps.Checked;
 			//Annotator.FirstBeat = Int32.Parse(txtStartBeat.Text);
 			//Annotator.TempPath = pathWork;
-			
+
 
 
 			//!/////////////////
@@ -618,7 +619,7 @@ namespace UtilORama4
 			}
 			lblVampTime.Text = FormatSongTime(Annotator.TotalCentiseconds); lblSongTime.Refresh();
 
-			 
+
 			//!////////////////
 			//! NOTE ONSETS //
 			//!/////////////
@@ -670,7 +671,7 @@ namespace UtilORama4
 
 			lblVampTime.Text = FormatSongTime(Annotator.TotalCentiseconds); lblSongTime.Refresh();
 
-			
+
 			//!///////////////////////
 			//! PITCH & KEY //
 			//!/////////////////////
@@ -808,7 +809,7 @@ namespace UtilORama4
 
 			return completed;
 		}
-		
+
 		private void ExportSelectedVampsToxLights(string fileName)
 		{
 			// Get Temp Directory
@@ -821,10 +822,10 @@ namespace UtilORama4
 			// Save Filename for next time (really only need the path, but...)
 			fileTimingsLast = fileName;
 			txtSaveNamexL.Text = ShortenPath(fileName, 100);
-			heartOfTheSun.fileTimingsLast = fileTimingsLast;
+			userSettings.fileTimingsLast = fileTimingsLast;
 
-			if (optMultiPer.Checked) heartOfTheSun.saveFormat = 2;
-			else heartOfTheSun.saveFormat = 1;
+			if (optMultiPer.Checked) userSettings.saveFormat = 2;
+			else userSettings.saveFormat = 1;
 			mruTimings.AddNew(fileName);
 			mruTimings.SaveToConfig();
 			// Get path and name for export files
@@ -931,25 +932,25 @@ namespace UtilORama4
 			}
 
 			//! NOTE ONSETS
-				if (chkNoteOnsets.Checked)
+			if (chkNoteOnsets.Checked)
+			{
+				if (VampNoteOnsets.Timings != null)
 				{
-					if (VampNoteOnsets.Timings != null)
+					if (VampNoteOnsets.Timings.effects.Count > 0)
 					{
-						if (VampNoteOnsets.Timings.effects.Count > 0)
-						{
 						StatusUpdate("Exporting Note Onset Timings");
 						if (!allInOne)
 						{
-								writer = BeginTimingsXFile(fileBaseName + " - " + VampNoteOnsets.Timings.Name + exten);
-								writeCount++;
-							}
-							vamps.LabelType lt = vamps.GetLabelTypeFromName(cboLabelsOnsets.Text);
-							lineOut = xTimingsOutX(VampNoteOnsets.Timings, lt, allInOne);
-							writer.WriteLine(lineOut);
+							writer = BeginTimingsXFile(fileBaseName + " - " + VampNoteOnsets.Timings.Name + exten);
 							writeCount++;
 						}
+						vamps.LabelType lt = vamps.GetLabelTypeFromName(cboLabelsOnsets.Text);
+						lineOut = xTimingsOutX(VampNoteOnsets.Timings, lt, allInOne);
+						writer.WriteLine(lineOut);
+						writeCount++;
 					}
 				}
+			}
 
 			//! POLYPHONIC TRANSCRIPTION
 			if (chkPolyphonic.Checked)
@@ -971,7 +972,7 @@ namespace UtilORama4
 					}
 				}
 			}
-			
+
 			//! PITCH AND KEY
 			if (chkPitchKey.Checked)
 			{
@@ -1204,12 +1205,12 @@ namespace UtilORama4
 				{
 					//if (VampChromagram.Timings.effects.Count > 0)
 					// {
-						StatusUpdate("Exporting Chromagram Annotations");
+					StatusUpdate("Exporting Chromagram Annotations");
 					// Chromagram does not create useful timings
 					//VampChromagram.xTimingsToLORtimings();
 					//VampChromagram.xTimingsToLORChannels();
 					VampChromagram.ResultsToLORChannels();
-						if (Fyle.Exists(VampChromagram.FileResults)) completed++;
+					if (Fyle.Exists(VampChromagram.FileResults)) completed++;
 					//}
 				}
 			}
@@ -1241,13 +1242,13 @@ namespace UtilORama4
 		private void FixStepSize()
 		{
 			bool found = false;  // Flag if value already in step size list
-			// Set the current step size to the new needed size
+													 // Set the current step size to the new needed size
 			Annotator.StepSize = Annotator.NeedStepSize;
 			Annotator.StepErrFlag = true;
 			lblStepSize.ForeColor = System.Drawing.Color.Crimson;
 			cboStepSize.ForeColor = System.Drawing.Color.Crimson;
 			// Loop thru item in step size combo looking for new value
-			for (int i=0; i< cboStepSize.Items.Count; i++)
+			for (int i = 0; i < cboStepSize.Items.Count; i++)
 			{
 				int n = 0;
 				int.TryParse(cboStepSize.Items[i].ToString(), out n);
@@ -1354,7 +1355,7 @@ namespace UtilORama4
 			originalExt = Path.GetExtension(originalAudioFile);
 
 			newFile = tempPath + "song" + originalExt;
-			
+
 			// Do we need to copy or re-copy the original song file to the temp folder?
 			// Is reuse turned off?  Does it exist?  Is it the same size and date?
 			if (!chkReuse.Checked) needCopy = true;
@@ -1466,7 +1467,7 @@ namespace UtilORama4
 
 				//string newLabel = GetLabel(effect.Number, labelType);
 				ret.Append(effect.Label);
-				
+
 				ret.Append(xTimings.VALUE_end);
 				ret.Append(xTimings.SPC);
 				//  starttime="50" 
@@ -1522,7 +1523,7 @@ namespace UtilORama4
 					}
 					break;
 				case vamps.LabelType.KeyNumbers:
-					 label = number.ToString();
+					label = number.ToString();
 					break;
 				case vamps.LabelType.NoteNamesASCII:
 					if (number >= 0 && number <= 127)

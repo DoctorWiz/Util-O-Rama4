@@ -286,9 +286,10 @@
 			this.pnlTrackBeatsX.Controls.Add(this.vscStartBeat);
 			this.pnlTrackBeatsX.Controls.Add(this.txtStartBeat);
 			this.pnlTrackBeatsX.Controls.Add(this.lblTrackBeatsX);
-			this.pnlTrackBeatsX.Location = new System.Drawing.Point(5, 48);
+			this.pnlTrackBeatsX.Location = new System.Drawing.Point(6, 55);
+			this.pnlTrackBeatsX.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.pnlTrackBeatsX.Name = "pnlTrackBeatsX";
-			this.pnlTrackBeatsX.Size = new System.Drawing.Size(101, 23);
+			this.pnlTrackBeatsX.Size = new System.Drawing.Size(118, 27);
 			this.pnlTrackBeatsX.TabIndex = 142;
 			this.ttip.SetToolTip(this.pnlTrackBeatsX, "Sometimes the very first beat detected is NOT the first beat of the bar.\r\nIf (and" +
         " only if) this happens, you can correct it here.\r\n");
@@ -296,11 +297,11 @@
 			// vscStartBeat
 			// 
 			this.vscStartBeat.LargeChange = 1;
-			this.vscStartBeat.Location = new System.Drawing.Point(67, -3);
+			this.vscStartBeat.Location = new System.Drawing.Point(78, -3);
 			this.vscStartBeat.Maximum = 4;
 			this.vscStartBeat.Minimum = 1;
 			this.vscStartBeat.Name = "vscStartBeat";
-			this.vscStartBeat.Size = new System.Drawing.Size(16, 18);
+			this.vscStartBeat.Size = new System.Drawing.Size(16, 21);
 			this.vscStartBeat.TabIndex = 28;
 			this.ttip.SetToolTip(this.vscStartBeat, "Sometimes the very first beat detected is NOT the first beat of the bar.\r\nIf (and" +
         " only if) this happens, you can correct it here.\r\n");
@@ -309,20 +310,22 @@
 			// 
 			// txtStartBeat
 			// 
-			this.txtStartBeat.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.txtStartBeat.Location = new System.Drawing.Point(54, 0);
+			this.txtStartBeat.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.txtStartBeat.Location = new System.Drawing.Point(63, 0);
+			this.txtStartBeat.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.txtStartBeat.Name = "txtStartBeat";
 			this.txtStartBeat.ReadOnly = true;
-			this.txtStartBeat.Size = new System.Drawing.Size(13, 20);
+			this.txtStartBeat.Size = new System.Drawing.Size(14, 20);
 			this.txtStartBeat.TabIndex = 7;
 			this.txtStartBeat.Text = "1";
 			// 
 			// lblTrackBeatsX
 			// 
 			this.lblTrackBeatsX.AutoSize = true;
-			this.lblTrackBeatsX.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblTrackBeatsX.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.lblTrackBeatsX.ForeColor = System.Drawing.Color.OrangeRed;
-			this.lblTrackBeatsX.Location = new System.Drawing.Point(1, 4);
+			this.lblTrackBeatsX.Location = new System.Drawing.Point(1, 5);
+			this.lblTrackBeatsX.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblTrackBeatsX.Name = "lblTrackBeatsX";
 			this.lblTrackBeatsX.Size = new System.Drawing.Size(54, 13);
 			this.lblTrackBeatsX.TabIndex = 6;
@@ -334,9 +337,10 @@
 			// btnExploreVamp
 			// 
 			this.btnExploreVamp.AllowDrop = true;
-			this.btnExploreVamp.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnExploreVamp.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.btnExploreVamp.Image = ((System.Drawing.Image)(resources.GetObject("btnExploreVamp.Image")));
-			this.btnExploreVamp.Location = new System.Drawing.Point(266, 16);
+			this.btnExploreVamp.Location = new System.Drawing.Point(310, 18);
+			this.btnExploreVamp.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnExploreVamp.Name = "btnExploreVamp";
 			this.btnExploreVamp.Size = new System.Drawing.Size(36, 36);
 			this.btnExploreVamp.TabIndex = 183;
@@ -348,9 +352,10 @@
 			// btnExplorexLights
 			// 
 			this.btnExplorexLights.AllowDrop = true;
-			this.btnExplorexLights.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnExplorexLights.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.btnExplorexLights.Image = ((System.Drawing.Image)(resources.GetObject("btnExplorexLights.Image")));
-			this.btnExplorexLights.Location = new System.Drawing.Point(138, 16);
+			this.btnExplorexLights.Location = new System.Drawing.Point(161, 18);
+			this.btnExplorexLights.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnExplorexLights.Name = "btnExplorexLights";
 			this.btnExplorexLights.Size = new System.Drawing.Size(36, 36);
 			this.btnExplorexLights.TabIndex = 182;
@@ -362,9 +367,10 @@
 			// btnExploreTemp
 			// 
 			this.btnExploreTemp.AllowDrop = true;
-			this.btnExploreTemp.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnExploreTemp.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.btnExploreTemp.Image = ((System.Drawing.Image)(resources.GetObject("btnExploreTemp.Image")));
-			this.btnExploreTemp.Location = new System.Drawing.Point(222, 16);
+			this.btnExploreTemp.Location = new System.Drawing.Point(259, 18);
+			this.btnExploreTemp.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnExploreTemp.Name = "btnExploreTemp";
 			this.btnExploreTemp.Size = new System.Drawing.Size(36, 36);
 			this.btnExploreTemp.TabIndex = 181;
@@ -376,9 +382,10 @@
 			// btnCmdTemp
 			// 
 			this.btnCmdTemp.AllowDrop = true;
-			this.btnCmdTemp.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnCmdTemp.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.btnCmdTemp.Image = ((System.Drawing.Image)(resources.GetObject("btnCmdTemp.Image")));
-			this.btnCmdTemp.Location = new System.Drawing.Point(180, 16);
+			this.btnCmdTemp.Location = new System.Drawing.Point(210, 18);
+			this.btnCmdTemp.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnCmdTemp.Name = "btnCmdTemp";
 			this.btnCmdTemp.Size = new System.Drawing.Size(36, 36);
 			this.btnCmdTemp.TabIndex = 180;
@@ -390,9 +397,10 @@
 			// btnLaunchxLights
 			// 
 			this.btnLaunchxLights.AllowDrop = true;
-			this.btnLaunchxLights.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnLaunchxLights.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.btnLaunchxLights.Image = ((System.Drawing.Image)(resources.GetObject("btnLaunchxLights.Image")));
-			this.btnLaunchxLights.Location = new System.Drawing.Point(96, 16);
+			this.btnLaunchxLights.Location = new System.Drawing.Point(112, 18);
+			this.btnLaunchxLights.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnLaunchxLights.Name = "btnLaunchxLights";
 			this.btnLaunchxLights.Size = new System.Drawing.Size(36, 36);
 			this.btnLaunchxLights.TabIndex = 179;
@@ -404,9 +412,10 @@
 			// btnSequenceEditor
 			// 
 			this.btnSequenceEditor.AllowDrop = true;
-			this.btnSequenceEditor.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnSequenceEditor.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.btnSequenceEditor.Image = ((System.Drawing.Image)(resources.GetObject("btnSequenceEditor.Image")));
-			this.btnSequenceEditor.Location = new System.Drawing.Point(11, 16);
+			this.btnSequenceEditor.Location = new System.Drawing.Point(13, 18);
+			this.btnSequenceEditor.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnSequenceEditor.Name = "btnSequenceEditor";
 			this.btnSequenceEditor.Size = new System.Drawing.Size(36, 36);
 			this.btnSequenceEditor.TabIndex = 178;
@@ -418,9 +427,10 @@
 			// btnExploreLOR
 			// 
 			this.btnExploreLOR.AllowDrop = true;
-			this.btnExploreLOR.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnExploreLOR.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.btnExploreLOR.Image = ((System.Drawing.Image)(resources.GetObject("btnExploreLOR.Image")));
-			this.btnExploreLOR.Location = new System.Drawing.Point(53, 16);
+			this.btnExploreLOR.Location = new System.Drawing.Point(62, 18);
+			this.btnExploreLOR.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnExploreLOR.Name = "btnExploreLOR";
 			this.btnExploreLOR.Size = new System.Drawing.Size(36, 36);
 			this.btnExploreLOR.TabIndex = 177;
@@ -437,9 +447,10 @@
             this.pnlProgress,
             this.pnlStatus,
             this.pnlAbout});
-			this.staStatus.Location = new System.Drawing.Point(0, 700);
+			this.staStatus.Location = new System.Drawing.Point(0, 811);
 			this.staStatus.Name = "staStatus";
-			this.staStatus.Size = new System.Drawing.Size(990, 24);
+			this.staStatus.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
+			this.staStatus.Size = new System.Drawing.Size(1155, 24);
 			this.staStatus.TabIndex = 62;
 			this.staStatus.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
 			this.staStatus.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
@@ -450,7 +461,7 @@
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlHelp.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenInner;
-			this.pnlHelp.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.pnlHelp.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
 			this.pnlHelp.ForeColor = System.Drawing.SystemColors.Highlight;
 			this.pnlHelp.IsLink = true;
 			this.pnlHelp.Name = "pnlHelp";
@@ -461,7 +472,7 @@
 			// pnlProgress
 			// 
 			this.pnlProgress.Name = "pnlProgress";
-			this.pnlProgress.Size = new System.Drawing.Size(100, 18);
+			this.pnlProgress.Size = new System.Drawing.Size(117, 21);
 			this.pnlProgress.Visible = false;
 			// 
 			// pnlStatus
@@ -471,7 +482,7 @@
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlStatus.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
 			this.pnlStatus.Name = "pnlStatus";
-			this.pnlStatus.Size = new System.Drawing.Size(878, 19);
+			this.pnlStatus.Size = new System.Drawing.Size(1041, 19);
 			this.pnlStatus.Spring = true;
 			// 
 			// pnlAbout
@@ -480,7 +491,7 @@
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlAbout.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenInner;
-			this.pnlAbout.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.pnlAbout.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
 			this.pnlAbout.ForeColor = System.Drawing.SystemColors.Highlight;
 			this.pnlAbout.Name = "pnlAbout";
 			this.pnlAbout.Size = new System.Drawing.Size(52, 19);
@@ -498,7 +509,8 @@
             this.mnuGenerate});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Size = new System.Drawing.Size(1147, 24);
+			this.menuStrip1.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
+			this.menuStrip1.Size = new System.Drawing.Size(1338, 28);
 			this.menuStrip1.TabIndex = 110;
 			this.menuStrip1.Text = "menuStrip1";
 			this.menuStrip1.Visible = false;
@@ -513,7 +525,7 @@
             this.mnuFileDivider2,
             this.mnuExit});
 			this.mnuFile.Name = "mnuFile";
-			this.mnuFile.Size = new System.Drawing.Size(37, 20);
+			this.mnuFile.Size = new System.Drawing.Size(37, 24);
 			this.mnuFile.Text = "&File";
 			// 
 			// mnuOpenAudio
@@ -588,7 +600,7 @@
             this.mnuTimingMarks,
             this.mnuTranscription});
 			this.mnuGenerate.Name = "mnuGenerate";
-			this.mnuGenerate.Size = new System.Drawing.Size(66, 20);
+			this.mnuGenerate.Size = new System.Drawing.Size(66, 24);
 			this.mnuGenerate.Text = "&Generate";
 			// 
 			// mnuTimingMarks
@@ -634,9 +646,11 @@
 			this.grpTimings.Controls.Add(this.lblStep2B);
 			this.grpTimings.Controls.Add(this.chkFlux);
 			this.grpTimings.Enabled = false;
-			this.grpTimings.Location = new System.Drawing.Point(352, 12);
+			this.grpTimings.Location = new System.Drawing.Point(411, 14);
+			this.grpTimings.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.grpTimings.Name = "grpTimings";
-			this.grpTimings.Size = new System.Drawing.Size(628, 676);
+			this.grpTimings.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.grpTimings.Size = new System.Drawing.Size(733, 780);
 			this.grpTimings.TabIndex = 113;
 			this.grpTimings.TabStop = false;
 			this.grpTimings.Text = "      Select Which Timings to Generate";
@@ -651,10 +665,12 @@
 			this.grpChords.Controls.Add(this.cboMethodChords);
 			this.grpChords.Controls.Add(this.label4);
 			this.grpChords.Controls.Add(this.cboAlignChords);
-			this.grpChords.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.grpChords.Location = new System.Drawing.Point(469, 237);
+			this.grpChords.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
+			this.grpChords.Location = new System.Drawing.Point(547, 273);
+			this.grpChords.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.grpChords.Name = "grpChords";
-			this.grpChords.Size = new System.Drawing.Size(147, 154);
+			this.grpChords.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.grpChords.Size = new System.Drawing.Size(172, 178);
 			this.grpChords.TabIndex = 181;
 			this.grpChords.TabStop = false;
 			this.grpChords.Text = "   Chords";
@@ -662,8 +678,11 @@
 			// chkChords
 			// 
 			this.chkChords.AutoSize = true;
-			this.chkChords.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.chkChords.Checked = true;
+			this.chkChords.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkChords.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.chkChords.Location = new System.Drawing.Point(0, 0);
+			this.chkChords.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chkChords.Name = "chkChords";
 			this.chkChords.Size = new System.Drawing.Size(15, 14);
 			this.chkChords.TabIndex = 151;
@@ -673,8 +692,9 @@
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label2.Location = new System.Drawing.Point(6, 64);
+			this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.label2.Location = new System.Drawing.Point(7, 74);
+			this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(41, 13);
 			this.label2.TabIndex = 149;
@@ -683,22 +703,24 @@
 			// cboLabelsChords
 			// 
 			this.cboLabelsChords.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cboLabelsChords.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboLabelsChords.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboLabelsChords.FormattingEnabled = true;
 			this.cboLabelsChords.Items.AddRange(new object[] {
             "None",
             "Note Names",
             "MIDI Note Numbers"});
-			this.cboLabelsChords.Location = new System.Drawing.Point(6, 80);
+			this.cboLabelsChords.Location = new System.Drawing.Point(7, 92);
+			this.cboLabelsChords.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboLabelsChords.Name = "cboLabelsChords";
-			this.cboLabelsChords.Size = new System.Drawing.Size(135, 21);
+			this.cboLabelsChords.Size = new System.Drawing.Size(157, 21);
 			this.cboLabelsChords.TabIndex = 148;
 			// 
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label3.Location = new System.Drawing.Point(6, 16);
+			this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.label3.Location = new System.Drawing.Point(7, 18);
+			this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(86, 13);
 			this.label3.TabIndex = 144;
@@ -707,7 +729,7 @@
 			// cboMethodChords
 			// 
 			this.cboMethodChords.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cboMethodChords.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboMethodChords.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboMethodChords.FormattingEnabled = true;
 			this.cboMethodChords.Items.AddRange(new object[] {
             "Queen Mary Note Onset Detector",
@@ -718,16 +740,18 @@
             "Alicante Polyphonic Transcription",
             "Aubio Onset Detector",
             "Aubio Note Tracker"});
-			this.cboMethodChords.Location = new System.Drawing.Point(6, 32);
+			this.cboMethodChords.Location = new System.Drawing.Point(7, 37);
+			this.cboMethodChords.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboMethodChords.Name = "cboMethodChords";
-			this.cboMethodChords.Size = new System.Drawing.Size(135, 21);
+			this.cboMethodChords.Size = new System.Drawing.Size(157, 21);
 			this.cboMethodChords.TabIndex = 143;
 			// 
 			// label4
 			// 
 			this.label4.AutoSize = true;
-			this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label4.Location = new System.Drawing.Point(6, 104);
+			this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.label4.Location = new System.Drawing.Point(7, 120);
+			this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(49, 13);
 			this.label4.TabIndex = 142;
@@ -737,7 +761,7 @@
 			// 
 			this.cboAlignChords.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cboAlignChords.DropDownWidth = 180;
-			this.cboAlignChords.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboAlignChords.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboAlignChords.FormattingEnabled = true;
 			this.cboAlignChords.Items.AddRange(new object[] {
             "None",
@@ -748,9 +772,10 @@
             "Half Beats / Eighth Notes",
             "Quarter Beats / Sixteenth Notes",
             "Note Onsets"});
-			this.cboAlignChords.Location = new System.Drawing.Point(6, 120);
+			this.cboAlignChords.Location = new System.Drawing.Point(7, 138);
+			this.cboAlignChords.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboAlignChords.Name = "cboAlignChords";
-			this.cboAlignChords.Size = new System.Drawing.Size(135, 21);
+			this.cboAlignChords.Size = new System.Drawing.Size(157, 21);
 			this.cboAlignChords.TabIndex = 141;
 			// 
 			// grbGlobal
@@ -761,10 +786,12 @@
 			this.grbGlobal.Controls.Add(this.chkWhiten);
 			this.grbGlobal.Controls.Add(this.pnlTrackBeatsX);
 			this.grbGlobal.Controls.Add(this.panel1);
-			this.grbGlobal.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.grbGlobal.Location = new System.Drawing.Point(6, 77);
+			this.grbGlobal.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
+			this.grbGlobal.Location = new System.Drawing.Point(7, 89);
+			this.grbGlobal.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.grbGlobal.Name = "grbGlobal";
-			this.grbGlobal.Size = new System.Drawing.Size(147, 174);
+			this.grbGlobal.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.grbGlobal.Size = new System.Drawing.Size(172, 201);
 			this.grbGlobal.TabIndex = 180;
 			this.grbGlobal.TabStop = false;
 			this.grbGlobal.Text = " All Vamps ";
@@ -772,8 +799,9 @@
 			// lblStepSize
 			// 
 			this.lblStepSize.AutoSize = true;
-			this.lblStepSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblStepSize.Location = new System.Drawing.Point(6, 126);
+			this.lblStepSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblStepSize.Location = new System.Drawing.Point(7, 145);
+			this.lblStepSize.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblStepSize.Name = "lblStepSize";
 			this.lblStepSize.Size = new System.Drawing.Size(55, 13);
 			this.lblStepSize.TabIndex = 164;
@@ -782,15 +810,16 @@
 			// cboStepSize
 			// 
 			this.cboStepSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cboStepSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboStepSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboStepSize.FormattingEnabled = true;
 			this.cboStepSize.Items.AddRange(new object[] {
             "441",
             "512",
             "557"});
-			this.cboStepSize.Location = new System.Drawing.Point(6, 142);
+			this.cboStepSize.Location = new System.Drawing.Point(7, 164);
+			this.cboStepSize.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboStepSize.Name = "cboStepSize";
-			this.cboStepSize.Size = new System.Drawing.Size(135, 21);
+			this.cboStepSize.Size = new System.Drawing.Size(157, 21);
 			this.cboStepSize.TabIndex = 163;
 			// 
 			// pnlBeatFade
@@ -798,26 +827,28 @@
 			this.pnlBeatFade.Controls.Add(this.swRamps);
 			this.pnlBeatFade.Controls.Add(this.lblBarsRampFade);
 			this.pnlBeatFade.Controls.Add(this.lblBarsOnOff);
-			this.pnlBeatFade.Location = new System.Drawing.Point(5, 103);
+			this.pnlBeatFade.Location = new System.Drawing.Point(6, 119);
+			this.pnlBeatFade.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.pnlBeatFade.Name = "pnlBeatFade";
-			this.pnlBeatFade.Size = new System.Drawing.Size(139, 17);
+			this.pnlBeatFade.Size = new System.Drawing.Size(162, 20);
 			this.pnlBeatFade.TabIndex = 158;
 			// 
 			// swRamps
 			// 
-			this.swRamps.Location = new System.Drawing.Point(37, 1);
+			this.swRamps.Location = new System.Drawing.Point(43, 1);
+			this.swRamps.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.swRamps.Name = "swRamps";
-			this.swRamps.OffFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.swRamps.OnFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.swRamps.Size = new System.Drawing.Size(32, 16);
+			this.swRamps.OnFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.swRamps.Size = new System.Drawing.Size(37, 18);
 			this.swRamps.Style = JCS.ToggleSwitch.ToggleSwitchStyle.OSX;
 			this.swRamps.TabIndex = 132;
 			// 
 			// lblBarsRampFade
 			// 
 			this.lblBarsRampFade.AutoSize = true;
-			this.lblBarsRampFade.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblBarsRampFade.Location = new System.Drawing.Point(69, 2);
+			this.lblBarsRampFade.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblBarsRampFade.Location = new System.Drawing.Point(80, 2);
+			this.lblBarsRampFade.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblBarsRampFade.Name = "lblBarsRampFade";
 			this.lblBarsRampFade.Size = new System.Drawing.Size(62, 13);
 			this.lblBarsRampFade.TabIndex = 128;
@@ -826,8 +857,9 @@
 			// lblBarsOnOff
 			// 
 			this.lblBarsOnOff.AutoSize = true;
-			this.lblBarsOnOff.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblBarsOnOff.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.lblBarsOnOff.Location = new System.Drawing.Point(0, 2);
+			this.lblBarsOnOff.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblBarsOnOff.Name = "lblBarsOnOff";
 			this.lblBarsOnOff.Size = new System.Drawing.Size(38, 13);
 			this.lblBarsOnOff.TabIndex = 127;
@@ -836,8 +868,9 @@
 			// chkWhiten
 			// 
 			this.chkWhiten.AutoSize = true;
-			this.chkWhiten.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.chkWhiten.Location = new System.Drawing.Point(5, 80);
+			this.chkWhiten.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.chkWhiten.Location = new System.Drawing.Point(6, 92);
+			this.chkWhiten.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chkWhiten.Name = "chkWhiten";
 			this.chkWhiten.Size = new System.Drawing.Size(89, 17);
 			this.chkWhiten.TabIndex = 155;
@@ -850,27 +883,29 @@
 			this.panel1.Controls.Add(this.swTrackBeat);
 			this.panel1.Controls.Add(this.lblTrackBeat34);
 			this.panel1.Controls.Add(this.lblTrackBeat44);
-			this.panel1.Location = new System.Drawing.Point(5, 19);
+			this.panel1.Location = new System.Drawing.Point(6, 22);
+			this.panel1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(127, 23);
+			this.panel1.Size = new System.Drawing.Size(148, 27);
 			this.panel1.TabIndex = 141;
 			// 
 			// swTrackBeat
 			// 
-			this.swTrackBeat.Location = new System.Drawing.Point(46, 1);
+			this.swTrackBeat.Location = new System.Drawing.Point(54, 1);
+			this.swTrackBeat.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.swTrackBeat.Name = "swTrackBeat";
-			this.swTrackBeat.OffFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.swTrackBeat.OnFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.swTrackBeat.Size = new System.Drawing.Size(32, 16);
+			this.swTrackBeat.OnFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.swTrackBeat.Size = new System.Drawing.Size(37, 18);
 			this.swTrackBeat.Style = JCS.ToggleSwitch.ToggleSwitchStyle.OSX;
 			this.swTrackBeat.TabIndex = 133;
 			// 
 			// lblTrackBeat34
 			// 
 			this.lblTrackBeat34.AutoSize = true;
-			this.lblTrackBeat34.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblTrackBeat34.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.lblTrackBeat34.ForeColor = System.Drawing.Color.OrangeRed;
-			this.lblTrackBeat34.Location = new System.Drawing.Point(80, 2);
+			this.lblTrackBeat34.Location = new System.Drawing.Point(93, 2);
+			this.lblTrackBeat34.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblTrackBeat34.Name = "lblTrackBeat34";
 			this.lblTrackBeat34.Size = new System.Drawing.Size(46, 13);
 			this.lblTrackBeat34.TabIndex = 128;
@@ -879,8 +914,9 @@
 			// lblTrackBeat44
 			// 
 			this.lblTrackBeat44.AutoSize = true;
-			this.lblTrackBeat44.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblTrackBeat44.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.lblTrackBeat44.Location = new System.Drawing.Point(1, 2);
+			this.lblTrackBeat44.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblTrackBeat44.Name = "lblTrackBeat44";
 			this.lblTrackBeat44.Size = new System.Drawing.Size(46, 13);
 			this.lblTrackBeat44.TabIndex = 127;
@@ -889,8 +925,9 @@
 			// lblNote3Third
 			// 
 			this.lblNote3Third.AutoSize = true;
-			this.lblNote3Third.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblNote3Third.Location = new System.Drawing.Point(525, 626);
+			this.lblNote3Third.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblNote3Third.Location = new System.Drawing.Point(612, 722);
+			this.lblNote3Third.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblNote3Third.Name = "lblNote3Third";
 			this.lblNote3Third.Size = new System.Drawing.Size(23, 26);
 			this.lblNote3Third.TabIndex = 148;
@@ -900,8 +937,9 @@
 			// lblNote1Bars
 			// 
 			this.lblNote1Bars.AutoSize = true;
-			this.lblNote1Bars.Font = new System.Drawing.Font("Segoe UI Symbol", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblNote1Bars.Location = new System.Drawing.Point(611, 646);
+			this.lblNote1Bars.Font = new System.Drawing.Font("Segoe UI Symbol", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblNote1Bars.Location = new System.Drawing.Point(713, 745);
+			this.lblNote1Bars.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblNote1Bars.Name = "lblNote1Bars";
 			this.lblNote1Bars.Size = new System.Drawing.Size(19, 30);
 			this.lblNote1Bars.TabIndex = 145;
@@ -911,8 +949,9 @@
 			// lblWorkFolder
 			// 
 			this.lblWorkFolder.AutoSize = true;
-			this.lblWorkFolder.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblWorkFolder.Location = new System.Drawing.Point(475, 12);
+			this.lblWorkFolder.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblWorkFolder.Location = new System.Drawing.Point(554, 14);
+			this.lblWorkFolder.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblWorkFolder.Name = "lblWorkFolder";
 			this.lblWorkFolder.Size = new System.Drawing.Size(109, 13);
 			this.lblWorkFolder.TabIndex = 173;
@@ -926,10 +965,12 @@
 			this.grpPlatform.Controls.Add(this.pictureBox2);
 			this.grpPlatform.Controls.Add(this.chkLOR);
 			this.grpPlatform.Controls.Add(this.lbllabel);
-			this.grpPlatform.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.grpPlatform.Location = new System.Drawing.Point(8, 18);
+			this.grpPlatform.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.grpPlatform.Location = new System.Drawing.Point(9, 21);
+			this.grpPlatform.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.grpPlatform.Name = "grpPlatform";
-			this.grpPlatform.Size = new System.Drawing.Size(300, 48);
+			this.grpPlatform.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.grpPlatform.Size = new System.Drawing.Size(350, 55);
 			this.grpPlatform.TabIndex = 157;
 			this.grpPlatform.TabStop = false;
 			this.grpPlatform.Text = "       Platform";
@@ -938,17 +979,19 @@
 			// 
 			this.pictureBox3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox3.BackgroundImage")));
 			this.pictureBox3.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox3.InitialImage")));
-			this.pictureBox3.Location = new System.Drawing.Point(169, 17);
+			this.pictureBox3.Location = new System.Drawing.Point(197, 20);
+			this.pictureBox3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.pictureBox3.Name = "pictureBox3";
-			this.pictureBox3.Size = new System.Drawing.Size(85, 28);
+			this.pictureBox3.Size = new System.Drawing.Size(85, 26);
 			this.pictureBox3.TabIndex = 160;
 			this.pictureBox3.TabStop = false;
 			// 
 			// chkxLights
 			// 
 			this.chkxLights.AutoSize = true;
-			this.chkxLights.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.chkxLights.Location = new System.Drawing.Point(151, 22);
+			this.chkxLights.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.chkxLights.Location = new System.Drawing.Point(176, 25);
+			this.chkxLights.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chkxLights.Name = "chkxLights";
 			this.chkxLights.Size = new System.Drawing.Size(15, 14);
 			this.chkxLights.TabIndex = 159;
@@ -959,7 +1002,8 @@
 			// pictureBox2
 			// 
 			this.pictureBox2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox2.BackgroundImage")));
-			this.pictureBox2.Location = new System.Drawing.Point(40, 20);
+			this.pictureBox2.Location = new System.Drawing.Point(47, 23);
+			this.pictureBox2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.pictureBox2.Name = "pictureBox2";
 			this.pictureBox2.Size = new System.Drawing.Size(90, 19);
 			this.pictureBox2.TabIndex = 158;
@@ -969,8 +1013,9 @@
 			// chkLOR
 			// 
 			this.chkLOR.AutoSize = true;
-			this.chkLOR.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.chkLOR.Location = new System.Drawing.Point(19, 22);
+			this.chkLOR.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.chkLOR.Location = new System.Drawing.Point(22, 25);
+			this.chkLOR.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chkLOR.Name = "chkLOR";
 			this.chkLOR.Size = new System.Drawing.Size(15, 14);
 			this.chkLOR.TabIndex = 157;
@@ -981,8 +1026,9 @@
 			// lbllabel
 			// 
 			this.lbllabel.AutoSize = true;
-			this.lbllabel.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lbllabel.Location = new System.Drawing.Point(132, 55);
+			this.lbllabel.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lbllabel.Location = new System.Drawing.Point(154, 63);
+			this.lbllabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lbllabel.Name = "lbllabel";
 			this.lbllabel.Size = new System.Drawing.Size(38, 13);
 			this.lbllabel.TabIndex = 142;
@@ -993,8 +1039,9 @@
 			// 
 			this.chk24fps.AutoSize = true;
 			this.chk24fps.Enabled = false;
-			this.chk24fps.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.chk24fps.Location = new System.Drawing.Point(649, 445);
+			this.chk24fps.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.chk24fps.Location = new System.Drawing.Point(757, 513);
+			this.chk24fps.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chk24fps.Name = "chk24fps";
 			this.chk24fps.Size = new System.Drawing.Size(153, 17);
 			this.chk24fps.TabIndex = 170;
@@ -1007,8 +1054,9 @@
 			this.chk30fps.AllowDrop = true;
 			this.chk30fps.AutoSize = true;
 			this.chk30fps.Enabled = false;
-			this.chk30fps.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.chk30fps.Location = new System.Drawing.Point(649, 429);
+			this.chk30fps.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.chk30fps.Location = new System.Drawing.Point(757, 495);
+			this.chk30fps.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chk30fps.Name = "chk30fps";
 			this.chk30fps.Size = new System.Drawing.Size(153, 17);
 			this.chk30fps.TabIndex = 169;
@@ -1019,9 +1067,10 @@
 			// lblTweaks
 			// 
 			this.lblTweaks.AutoSize = true;
-			this.lblTweaks.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Italic | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblTweaks.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Italic | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point);
 			this.lblTweaks.ForeColor = System.Drawing.SystemColors.HotTrack;
-			this.lblTweaks.Location = new System.Drawing.Point(681, 272);
+			this.lblTweaks.Location = new System.Drawing.Point(794, 314);
+			this.lblTweaks.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblTweaks.Name = "lblTweaks";
 			this.lblTweaks.Size = new System.Drawing.Size(79, 13);
 			this.lblTweaks.TabIndex = 157;
@@ -1032,8 +1081,9 @@
 			// 
 			this.chk15fps.AutoSize = true;
 			this.chk15fps.Enabled = false;
-			this.chk15fps.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.chk15fps.Location = new System.Drawing.Point(649, 461);
+			this.chk15fps.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.chk15fps.Location = new System.Drawing.Point(757, 532);
+			this.chk15fps.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chk15fps.Name = "chk15fps";
 			this.chk15fps.Size = new System.Drawing.Size(153, 17);
 			this.chk15fps.TabIndex = 168;
@@ -1046,10 +1096,12 @@
 			this.grpVocals.Controls.Add(this.chkVocals);
 			this.grpVocals.Controls.Add(this.lblVocalsAlign);
 			this.grpVocals.Controls.Add(this.cboAlignVocals);
-			this.grpVocals.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.grpVocals.Location = new System.Drawing.Point(585, 614);
+			this.grpVocals.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
+			this.grpVocals.Location = new System.Drawing.Point(682, 708);
+			this.grpVocals.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.grpVocals.Name = "grpVocals";
-			this.grpVocals.Size = new System.Drawing.Size(147, 86);
+			this.grpVocals.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.grpVocals.Size = new System.Drawing.Size(172, 99);
 			this.grpVocals.TabIndex = 143;
 			this.grpVocals.TabStop = false;
 			this.grpVocals.Text = "   Vocals";
@@ -1058,8 +1110,9 @@
 			// chkVocals
 			// 
 			this.chkVocals.AutoSize = true;
-			this.chkVocals.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.chkVocals.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.chkVocals.Location = new System.Drawing.Point(0, 0);
+			this.chkVocals.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chkVocals.Name = "chkVocals";
 			this.chkVocals.Size = new System.Drawing.Size(15, 14);
 			this.chkVocals.TabIndex = 143;
@@ -1070,8 +1123,9 @@
 			// lblVocalsAlign
 			// 
 			this.lblVocalsAlign.AutoSize = true;
-			this.lblVocalsAlign.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblVocalsAlign.Location = new System.Drawing.Point(6, 41);
+			this.lblVocalsAlign.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblVocalsAlign.Location = new System.Drawing.Point(7, 47);
+			this.lblVocalsAlign.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblVocalsAlign.Name = "lblVocalsAlign";
 			this.lblVocalsAlign.Size = new System.Drawing.Size(52, 13);
 			this.lblVocalsAlign.TabIndex = 142;
@@ -1081,7 +1135,7 @@
 			// 
 			this.cboAlignVocals.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cboAlignVocals.DropDownWidth = 180;
-			this.cboAlignVocals.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboAlignVocals.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboAlignVocals.FormattingEnabled = true;
 			this.cboAlignVocals.Items.AddRange(new object[] {
             "None",
@@ -1092,16 +1146,18 @@
             "Half Beats / Eighth Notes",
             "Quarter Beats / Sixteenth Notes",
             "Note Onsets"});
-			this.cboAlignVocals.Location = new System.Drawing.Point(6, 57);
+			this.cboAlignVocals.Location = new System.Drawing.Point(7, 66);
+			this.cboAlignVocals.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboAlignVocals.Name = "cboAlignVocals";
-			this.cboAlignVocals.Size = new System.Drawing.Size(135, 21);
+			this.cboAlignVocals.Size = new System.Drawing.Size(157, 21);
 			this.cboAlignVocals.TabIndex = 141;
 			// 
 			// lblTrans2Options
 			// 
 			this.lblTrans2Options.AutoSize = true;
-			this.lblTrans2Options.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Italic | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblTrans2Options.Location = new System.Drawing.Point(715, 568);
+			this.lblTrans2Options.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Italic | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point);
+			this.lblTrans2Options.Location = new System.Drawing.Point(834, 655);
+			this.lblTrans2Options.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblTrans2Options.Name = "lblTrans2Options";
 			this.lblTrans2Options.Size = new System.Drawing.Size(79, 13);
 			this.lblTrans2Options.TabIndex = 167;
@@ -1116,10 +1172,12 @@
 			this.grpSegments.Controls.Add(this.chkSegments);
 			this.grpSegments.Controls.Add(this.lblSegmentsAlign);
 			this.grpSegments.Controls.Add(this.cboAlignSegments);
-			this.grpSegments.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.grpSegments.Location = new System.Drawing.Point(469, 413);
+			this.grpSegments.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
+			this.grpSegments.Location = new System.Drawing.Point(547, 477);
+			this.grpSegments.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.grpSegments.Name = "grpSegments";
-			this.grpSegments.Size = new System.Drawing.Size(147, 150);
+			this.grpSegments.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.grpSegments.Size = new System.Drawing.Size(172, 173);
 			this.grpSegments.TabIndex = 142;
 			this.grpSegments.TabStop = false;
 			this.grpSegments.Text = "   Segments";
@@ -1127,8 +1185,9 @@
 			// lblSegmentsLabels
 			// 
 			this.lblSegmentsLabels.AutoSize = true;
-			this.lblSegmentsLabels.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblSegmentsLabels.Location = new System.Drawing.Point(6, 60);
+			this.lblSegmentsLabels.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblSegmentsLabels.Location = new System.Drawing.Point(7, 69);
+			this.lblSegmentsLabels.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblSegmentsLabels.Name = "lblSegmentsLabels";
 			this.lblSegmentsLabels.Size = new System.Drawing.Size(41, 13);
 			this.lblSegmentsLabels.TabIndex = 154;
@@ -1137,22 +1196,24 @@
 			// cboLabelsSegments
 			// 
 			this.cboLabelsSegments.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cboLabelsSegments.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboLabelsSegments.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboLabelsSegments.FormattingEnabled = true;
 			this.cboLabelsSegments.Items.AddRange(new object[] {
             "None",
             "Numbers",
             "Letters"});
-			this.cboLabelsSegments.Location = new System.Drawing.Point(6, 76);
+			this.cboLabelsSegments.Location = new System.Drawing.Point(7, 88);
+			this.cboLabelsSegments.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboLabelsSegments.Name = "cboLabelsSegments";
-			this.cboLabelsSegments.Size = new System.Drawing.Size(135, 21);
+			this.cboLabelsSegments.Size = new System.Drawing.Size(157, 21);
 			this.cboLabelsSegments.TabIndex = 153;
 			// 
 			// lblSegmentsPlugin
 			// 
 			this.lblSegmentsPlugin.AutoSize = true;
-			this.lblSegmentsPlugin.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblSegmentsPlugin.Location = new System.Drawing.Point(6, 16);
+			this.lblSegmentsPlugin.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblSegmentsPlugin.Location = new System.Drawing.Point(7, 18);
+			this.lblSegmentsPlugin.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblSegmentsPlugin.Name = "lblSegmentsPlugin";
 			this.lblSegmentsPlugin.Size = new System.Drawing.Size(86, 13);
 			this.lblSegmentsPlugin.TabIndex = 152;
@@ -1162,21 +1223,25 @@
 			// 
 			this.cboMethodSegments.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cboMethodSegments.DropDownWidth = 200;
-			this.cboMethodSegments.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboMethodSegments.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboMethodSegments.FormattingEnabled = true;
 			this.cboMethodSegments.Items.AddRange(new object[] {
             "Queen Mary Segmenter",
             "Segmentino"});
-			this.cboMethodSegments.Location = new System.Drawing.Point(5, 32);
+			this.cboMethodSegments.Location = new System.Drawing.Point(6, 37);
+			this.cboMethodSegments.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboMethodSegments.Name = "cboMethodSegments";
-			this.cboMethodSegments.Size = new System.Drawing.Size(135, 21);
+			this.cboMethodSegments.Size = new System.Drawing.Size(157, 21);
 			this.cboMethodSegments.TabIndex = 151;
 			// 
 			// chkSegments
 			// 
 			this.chkSegments.AutoSize = true;
-			this.chkSegments.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.chkSegments.Checked = true;
+			this.chkSegments.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkSegments.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.chkSegments.Location = new System.Drawing.Point(0, 0);
+			this.chkSegments.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chkSegments.Name = "chkSegments";
 			this.chkSegments.Size = new System.Drawing.Size(15, 14);
 			this.chkSegments.TabIndex = 150;
@@ -1186,8 +1251,9 @@
 			// lblSegmentsAlign
 			// 
 			this.lblSegmentsAlign.AutoSize = true;
-			this.lblSegmentsAlign.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblSegmentsAlign.Location = new System.Drawing.Point(6, 104);
+			this.lblSegmentsAlign.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblSegmentsAlign.Location = new System.Drawing.Point(7, 120);
+			this.lblSegmentsAlign.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblSegmentsAlign.Name = "lblSegmentsAlign";
 			this.lblSegmentsAlign.Size = new System.Drawing.Size(52, 13);
 			this.lblSegmentsAlign.TabIndex = 142;
@@ -1197,7 +1263,7 @@
 			// 
 			this.cboAlignSegments.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cboAlignSegments.DropDownWidth = 180;
-			this.cboAlignSegments.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboAlignSegments.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboAlignSegments.FormattingEnabled = true;
 			this.cboAlignSegments.Items.AddRange(new object[] {
             "None",
@@ -1208,20 +1274,22 @@
             "Half Beats / Eighth Notes",
             "Quarter Beats / Sixteenth Notes",
             "Note Onsets"});
-			this.cboAlignSegments.Location = new System.Drawing.Point(5, 121);
+			this.cboAlignSegments.Location = new System.Drawing.Point(6, 140);
+			this.cboAlignSegments.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboAlignSegments.Name = "cboAlignSegments";
-			this.cboAlignSegments.Size = new System.Drawing.Size(135, 21);
+			this.cboAlignSegments.Size = new System.Drawing.Size(157, 21);
 			this.cboAlignSegments.TabIndex = 141;
 			// 
 			// button3
 			// 
 			this.button3.AllowDrop = true;
 			this.button3.Enabled = false;
-			this.button3.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.button3.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
-			this.button3.Location = new System.Drawing.Point(636, 221);
+			this.button3.Location = new System.Drawing.Point(742, 255);
+			this.button3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.button3.Name = "button3";
-			this.button3.Size = new System.Drawing.Size(32, 32);
+			this.button3.Size = new System.Drawing.Size(37, 37);
 			this.button3.TabIndex = 162;
 			this.button3.UseVisualStyleBackColor = true;
 			this.button3.Visible = false;
@@ -1235,10 +1303,12 @@
 			this.grpTempo.Controls.Add(this.cboMethodTempo);
 			this.grpTempo.Controls.Add(this.lblTempoAlign);
 			this.grpTempo.Controls.Add(this.cboAlignTempo);
-			this.grpTempo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.grpTempo.Location = new System.Drawing.Point(316, 413);
+			this.grpTempo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
+			this.grpTempo.Location = new System.Drawing.Point(369, 477);
+			this.grpTempo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.grpTempo.Name = "grpTempo";
-			this.grpTempo.Size = new System.Drawing.Size(147, 150);
+			this.grpTempo.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.grpTempo.Size = new System.Drawing.Size(172, 173);
 			this.grpTempo.TabIndex = 141;
 			this.grpTempo.TabStop = false;
 			this.grpTempo.Text = "   Tempo";
@@ -1246,9 +1316,12 @@
 			// chkTempo
 			// 
 			this.chkTempo.AutoSize = true;
-			this.chkTempo.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.chkTempo.Checked = true;
+			this.chkTempo.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkTempo.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.chkTempo.ForeColor = System.Drawing.Color.Red;
 			this.chkTempo.Location = new System.Drawing.Point(0, 0);
+			this.chkTempo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chkTempo.Name = "chkTempo";
 			this.chkTempo.Size = new System.Drawing.Size(15, 14);
 			this.chkTempo.TabIndex = 150;
@@ -1258,8 +1331,9 @@
 			// lblTempoLabels
 			// 
 			this.lblTempoLabels.AutoSize = true;
-			this.lblTempoLabels.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblTempoLabels.Location = new System.Drawing.Point(6, 59);
+			this.lblTempoLabels.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblTempoLabels.Location = new System.Drawing.Point(7, 68);
+			this.lblTempoLabels.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblTempoLabels.Name = "lblTempoLabels";
 			this.lblTempoLabels.Size = new System.Drawing.Size(41, 13);
 			this.lblTempoLabels.TabIndex = 149;
@@ -1268,22 +1342,24 @@
 			// cboLabelsTempo
 			// 
 			this.cboLabelsTempo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cboLabelsTempo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboLabelsTempo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboLabelsTempo.FormattingEnabled = true;
 			this.cboLabelsTempo.Items.AddRange(new object[] {
             "None",
             "Note Names",
             "MIDI Note Numbers"});
-			this.cboLabelsTempo.Location = new System.Drawing.Point(6, 75);
+			this.cboLabelsTempo.Location = new System.Drawing.Point(7, 87);
+			this.cboLabelsTempo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboLabelsTempo.Name = "cboLabelsTempo";
-			this.cboLabelsTempo.Size = new System.Drawing.Size(135, 21);
+			this.cboLabelsTempo.Size = new System.Drawing.Size(157, 21);
 			this.cboLabelsTempo.TabIndex = 148;
 			// 
 			// lblTempoPlugin
 			// 
 			this.lblTempoPlugin.AutoSize = true;
-			this.lblTempoPlugin.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblTempoPlugin.Location = new System.Drawing.Point(6, 16);
+			this.lblTempoPlugin.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblTempoPlugin.Location = new System.Drawing.Point(7, 18);
+			this.lblTempoPlugin.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblTempoPlugin.Name = "lblTempoPlugin";
 			this.lblTempoPlugin.Size = new System.Drawing.Size(86, 13);
 			this.lblTempoPlugin.TabIndex = 144;
@@ -1292,7 +1368,7 @@
 			// cboMethodTempo
 			// 
 			this.cboMethodTempo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cboMethodTempo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboMethodTempo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboMethodTempo.FormattingEnabled = true;
 			this.cboMethodTempo.Items.AddRange(new object[] {
             "Queen Mary Note Onset Detector",
@@ -1303,16 +1379,18 @@
             "Alicante Polyphonic Transcription",
             "Aubio Onset Detector",
             "Aubio Note Tracker"});
-			this.cboMethodTempo.Location = new System.Drawing.Point(6, 33);
+			this.cboMethodTempo.Location = new System.Drawing.Point(7, 38);
+			this.cboMethodTempo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboMethodTempo.Name = "cboMethodTempo";
-			this.cboMethodTempo.Size = new System.Drawing.Size(135, 21);
+			this.cboMethodTempo.Size = new System.Drawing.Size(157, 21);
 			this.cboMethodTempo.TabIndex = 143;
 			// 
 			// lblTempoAlign
 			// 
 			this.lblTempoAlign.AutoSize = true;
-			this.lblTempoAlign.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblTempoAlign.Location = new System.Drawing.Point(6, 99);
+			this.lblTempoAlign.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblTempoAlign.Location = new System.Drawing.Point(7, 114);
+			this.lblTempoAlign.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblTempoAlign.Name = "lblTempoAlign";
 			this.lblTempoAlign.Size = new System.Drawing.Size(49, 13);
 			this.lblTempoAlign.TabIndex = 142;
@@ -1322,7 +1400,7 @@
 			// 
 			this.cboAlignTempo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cboAlignTempo.DropDownWidth = 180;
-			this.cboAlignTempo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboAlignTempo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboAlignTempo.FormattingEnabled = true;
 			this.cboAlignTempo.Items.AddRange(new object[] {
             "None",
@@ -1333,9 +1411,10 @@
             "Half Beats / Eighth Notes",
             "Quarter Beats / Sixteenth Notes",
             "Note Onsets"});
-			this.cboAlignTempo.Location = new System.Drawing.Point(6, 115);
+			this.cboAlignTempo.Location = new System.Drawing.Point(7, 133);
+			this.cboAlignTempo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboAlignTempo.Name = "cboAlignTempo";
-			this.cboAlignTempo.Size = new System.Drawing.Size(135, 21);
+			this.cboAlignTempo.Size = new System.Drawing.Size(157, 21);
 			this.cboAlignTempo.TabIndex = 141;
 			// 
 			// grpPoly2
@@ -1347,10 +1426,12 @@
 			this.grpPoly2.Controls.Add(this.comboBox2);
 			this.grpPoly2.Controls.Add(this.lblTrans2Align);
 			this.grpPoly2.Controls.Add(this.cboAlignFoo);
-			this.grpPoly2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.grpPoly2.Location = new System.Drawing.Point(741, 24);
+			this.grpPoly2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
+			this.grpPoly2.Location = new System.Drawing.Point(864, 28);
+			this.grpPoly2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.grpPoly2.Name = "grpPoly2";
-			this.grpPoly2.Size = new System.Drawing.Size(147, 346);
+			this.grpPoly2.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.grpPoly2.Size = new System.Drawing.Size(172, 399);
 			this.grpPoly2.TabIndex = 166;
 			this.grpPoly2.TabStop = false;
 			this.grpPoly2.Text = "   Polyphonic Transcription";
@@ -1359,8 +1440,9 @@
 			// lblTrans2Plugin
 			// 
 			this.lblTrans2Plugin.AutoSize = true;
-			this.lblTrans2Plugin.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblTrans2Plugin.Location = new System.Drawing.Point(6, 16);
+			this.lblTrans2Plugin.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblTrans2Plugin.Location = new System.Drawing.Point(7, 18);
+			this.lblTrans2Plugin.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblTrans2Plugin.Name = "lblTrans2Plugin";
 			this.lblTrans2Plugin.Size = new System.Drawing.Size(86, 13);
 			this.lblTrans2Plugin.TabIndex = 148;
@@ -1369,8 +1451,9 @@
 			// lblTrans2Labels
 			// 
 			this.lblTrans2Labels.AutoSize = true;
-			this.lblTrans2Labels.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblTrans2Labels.Location = new System.Drawing.Point(6, 261);
+			this.lblTrans2Labels.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblTrans2Labels.Location = new System.Drawing.Point(7, 301);
+			this.lblTrans2Labels.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblTrans2Labels.Name = "lblTrans2Labels";
 			this.lblTrans2Labels.Size = new System.Drawing.Size(41, 13);
 			this.lblTrans2Labels.TabIndex = 147;
@@ -1379,21 +1462,23 @@
 			// comboBox1
 			// 
 			this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.comboBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.comboBox1.FormattingEnabled = true;
 			this.comboBox1.Items.AddRange(new object[] {
             "MIDI Note Numbers",
             "Note Names"});
-			this.comboBox1.Location = new System.Drawing.Point(6, 277);
+			this.comboBox1.Location = new System.Drawing.Point(7, 320);
+			this.comboBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.comboBox1.Name = "comboBox1";
-			this.comboBox1.Size = new System.Drawing.Size(135, 21);
+			this.comboBox1.Size = new System.Drawing.Size(157, 21);
 			this.comboBox1.TabIndex = 146;
 			// 
 			// checkBox1
 			// 
 			this.checkBox1.AutoSize = true;
-			this.checkBox1.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.checkBox1.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.checkBox1.Location = new System.Drawing.Point(0, 0);
+			this.checkBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.checkBox1.Name = "checkBox1";
 			this.checkBox1.Size = new System.Drawing.Size(15, 14);
 			this.checkBox1.TabIndex = 145;
@@ -1405,23 +1490,25 @@
 			// 
 			this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboBox2.DropDownWidth = 200;
-			this.comboBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.comboBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.comboBox2.FormattingEnabled = true;
 			this.comboBox2.Items.AddRange(new object[] {
             "Queen Mary Polyphonic Transcription",
             "Silvet Note Transcription",
             "Alicante Polyphonic Transcription",
             "Aubio Note Tracker"});
-			this.comboBox2.Location = new System.Drawing.Point(6, 32);
+			this.comboBox2.Location = new System.Drawing.Point(7, 37);
+			this.comboBox2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.comboBox2.Name = "comboBox2";
-			this.comboBox2.Size = new System.Drawing.Size(135, 21);
+			this.comboBox2.Size = new System.Drawing.Size(157, 21);
 			this.comboBox2.TabIndex = 143;
 			// 
 			// lblTrans2Align
 			// 
 			this.lblTrans2Align.AutoSize = true;
-			this.lblTrans2Align.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblTrans2Align.Location = new System.Drawing.Point(6, 301);
+			this.lblTrans2Align.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblTrans2Align.Location = new System.Drawing.Point(7, 347);
+			this.lblTrans2Align.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblTrans2Align.Name = "lblTrans2Align";
 			this.lblTrans2Align.Size = new System.Drawing.Size(49, 13);
 			this.lblTrans2Align.TabIndex = 142;
@@ -1431,7 +1518,7 @@
 			// 
 			this.cboAlignFoo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cboAlignFoo.DropDownWidth = 180;
-			this.cboAlignFoo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboAlignFoo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboAlignFoo.FormattingEnabled = true;
 			this.cboAlignFoo.Items.AddRange(new object[] {
             "None",
@@ -1441,17 +1528,19 @@
             "Half Beats / Eighth Notes",
             "Quarter Beats / Sixteenth Notes",
             "Note Onsets"});
-			this.cboAlignFoo.Location = new System.Drawing.Point(6, 317);
+			this.cboAlignFoo.Location = new System.Drawing.Point(7, 366);
+			this.cboAlignFoo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboAlignFoo.Name = "cboAlignFoo";
-			this.cboAlignFoo.Size = new System.Drawing.Size(135, 21);
+			this.cboAlignFoo.Size = new System.Drawing.Size(157, 21);
 			this.cboAlignFoo.TabIndex = 141;
 			// 
 			// checkBox2
 			// 
 			this.checkBox2.AutoSize = true;
 			this.checkBox2.Enabled = false;
-			this.checkBox2.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.checkBox2.Location = new System.Drawing.Point(636, 148);
+			this.checkBox2.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.checkBox2.Location = new System.Drawing.Point(742, 171);
+			this.checkBox2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.checkBox2.Name = "checkBox2";
 			this.checkBox2.Size = new System.Drawing.Size(80, 17);
 			this.checkBox2.TabIndex = 165;
@@ -1463,11 +1552,12 @@
 			// 
 			this.btnTrackSettings.AllowDrop = true;
 			this.btnTrackSettings.Enabled = false;
-			this.btnTrackSettings.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnTrackSettings.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.btnTrackSettings.Image = ((System.Drawing.Image)(resources.GetObject("btnTrackSettings.Image")));
-			this.btnTrackSettings.Location = new System.Drawing.Point(684, 221);
+			this.btnTrackSettings.Location = new System.Drawing.Point(798, 255);
+			this.btnTrackSettings.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnTrackSettings.Name = "btnTrackSettings";
-			this.btnTrackSettings.Size = new System.Drawing.Size(32, 32);
+			this.btnTrackSettings.Size = new System.Drawing.Size(37, 37);
 			this.btnTrackSettings.TabIndex = 122;
 			this.btnTrackSettings.UseVisualStyleBackColor = true;
 			this.btnTrackSettings.Visible = false;
@@ -1477,8 +1567,9 @@
 			// 
 			this.checkBox3.AutoSize = true;
 			this.checkBox3.Enabled = false;
-			this.checkBox3.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.checkBox3.Location = new System.Drawing.Point(636, 171);
+			this.checkBox3.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.checkBox3.Location = new System.Drawing.Point(742, 197);
+			this.checkBox3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.checkBox3.Name = "checkBox3";
 			this.checkBox3.Size = new System.Drawing.Size(80, 17);
 			this.checkBox3.TabIndex = 163;
@@ -1495,10 +1586,12 @@
 			this.grpPitchKey.Controls.Add(this.cboMethodPitchKey);
 			this.grpPitchKey.Controls.Add(this.lblKeyAlign);
 			this.grpPitchKey.Controls.Add(this.cboAlignPitchKey);
-			this.grpPitchKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.grpPitchKey.Location = new System.Drawing.Point(161, 413);
+			this.grpPitchKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
+			this.grpPitchKey.Location = new System.Drawing.Point(188, 477);
+			this.grpPitchKey.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.grpPitchKey.Name = "grpPitchKey";
-			this.grpPitchKey.Size = new System.Drawing.Size(147, 150);
+			this.grpPitchKey.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.grpPitchKey.Size = new System.Drawing.Size(172, 173);
 			this.grpPitchKey.TabIndex = 140;
 			this.grpPitchKey.TabStop = false;
 			this.grpPitchKey.Text = "   Pitch && Key";
@@ -1506,8 +1599,11 @@
 			// chkPitchKey
 			// 
 			this.chkPitchKey.AutoSize = true;
-			this.chkPitchKey.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.chkPitchKey.Checked = true;
+			this.chkPitchKey.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkPitchKey.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.chkPitchKey.Location = new System.Drawing.Point(0, 0);
+			this.chkPitchKey.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chkPitchKey.Name = "chkPitchKey";
 			this.chkPitchKey.Size = new System.Drawing.Size(15, 14);
 			this.chkPitchKey.TabIndex = 150;
@@ -1517,8 +1613,9 @@
 			// lblKeyLabels
 			// 
 			this.lblKeyLabels.AutoSize = true;
-			this.lblKeyLabels.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblKeyLabels.Location = new System.Drawing.Point(6, 60);
+			this.lblKeyLabels.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblKeyLabels.Location = new System.Drawing.Point(7, 69);
+			this.lblKeyLabels.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblKeyLabels.Name = "lblKeyLabels";
 			this.lblKeyLabels.Size = new System.Drawing.Size(41, 13);
 			this.lblKeyLabels.TabIndex = 149;
@@ -1527,7 +1624,7 @@
 			// cboLabelsPitchKey
 			// 
 			this.cboLabelsPitchKey.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cboLabelsPitchKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboLabelsPitchKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboLabelsPitchKey.FormattingEnabled = true;
 			this.cboLabelsPitchKey.Items.AddRange(new object[] {
             "None",
@@ -1535,16 +1632,18 @@
             "Key Numbers",
             "MIDI Note Numbers",
             "Frequency"});
-			this.cboLabelsPitchKey.Location = new System.Drawing.Point(6, 76);
+			this.cboLabelsPitchKey.Location = new System.Drawing.Point(7, 88);
+			this.cboLabelsPitchKey.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboLabelsPitchKey.Name = "cboLabelsPitchKey";
-			this.cboLabelsPitchKey.Size = new System.Drawing.Size(135, 21);
+			this.cboLabelsPitchKey.Size = new System.Drawing.Size(157, 21);
 			this.cboLabelsPitchKey.TabIndex = 148;
 			// 
 			// lblKeyPlugin
 			// 
 			this.lblKeyPlugin.AutoSize = true;
-			this.lblKeyPlugin.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblKeyPlugin.Location = new System.Drawing.Point(6, 16);
+			this.lblKeyPlugin.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblKeyPlugin.Location = new System.Drawing.Point(7, 18);
+			this.lblKeyPlugin.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblKeyPlugin.Name = "lblKeyPlugin";
 			this.lblKeyPlugin.Size = new System.Drawing.Size(86, 13);
 			this.lblKeyPlugin.TabIndex = 144;
@@ -1553,20 +1652,22 @@
 			// cboMethodPitchKey
 			// 
 			this.cboMethodPitchKey.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cboMethodPitchKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboMethodPitchKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboMethodPitchKey.FormattingEnabled = true;
 			this.cboMethodPitchKey.Items.AddRange(new object[] {
             "Queen Mary Key Detector"});
-			this.cboMethodPitchKey.Location = new System.Drawing.Point(6, 32);
+			this.cboMethodPitchKey.Location = new System.Drawing.Point(7, 37);
+			this.cboMethodPitchKey.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboMethodPitchKey.Name = "cboMethodPitchKey";
-			this.cboMethodPitchKey.Size = new System.Drawing.Size(135, 21);
+			this.cboMethodPitchKey.Size = new System.Drawing.Size(157, 21);
 			this.cboMethodPitchKey.TabIndex = 143;
 			// 
 			// lblKeyAlign
 			// 
 			this.lblKeyAlign.AutoSize = true;
-			this.lblKeyAlign.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblKeyAlign.Location = new System.Drawing.Point(6, 104);
+			this.lblKeyAlign.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblKeyAlign.Location = new System.Drawing.Point(7, 120);
+			this.lblKeyAlign.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblKeyAlign.Name = "lblKeyAlign";
 			this.lblKeyAlign.Size = new System.Drawing.Size(49, 13);
 			this.lblKeyAlign.TabIndex = 142;
@@ -1576,7 +1677,7 @@
 			// 
 			this.cboAlignPitchKey.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cboAlignPitchKey.DropDownWidth = 180;
-			this.cboAlignPitchKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboAlignPitchKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboAlignPitchKey.FormattingEnabled = true;
 			this.cboAlignPitchKey.Items.AddRange(new object[] {
             "None",
@@ -1587,17 +1688,19 @@
             "Half Beats / Eighth Notes",
             "Quarter Beats / Sixteenth Notes",
             "Note Onsets"});
-			this.cboAlignPitchKey.Location = new System.Drawing.Point(6, 120);
+			this.cboAlignPitchKey.Location = new System.Drawing.Point(7, 138);
+			this.cboAlignPitchKey.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboAlignPitchKey.Name = "cboAlignPitchKey";
-			this.cboAlignPitchKey.Size = new System.Drawing.Size(135, 21);
+			this.cboAlignPitchKey.Size = new System.Drawing.Size(157, 21);
 			this.cboAlignPitchKey.TabIndex = 141;
 			// 
 			// checkBox4
 			// 
 			this.checkBox4.AutoSize = true;
 			this.checkBox4.Enabled = false;
-			this.checkBox4.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.checkBox4.Location = new System.Drawing.Point(636, 194);
+			this.checkBox4.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.checkBox4.Location = new System.Drawing.Point(742, 224);
+			this.checkBox4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.checkBox4.Name = "checkBox4";
 			this.checkBox4.Size = new System.Drawing.Size(80, 17);
 			this.checkBox4.TabIndex = 164;
@@ -1614,10 +1717,12 @@
 			this.grpChromagram.Controls.Add(this.cboMethodChromagram);
 			this.grpChromagram.Controls.Add(this.lblSpectrumAlign);
 			this.grpChromagram.Controls.Add(this.cboAlignChromagram);
-			this.grpChromagram.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.grpChromagram.Location = new System.Drawing.Point(469, 77);
+			this.grpChromagram.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
+			this.grpChromagram.Location = new System.Drawing.Point(547, 89);
+			this.grpChromagram.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.grpChromagram.Name = "grpChromagram";
-			this.grpChromagram.Size = new System.Drawing.Size(147, 154);
+			this.grpChromagram.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.grpChromagram.Size = new System.Drawing.Size(172, 178);
 			this.grpChromagram.TabIndex = 139;
 			this.grpChromagram.TabStop = false;
 			this.grpChromagram.Text = "   Chromagram";
@@ -1625,8 +1730,11 @@
 			// chkChromagram
 			// 
 			this.chkChromagram.AutoSize = true;
-			this.chkChromagram.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.chkChromagram.Checked = true;
+			this.chkChromagram.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkChromagram.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.chkChromagram.Location = new System.Drawing.Point(0, 0);
+			this.chkChromagram.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chkChromagram.Name = "chkChromagram";
 			this.chkChromagram.Size = new System.Drawing.Size(15, 14);
 			this.chkChromagram.TabIndex = 150;
@@ -1636,8 +1744,9 @@
 			// lblSpectrumLabels
 			// 
 			this.lblSpectrumLabels.AutoSize = true;
-			this.lblSpectrumLabels.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblSpectrumLabels.Location = new System.Drawing.Point(6, 64);
+			this.lblSpectrumLabels.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblSpectrumLabels.Location = new System.Drawing.Point(7, 74);
+			this.lblSpectrumLabels.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblSpectrumLabels.Name = "lblSpectrumLabels";
 			this.lblSpectrumLabels.Size = new System.Drawing.Size(41, 13);
 			this.lblSpectrumLabels.TabIndex = 149;
@@ -1646,22 +1755,24 @@
 			// cboLabelsChromagram
 			// 
 			this.cboLabelsChromagram.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cboLabelsChromagram.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboLabelsChromagram.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboLabelsChromagram.FormattingEnabled = true;
 			this.cboLabelsChromagram.Items.AddRange(new object[] {
             "None",
             "Note Names",
             "MIDI Note Numbers"});
-			this.cboLabelsChromagram.Location = new System.Drawing.Point(6, 80);
+			this.cboLabelsChromagram.Location = new System.Drawing.Point(7, 92);
+			this.cboLabelsChromagram.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboLabelsChromagram.Name = "cboLabelsChromagram";
-			this.cboLabelsChromagram.Size = new System.Drawing.Size(135, 21);
+			this.cboLabelsChromagram.Size = new System.Drawing.Size(157, 21);
 			this.cboLabelsChromagram.TabIndex = 148;
 			// 
 			// lblSpectrumPlugin
 			// 
 			this.lblSpectrumPlugin.AutoSize = true;
-			this.lblSpectrumPlugin.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblSpectrumPlugin.Location = new System.Drawing.Point(6, 16);
+			this.lblSpectrumPlugin.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblSpectrumPlugin.Location = new System.Drawing.Point(7, 18);
+			this.lblSpectrumPlugin.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblSpectrumPlugin.Name = "lblSpectrumPlugin";
 			this.lblSpectrumPlugin.Size = new System.Drawing.Size(86, 13);
 			this.lblSpectrumPlugin.TabIndex = 144;
@@ -1670,7 +1781,7 @@
 			// cboMethodChromagram
 			// 
 			this.cboMethodChromagram.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cboMethodChromagram.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboMethodChromagram.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboMethodChromagram.FormattingEnabled = true;
 			this.cboMethodChromagram.Items.AddRange(new object[] {
             "Queen Mary Note Onset Detector",
@@ -1681,16 +1792,18 @@
             "Alicante Polyphonic Transcription",
             "Aubio Onset Detector",
             "Aubio Note Tracker"});
-			this.cboMethodChromagram.Location = new System.Drawing.Point(6, 32);
+			this.cboMethodChromagram.Location = new System.Drawing.Point(7, 37);
+			this.cboMethodChromagram.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboMethodChromagram.Name = "cboMethodChromagram";
-			this.cboMethodChromagram.Size = new System.Drawing.Size(135, 21);
+			this.cboMethodChromagram.Size = new System.Drawing.Size(157, 21);
 			this.cboMethodChromagram.TabIndex = 143;
 			// 
 			// lblSpectrumAlign
 			// 
 			this.lblSpectrumAlign.AutoSize = true;
-			this.lblSpectrumAlign.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblSpectrumAlign.Location = new System.Drawing.Point(6, 104);
+			this.lblSpectrumAlign.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblSpectrumAlign.Location = new System.Drawing.Point(7, 120);
+			this.lblSpectrumAlign.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblSpectrumAlign.Name = "lblSpectrumAlign";
 			this.lblSpectrumAlign.Size = new System.Drawing.Size(49, 13);
 			this.lblSpectrumAlign.TabIndex = 142;
@@ -1700,7 +1813,7 @@
 			// 
 			this.cboAlignChromagram.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cboAlignChromagram.DropDownWidth = 180;
-			this.cboAlignChromagram.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboAlignChromagram.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboAlignChromagram.FormattingEnabled = true;
 			this.cboAlignChromagram.Items.AddRange(new object[] {
             "None",
@@ -1711,9 +1824,10 @@
             "Half Beats / Eighth Notes",
             "Quarter Beats / Sixteenth Notes",
             "Note Onsets"});
-			this.cboAlignChromagram.Location = new System.Drawing.Point(6, 120);
+			this.cboAlignChromagram.Location = new System.Drawing.Point(7, 138);
+			this.cboAlignChromagram.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboAlignChromagram.Name = "cboAlignChromagram";
-			this.cboAlignChromagram.Size = new System.Drawing.Size(135, 21);
+			this.cboAlignChromagram.Size = new System.Drawing.Size(157, 21);
 			this.cboAlignChromagram.TabIndex = 141;
 			// 
 			// grpPolyphonic
@@ -1725,10 +1839,12 @@
 			this.grpPolyphonic.Controls.Add(this.cboMethodPolyphonic);
 			this.grpPolyphonic.Controls.Add(this.lblTranscribeAlign);
 			this.grpPolyphonic.Controls.Add(this.cboAlignPolyphonic);
-			this.grpPolyphonic.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.grpPolyphonic.Location = new System.Drawing.Point(6, 413);
+			this.grpPolyphonic.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
+			this.grpPolyphonic.Location = new System.Drawing.Point(7, 477);
+			this.grpPolyphonic.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.grpPolyphonic.Name = "grpPolyphonic";
-			this.grpPolyphonic.Size = new System.Drawing.Size(147, 150);
+			this.grpPolyphonic.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.grpPolyphonic.Size = new System.Drawing.Size(172, 173);
 			this.grpPolyphonic.TabIndex = 138;
 			this.grpPolyphonic.TabStop = false;
 			this.grpPolyphonic.Text = "   Polyphonic Transcription";
@@ -1736,8 +1852,9 @@
 			// lblTranscribePlugin
 			// 
 			this.lblTranscribePlugin.AutoSize = true;
-			this.lblTranscribePlugin.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblTranscribePlugin.Location = new System.Drawing.Point(6, 16);
+			this.lblTranscribePlugin.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblTranscribePlugin.Location = new System.Drawing.Point(7, 18);
+			this.lblTranscribePlugin.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblTranscribePlugin.Name = "lblTranscribePlugin";
 			this.lblTranscribePlugin.Size = new System.Drawing.Size(86, 13);
 			this.lblTranscribePlugin.TabIndex = 148;
@@ -1746,8 +1863,9 @@
 			// lblTranscribeLabels
 			// 
 			this.lblTranscribeLabels.AutoSize = true;
-			this.lblTranscribeLabels.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblTranscribeLabels.Location = new System.Drawing.Point(6, 60);
+			this.lblTranscribeLabels.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblTranscribeLabels.Location = new System.Drawing.Point(7, 69);
+			this.lblTranscribeLabels.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblTranscribeLabels.Name = "lblTranscribeLabels";
 			this.lblTranscribeLabels.Size = new System.Drawing.Size(41, 13);
 			this.lblTranscribeLabels.TabIndex = 147;
@@ -1756,21 +1874,25 @@
 			// cboLabelsPolyphonic
 			// 
 			this.cboLabelsPolyphonic.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cboLabelsPolyphonic.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboLabelsPolyphonic.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboLabelsPolyphonic.FormattingEnabled = true;
 			this.cboLabelsPolyphonic.Items.AddRange(new object[] {
             "MIDI Note Numbers",
             "Note Names"});
-			this.cboLabelsPolyphonic.Location = new System.Drawing.Point(6, 76);
+			this.cboLabelsPolyphonic.Location = new System.Drawing.Point(7, 88);
+			this.cboLabelsPolyphonic.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboLabelsPolyphonic.Name = "cboLabelsPolyphonic";
-			this.cboLabelsPolyphonic.Size = new System.Drawing.Size(135, 21);
+			this.cboLabelsPolyphonic.Size = new System.Drawing.Size(157, 21);
 			this.cboLabelsPolyphonic.TabIndex = 146;
 			// 
 			// chkPolyphonic
 			// 
 			this.chkPolyphonic.AutoSize = true;
-			this.chkPolyphonic.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.chkPolyphonic.Checked = true;
+			this.chkPolyphonic.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkPolyphonic.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.chkPolyphonic.Location = new System.Drawing.Point(0, 0);
+			this.chkPolyphonic.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chkPolyphonic.Name = "chkPolyphonic";
 			this.chkPolyphonic.Size = new System.Drawing.Size(15, 14);
 			this.chkPolyphonic.TabIndex = 145;
@@ -1782,23 +1904,25 @@
 			// 
 			this.cboMethodPolyphonic.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cboMethodPolyphonic.DropDownWidth = 200;
-			this.cboMethodPolyphonic.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboMethodPolyphonic.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboMethodPolyphonic.FormattingEnabled = true;
 			this.cboMethodPolyphonic.Items.AddRange(new object[] {
             "Queen Mary Polyphonic Transcription",
             "Silvet Note Transcription",
             "Alicante Polyphonic Transcription",
             "Aubio Note Tracker"});
-			this.cboMethodPolyphonic.Location = new System.Drawing.Point(6, 32);
+			this.cboMethodPolyphonic.Location = new System.Drawing.Point(7, 37);
+			this.cboMethodPolyphonic.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboMethodPolyphonic.Name = "cboMethodPolyphonic";
-			this.cboMethodPolyphonic.Size = new System.Drawing.Size(135, 21);
+			this.cboMethodPolyphonic.Size = new System.Drawing.Size(157, 21);
 			this.cboMethodPolyphonic.TabIndex = 143;
 			// 
 			// lblTranscribeAlign
 			// 
 			this.lblTranscribeAlign.AutoSize = true;
-			this.lblTranscribeAlign.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblTranscribeAlign.Location = new System.Drawing.Point(6, 99);
+			this.lblTranscribeAlign.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblTranscribeAlign.Location = new System.Drawing.Point(7, 114);
+			this.lblTranscribeAlign.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblTranscribeAlign.Name = "lblTranscribeAlign";
 			this.lblTranscribeAlign.Size = new System.Drawing.Size(49, 13);
 			this.lblTranscribeAlign.TabIndex = 142;
@@ -1808,7 +1932,7 @@
 			// 
 			this.cboAlignPolyphonic.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cboAlignPolyphonic.DropDownWidth = 180;
-			this.cboAlignPolyphonic.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboAlignPolyphonic.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboAlignPolyphonic.FormattingEnabled = true;
 			this.cboAlignPolyphonic.Items.AddRange(new object[] {
             "None",
@@ -1818,17 +1942,19 @@
             "Half Beats / Eighth Notes",
             "Quarter Beats / Sixteenth Notes",
             "Note Onsets"});
-			this.cboAlignPolyphonic.Location = new System.Drawing.Point(6, 115);
+			this.cboAlignPolyphonic.Location = new System.Drawing.Point(7, 133);
+			this.cboAlignPolyphonic.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboAlignPolyphonic.Name = "cboAlignPolyphonic";
-			this.cboAlignPolyphonic.Size = new System.Drawing.Size(135, 21);
+			this.cboAlignPolyphonic.Size = new System.Drawing.Size(157, 21);
 			this.cboAlignPolyphonic.TabIndex = 141;
 			// 
 			// chkChromathing
 			// 
 			this.chkChromathing.AutoSize = true;
 			this.chkChromathing.Enabled = false;
-			this.chkChromathing.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.chkChromathing.Location = new System.Drawing.Point(636, 79);
+			this.chkChromathing.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.chkChromathing.Location = new System.Drawing.Point(742, 91);
+			this.chkChromathing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chkChromathing.Name = "chkChromathing";
 			this.chkChromathing.Size = new System.Drawing.Size(92, 17);
 			this.chkChromathing.TabIndex = 134;
@@ -1850,10 +1976,12 @@
 			this.grpOnsets.Controls.Add(this.cboMethodOnsets);
 			this.grpOnsets.Controls.Add(this.lblOnsetsAlign);
 			this.grpOnsets.Controls.Add(this.cboAlignOnsets);
-			this.grpOnsets.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.grpOnsets.Location = new System.Drawing.Point(314, 79);
+			this.grpOnsets.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
+			this.grpOnsets.Location = new System.Drawing.Point(366, 91);
+			this.grpOnsets.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.grpOnsets.Name = "grpOnsets";
-			this.grpOnsets.Size = new System.Drawing.Size(147, 328);
+			this.grpOnsets.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.grpOnsets.Size = new System.Drawing.Size(172, 378);
 			this.grpOnsets.TabIndex = 137;
 			this.grpOnsets.TabStop = false;
 			this.grpOnsets.Text = "   Note Onsets ";
@@ -1863,36 +1991,39 @@
 			this.pnlOnsetSensitivity.Controls.Add(this.vscSensitivity);
 			this.pnlOnsetSensitivity.Controls.Add(this.txtOnsetSensitivity);
 			this.pnlOnsetSensitivity.Controls.Add(this.lblOnsetsSensitivity);
-			this.pnlOnsetSensitivity.Location = new System.Drawing.Point(8, 215);
+			this.pnlOnsetSensitivity.Location = new System.Drawing.Point(9, 248);
+			this.pnlOnsetSensitivity.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.pnlOnsetSensitivity.Name = "pnlOnsetSensitivity";
-			this.pnlOnsetSensitivity.Size = new System.Drawing.Size(101, 23);
+			this.pnlOnsetSensitivity.Size = new System.Drawing.Size(118, 27);
 			this.pnlOnsetSensitivity.TabIndex = 152;
 			// 
 			// vscSensitivity
 			// 
-			this.vscSensitivity.Location = new System.Drawing.Point(85, -1);
+			this.vscSensitivity.Location = new System.Drawing.Point(99, -1);
 			this.vscSensitivity.Minimum = 10;
 			this.vscSensitivity.Name = "vscSensitivity";
-			this.vscSensitivity.Size = new System.Drawing.Size(16, 18);
+			this.vscSensitivity.Size = new System.Drawing.Size(16, 21);
 			this.vscSensitivity.TabIndex = 28;
 			this.vscSensitivity.Value = 10;
 			this.vscSensitivity.Scroll += new System.Windows.Forms.ScrollEventHandler(this.vScrollBar1_Scroll);
 			// 
 			// txtOnsetSensitivity
 			// 
-			this.txtOnsetSensitivity.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.txtOnsetSensitivity.Location = new System.Drawing.Point(54, 0);
+			this.txtOnsetSensitivity.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.txtOnsetSensitivity.Location = new System.Drawing.Point(63, 0);
+			this.txtOnsetSensitivity.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.txtOnsetSensitivity.Name = "txtOnsetSensitivity";
 			this.txtOnsetSensitivity.ReadOnly = true;
-			this.txtOnsetSensitivity.Size = new System.Drawing.Size(29, 20);
+			this.txtOnsetSensitivity.Size = new System.Drawing.Size(33, 20);
 			this.txtOnsetSensitivity.TabIndex = 7;
 			this.txtOnsetSensitivity.Text = "50";
 			// 
 			// lblOnsetsSensitivity
 			// 
 			this.lblOnsetsSensitivity.AutoSize = true;
-			this.lblOnsetsSensitivity.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblOnsetsSensitivity.Location = new System.Drawing.Point(1, 4);
+			this.lblOnsetsSensitivity.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblOnsetsSensitivity.Location = new System.Drawing.Point(1, 5);
+			this.lblOnsetsSensitivity.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblOnsetsSensitivity.Name = "lblOnsetsSensitivity";
 			this.lblOnsetsSensitivity.Size = new System.Drawing.Size(57, 13);
 			this.lblOnsetsSensitivity.TabIndex = 6;
@@ -1902,8 +2033,9 @@
 			// lblDetectOnsets
 			// 
 			this.lblDetectOnsets.AutoSize = true;
-			this.lblDetectOnsets.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblDetectOnsets.Location = new System.Drawing.Point(8, 172);
+			this.lblDetectOnsets.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblDetectOnsets.Location = new System.Drawing.Point(9, 198);
+			this.lblDetectOnsets.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblDetectOnsets.Name = "lblDetectOnsets";
 			this.lblDetectOnsets.Size = new System.Drawing.Size(95, 13);
 			this.lblDetectOnsets.TabIndex = 151;
@@ -1913,23 +2045,25 @@
 			// 
 			this.cboOnsetsDetect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cboOnsetsDetect.DropDownWidth = 300;
-			this.cboOnsetsDetect.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboOnsetsDetect.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboOnsetsDetect.FormattingEnabled = true;
 			this.cboOnsetsDetect.Items.AddRange(new object[] {
             "\'Complex Domain\' (Strings/Mixed: Piano, Guitar)",
             "\'Spectral Difference\' (Percussion: Drums, Chimes)",
             "\'Phase Deviation\' (Wind: Flute, Sax, Trumpet)",
             "\'Broadband Energy Rise\' (Percussion mixed with other)"});
-			this.cboOnsetsDetect.Location = new System.Drawing.Point(8, 188);
+			this.cboOnsetsDetect.Location = new System.Drawing.Point(9, 217);
+			this.cboOnsetsDetect.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboOnsetsDetect.Name = "cboOnsetsDetect";
-			this.cboOnsetsDetect.Size = new System.Drawing.Size(135, 21);
+			this.cboOnsetsDetect.Size = new System.Drawing.Size(157, 21);
 			this.cboOnsetsDetect.TabIndex = 150;
 			// 
 			// lblOnsetsLabels
 			// 
 			this.lblOnsetsLabels.AutoSize = true;
-			this.lblOnsetsLabels.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblOnsetsLabels.Location = new System.Drawing.Point(6, 62);
+			this.lblOnsetsLabels.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblOnsetsLabels.Location = new System.Drawing.Point(7, 72);
+			this.lblOnsetsLabels.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblOnsetsLabels.Name = "lblOnsetsLabels";
 			this.lblOnsetsLabels.Size = new System.Drawing.Size(41, 13);
 			this.lblOnsetsLabels.TabIndex = 149;
@@ -1938,15 +2072,16 @@
 			// cboLabelsOnsets
 			// 
 			this.cboLabelsOnsets.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cboLabelsOnsets.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboLabelsOnsets.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboLabelsOnsets.FormattingEnabled = true;
 			this.cboLabelsOnsets.Items.AddRange(new object[] {
             "None",
             "Note Names",
             "MIDI Note Numbers"});
-			this.cboLabelsOnsets.Location = new System.Drawing.Point(6, 78);
+			this.cboLabelsOnsets.Location = new System.Drawing.Point(7, 90);
+			this.cboLabelsOnsets.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboLabelsOnsets.Name = "cboLabelsOnsets";
-			this.cboLabelsOnsets.Size = new System.Drawing.Size(135, 21);
+			this.cboLabelsOnsets.Size = new System.Drawing.Size(157, 21);
 			this.cboLabelsOnsets.TabIndex = 148;
 			// 
 			// chkNoteOnsets
@@ -1954,8 +2089,9 @@
 			this.chkNoteOnsets.AutoSize = true;
 			this.chkNoteOnsets.Checked = true;
 			this.chkNoteOnsets.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkNoteOnsets.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.chkNoteOnsets.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.chkNoteOnsets.Location = new System.Drawing.Point(0, 0);
+			this.chkNoteOnsets.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chkNoteOnsets.Name = "chkNoteOnsets";
 			this.chkNoteOnsets.Size = new System.Drawing.Size(15, 14);
 			this.chkNoteOnsets.TabIndex = 145;
@@ -1965,8 +2101,9 @@
 			// lblOnsetsPlugin
 			// 
 			this.lblOnsetsPlugin.AutoSize = true;
-			this.lblOnsetsPlugin.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblOnsetsPlugin.Location = new System.Drawing.Point(6, 16);
+			this.lblOnsetsPlugin.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblOnsetsPlugin.Location = new System.Drawing.Point(7, 18);
+			this.lblOnsetsPlugin.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblOnsetsPlugin.Name = "lblOnsetsPlugin";
 			this.lblOnsetsPlugin.Size = new System.Drawing.Size(86, 13);
 			this.lblOnsetsPlugin.TabIndex = 144;
@@ -1976,7 +2113,7 @@
 			// 
 			this.cboMethodOnsets.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cboMethodOnsets.DropDownWidth = 200;
-			this.cboMethodOnsets.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboMethodOnsets.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboMethodOnsets.FormattingEnabled = true;
 			this.cboMethodOnsets.Items.AddRange(new object[] {
             "Queen Mary Note Onset Detector",
@@ -1987,17 +2124,19 @@
             "Aubio Note Tracker",
             "#Alicante Note Onset Detector",
             "#Alicante Polyphonic Transcription"});
-			this.cboMethodOnsets.Location = new System.Drawing.Point(6, 32);
+			this.cboMethodOnsets.Location = new System.Drawing.Point(7, 37);
+			this.cboMethodOnsets.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboMethodOnsets.Name = "cboMethodOnsets";
-			this.cboMethodOnsets.Size = new System.Drawing.Size(135, 21);
+			this.cboMethodOnsets.Size = new System.Drawing.Size(157, 21);
 			this.cboMethodOnsets.TabIndex = 143;
 			this.cboMethodOnsets.SelectedIndexChanged += new System.EventHandler(this.cboOnsetsPlugin_SelectedIndexChanged);
 			// 
 			// lblOnsetsAlign
 			// 
 			this.lblOnsetsAlign.AutoSize = true;
-			this.lblOnsetsAlign.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblOnsetsAlign.Location = new System.Drawing.Point(6, 102);
+			this.lblOnsetsAlign.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblOnsetsAlign.Location = new System.Drawing.Point(7, 118);
+			this.lblOnsetsAlign.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblOnsetsAlign.Name = "lblOnsetsAlign";
 			this.lblOnsetsAlign.Size = new System.Drawing.Size(49, 13);
 			this.lblOnsetsAlign.TabIndex = 142;
@@ -2007,7 +2146,7 @@
 			// 
 			this.cboAlignOnsets.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cboAlignOnsets.DropDownWidth = 180;
-			this.cboAlignOnsets.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboAlignOnsets.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboAlignOnsets.FormattingEnabled = true;
 			this.cboAlignOnsets.Items.AddRange(new object[] {
             "None",
@@ -2016,9 +2155,10 @@
             "Beats / Quarter Notes",
             "Half Beats / Eighth Notes",
             "Quarter Beats / Sixteenth Notes"});
-			this.cboAlignOnsets.Location = new System.Drawing.Point(6, 118);
+			this.cboAlignOnsets.Location = new System.Drawing.Point(7, 136);
+			this.cboAlignOnsets.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboAlignOnsets.Name = "cboAlignOnsets";
-			this.cboAlignOnsets.Size = new System.Drawing.Size(141, 21);
+			this.cboAlignOnsets.Size = new System.Drawing.Size(164, 21);
 			this.cboAlignOnsets.TabIndex = 141;
 			// 
 			// grpBarsBeats
@@ -2033,10 +2173,12 @@
 			this.grpBarsBeats.Controls.Add(this.cboMethodBarsBeats);
 			this.grpBarsBeats.Controls.Add(this.lblAlignBarsBeats);
 			this.grpBarsBeats.Controls.Add(this.cboAlignBarBeats);
-			this.grpBarsBeats.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.grpBarsBeats.Location = new System.Drawing.Point(161, 77);
+			this.grpBarsBeats.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
+			this.grpBarsBeats.Location = new System.Drawing.Point(188, 89);
+			this.grpBarsBeats.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.grpBarsBeats.Name = "grpBarsBeats";
-			this.grpBarsBeats.Size = new System.Drawing.Size(147, 330);
+			this.grpBarsBeats.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.grpBarsBeats.Size = new System.Drawing.Size(172, 381);
 			this.grpBarsBeats.TabIndex = 136;
 			this.grpBarsBeats.TabStop = false;
 			this.grpBarsBeats.Text = "   Bars && Beats ";
@@ -2044,8 +2186,9 @@
 			// lblDetectBarBeats
 			// 
 			this.lblDetectBarBeats.AutoSize = true;
-			this.lblDetectBarBeats.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblDetectBarBeats.Location = new System.Drawing.Point(7, 272);
+			this.lblDetectBarBeats.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblDetectBarBeats.Location = new System.Drawing.Point(8, 314);
+			this.lblDetectBarBeats.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblDetectBarBeats.Name = "lblDetectBarBeats";
 			this.lblDetectBarBeats.Size = new System.Drawing.Size(95, 13);
 			this.lblDetectBarBeats.TabIndex = 163;
@@ -2055,23 +2198,25 @@
 			// 
 			this.cboDetectBarBeats.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cboDetectBarBeats.DropDownWidth = 300;
-			this.cboDetectBarBeats.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboDetectBarBeats.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboDetectBarBeats.FormattingEnabled = true;
 			this.cboDetectBarBeats.Items.AddRange(new object[] {
             "\'Complex Domain\' (Strings/Mixed: Piano, Guitar)",
             "\'Spectral Difference\' (Percussion: Drums, Chimes)",
             "\'Phase Deviation\' (Wind: Flute, Sax, Trumpet)",
             "\'Broadband Energy Rise\' (Percussion mixed with other)"});
-			this.cboDetectBarBeats.Location = new System.Drawing.Point(6, 288);
+			this.cboDetectBarBeats.Location = new System.Drawing.Point(7, 332);
+			this.cboDetectBarBeats.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboDetectBarBeats.Name = "cboDetectBarBeats";
-			this.cboDetectBarBeats.Size = new System.Drawing.Size(135, 21);
+			this.cboDetectBarBeats.Size = new System.Drawing.Size(157, 21);
 			this.cboDetectBarBeats.TabIndex = 162;
 			// 
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label1.Location = new System.Drawing.Point(6, 58);
+			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.label1.Location = new System.Drawing.Point(7, 67);
+			this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(41, 13);
 			this.label1.TabIndex = 161;
@@ -2080,15 +2225,16 @@
 			// cboLabelsBarBeats
 			// 
 			this.cboLabelsBarBeats.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cboLabelsBarBeats.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboLabelsBarBeats.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboLabelsBarBeats.FormattingEnabled = true;
 			this.cboLabelsBarBeats.Items.AddRange(new object[] {
             "None",
             "Note Names",
             "MIDI Note Numbers"});
-			this.cboLabelsBarBeats.Location = new System.Drawing.Point(6, 74);
+			this.cboLabelsBarBeats.Location = new System.Drawing.Point(7, 85);
+			this.cboLabelsBarBeats.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboLabelsBarBeats.Name = "cboLabelsBarBeats";
-			this.cboLabelsBarBeats.Size = new System.Drawing.Size(135, 21);
+			this.cboLabelsBarBeats.Size = new System.Drawing.Size(157, 21);
 			this.cboLabelsBarBeats.TabIndex = 160;
 			// 
 			// chkBarsBeats
@@ -2096,8 +2242,9 @@
 			this.chkBarsBeats.AutoSize = true;
 			this.chkBarsBeats.Checked = true;
 			this.chkBarsBeats.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkBarsBeats.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.chkBarsBeats.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.chkBarsBeats.Location = new System.Drawing.Point(0, 0);
+			this.chkBarsBeats.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chkBarsBeats.Name = "chkBarsBeats";
 			this.chkBarsBeats.Size = new System.Drawing.Size(15, 14);
 			this.chkBarsBeats.TabIndex = 156;
@@ -2115,17 +2262,19 @@
 			this.pnlNotes.Controls.Add(this.lblBeats1Full);
 			this.pnlNotes.Controls.Add(this.lblBeats4Quarter);
 			this.pnlNotes.Controls.Add(this.lblBeats0Bars);
-			this.pnlNotes.Location = new System.Drawing.Point(2, 144);
+			this.pnlNotes.Location = new System.Drawing.Point(2, 166);
+			this.pnlNotes.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.pnlNotes.Name = "pnlNotes";
-			this.pnlNotes.Size = new System.Drawing.Size(145, 118);
+			this.pnlNotes.Size = new System.Drawing.Size(169, 136);
 			this.pnlNotes.TabIndex = 155;
 			this.pnlNotes.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlNotes_Paint);
 			// 
 			// chkBeatsThird
 			// 
 			this.chkBeatsThird.AutoSize = true;
-			this.chkBeatsThird.Font = new System.Drawing.Font("Bahnschrift Condensed", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.chkBeatsThird.Location = new System.Drawing.Point(20, 66);
+			this.chkBeatsThird.Font = new System.Drawing.Font("Bahnschrift Condensed", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.chkBeatsThird.Location = new System.Drawing.Point(23, 76);
+			this.chkBeatsThird.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chkBeatsThird.Name = "chkBeatsThird";
 			this.chkBeatsThird.Size = new System.Drawing.Size(66, 17);
 			this.chkBeatsThird.TabIndex = 141;
@@ -2138,8 +2287,9 @@
 			this.chkBars.AutoSize = true;
 			this.chkBars.Checked = true;
 			this.chkBars.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkBars.Font = new System.Drawing.Font("Bahnschrift Condensed", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.chkBars.Location = new System.Drawing.Point(20, 3);
+			this.chkBars.Font = new System.Drawing.Font("Bahnschrift Condensed", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.chkBars.Location = new System.Drawing.Point(23, 3);
+			this.chkBars.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chkBars.Name = "chkBars";
 			this.chkBars.Size = new System.Drawing.Size(88, 17);
 			this.chkBars.TabIndex = 139;
@@ -2152,8 +2302,9 @@
 			this.chkBeatsFull.AutoSize = true;
 			this.chkBeatsFull.Checked = true;
 			this.chkBeatsFull.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkBeatsFull.Font = new System.Drawing.Font("Bahnschrift Condensed", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.chkBeatsFull.Location = new System.Drawing.Point(20, 24);
+			this.chkBeatsFull.Font = new System.Drawing.Font("Bahnschrift Condensed", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.chkBeatsFull.Location = new System.Drawing.Point(23, 28);
+			this.chkBeatsFull.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chkBeatsFull.Name = "chkBeatsFull";
 			this.chkBeatsFull.Size = new System.Drawing.Size(112, 17);
 			this.chkBeatsFull.TabIndex = 143;
@@ -2166,8 +2317,9 @@
 			this.chkBeatsHalf.AutoSize = true;
 			this.chkBeatsHalf.Checked = true;
 			this.chkBeatsHalf.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkBeatsHalf.Font = new System.Drawing.Font("Bahnschrift Condensed", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.chkBeatsHalf.Location = new System.Drawing.Point(20, 45);
+			this.chkBeatsHalf.Font = new System.Drawing.Font("Bahnschrift Condensed", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.chkBeatsHalf.Location = new System.Drawing.Point(23, 52);
+			this.chkBeatsHalf.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chkBeatsHalf.Name = "chkBeatsHalf";
 			this.chkBeatsHalf.Size = new System.Drawing.Size(110, 17);
 			this.chkBeatsHalf.TabIndex = 142;
@@ -2180,8 +2332,9 @@
 			this.chkBeatsQuarter.AutoSize = true;
 			this.chkBeatsQuarter.Checked = true;
 			this.chkBeatsQuarter.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkBeatsQuarter.Font = new System.Drawing.Font("Bahnschrift Condensed", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.chkBeatsQuarter.Location = new System.Drawing.Point(20, 87);
+			this.chkBeatsQuarter.Font = new System.Drawing.Font("Bahnschrift Condensed", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.chkBeatsQuarter.Location = new System.Drawing.Point(23, 100);
+			this.chkBeatsQuarter.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chkBeatsQuarter.Name = "chkBeatsQuarter";
 			this.chkBeatsQuarter.Size = new System.Drawing.Size(133, 17);
 			this.chkBeatsQuarter.TabIndex = 140;
@@ -2192,8 +2345,9 @@
 			// lblBeats2Half
 			// 
 			this.lblBeats2Half.AutoSize = true;
-			this.lblBeats2Half.Font = new System.Drawing.Font("Segoe UI Symbol", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblBeats2Half.Location = new System.Drawing.Point(0, 37);
+			this.lblBeats2Half.Font = new System.Drawing.Font("Segoe UI Symbol", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblBeats2Half.Location = new System.Drawing.Point(0, 43);
+			this.lblBeats2Half.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblBeats2Half.Name = "lblBeats2Half";
 			this.lblBeats2Half.Size = new System.Drawing.Size(24, 30);
 			this.lblBeats2Half.TabIndex = 149;
@@ -2203,8 +2357,9 @@
 			// lblBeats1Full
 			// 
 			this.lblBeats1Full.AutoSize = true;
-			this.lblBeats1Full.Font = new System.Drawing.Font("Segoe UI Symbol", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblBeats1Full.Location = new System.Drawing.Point(0, 16);
+			this.lblBeats1Full.Font = new System.Drawing.Font("Segoe UI Symbol", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblBeats1Full.Location = new System.Drawing.Point(0, 18);
+			this.lblBeats1Full.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblBeats1Full.Name = "lblBeats1Full";
 			this.lblBeats1Full.Size = new System.Drawing.Size(21, 30);
 			this.lblBeats1Full.TabIndex = 150;
@@ -2214,8 +2369,9 @@
 			// lblBeats4Quarter
 			// 
 			this.lblBeats4Quarter.AutoSize = true;
-			this.lblBeats4Quarter.Font = new System.Drawing.Font("Segoe UI Symbol", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblBeats4Quarter.Location = new System.Drawing.Point(0, 78);
+			this.lblBeats4Quarter.Font = new System.Drawing.Font("Segoe UI Symbol", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblBeats4Quarter.Location = new System.Drawing.Point(0, 90);
+			this.lblBeats4Quarter.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblBeats4Quarter.Name = "lblBeats4Quarter";
 			this.lblBeats4Quarter.Size = new System.Drawing.Size(24, 30);
 			this.lblBeats4Quarter.TabIndex = 152;
@@ -2225,8 +2381,9 @@
 			// lblBeats0Bars
 			// 
 			this.lblBeats0Bars.AutoSize = true;
-			this.lblBeats0Bars.Font = new System.Drawing.Font("Segoe UI Symbol", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblBeats0Bars.Font = new System.Drawing.Font("Segoe UI Symbol", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.lblBeats0Bars.Location = new System.Drawing.Point(0, 0);
+			this.lblBeats0Bars.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblBeats0Bars.Name = "lblBeats0Bars";
 			this.lblBeats0Bars.Size = new System.Drawing.Size(33, 45);
 			this.lblBeats0Bars.TabIndex = 153;
@@ -2236,8 +2393,9 @@
 			// lblMethod
 			// 
 			this.lblMethod.AutoSize = true;
-			this.lblMethod.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblMethod.Location = new System.Drawing.Point(6, 16);
+			this.lblMethod.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblMethod.Location = new System.Drawing.Point(7, 18);
+			this.lblMethod.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblMethod.Name = "lblMethod";
 			this.lblMethod.Size = new System.Drawing.Size(86, 13);
 			this.lblMethod.TabIndex = 144;
@@ -2247,24 +2405,26 @@
 			// 
 			this.cboMethodBarsBeats.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cboMethodBarsBeats.DropDownWidth = 200;
-			this.cboMethodBarsBeats.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboMethodBarsBeats.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboMethodBarsBeats.FormattingEnabled = true;
 			this.cboMethodBarsBeats.Items.AddRange(new object[] {
             "Queen Mary Bar and Beat Tracker",
             "Queen Mary Tempo and Beat Tracker",
             "BeatRoot Beat Tracker",
             "Aubio Beat Tracker"});
-			this.cboMethodBarsBeats.Location = new System.Drawing.Point(6, 32);
+			this.cboMethodBarsBeats.Location = new System.Drawing.Point(7, 37);
+			this.cboMethodBarsBeats.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboMethodBarsBeats.Name = "cboMethodBarsBeats";
-			this.cboMethodBarsBeats.Size = new System.Drawing.Size(135, 21);
+			this.cboMethodBarsBeats.Size = new System.Drawing.Size(157, 21);
 			this.cboMethodBarsBeats.TabIndex = 143;
 			this.cboMethodBarsBeats.SelectedIndexChanged += new System.EventHandler(this.cboBarBeatMethod_SelectedIndexChanged);
 			// 
 			// lblAlignBarsBeats
 			// 
 			this.lblAlignBarsBeats.AutoSize = true;
-			this.lblAlignBarsBeats.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblAlignBarsBeats.Location = new System.Drawing.Point(6, 98);
+			this.lblAlignBarsBeats.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.lblAlignBarsBeats.Location = new System.Drawing.Point(7, 113);
+			this.lblAlignBarsBeats.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblAlignBarsBeats.Name = "lblAlignBarsBeats";
 			this.lblAlignBarsBeats.Size = new System.Drawing.Size(49, 13);
 			this.lblAlignBarsBeats.TabIndex = 142;
@@ -2274,23 +2434,25 @@
 			// 
 			this.cboAlignBarBeats.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cboAlignBarBeats.DropDownWidth = 135;
-			this.cboAlignBarBeats.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cboAlignBarBeats.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboAlignBarBeats.FormattingEnabled = true;
 			this.cboAlignBarBeats.Items.AddRange(new object[] {
             "None",
             "25ms 40fps",
             "50ms 20fps"});
-			this.cboAlignBarBeats.Location = new System.Drawing.Point(6, 114);
+			this.cboAlignBarBeats.Location = new System.Drawing.Point(7, 132);
+			this.cboAlignBarBeats.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboAlignBarBeats.Name = "cboAlignBarBeats";
-			this.cboAlignBarBeats.Size = new System.Drawing.Size(135, 21);
+			this.cboAlignBarBeats.Size = new System.Drawing.Size(157, 21);
 			this.cboAlignBarBeats.TabIndex = 141;
 			// 
 			// lblStep2B
 			// 
 			this.lblStep2B.AutoSize = true;
-			this.lblStep2B.Font = new System.Drawing.Font("Times New Roman", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblStep2B.Font = new System.Drawing.Font("Times New Roman", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point);
 			this.lblStep2B.ForeColor = System.Drawing.SystemColors.Highlight;
-			this.lblStep2B.Location = new System.Drawing.Point(6, -5);
+			this.lblStep2B.Location = new System.Drawing.Point(7, -6);
+			this.lblStep2B.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblStep2B.Name = "lblStep2B";
 			this.lblStep2B.Size = new System.Drawing.Size(21, 24);
 			this.lblStep2B.TabIndex = 121;
@@ -2300,8 +2462,9 @@
 			// 
 			this.chkFlux.AutoSize = true;
 			this.chkFlux.Enabled = false;
-			this.chkFlux.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.chkFlux.Location = new System.Drawing.Point(636, 125);
+			this.chkFlux.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.chkFlux.Location = new System.Drawing.Point(742, 144);
+			this.chkFlux.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chkFlux.Name = "chkFlux";
 			this.chkFlux.Size = new System.Drawing.Size(47, 17);
 			this.chkFlux.TabIndex = 128;
@@ -2317,9 +2480,10 @@
 			this.pnlVamping.Controls.Add(this.lblAnalyzing);
 			this.pnlVamping.Controls.Add(this.lblWait);
 			this.pnlVamping.Controls.Add(this.lblVampRed);
-			this.pnlVamping.Location = new System.Drawing.Point(159, 176);
+			this.pnlVamping.Location = new System.Drawing.Point(186, 203);
+			this.pnlVamping.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.pnlVamping.Name = "pnlVamping";
-			this.pnlVamping.Size = new System.Drawing.Size(334, 72);
+			this.pnlVamping.Size = new System.Drawing.Size(390, 83);
 			this.pnlVamping.TabIndex = 125;
 			this.pnlVamping.Visible = false;
 			this.pnlVamping.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlVamping_Paint);
@@ -2327,9 +2491,10 @@
 			// lblSongName
 			// 
 			this.lblSongName.AutoSize = true;
-			this.lblSongName.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblSongName.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.lblSongName.ForeColor = System.Drawing.Color.Blue;
-			this.lblSongName.Location = new System.Drawing.Point(5, 33);
+			this.lblSongName.Location = new System.Drawing.Point(6, 38);
+			this.lblSongName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblSongName.Name = "lblSongName";
 			this.lblSongName.Size = new System.Drawing.Size(216, 18);
 			this.lblSongName.TabIndex = 3;
@@ -2339,9 +2504,10 @@
 			// lblAnalyzing
 			// 
 			this.lblAnalyzing.AutoSize = true;
-			this.lblAnalyzing.Font = new System.Drawing.Font("Times New Roman", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblAnalyzing.Font = new System.Drawing.Font("Times New Roman", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
 			this.lblAnalyzing.ForeColor = System.Drawing.Color.Red;
-			this.lblAnalyzing.Location = new System.Drawing.Point(5, 7);
+			this.lblAnalyzing.Location = new System.Drawing.Point(6, 8);
+			this.lblAnalyzing.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblAnalyzing.Name = "lblAnalyzing";
 			this.lblAnalyzing.Size = new System.Drawing.Size(189, 24);
 			this.lblAnalyzing.TabIndex = 2;
@@ -2350,9 +2516,10 @@
 			// lblWait
 			// 
 			this.lblWait.AutoSize = true;
-			this.lblWait.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblWait.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.lblWait.ForeColor = System.Drawing.Color.Red;
-			this.lblWait.Location = new System.Drawing.Point(60, 53);
+			this.lblWait.Location = new System.Drawing.Point(70, 61);
+			this.lblWait.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblWait.Name = "lblWait";
 			this.lblWait.Size = new System.Drawing.Size(75, 15);
 			this.lblWait.TabIndex = 1;
@@ -2361,9 +2528,10 @@
 			// lblVampRed
 			// 
 			this.lblVampRed.AutoSize = true;
-			this.lblVampRed.Font = new System.Drawing.Font("Times New Roman", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblVampRed.Font = new System.Drawing.Font("Times New Roman", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point);
 			this.lblVampRed.ForeColor = System.Drawing.Color.Red;
-			this.lblVampRed.Location = new System.Drawing.Point(3, 5);
+			this.lblVampRed.Location = new System.Drawing.Point(4, 6);
+			this.lblVampRed.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblVampRed.Name = "lblVampRed";
 			this.lblVampRed.Size = new System.Drawing.Size(62, 24);
 			this.lblVampRed.TabIndex = 0;
@@ -2379,9 +2547,11 @@
 			this.grpExplore.Controls.Add(this.btnLaunchxLights);
 			this.grpExplore.Controls.Add(this.btnSequenceEditor);
 			this.grpExplore.Controls.Add(this.btnExploreLOR);
-			this.grpExplore.Location = new System.Drawing.Point(666, 7);
+			this.grpExplore.Location = new System.Drawing.Point(777, 8);
+			this.grpExplore.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.grpExplore.Name = "grpExplore";
-			this.grpExplore.Size = new System.Drawing.Size(314, 56);
+			this.grpExplore.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.grpExplore.Size = new System.Drawing.Size(366, 65);
 			this.grpExplore.TabIndex = 180;
 			this.grpExplore.TabStop = false;
 			this.grpExplore.Text = " Explore... ";
@@ -2389,9 +2559,10 @@
 			// btnResetDefaults
 			// 
 			this.btnResetDefaults.AllowDrop = true;
-			this.btnResetDefaults.Location = new System.Drawing.Point(1031, 263);
+			this.btnResetDefaults.Location = new System.Drawing.Point(1203, 303);
+			this.btnResetDefaults.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnResetDefaults.Name = "btnResetDefaults";
-			this.btnResetDefaults.Size = new System.Drawing.Size(123, 23);
+			this.btnResetDefaults.Size = new System.Drawing.Size(144, 27);
 			this.btnResetDefaults.TabIndex = 158;
 			this.btnResetDefaults.Text = "Reset to Defaults";
 			this.btnResetDefaults.UseVisualStyleBackColor = true;
@@ -2405,9 +2576,11 @@
 			this.grpAudio.Controls.Add(this.lblFileAudio);
 			this.grpAudio.Controls.Add(this.lblStep1);
 			this.grpAudio.Enabled = false;
-			this.grpAudio.Location = new System.Drawing.Point(12, 12);
+			this.grpAudio.Location = new System.Drawing.Point(14, 14);
+			this.grpAudio.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.grpAudio.Name = "grpAudio";
-			this.grpAudio.Size = new System.Drawing.Size(334, 66);
+			this.grpAudio.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.grpAudio.Size = new System.Drawing.Size(390, 76);
 			this.grpAudio.TabIndex = 122;
 			this.grpAudio.TabStop = false;
 			this.grpAudio.Text = "      Select Audio File";
@@ -2415,9 +2588,10 @@
 			// lblSongTime
 			// 
 			this.lblSongTime.AutoSize = true;
-			this.lblSongTime.Font = new System.Drawing.Font("DejaVu Sans Mono", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblSongTime.Font = new System.Drawing.Font("DejaVu Sans Mono", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.lblSongTime.ForeColor = System.Drawing.Color.DarkOliveGreen;
-			this.lblSongTime.Location = new System.Drawing.Point(238, 12);
+			this.lblSongTime.Location = new System.Drawing.Point(278, 14);
+			this.lblSongTime.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblSongTime.Name = "lblSongTime";
 			this.lblSongTime.Size = new System.Drawing.Size(40, 10);
 			this.lblSongTime.TabIndex = 163;
@@ -2427,9 +2601,10 @@
 			// btnBrowseAudio
 			// 
 			this.btnBrowseAudio.AllowDrop = true;
-			this.btnBrowseAudio.Location = new System.Drawing.Point(244, 35);
+			this.btnBrowseAudio.Location = new System.Drawing.Point(285, 40);
+			this.btnBrowseAudio.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnBrowseAudio.Name = "btnBrowseAudio";
-			this.btnBrowseAudio.Size = new System.Drawing.Size(75, 20);
+			this.btnBrowseAudio.Size = new System.Drawing.Size(88, 23);
 			this.btnBrowseAudio.TabIndex = 124;
 			this.btnBrowseAudio.Text = "Browse...";
 			this.btnBrowseAudio.UseVisualStyleBackColor = true;
@@ -2438,10 +2613,11 @@
 			// txtFileAudio
 			// 
 			this.txtFileAudio.AllowDrop = true;
-			this.txtFileAudio.Location = new System.Drawing.Point(19, 35);
+			this.txtFileAudio.Location = new System.Drawing.Point(22, 40);
+			this.txtFileAudio.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.txtFileAudio.Name = "txtFileAudio";
 			this.txtFileAudio.ReadOnly = true;
-			this.txtFileAudio.Size = new System.Drawing.Size(219, 20);
+			this.txtFileAudio.Size = new System.Drawing.Size(255, 23);
 			this.txtFileAudio.TabIndex = 123;
 			this.txtFileAudio.TextChanged += new System.EventHandler(this.txtFileAudio_TextChanged);
 			this.txtFileAudio.Leave += new System.EventHandler(this.txtFileAudio_Leave);
@@ -2450,18 +2626,20 @@
 			// 
 			this.lblFileAudio.AllowDrop = true;
 			this.lblFileAudio.AutoSize = true;
-			this.lblFileAudio.Location = new System.Drawing.Point(16, 19);
+			this.lblFileAudio.Location = new System.Drawing.Point(19, 22);
+			this.lblFileAudio.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblFileAudio.Name = "lblFileAudio";
-			this.lblFileAudio.Size = new System.Drawing.Size(53, 13);
+			this.lblFileAudio.Size = new System.Drawing.Size(60, 15);
 			this.lblFileAudio.TabIndex = 125;
 			this.lblFileAudio.Text = "Audio File";
 			// 
 			// lblStep1
 			// 
 			this.lblStep1.AutoSize = true;
-			this.lblStep1.Font = new System.Drawing.Font("Times New Roman", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblStep1.Font = new System.Drawing.Font("Times New Roman", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point);
 			this.lblStep1.ForeColor = System.Drawing.SystemColors.Highlight;
-			this.lblStep1.Location = new System.Drawing.Point(6, -5);
+			this.lblStep1.Location = new System.Drawing.Point(7, -6);
+			this.lblStep1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblStep1.Name = "lblStep1";
 			this.lblStep1.Size = new System.Drawing.Size(21, 24);
 			this.lblStep1.TabIndex = 122;
@@ -2477,9 +2655,11 @@
 			this.grpSavex.Controls.Add(this.btnSavexL);
 			this.grpSavex.Controls.Add(this.txtSaveNamexL);
 			this.grpSavex.Enabled = false;
-			this.grpSavex.Location = new System.Drawing.Point(12, 452);
+			this.grpSavex.Location = new System.Drawing.Point(14, 522);
+			this.grpSavex.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.grpSavex.Name = "grpSavex";
-			this.grpSavex.Size = new System.Drawing.Size(334, 111);
+			this.grpSavex.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.grpSavex.Size = new System.Drawing.Size(390, 128);
 			this.grpSavex.TabIndex = 123;
 			this.grpSavex.TabStop = false;
 			this.grpSavex.Text = "          Save                              Timings";
@@ -2488,9 +2668,10 @@
 			// 
 			this.picxLights.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("picxLights.BackgroundImage")));
 			this.picxLights.InitialImage = ((System.Drawing.Image)(resources.GetObject("picxLights.InitialImage")));
-			this.picxLights.Location = new System.Drawing.Point(66, -3);
+			this.picxLights.Location = new System.Drawing.Point(66, -2);
+			this.picxLights.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.picxLights.Name = "picxLights";
-			this.picxLights.Size = new System.Drawing.Size(85, 28);
+			this.picxLights.Size = new System.Drawing.Size(85, 26);
 			this.picxLights.TabIndex = 137;
 			this.picxLights.TabStop = false;
 			// 
@@ -2498,18 +2679,20 @@
 			// 
 			this.panel2.Controls.Add(this.optOnePer);
 			this.panel2.Controls.Add(this.optMultiPer);
-			this.panel2.Location = new System.Drawing.Point(19, 19);
+			this.panel2.Location = new System.Drawing.Point(22, 22);
+			this.panel2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.panel2.Name = "panel2";
-			this.panel2.Size = new System.Drawing.Size(277, 26);
+			this.panel2.Size = new System.Drawing.Size(323, 30);
 			this.panel2.TabIndex = 136;
 			// 
 			// optOnePer
 			// 
 			this.optOnePer.AutoSize = true;
 			this.optOnePer.Checked = true;
-			this.optOnePer.Location = new System.Drawing.Point(128, 5);
+			this.optOnePer.Location = new System.Drawing.Point(149, 6);
+			this.optOnePer.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.optOnePer.Name = "optOnePer";
-			this.optOnePer.Size = new System.Drawing.Size(134, 18);
+			this.optOnePer.Size = new System.Drawing.Size(143, 22);
 			this.optOnePer.TabIndex = 139;
 			this.optOnePer.TabStop = true;
 			this.optOnePer.Text = "Individual Timing Files";
@@ -2519,9 +2702,10 @@
 			// optMultiPer
 			// 
 			this.optMultiPer.AutoSize = true;
-			this.optMultiPer.Location = new System.Drawing.Point(3, 5);
+			this.optMultiPer.Location = new System.Drawing.Point(4, 6);
+			this.optMultiPer.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.optMultiPer.Name = "optMultiPer";
-			this.optMultiPer.Size = new System.Drawing.Size(112, 18);
+			this.optMultiPer.Size = new System.Drawing.Size(118, 22);
 			this.optMultiPer.TabIndex = 138;
 			this.optMultiPer.Text = "Single Timing File";
 			this.optMultiPer.UseCompatibleTextRendering = true;
@@ -2530,9 +2714,10 @@
 			// btnSaveOptions
 			// 
 			this.btnSaveOptions.AllowDrop = true;
-			this.btnSaveOptions.Location = new System.Drawing.Point(189, 96);
+			this.btnSaveOptions.Location = new System.Drawing.Point(220, 111);
+			this.btnSaveOptions.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnSaveOptions.Name = "btnSaveOptions";
-			this.btnSaveOptions.Size = new System.Drawing.Size(75, 23);
+			this.btnSaveOptions.Size = new System.Drawing.Size(88, 27);
 			this.btnSaveOptions.TabIndex = 129;
 			this.btnSaveOptions.Text = "Settings...";
 			this.btnSaveOptions.UseVisualStyleBackColor = true;
@@ -2542,9 +2727,10 @@
 			// lblStep4A
 			// 
 			this.lblStep4A.AutoSize = true;
-			this.lblStep4A.Font = new System.Drawing.Font("Times New Roman", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblStep4A.Font = new System.Drawing.Font("Times New Roman", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point);
 			this.lblStep4A.ForeColor = System.Drawing.SystemColors.Highlight;
-			this.lblStep4A.Location = new System.Drawing.Point(6, -5);
+			this.lblStep4A.Location = new System.Drawing.Point(7, -6);
+			this.lblStep4A.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblStep4A.Name = "lblStep4A";
 			this.lblStep4A.Size = new System.Drawing.Size(32, 24);
 			this.lblStep4A.TabIndex = 127;
@@ -2554,18 +2740,20 @@
 			// 
 			this.lblFilexTimings.AllowDrop = true;
 			this.lblFilexTimings.AutoSize = true;
-			this.lblFilexTimings.Location = new System.Drawing.Point(16, 51);
+			this.lblFilexTimings.Location = new System.Drawing.Point(19, 59);
+			this.lblFilexTimings.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblFilexTimings.Name = "lblFilexTimings";
-			this.lblFilexTimings.Size = new System.Drawing.Size(97, 13);
+			this.lblFilexTimings.Size = new System.Drawing.Size(111, 15);
 			this.lblFilexTimings.TabIndex = 126;
 			this.lblFilexTimings.Text = "Timing Filename(s):";
 			// 
 			// btnSavexL
 			// 
 			this.btnSavexL.AllowDrop = true;
-			this.btnSavexL.Location = new System.Drawing.Point(244, 64);
+			this.btnSavexL.Location = new System.Drawing.Point(285, 74);
+			this.btnSavexL.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnSavexL.Name = "btnSavexL";
-			this.btnSavexL.Size = new System.Drawing.Size(75, 23);
+			this.btnSavexL.Size = new System.Drawing.Size(88, 27);
 			this.btnSavexL.TabIndex = 125;
 			this.btnSavexL.Text = "Save As...";
 			this.btnSavexL.UseVisualStyleBackColor = true;
@@ -2574,14 +2762,16 @@
 			// txtSaveNamexL
 			// 
 			this.txtSaveNamexL.AllowDrop = true;
-			this.txtSaveNamexL.Location = new System.Drawing.Point(19, 67);
+			this.txtSaveNamexL.Location = new System.Drawing.Point(22, 77);
+			this.txtSaveNamexL.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.txtSaveNamexL.Name = "txtSaveNamexL";
 			this.txtSaveNamexL.ReadOnly = true;
-			this.txtSaveNamexL.Size = new System.Drawing.Size(219, 20);
+			this.txtSaveNamexL.Size = new System.Drawing.Size(255, 23);
 			this.txtSaveNamexL.TabIndex = 124;
 			// 
 			// imlTreeIcons
 			// 
+			this.imlTreeIcons.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
 			this.imlTreeIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imlTreeIcons.ImageStream")));
 			this.imlTreeIcons.TransparentColor = System.Drawing.Color.Transparent;
 			this.imlTreeIcons.Images.SetKeyName(0, "LORTrack4");
@@ -2599,9 +2789,11 @@
 			this.grpAnalyze.Controls.Add(this.btnOK);
 			this.grpAnalyze.Controls.Add(this.lblStep3);
 			this.grpAnalyze.Enabled = false;
-			this.grpAnalyze.Location = new System.Drawing.Point(12, 378);
+			this.grpAnalyze.Location = new System.Drawing.Point(14, 436);
+			this.grpAnalyze.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.grpAnalyze.Name = "grpAnalyze";
-			this.grpAnalyze.Size = new System.Drawing.Size(334, 66);
+			this.grpAnalyze.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.grpAnalyze.Size = new System.Drawing.Size(390, 76);
 			this.grpAnalyze.TabIndex = 126;
 			this.grpAnalyze.TabStop = false;
 			this.grpAnalyze.Text = "      Analyze the Audio File";
@@ -2610,10 +2802,11 @@
 			// 
 			this.btnReanalyze.AllowDrop = true;
 			this.btnReanalyze.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.btnReanalyze.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnReanalyze.Location = new System.Drawing.Point(162, 20);
+			this.btnReanalyze.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.btnReanalyze.Location = new System.Drawing.Point(189, 23);
+			this.btnReanalyze.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnReanalyze.Name = "btnReanalyze";
-			this.btnReanalyze.Size = new System.Drawing.Size(117, 41);
+			this.btnReanalyze.Size = new System.Drawing.Size(136, 47);
 			this.btnReanalyze.TabIndex = 165;
 			this.btnReanalyze.Text = "Change Options and\r\nAnalyze Again...";
 			this.btnReanalyze.UseVisualStyleBackColor = true;
@@ -2623,9 +2816,10 @@
 			// lblVampTime
 			// 
 			this.lblVampTime.AutoSize = true;
-			this.lblVampTime.Font = new System.Drawing.Font("DejaVu Sans Mono", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblVampTime.Font = new System.Drawing.Font("DejaVu Sans Mono", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.lblVampTime.ForeColor = System.Drawing.Color.DarkOliveGreen;
-			this.lblVampTime.Location = new System.Drawing.Point(238, 19);
+			this.lblVampTime.Location = new System.Drawing.Point(278, 22);
+			this.lblVampTime.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblVampTime.Name = "lblVampTime";
 			this.lblVampTime.Size = new System.Drawing.Size(40, 10);
 			this.lblVampTime.TabIndex = 164;
@@ -2636,10 +2830,11 @@
 			// 
 			this.btnOK.AllowDrop = true;
 			this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.btnOK.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnOK.Location = new System.Drawing.Point(89, 19);
+			this.btnOK.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point);
+			this.btnOK.Location = new System.Drawing.Point(104, 22);
+			this.btnOK.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnOK.Name = "btnOK";
-			this.btnOK.Size = new System.Drawing.Size(117, 41);
+			this.btnOK.Size = new System.Drawing.Size(136, 47);
 			this.btnOK.TabIndex = 124;
 			this.btnOK.Text = "Analyze...";
 			this.btnOK.UseVisualStyleBackColor = true;
@@ -2648,9 +2843,10 @@
 			// lblStep3
 			// 
 			this.lblStep3.AutoSize = true;
-			this.lblStep3.Font = new System.Drawing.Font("Times New Roman", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblStep3.Font = new System.Drawing.Font("Times New Roman", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point);
 			this.lblStep3.ForeColor = System.Drawing.SystemColors.Highlight;
-			this.lblStep3.Location = new System.Drawing.Point(6, -5);
+			this.lblStep3.Location = new System.Drawing.Point(7, -6);
+			this.lblStep3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblStep3.Name = "lblStep3";
 			this.lblStep3.Size = new System.Drawing.Size(21, 24);
 			this.lblStep3.TabIndex = 122;
@@ -2668,9 +2864,11 @@
 			this.grpOptions.Controls.Add(this.picPoisonArrow);
 			this.grpOptions.Controls.Add(this.lblStep2A);
 			this.grpOptions.Enabled = false;
-			this.grpOptions.Location = new System.Drawing.Point(12, 89);
+			this.grpOptions.Location = new System.Drawing.Point(14, 103);
+			this.grpOptions.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.grpOptions.Name = "grpOptions";
-			this.grpOptions.Size = new System.Drawing.Size(334, 281);
+			this.grpOptions.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.grpOptions.Size = new System.Drawing.Size(390, 324);
 			this.grpOptions.TabIndex = 130;
 			this.grpOptions.TabStop = false;
 			this.grpOptions.Text = "      Select Timings and Options";
@@ -2678,7 +2876,8 @@
 			// picWorking
 			// 
 			this.picWorking.Image = ((System.Drawing.Image)(resources.GetObject("picWorking.Image")));
-			this.picWorking.Location = new System.Drawing.Point(164, 71);
+			this.picWorking.Location = new System.Drawing.Point(191, 82);
+			this.picWorking.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.picWorking.Name = "picWorking";
 			this.picWorking.Size = new System.Drawing.Size(132, 40);
 			this.picWorking.TabIndex = 157;
@@ -2688,9 +2887,10 @@
 			// lblPickYourPoison
 			// 
 			this.lblPickYourPoison.AutoSize = true;
-			this.lblPickYourPoison.Font = new System.Drawing.Font("Times New Roman", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblPickYourPoison.Font = new System.Drawing.Font("Times New Roman", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
 			this.lblPickYourPoison.ForeColor = System.Drawing.Color.DarkViolet;
-			this.lblPickYourPoison.Location = new System.Drawing.Point(131, 67);
+			this.lblPickYourPoison.Location = new System.Drawing.Point(153, 77);
+			this.lblPickYourPoison.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblPickYourPoison.Name = "lblPickYourPoison";
 			this.lblPickYourPoison.Size = new System.Drawing.Size(162, 24);
 			this.lblPickYourPoison.TabIndex = 130;
@@ -2699,9 +2899,10 @@
 			// chkReuse
 			// 
 			this.chkReuse.AutoSize = true;
-			this.chkReuse.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.chkReuse.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
 			this.chkReuse.ForeColor = System.Drawing.Color.DeepPink;
-			this.chkReuse.Location = new System.Drawing.Point(106, 266);
+			this.chkReuse.Location = new System.Drawing.Point(124, 307);
+			this.chkReuse.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chkReuse.Name = "chkReuse";
 			this.chkReuse.Size = new System.Drawing.Size(81, 17);
 			this.chkReuse.TabIndex = 135;
@@ -2713,7 +2914,8 @@
 			// picVampire
 			// 
 			this.picVampire.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("picVampire.BackgroundImage")));
-			this.picVampire.Location = new System.Drawing.Point(22, 45);
+			this.picVampire.Location = new System.Drawing.Point(26, 52);
+			this.picVampire.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.picVampire.Name = "picVampire";
 			this.picVampire.Size = new System.Drawing.Size(128, 192);
 			this.picVampire.TabIndex = 136;
@@ -2722,9 +2924,10 @@
 			// lblHelpOnsets
 			// 
 			this.lblHelpOnsets.AutoSize = true;
-			this.lblHelpOnsets.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Italic | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblHelpOnsets.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Italic | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point);
 			this.lblHelpOnsets.ForeColor = System.Drawing.SystemColors.HotTrack;
-			this.lblHelpOnsets.Location = new System.Drawing.Point(237, 266);
+			this.lblHelpOnsets.Location = new System.Drawing.Point(276, 307);
+			this.lblHelpOnsets.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblHelpOnsets.Name = "lblHelpOnsets";
 			this.lblHelpOnsets.Size = new System.Drawing.Size(38, 13);
 			this.lblHelpOnsets.TabIndex = 156;
@@ -2734,7 +2937,8 @@
 			// picPoisonArrow
 			// 
 			this.picPoisonArrow.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("picPoisonArrow.BackgroundImage")));
-			this.picPoisonArrow.Location = new System.Drawing.Point(217, 99);
+			this.picPoisonArrow.Location = new System.Drawing.Point(253, 114);
+			this.picPoisonArrow.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.picPoisonArrow.Name = "picPoisonArrow";
 			this.picPoisonArrow.Size = new System.Drawing.Size(64, 32);
 			this.picPoisonArrow.TabIndex = 131;
@@ -2743,9 +2947,10 @@
 			// lblStep2A
 			// 
 			this.lblStep2A.AutoSize = true;
-			this.lblStep2A.Font = new System.Drawing.Font("Times New Roman", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblStep2A.Font = new System.Drawing.Font("Times New Roman", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point);
 			this.lblStep2A.ForeColor = System.Drawing.SystemColors.Highlight;
-			this.lblStep2A.Location = new System.Drawing.Point(6, -5);
+			this.lblStep2A.Location = new System.Drawing.Point(7, -6);
+			this.lblStep2A.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblStep2A.Name = "lblStep2A";
 			this.lblStep2A.Size = new System.Drawing.Size(21, 24);
 			this.lblStep2A.TabIndex = 122;
@@ -2767,9 +2972,11 @@
 			this.grpSaveLOR.Controls.Add(this.btnSaveSeq);
 			this.grpSaveLOR.Controls.Add(this.txtSeqName);
 			this.grpSaveLOR.Enabled = false;
-			this.grpSaveLOR.Location = new System.Drawing.Point(12, 577);
+			this.grpSaveLOR.Location = new System.Drawing.Point(14, 666);
+			this.grpSaveLOR.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.grpSaveLOR.Name = "grpSaveLOR";
-			this.grpSaveLOR.Size = new System.Drawing.Size(334, 111);
+			this.grpSaveLOR.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.grpSaveLOR.Size = new System.Drawing.Size(390, 128);
 			this.grpSaveLOR.TabIndex = 136;
 			this.grpSaveLOR.TabStop = false;
 			this.grpSaveLOR.Text = "          Save                                Sequence";
@@ -2777,9 +2984,10 @@
 			// lblSeqTime
 			// 
 			this.lblSeqTime.AutoSize = true;
-			this.lblSeqTime.Font = new System.Drawing.Font("DejaVu Sans Mono", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblSeqTime.Font = new System.Drawing.Font("DejaVu Sans Mono", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.lblSeqTime.ForeColor = System.Drawing.Color.DarkOliveGreen;
-			this.lblSeqTime.Location = new System.Drawing.Point(238, 54);
+			this.lblSeqTime.Location = new System.Drawing.Point(278, 62);
+			this.lblSeqTime.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblSeqTime.Name = "lblSeqTime";
 			this.lblSeqTime.Size = new System.Drawing.Size(40, 10);
 			this.lblSeqTime.TabIndex = 165;
@@ -2789,9 +2997,10 @@
 			// chkAutolaunch
 			// 
 			this.chkAutolaunch.AutoSize = true;
-			this.chkAutolaunch.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.chkAutolaunch.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.chkAutolaunch.ForeColor = System.Drawing.SystemColors.ControlText;
-			this.chkAutolaunch.Location = new System.Drawing.Point(22, 88);
+			this.chkAutolaunch.Location = new System.Drawing.Point(26, 102);
+			this.chkAutolaunch.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chkAutolaunch.Name = "chkAutolaunch";
 			this.chkAutolaunch.Size = new System.Drawing.Size(165, 17);
 			this.chkAutolaunch.TabIndex = 138;
@@ -2802,6 +3011,7 @@
 			// 
 			this.picLOR.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("picLOR.BackgroundImage")));
 			this.picLOR.Location = new System.Drawing.Point(66, 0);
+			this.picLOR.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.picLOR.Name = "picLOR";
 			this.picLOR.Size = new System.Drawing.Size(90, 19);
 			this.picLOR.TabIndex = 137;
@@ -2811,17 +3021,19 @@
 			// 
 			this.panel3.Controls.Add(this.optSeqAppend);
 			this.panel3.Controls.Add(this.optSeqNew);
-			this.panel3.Location = new System.Drawing.Point(19, 19);
+			this.panel3.Location = new System.Drawing.Point(22, 22);
+			this.panel3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.panel3.Name = "panel3";
-			this.panel3.Size = new System.Drawing.Size(277, 26);
+			this.panel3.Size = new System.Drawing.Size(323, 30);
 			this.panel3.TabIndex = 136;
 			// 
 			// optSeqAppend
 			// 
 			this.optSeqAppend.AutoSize = true;
-			this.optSeqAppend.Location = new System.Drawing.Point(128, 5);
+			this.optSeqAppend.Location = new System.Drawing.Point(149, 6);
+			this.optSeqAppend.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.optSeqAppend.Name = "optSeqAppend";
-			this.optSeqAppend.Size = new System.Drawing.Size(116, 18);
+			this.optSeqAppend.Size = new System.Drawing.Size(126, 22);
 			this.optSeqAppend.TabIndex = 139;
 			this.optSeqAppend.Text = "Append to Existing";
 			this.optSeqAppend.UseCompatibleTextRendering = true;
@@ -2832,9 +3044,10 @@
 			// 
 			this.optSeqNew.AutoSize = true;
 			this.optSeqNew.Checked = true;
-			this.optSeqNew.Location = new System.Drawing.Point(3, 5);
+			this.optSeqNew.Location = new System.Drawing.Point(4, 6);
+			this.optSeqNew.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.optSeqNew.Name = "optSeqNew";
-			this.optSeqNew.Size = new System.Drawing.Size(82, 18);
+			this.optSeqNew.Size = new System.Drawing.Size(86, 22);
 			this.optSeqNew.TabIndex = 138;
 			this.optSeqNew.TabStop = true;
 			this.optSeqNew.Text = "Create New";
@@ -2845,9 +3058,10 @@
 			// button1
 			// 
 			this.button1.AllowDrop = true;
-			this.button1.Location = new System.Drawing.Point(189, 96);
+			this.button1.Location = new System.Drawing.Point(220, 111);
+			this.button1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(75, 23);
+			this.button1.Size = new System.Drawing.Size(88, 27);
 			this.button1.TabIndex = 129;
 			this.button1.Text = "Settings...";
 			this.button1.UseVisualStyleBackColor = true;
@@ -2856,9 +3070,10 @@
 			// lblStep4B
 			// 
 			this.lblStep4B.AutoSize = true;
-			this.lblStep4B.Font = new System.Drawing.Font("Times New Roman", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblStep4B.Font = new System.Drawing.Font("Times New Roman", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point);
 			this.lblStep4B.ForeColor = System.Drawing.SystemColors.Highlight;
-			this.lblStep4B.Location = new System.Drawing.Point(6, -5);
+			this.lblStep4B.Location = new System.Drawing.Point(7, -6);
+			this.lblStep4B.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblStep4B.Name = "lblStep4B";
 			this.lblStep4B.Size = new System.Drawing.Size(32, 24);
 			this.lblStep4B.TabIndex = 127;
@@ -2868,18 +3083,20 @@
 			// 
 			this.lblFileSequence.AllowDrop = true;
 			this.lblFileSequence.AutoSize = true;
-			this.lblFileSequence.Location = new System.Drawing.Point(16, 51);
+			this.lblFileSequence.Location = new System.Drawing.Point(19, 59);
+			this.lblFileSequence.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblFileSequence.Name = "lblFileSequence";
-			this.lblFileSequence.Size = new System.Drawing.Size(115, 13);
+			this.lblFileSequence.Size = new System.Drawing.Size(125, 15);
 			this.lblFileSequence.TabIndex = 126;
 			this.lblFileSequence.Text = "Sequence Filename(s):";
 			// 
 			// btnSaveSeq
 			// 
 			this.btnSaveSeq.AllowDrop = true;
-			this.btnSaveSeq.Location = new System.Drawing.Point(244, 64);
+			this.btnSaveSeq.Location = new System.Drawing.Point(285, 74);
+			this.btnSaveSeq.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnSaveSeq.Name = "btnSaveSeq";
-			this.btnSaveSeq.Size = new System.Drawing.Size(75, 23);
+			this.btnSaveSeq.Size = new System.Drawing.Size(88, 27);
 			this.btnSaveSeq.TabIndex = 125;
 			this.btnSaveSeq.Text = "Save As...";
 			this.btnSaveSeq.UseVisualStyleBackColor = true;
@@ -2888,18 +3105,19 @@
 			// txtSeqName
 			// 
 			this.txtSeqName.AllowDrop = true;
-			this.txtSeqName.Location = new System.Drawing.Point(19, 67);
+			this.txtSeqName.Location = new System.Drawing.Point(22, 77);
+			this.txtSeqName.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.txtSeqName.Name = "txtSeqName";
 			this.txtSeqName.ReadOnly = true;
-			this.txtSeqName.Size = new System.Drawing.Size(219, 20);
+			this.txtSeqName.Size = new System.Drawing.Size(255, 23);
 			this.txtSeqName.TabIndex = 124;
 			// 
 			// frmVamp
 			// 
 			this.AcceptButton = this.btnOK;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(990, 724);
+			this.ClientSize = new System.Drawing.Size(1155, 835);
 			this.Controls.Add(this.grpExplore);
 			this.Controls.Add(this.grpSaveLOR);
 			this.Controls.Add(this.grpAnalyze);
@@ -2913,6 +3131,7 @@
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MainMenuStrip = this.menuStrip1;
+			this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.MaximizeBox = false;
 			this.Name = "frmVamp";
 			this.Text = "Vamperizer";
