@@ -44,6 +44,11 @@
     <ApplicationIcon>Util-O-Rama.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="obj.bak\**" />
+    <EmbeddedResource Remove="obj.bak\**" />
+    <None Remove="obj.bak\**" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="System.Data.OracleClient" />
     <Reference Include="System.Net" />
     <Reference Include="System.Security" />
@@ -54,6 +59,8 @@
     <Compile Include="..\..\COMMON\FileHelper.cs">
       <Link>FileHelper.cs</Link>
     </Compile>
+    <Compile Include="..\Common\About\About.cs" Link="About.cs" />
+    <Compile Include="..\Common\About\About.Designer.cs" Link="About.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
@@ -112,11 +119,7 @@
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="obj.bak\Debug\.NETFramework,Version=v4.7.1.AssemblyAttributes.cs" />
-    <Compile Remove="obj.bak\Debug\.NETFramework,Version=v4.7.2.AssemblyAttributes.cs" />
-    <Compile Remove="obj.bak\Debug\.NETFramework,Version=v4.8.AssemblyAttributes.cs" />
-    <Compile Remove="obj.bak\Debug\net5.0-windows\.NETCoreApp,Version=v5.0.AssemblyAttributes.cs" />
-    <Compile Remove="obj.bak\Debug\net5.0-windows\LaunchORama.AssemblyInfo.cs" />
+    <None Remove="desktop.ini" />
   </ItemGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />

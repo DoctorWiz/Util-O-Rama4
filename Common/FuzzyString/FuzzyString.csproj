@@ -87,6 +87,7 @@
     <None Remove="abstract-yellow-fluffy-isolated-sphere-cropped.jpg" />
     <None Remove="abstract-yellow-fluffy-isolated-sphere.jpg" />
     <None Remove="desktop.ini" />
+    <None Remove="FuzzyString.csproj.vspscc" />
     <None Remove="FuzzyString.obj.7z" />
   </ItemGroup>
   <ItemGroup>

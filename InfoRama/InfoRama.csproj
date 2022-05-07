@@ -27,6 +27,8 @@
     <Compile Include="..\..\COMMON\FileHelper.cs">
       <Link>FileHelper.cs</Link>
     </Compile>
+    <Compile Include="..\Common\About\About.cs" Link="About.cs" />
+    <Compile Include="..\Common\About\About.Designer.cs" Link="About.Designer.cs" />
     <Compile Include="..\Common\Sequence4\LORUtils.cs">
       <Link>LORUtils.cs</Link>
     </Compile>

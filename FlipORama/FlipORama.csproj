@@ -17,6 +17,9 @@
     <OutputPath>bin\x64\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="App.config.foo" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="System.Data.OracleClient" />
     <Reference Include="System.Net" />
     <Reference Include="System.Security" />
@@ -27,6 +30,8 @@
     <Compile Include="..\..\COMMON\FileHelper.cs">
       <Link>FileHelper.cs</Link>
     </Compile>
+    <Compile Include="..\Common\About\About.cs" Link="About.cs" />
+    <Compile Include="..\Common\About\About.Designer.cs" Link="About.Designer.cs" />
     <Compile Include="..\Common\Sequence4\LORUtils.cs">
       <Link>LORUtils.cs</Link>
     </Compile>
