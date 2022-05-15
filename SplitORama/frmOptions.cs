@@ -8,7 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using FuzzyString;
-using LORUtils4; using FileHelper;
+using LOR4Utils;
+using FileHelper;
 using System.IO;
 
 namespace UtilORama4
@@ -77,16 +78,16 @@ namespace UtilORama4
 					CheckBox chkCtl = (CheckBox)ctl;
 					//if (chkCtl.Checked)
 					//{
-						string ht = (string)chkCtl.Name.Substring(3);
-						long hi = Convert.ToInt32(ht, 16);
-						if ((theAlgorithms & hi) > 0)
-						{
-							chkCtl.Checked = true;
-						}
-						else
-						{
-							chkCtl.Checked = false;
-						}
+					string ht = (string)chkCtl.Name.Substring(3);
+					long hi = Convert.ToInt32(ht, 16);
+					if ((theAlgorithms & hi) > 0)
+					{
+						chkCtl.Checked = true;
+					}
+					else
+					{
+						chkCtl.Checked = false;
+					}
 					//}
 				}
 			}
@@ -296,7 +297,7 @@ namespace UtilORama4
 		}
 
 		private void LoadFuzzyOptions()
-		{ 
+		{
 			finalAlgorithms = Properties.Settings.Default.FuzzyFinalAlgorithms;
 			prematchAlgorithm = Properties.Settings.Default.FuzzyPrematchAlgorithm;
 			useFuzzy = Properties.Settings.Default.FuzzyUse;
@@ -385,7 +386,7 @@ namespace UtilORama4
 			caseSensitive = chkCase.Checked;
 			if (caseSensitive)
 			{
-				finalAlgorithms &= (FuzzyFunctions.USE_CASEINSENSITIVE-1);
+				finalAlgorithms &= (FuzzyFunctions.USE_CASEINSENSITIVE - 1);
 				prematchAlgorithm &= (FuzzyFunctions.USE_CASEINSENSITIVE - 1);
 			}
 			else

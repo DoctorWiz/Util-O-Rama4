@@ -14,7 +14,7 @@ using System.Configuration;
 using System.Threading;
 using Microsoft.Win32;
 using xUtilities;
-using LORUtils4;
+using LOR4Utils;
 using FileHelper;
 using Musik;
 //using Ini;
@@ -34,7 +34,7 @@ using System.Diagnostics.Eventing.Reader;
 
 namespace UtilORama4
 {
-	public partial class frmVamp : Form
+	public partial class frmVamp //: Form
 	{
 		private string annotatorProgram = "";
 		private string StepSizeExample = "ERROR: BarBeatTracker::initialize: Unsupported step size for this sample rate: 441 (wanted 512)";
@@ -47,6 +47,12 @@ namespace UtilORama4
 		private StringBuilder outLog = new StringBuilder();
 		private StreamWriter writer = null;
 		private bool outputChanged;
+		private string songTitle = "[Unknown]";
+		private string songArtist = "[Unknown]";
+		private const string BY = " by ";
+		private string theSong = "[Unknown] by [Unknown]";
+		private string fileCurrent = "";
+
 
 		#region Vamp Specific
 		// These first five functions are the ones to be updated whenever a
@@ -1236,6 +1242,18 @@ namespace UtilORama4
 
 			return completed;
 		}
+
+		public static string LabelName(vamps.LabelType labelType)
+		{
+			int i = (int)labelType;
+			return vamps.LabelNames[(int)labelType]; // availableLabels[i];
+		}
+
+		public static vamps.LabelType LabelType(string labelName)
+		{
+			return vamps.GetLabelTypeFromName(labelName);
+		}
+
 		#endregion
 
 		#region Vamp Agnostic

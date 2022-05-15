@@ -5,7 +5,7 @@ using System.Text;
 //using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-using LORUtils4;
+using LOR4Utils;
 using FileHelper;
 using xUtilities;
 
@@ -530,7 +530,7 @@ namespace UtilORama4
 
 
 
-		private static int OLD_xTimingsToLORtimings(xTimings timings, LORSequence4 sequence)
+		private static int OLD_xTimingsToLORtimings(xTimings timings, LOR4Sequence sequence)
 		{
 			// Ignore the timings passed in, and use the ones already cached for Bars and Beats
 			// (Other transforms will use the one passed in)
@@ -645,9 +645,9 @@ namespace UtilORama4
 					int tec = timings.effects.Count;
 					//int bpb = Annotator.BeatsPerBar;
 					string tname = timings.Name.Substring(6, 4);
-					LORChannelGroup4 beatGroup = Annotator.VampTrack.Members.FindChannelGroup("Bars and Beats", true);
-					//LORChannel4 chan = Annotator.Sequence.AllMembers.FindChannel(beatName, true, true);
-					LORChannel4 chan = beatGroup.Members.FindChannel(beatName, true, true);
+					LOR4ChannelGroup beatGroup = Annotator.VampTrack.Members.FindChannelGroup("Bars and Beats", true);
+					//LOR4Channel chan = Annotator.Sequence.AllMembers.FindChannel(beatName, true, true);
+					LOR4Channel chan = beatGroup.Members.FindChannel(beatName, true, true);
 					errs = SequenceFunctions.ImportBeatChannel(chan, timings, divider);
 				}
 			}
@@ -672,14 +672,14 @@ public xTimings xFrames = new xTimings("Frames");
 
 
 		//LORTrack4 vampTrack = sequence.FindTrack("Vamp-O-Rama", true);
-		LORChannelGroup4 beatGroup = sequence.FindChannelGroup("Bars and Beats", Annotator.VampTrack.Members, true);
+		LOR4ChannelGroup beatGroup = sequence.FindChannelGroup("Bars and Beats", Annotator.VampTrack.Members, true);
 		if (xBars != null)
 		{
 			if (xBars.effects.Count > 0)
 			{
 				//if (ramps)
 				//{
-				LORChannel4 barCh = sequence.FindChannel("Bars", beatGroup.Members, true, true);
+				LOR4Channel barCh = sequence.FindChannel("Bars", beatGroup.Members, true, true);
 				//SequenceFunctions.ImportBeatChannel(barCh, xBars, 1, firstBeat, ramps);
 				//SequenceFunctions.ImportBeatChannel(barCh, xBars, 1, firstBeat, true);
 				SequenceFunctions.ImportBeatChannel(barCh, xBars, 1, firstBeat, ramps);
@@ -694,7 +694,7 @@ public xTimings xFrames = new xTimings("Frames");
 			{
 				if (xBeatsFull.effects.Count > 0)
 				{
-					LORChannel4 beatCh = sequence.FindChannel("Beats-Full", beatGroup.Members, true, true);
+					LOR4Channel beatCh = sequence.FindChannel("Beats-Full", beatGroup.Members, true, true);
 					SequenceFunctions.ImportBeatChannel(beatCh, xBeatsFull, BeatsPerBar, firstBeat, ramps);
 				}
 			}
@@ -706,7 +706,7 @@ public xTimings xFrames = new xTimings("Frames");
 			{
 				if (xBeatsHalf.effects.Count > 0)
 				{
-					LORChannel4 beatCh = sequence.FindChannel("Beats-Half", beatGroup.Members, true, true);
+					LOR4Channel beatCh = sequence.FindChannel("Beats-Half", beatGroup.Members, true, true);
 					SequenceFunctions.ImportBeatChannel(beatCh, xBeatsHalf, BeatsPerBar * 2, firstBeat, ramps);
 				}
 			}
@@ -718,7 +718,7 @@ public xTimings xFrames = new xTimings("Frames");
 			{
 				if (xBeatsThird.effects.Count > 0)
 				{
-					LORChannel4 beatCh = sequence.FindChannel("Beats-Third", beatGroup.Members, true, true);
+					LOR4Channel beatCh = sequence.FindChannel("Beats-Third", beatGroup.Members, true, true);
 					SequenceFunctions.ImportBeatChannel(beatCh, xBeatsThird, BeatsPerBar * 3, firstBeat, ramps);
 				}
 			}
@@ -730,7 +730,7 @@ public xTimings xFrames = new xTimings("Frames");
 			{
 				if (xBeatsQuarter.effects.Count > 0)
 				{
-					LORChannel4 beatCh = sequence.FindChannel("Beats-Quarter", beatGroup.Members, true, true);
+					LOR4Channel beatCh = sequence.FindChannel("Beats-Quarter", beatGroup.Members, true, true);
 					SequenceFunctions.ImportBeatChannel(beatCh, xBeatsQuarter, BeatsPerBar * 4, firstBeat, ramps);
 				}
 			}

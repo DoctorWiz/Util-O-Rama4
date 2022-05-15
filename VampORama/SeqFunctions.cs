@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
-using LORUtils4;
+using LOR4Utils;
 using FileHelper;
 
 namespace UtilORama4
 {
 	public static class SequenceFunctions
 	{
-		//private static LORChannelGroup4 octaveGroups = null;
+		//private static LOR4ChannelGroup octaveGroups = null;
 		private static int firstCobjIdx = lutils.UNDEFINED;
 		private static int firstCsavedIndex = lutils.UNDEFINED;
 
@@ -22,18 +22,18 @@ namespace UtilORama4
 		// Colors are 0 = 0xFF0000; Red, 1 = 0xFF7F00; Orange, 2 = 0xFFFF00; Yellow, 3 = 0x7FFF00; Yellow-Green, 4 = 0x00FF00; Green,
 		// 5 = 0x00FF7F; Green-Cyan, 6 = 0x00FFFF; Cyan, 7 = 0x007FFF; Cyan-Blue, 8 = 0x0000FF; Blue, 9 = 0x7F00FF; Blu-Magenta,
 		// 10 = 0xFF00FF; Magenta, and 11 = 0xFF007F; Magenta-Red
-		
 
 
-	static SequenceFunctions()
+
+		static SequenceFunctions()
 		{
 
 		}
 
 		//public static int ImportTimingGrid(LORTimings4 beatGrid, xTimings xEffects)
 		//{
-			//string grdName = beatGrid.Name;
-			//return ImportTimingGrid(beatGrid, grdName, xEffects);
+		//string grdName = beatGrid.Name;
+		//return ImportTimingGrid(beatGrid, grdName, xEffects);
 		//}
 
 		public static int ImportTimingGrid(LORTimings4 beatGrid, xTimings xEffects)
@@ -49,15 +49,15 @@ namespace UtilORama4
 				beatGrid.timings.Clear();
 			}
 			int tc = xEffects.effects.Count;
-			beatGrid.TimingGridType = LORTimingGridType4.Freeform;
+			beatGrid.TimingGridType = LOR4TimingGridType.Freeform;
 			for (int q = 0; q < xEffects.effects.Count; q++)
 			{
 				xEffect xef = xEffects.effects[q];
 				int t = ms2cs(xef.starttime);
 
-				if (t > Annotator.Sequence.Centiseconds)  Annotator.Sequence.Centiseconds  = t;
+				if (t > Annotator.Sequence.Centiseconds) Annotator.Sequence.Centiseconds = t;
 				if (t > Annotator.VampTrack.Centiseconds) Annotator.VampTrack.Centiseconds = t;
-					
+
 				if (t > lastStart)
 				{
 					if (t <= Annotator.Sequence.Centiseconds)
@@ -81,12 +81,12 @@ namespace UtilORama4
 			return errs;
 		}
 
-		public static int LessEfficient_ImportBeatChannel(LORChannel4 beatCh, xTimings xEffects, int divider)
+		public static int LessEfficient_ImportBeatChannel(LOR4Channel beatCh, xTimings xEffects, int divider)
 		{
 			int errs = 0;
 			// Detect if we are doing 'Bars' channel for special handling
 			xEffect xef = null;
-			LOREffect4 lef = null;
+			LOR4Effect lef = null;
 			bool bars = false;
 			int st = 0;
 			int et = 0;
@@ -110,7 +110,7 @@ namespace UtilORama4
 					xef = xEffects.effects[q];
 					st = ms2cs(xef.starttime);
 					et = ms2cs(xef.endtime);
-					lef = new LOREffect4(LOREffectType4.FadeDown, st, et, 100, 0);
+					lef = new LOR4Effect(LOR4EffectType.FadeDown, st, et, 100, 0);
 					beatCh.AddEffect(lef);
 				}
 			}
@@ -232,7 +232,7 @@ namespace UtilORama4
 					} // End divider = 1 (or not)
 					if (!cancel)
 					{
-						lef = new LOREffect4(LOREffectType4.Intensity, st, et, 100);
+						lef = new LOR4Effect(LOR4EffectType.Intensity, st, et, 100);
 						beatCh.effects.Add(lef);
 					} // End if not cancelled
 					q += divider;
@@ -242,12 +242,12 @@ namespace UtilORama4
 			return beatCh.effects.Count;
 		}
 
-		public static int ImportBeatChannel(LORChannel4 beatCh, xTimings xEffects, int divider)
+		public static int ImportBeatChannel(LOR4Channel beatCh, xTimings xEffects, int divider)
 		{
 			//int errs = 0;
 			// Detect if we are doing 'Bars' channel for special handling
 			xEffect xef = null;
-			LOREffect4 lorEffect = null;
+			LOR4Effect lorEffect = null;
 			//bool bars = false;
 			int effectStart = 0;
 			int effectEnd = 0;
@@ -271,7 +271,7 @@ namespace UtilORama4
 					xef = xEffects.effects[q];
 					effectStart = ms2cs(xef.starttime);
 					effectEnd = ms2cs(xef.endtime);
-					lorEffect = new LOREffect4(LOREffectType4.FadeDown, effectStart, effectEnd, 100, 0);
+					lorEffect = new LOR4Effect(LOR4EffectType.FadeDown, effectStart, effectEnd, 100, 0);
 					beatCh.AddEffect(lorEffect);
 					//TODO Raise event for progress bar
 				}
@@ -308,24 +308,24 @@ namespace UtilORama4
 							effectEnd = Annotator.Sequence.Centiseconds;
 						}
 					}
-					lorEffect = new LOREffect4(LOREffectType4.Intensity, effectStart, effectEnd, 100);
+					lorEffect = new LOR4Effect(LOR4EffectType.Intensity, effectStart, effectEnd, 100);
 					beatCh.effects.Add(lorEffect);
 					effectIndexStart += divider;
 					//TODO Raise event for progress bar
 				} // End while effectIndexStart < effect count
 			} // End while q < effects count
-			//TODO Output status message
+				//TODO Output status message
 			return beatCh.effects.Count;
 		}
 
 
 
-		public static int ImportNoteChannel(LORChannel4 noteCh, xTimings xEffects)
+		public static int ImportNoteChannel(LOR4Channel noteCh, xTimings xEffects)
 		{
 			int errs = 0;
 			// Detect if we are doing 'Bars' channel for special handling
 			xEffect xef = null;
-			LOREffect4 lef = null;
+			LOR4Effect lef = null;
 			bool bars = false;
 			int st = 0;
 			int et = 0;
@@ -343,11 +343,11 @@ namespace UtilORama4
 				if (Annotator.UseRamps)
 				{
 					// Ramps are very simple, just add a fade-down effect for each effect
-					lef = new LOREffect4(LOREffectType4.FadeDown, st, et, 100, 0);
+					lef = new LOR4Effect(LOR4EffectType.FadeDown, st, et, 100, 0);
 				}
 				else
 				{
-					lef = new LOREffect4(LOREffectType4.Intensity, st, et, 100);
+					lef = new LOR4Effect(LOR4EffectType.Intensity, st, et, 100);
 				}
 				noteCh.AddEffect(lef);
 				//TODO Raise event for progress bar
@@ -355,16 +355,16 @@ namespace UtilORama4
 			//TODO Output status message with count
 			return noteCh.effects.Count;
 		}
-		
 
 
 
-		public static int OLD2_ImportBeatChannel(LORChannel4 beatCh, xTimings xEffects, int barDivs, int firstBeat, bool ramps)
+
+		public static int OLD2_ImportBeatChannel(LOR4Channel beatCh, xTimings xEffects, int barDivs, int firstBeat, bool ramps)
 		{
 			int errs = 0;
 			// Detect if we are doing 'Bars' channel for special handling
 			xEffect xef = null;
-			LOREffect4 lef = null;
+			LOR4Effect lef = null;
 			bool bars = false;
 			int b = beatCh.Name.IndexOf("Bars");
 			if (b >= 0) bars = true;
@@ -383,7 +383,7 @@ namespace UtilORama4
 				int et = ms2cs(xef.endtime);
 				if (ramps)
 				{
-					lef = new LOREffect4(LOREffectType4.FadeDown, st, et, 100, 0);
+					lef = new LOR4Effect(LOR4EffectType.FadeDown, st, et, 100, 0);
 					beatCh.AddEffect(lef);
 				}
 				else // On-Off, NOT ramps
@@ -398,8 +398,8 @@ namespace UtilORama4
 						if (et > Annotator.VampTrack.Centiseconds) Annotator.VampTrack.Centiseconds = et;
 						if (et > beatCh.Centiseconds) beatCh.Centiseconds = et;
 
-						lef = new LOREffect4();
-						lef.EffectType = LOREffectType4.Intensity;
+						lef = new LOR4Effect();
+						lef.EffectType = LOR4EffectType.Intensity;
 						lef.Intensity = 100;
 						lef.startCentisecond = st;
 						// If processing 'Bars' channel without Ramps, special handling is required
@@ -423,7 +423,7 @@ namespace UtilORama4
 						//}
 						beatCh.AddEffect(lef);
 					}
-					
+
 				}
 			} // end for loop
 			return errs;
@@ -450,17 +450,17 @@ namespace UtilORama4
 			return (int)Math.Round(ms.TotalMilliseconds / 10D);
 		}
 
-		public static void AddChildToParent(iLORMember4 child, iLORMember4 parent)
+		public static void AddChildToParent(iLOR4Member child, iLOR4Member parent)
 		{
 			// Tests for, and works with either a track or a channel group as the parent
-			if (parent.MemberType == LORMemberType4.Track)
+			if (parent.MemberType == LOR4MemberType.Track)
 			{
 				LORTrack4 trk = (LORTrack4)parent;
 				trk.Members.Add(child);
 			}
-			if (parent.MemberType == LORMemberType4.ChannelGroup)
+			if (parent.MemberType == LOR4MemberType.ChannelGroup)
 			{
-				LORChannelGroup4 grp = (LORChannelGroup4)parent;
+				LOR4ChannelGroup grp = (LOR4ChannelGroup)parent;
 				grp.Members.Add(child);
 			}
 
@@ -490,7 +490,7 @@ namespace UtilORama4
 			return NoteColors[noteNum];
 		}
 		*/
-		
+
 		public static int NoteColor_BAD(int noteNum)
 		{
 			// Returned value is LOR color, NOT Web or .Net color!
@@ -540,19 +540,19 @@ namespace UtilORama4
 
 
 		/*
-				public static LORChannel4[] CreatePolyChannels()  // iLORMember4 parent, string prefix, bool useGroups)
-		//public LORChannelGroup4 CreatePolyChannels(iLORMember4 parent, string prefix, bool useGroups)
+				public static LOR4Channel[] CreatePolyChannels()  // iLOR4Member parent, string prefix, bool useGroups)
+		//public LOR4ChannelGroup CreatePolyChannels(iLOR4Member parent, string prefix, bool useGroups)
 		{
 			// Returns an array of Channels of (empty) channels for Polyphonic Transcription
 
 			string prefix = "Note ";
 			string dmsg = "";
-			//LORChannel4 chan;
+			//LOR4Channel chan;
 			int octave = 0;
 			int lastOctave = 0;
-			//LORMembership4 parentSubs = new LORMembership4(Sequence);
-			//LORChannelGroup4 grp = new LORChannelGroup4("null");
-			LORChannel4[] polyChannels = null;
+			//LOR4Membership parentSubs = new LOR4Membership(Sequence);
+			//LOR4ChannelGroup grp = new LOR4ChannelGroup("null");
+			LOR4Channel[] polyChannels = null;
 			Array.Resize(ref polyChannels, MusicalNotation.noteNamesUnicode.Length);
 			//if (useGroups)
 			//{
@@ -562,7 +562,7 @@ namespace UtilORama4
 			//}
 			//else
 			//{
-			//	if (parent.MemberType == LORMemberType4.Track)
+			//	if (parent.MemberType == LOR4MemberType.Track)
 			//	{
 			//		parentSubs = ((LORTrack4)parent).Members;
 			//	}
@@ -593,8 +593,8 @@ namespace UtilORama4
 				//		Debug.WriteLine(dmsg);
 				//	}
 				//}
-				//LORChannel4 chan = GetChannel(prefix + MusicalNotation.noteNamesUnicode[n], parentSubs);
-				LORChannel4 chan = new LORChannel4(prefix + MusicalNotation.noteNamesUnicode[n]);
+				//LOR4Channel chan = GetChannel(prefix + MusicalNotation.noteNamesUnicode[n], parentSubs);
+				LOR4Channel chan = new LOR4Channel(prefix + MusicalNotation.noteNamesUnicode[n]);
 				chan.color = NoteColor(n);
 				//chan.identity.Centiseconds = Sequence.totalCentiseconds;
 				noteChannels[n] = chan;
@@ -622,26 +622,26 @@ namespace UtilORama4
 
 		}
 
-		public static LORChannelGroup4[] CreatePolyOctaveGroups()
+		public static LOR4ChannelGroup[] CreatePolyOctaveGroups()
 		{
 			string prefix = "Octave ";
-			LORChannelGroup4[] polyGroups = null;
+			LOR4ChannelGroup[] polyGroups = null;
 			Array.Resize(ref polyGroups, MusicalNotation.octaveNamesA.Length);
 			for (int n = 0; n < MusicalNotation.noteNamesUnicode.Length; n++)
 			{
-				LORChannelGroup4 grp = new LORChannelGroup4(prefix + MusicalNotation.octaveNamesA[n]);
+				LOR4ChannelGroup grp = new LOR4ChannelGroup(prefix + MusicalNotation.octaveNamesA[n]);
 			}
 			return polyGroups;
 		}
 
-		public static LORChannelGroup4 PutNonEmptyPolyChannelsIntoPolyOctaveGroups(LORChannel4[] polyChannels, LORChannelGroup4[] polyGroups)
+		public static LOR4ChannelGroup PutNonEmptyPolyChannelsIntoPolyOctaveGroups(LOR4Channel[] polyChannels, LOR4ChannelGroup[] polyGroups)
 		{
 			// Returns the parent group holding non-empty subgroups holding non-empty channels ...
 			//  ... if there is no errors!
 			//    Still returns the parent group if there are errors, but it will be empty
 			//     furthermore, the group name will indicate the error
 			int err = 0;
-			LORChannelGroup4 parentGroup = new LORChannelGroup4("Polyphonic Transcription");
+			LOR4ChannelGroup parentGroup = new LOR4ChannelGroup("Polyphonic Transcription");
 			int keepCount = 0;
 			if (polyChannels.Length != 128)
 			{

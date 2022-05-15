@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Media;
 using ReadWriteCsv;
-using LORUtils4;
+using LOR4Utils;
 using FileHelper;
 using xUtils;
-using FuzzyString;
+//using FuzzyString;
 using Syncfusion.Windows.Forms.Tools;
 
 //using xUtils;
@@ -418,7 +418,7 @@ namespace UtilORama4
 							controller.OutputCount = i;
 
 							i = 1;
-							int.TryParse(row[9], out i);   // Field 9 DMX Start LORChannel4
+							int.TryParse(row[9], out i);   // Field 9 DMX Start LOR4Channel
 							controller.DMXStartAddress = i;
 
 							i = 120;
@@ -540,7 +540,7 @@ namespace UtilORama4
 								}
 							}
 							//Color color = System.Drawing.ColorTranslator.FromHtml(colhex);
-							Color color = LORUtils4.lutils.HexToColor(colhex);
+							Color color = LOR4Utils.lutils.HexToColor(colhex);
 							channel.Color = color;
 
 							AllChannels.Add(channel);
@@ -570,7 +570,7 @@ namespace UtilORama4
 						}
 						catch (Exception ex)
 						{
-							int ln = LORUtils4.lutils.ExceptionLineNumber(ex);
+							int ln = LOR4Utils.lutils.ExceptionLineNumber(ex);
 							string msg = "Error on line " + ln.ToString() + "\r\n";
 							msg += ex.ToString() + " while reading Channel " + chanName;
 							if (isWiz)
@@ -594,7 +594,7 @@ namespace UtilORama4
 				}
 				catch (Exception ex)
 				{
-					int ln = LORUtils4.lutils.ExceptionLineNumber(ex);
+					int ln = LOR4Utils.lutils.ExceptionLineNumber(ex);
 					string msg = "Error " + ex.ToString() + " on line " + ln.ToString() + " while reading Channels file " + chnFile;
 					if (isWiz)
 					{
@@ -640,7 +640,7 @@ namespace UtilORama4
 						}
 						catch (Exception ex)
 						{
-							int ln = LORUtils4.lutils.ExceptionLineNumber(ex);
+							int ln = LOR4Utils.lutils.ExceptionLineNumber(ex);
 							string msg = "Error on line " + ln.ToString() + "\r\n";
 							msg += ex.ToString() + " while reading Channel " + devName;
 							if (isWiz)
@@ -654,7 +654,7 @@ namespace UtilORama4
 				}
 				catch (Exception ex)
 				{
-					int ln = LORUtils4.lutils.ExceptionLineNumber(ex);
+					int ln = LOR4Utils.lutils.ExceptionLineNumber(ex);
 					string msg = "Error " + ex.ToString() + " on line " + ln.ToString() + " while reading Channels file " + chnFile;
 					if (isWiz)
 					{
@@ -761,7 +761,7 @@ namespace UtilORama4
 				row.Add("Active"); // Field 5
 				row.Add("Brand"); // Field 6
 				row.Add("Model"); // Field 7
-				row.Add("LORChannel4 Count"); // Field 8
+				row.Add("LOR4Channel Count"); // Field 8
 				row.Add("DMX Start"); // Field 9
 				row.Add("Voltage"); // Field 10
 
@@ -857,7 +857,7 @@ namespace UtilORama4
 						row.Add(channel.Comment);                               // Field 5
 						row.Add(channel.Active.ToString());                     // Field 6
 						row.Add(channel.DeviceType.ID.ToString());         // Field 7
-						row.Add(LORUtils4.lutils.ColorToHex(channel.Color));                // Field 8
+						row.Add(LOR4Utils.lutils.ColorToHex(channel.Color));                // Field 8
 
 						writer.WriteRow(row);
 					}
@@ -918,7 +918,7 @@ namespace UtilORama4
 
 
 					DialogResult dr = dlgFileOpen.ShowDialog();
-					if (dr== DialogResult.OK)
+					if (dr == DialogResult.OK)
 					{
 						if (Fyle.Exists(dlgFileOpen.FileName))
 						{
@@ -955,7 +955,7 @@ namespace UtilORama4
 				formShown = true;
 			}
 		}
-		
+
 		private void frmList_Shown_Old(object sender, EventArgs e)
 		{
 			if (!formShown)
@@ -1093,7 +1093,7 @@ namespace UtilORama4
 				Syncfusion.Windows.Forms.Tools.TreeNodeAdv chanNode = new Syncfusion.Windows.Forms.Tools.TreeNodeAdv(nodeText);
 				ctlNode.Nodes.Add(chanNode); // treeChannels.Nodes.Add(nodeText); //   treeChannels.Nodes.Add(nodeText);
 				ImageList icons = treeChannels.LeftImageList;
-				int iconIndex = LORUtils4.lutils.ColorIcon(icons, channel.Color);
+				int iconIndex = LOR4Utils.lutils.ColorIcon(icons, channel.Color);
 				int[] ico = { iconIndex };
 				chanNode.LeftImageIndices = ico;
 				chanNode.Tag = channel;
@@ -1160,7 +1160,7 @@ namespace UtilORama4
 						string nodeText = channel.ToString();
 						node.Text = nodeText;
 						ImageList icons = treeChannels.LeftImageList;
-						int iconIndex = LORUtils4.lutils.ColorIcon(icons, channel.Color);
+						int iconIndex = LOR4Utils.lutils.ColorIcon(icons, channel.Color);
 						int[] ico = { iconIndex };
 						node.LeftImageIndices = ico;
 					}
@@ -1202,7 +1202,7 @@ namespace UtilORama4
 					else
 					{
 						int ix = ni[0];
-						if (ix>2)
+						if (ix > 2)
 						{
 							EditChannelNode(node);
 						}
@@ -1410,7 +1410,7 @@ namespace UtilORama4
 			{
 				// So when the effing form throws an effing excepttion for some effing reaason when it is effing closed
 				// Consider that a cancel
-				int ln = LORUtils4.lutils.ExceptionLineNumber(ex);
+				int ln = LOR4Utils.lutils.ExceptionLineNumber(ex);
 				string msg = "Error on line " + ln.ToString() + "\r\n";
 				msg += ex.ToString() + " while exiting Channel editor " + channelToEdit.Name;
 				if (isWiz)
@@ -1471,7 +1471,7 @@ namespace UtilORama4
 							TreeNodeAdv node = new TreeNodeAdv(channel.ToString());
 							parentNode.Nodes.Add(node);
 							node.Tag = channel;
-							int ImageIndex = LORUtils4.lutils.ColorIcon(imlTreeIcons, channel.Color);
+							int ImageIndex = LOR4Utils.lutils.ColorIcon(imlTreeIcons, channel.Color);
 							int[] ico = { ImageIndex };
 							node.LeftImageIndices = ico;
 							channel.Tag = node;
@@ -1599,7 +1599,7 @@ namespace UtilORama4
 
 			if (dirty)
 			{
-				string msg = "LORChannel4 information has changed.\r\nSave?";
+				string msg = "LOR4Channel information has changed.\r\nSave?";
 				DialogResult dr = MessageBox.Show(this, msg, "Save Changes?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 				if (dr == DialogResult.Cancel)
 				{
@@ -1702,7 +1702,7 @@ namespace UtilORama4
 										row.Add(channel.Active.ToString());          // Field 5 - Active
 										row.Add(channel.Name);                       // Field 6 - Name
 										row.Add(channel.DeviceType.Name);              // Field 7 - Type
-										row.Add(LORUtils4.lutils.ColorToHex(channel.Color));    // Field 8 - Color
+										row.Add(LOR4Utils.lutils.ColorToHex(channel.Color));    // Field 8 - Color
 										row.Add(channel.Location);                   // Field 9 - Location
 										row.Add(channel.Comment);                    // Field 10 - comment
 										writer.WriteRow(row);
@@ -1776,7 +1776,7 @@ namespace UtilORama4
 					DMXChannel channel = (DMXChannel)node.Tag;
 					msg = "Are you sure you want to delete channel ";
 					msg += channel.OutputNum + ": " + channel.Name + "?";
-					DialogResult dr = MessageBox.Show(this, msg, "Delete LORChannel4?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+					DialogResult dr = MessageBox.Show(this, msg, "Delete LOR4Channel?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
 					if (dr == DialogResult.Yes)
 					{
 						node.Parent.Nodes.Remove(node);
@@ -1881,7 +1881,7 @@ namespace UtilORama4
 			int vizCN = 0;
 			int xCNM = 0;
 			int xCNG = 0;
-			LORSequence4 lseq = new LORSequence4(seqFile);
+			LOR4Sequence lseq = new LOR4Sequence(seqFile);
 
 			/////////////////////////////
 			/// GENERATE REPORT DATA ///
@@ -1891,14 +1891,14 @@ namespace UtilORama4
 			//DMXChannel.SortByName = true;
 			DMXChannel.SortByName = sortByName;
 			AllChannels.Sort();
-			int oldLORsort = LORMembership4.sortMode;
+			int oldLORsort = LOR4Membership.sortMode;
 			if (sortByName)
 			{
-				LORMembership4.sortMode = LORMembership4.SORTbyName;
+				LOR4Membership.sortMode = LOR4Membership.SORTbyName;
 			}
 			else
 			{
-				LORMembership4.sortMode = LORMembership4.SORTbyOutput;
+				LOR4Membership.sortMode = LOR4Membership.SORTbyOutput;
 			}
 			lseq.Channels.Sort();
 			//xRGBEffects.SortByName = true;
@@ -1928,7 +1928,7 @@ namespace UtilORama4
 
 				for (int l = lorCN; l < lseq.Channels.Count; l++)
 				{
-					LORChannel4 chanLOR = lseq.Channels[l];
+					LOR4Channel chanLOR = lseq.Channels[l];
 
 					if (mgrName.CompareTo(chanLOR.Name.ToLower()) == 0)
 					{
@@ -2047,7 +2047,7 @@ namespace UtilORama4
 					fuzzies.Clear();
 					for (int l = 0; l < lseq.Channels.Count; l++)
 					{
-						LORChannel4 chanLOR = lseq.Channels[l];
+						LOR4Channel chanLOR = lseq.Channels[l];
 						if (chanLOR.Tag == null)
 						{
 							double score = mgrName.YetiLevenshteinSimilarity(chanLOR.Name.ToLower());
@@ -2068,8 +2068,8 @@ namespace UtilORama4
 					if (fuzzies.Count > 0)
 					{
 						fuzzies.Sort();
-						chanMgr.TagLOR = (iLORMember4)fuzzies[0].Item2;
-						LORChannel4 chanLor = (LORChannel4)fuzzies[0].Item2;
+						chanMgr.TagLOR = (iLOR4Member)fuzzies[0].Item2;
+						LOR4Channel chanLor = (LOR4Channel)fuzzies[0].Item2;
 						chanLor.Tag = chanMgr;
 					}
 				}
@@ -2127,8 +2127,8 @@ namespace UtilORama4
 					if (fuzzies.Count > 0)
 					{
 						fuzzies.Sort();
-						chanMgr.TagViz = (iLORMember4)fuzzies[0].Item2;
-						iLORMember4 chanViz = (iLORMember4)fuzzies[0].Item2;
+						chanMgr.TagViz = (iLOR4Member)fuzzies[0].Item2;
+						iLOR4Member chanViz = (iLOR4Member)fuzzies[0].Item2;
 						chanViz.Tag = chanMgr;
 					}
 				}
@@ -2236,12 +2236,12 @@ namespace UtilORama4
 				if (chanMgr.TagLOR != null)
 				{
 					Type t = chanMgr.TagLOR.GetType();
-					if (t != typeof(LORChannel4))
+					if (t != typeof(LOR4Channel))
 					{
 						string xxxx = "Why Not!";
 					}
 
-					LORChannel4 chanLor = (LORChannel4)chanMgr.TagLOR;
+					LOR4Channel chanLor = (LOR4Channel)chanMgr.TagLOR;
 					if (chanLor.ExactMatch)
 					{
 						StringBuilder lineOut = new StringBuilder("  Exact: ");
@@ -2273,7 +2273,7 @@ namespace UtilORama4
 				DMXChannel chanMgr = AllChannels[m];
 				if (chanMgr.TagLOR != null)
 				{
-					LORChannel4 chanLor = (LORChannel4)chanMgr.TagLOR;
+					LOR4Channel chanLor = (LOR4Channel)chanMgr.TagLOR;
 					if (!chanLor.ExactMatch)
 					{
 						StringBuilder lineOut = new StringBuilder("  Fuzzy: ");
@@ -2315,7 +2315,7 @@ namespace UtilORama4
 			writer.WriteLine("[LOR Channels with NO Managed Match]");
 			for (int c = 0; c < lseq.Channels.Count; c++)
 			{
-				LORChannel4 chanLOR = lseq.Channels[c];
+				LOR4Channel chanLOR = lseq.Channels[c];
 				if (chanLOR.Tag == null)
 				{
 					StringBuilder lineOut = new StringBuilder("  NoMatch: ");
@@ -2336,7 +2336,7 @@ namespace UtilORama4
 				DMXChannel chanMgr = AllChannels[m];
 				if (chanMgr.TagViz != null)
 				{
-					iLORMember4 chanViz = (iLORMember4)chanMgr.TagViz;
+					iLOR4Member chanViz = (iLOR4Member)chanMgr.TagViz;
 					if (chanViz.ExactMatch)
 					{
 						StringBuilder lineOut = new StringBuilder("  Exact: ");
@@ -2371,7 +2371,7 @@ namespace UtilORama4
 				DMXChannel chanMgr = AllChannels[m];
 				if (chanMgr.TagViz != null)
 				{
-					iLORMember4 chanViz = (iLORMember4)chanMgr.TagViz;
+					iLOR4Member chanViz = (iLOR4Member)chanMgr.TagViz;
 					if (!chanViz.ExactMatch)
 					{
 						StringBuilder lineOut = new StringBuilder("  Fuzzy: ");
@@ -2416,7 +2416,7 @@ namespace UtilORama4
 			writer.WriteLine("[Viz Channels and Groups with NO Managed Match]");
 			for (int v = 0; v < lViz.VizChannels.Count; v++)
 			{
-				iLORMember4 chanViz = lViz.VizChannels[v];
+				iLOR4Member chanViz = lViz.VizChannels[v];
 				if (chanViz.Tag == null)
 				{
 					StringBuilder lineOut = new StringBuilder("  NoMatch Channel: ");
@@ -2426,7 +2426,7 @@ namespace UtilORama4
 			}
 			for (int v = 0; v < lViz.VizItemGroups.Count; v++)
 			{
-				iLORMember4 chanViz = lViz.VizItemGroups[v];
+				iLOR4Member chanViz = lViz.VizItemGroups[v];
 				if (chanViz.Tag == null)
 				{
 					StringBuilder lineOut = new StringBuilder("  NoMatch Group: ");
@@ -2436,7 +2436,7 @@ namespace UtilORama4
 			}
 			for (int v = 0; v < lViz.VizDrawObjects.Count; v++)
 			{
-				iLORMember4 chanViz = lViz.VizDrawObjects[v];
+				iLOR4Member chanViz = lViz.VizDrawObjects[v];
 				if (chanViz.Tag == null)
 				{
 					StringBuilder lineOut = new StringBuilder("  NoMatch DrOb: ");
@@ -2565,7 +2565,7 @@ namespace UtilORama4
 			// Resort back to default by channel number
 			DMXChannel.SortByName = false;
 			AllChannels.Sort();
-			LORMembership4.sortMode = oldLORsort;
+			LOR4Membership.sortMode = oldLORsort;
 			lseq.Channels.Sort();
 			xRGBEffects.SortByName = false;
 			xModel.AllModels.Sort();

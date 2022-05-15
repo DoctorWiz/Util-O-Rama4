@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
-using LORUtils4; using FileHelper;
+using LOR4Utils;
+using FileHelper;
 
 namespace UtilORama4
 {
@@ -17,7 +18,7 @@ namespace UtilORama4
 	{
 		private string fileSequence = "";
 		private string fileReport = "";
-		private LORSequence4 seq = new LORSequence4();
+		private LOR4Sequence seq = new LOR4Sequence();
 		private string applicationName = "LORSeqInfo4-Rama";
 		private string tempPath = "C:\\Windows\\Temp\\";  // Gets overwritten with X:\\Username\\AppData\\Roaming\\Util-O-Rama\\Split-O-Rama\\
 		private string thisEXE = "LORSeqInfo4-Rama.exe";
@@ -584,20 +585,20 @@ namespace UtilORama4
 				errInfo += " for assistance.";
 				errInfo += "The most recent error code is <i>" + seq.info.LastError.errMsg + "</i>.";
 			}
-			if (err == LORSequence4.ERROR_CantOpen)
+			if (err == LOR4Sequence.ERROR_CantOpen)
 			{
 				// Can't Open
 				errInfo = "The file cannot be opened by LORSeqInfo4-Rama.  Since selecting it, the file ";
 				errInfo += "may have been deleted, renamed, or moved, or you may not have the ";
 				errInfo += "necessary security permissions to access it.";
 			}
-			if (err == LORSequence4.ERROR_NotXML)
+			if (err == LOR4Sequence.ERROR_NotXML)
 			{
 				// Not XML
 				errInfo = "The file is not in XML format and does not appear to be a valid Light-O-Rama sequence. ";
 				errInfo += "LORSeqInfo4-Rama is unable to read this file or provide any further details about it.";
 			}
-			if (err == LORSequence4.ERROR_NotSequence)
+			if (err == LOR4Sequence.ERROR_NotSequence)
 			{
 				// Not a Sequence
 				errInfo = "The file is in XML format, but is not a valid Light-O-Rama sequence or visualizer file. ";
@@ -605,7 +606,7 @@ namespace UtilORama4
 				errInfo += "about the sequence, but does not.  The second line is:<br><i>";
 				errInfo += "'" + seq.info.infoLine + "'</i>";
 			}
-			if (err == LORSequence4.ERROR_EncryptedDemo)
+			if (err == LOR4Sequence.ERROR_EncryptedDemo)
 			{
 				// Encrypted Demo
 				errInfo = "The file was saved by a Demo version of Light-O-Rama Showtime and is ";
@@ -613,7 +614,7 @@ namespace UtilORama4
 				errInfo += "LORSeqInfo4-Rama.  Please open the sequence in a licensed copy of Light-O-Rama ";
 				errInfo += "Showtime and re-save it in a non-encrypted and non-compressed format.";
 			}
-			if (err == LORSequence4.ERROR_Compressed)
+			if (err == LOR4Sequence.ERROR_Compressed)
 			{
 				// Compressed
 				errInfo = "The file has been saved in compressed format. ";
@@ -621,7 +622,7 @@ namespace UtilORama4
 				errInfo += "LORSeqInfo4-Rama.  Please open the sequence in a licensed copy of Light-O-Rama ";
 				errInfo += "Showtime and re-save it in a non-compressed and non-encrypted format.";
 			}
-			if (err == LORSequence4.ERROR_UnsupportedVersion)
+			if (err == LOR4Sequence.ERROR_UnsupportedVersion)
 			{
 				// Unsupported Version
 				errInfo = "The file version is unrecognized and unsupported by this release of ";
@@ -637,7 +638,7 @@ namespace UtilORama4
 				ReportError(errInfo);
 				if (fileinfo != null) ReportFileOS(sequenceFilename);
 			}
-			if ((err > 0) && (err <100))
+			if ((err > 0) && (err < 100))
 			{
 				ReportError(errInfo);
 				//if (fileinfo != null)	ReportFileOS(sequenceFilename);
@@ -647,7 +648,7 @@ namespace UtilORama4
 				ReportSummary();
 				ReportFileInfo();
 				ReportSequenceInfo();
-				if (seq.LORSequenceType4 == LORSequenceType4.Musical)
+				if (seq.LOR4SequenceType == LOR4SequenceType.Musical)
 				{
 					ReportMusicInfo();
 				}
@@ -915,8 +916,8 @@ namespace UtilORama4
 
 
 			AddItem("File Size", Fyle.FileSizeFormatted(fileSequence), itemLevel.normal);
-			AddItem("Sequence Type", seq.LORSequenceType4.ToString(), itemLevel.normal);
-			if (seq.LORSequenceType4 == LORSequenceType4.Musical)
+			AddItem("Sequence Type", seq.LOR4SequenceType.ToString(), itemLevel.normal);
+			if (seq.LOR4SequenceType == LOR4SequenceType.Musical)
 			{
 				AddItem("Song Title", seq.info.music.Title, itemLevel.normal);
 				AddItem("By Artist", seq.info.music.Artist, itemLevel.normal);
@@ -938,11 +939,11 @@ namespace UtilORama4
 			AddItem("Regular Channels", cc.ToString(), thisLevel);
 			thisLevel = itemLevel.normal; // Reset Default
 			AddItem("RGB Channels", rc.ToString(), itemLevel.normal);
-			AddItem("LORChannel4 Groups", seq.ChannelGroups.Count.ToString());
+			AddItem("LOR4Channel Groups", seq.ChannelGroups.Count.ToString());
 			AddItem("Tracks", seq.Tracks.Count.ToString(), itemLevel.normal);
 			AddItem("Timing Grids", seq.TimingGrids.Count.ToString(), itemLevel.normal);
 			AddItem("Last SavedIndex", seq.Members.HighestSavedIndex.ToString(), itemLevel.normal);
-			
+
 		}
 
 		private void ReportFileInfo()
@@ -970,7 +971,7 @@ namespace UtilORama4
 			string sz = Fyle.FileSizeFormatted(fileSequence, "") + " (" + Fyle.FileSizeFormatted(fileSequence, "B") + ")";
 			AddItem("File Size", sz, itemLevel.normal);
 			AddItem("Line Count", seq.lineCount.ToString(), itemLevel.normal);
-			if (seq.LORSequenceType4 == LORSequenceType4.Musical)
+			if (seq.LOR4SequenceType == LOR4SequenceType.Musical)
 			{
 				AddItem("LORMusic4 File Name", Path.GetFileName(seq.info.music.File), itemLevel.normal);
 				filePath = Path.GetDirectoryName(seq.info.music.File);
@@ -1010,10 +1011,10 @@ namespace UtilORama4
 			AddItem("File Created on", Fyle.FormatDateTime(fileinfo.CreationTime), itemLevel.normal);
 			AddItem("File Last Written On", Fyle.FormatDateTime(fileinfo.LastWriteTime));
 			AddItem("File Last Accessed On", Fyle.FormatDateTime(fileinfo.LastAccessTime));
-			
+
 			string sz = Fyle.FileSizeFormatted(theFile, "") + " (" + Fyle.FileSizeFormatted(theFile, "B") + ")";
 			AddItem("File Size", sz, itemLevel.normal);
-			
+
 
 		} // end FileInfo
 
@@ -1131,9 +1132,9 @@ namespace UtilORama4
 			{
 				string ext = Path.GetExtension(file).ToLower();
 				if ((ext.CompareTo(".lms") == 0) ||
-					  (ext.CompareTo(".las") == 0) ||
+						(ext.CompareTo(".las") == 0) ||
 						(ext.CompareTo(".lcc") == 0) ||
-					  (ext.CompareTo(".lcb") == 0))
+						(ext.CompareTo(".lcb") == 0))
 				{
 					Array.Resize(ref batch_fileList, batch_fileCount + 1);
 					batch_fileList[batch_fileCount] = file;
@@ -1151,7 +1152,7 @@ namespace UtilORama4
 				{
 					string thisFile = batch_fileList[0];
 					fileSequence = thisFile;
-					string reportTempFile = tempPath + Path.GetFileNameWithoutExtension(thisFile) +" Report.htm";
+					string reportTempFile = tempPath + Path.GetFileNameWithoutExtension(thisFile) + " Report.htm";
 					CreateReport(thisFile, reportTempFile);
 				}
 			} // batch_fileCount-- Batch Mode or Not
@@ -1163,7 +1164,7 @@ namespace UtilORama4
 			string reportTempFile = tempPath + Path.GetFileNameWithoutExtension(thisFile) + " Report.htm";
 			CreateReport(thisFile, reportTempFile);
 
-			for (int f=1; f< batchFilenames.Length; f++)
+			for (int f = 1; f < batchFilenames.Length; f++)
 			{
 				thisFile = batch_fileList[f];
 				Process.Start(thisEXE, thisFile);
@@ -1212,7 +1213,7 @@ namespace UtilORama4
 			if (result == DialogResult.OK)
 			{
 				ImBusy(true);
-				string thisFile  = dlgFileOpen.FileName;
+				string thisFile = dlgFileOpen.FileName;
 				string thisRpt = tempPath + Path.GetFileNameWithoutExtension(thisFile) + "Report.htm";
 				loadSequence(thisFile);
 				CreateReport(thisFile, thisRpt);

@@ -1,0 +1,10 @@
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+@prefix vamp:     <http://purl.org/ontology/vamp/> .
+@prefix :         <#> .
+
+:transform a vamp:Transform ;
+    vamp:plugin <http://vamp-plugins.org/rdf/plugins/qm-vamp-plugins#qm-transcription> ;
+    vamp:step_size "441"^^xsd:int ; 
+    vamp:block_size "441"^^xsd:int ; 
+    vamp:plugin_version """1""" ; 
+    vamp:output <http://vamp-plugins.org/rdf/plugins/qm-vamp-plugins#qm-transcription_output_transcription> .

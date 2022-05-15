@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
-using LORUtils4;
+using LOR4Utils;
 using FileHelper;
 using xUtilities;
 
@@ -92,9 +92,9 @@ namespace UtilORama4
 		//public const int LABELNoteNameUnicode = 2;
 		//public const int LABELMidiNoteNumber = 3;
 
-		public static LORChannelGroup4 tempoGroup = null;
-		public static LORChannel4 tempoChannel = null;
-		public static LORRGBChannel4 tempoRGBChannel = null;
+		public static LOR4ChannelGroup tempoGroup = null;
+		public static LOR4Channel tempoChannel = null;
+		public static LOR4RGBChannel tempoRGBChannel = null;
 
 		private static int idx = 0;
 		public static int MinChangePercent = 3;
@@ -434,7 +434,7 @@ namespace UtilORama4
 								}
 								else
 								{
-									LOREffect4 eft = null;
+									LOR4Effect eft = null;
 									int intenPct = (int)Math.Round((bpm - tempoLow) * tempoRatio);
 									int r = 0;
 									int g = 0;
@@ -442,20 +442,20 @@ namespace UtilORama4
 									PercentageColor(intenPct, ref r, ref g, ref b);
 									if (r > 0)
 									{
-										eft = new LOREffect4(LOREffectType4.Intensity, csStart, csEnd, r);
+										eft = new LOR4Effect(LOR4EffectType.Intensity, csStart, csEnd, r);
 										tempoRGBChannel.redChannel.effects.Add(eft);
 									}
 									if (g > 0)
 									{
-										eft = new LOREffect4(LOREffectType4.Intensity, csStart, csEnd, g);
+										eft = new LOR4Effect(LOR4EffectType.Intensity, csStart, csEnd, g);
 										tempoRGBChannel.grnChannel.effects.Add(eft);
 									}
 									if (b > 0)
 									{
-										eft = new LOREffect4(LOREffectType4.Intensity, csStart, csEnd, b);
+										eft = new LOR4Effect(LOR4EffectType.Intensity, csStart, csEnd, b);
 										tempoRGBChannel.bluChannel.effects.Add(eft);
 									}
-									eft = new LOREffect4(LOREffectType4.Intensity, csStart, csEnd, intenPct);
+									eft = new LOR4Effect(LOR4EffectType.Intensity, csStart, csEnd, intenPct);
 									tempoChannel.effects.Add(eft);
 								}
 								lastStart = csStart;
@@ -471,9 +471,9 @@ namespace UtilORama4
 			return errs;
 		}
 
-		private static LORChannel4 FindTempoChannel(LORMembership4 members, bool createIfNotFound = true, bool clearEffects = false)
+		private static LOR4Channel FindTempoChannel(LOR4Membership members, bool createIfNotFound = true, bool clearEffects = false)
 		{
-			LORChannel4 tempoCh = null;
+			LOR4Channel tempoCh = null;
 			if (members == null)
 			{
 				Fyle.BUG("Membership is null");
@@ -482,7 +482,7 @@ namespace UtilORama4
 			{
 				for (int m = 0; m < members.Count; m++)
 				{
-					if (members[m].MemberType == LORMemberType4.Channel)
+					if (members[m].MemberType == LOR4MemberType.Channel)
 					{
 						string mName = members.Items[m].Name;
 						if (mName.Length > 8)
@@ -492,7 +492,7 @@ namespace UtilORama4
 								if (mName.Substring(mName.Length - 3, 3) == " BPM")
 								{
 									// found it!
-									tempoCh = (LORChannel4)members[m];
+									tempoCh = (LOR4Channel)members[m];
 									m = members.Count; // force exit of loop
 								}
 							}
@@ -583,9 +583,9 @@ namespace UtilORama4
 								}
 								else
 								{
-									LOREffect4 eft = null;
+									LOR4Effect eft = null;
 									int intensity = (int)Math.Round((bpm - tempoLow) * tempoRatio) + 25;
-									eft = new LOREffect4(LOREffectType4.Intensity, csStart, csEnd, intensity);
+									eft = new LOR4Effect(LOR4EffectType.Intensity, csStart, csEnd, intensity);
 									tempoChannel.effects.Add(eft);
 								}
 								lastStart = csStart;

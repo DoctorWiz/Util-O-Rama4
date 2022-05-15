@@ -8,9 +8,9 @@ using System.Drawing;
 using System.Diagnostics;
 using FileHelper;
 
-namespace LORUtils4
+namespace LOR4Utils
 {
-	public class LORChannelGroup4 : LORMemberBase4, iLORMember4, IComparable<iLORMember4>
+	public class LOR4ChannelGroup : LORMemberBase4, iLOR4Member, IComparable<iLOR4Member>
 	{
 		// Channel Groups are Level 2 and Up, Level 1 is the Tracks (which are similar to a group)
 		// Channel Groups can contain regular Channels, RGB Channels, and other groups.
@@ -25,15 +25,15 @@ namespace LORUtils4
 		public const string TABLEchannelGroupList = "channelGroupList";
 		private const string STARTchannelGroup = lutils.STFLD + TABLEchannelGroupList + lutils.SPC;
 
-		public LORMembership4 Members; // = new LORMembership4(this);
+		public LOR4Membership Members; // = new LOR4Membership(this);
 
 		//! CONSTRUCTORS
 
-		public LORChannelGroup4(iLORMember4 theParent, string lineIn)
+		public LOR4ChannelGroup(iLOR4Member theParent, string lineIn)
 		{
 			myParent = theParent;
 			//int li = lineIn.IndexOf(STARTchannelGroup);
-			Members = new LORMembership4(this);
+			Members = new LOR4Membership(this);
 			Parse(lineIn);
 		}
 
@@ -47,7 +47,7 @@ namespace LORUtils4
 				int cs = 0;
 				for (int idx = 0; idx < Members.Count; idx++)
 				{
-					iLORMember4 mbr = Members[idx];
+					iLOR4Member mbr = Members[idx];
 					if (Members.Items[idx].Centiseconds > cs)
 					{
 						cs = Members.Items[idx].Centiseconds;
@@ -85,7 +85,7 @@ namespace LORUtils4
 							myCentiseconds = value;
 							for (int idx = 0; idx < Members.Count; idx++)
 							{
-								iLORMember4 mbr = Members[idx];
+								iLOR4Member mbr = Members[idx];
 								if (Members.Items[idx].Centiseconds > value)
 								{
 									Members.Items[idx].Centiseconds = value;
@@ -111,11 +111,11 @@ namespace LORUtils4
 			}
 		}
 
-		public override LORMemberType4 MemberType
+		public override LOR4MemberType MemberType
 		{
 			get
 			{
-				return LORMemberType4.ChannelGroup;
+				return LOR4MemberType.ChannelGroup;
 			}
 		}
 
@@ -126,7 +126,7 @@ namespace LORUtils4
 
 		public override void Parse(string lineIn)
 		{
-			string seek = lutils.STFLD + LORSequence4.TABLEchannelGroupList + lutils.FIELDtotalCentiseconds;
+			string seek = lutils.STFLD + LOR4Sequence.TABLEchannelGroupList + lutils.FIELDtotalCentiseconds;
 			//int pos = lineIn.IndexOf(seek);
 			int pos = lutils.ContainsKey(lineIn, seek);
 			if (pos > 0)
@@ -137,8 +137,8 @@ namespace LORUtils4
 					//System.Diagnostics.Debugger.Break();
 				}
 				myID = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
-				Members = new LORMembership4(this);
-				//Members = new LORMembership4(this);
+				Members = new LOR4Membership(this);
+				//Members = new LOR4Membership(this);
 				myCentiseconds = lutils.getKeyValue(lineIn, lutils.FIELDtotalCentiseconds);
 				//if (myParent != null) myParent.MakeDirty(true);
 				this.MakeDirty(true);
@@ -156,17 +156,17 @@ namespace LORUtils4
 		{ get { return Members.Count; } }
 
 
-		public override iLORMember4 Clone()
+		public override iLOR4Member Clone()
 		{
-			LORChannelGroup4 grp = (LORChannelGroup4)Clone();
+			LOR4ChannelGroup grp = (LOR4ChannelGroup)Clone();
 			grp.Members = Members;
 			return grp;
 		}
 
-		public override iLORMember4 Clone(string newName)
+		public override iLOR4Member Clone(string newName)
 		{
 			// Returns an EMPTY group with same name, index, centiseconds, etc.
-			LORChannelGroup4 grp = (LORChannelGroup4)Clone();
+			LOR4ChannelGroup grp = (LOR4ChannelGroup)Clone();
 			ChangeName(newName);
 			return grp;
 		}
@@ -178,7 +178,7 @@ namespace LORUtils4
 
 			ret.Append(lutils.LEVEL2);
 			ret.Append(lutils.STFLD);
-			ret.Append(LORSequence4.TABLEchannelGroupList);
+			ret.Append(LOR4Sequence.TABLEchannelGroupList);
 
 			ret.Append(lutils.FIELDtotalCentiseconds);
 			ret.Append(lutils.FIELDEQ);
@@ -199,11 +199,11 @@ namespace LORUtils4
 			ret.Append(lutils.CRLF);
 			ret.Append(lutils.LEVEL3);
 			ret.Append(lutils.STFLD);
-			ret.Append(LORSequence4.TABLEchannelGroup);
+			ret.Append(LOR4Sequence.TABLEchannelGroup);
 			ret.Append(lutils.PLURAL);
 			ret.Append(lutils.FINFLD);
 
-			foreach (iLORMember4 member in Members.Items)
+			foreach (iLOR4Member member in Members.Items)
 			{
 				int osi = member.ID;
 				int asi = member.AltID;
@@ -212,7 +212,7 @@ namespace LORUtils4
 					ret.Append(lutils.CRLF);
 					ret.Append(lutils.LEVEL4);
 					ret.Append(lutils.STFLD);
-					ret.Append(LORSequence4.TABLEchannelGroup);
+					ret.Append(LOR4Sequence.TABLEchannelGroup);
 
 					ret.Append(lutils.FIELDsavedIndex);
 					ret.Append(lutils.FIELDEQ);
@@ -224,20 +224,20 @@ namespace LORUtils4
 			ret.Append(lutils.CRLF);
 			ret.Append(lutils.LEVEL3);
 			ret.Append(lutils.FINTBL);
-			ret.Append(LORSequence4.TABLEchannelGroup);
+			ret.Append(LOR4Sequence.TABLEchannelGroup);
 			ret.Append(lutils.PLURAL);
 			ret.Append(lutils.FINFLD);
 
 			ret.Append(lutils.CRLF);
 			ret.Append(lutils.LEVEL2);
 			ret.Append(lutils.FINTBL);
-			ret.Append(LORSequence4.TABLEchannelGroupList);
+			ret.Append(LOR4Sequence.TABLEchannelGroupList);
 			ret.Append(lutils.FINFLD);
 
 			return ret.ToString();
 		}
 
-		public int AddItem(iLORMember4 newPart)
+		public int AddItem(iLOR4Member newPart)
 		{
 			int retSI = lutils.UNDEFINED;
 			bool alreadyAdded = false;
@@ -247,7 +247,7 @@ namespace LORUtils4
 				{
 					//TODO: Using saved index, look up Name of item being added
 					string sMsg = newPart.Name + " has already been added to this Channel Group '" + myName + "'.";
-					//DialogResult rs = MessageBox.Show(sMsg, "LORChannel4 Groups", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+					//DialogResult rs = MessageBox.Show(sMsg, "LOR4Channel Groups", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 					if (System.Diagnostics.Debugger.IsAttached)
 						//System.Diagnostics.Debugger.Break();
 						//TODO: Make this just a warning, put "add" code below into an else block
@@ -272,8 +272,8 @@ namespace LORUtils4
 			int ret = lutils.UNDEFINED;
 			if (myParent != null)
 			{
-				LORSequence4 mySeq = (LORSequence4)myParent;
-				iLORMember4 newPart = mySeq.AllMembers.BySavedIndex[itemSavedIndex];
+				LOR4Sequence mySeq = (LOR4Sequence)myParent;
+				iLOR4Member newPart = mySeq.AllMembers.BySavedIndex[itemSavedIndex];
 				this.MakeDirty(true);
 				ret = AddItem(newPart);
 			}

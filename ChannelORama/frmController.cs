@@ -7,7 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LORUtils4; using FileHelper;
+using LOR4Utils;
+using FileHelper;
 
 namespace UtilORama4
 {
@@ -40,7 +41,7 @@ namespace UtilORama4
 			cboUniverse.Items.Clear();
 			if (universes != null)
 			{
-				for (int u=0; u< universes.Count; u++)
+				for (int u = 0; u < universes.Count; u++)
 				{
 					ListItem li = new ListItem(universes[u].ToString(), universes[u].ID);
 					cboUniverse.Items.Add(li);
@@ -87,12 +88,12 @@ namespace UtilORama4
 					u = cboUniverse.Items.Count; // Force exit of loop
 				}
 			}
-			
+
 			string brd = controller.ControllerBrand.ToLower();
-			for (int i = 0; i < cboBrand.Items.Count; i++) 
+			for (int i = 0; i < cboBrand.Items.Count; i++)
 			{
-				if (brd.CompareTo(cboBrand.Items[i].ToString().ToLower())==0)
-					{
+				if (brd.CompareTo(cboBrand.Items[i].ToString().ToLower()) == 0)
+				{
 					cboBrand.SelectedIndex = i;
 					i = cboBrand.Items.Count; // Exit loop
 				}
@@ -221,7 +222,7 @@ namespace UtilORama4
 		{
 			Graphics g = e.Graphics;
 			Pen p = new Pen(Color.Red, 2);
-				
+
 			if (controller.BadLetter)
 			{
 				int w = txtLetter.Left - lblLetter.Left + lblLetter.Width + txtLetter.Width;
@@ -309,7 +310,7 @@ namespace UtilORama4
 		private void btnChannels_Click(object sender, EventArgs e)
 		{
 			StringBuilder txt = new StringBuilder();
-			for (int c=0; c< controller.DMXChannels.Count; c++)
+			for (int c = 0; c < controller.DMXChannels.Count; c++)
 			{
 				txt.Append(controller.DMXChannels[c].OutputNum.ToString());
 				txt.Append(": ");

@@ -292,7 +292,7 @@
 			this.pnlTrackBeatsX.Size = new System.Drawing.Size(118, 27);
 			this.pnlTrackBeatsX.TabIndex = 142;
 			this.ttip.SetToolTip(this.pnlTrackBeatsX, "Sometimes the very first beat detected is NOT the first beat of the bar.\r\nIf (and" +
-        " only if) this happens, you can correct it here.\r\n");
+				" only if) this happens, you can correct it here.\r\n");
 			// 
 			// vscStartBeat
 			// 
@@ -304,7 +304,7 @@
 			this.vscStartBeat.Size = new System.Drawing.Size(16, 21);
 			this.vscStartBeat.TabIndex = 28;
 			this.ttip.SetToolTip(this.vscStartBeat, "Sometimes the very first beat detected is NOT the first beat of the bar.\r\nIf (and" +
-        " only if) this happens, you can correct it here.\r\n");
+				" only if) this happens, you can correct it here.\r\n");
 			this.vscStartBeat.Value = 1;
 			this.vscStartBeat.Scroll += new System.Windows.Forms.ScrollEventHandler(this.vscStartBeat_Scroll);
 			// 
@@ -331,7 +331,7 @@
 			this.lblTrackBeatsX.TabIndex = 6;
 			this.lblTrackBeatsX.Text = "Start Beat";
 			this.ttip.SetToolTip(this.lblTrackBeatsX, "Sometimes the very first beat detected is NOT the first beat of the bar.\r\nIf (and" +
-        " only if) this happens, you can correct it here.");
+				" only if) this happens, you can correct it here.");
 			this.lblTrackBeatsX.UseMnemonic = false;
 			// 
 			// btnExploreVamp
@@ -443,10 +443,10 @@
 			// 
 			this.staStatus.AllowDrop = true;
 			this.staStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.pnlHelp,
-            this.pnlProgress,
-            this.pnlStatus,
-            this.pnlAbout});
+						this.pnlHelp,
+						this.pnlProgress,
+						this.pnlStatus,
+						this.pnlAbout});
 			this.staStatus.Location = new System.Drawing.Point(0, 811);
 			this.staStatus.Name = "staStatus";
 			this.staStatus.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
@@ -457,9 +457,9 @@
 			// 
 			// pnlHelp
 			// 
-			this.pnlHelp.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+			this.pnlHelp.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+						| System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+						| System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlHelp.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenInner;
 			this.pnlHelp.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
 			this.pnlHelp.ForeColor = System.Drawing.SystemColors.Highlight;
@@ -477,9 +477,9 @@
 			// 
 			// pnlStatus
 			// 
-			this.pnlStatus.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+			this.pnlStatus.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+						| System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+						| System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlStatus.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
 			this.pnlStatus.Name = "pnlStatus";
 			this.pnlStatus.Size = new System.Drawing.Size(1041, 19);
@@ -487,9 +487,9 @@
 			// 
 			// pnlAbout
 			// 
-			this.pnlAbout.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+			this.pnlAbout.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+						| System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+						| System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlAbout.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenInner;
 			this.pnlAbout.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
 			this.pnlAbout.ForeColor = System.Drawing.SystemColors.Highlight;
@@ -505,8 +505,8 @@
 			// menuStrip1
 			// 
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuFile,
-            this.mnuGenerate});
+						this.mnuFile,
+						this.mnuGenerate});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
@@ -518,12 +518,12 @@
 			// mnuFile
 			// 
 			this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuOpenAudio,
-            this.mnuSaveSequenceAs,
-            this.mnuFileDivider1,
-            this.toolStripMenuItem2,
-            this.mnuFileDivider2,
-            this.mnuExit});
+						this.mnuOpenAudio,
+						this.mnuSaveSequenceAs,
+						this.mnuFileDivider1,
+						this.toolStripMenuItem2,
+						this.mnuFileDivider2,
+						this.mnuExit});
 			this.mnuFile.Name = "mnuFile";
 			this.mnuFile.Size = new System.Drawing.Size(37, 24);
 			this.mnuFile.Text = "&File";
@@ -550,10 +550,10 @@
 			// toolStripMenuItem2
 			// 
 			this.toolStripMenuItem2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuOptionsAnnotator,
-            this.mnuOptionsVamp,
-            this.mnuOptionsDivider1,
-            this.mnuOptionsSaveFormat});
+						this.mnuOptionsAnnotator,
+						this.mnuOptionsVamp,
+						this.mnuOptionsDivider1,
+						this.mnuOptionsSaveFormat});
 			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
 			this.toolStripMenuItem2.Size = new System.Drawing.Size(217, 22);
 			this.toolStripMenuItem2.Text = "O&ptions";
@@ -597,8 +597,8 @@
 			// mnuGenerate
 			// 
 			this.mnuGenerate.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuTimingMarks,
-            this.mnuTranscription});
+						this.mnuTimingMarks,
+						this.mnuTranscription});
 			this.mnuGenerate.Name = "mnuGenerate";
 			this.mnuGenerate.Size = new System.Drawing.Size(66, 24);
 			this.mnuGenerate.Text = "&Generate";
@@ -706,9 +706,9 @@
 			this.cboLabelsChords.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboLabelsChords.FormattingEnabled = true;
 			this.cboLabelsChords.Items.AddRange(new object[] {
-            "None",
-            "Note Names",
-            "MIDI Note Numbers"});
+						"None",
+						"Note Names",
+						"MIDI Note Numbers"});
 			this.cboLabelsChords.Location = new System.Drawing.Point(7, 92);
 			this.cboLabelsChords.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboLabelsChords.Name = "cboLabelsChords";
@@ -732,14 +732,14 @@
 			this.cboMethodChords.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboMethodChords.FormattingEnabled = true;
 			this.cboMethodChords.Items.AddRange(new object[] {
-            "Queen Mary Note Onset Detector",
-            "Queen Mary Polyphonic Transcription",
-            "OnsetDS Onset Detector",
-            "Silvet Note Transcription",
-            "Alicante Note Onset Detector",
-            "Alicante Polyphonic Transcription",
-            "Aubio Onset Detector",
-            "Aubio Note Tracker"});
+						"Queen Mary Note Onset Detector",
+						"Queen Mary Polyphonic Transcription",
+						"OnsetDS Onset Detector",
+						"Silvet Note Transcription",
+						"Alicante Note Onset Detector",
+						"Alicante Polyphonic Transcription",
+						"Aubio Onset Detector",
+						"Aubio Note Tracker"});
 			this.cboMethodChords.Location = new System.Drawing.Point(7, 37);
 			this.cboMethodChords.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboMethodChords.Name = "cboMethodChords";
@@ -764,14 +764,14 @@
 			this.cboAlignChords.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboAlignChords.FormattingEnabled = true;
 			this.cboAlignChords.Items.AddRange(new object[] {
-            "None",
-            "25ms 40fps",
-            "50ms 20fps",
-            "Bars / Whole Notes",
-            "Full Beats / Quarter Notes",
-            "Half Beats / Eighth Notes",
-            "Quarter Beats / Sixteenth Notes",
-            "Note Onsets"});
+						"None",
+						"25ms 40fps",
+						"50ms 20fps",
+						"Bars / Whole Notes",
+						"Full Beats / Quarter Notes",
+						"Half Beats / Eighth Notes",
+						"Quarter Beats / Sixteenth Notes",
+						"Note Onsets"});
 			this.cboAlignChords.Location = new System.Drawing.Point(7, 138);
 			this.cboAlignChords.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboAlignChords.Name = "cboAlignChords";
@@ -813,9 +813,9 @@
 			this.cboStepSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboStepSize.FormattingEnabled = true;
 			this.cboStepSize.Items.AddRange(new object[] {
-            "441",
-            "512",
-            "557"});
+						"441",
+						"512",
+						"557"});
 			this.cboStepSize.Location = new System.Drawing.Point(7, 164);
 			this.cboStepSize.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboStepSize.Name = "cboStepSize";
@@ -1138,14 +1138,14 @@
 			this.cboAlignVocals.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboAlignVocals.FormattingEnabled = true;
 			this.cboAlignVocals.Items.AddRange(new object[] {
-            "None",
-            "25ms 40fps",
-            "50ms 20fps",
-            "Bars / Whole Notes",
-            "Full Beats / Quarter Notes",
-            "Half Beats / Eighth Notes",
-            "Quarter Beats / Sixteenth Notes",
-            "Note Onsets"});
+						"None",
+						"25ms 40fps",
+						"50ms 20fps",
+						"Bars / Whole Notes",
+						"Full Beats / Quarter Notes",
+						"Half Beats / Eighth Notes",
+						"Quarter Beats / Sixteenth Notes",
+						"Note Onsets"});
 			this.cboAlignVocals.Location = new System.Drawing.Point(7, 66);
 			this.cboAlignVocals.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboAlignVocals.Name = "cboAlignVocals";
@@ -1199,9 +1199,9 @@
 			this.cboLabelsSegments.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboLabelsSegments.FormattingEnabled = true;
 			this.cboLabelsSegments.Items.AddRange(new object[] {
-            "None",
-            "Numbers",
-            "Letters"});
+						"None",
+						"Numbers",
+						"Letters"});
 			this.cboLabelsSegments.Location = new System.Drawing.Point(7, 88);
 			this.cboLabelsSegments.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboLabelsSegments.Name = "cboLabelsSegments";
@@ -1226,8 +1226,8 @@
 			this.cboMethodSegments.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboMethodSegments.FormattingEnabled = true;
 			this.cboMethodSegments.Items.AddRange(new object[] {
-            "Queen Mary Segmenter",
-            "Segmentino"});
+						"Queen Mary Segmenter",
+						"Segmentino"});
 			this.cboMethodSegments.Location = new System.Drawing.Point(6, 37);
 			this.cboMethodSegments.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboMethodSegments.Name = "cboMethodSegments";
@@ -1266,14 +1266,14 @@
 			this.cboAlignSegments.Font = new System.Drawing.Font("Segoe UI Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboAlignSegments.FormattingEnabled = true;
 			this.cboAlignSegments.Items.AddRange(new object[] {
-            "None",
-            "25ms 40fps",
-            "50ms 20fps",
-            "Bars / Whole Notes",
-            "Full Beats / Quarter Notes",
-            "Half Beats / Eighth Notes",
-            "Quarter Beats / Sixteenth Notes",
-            "Note Onsets"});
+						"None",
+						"25ms 40fps",
+						"50ms 20fps",
+						"Bars / Whole Notes",
+						"Full Beats / Quarter Notes",
+						"Half Beats / Eighth Notes",
+						"Quarter Beats / Sixteenth Notes",
+						"Note Onsets"});
 			this.cboAlignSegments.Location = new System.Drawing.Point(6, 140);
 			this.cboAlignSegments.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboAlignSegments.Name = "cboAlignSegments";
@@ -1345,9 +1345,9 @@
 			this.cboLabelsTempo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboLabelsTempo.FormattingEnabled = true;
 			this.cboLabelsTempo.Items.AddRange(new object[] {
-            "None",
-            "Note Names",
-            "MIDI Note Numbers"});
+						"None",
+						"Note Names",
+						"MIDI Note Numbers"});
 			this.cboLabelsTempo.Location = new System.Drawing.Point(7, 87);
 			this.cboLabelsTempo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboLabelsTempo.Name = "cboLabelsTempo";
@@ -1371,14 +1371,14 @@
 			this.cboMethodTempo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboMethodTempo.FormattingEnabled = true;
 			this.cboMethodTempo.Items.AddRange(new object[] {
-            "Queen Mary Note Onset Detector",
-            "Queen Mary Polyphonic Transcription",
-            "OnsetDS Onset Detector",
-            "Silvet Note Transcription",
-            "Alicante Note Onset Detector",
-            "Alicante Polyphonic Transcription",
-            "Aubio Onset Detector",
-            "Aubio Note Tracker"});
+						"Queen Mary Note Onset Detector",
+						"Queen Mary Polyphonic Transcription",
+						"OnsetDS Onset Detector",
+						"Silvet Note Transcription",
+						"Alicante Note Onset Detector",
+						"Alicante Polyphonic Transcription",
+						"Aubio Onset Detector",
+						"Aubio Note Tracker"});
 			this.cboMethodTempo.Location = new System.Drawing.Point(7, 38);
 			this.cboMethodTempo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboMethodTempo.Name = "cboMethodTempo";
@@ -1403,14 +1403,14 @@
 			this.cboAlignTempo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboAlignTempo.FormattingEnabled = true;
 			this.cboAlignTempo.Items.AddRange(new object[] {
-            "None",
-            "25ms 40fps",
-            "50ms 20fps",
-            "Bars / Whole Notes",
-            "Full Beats / Quarter Notes",
-            "Half Beats / Eighth Notes",
-            "Quarter Beats / Sixteenth Notes",
-            "Note Onsets"});
+						"None",
+						"25ms 40fps",
+						"50ms 20fps",
+						"Bars / Whole Notes",
+						"Full Beats / Quarter Notes",
+						"Half Beats / Eighth Notes",
+						"Quarter Beats / Sixteenth Notes",
+						"Note Onsets"});
 			this.cboAlignTempo.Location = new System.Drawing.Point(7, 133);
 			this.cboAlignTempo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboAlignTempo.Name = "cboAlignTempo";
@@ -1465,8 +1465,8 @@
 			this.comboBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.comboBox1.FormattingEnabled = true;
 			this.comboBox1.Items.AddRange(new object[] {
-            "MIDI Note Numbers",
-            "Note Names"});
+						"MIDI Note Numbers",
+						"Note Names"});
 			this.comboBox1.Location = new System.Drawing.Point(7, 320);
 			this.comboBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.comboBox1.Name = "comboBox1";
@@ -1493,10 +1493,10 @@
 			this.comboBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.comboBox2.FormattingEnabled = true;
 			this.comboBox2.Items.AddRange(new object[] {
-            "Queen Mary Polyphonic Transcription",
-            "Silvet Note Transcription",
-            "Alicante Polyphonic Transcription",
-            "Aubio Note Tracker"});
+						"Queen Mary Polyphonic Transcription",
+						"Silvet Note Transcription",
+						"Alicante Polyphonic Transcription",
+						"Aubio Note Tracker"});
 			this.comboBox2.Location = new System.Drawing.Point(7, 37);
 			this.comboBox2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.comboBox2.Name = "comboBox2";
@@ -1521,13 +1521,13 @@
 			this.cboAlignFoo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboAlignFoo.FormattingEnabled = true;
 			this.cboAlignFoo.Items.AddRange(new object[] {
-            "None",
-            "25ms 40fps",
-            "50ms 20fps",
-            "Beats / Quarter Notes",
-            "Half Beats / Eighth Notes",
-            "Quarter Beats / Sixteenth Notes",
-            "Note Onsets"});
+						"None",
+						"25ms 40fps",
+						"50ms 20fps",
+						"Beats / Quarter Notes",
+						"Half Beats / Eighth Notes",
+						"Quarter Beats / Sixteenth Notes",
+						"Note Onsets"});
 			this.cboAlignFoo.Location = new System.Drawing.Point(7, 366);
 			this.cboAlignFoo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboAlignFoo.Name = "cboAlignFoo";
@@ -1627,11 +1627,11 @@
 			this.cboLabelsPitchKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboLabelsPitchKey.FormattingEnabled = true;
 			this.cboLabelsPitchKey.Items.AddRange(new object[] {
-            "None",
-            "Key Names",
-            "Key Numbers",
-            "MIDI Note Numbers",
-            "Frequency"});
+						"None",
+						"Key Names",
+						"Key Numbers",
+						"MIDI Note Numbers",
+						"Frequency"});
 			this.cboLabelsPitchKey.Location = new System.Drawing.Point(7, 88);
 			this.cboLabelsPitchKey.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboLabelsPitchKey.Name = "cboLabelsPitchKey";
@@ -1655,7 +1655,7 @@
 			this.cboMethodPitchKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboMethodPitchKey.FormattingEnabled = true;
 			this.cboMethodPitchKey.Items.AddRange(new object[] {
-            "Queen Mary Key Detector"});
+						"Queen Mary Key Detector"});
 			this.cboMethodPitchKey.Location = new System.Drawing.Point(7, 37);
 			this.cboMethodPitchKey.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboMethodPitchKey.Name = "cboMethodPitchKey";
@@ -1680,14 +1680,14 @@
 			this.cboAlignPitchKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboAlignPitchKey.FormattingEnabled = true;
 			this.cboAlignPitchKey.Items.AddRange(new object[] {
-            "None",
-            "25ms 40fps",
-            "50ms 20fps",
-            "Bars / Whole Notes",
-            "Full Beats / Quarter Notes",
-            "Half Beats / Eighth Notes",
-            "Quarter Beats / Sixteenth Notes",
-            "Note Onsets"});
+						"None",
+						"25ms 40fps",
+						"50ms 20fps",
+						"Bars / Whole Notes",
+						"Full Beats / Quarter Notes",
+						"Half Beats / Eighth Notes",
+						"Quarter Beats / Sixteenth Notes",
+						"Note Onsets"});
 			this.cboAlignPitchKey.Location = new System.Drawing.Point(7, 138);
 			this.cboAlignPitchKey.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboAlignPitchKey.Name = "cboAlignPitchKey";
@@ -1758,9 +1758,9 @@
 			this.cboLabelsChromagram.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboLabelsChromagram.FormattingEnabled = true;
 			this.cboLabelsChromagram.Items.AddRange(new object[] {
-            "None",
-            "Note Names",
-            "MIDI Note Numbers"});
+						"None",
+						"Note Names",
+						"MIDI Note Numbers"});
 			this.cboLabelsChromagram.Location = new System.Drawing.Point(7, 92);
 			this.cboLabelsChromagram.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboLabelsChromagram.Name = "cboLabelsChromagram";
@@ -1784,14 +1784,14 @@
 			this.cboMethodChromagram.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboMethodChromagram.FormattingEnabled = true;
 			this.cboMethodChromagram.Items.AddRange(new object[] {
-            "Queen Mary Note Onset Detector",
-            "Queen Mary Polyphonic Transcription",
-            "OnsetDS Onset Detector",
-            "Silvet Note Transcription",
-            "Alicante Note Onset Detector",
-            "Alicante Polyphonic Transcription",
-            "Aubio Onset Detector",
-            "Aubio Note Tracker"});
+						"Queen Mary Note Onset Detector",
+						"Queen Mary Polyphonic Transcription",
+						"OnsetDS Onset Detector",
+						"Silvet Note Transcription",
+						"Alicante Note Onset Detector",
+						"Alicante Polyphonic Transcription",
+						"Aubio Onset Detector",
+						"Aubio Note Tracker"});
 			this.cboMethodChromagram.Location = new System.Drawing.Point(7, 37);
 			this.cboMethodChromagram.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboMethodChromagram.Name = "cboMethodChromagram";
@@ -1816,14 +1816,14 @@
 			this.cboAlignChromagram.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboAlignChromagram.FormattingEnabled = true;
 			this.cboAlignChromagram.Items.AddRange(new object[] {
-            "None",
-            "25ms 40fps",
-            "50ms 20fps",
-            "Bars / Whole Notes",
-            "Full Beats / Quarter Notes",
-            "Half Beats / Eighth Notes",
-            "Quarter Beats / Sixteenth Notes",
-            "Note Onsets"});
+						"None",
+						"25ms 40fps",
+						"50ms 20fps",
+						"Bars / Whole Notes",
+						"Full Beats / Quarter Notes",
+						"Half Beats / Eighth Notes",
+						"Quarter Beats / Sixteenth Notes",
+						"Note Onsets"});
 			this.cboAlignChromagram.Location = new System.Drawing.Point(7, 138);
 			this.cboAlignChromagram.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboAlignChromagram.Name = "cboAlignChromagram";
@@ -1877,8 +1877,8 @@
 			this.cboLabelsPolyphonic.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboLabelsPolyphonic.FormattingEnabled = true;
 			this.cboLabelsPolyphonic.Items.AddRange(new object[] {
-            "MIDI Note Numbers",
-            "Note Names"});
+						"MIDI Note Numbers",
+						"Note Names"});
 			this.cboLabelsPolyphonic.Location = new System.Drawing.Point(7, 88);
 			this.cboLabelsPolyphonic.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboLabelsPolyphonic.Name = "cboLabelsPolyphonic";
@@ -1907,10 +1907,10 @@
 			this.cboMethodPolyphonic.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboMethodPolyphonic.FormattingEnabled = true;
 			this.cboMethodPolyphonic.Items.AddRange(new object[] {
-            "Queen Mary Polyphonic Transcription",
-            "Silvet Note Transcription",
-            "Alicante Polyphonic Transcription",
-            "Aubio Note Tracker"});
+						"Queen Mary Polyphonic Transcription",
+						"Silvet Note Transcription",
+						"Alicante Polyphonic Transcription",
+						"Aubio Note Tracker"});
 			this.cboMethodPolyphonic.Location = new System.Drawing.Point(7, 37);
 			this.cboMethodPolyphonic.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboMethodPolyphonic.Name = "cboMethodPolyphonic";
@@ -1935,13 +1935,13 @@
 			this.cboAlignPolyphonic.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboAlignPolyphonic.FormattingEnabled = true;
 			this.cboAlignPolyphonic.Items.AddRange(new object[] {
-            "None",
-            "25ms 40fps",
-            "50ms 20fps",
-            "Beats / Quarter Notes",
-            "Half Beats / Eighth Notes",
-            "Quarter Beats / Sixteenth Notes",
-            "Note Onsets"});
+						"None",
+						"25ms 40fps",
+						"50ms 20fps",
+						"Beats / Quarter Notes",
+						"Half Beats / Eighth Notes",
+						"Quarter Beats / Sixteenth Notes",
+						"Note Onsets"});
 			this.cboAlignPolyphonic.Location = new System.Drawing.Point(7, 133);
 			this.cboAlignPolyphonic.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboAlignPolyphonic.Name = "cboAlignPolyphonic";
@@ -2048,10 +2048,10 @@
 			this.cboOnsetsDetect.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboOnsetsDetect.FormattingEnabled = true;
 			this.cboOnsetsDetect.Items.AddRange(new object[] {
-            "\'Complex Domain\' (Strings/Mixed: Piano, Guitar)",
-            "\'Spectral Difference\' (Percussion: Drums, Chimes)",
-            "\'Phase Deviation\' (Wind: Flute, Sax, Trumpet)",
-            "\'Broadband Energy Rise\' (Percussion mixed with other)"});
+						"\'Complex Domain\' (Strings/Mixed: Piano, Guitar)",
+						"\'Spectral Difference\' (Percussion: Drums, Chimes)",
+						"\'Phase Deviation\' (Wind: Flute, Sax, Trumpet)",
+						"\'Broadband Energy Rise\' (Percussion mixed with other)"});
 			this.cboOnsetsDetect.Location = new System.Drawing.Point(9, 217);
 			this.cboOnsetsDetect.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboOnsetsDetect.Name = "cboOnsetsDetect";
@@ -2075,9 +2075,9 @@
 			this.cboLabelsOnsets.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboLabelsOnsets.FormattingEnabled = true;
 			this.cboLabelsOnsets.Items.AddRange(new object[] {
-            "None",
-            "Note Names",
-            "MIDI Note Numbers"});
+						"None",
+						"Note Names",
+						"MIDI Note Numbers"});
 			this.cboLabelsOnsets.Location = new System.Drawing.Point(7, 90);
 			this.cboLabelsOnsets.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboLabelsOnsets.Name = "cboLabelsOnsets";
@@ -2116,14 +2116,14 @@
 			this.cboMethodOnsets.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboMethodOnsets.FormattingEnabled = true;
 			this.cboMethodOnsets.Items.AddRange(new object[] {
-            "Queen Mary Note Onset Detector",
-            "Queen Mary Polyphonic Transcription",
-            "OnsetDS Onset Detector",
-            "Silvet Note Transcription",
-            "Aubio Onset Detector",
-            "Aubio Note Tracker",
-            "#Alicante Note Onset Detector",
-            "#Alicante Polyphonic Transcription"});
+						"Queen Mary Note Onset Detector",
+						"Queen Mary Polyphonic Transcription",
+						"OnsetDS Onset Detector",
+						"Silvet Note Transcription",
+						"Aubio Onset Detector",
+						"Aubio Note Tracker",
+						"#Alicante Note Onset Detector",
+						"#Alicante Polyphonic Transcription"});
 			this.cboMethodOnsets.Location = new System.Drawing.Point(7, 37);
 			this.cboMethodOnsets.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboMethodOnsets.Name = "cboMethodOnsets";
@@ -2149,12 +2149,12 @@
 			this.cboAlignOnsets.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboAlignOnsets.FormattingEnabled = true;
 			this.cboAlignOnsets.Items.AddRange(new object[] {
-            "None",
-            "25ms 40fps",
-            "50ms 20fps",
-            "Beats / Quarter Notes",
-            "Half Beats / Eighth Notes",
-            "Quarter Beats / Sixteenth Notes"});
+						"None",
+						"25ms 40fps",
+						"50ms 20fps",
+						"Beats / Quarter Notes",
+						"Half Beats / Eighth Notes",
+						"Quarter Beats / Sixteenth Notes"});
 			this.cboAlignOnsets.Location = new System.Drawing.Point(7, 136);
 			this.cboAlignOnsets.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboAlignOnsets.Name = "cboAlignOnsets";
@@ -2201,10 +2201,10 @@
 			this.cboDetectBarBeats.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboDetectBarBeats.FormattingEnabled = true;
 			this.cboDetectBarBeats.Items.AddRange(new object[] {
-            "\'Complex Domain\' (Strings/Mixed: Piano, Guitar)",
-            "\'Spectral Difference\' (Percussion: Drums, Chimes)",
-            "\'Phase Deviation\' (Wind: Flute, Sax, Trumpet)",
-            "\'Broadband Energy Rise\' (Percussion mixed with other)"});
+						"\'Complex Domain\' (Strings/Mixed: Piano, Guitar)",
+						"\'Spectral Difference\' (Percussion: Drums, Chimes)",
+						"\'Phase Deviation\' (Wind: Flute, Sax, Trumpet)",
+						"\'Broadband Energy Rise\' (Percussion mixed with other)"});
 			this.cboDetectBarBeats.Location = new System.Drawing.Point(7, 332);
 			this.cboDetectBarBeats.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboDetectBarBeats.Name = "cboDetectBarBeats";
@@ -2228,9 +2228,9 @@
 			this.cboLabelsBarBeats.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboLabelsBarBeats.FormattingEnabled = true;
 			this.cboLabelsBarBeats.Items.AddRange(new object[] {
-            "None",
-            "Note Names",
-            "MIDI Note Numbers"});
+						"None",
+						"Note Names",
+						"MIDI Note Numbers"});
 			this.cboLabelsBarBeats.Location = new System.Drawing.Point(7, 85);
 			this.cboLabelsBarBeats.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboLabelsBarBeats.Name = "cboLabelsBarBeats";
@@ -2408,10 +2408,10 @@
 			this.cboMethodBarsBeats.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboMethodBarsBeats.FormattingEnabled = true;
 			this.cboMethodBarsBeats.Items.AddRange(new object[] {
-            "Queen Mary Bar and Beat Tracker",
-            "Queen Mary Tempo and Beat Tracker",
-            "BeatRoot Beat Tracker",
-            "Aubio Beat Tracker"});
+						"Queen Mary Bar and Beat Tracker",
+						"Queen Mary Tempo and Beat Tracker",
+						"BeatRoot Beat Tracker",
+						"Aubio Beat Tracker"});
 			this.cboMethodBarsBeats.Location = new System.Drawing.Point(7, 37);
 			this.cboMethodBarsBeats.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboMethodBarsBeats.Name = "cboMethodBarsBeats";
@@ -2437,9 +2437,9 @@
 			this.cboAlignBarBeats.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.cboAlignBarBeats.FormattingEnabled = true;
 			this.cboAlignBarBeats.Items.AddRange(new object[] {
-            "None",
-            "25ms 40fps",
-            "50ms 20fps"});
+						"None",
+						"25ms 40fps",
+						"50ms 20fps"});
 			this.cboAlignBarBeats.Location = new System.Drawing.Point(7, 132);
 			this.cboAlignBarBeats.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboAlignBarBeats.Name = "cboAlignBarBeats";
@@ -2775,9 +2775,9 @@
 			this.imlTreeIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imlTreeIcons.ImageStream")));
 			this.imlTreeIcons.TransparentColor = System.Drawing.Color.Transparent;
 			this.imlTreeIcons.Images.SetKeyName(0, "LORTrack4");
-			this.imlTreeIcons.Images.SetKeyName(1, "LORChannelGroup4");
-			this.imlTreeIcons.Images.SetKeyName(2, "LORRGBChannel4");
-			this.imlTreeIcons.Images.SetKeyName(3, "LORChannel4");
+			this.imlTreeIcons.Images.SetKeyName(1, "LOR4ChannelGroup");
+			this.imlTreeIcons.Images.SetKeyName(2, "LOR4RGBChannel");
+			this.imlTreeIcons.Images.SetKeyName(3, "LOR4Channel");
 			this.imlTreeIcons.Images.SetKeyName(4, "RedCh");
 			this.imlTreeIcons.Images.SetKeyName(5, "GrnCh");
 			this.imlTreeIcons.Images.SetKeyName(6, "BluCh");

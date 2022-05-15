@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LORUtils4; using FileHelper;
+using LOR4Utils;
+using FileHelper;
 
 namespace UtilORama4
 {
-	public interface ITransform //: IComparable<iLORMember4>
+	public interface ITransform //: IComparable<iLOR4Member>
 	{
 		string[] AvailablePluginNames
 		{
@@ -43,9 +44,9 @@ namespace UtilORama4
 
 		//int xTimingsToxLights(xTimings timings, string baseFileName);
 
-		//int xTimingsToLORtimings(xTimings timings, LORSequence4 sequence);
+		//int xTimingsToLORtimings(xTimings timings, LOR4Sequence sequence);
 
-		//int xTimingsToLORChannels(xTimings timings, LORSequence4 sequence);
+		//int xTimingsToLORChannels(xTimings timings, LOR4Sequence sequence);
 
 		int ResultsToxTimings(string resultsFile, vamps.AlignmentType alignmentType, vamps.LabelType labelType);
 

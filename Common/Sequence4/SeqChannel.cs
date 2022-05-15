@@ -8,28 +8,28 @@ using System.Drawing;
 using System.Diagnostics;
 using FileHelper;
 
-namespace LORUtils4
+namespace LOR4Utils
 {
 
-	public class LORChannel4 : LORMemberBase4, iLORMember4, IComparable<iLORMember4>
+	public class LOR4Channel : LORMemberBase4, iLOR4Member, IComparable<iLOR4Member>
 	{
 		private const string STARTchannel = lutils.STFLD + lutils.TABLEchannel + lutils.FIELDname;
 		//public int color = 0;
 		public LOROutput4 output = null;
 		public LORRGBChild4 rgbChild = LORRGBChild4.None;
-		public LORRGBChannel4 rgbParent = null;
+		public LOR4RGBChannel rgbParent = null;
 		public List<LOREffect4> effects = new List<LOREffect4>();
 		public const string FIELDcolor = " color";
 
 		//! CONSTRUCTORS
-		/*public LORChannel4(string theName, int theSavedIndex)
+		/*public LOR4Channel(string theName, int theSavedIndex)
 		{
 			myName = theName;
 			output = new LOROutput4(this);
 			mySavedIndex = theSavedIndex;
 		}
 		*/
-		public LORChannel4(iLORMember4 theParent, string lineIn)
+		public LOR4Channel(iLOR4Member theParent, string lineIn)
 		{
 			myParent = theParent;
 			output = new LOROutput4(this);
@@ -38,7 +38,7 @@ namespace LORUtils4
 
 
 		/*
-		public LORChannel4(string lineIn)
+		public LOR4Channel(string lineIn)
 		{
 			output = new LOROutput4(this);
 			string seek = lutils.STFLD + lutils.TABLEchannel + lutils.FIELDname;
@@ -60,12 +60,12 @@ namespace LORUtils4
 
 		//! METHODS, PROPERTIES, ETC.
 
-		public override LORMemberType4 MemberType
-		{	get	{	return LORMemberType4.Channel;	}	}
+		public override LOR4MemberType MemberType
+		{ get { return LOR4MemberType.Channel; } }
 		public override int UniverseNumber
-		{ get	{ return output.UniverseNumber;	}	}
+		{ get { return output.UniverseNumber; } }
 		public override int DMXAddress
-		{	get	{ return output.DMXAddress;	} }
+		{ get { return output.DMXAddress; } }
 
 		//public int SavedIndex
 		//{ get { return myID; } }
@@ -74,15 +74,15 @@ namespace LORUtils4
 		//public int AltSavedIndex
 		//{ get { return myAltID;} set { myAltID = value; } }
 
-		public override int CompareTo(iLORMember4 other)
+		public override int CompareTo(iLOR4Member other)
 		{
 			int result = 0;
-			if (LORMembership4.sortMode == LORMembership4.SORTbyOutput)
+			if (LOR4Membership.sortMode == LOR4Membership.SORTbyOutput)
 			{
 				Type t = other.GetType();
-				if (t == typeof(LORChannel4))
+				if (t == typeof(LOR4Channel))
 				{
-					LORChannel4 ch = (LORChannel4)other;
+					LOR4Channel ch = (LOR4Channel)other;
 					result = output.ToString().CompareTo(ch.output.ToString());
 				}
 				if (t == typeof(LORVizChannel4))
@@ -144,14 +144,14 @@ namespace LORUtils4
 					myName = lineIn;
 				}
 			}
-			//LORSequence4 Parent = ID.Parent;
+			//LOR4Sequence Parent = ID.Parent;
 			//if (myParent != null) myParent.MakeDirty(true);
 		}
 
-		public override iLORMember4 Clone()
+		public override iLOR4Member Clone()
 		{
 			// See Also: Clone(), CopyTo(), and CopyFrom()
-			LORChannel4 chan = (LORChannel4)base.Clone();
+			LOR4Channel chan = (LOR4Channel)base.Clone();
 			chan.color = color;
 			chan.output = output.Clone();
 			chan.rgbChild = this.rgbChild;
@@ -160,10 +160,10 @@ namespace LORUtils4
 			return chan;
 		}
 
-		public override iLORMember4 Clone(string newName)
+		public override iLOR4Member Clone(string newName)
 		{
-			//LORChannel4 chan = new LORChannel4(newName, lutils.UNDEFINED);
-			LORChannel4 chan = (LORChannel4)base.Clone();
+			//LOR4Channel chan = new LOR4Channel(newName, lutils.UNDEFINED);
+			LOR4Channel chan = (LOR4Channel)base.Clone();
 			chan.ChangeName(newName);
 			return chan;
 		}
@@ -251,17 +251,17 @@ namespace LORUtils4
 		}
 
 
-		public void CopyTo(LORChannel4 destination, bool withEffects)
+		public void CopyTo(LOR4Channel destination, bool withEffects)
 		{
 			if (destination.color == 0) destination.color = color;
 			if (destination.Name.Length == 0) destination.ChangeName(myName);
 			if (destination.myParent == null) destination.myParent = this.myParent;
 			//if (destination.output.deviceType == LORDeviceType4.None)
 			//{
-				destination.output.deviceType = output.deviceType;
-				destination.output.circuit = output.circuit;
-				destination.output.network = output.network;
-				destination.output.unit = output.unit;
+			destination.output.deviceType = output.deviceType;
+			destination.output.circuit = output.circuit;
+			destination.output.network = output.network;
+			destination.output.unit = output.unit;
 			//}
 			if (withEffects)
 			{
@@ -274,17 +274,17 @@ namespace LORUtils4
 			}
 		}
 
-		public void CopyFrom(LORChannel4 source, bool withEffects)
+		public void CopyFrom(LOR4Channel source, bool withEffects)
 		{
 			if (color == 0) color = source.color;
 			if (myName.Length == 0) ChangeName(source.Name);
 			if (this.myParent == null) this.myParent = source.myParent;
 			//if (output.deviceType == LORDeviceType4.None)
 			//{
-				output.deviceType = source.output.deviceType;
-				output.circuit = source.output.circuit;
-				output.network = source.output.network;
-				output.unit = source.output.unit;
+			output.deviceType = source.output.deviceType;
+			output.circuit = source.output.circuit;
+			output.network = source.output.network;
+			output.unit = source.output.unit;
 			//}
 			if (withEffects)
 			{
@@ -298,11 +298,11 @@ namespace LORUtils4
 			}
 		}
 
-		public LORChannel4 Clone(bool withEffects)
+		public LOR4Channel Clone(bool withEffects)
 		{
 			// See Also: Duplicate()
 			//int nextSI = ID.Parent.Members.highestSavedIndex + 1;
-			LORChannel4 ret = new LORChannel4(this, myName);
+			LOR4Channel ret = new LOR4Channel(this, myName);
 			ret.color = color;
 			ret.output = output;
 			ret.rgbChild = rgbChild;

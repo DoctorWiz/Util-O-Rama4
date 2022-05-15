@@ -144,7 +144,7 @@ namespace UtilORama4
 			this.lblLastDMX.Name = "lblLastDMX";
 			this.lblLastDMX.Size = new System.Drawing.Size(114, 13);
 			this.lblLastDMX.TabIndex = 19;
-			this.lblLastDMX.Text = "Last DMX LORChannel4: 16";
+			this.lblLastDMX.Text = "Last DMX LOR4Channel: 16";
 			// 
 			// lblStart
 			// 
@@ -159,40 +159,40 @@ namespace UtilORama4
 			// 
 			this.numStart.Location = new System.Drawing.Point(326, 113);
 			this.numStart.Maximum = new decimal(new int[] {
-            510,
-            0,
-            0,
-            0});
+						510,
+						0,
+						0,
+						0});
 			this.numStart.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+						1,
+						0,
+						0,
+						0});
 			this.numStart.Name = "numStart";
 			this.numStart.Size = new System.Drawing.Size(44, 20);
 			this.numStart.TabIndex = 14;
 			this.numStart.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+						1,
+						0,
+						0,
+						0});
 			this.numStart.ValueChanged += new System.EventHandler(this.numStart_ValueChanged);
 			this.numStart.Validating += new System.ComponentModel.CancelEventHandler(this.numStart_Validating);
 			// 
 			// cboBrand
 			// 
 			this.cboBrand.AutoCompleteCustomSource.AddRange(new string[] {
-            "LOR",
-            "Renard",
-            "Chinese"});
+						"LOR",
+						"Renard",
+						"Chinese"});
 			this.cboBrand.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cboBrand.FormattingEnabled = true;
 			this.cboBrand.Items.AddRange(new object[] {
-            "LOR",
-            "Renard",
-            "Chinese",
-            "Chauvet",
-            "American DJ"});
+						"LOR",
+						"Renard",
+						"Chinese",
+						"Chauvet",
+						"American DJ"});
 			this.cboBrand.Location = new System.Drawing.Point(70, 112);
 			this.cboBrand.Name = "cboBrand";
 			this.cboBrand.Size = new System.Drawing.Size(200, 21);
@@ -297,23 +297,23 @@ namespace UtilORama4
 			// 
 			this.numCount.Location = new System.Drawing.Point(326, 145);
 			this.numCount.Maximum = new decimal(new int[] {
-            32,
-            0,
-            0,
-            0});
+						32,
+						0,
+						0,
+						0});
 			this.numCount.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+						1,
+						0,
+						0,
+						0});
 			this.numCount.Name = "numCount";
 			this.numCount.Size = new System.Drawing.Size(44, 20);
 			this.numCount.TabIndex = 18;
 			this.numCount.Value = new decimal(new int[] {
-            16,
-            0,
-            0,
-            0});
+						16,
+						0,
+						0,
+						0});
 			this.numCount.ValueChanged += new System.EventHandler(this.numCount_ValueChanged);
 			this.numCount.Validating += new System.ComponentModel.CancelEventHandler(this.numCount_Validating);
 			// 

@@ -8,16 +8,16 @@ using System.Diagnostics;
 using System.Text;
 using FileHelper;
 
-namespace LORUtils4
+namespace LOR4Utils
 {
-	public class LORVisualization4 : LORMemberBase4, iLORMember4, IComparable<iLORMember4>
+	public class LORVisualization4 : LORMemberBase4, iLOR4Member, IComparable<iLOR4Member>
 	{
 		// Sub-Member Heirarchy:
 		//	Visualization has ItemGroups,
 		//   ItemGroups have DrawObjects,
 		//    DrawObjects have 1 or 3 VizChannels,
 		//     (1 for single-color, 3 for RGB).
-		
+
 		public static readonly string TABLEvisualization = "LViz";
 		public static readonly string TABLEdrawPoint = "DrawPoint";
 		public static readonly string TABLEdrawPoints = "DrawPoints";
@@ -37,7 +37,7 @@ namespace LORUtils4
 		public static readonly string FIELDreverseOrder = " SSReverseOrder";
 		public static readonly string FIELDAssignedID = "AssignedObject ID";
 		// Sequence Channels use "channel", "name" and "color" (Lower Case)
-		// But Visualizations use "LORChannel4", "Name" and "Color" -- Arrrggggh!
+		// But Visualizations use "LOR4Channel", "Name" and "Color" -- Arrrggggh!
 		public static readonly string FIELDvizName = " Name";
 		public static readonly string FIELDvizColor = " Color";
 
@@ -66,9 +66,9 @@ namespace LORUtils4
 
 		// Members contains the only objects directly below a visualization
 		//   which is ItemGroups
-		public LORMembership4 Members = null;
+		public LOR4Membership Members = null;
 		// All Members contains ItemGroups, DrawObjects, and VizChannels
-		public LORMembership4 AllMembers = null;
+		public LOR4Membership AllMembers = null;
 		//public List<Prop> Props = new List<Prop>();
 		private int highestSavedIndex = lutils.UNDEFINED;
 
@@ -76,12 +76,12 @@ namespace LORUtils4
 		private StringBuilder reportBuilder = new StringBuilder();
 
 
-	public LORVisualization4(iLORMember4 NullParentIgnoreThis, string fileName)
+		public LORVisualization4(iLOR4Member NullParentIgnoreThis, string fileName)
 		{
 			// I'm my own grandpa
 			base.SetParent(this);
-			AllMembers = new LORMembership4(this);
-			Members = new LORMembership4(this);
+			AllMembers = new LOR4Membership(this);
+			Members = new LOR4Membership(this);
 			MakeDummies();
 			myName = fileName;
 			ReadVisualizationFile(fileName);
@@ -131,12 +131,12 @@ namespace LORUtils4
 			string lineIn; // line read in (does not get modified)
 			string xmlInfo = "";
 			int li = lutils.UNDEFINED; // positions of certain key text in the line
-																//LORTrack4 trk = new LORTrack4();
-			// const string ERRproc = " in LORVisualization4:ReadVisualizationFile(";
-			// const string ERRgrp = "), on Line #";
-			// const string ERRitem = ", at position ";
-			// const string ERRline = ", Code Line #";
-			//LORSequenceType4 st = LORSequenceType4.Undefined;
+																 //LORTrack4 trk = new LORTrack4();
+																 // const string ERRproc = " in LORVisualization4:ReadVisualizationFile(";
+																 // const string ERRgrp = "), on Line #";
+																 // const string ERRitem = ", at position ";
+																 // const string ERRline = ", Code Line #";
+																 //LOR4SequenceType st = LOR4SequenceType.Undefined;
 			string creation = "";
 			DateTime modification;
 
@@ -220,8 +220,8 @@ namespace LORUtils4
 										li = lutils.ContainsKey(lineIn, STARTdrawObject);
 										if (li > 0)
 										{
-										//TODO: Save it!	
-										lastDrawObject = CreateNewDrawObject(lineIn);
+											//TODO: Save it!	
+											lastDrawObject = CreateNewDrawObject(lineIn);
 										}
 										else // Not a LORVizDrawObject4
 										{
@@ -339,21 +339,21 @@ namespace LORUtils4
 											} // end VizChannel (or not)
 										} // end DrawObject (or not)
 									} // end DrawPoints (or not)
-										/*
-							} // end 2nd Try
-									catch (Exception ex)
-									{
-										StackTrace st = new StackTrace(ex, true);
-										StackFrame sf = st.GetFrame(st.FrameCount - 1);
-										string emsg = ex.ToString();
-										emsg += ERRproc + existingFileName + ERRgrp + lineCount.ToString() + ERRitem + li.ToString();
-										emsg += ERRline + sf.GetFileLineNumber();
+									/*
+						} // end 2nd Try
+								catch (Exception ex)
+								{
+									StackTrace st = new StackTrace(ex, true);
+									StackFrame sf = st.GetFrame(st.FrameCount - 1);
+									string emsg = ex.ToString();
+									emsg += ERRproc + existingFileName + ERRgrp + lineCount.ToString() + ERRitem + li.ToString();
+									emsg += ERRline + sf.GetFileLineNumber();
 #if DEBUG
-										System.Diagnostics.Debugger.Break();
+									System.Diagnostics.Debugger.Break();
 #endif
-										Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
-									} // end catch
-									*/
+									Fyle.WriteLogEntry(emsg, lutils.LOG_Error, Application.ProductName);
+								} // end catch
+								*/
 								} // end while lines remain
 							} // end SaveFileVersion = 14
 
@@ -416,7 +416,7 @@ namespace LORUtils4
 
 
 				group.Members.Add(VizDrawObjects[0]);
-				for (int n=1; n<group.AssignedObjectsNumbers.Length; n++)
+				for (int n = 1; n < group.AssignedObjectsNumbers.Length; n++)
 				{
 					int doi = group.AssignedObjectsNumbers[n];
 					//LORVizDrawObject4 ldo = AllMembers.ByObjectID[doi];
@@ -456,21 +456,21 @@ namespace LORUtils4
 				VizChannels = new List<LORVizChannel4>();
 				VizDrawObjects = new List<LORVizDrawObject4>();
 				VizItemGroups = new List<LORVizItemGroup4>();
-				Members = new LORMembership4(this);
-				AllMembers = new LORMembership4(this);
+				Members = new LOR4Membership(this);
+				AllMembers = new LOR4Membership(this);
 				MakeDummies();
 
 				//Props = new List<Prop>();
 				this.info = new LORSeqInfo4(null);
-				
+
 				MakeDirty(false);
 
 			} // end Are You Sure
 		} // end Clear Sequence
 
-				
 
-		public override iLORMember4 Clone()
+
+		public override iLOR4Member Clone()
 		{
 			LORVisualization4 newViz = (LORVisualization4)Clone();
 			newViz.info = info.Clone();
@@ -481,7 +481,7 @@ namespace LORUtils4
 			return newViz;
 		}
 
-		public override iLORMember4 Clone(string newName)
+		public override iLOR4Member Clone(string newName)
 		{
 			LORVisualization4 ret = (LORVisualization4)this.Clone();
 			ChangeName(newName);
@@ -530,7 +530,7 @@ namespace LORUtils4
 			VizItemGroups[group.ItemID] = group;
 			while (Members.Count <= group.ItemID)
 			{
-				LORMemberBase4 mem = new LORMemberBase4(this,"\tDUMMY");
+				LORMemberBase4 mem = new LORMemberBase4(this, "\tDUMMY");
 				mem.SetID(0);
 				mem.SetIndex(0);
 				Members.Add(mem);
@@ -542,7 +542,7 @@ namespace LORUtils4
 		public LORVizChannel4 FindVizChannel(string channelName, bool createIfNotFound = false)
 		{
 			LORVizChannel4 ret = null;
-			iLORMember4 member = AllMembers.FindByName(channelName, LORMemberType4.VizChannel, createIfNotFound);
+			iLOR4Member member = AllMembers.FindByName(channelName, LOR4MemberType.VizChannel, createIfNotFound);
 			if (member != null)
 			{
 				ret = (LORVizChannel4)member;
@@ -553,7 +553,7 @@ namespace LORUtils4
 		public LORVizItemGroup4 FindItemGroup(string groupName, bool createIfNotFound = false)
 		{
 			LORVizItemGroup4 ret = null;
-			iLORMember4 member = AllMembers.FindByName(groupName, LORMemberType4.VizItemGroup, createIfNotFound);
+			iLOR4Member member = AllMembers.FindByName(groupName, LOR4MemberType.VizItemGroup, createIfNotFound);
 			if (member != null)
 			{
 				ret = (LORVizItemGroup4)member;
@@ -564,7 +564,7 @@ namespace LORUtils4
 		public LORVizDrawObject4 FindDrawObject(string objectName, bool createIfNotFound = false)
 		{
 			LORVizDrawObject4 ret = null;
-			iLORMember4 member = AllMembers.FindByName(objectName, LORMemberType4.VizDrawObject, createIfNotFound);
+			iLOR4Member member = AllMembers.FindByName(objectName, LOR4MemberType.VizDrawObject, createIfNotFound);
 			if (member != null)
 			{
 				ret = (LORVizDrawObject4)member;
@@ -712,7 +712,7 @@ namespace LORUtils4
 					}
 					if (ob.DrawObjectID != c)
 					{
-						l = "!" + n + "DrawObjectID is " + ob.DrawObjectID.ToString() + " (Should be " + c.ToString() + ")";;
+						l = "!" + n + "DrawObjectID is " + ob.DrawObjectID.ToString() + " (Should be " + c.ToString() + ")"; ;
 						r(l);
 						ie++;
 					}
@@ -905,11 +905,11 @@ namespace LORUtils4
 					if (ig.AssignedObjectsNumbers.Length != ig.Members.Count)
 					{
 						l = "!" + n + "AssignedObjectNumbers count (" + ig.AssignedObjectsNumbers.Length.ToString();
-						l+= ") does not match Members Count {" +ig.Members.Count.ToString() + ").";
+						l += ") does not match Members Count {" + ig.Members.Count.ToString() + ").";
 						r(l);
 						ie++;
 						l = " * ";
-						for (int b=0; b< ig.Members.Count; b++)
+						for (int b = 0; b < ig.Members.Count; b++)
 						{
 							l += ig.Members[b].Name + ", ";
 						}
@@ -933,8 +933,8 @@ namespace LORUtils4
 							}
 							else
 							{
-								iLORMember4 mbr = ig.Members[a];
-								if (mbr.MemberType != LORMemberType4.VizDrawObject)
+								iLOR4Member mbr = ig.Members[a];
+								if (mbr.MemberType != LOR4MemberType.VizDrawObject)
 								{
 									l = "!" + n + "Assigned Object Members[" + a.ToString() + "] '";
 									l += mbr.Name + "' is not a DrawObject.";
@@ -981,4 +981,4 @@ namespace LORUtils4
 
 
 	} // end Visualization class
-} // end namespace LORUtils4
+} // end namespace LOR4Utils

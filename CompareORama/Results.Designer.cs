@@ -192,7 +192,7 @@ namespace UtilORama4
 			this.lblGroupsList.Name = "lblGroupsList";
 			this.lblGroupsList.Size = new System.Drawing.Size(83, 13);
 			this.lblGroupsList.TabIndex = 7;
-			this.lblGroupsList.Text = "LORChannel4 Groups";
+			this.lblGroupsList.Text = "LOR4Channel Groups";
 			// 
 			// panel1
 			// 

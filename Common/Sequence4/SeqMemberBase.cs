@@ -8,9 +8,9 @@ using System.Drawing;
 using System.Diagnostics;
 using FileHelper;
 
-namespace LORUtils4
+namespace LOR4Utils
 {
-	public class LORMemberBase4 : iLORMember4, IComparable<iLORMember4>
+	public class LORMemberBase4 : iLOR4Member, IComparable<iLOR4Member>
 	{
 		protected string myName = "";
 		protected int myCentiseconds = lutils.UNDEFINED;
@@ -19,15 +19,15 @@ namespace LORUtils4
 		protected int myAltID = lutils.UNDEFINED;
 		protected int mycolor = 0; // Note: LOR color, 12-bit int in BGR order
 															 // Do not confuse with .Net or HTML color, 16 bits in ARGB order
-		protected iLORMember4 myParent = null;
+		protected iLOR4Member myParent = null;
 		protected bool imSelected = false;
 		protected bool isDirty = false;
 		protected bool isExactMatch = false;
 		protected object myTag = null; // General Purpose Object
-		// Note: Mapped to is used by Map-O-Rama and possibly by other utils in the future
-		// Only holds a single member so only works for destination to source mapping
-		// source-to-destination mapping may include multiple members, and is stored in a List<iLORmember4> stored in the Tag property
-		protected iLORMember4 mappedTo = null;
+																	 // Note: Mapped to is used by Map-O-Rama and possibly by other utils in the future
+																	 // Only holds a single member so only works for destination to source mapping
+																	 // source-to-destination mapping may include multiple members, and is stored in a List<iLOR4Member> stored in the Tag property
+		protected iLOR4Member mappedTo = null;
 
 		// Holds a List<TreeNodeAdv> but is not defined that way, so that this base member is NOT dependant on
 		// SyncFusion's TreeViewAdv in projects that don't use it.
@@ -42,14 +42,14 @@ namespace LORUtils4
 		// Should never be called directly!
 		{ }
 
-		public LORMemberBase4(iLORMember4 theParent, string lineIn)
+		public LORMemberBase4(iLOR4Member theParent, string lineIn)
 		{
 			myParent = theParent;
 			Parse(lineIn);
 		}
 
 		public string Name
-		{	get	{	return myName; } }
+		{ get { return myName; } }
 		// Note: Name property does not have a 'set'.  Uses ChangeName() instead-- because this property is
 		// usually only set once and not usually changed thereafter.
 		public void ChangeName(string newName)
@@ -106,7 +106,7 @@ namespace LORUtils4
 		}
 
 		public int Index
-		{	get	{	return myIndex;	} }
+		{ get { return myIndex; } }
 		// Note: Index property does not have a 'set'.  Uses SetIndex() instead-- because this property is
 		// usually only set once and not usually changed thereafter.
 		public void SetIndex(int theIndex)
@@ -116,7 +116,7 @@ namespace LORUtils4
 		}
 
 		public int ID
-		{	get	{	return myID; } }
+		{ get { return myID; } }
 		// Note: SavedIndex property does not have a 'set'.  Uses SetSavedIndex() instead-- because this property is
 		// usually only set once and not usually changed thereafter.
 		public void SetID(int newID)
@@ -126,7 +126,7 @@ namespace LORUtils4
 		}
 
 		public int AltID
-		{	get	{	return myAltID;	}	set	{	myAltID = value; } }
+		{ get { return myAltID; } set { myAltID = value; } }
 
 		public int SavedIndex
 		{ get { return myID; } }
@@ -144,18 +144,18 @@ namespace LORUtils4
 		{ get { return lutils.Color_LORtoNet(mycolor); } set { mycolor = lutils.Color_NettoLOR(value); } }
 
 
-		public virtual iLORMember4 Parent
-		{	get	{	return myParent; } }
+		public virtual iLOR4Member Parent
+		{ get { return myParent; } }
 		// Note: Parent property does not have a 'set'.  Uses SetParent() instead-- because this property is
 		// usually only set once and not usually changed thereafter
-		public void SetParent(iLORMember4 newParent)
+		public void SetParent(iLOR4Member newParent)
 		{
 			if (newParent != null)
 			{
 				Type t = newParent.GetType();
-				if (t.Equals(typeof(LORSequence4)))
+				if (t.Equals(typeof(LOR4Sequence)))
 				{
-					myParent = (LORSequence4)newParent;
+					myParent = (LOR4Sequence)newParent;
 				}
 				else
 				{
@@ -176,10 +176,10 @@ namespace LORUtils4
 		}
 
 		public bool Selected
-		{	get	{	return imSelected; } set { imSelected = value; } }
+		{ get { return imSelected; } set { imSelected = value; } }
 
 		public bool Dirty
-		{	get	{	return isDirty;	}	}
+		{ get { return isDirty; } }
 		// Note: Dirty flag is read-only.  Uses MakeDirty() instead-- to set it
 		// and optionally to clear it.
 		public virtual void MakeDirty(bool dirtyState = true)
@@ -199,45 +199,46 @@ namespace LORUtils4
 
 		// This property is included here to be part of the base interface
 		// But every subclass should override it and return their own value
-		public virtual LORMemberType4 MemberType
-		{	get	{	return LORMemberType4.None;	}	}
+		public virtual LOR4MemberType MemberType
+		{ get { return LOR4MemberType.None; } }
 
-		public virtual int CompareTo(iLORMember4 other)
+		public virtual int CompareTo(iLOR4Member other)
 		{
 			int result = 0;
-			//if (parentSequence.Members.sortMode == LORMembership4.SORTbySavedIndex)
+			//if (parentSequence.Members.sortMode == LOR4Membership.SORTbySavedIndex)
 			if (other == null)
 			{
 				result = 1;
 				//string msg = "Why are we comparing " + this.Name + " to null?";
 				//msg+= "\r\nClick Cancel, step thru code, check call stack!";
 				//Fyle.BUG(msg);
-				
+
 				//! TODO: Find out why we are getting null members in visualizations
 				//! This is an ugly kludgy fix in the meantime
-				LORMemberBase4 bass = new LORMemberBase4(this,"WTF");
+				LORMemberBase4 bass = new LORMemberBase4(this, "WTF");
 				other = bass;
 			}
-			else {
-				if (LORMembership4.sortMode == LORMembership4.SORTbyID)
+			else
+			{
+				if (LOR4Membership.sortMode == LOR4Membership.SORTbyID)
 				{
 					result = myID.CompareTo(other.ID);
 				}
 				else
 				{
-					if (LORMembership4.sortMode == LORMembership4.SORTbyName)
+					if (LOR4Membership.sortMode == LOR4Membership.SORTbyName)
 					{
 						result = myName.CompareTo(other.Name);
 					}
 					else
 					{
-						if (LORMembership4.sortMode == LORMembership4.SORTbyAltID)
+						if (LOR4Membership.sortMode == LOR4Membership.SORTbyAltID)
 						{
 							result = myID.CompareTo(other.AltID);
 						}
 						else
 						{
-							if (LORMembership4.sortMode == LORMembership4.SORTbyOutput)
+							if (LOR4Membership.sortMode == LOR4Membership.SORTbyOutput)
 							{
 								result = UniverseNumber.CompareTo(other.UniverseNumber);
 								if (result == 0)
@@ -274,7 +275,7 @@ namespace LORUtils4
 			int nl = lineIn.IndexOf(" name=\"");
 			if ((nu + nl) > 0)
 			{
-				//LORSequence4 Parent = ID.Parent;
+				//LOR4Sequence Parent = ID.Parent;
 				myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
 				if (myName.Length == 0) myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, " Name"));
 				myID = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
@@ -298,12 +299,12 @@ namespace LORUtils4
 			}
 		}
 
-		public virtual iLORMember4 Clone()
+		public virtual iLOR4Member Clone()
 		{
 			return this.Clone(myName);
 		}
 
-		public virtual iLORMember4 Clone(string newName)
+		public virtual iLOR4Member Clone(string newName)
 		{
 			LORMemberBase4 mbr = new LORMemberBase4(myParent, newName);
 			mbr.myCentiseconds = myCentiseconds;
@@ -331,7 +332,7 @@ namespace LORUtils4
 		public object Nodes
 		{ get { return myNodes; } set { myNodes = value; } }
 
-		public iLORMember4 MapTo
+		public iLOR4Member MapTo
 		{
 			get
 			{
@@ -348,8 +349,8 @@ namespace LORUtils4
 					}
 					else
 					{
-						string msg = "Why are you trying to map a " + LORSeqEnums4.MemberName(value.MemberType);
-						msg += " a " + LORSeqEnums4.MemberName(this.MemberType) + " ?!?";
+						string msg = "Why are you trying to map a " + LOR4SeqEnums.MemberName(value.MemberType);
+						msg += " a " + LOR4SeqEnums.MemberName(this.MemberType) + " ?!?";
 						//Fyle.BUG(msg);
 						Debug.WriteLine(msg);
 						Fyle.MakeNoise(Fyle.Noises.Pop);
@@ -363,13 +364,13 @@ namespace LORUtils4
 
 		public bool ExactMatch
 		{ get { return isExactMatch; } set { isExactMatch = value; } }
-		
+
 		// Properties are read-only and overridden by subclasses to pull the correct values from the appropriate
 		// locations.  Included in base class only as a placeholder.  (No way to set them in base class)
 		public virtual int UniverseNumber
-		{	get	{	return myUniverseNumber; } }
+		{ get { return myUniverseNumber; } }
 		public virtual int DMXAddress
-		{	get	{	return myDMXAddress; } }
+		{ get { return myDMXAddress; } }
 
 		// Not supported by ShowTime, and not saved along with the sequence file.  Included only for temporary use in Util-O-Rama
 		public string Comment

@@ -9,10 +9,10 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using FileHelper;
 
-namespace LORUtils4
+namespace LOR4Utils
 {
 
-		public class LORVizDrawObject4 : LORMemberBase4, iLORMember4, IComparable<iLORMember4>
+	public class LORVizDrawObject4 : LORMemberBase4, iLOR4Member, IComparable<iLOR4Member>
 	{
 		public bool isRGB = false;
 		public int BulbSize = lutils.UNDEFINED;
@@ -39,7 +39,7 @@ namespace LORUtils4
 		private static readonly string FIELDchannelType = " Channel_Type";
 		private static readonly string FIELDmaxOpacity = " Max_Opacity";
 
-		public LORVizDrawObject4(iLORMember4 theParent, string lineIn)
+		public LORVizDrawObject4(iLOR4Member theParent, string lineIn)
 		{
 			myParent = theParent;
 			Parse(lineIn);
@@ -58,13 +58,13 @@ namespace LORUtils4
 		}
 
 		public int DrawObjectID
-		{	get	{	return myID;	} }
+		{ get { return myID; } }
 		public void SetDrawObjectID(int newObjectID)
 		{ myID = newObjectID; }
 		public int AltDrawObjectID
-		{	get	{	return myAltID;	}	set	{	myAltID = value;	}	}
-		public override LORMemberType4 MemberType
-		{ get { return LORMemberType4.VizDrawObject; } }
+		{ get { return myAltID; } set { myAltID = value; } }
+		public override LOR4MemberType MemberType
+		{ get { return LOR4MemberType.VizDrawObject; } }
 
 		public override int UniverseNumber
 		{
@@ -186,7 +186,7 @@ namespace LORUtils4
 			return ret.ToString();
 		}
 
-		public override iLORMember4 Clone()
+		public override iLOR4Member Clone()
 		{
 			LORVizDrawObject4 newDO = (LORVizDrawObject4)Clone();
 			newDO.isRGB = isRGB;
@@ -207,9 +207,9 @@ namespace LORUtils4
 			return newDO;
 		}
 
-		public override iLORMember4 Clone(string newName)
+		public override iLOR4Member Clone(string newName)
 		{
-			iLORMember4 newDO = (LORVizDrawObject4)this.Clone();
+			iLOR4Member newDO = (LORVizDrawObject4)this.Clone();
 			newDO.ChangeName(newName);
 			return newDO;
 		}

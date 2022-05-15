@@ -8,7 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using FuzzyString;
-using LORUtils4; using FileHelper;
+using LOR4Utils;
+using FileHelper;
 using System.IO;
 
 namespace UtilORama4
@@ -77,16 +78,16 @@ namespace UtilORama4
 					CheckBox chkCtl = (CheckBox)ctl;
 					//if (chkCtl.Checked)
 					//{
-						string ht = (string)chkCtl.Name.Substring(3);
-						long hi = Convert.ToInt32(ht, 16);
-						if ((theAlgorithms & hi) > 0)
-						{
-							chkCtl.Checked = true;
-						}
-						else
-						{
-							chkCtl.Checked = false;
-						}
+					string ht = (string)chkCtl.Name.Substring(3);
+					long hi = Convert.ToInt32(ht, 16);
+					if ((theAlgorithms & hi) > 0)
+					{
+						chkCtl.Checked = true;
+					}
+					else
+					{
+						chkCtl.Checked = false;
+					}
 					//}
 				}
 			}
@@ -148,7 +149,7 @@ namespace UtilORama4
 			}
 			else if (start == "N-G")
 			{
-				alg = FuzzyString.FuzzyFunctions.USE_NGRAM;
+				//alg = FuzzyString.FuzzyFunctions.USE_NGRAM;
 			}
 			else if (start == "Q-G")
 			{
@@ -264,9 +265,9 @@ namespace UtilORama4
 				case FuzzyFunctions.USE_NEEDLEMANWUNSCH:
 					idx = 16;
 					break;
-				case FuzzyFunctions.USE_NGRAM:
-					idx = 17;
-					break;
+				//case FuzzyFunctions.USE_NGRAM:
+				//	idx = 17;
+				//	break;
 				case FuzzyFunctions.USE_QGRAM:
 					idx = 18;
 					break;
@@ -381,7 +382,7 @@ namespace UtilORama4
 			caseSensitive = chkCase.Checked;
 			if (caseSensitive)
 			{
-				finalAlgorithms &= (FuzzyFunctions.USE_CASEINSENSITIVE-1);
+				finalAlgorithms &= (FuzzyFunctions.USE_CASEINSENSITIVE - 1);
 				prematchAlgorithm &= (FuzzyFunctions.USE_CASEINSENSITIVE - 1);
 			}
 			else

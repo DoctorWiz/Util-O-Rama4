@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-//using System.Windows.Media;
 using System.Drawing;
 using System.IO;
 using System.Media;
@@ -9,33 +8,20 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Runtime.InteropServices;
-using System.DirectoryServices;
 using Microsoft.Win32;
-
-
+using System.DirectoryServices;
+using FileHelper;
 
 //using FuzzyString;
 
-namespace xUtils
+namespace xUtilities
 {
-	public class xutils
+	public class xUtils
 	{
 		public const int UNDEFINED = -1;
-		//public const string ICONtrack = "LORTrack4";
-		//public const string ICONchannelGroup = "LORChannelGroup4";
-		//public const string ICONcosmicDevice = "LORCosmic";
-		//public const string ICONchannel = "channel";
-		//public const string ICONrgbChannel = "LORRGBChannel4";
-		//public const string ICONredChannel = "redChannel";
-		//public const string ICONgrnChannel = "grnChannel";
-		//public const string ICONbluChannel = "bluChannel";
-		//public const string ICONredChannel = "FF0000";
-		//public const string ICONgrnChannel = "00FF00";
-		//public const string ICONbluChannel = "0000FF";
-
 
 		public const string LOG_Error = "Error";
-		public const string LOG_Info = "LORSeqInfo4";
+		public const string LOG_Info = "SeqInfo";
 		public const string LOG_Debug = "Debug";
 		private const string FORMAT_DATETIME = "MM/dd/yyyy hh:mm:ss tt";
 		private const string FORMAT_FILESIZE = "###,###,###,###,##0";
@@ -44,49 +30,29 @@ namespace xUtils
 
 		public const string FIELDname = " name";
 		public const string FIELDtype = " type";
-		//public const string FIELDsavedIndex = " savedIndex";
-		//public const string FIELDcentisecond = " centisecond";
-		//public const string FIELDmilliseconds = FIELDcentisecond + PLURAL;
-		//public const string FIELDtotalmilliseconds = " totalmilliseconds";
-		//public const string FIELDstartCentisecond = " startCentisecond";
-		//public const string FIELDendCentisecond = " endCentisecond";
 
-		//public const string FILE_SEQ = "All Sequences *.las, *.lms|*.las;*.lms";
-		//public const string FILE_CFG = "All Sequences *.las, *.lms, *.lcc|*.las;*.lms;*.lcc";
-		//public const string FILE_LMS = "Musical Sequence *.lms|*.lms";
-		//public const string FILE_LAS = "Animated Sequence *.las|*.las";
-		//public const string FILE_LCC = "LORChannel4 Configuration *.lcc|*.lcc";
-		//public const string FILE_LEE = "Visualization *.lee|*.lee";
-		//public const string FILE_CHMAP = "LORChannel4 Map *.ChMap|*.ChMap";
-		//public const string FILE_ALL = "All Files *.*|*.*";
-		//public const string FILT_OPEN_ANY = FILE_SEQ + "|" + FILE_LMS + "|" + FILE_LAS;
-		//public const string FILT_OPEN_CFG = FILE_CFG + "|" + FILE_LMS + "|" + FILE_LAS + "|" + FILE_LCC;
-		//public const string FILT_SAVE_EITHER = FILE_LMS + "|" + FILE_LAS;
+		public const string FILE_SEQ = "All Sequences *.xsq|*.xsq";
+		public const string FILE_ALL = "All Files *.*|*.*";
 		//public const string EXT_CHMAP = "ChMap";
-		//public const string EXT_LAS = "las";
-		//public const string EXT_LMS = "lms";
-		//public const string EXT_LEE = "lee";
-		//public const string EXT_LCC = "lcc";
+		public const string EXT_XML = "xml";
+		public const string EXT_XSQ = "xsq";
 
 
 		public const string SPC = " ";
 		public const string LEVEL0 = "";
+		// USING SPACES
 		//public const string LEVEL1 = "  ";
 		//public const string LEVEL2 = "    ";
 		//public const string LEVEL3 = "      ";
 		//public const string LEVEL4 = "        ";
 		//public const string LEVEL5 = "          ";
+		// USING TABS
 		public const string LEVEL1 = "\t";
 		public const string LEVEL2 = "\t\t";
 		public const string LEVEL3 = "\t\t\t";
 		public const string LEVEL4 = "\t\t\t\t";
 		public const string LEVEL5 = "\t\t\t\t\t";
 		public const string CRLF = "\r\n";
-		// Or, if you prefer tabs instead of spaces...
-		//public const string LEVEL1 = "\t";
-		//public const string LEVEL2 = "\t\t";
-		//public const string LEVEL3 = "\t\t\t";
-		//public const string LEVEL4 = "\t\t\t\t";
 		public const string PLURAL = "s";
 		public const string FIELDEQ = "=\"";
 		public const string ENDQT = "\"";
@@ -335,51 +301,6 @@ namespace xUtils
 			return ret;
 		}
 
-		private static string NotifyGenericSound
-		{
-			get
-			{
-				const string keyName = "HKEY_CURRENT_USER\\AppEvents\\Schemes\\Apps\\.Default\\Notification.Default";
-				string sound = (string)Registry.GetValue(keyName, null, "");
-				return sound;
-			} // End get the Notify.Generic Sound filename
-		}
-
-		public static void PlayNotifyGenericSound()
-		{
-			string sound = NotifyGenericSound;
-			if (sound.Length > 6)
-			{
-				if (File.Exists(sound))
-				{
-					SoundPlayer player = new SoundPlayer(sound);
-					player.Play();
-				}
-			}
-		}
-
-		private static string MenuClickSound
-		{
-			get
-			{
-				const string keyName = "HKEY_CURRENT_USER\\AppEvents\\Schemes\\Apps\\.Default\\MenuCommand";
-				string sound = (string)Registry.GetValue(keyName, null, "");
-				return sound;
-			} // End get the Notify.Generic Sound filename
-		}
-
-		public static void PlayMenuClickSound()
-		{
-			string sound = MenuClickSound;
-			if (sound.Length > 6)
-			{
-				if (File.Exists(sound))
-				{
-					SoundPlayer player = new SoundPlayer(sound);
-					player.Play();
-				}
-			}
-		}
 
 		public static void WriteLogEntry(string message, string logType, string applicationName)
 		{
@@ -509,265 +430,6 @@ namespace xUtils
 			return finalName;
 		}
 
-		public static bool IsWizard
-		{
-			get
-			{
-				bool ret = false;
-				string usr = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-				usr = usr.ToLower();
-				int p = usr.IndexOf("\\");
-				if (p >= 0) usr = usr.Substring(p+1);
-				if (usr.CompareTo("wizard") == 0) ret = true;
-				return ret;
-			}
-		}
-
-		public static bool IsAWizard
-		{
-			get
-			{
-				bool ret = false;
-				//string usr = System.DirectoryServices.AccountManagement.UserPrincipal.Current.DisplayName;
-				string usr = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-
-				usr = usr.ToLower();
-				int i = usr.IndexOf("wizard");
-				if (i >= 0) ret = true;
-				return ret;
-			}
-		}
-
-		public static string FileCreatedAt(string filename)
-		{
-			string ret = "";
-			if (File.Exists(filename))
-			{
-				DateTime dt = File.GetCreationTime(filename);
-				ret = dt.ToString(FORMAT_DATETIME);
-			}
-			return ret;
-		}
-
-		public static DateTime FileCreatedDateTime(string filename)
-		{
-			DateTime ret = new DateTime();
-			if (File.Exists(filename))
-			{
-				ret = File.GetCreationTime(filename);
-			}
-			return ret;
-		}
-
-		public static string FileModiedAt(string filename)
-		{
-			string ret = "";
-			if (File.Exists(filename))
-			{
-				DateTime dt = File.GetLastWriteTime(filename);
-				ret = dt.ToString(FORMAT_DATETIME);
-			}
-			return ret;
-		}
-
-		public static string FormatDateTime(DateTime dt)
-		{
-			string ret = dt.ToString(FORMAT_DATETIME);
-			return ret;
-		}
-
-		public static DateTime fileModiedDateTime(string filename)
-		{
-			DateTime ret = new DateTime();
-			if (File.Exists(filename))
-			{
-				ret = File.GetLastWriteTime(filename);
-			}
-			return ret;
-		}
-
-		public static string FileSizeFormatted(string filename)
-		{
-			long sz = GetFileSize(filename);
-			return FileSizeFormatted(sz, "");
-		}
-
-		public static string FileSizeFormatted(string filename, string thousands)
-		{
-			long sz = GetFileSize(filename);
-			return FileSizeFormatted(sz, thousands);
-		}
-
-		public static string FileSizeFormatted(long filesize)
-		{
-			return FileSizeFormatted(filesize, "");
-		}
-
-		public static string FileSizeFormatted(long filesize, string thousands)
-		{
-			string thou = thousands.ToUpper();
-			string ret = "0";
-			if (thou == "B") // Force value in Bytes
-			{
-				ret = Bytes(filesize);
-			}
-			else
-			{
-				if (thou == "K") // Force value in KiloBytes
-				{
-					ret = KiloBytes(filesize);
-				}
-				else
-				{
-					if (thou == "M") // Force value in MegaBytes
-					{
-						ret = MegaBytes(filesize);
-					}
-					else
-					{
-						if (thou == "G") // Force value in GigaBytes
-						{
-							ret = GigaBytes(filesize);
-						}
-						else
-						{
-							thou = ""; // Return value in nearest size group
-							if (filesize < 100000)
-							{
-								ret = Bytes(filesize);
-							}
-							else
-							{
-								if (filesize < 100000000)
-								{
-									ret = KiloBytes(filesize);
-								}
-								else
-								{
-									if (filesize < 100000000000)
-									{
-										ret = MegaBytes(filesize);
-									}
-									else
-									{
-										//if (filesize < 1099511627776)
-										//{
-										ret = GigaBytes(filesize);
-										//}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-			return ret;
-		}
-
-		private static string Bytes(long size)
-		{
-			return size.ToString(FORMAT_FILESIZE) + " Bytes";
-		}
-
-		private static string KiloBytes(long size)
-		{
-			long k = size >> 10;
-			string ret = k.ToString(FORMAT_FILESIZE);
-			if (k < 100)
-			{
-				double r = (int)(size % 0x400);
-				int d = 0;
-				double f = 0;
-				if (k < 10) f = (r / 10D); else f = (r / 100D);
-				d = (int)Math.Round(f);
-				ret += "." + d.ToString();
-			}
-			else
-			{
-				double ds = (double)size;
-				double dk = Math.Round(ds / 1024D);
-				k = (int)dk;
-				ret = k.ToString(FORMAT_FILESIZE);
-			}
-			ret += " KB";
-			return ret;
-		}
-
-		private static string MegaBytes(long size)
-		{
-			long m = size >> 20;
-			string ret = m.ToString(FORMAT_FILESIZE);
-			if (m < 100)
-			{
-				double r = (int)(size % 0x10000);
-				int d = 0;
-				double f = 0;
-				if (m < 10) f = (r / 10000D); else f = (r / 100000D);
-				d = (int)Math.Round(f);
-				ret += "." + d.ToString();
-			}
-			else
-			{
-				double ds = (double)size;
-				double dm = Math.Round(ds / 1048576D);
-				m = (int)dm;
-				ret = m.ToString(FORMAT_FILESIZE);
-			}
-			ret += " MB";
-			return ret;
-		}
-
-		private static string GigaBytes(long size)
-		{
-			long g = size >> 30;
-			string ret = g.ToString(FORMAT_FILESIZE);
-			if (g < 100)
-			{
-				double r = (int)(size % 0x40000000);
-				int d = 0;
-				double f = 0;
-				if (g < 10) f = (r / 10000000D); else f = (r / 100000000D);
-				d = (int)Math.Round(f);
-				ret += "." + d.ToString();
-			}
-			else
-			{
-				double ds = (double)size;
-				double dg = Math.Round(ds / 1073741824D);
-				g = (int)dg;
-				ret = g.ToString(FORMAT_FILESIZE);
-			}
-			ret += " GB";
-			return ret;
-		}
-
-		public static long GetFileSize(string filename)
-		{
-				long ret = 0;
-				if (File.Exists(filename))
-				{
-					FileInfo fi = new FileInfo(filename);
-					ret = fi.Length;
-				}
-				return ret;
-		}
-
-		public static string HumanizeName(string XMLizedName)
-		{
-			// Takes a name from XML and converts symbols back to the real thing
-			string ret = XMLizedName;
-			ret = ret.Replace("&quot", "\"");
-			return ret;
-		}
-
-		public static string XMLifyName(string HumanizedName)
-		{
-			// Takes a human friendly name, possibly with illegal symbols in it
-			// And replaces the illegal symbols with codes to make it XML friendly
-			string ret = HumanizedName;
-			ret = ret.Replace("\"", "&quot");
-			return ret;
-		}
 
 		public static int ContainsKey(string lineIn, string keyWord)
 		{
@@ -791,7 +453,7 @@ namespace xUtils
 			}
 			else
 			{
-				return xutils.UNDEFINED;
+				return xUtils.UNDEFINED;
 			}
 		}
 
@@ -804,16 +466,7 @@ namespace xUtils
 			fooo = lineIn.Substring(pos1 + keyWord.Length + 2);
 			pos2 = fooo.IndexOf("\"");
 			fooo = fooo.Substring(0, pos2);
-			int vo = -1;
-			int.TryParse(fooo, out vo);
-			if (vo == -1)
-			{
-				if (IsWizard)
-				{
-					System.Diagnostics.Debugger.Break();
-				}
-			}
-			valueOut = vo;
+			valueOut = Convert.ToInt32(fooo);
 			return valueOut;
 		}
 
@@ -867,56 +520,10 @@ namespace xUtils
 			fooo = lineIn.Substring(pos1 + keyWord.Length + 2);
 			pos2 = fooo.IndexOf("\"");
 			fooo = fooo.Substring(0, pos2).ToLower();
-			if (fooo.CompareTo("true") == 0) stateOut = true;
-			if (fooo.CompareTo("yes") == 0) stateOut = true;
-			if (fooo.CompareTo("1") == 0) stateOut = true;
+			if (fooo == "true") stateOut = true;
+			if (fooo == "yes") stateOut = true;
+			if (fooo == "1") stateOut = true;
 			return stateOut;
-		}
-
-		public static int GetAddress(string address, List<xModel> allModels)
-		{
-			int addr = -1;
-			if (address.Length < 6)
-			{
-				bool itWorked = int.TryParse(address, out addr);
-			}
-			else
-			{
-				int isemi = address.IndexOf(';');
-				int ioffset = address.IndexOf(':');
-				string temp1 = address.Substring(ioffset+1);
-				int offset = 1;
-				bool itWorked = int.TryParse(temp1, out offset);
-				int ilen = ioffset - isemi -1;
-				string modelName = address.Substring(isemi +1, ilen);
-				string modAddr = "";
-				for (int m = 0; m < allModels.Count; m++)
-				{
-					xModel model = allModels[m];
-					if (modelName.CompareTo(model.Name) == 0) ;
-					{
-						if (model.xLightsAddress < 1)
-						{
-							// Recurse!
-							int a2 = xutils.GetAddress(model.StartChannel, allModels);
-							if (a2 >0)
-							{
-								model.xLightsAddress = a2;
-							}
-						}
-						// Got it yet?
-						if (model.xLightsAddress > 0)
-						{
-							addr = model.xLightsAddress + offset;
-						}
-						m = allModels.Count; // Exit loop
-					}
-				}
-			}
-
-
-
-			return addr;
 		}
 
 		public static string SetKey(string fieldName, string value)
@@ -943,12 +550,6 @@ namespace xUtils
 			return ret.ToString();
 		}
 
-		public static Color ColorHTMLtoNet(string htmlCode)
-		{
-			Color color = System.Drawing.ColorTranslator.FromHtml(htmlCode);
-			return color;
-		}
-
 		public static string StartTable(string tableName, int level)
 		{
 			StringBuilder ret = new StringBuilder();
@@ -970,9 +571,9 @@ namespace xUtils
 			{
 				ret.Append(LEVEL1);
 			}
-			ret.Append(xutils.FINTBL);
+			ret.Append(xUtils.FINTBL);
 			ret.Append(tableName);
-			ret.Append(xutils.ENDTBL);
+			ret.Append(xUtils.ENDTBL);
 			return ret.ToString();
 		}
 
@@ -1001,7 +602,7 @@ namespace xUtils
 		{
 
 			string appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-			string mySubDir = "\\UtilORama\\";
+			string mySubDir = "\\xUtils\\";
 			string tempPath = appDataDir + mySubDir;
 			if (!Directory.Exists(tempPath))
 			{
@@ -1017,7 +618,7 @@ namespace xUtils
 			return tempPath;
 		}
 
-		public static string FormatTime(int milliseconds)
+		public static string FormatSongTime(int milliseconds)
 		{
 			string timeOut = "";
 
@@ -1132,23 +733,6 @@ namespace xUtils
 			return -1;
 		}
 
-		public static string ReplaceInvalidFilenameCharacters(string oldName)
-		{
-			//! This is for the main part of the filename only!
-			//! It replaces things like \ and : so it can't be used for full paths + names
-			string newName = oldName.Replace('<', '＜');
-			newName = newName.Replace('>', '＞');
-			newName = newName.Replace(':', '﹕');
-			newName = newName.Replace('\"', '＂');
-			newName = newName.Replace('/', '∕');
-			newName = newName.Replace('\\', '＼');
-			newName = newName.Replace('?', '？');
-			newName = newName.Replace('|', '￤');
-			newName = newName.Replace('$', '§');
-			newName = newName.Replace('*', '＊');
-			return newName;
-		}
-
 		public static string Time_millisecondsToMinutes(int milliseconds)
 		{
 			int mm = (int)(milliseconds / 60000);
@@ -1184,15 +768,15 @@ namespace xUtils
 						{
 							string sec = rest.Substring(0, posPer);
 							string cs = rest.Substring(posPer + 1);
-							int mn = xutils.UNDEFINED;
+							int mn = xUtils.UNDEFINED;
 							int.TryParse(min, out mn);
 							if ((mn >=0) && (mn<61))
 							{
-								int sc = xutils.UNDEFINED;
+								int sc = xUtils.UNDEFINED;
 								int.TryParse(sec, out sc);
 								if ((sc >=0 ) && (sc<60))
 								{
-									int c = xutils.UNDEFINED;
+									int c = xUtils.UNDEFINED;
 									int.TryParse(cs, out c);
 									if ((c >=0) && (c<1000))
 									{
@@ -1208,13 +792,37 @@ namespace xUtils
 			return ret;
 		}
 
-		public static string DefaultDocumentsPath
+		public static string SequenceEditor
 		{
 			get
 			{
-				string myDocs = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-				if (myDocs.Substring(myDocs.Length - 1, 1).CompareTo("\\") != 0) myDocs += "\\";
-				return myDocs;
+				string exe = "";
+				string root = ROOT;
+				try
+				{
+					string ky = "HKEY_CLASSES_ROOT\\xLights\\shell\\open";
+					exe = (string)Registry.GetValue(ky, "command", root);
+					exe = exe.Replace(" \"%1\"","");
+					if (exe == null)
+					{
+						exe = "C:\\Program Files\\xLights\\xLights.exe";
+					}
+					if (exe.Length < 10)
+					{
+						exe = "C:\\Program Files\\xLights\\xLights.exe";
+					}
+					bool valid = Fyle.Exists(exe);
+					if (!valid)
+					{
+						exe = "";
+					}
+				}
+				catch
+				{
+					exe = "";
+				}
+				return exe;
+
 			}
 		}
 
@@ -1225,7 +833,7 @@ namespace xUtils
 			{
 				string fldr = "";
 				string root = ROOT;
-				string userDocs = DefaultDocumentsPath;
+				string userDocs = Fyle.DefaultDocumentsPath;
 				try
 				{
 					fldr = (string)Registry.GetValue(REGKEYx, "LastDir", root);
@@ -1245,70 +853,92 @@ namespace xUtils
 			} // End get ShowDirectory
 		}
 
-		public static Bitmap RenderTimings(xTimings timeTrack, int startMilliseconds, int endMilliseconds, int width, int height)
+		public static int ParseMilliseconds(string secondsValue)
 		{
-			// Create a temporary working bitmap
-			Bitmap bmp = new Bitmap(width, height);
-			// get the graphics handle from it
-			Graphics gr = Graphics.FromImage(bmp);
-			// Paint the entire 'background' black
-			gr.FillRectangle(Brushes.Black, 0, 0, width - 1, height - 1);
-			Color c = Color.FromArgb(64, 64, 64);
-			Pen p = new Pen(c, 1);
-			Brush br = new SolidBrush(c);
-			int totalMS = endMilliseconds - startMilliseconds;
-			float q = (totalMS) / width;
-			int div = 15000;
-			if (totalMS < 30000) div = 1000;
-			if (totalMS > 300000) div = 30000;
-			// Dark gray tick marks every 30 seconds
-			int n30 = totalMS / div;
-			for (int cx=startMilliseconds; cx < endMilliseconds; cx+=div)
-			{
-				float xf = (cx - startMilliseconds) / q;
-				int x = (int)Math.Round(xf, 0);
-				gr.DrawLine(p, x, 0, x, height);
-			}
-			
-			c = Color.White;
-			p = new Pen(c, 1);
-			br = new SolidBrush(c);
-						//Debug.WriteLine(""); Debug.WriteLine("");
-			if (timeTrack.effects.Count > 0)
-			{
-				
-				for (int i = 0; i < timeTrack.effects.Count; i++)
-				{
-					int xs = 0;
-					int xe = width - 1;
-					int ts = timeTrack.effects[i].starttime;
-					int te = timeTrack.effects[i].endtime;
-					if (ts==te)
-					{
-						int nnnn = 2;
-					}
-					if ((ts >= startMilliseconds) && (ts <= endMilliseconds))
-					{
-						float xfs = (ts - startMilliseconds) / q;
-						xs = (int)Math.Round(xfs, 0);
-						//gr.DrawLine(p, xs, height - 1, xs, height);
-						gr.DrawLine(p, xs, 3, xs, height-5);
-					} // End timing start in range
-					if ((te >= startMilliseconds) && (te <= endMilliseconds))
-					{
-						float xfe = (te - startMilliseconds) / q;
-						xe = (int)Math.Round(xfe, 0);
-						//gr.DrawLine(p, xe, height - 1, xe, height);
-						gr.DrawLine(p, xe, 3, xe, height-5);
-					} // End timing end in range
-					int y = height / 2;
-					gr.DrawLine(p, xs, y, xe, y);
-				} // End loop thru timings
-			} // End grid has timings
+			double dsec = xUtils.UNDEFINED;
+			double.TryParse(secondsValue, out dsec);
+			double msec = Math.Round(dsec * 1000D);
+			int ms = (int)msec;
+			return ms;
+		}
 
-			return bmp;
+		public static int ParseCentiseconds(string secondsValue)
+		{
+			// Yeah, Centiseconds is a LOR thing, not xLights
+			// But this is only used (so far) by Vamp-O-Rama
+			// so it makes more sense to stick it here than in LORutils
+			double dsec = xUtils.UNDEFINED;
+			double.TryParse(secondsValue, out dsec);
+			double csec = Math.Round(dsec * 100D);
+			int cs = (int)csec;
+			return cs;
 		}
 
 
-	} // end class lutils
+		public static int DEPRECIATED_RoundTimeTo(int startTime, int msPerFrame)
+		{
+			if (msPerFrame > 1)
+			{
+				int half = msPerFrame / 2;
+				int newStart = startTime / msPerFrame * msPerFrame;
+				int diff = startTime - newStart;
+				if (diff > half) newStart += msPerFrame;
+				return newStart;
+			}
+			else
+			{
+				return startTime;
+			}
+		}
+
+		public static int ClearTempDir(string tempPath)
+		{
+			int errs = 0;
+
+			try
+			{
+				List<string> fls = new List<string>(Directory.EnumerateFiles(tempPath));
+
+				foreach (string fil in fls)
+				{
+					try
+					{
+						System.IO.File.Delete(fil);
+					}
+					catch
+					{
+						errs++;
+					}
+				}
+			}
+			catch (UnauthorizedAccessException ex)
+			{
+				errs = 99999;
+			}
+			catch (PathTooLongException ex)
+			{
+				errs = 99998;
+			}
+			return errs;
+		}
+
+		public static string NoteUnicodeToASCII(string unicodeNoteName)
+		{
+			string tmp = unicodeNoteName.Replace('♯', '#');
+			string ret = tmp.Replace('♭', 'b');
+			return ret;
+		}
+
+		public static string NoteASCIIToUnicode(string asciiNoteName)
+		{
+			// Use with caution as all lower-case b's will be replaced with ♭
+			//   (All other lower-case letters will be unaffected, as will upper-case letters ihcluing B's)
+			string tmp = asciiNoteName.Replace('#', '♯');
+			string ret = tmp.Replace('b', '♭');
+			return ret;
+		}
+
+
+
+	} // end class xUtils
 } // end namespace xUtils

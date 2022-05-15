@@ -351,7 +351,7 @@ namespace UtilORama4
 			this.optChannel.Name = "optChannel";
 			this.optChannel.Size = new System.Drawing.Size(64, 17);
 			this.optChannel.TabIndex = 16;
-			this.optChannel.Text = "LORChannel4";
+			this.optChannel.Text = "LOR4Channel";
 			this.optChannel.UseVisualStyleBackColor = true;
 			this.optChannel.CheckedChanged += new System.EventHandler(this.optChannel_CheckedChanged);
 			// 
@@ -474,9 +474,9 @@ namespace UtilORama4
 			// 
 			this.staStatus.AllowDrop = true;
 			this.staStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.pnlHelp,
-            this.pnlStatus,
-            this.pnlAbout});
+						this.pnlHelp,
+						this.pnlStatus,
+						this.pnlAbout});
 			this.staStatus.Location = new System.Drawing.Point(0, 485);
 			this.staStatus.Name = "staStatus";
 			this.staStatus.Size = new System.Drawing.Size(480, 24);
@@ -484,9 +484,9 @@ namespace UtilORama4
 			// 
 			// pnlHelp
 			// 
-			this.pnlHelp.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+			this.pnlHelp.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+						| System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+						| System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlHelp.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenInner;
 			this.pnlHelp.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.pnlHelp.ForeColor = System.Drawing.SystemColors.Highlight;
@@ -498,9 +498,9 @@ namespace UtilORama4
 			// 
 			// pnlStatus
 			// 
-			this.pnlStatus.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+			this.pnlStatus.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+						| System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+						| System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlStatus.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
 			this.pnlStatus.Name = "pnlStatus";
 			this.pnlStatus.Size = new System.Drawing.Size(368, 19);
@@ -508,9 +508,9 @@ namespace UtilORama4
 			// 
 			// pnlAbout
 			// 
-			this.pnlAbout.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+			this.pnlAbout.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+						| System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+						| System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlAbout.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenInner;
 			this.pnlAbout.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.pnlAbout.ForeColor = System.Drawing.SystemColors.Highlight;

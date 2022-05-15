@@ -8,7 +8,7 @@ using System.Drawing;
 using System.Diagnostics;
 using FileHelper;
 
-namespace LORUtils4
+namespace LOR4Utils
 {
 
 	//////////////////////////////////////////////
@@ -17,17 +17,17 @@ namespace LORUtils4
 	//
 	////////////////////////////////////////////////
 
-	public class LORRGBChannel4 : LORMemberBase4, iLORMember4, IComparable<iLORMember4>
+	public class LOR4RGBChannel : LORMemberBase4, iLOR4Member, IComparable<iLOR4Member>
 	{
-		public LORChannel4 redChannel = null;
-		public LORChannel4 grnChannel = null;
-		public LORChannel4 bluChannel = null;
+		public LOR4Channel redChannel = null;
+		public LOR4Channel grnChannel = null;
+		public LOR4Channel bluChannel = null;
 
 		//! CONSTRUCTOR(s)
 		/*
-		public LORRGBChannel4(string lineIn)
+		public LOR4RGBChannel(string lineIn)
 		{
-			string seek = lutils.STFLD + LORSequence4.TABLErgbChannel + lutils.FIELDtotalCentiseconds;
+			string seek = lutils.STFLD + LOR4Sequence.TABLErgbChannel + lutils.FIELDtotalCentiseconds;
 			//int pos = lineIn.IndexOf(seek);
 			int pos = lutils.ContainsKey(lineIn, seek);
 			if (pos > 0)
@@ -40,16 +40,16 @@ namespace LORUtils4
 			}
 		}
 		*/
-		public LORRGBChannel4(iLORMember4 theParent, string lineIn)
+		public LOR4RGBChannel(iLOR4Member theParent, string lineIn)
 		{
 			myParent = theParent;
 			Parse(lineIn);
 		}
 
 		/*
-		public LORRGBChannel4(string lineIn, int theSavedIndex)
+		public LOR4RGBChannel(string lineIn, int theSavedIndex)
 		{
-			string seek = lutils.STFLD + LORSequence4.TABLErgbChannel + lutils.FIELDtotalCentiseconds;
+			string seek = lutils.STFLD + LOR4Sequence.TABLErgbChannel + lutils.FIELDtotalCentiseconds;
 			//int pos = lineIn.IndexOf(seek);
 			int pos = lutils.ContainsKey(lineIn, seek);
 			if (pos > 0)
@@ -150,22 +150,22 @@ namespace LORUtils4
 		}
 
 
-		public override LORMemberType4 MemberType
+		public override LOR4MemberType MemberType
 		{
 			get
 			{
-				return LORMemberType4.RGBChannel;
+				return LOR4MemberType.RGBChannel;
 			}
 		}
 
 		public override string LineOut()
 		{
-			return LineOut(false, false, LORMemberType4.FullTrack);
+			return LineOut(false, false, LOR4MemberType.FullTrack);
 		}
 
 		public override void Parse(string lineIn)
 		{
-			string seek = lutils.STFLD + LORSequence4.TABLErgbChannel + lutils.FIELDtotalCentiseconds;
+			string seek = lutils.STFLD + LOR4Sequence.TABLErgbChannel + lutils.FIELDtotalCentiseconds;
 			int pos = lutils.ContainsKey(lineIn, seek);
 			if (pos > 0)
 			{
@@ -181,23 +181,23 @@ namespace LORUtils4
 		}
 
 
-		public override iLORMember4 Clone()
+		public override iLOR4Member Clone()
 		{
-			LORRGBChannel4 rgb = (LORRGBChannel4)this.Clone();
-			rgb.redChannel = (LORChannel4)redChannel.Clone();
-			rgb.grnChannel = (LORChannel4)grnChannel.Clone();
-			rgb.bluChannel = (LORChannel4)bluChannel.Clone();
+			LOR4RGBChannel rgb = (LOR4RGBChannel)this.Clone();
+			rgb.redChannel = (LOR4Channel)redChannel.Clone();
+			rgb.grnChannel = (LOR4Channel)grnChannel.Clone();
+			rgb.bluChannel = (LOR4Channel)bluChannel.Clone();
 			return rgb;
 		}
 
-		public override iLORMember4 Clone(string newName)
+		public override iLOR4Member Clone(string newName)
 		{
-			LORRGBChannel4 rgb = (LORRGBChannel4)this.Clone();  //   new LORRGBChannel4(newName, lutils.UNDEFINED);
+			LOR4RGBChannel rgb = (LOR4RGBChannel)this.Clone();  //   new LOR4RGBChannel(newName, lutils.UNDEFINED);
 			rgb.ChangeName(newName);
 			return rgb;
 		}
 
-		public string LineOut(bool selectedOnly, bool noEffects, LORMemberType4 itemTypes)
+		public string LineOut(bool selectedOnly, bool noEffects, LOR4MemberType itemTypes)
 		{
 			StringBuilder ret = new StringBuilder();
 
@@ -207,20 +207,20 @@ namespace LORUtils4
 
 			int AltSavedIndex = lutils.UNDEFINED;
 
-			if ((itemTypes == LORMemberType4.Items) || (itemTypes == LORMemberType4.Channel))
+			if ((itemTypes == LOR4MemberType.Items) || (itemTypes == LOR4MemberType.Channel))
 			// Type NONE actually means ALL in this case
 			{
-				// not checking .Selected flag 'cuz if parent LORRGBChannel4 is Selected 
+				// not checking .Selected flag 'cuz if parent LOR4RGBChannel is Selected 
 				//redSavedIndex = ID.ParentSequence.WriteChannel(redChannel, noEffects);
 				//grnSavedIndex = ID.ParentSequence.WriteChannel(grnChannel, noEffects);
 				//bluSavedIndex = ID.ParentSequence.WriteChannel(bluChannel, noEffects);
 			}
 
-			if ((itemTypes == LORMemberType4.Items) || (itemTypes == LORMemberType4.RGBChannel))
+			if ((itemTypes == LOR4MemberType.Items) || (itemTypes == LOR4MemberType.RGBChannel))
 			{
 				ret.Append(lutils.LEVEL2);
 				ret.Append(lutils.STFLD);
-				ret.Append(LORSequence4.TABLErgbChannel);
+				ret.Append(LOR4Sequence.TABLErgbChannel);
 				ret.Append(lutils.FIELDtotalCentiseconds);
 				ret.Append(lutils.FIELDEQ);
 				ret.Append(myCentiseconds.ToString());
@@ -293,9 +293,9 @@ namespace LORUtils4
 				ret.Append(lutils.CRLF);
 				ret.Append(lutils.LEVEL2);
 				ret.Append(lutils.FINTBL);
-				ret.Append(LORSequence4.TABLErgbChannel);
+				ret.Append(LOR4Sequence.TABLErgbChannel);
 				ret.Append(lutils.FINFLD);
-			} // end LORMemberType4 Channel or LORRGBChannel4
+			} // end LOR4MemberType Channel or LOR4RGBChannel
 
 			return ret.ToString();
 		} // end LineOut
@@ -334,5 +334,5 @@ namespace LORUtils4
 
 
 
-	} // end LORRGBChannel4 Class
+	} // end LOR4RGBChannel Class
 }

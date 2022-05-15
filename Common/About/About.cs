@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-//using LORUtils4;
+//using LOR4Utils;
 using FileHelper;
 
 namespace UtilORama4
@@ -124,7 +124,7 @@ namespace UtilORama4
 					// Set graphic to...
 					break;
 				case "vamp":  // Vamp-O-Rama
-					// Set graphic to...
+											// Set graphic to...
 					break;
 
 

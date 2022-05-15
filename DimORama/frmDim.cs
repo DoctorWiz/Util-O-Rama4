@@ -10,7 +10,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Syncfusion.Windows.Forms.Tools;
-using LORUtils4;
+using LOR4Utils;
 using FileHelper;
 
 namespace UtilORama4
@@ -55,7 +55,7 @@ namespace UtilORama4
 		//                                     0/4/8/12              1/5/9/13						 2/6/10/14						 3/7/11/15
 		public readonly Color[] ruleColors = {COLOR_NOCHANGE,       COLOR_DIM,          COLOR_TRIM,           COLOR_ONOFF,
 																					COLOR_MINTIME,        COLOR_DIM_MINTIME,  COLOR_TRIM_MINTIME,  COLOR_ONOFF_MINTIME };
-																					
+
 
 
 
@@ -67,16 +67,16 @@ namespace UtilORama4
 		//public const string FILE_DIMMAP = "Channel Dimming Map *.DimMap|*DimMap";
 		public const string FILE_DIMMAP = "Channel Dimming Map *." + EXT_DIMMAP + "|*." + EXT_DIMMAP;
 
-		private LORSequence4 seqSource = null;
-		private LORSequence4 seqDest = null;
+		private LOR4Sequence seqSource = null;
+		private LOR4Sequence seqDest = null;
 		private bool dirtyMap = false;
 		private bool dirtySeq = false;
 		private int currentTab = 0;
-		
-		
+
+
 		//! Try to avoid using this!  Now included in the new  .Nodes property of all iLORMembers
 		private List<TreeNodeAdv>[] nodesBySI = null; // new List<TreeNodeAdv>();
-		//! If that works out I can rid of this and all the associated code needed to update it
+																									//! If that works out I can rid of this and all the associated code needed to update it
 
 
 		public frmDim()
@@ -99,7 +99,7 @@ namespace UtilORama4
 			tabChannels.Controls.Clear();
 			// To add the tab pages in the order 1, 2, 3, 4
 			//tabChannels.Controls.AddRange(new System.Windows.Forms.Control[] { tabDim, tabTrim, tabOnOff, tabMinTime, tabNoChange });
-			tabChannels.Controls.AddRange(new System.Windows.Forms.Control[] {tabNoChange, tabDim, tabTrim, tabOnOff, tabMinTime });
+			tabChannels.Controls.AddRange(new System.Windows.Forms.Control[] { tabNoChange, tabDim, tabTrim, tabOnOff, tabMinTime });
 
 
 			int y = tabChannels.Top + 4;
@@ -435,7 +435,7 @@ namespace UtilORama4
 		{
 			ImBusy(true);
 			string beatsName = "";
-			seqSource = new LORSequence4();
+			seqSource = new LOR4Sequence();
 			int err = seqSource.ReadSequenceFile(sourceFilename);
 			if (err < 100)
 			{
@@ -459,11 +459,11 @@ namespace UtilORama4
 			int err = 0;
 			/*
 			ImBusy(true);
-			LORSequence4 seqNew = seqMaster;
+			LOR4Sequence seqNew = seqMaster;
 
 			seqNew.info = seqSource.info;
 			seqNew.info.filename = newSeqFileName;
-			seqNew.LORSequenceType4 = seqSource.LORSequenceType4;
+			seqNew.LOR4SequenceType = seqSource.LOR4SequenceType;
 			seqNew.Centiseconds = seqSource.Centiseconds;
 			seqNew.animation = seqSource.animation;
 			seqNew.videoUsage = seqSource.videoUsage;
@@ -513,18 +513,18 @@ namespace UtilORama4
 				if (mapMastToSrc[mapLoop] != null)
 				{
 					int newSI = mapLoop;
-					iLORMember4 newChild = seqNew.Members.BySavedIndex[newSI];
-					if (newChild.MemberType == LORMemberType4.Channel)
+					iLOR4Member newChild = seqNew.Members.BySavedIndex[newSI];
+					if (newChild.MemberType == LOR4MemberType.Channel)
 					{
 						//int sourceSI = mapMastToSrc[mapLoop];
-						//iLORMember4 sourceChildMember = seqSource.Members.BySavedIndex[sourceSI];
-						iLORMember4 sourceChildMember = mapMastToSrc[mapLoop];
-						if (sourceChildMember.MemberType == LORMemberType4.Channel)
+						//iLOR4Member sourceChildMember = seqSource.Members.BySavedIndex[sourceSI];
+						iLOR4Member sourceChildMember = mapMastToSrc[mapLoop];
+						if (sourceChildMember.MemberType == LOR4MemberType.Channel)
 						{
-							LORChannel4 sourceChannel = (LORChannel4)sourceChildMember;
+							LOR4Channel sourceChannel = (LOR4Channel)sourceChildMember;
 							if (sourceChannel.effects.Count > 0)
 							{
-								LORChannel4 newChannel = (LORChannel4)newChild;
+								LOR4Channel newChannel = (LOR4Channel)newChild;
 								newChannel.CopyEffects(sourceChannel.effects, false);
 								newChannel.Centiseconds = sourceChannel.Centiseconds;
 							} // end if effects.Count
@@ -532,18 +532,18 @@ namespace UtilORama4
 					}
 					else // newer obj is NOT a channel
 					{
-						if (newChild.MemberType == LORMemberType4.RGBChannel)
+						if (newChild.MemberType == LOR4MemberType.RGBChannel)
 						{
 							//int sourceSI = mapMastToSrc[mapLoop];
-							//iLORMember4 sourceChildMember = seqSource.Members.BySavedIndex[sourceSI];
-							iLORMember4 sourceChildMember = mapMastToSrc[mapLoop];
-							if (sourceChildMember.MemberType == LORMemberType4.RGBChannel)
+							//iLOR4Member sourceChildMember = seqSource.Members.BySavedIndex[sourceSI];
+							iLOR4Member sourceChildMember = mapMastToSrc[mapLoop];
+							if (sourceChildMember.MemberType == LOR4MemberType.RGBChannel)
 							{
-								LORRGBChannel4 sourceRGBchannel = (LORRGBChannel4)sourceChildMember;
-								LORRGBChannel4 masterRGBchannel = (LORRGBChannel4)newChild;
+								LOR4RGBChannel sourceRGBchannel = (LOR4RGBChannel)sourceChildMember;
+								LOR4RGBChannel masterRGBchannel = (LOR4RGBChannel)newChild;
 								masterRGBchannel.Centiseconds = sourceRGBchannel.Centiseconds;
-								LORChannel4 sourceChannel = sourceRGBchannel.redChannel;
-								LORChannel4 newChannel;
+								LOR4Channel sourceChannel = sourceRGBchannel.redChannel;
+								LOR4Channel newChannel;
 								if (sourceChannel.effects.Count > 0)
 								{
 									newChannel = masterRGBchannel.redChannel;
@@ -564,12 +564,12 @@ namespace UtilORama4
 
 							} // end if source obj is RGB channel
 						}
-						else // newer obj is NOT an LORRGBChannel4
+						else // newer obj is NOT an LOR4RGBChannel
 						{
 							// Channel Group = do nothing (?)
 							// LORTrack4 = do nothing (?)
 							// Timing Grid = do nothing (?)
-						} // end if newer obj is an LORRGBChannel4 (or not)
+						} // end if newer obj is an LOR4RGBChannel (or not)
 					} // end if newer obj is channel (or not)
 				} // end if mapping is undefined
 			} // loop thru newer Channels
@@ -587,15 +587,15 @@ namespace UtilORama4
 				}
 			}
 
-			foreach (LORChannel4 ch in seqMaster.Channels)
+			foreach (LOR4Channel ch in seqMaster.Channels)
 			{
 				ch.Centiseconds = seqSource.Centiseconds;
 			}
-			foreach (LORRGBChannel4 rc in seqMaster.RGBchannels)
+			foreach (LOR4RGBChannel rc in seqMaster.RGBchannels)
 			{
 				rc.Centiseconds = seqSource.Centiseconds;
 			}
-			foreach (LORChannelGroup4 cg in seqMaster.ChannelGroups)
+			foreach (LOR4ChannelGroup cg in seqMaster.ChannelGroups)
 			{
 				cg.Centiseconds = seqSource.Centiseconds;
 			}
@@ -874,8 +874,8 @@ namespace UtilORama4
 							string[] parts = null;
 							int si = lutils.UNDEFINED;
 							string name = "";
-							LORChannel4 chan = null;
-							LORRGBChannel4 rgbchan = null;
+							LOR4Channel chan = null;
+							LOR4RGBChannel rgbchan = null;
 							// Keep reading lines until the end
 							while (!reader.EndOfStream)
 							{
@@ -973,20 +973,20 @@ namespace UtilORama4
 			return err;
 		} // end SaveMap
 
-		private LORChannel4 FindChannel(int savedIndex, string name)
+		private LOR4Channel FindChannel(int savedIndex, string name)
 		{
-			LORChannel4 chan = null;
+			LOR4Channel chan = null;
 			try
 			{
 				// Is saved index within valid range
 				if (savedIndex <= seqSource.AllMembers.HighestSavedIndex)
 				{
 					// Get the member at that saved index
-					iLORMember4 member = seqSource.AllMembers.BySavedIndex[savedIndex];
+					iLOR4Member member = seqSource.AllMembers.BySavedIndex[savedIndex];
 					// did we get Something, and is that something a channel?
 					if (member != null)
 					{
-						if (member.MemberType == LORMemberType4.Channel)
+						if (member.MemberType == LOR4MemberType.Channel)
 						{
 							// So far so good!  Now, does the name match ?
 							// Case insensitive
@@ -996,7 +996,7 @@ namespace UtilORama4
 							if (cmp == 0)
 							{
 								// Got it!  Return it!
-								chan = (LORChannel4)member;
+								chan = (LOR4Channel)member;
 							}
 							else // Nope, name does NOT match
 							{
@@ -1016,20 +1016,20 @@ namespace UtilORama4
 			return chan;
 		}
 
-		private LORRGBChannel4 FindRGBChannel(int savedIndex, string name)
+		private LOR4RGBChannel FindRGBChannel(int savedIndex, string name)
 		{
-			LORRGBChannel4 rgbChan = null;
+			LOR4RGBChannel rgbChan = null;
 			try
 			{
 				// Is saved index within valid range
 				if (savedIndex <= seqSource.AllMembers.HighestSavedIndex)
 				{
 					// Get the member at that saved index
-					iLORMember4 member = seqSource.AllMembers.BySavedIndex[savedIndex];
+					iLOR4Member member = seqSource.AllMembers.BySavedIndex[savedIndex];
 					// did we get Something, and is that something a RGB Channel?
 					if (member != null)
 					{
-						if (member.MemberType == LORMemberType4.RGBChannel)
+						if (member.MemberType == LOR4MemberType.RGBChannel)
 						{
 							// So far so good!  Now, does the name match ?
 							// Case insensitive
@@ -1039,7 +1039,7 @@ namespace UtilORama4
 							if (cmp == 0)
 							{
 								// Got it!  Return it!
-								rgbChan = (LORRGBChannel4)member;
+								rgbChan = (LOR4RGBChannel)member;
 							}
 							else // Nope, name does NOT match
 							{
@@ -1091,11 +1091,11 @@ namespace UtilORama4
 			int[] foundChannels;
 			int sourceSI = lutils.UNDEFINED;
 			int masterSI = lutils.UNDEFINED;
-			LORMemberType4 sourceType = LORMemberType4.None;
-			LORMemberType4 masterType = LORMemberType4.None;
-			iLORMember4 masterMember = null;
-			iLORMember4 newSourceMember = null;
-			iLORMember4 foundID = null;
+			LOR4MemberType sourceType = LOR4MemberType.None;
+			LOR4MemberType masterType = LOR4MemberType.None;
+			iLOR4Member masterMember = null;
+			iLOR4Member newSourceMember = null;
+			iLOR4Member foundID = null;
 			string mfile = "";
 			string sfile = "";
 			long finalAlgorithms = Properties.Settings.Default.FuzzyFinalAlgorithms;
@@ -1227,7 +1227,7 @@ namespace UtilORama4
 					{
 						if (!reader.EndOfStream)
 						{
-							// Next line is the Master LORChannel4
+							// Next line is the Master LOR4Channel
 							lineIn = reader.ReadLine();
 							lineNum++;
 							//li = lineIn.IndexOf(FIELDmasterChannel);
@@ -1236,14 +1236,14 @@ namespace UtilORama4
 							{
 								masterName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
 								masterSI = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
-								masterType = LORSeqEnums4.EnumMemberType(lutils.getKeyWord(lineIn, lutils.FIELDtype));
+								masterType = LOR4SeqEnums.EnumMemberType(lutils.getKeyWord(lineIn, lutils.FIELDtype));
 								//lblMessage.Text = "Map \"" + masterName + "\" to...";
 								//pnlMessage.Refresh();
 
-								// Next line (let's assume its there) is the Source LORChannel4
+								// Next line (let's assume its there) is the Source LOR4Channel
 								if (!reader.EndOfStream)
 								{
-									// Next line is the Source LORChannel4
+									// Next line is the Source LOR4Channel
 									lineIn = reader.ReadLine();
 									lineNum++;
 									//li = lineIn.IndexOf(FIELDsourceChannel);
@@ -1252,7 +1252,7 @@ namespace UtilORama4
 									{
 										sourceName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
 										sourceSI = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
-										sourceType = LORSeqEnums4.EnumMemberType(lutils.getKeyWord(lineIn, lutils.FIELDtype));
+										sourceType = LOR4SeqEnums.EnumMemberType(lutils.getKeyWord(lineIn, lutils.FIELDtype));
 
 										// is it time to update?
 										if ((lineNum % updFreq) == 0)
@@ -1397,7 +1397,7 @@ namespace UtilORama4
 						{
 							if (!reader.EndOfStream)
 							{
-								// Next line is the Master LORChannel4
+								// Next line is the Master LOR4Channel
 								lineIn = reader.ReadLine();
 								lineNum++;
 								//li = lineIn.IndexOf(FIELDmasterChannel);
@@ -1408,11 +1408,11 @@ namespace UtilORama4
 									//lblMessage.Text = "Map \"" + masterName + "\" to...";
 									//pnlMessage.Refresh();
 									masterSI = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
-									masterType = LORSeqEnums4.EnumMemberType(lutils.getKeyWord(lineIn, lutils.FIELDtype));
-									// Next line (let's assume its there) is the Source LORChannel4
+									masterType = LOR4SeqEnums.EnumMemberType(lutils.getKeyWord(lineIn, lutils.FIELDtype));
+									// Next line (let's assume its there) is the Source LOR4Channel
 									if (!reader.EndOfStream)
 									{
-										// Next line is the Source LORChannel4
+										// Next line is the Source LOR4Channel
 										lineIn = reader.ReadLine();
 										lineNum++;
 										//li = lineIn.IndexOf(FIELDsourceChannel);
@@ -1431,7 +1431,7 @@ namespace UtilORama4
 											prgBarInner.CustomText = lblMessage.Text;
 											pnlMessage.Refresh();
 											sourceSI = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
-											sourceType = LORSeqEnums4.EnumMemberType(lutils.getKeyWord(lineIn, lutils.FIELDtype));
+											sourceType = LOR4SeqEnums.EnumMemberType(lutils.getKeyWord(lineIn, lutils.FIELDtype));
 
 											if (!seqMaster.Members.BySavedIndex[masterSI].Selected)
 											{
@@ -1647,8 +1647,8 @@ namespace UtilORama4
 			{
 				if (node.Tag != null)
 				{
-					iLORMember4 member = (iLORMember4)treeSource.SelectedNode.Tag;
-					if (member.MemberType == LORMemberType4.Channel)
+					iLOR4Member member = (iLOR4Member)treeSource.SelectedNode.Tag;
+					if (member.MemberType == LOR4MemberType.Channel)
 					{
 						Bitmap img = lutils.RenderEffects(member, 0, member.Centiseconds, picPreviewSource.Width, picPreviewSource.Height, true);
 						if (tabChannels.SelectedIndex == TAB_DIM)
@@ -1664,7 +1664,7 @@ namespace UtilORama4
 					}
 					else
 					{
-						if (member.MemberType == LORMemberType4.RGBChannel)
+						if (member.MemberType == LOR4MemberType.RGBChannel)
 						{
 							Bitmap img = lutils.RenderEffects(member, 0, member.Centiseconds, picPreviewSource.Width, picPreviewSource.Height, false);
 							if (tabChannels.SelectedIndex == TAB_DIM)
@@ -1733,7 +1733,7 @@ namespace UtilORama4
 			return preview;
 		}
 
-		private int ScaleChannel(iLORMember4 member, int percent, bool force = false)
+		private int ScaleChannel(iLOR4Member member, int percent, bool force = false)
 		{
 			// Returns the count of how many effects actually needed scaling
 			int count = 0;
@@ -1743,8 +1743,8 @@ namespace UtilORama4
 				//////////////
 				// CHANNEL //
 				////////////
-				case LORMemberType4.Channel:
-					LORChannel4 chan = (LORChannel4)member;
+				case LOR4MemberType.Channel:
+					LOR4Channel chan = (LOR4Channel)member;
 					// if 'Force' is true, then definately needed
 					needed = force;
 					// If not Force, then check to see if needed
@@ -1790,8 +1790,8 @@ namespace UtilORama4
 				//////////////////
 				// RGB CHANNEL //
 				////////////////
-				case LORMemberType4.RGBChannel:
-					LORRGBChannel4 rgb = (LORRGBChannel4)member;
+				case LOR4MemberType.RGBChannel:
+					LOR4RGBChannel rgb = (LOR4RGBChannel)member;
 					// if 'Force' is true, then definately needed
 					needed = force;
 					// If not Force, then check to see if needed
@@ -1869,9 +1869,9 @@ namespace UtilORama4
 				////////////////////
 				// CHANNEL GROUP //
 				//////////////////
-				case LORMemberType4.ChannelGroup:
-					LORChannelGroup4 group = (LORChannelGroup4)member;
-					foreach (iLORMember4 subMember in group.Members)
+				case LOR4MemberType.ChannelGroup:
+					LOR4ChannelGroup group = (LOR4ChannelGroup)member;
+					foreach (iLOR4Member subMember in group.Members)
 					{
 						// Recurse!
 						count += ScaleChannel(subMember, percent, force);
@@ -1881,9 +1881,9 @@ namespace UtilORama4
 				////////////////////
 				// COSMIC DEVICE //   (Treat the same as a Channel Group)
 				//////////////////
-				case LORMemberType4.Cosmic:
-					LORCosmic4 cosmic = (LORCosmic4)member;
-					foreach (iLORMember4 subMember in cosmic.Members)
+				case LOR4MemberType.Cosmic:
+					LOR4Cosmic cosmic = (LOR4Cosmic)member;
+					foreach (iLOR4Member subMember in cosmic.Members)
 					{
 						// Recurse!
 						count += ScaleChannel(subMember, percent, force);
@@ -1893,9 +1893,9 @@ namespace UtilORama4
 				////////////
 				// TRACK //   (Effectively a group, so treat it like one)
 				//////////
-				case LORMemberType4.Track:
+				case LOR4MemberType.Track:
 					LORTrack4 track = (LORTrack4)member;
-					foreach (iLORMember4 subMember in track.Members)
+					foreach (iLOR4Member subMember in track.Members)
 					{
 						// Recurse!
 						count += ScaleChannel(subMember, percent, force);
@@ -1907,7 +1907,7 @@ namespace UtilORama4
 			return count;
 		}
 
-		private int TrimChannel(iLORMember4 member, int percent)
+		private int TrimChannel(iLOR4Member member, int percent)
 		{
 			// Returns the count of how many effects actually needed scaling
 			int count = 0;
@@ -1917,8 +1917,8 @@ namespace UtilORama4
 				//////////////
 				// CHANNEL //
 				////////////
-				case LORMemberType4.Channel:
-					LORChannel4 chan = (LORChannel4)member;
+				case LOR4MemberType.Channel:
+					LOR4Channel chan = (LOR4Channel)member;
 					// Loop thru all effects
 					for (int e = 0; e < chan.effects.Count; e++)
 					{
@@ -1964,8 +1964,8 @@ namespace UtilORama4
 				//////////////////
 				// RGB CHANNEL //
 				////////////////
-				case LORMemberType4.RGBChannel:
-					LORRGBChannel4 rgb = (LORRGBChannel4)member;
+				case LOR4MemberType.RGBChannel:
+					LOR4RGBChannel rgb = (LOR4RGBChannel)member;
 					// For RGB Channels, we need to check all 3 subchannels (Red, Grn, Blu)
 					TrimChannel(rgb.redChannel, percent);
 					TrimChannel(rgb.grnChannel, percent);
@@ -1975,9 +1975,9 @@ namespace UtilORama4
 				////////////////////
 				// CHANNEL GROUP //
 				//////////////////
-				case LORMemberType4.ChannelGroup:
-					LORChannelGroup4 group = (LORChannelGroup4)member;
-					foreach (iLORMember4 subMember in group.Members)
+				case LOR4MemberType.ChannelGroup:
+					LOR4ChannelGroup group = (LOR4ChannelGroup)member;
+					foreach (iLOR4Member subMember in group.Members)
 					{
 						// Recurse!
 						count += TrimChannel(subMember, percent);
@@ -1987,9 +1987,9 @@ namespace UtilORama4
 				////////////////////
 				// COSMIC DEVICE //   (Treat the same as a Channel Group)
 				//////////////////
-				case LORMemberType4.Cosmic:
-					LORCosmic4 cosmic = (LORCosmic4)member;
-					foreach (iLORMember4 subMember in cosmic.Members)
+				case LOR4MemberType.Cosmic:
+					LOR4Cosmic cosmic = (LOR4Cosmic)member;
+					foreach (iLOR4Member subMember in cosmic.Members)
 					{
 						// Recurse!
 						count += TrimChannel(subMember, percent);
@@ -1999,9 +1999,9 @@ namespace UtilORama4
 				////////////
 				// TRACK //   (Effectively a group, so treat it like one)
 				//////////
-				case LORMemberType4.Track:
+				case LOR4MemberType.Track:
 					LORTrack4 track = (LORTrack4)member;
-					foreach (iLORMember4 subMember in track.Members)
+					foreach (iLOR4Member subMember in track.Members)
 					{
 						// Recurse!
 						count += TrimChannel(subMember, percent);
@@ -2013,7 +2013,7 @@ namespace UtilORama4
 			return count;
 		}
 
-		private int OnOffChannel(iLORMember4 member)
+		private int OnOffChannel(iLOR4Member member)
 		{
 			// Returns the count of how many effects actually needed scaling
 			int count = 0;
@@ -2023,8 +2023,8 @@ namespace UtilORama4
 				//////////////
 				// CHANNEL //
 				////////////
-				case LORMemberType4.Channel:
-					LORChannel4 chan = (LORChannel4)member;
+				case LOR4MemberType.Channel:
+					LOR4Channel chan = (LOR4Channel)member;
 					// Loop thru all effects
 					for (int e = 0; e < chan.effects.Count; e++)
 					{
@@ -2080,8 +2080,8 @@ namespace UtilORama4
 				//////////////////
 				// RGB CHANNEL //
 				////////////////
-				case LORMemberType4.RGBChannel:
-					LORRGBChannel4 rgb = (LORRGBChannel4)member;
+				case LOR4MemberType.RGBChannel:
+					LOR4RGBChannel rgb = (LOR4RGBChannel)member;
 					// For RGB Channels, we need to check all 3 subchannels (Red, Grn, Blu)
 					OnOffChannel(rgb.redChannel);
 					OnOffChannel(rgb.grnChannel);
@@ -2091,9 +2091,9 @@ namespace UtilORama4
 				////////////////////
 				// CHANNEL GROUP //
 				//////////////////
-				case LORMemberType4.ChannelGroup:
-					LORChannelGroup4 group = (LORChannelGroup4)member;
-					foreach (iLORMember4 subMember in group.Members)
+				case LOR4MemberType.ChannelGroup:
+					LOR4ChannelGroup group = (LOR4ChannelGroup)member;
+					foreach (iLOR4Member subMember in group.Members)
 					{
 						// Recurse!
 						count += OnOffChannel(subMember);
@@ -2103,9 +2103,9 @@ namespace UtilORama4
 				////////////////////
 				// COSMIC DEVICE //   (Treat the same as a Channel Group)
 				//////////////////
-				case LORMemberType4.Cosmic:
-					LORCosmic4 cosmic = (LORCosmic4)member;
-					foreach (iLORMember4 subMember in cosmic.Members)
+				case LOR4MemberType.Cosmic:
+					LOR4Cosmic cosmic = (LOR4Cosmic)member;
+					foreach (iLOR4Member subMember in cosmic.Members)
 					{
 						// Recurse!
 						count += OnOffChannel(subMember);
@@ -2115,9 +2115,9 @@ namespace UtilORama4
 				////////////
 				// TRACK //   (Effectively a group, so treat it like one)
 				//////////
-				case LORMemberType4.Track:
+				case LOR4MemberType.Track:
 					LORTrack4 track = (LORTrack4)member;
-					foreach (iLORMember4 subMember in track.Members)
+					foreach (iLOR4Member subMember in track.Members)
 					{
 						// Recurse!
 						count += OnOffChannel(subMember);
@@ -2129,7 +2129,7 @@ namespace UtilORama4
 			return count;
 		}
 
-		private int MinTimeChannel(iLORMember4 member, int seconds)
+		private int MinTimeChannel(iLOR4Member member, int seconds)
 		{
 			// Returns the count of how many effects actually needed scaling
 			int count = 0;
@@ -2141,8 +2141,8 @@ namespace UtilORama4
 				//////////////
 				// CHANNEL //
 				////////////
-				case LORMemberType4.Channel:
-					LORChannel4 chan = (LORChannel4)member;
+				case LOR4MemberType.Channel:
+					LOR4Channel chan = (LOR4Channel)member;
 					LOREffect4 thiseffect = null;
 					LOREffect4 nexteffect = null;
 					// Loop thru all but last effects
@@ -2231,8 +2231,8 @@ namespace UtilORama4
 				//////////////////
 				// RGB CHANNEL //
 				////////////////
-				case LORMemberType4.RGBChannel:
-					LORRGBChannel4 rgb = (LORRGBChannel4)member;
+				case LOR4MemberType.RGBChannel:
+					LOR4RGBChannel rgb = (LOR4RGBChannel)member;
 					// For RGB Channels, we need to check all 3 subchannels (Red, Grn, Blu)
 					OnOffChannel(rgb.redChannel);
 					OnOffChannel(rgb.grnChannel);
@@ -2242,9 +2242,9 @@ namespace UtilORama4
 				////////////////////
 				// CHANNEL GROUP //
 				//////////////////
-				case LORMemberType4.ChannelGroup:
-					LORChannelGroup4 group = (LORChannelGroup4)member;
-					foreach (iLORMember4 subMember in group.Members)
+				case LOR4MemberType.ChannelGroup:
+					LOR4ChannelGroup group = (LOR4ChannelGroup)member;
+					foreach (iLOR4Member subMember in group.Members)
 					{
 						// Recurse!
 						count += OnOffChannel(subMember);
@@ -2254,9 +2254,9 @@ namespace UtilORama4
 				////////////////////
 				// COSMIC DEVICE //   (Treat the same as a Channel Group)
 				//////////////////
-				case LORMemberType4.Cosmic:
-					LORCosmic4 cosmic = (LORCosmic4)member;
-					foreach (iLORMember4 subMember in cosmic.Members)
+				case LOR4MemberType.Cosmic:
+					LOR4Cosmic cosmic = (LOR4Cosmic)member;
+					foreach (iLOR4Member subMember in cosmic.Members)
 					{
 						// Recurse!
 						count += OnOffChannel(subMember);
@@ -2266,9 +2266,9 @@ namespace UtilORama4
 				////////////
 				// TRACK //   (Effectively a group, so treat it like one)
 				//////////
-				case LORMemberType4.Track:
+				case LOR4MemberType.Track:
 					LORTrack4 track = (LORTrack4)member;
-					foreach (iLORMember4 subMember in track.Members)
+					foreach (iLOR4Member subMember in track.Members)
 					{
 						// Recurse!
 						count += OnOffChannel(subMember);
@@ -2297,7 +2297,7 @@ namespace UtilORama4
 		{
 			if (node.Tag != null)
 			{
-				iLORMember4 member = (iLORMember4)node.Tag;
+				iLOR4Member member = (iLOR4Member)node.Tag;
 				if (node.CheckState == CheckState.Indeterminate)
 				{
 					node.TextColor = COLOR_INDETERMINATE;
@@ -2311,7 +2311,7 @@ namespace UtilORama4
 				List<TreeNodeAdv> chNodes = (List<TreeNodeAdv>)member.Tag;
 				if (chNodes.Count > 1)
 				{
-					for (int c=0; c< chNodes.Count; c++)
+					for (int c = 0; c < chNodes.Count; c++)
 					{
 						if (chNodes[c].Text != node.Text)
 						{
@@ -2349,10 +2349,10 @@ namespace UtilORama4
 			CheckState ret = CheckState.Unchecked;
 			if (node.Tag != null)
 			{
-				iLORMember4 member = (iLORMember4)node.Tag;
+				iLOR4Member member = (iLOR4Member)node.Tag;
 				int nodeRule = member.ZCount;
-				if ((member.MemberType == LORMemberType4.Channel) ||
-					(member.MemberType == LORMemberType4.RGBChannel))
+				if ((member.MemberType == LOR4MemberType.Channel) ||
+					(member.MemberType == LOR4MemberType.RGBChannel))
 				{
 					if ((theRule == RULE_DIM) ||
 						(theRule == RULE_TRIM) ||
@@ -2382,16 +2382,16 @@ namespace UtilORama4
 					}
 					if (node.Checked) ret = CheckState.Checked;
 				}
-				else 
+				else
 				{
-					if (member.MemberType == LORMemberType4.ChannelGroup)
+					if (member.MemberType == LOR4MemberType.ChannelGroup)
 					{
-						LORChannelGroup4 group = (LORChannelGroup4)member;
+						LOR4ChannelGroup group = (LOR4ChannelGroup)member;
 						ret = GroupCheckState(group.Members, theRule);
 					}
 					else
 					{
-						if (member.MemberType == LORMemberType4.Track)
+						if (member.MemberType == LOR4MemberType.Track)
 						{
 							LORTrack4 track = (LORTrack4)member;
 							ret = GroupCheckState(track.Members, theRule);
@@ -2399,7 +2399,7 @@ namespace UtilORama4
 					} // End if a group, or not
 				} // end if a channel or rgb channel, or not
 			} // end if tag ain't null
-			// Recurse if it has children!
+				// Recurse if it has children!
 			for (int n = 0; n < node.Nodes.Count; n++)
 			{
 				UpdateNodeChecks(node.Nodes[n], theRule);
@@ -2433,14 +2433,14 @@ namespace UtilORama4
 			{
 				if (node.Tag != null)
 				{
-					iLORMember4 member = (iLORMember4)node.Tag;
+					iLOR4Member member = (iLOR4Member)node.Tag;
 					SetMemberRules(member, TabRules[tabIndex], isChecked);
 				} // end if node.Tag ain't null
 			} // end if node ain't null
 		}
 
 
-		private int SetMemberRules(iLORMember4 member, int newRule, bool isChecked)
+		private int SetMemberRules(iLOR4Member member, int newRule, bool isChecked)
 		{
 			// Return old rules
 			int ret = member.ZCount;
@@ -2493,32 +2493,32 @@ namespace UtilORama4
 					}
 				}
 
-				if (member.MemberType == LORMemberType4.RGBChannel)
+				if (member.MemberType == LOR4MemberType.RGBChannel)
 				{
 					// If an RGB channel, copy it to the 3 subchannels
-					LORRGBChannel4 rgbCh = (LORRGBChannel4)member;
+					LOR4RGBChannel rgbCh = (LOR4RGBChannel)member;
 					rgbCh.redChannel.ZCount = rgbCh.ZCount;
 					rgbCh.grnChannel.ZCount = rgbCh.ZCount;
 					rgbCh.bluChannel.ZCount = rgbCh.ZCount;
 				}
 				// If a group or a track, we need to recurse
-				if (member.MemberType == LORMemberType4.ChannelGroup)
+				if (member.MemberType == LOR4MemberType.ChannelGroup)
 				{
 					// Recurse!!
-					LORChannelGroup4 group = (LORChannelGroup4)member;
+					LOR4ChannelGroup group = (LOR4ChannelGroup)member;
 					for (int m = 0; m < group.Members.Count; m++)
 					{
-						iLORMember4 subMember = group.Members[m];
+						iLOR4Member subMember = group.Members[m];
 						SetMemberRules(subMember, newRule, isChecked);
 					}
 				}
-				if (member.MemberType == LORMemberType4.Track)
+				if (member.MemberType == LOR4MemberType.Track)
 				{
 					// Recurse!!
 					LORTrack4 track = (LORTrack4)member;
 					for (int m = 0; m < track.Members.Count; m++)
 					{
-						iLORMember4 subMember = track.Members[m];
+						iLOR4Member subMember = track.Members[m];
 						SetMemberRules(subMember, newRule, isChecked);
 					}
 				}
@@ -2526,21 +2526,21 @@ namespace UtilORama4
 			return ret;
 		}
 
-		private CheckState GroupCheckState(LORMembership4 members, int theRule)
+		private CheckState GroupCheckState(LOR4Membership members, int theRule)
 		{
 			CheckState ret = CheckState.Unchecked;
 			int countTotal = 0;  // How many channels or rgbchannels-- so far
 			int countRule = 0; // how many of them-- so far-- have this rule
-			// as soon as we get out of balance we will exit, so these are NOT complete counts
-			
+												 // as soon as we get out of balance we will exit, so these are NOT complete counts
+
 			// Loop thru all members (duh)
-			for (int m=0; m< members.Count; m++)
+			for (int m = 0; m < members.Count; m++)
 			{
 				// Get current member
-				iLORMember4 member = members[m];
+				iLOR4Member member = members[m];
 				// If channel or rgb channel, and thus no children
-				if ((member.MemberType == LORMemberType4.Channel) ||
-					(member.MemberType == LORMemberType4.RGBChannel))
+				if ((member.MemberType == LOR4MemberType.Channel) ||
+					(member.MemberType == LOR4MemberType.RGBChannel))
 				{
 					// Raise total count
 					countTotal++;
@@ -2552,14 +2552,14 @@ namespace UtilORama4
 						// mask out MinTime
 						int mr = member.ZCount & 3;
 						// Does rule match
-						if (mr==theRule)
+						if (mr == theRule)
 						{
 							// Yep, matches, increase that counter
 							countRule++;
 							// If ALL of them so far have matched
 							if (countRule == countTotal)
 							// Then this parent will be checked (so far)
-							{ ret = CheckState.Checked;	}
+							{ ret = CheckState.Checked; }
 							else
 							{
 								// else if a previous one(s) didn't match, and now we have have a match
@@ -2621,13 +2621,13 @@ namespace UtilORama4
 					} // End if The Rule is Dim, Trim, or OnOff
 				}
 				else // Member is not channel or rgb channel
-				// So by process of elimination must be group or track
+						 // So by process of elimination must be group or track
 				{
 					// if a group
-					if (member.MemberType == LORMemberType4.ChannelGroup)
+					if (member.MemberType == LOR4MemberType.ChannelGroup)
 					{
 						// type cast it so we can get its members
-						LORChannelGroup4 group = (LORChannelGroup4)member;
+						LOR4ChannelGroup group = (LOR4ChannelGroup)member;
 						// Run a test on them-- RECURSE!
 						CheckState grpState = GroupCheckState(group.Members, theRule);
 						// If the group is indeterminite, or doesn't match what we've got so far
@@ -2643,7 +2643,7 @@ namespace UtilORama4
 					else
 					{
 						// If a track (which is basically a group) follow same logic as group above
-						if (member.MemberType == LORMemberType4.Track)
+						if (member.MemberType == LOR4MemberType.Track)
 						{
 							LORTrack4 track = (LORTrack4)member;
 							CheckState trkState = GroupCheckState(track.Members, theRule);
@@ -2726,10 +2726,10 @@ namespace UtilORama4
 			BrowseForMap();
 		}
 
-		private bool MakeDirty(bool isDirty=true)
+		private bool MakeDirty(bool isDirty = true)
 		{
 			bool ret = dirtyMap; // Return previous state
-			if (isDirty!= dirtyMap) // did it change?
+			if (isDirty != dirtyMap) // did it change?
 			{
 				if (seqSource != null)
 				{

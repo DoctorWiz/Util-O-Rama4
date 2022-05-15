@@ -28,7 +28,8 @@ using TagLib.Asf;
 using TagLib.MusePack;
 using TagLib.NonContainer;
 using System.Diagnostics.Eventing.Reader;
-using LORUtils4; using FileHelper;
+using LOR4Utils;
+using FileHelper;
 
 namespace UtilORama4
 {
@@ -56,7 +57,7 @@ namespace UtilORama4
 		public static int AverageBarMS = 1;
 		public static int AverageBeatFullMS = 1;
 		public static int AverageBeatQuarterMS = 1;
-		
+
 		// Default MS per Frame alignment is Zero
 		// Zero indicates alignment to Bars, Beats, Onsets, or None
 		// Will range from 100-17 for 10-60 FPS
@@ -83,27 +84,27 @@ namespace UtilORama4
 		//private static bool Fyle.DebugMode = Fyle.IsWizard || Fyle.IsAWizard;
 		//public static LORTrack4 VampTrack = null;
 
-		public static LORSequence4 Sequence = null;
+		public static LOR4Sequence Sequence = null;
 		public const string VAMPTRACKname = "Vamp-O-Rama";
 		public static LORTrack4 VampTrack = null;
 		public static LORTimings4 GridBeats = null;
 		public static LORTimings4 GridOnsets = null;
-		private static LORChannel4[] noteChannels = null;
+		private static LOR4Channel[] noteChannels = null;
 
 		// Note this is a temporary (bad pun) temp location
 		// Should get overwritten by the REAL temp path
 		// C:\\Users\\Username\\AppData\\Temp\\UtilORama\\VampORama\\
 		//public static string WorkPath = "C:\\Windows\\Temp\\";
 		public static string TempPath = Fyle.GetTempPath("Vamps");
-		
 
 
-		public enum TransformTypes { BarsAndBeats, NoteOnsets, PolyphonicTranscription, PitchAndKey, Tempo, Chromagram, Spectrogram, Segments, Chords};
+
+		public enum TransformTypes { BarsAndBeats, NoteOnsets, PolyphonicTranscription, PitchAndKey, Tempo, Chromagram, Spectrogram, Segments, Chords };
 
 
 		#endregion
-		
-		
+
+
 		static Annotator()
 		{
 			int x = 5;
@@ -130,17 +131,17 @@ namespace UtilORama4
 			highestTime = 0;
 			msPerFrame = 0;
 			alignIndex = 0;
-			LORSequence4 Sequence = null;
+			LOR4Sequence Sequence = null;
 			VampTrack = null;
 			noteChannels = null;
 		}
 
 
-		public static void Init(LORSequence4 sequence)
+		public static void Init(LOR4Sequence sequence)
 		{
 			Clear();
 			Sequence = sequence;
-			VampTrack = Sequence.FindTrack(VAMPTRACKname,true);
+			VampTrack = Sequence.FindTrack(VAMPTRACKname, true);
 		}
 
 		public static string OLDAnnotateSong(string fileSong, string vampParams, string fileConfig, bool reuse = false)
@@ -158,33 +159,33 @@ namespace UtilORama4
 
 			try
 			{
-					string emsg = annotatorProgram + " " + annotatorArguments;
-					Console.WriteLine(emsg);
-					//DialogResult dr = MessageBox.Show(this, emsg, "About to launch", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Asterisk);
-					DialogResult dr = DialogResult.Yes;
+				string emsg = annotatorProgram + " " + annotatorArguments;
+				Console.WriteLine(emsg);
+				//DialogResult dr = MessageBox.Show(this, emsg, "About to launch", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Asterisk);
+				DialogResult dr = DialogResult.Yes;
 
-					if (dr == DialogResult.Yes)
-					{
-						if (Fyle.DebugMode) Clipboard.SetText(emsg);
-					}
-					if (dr != DialogResult.Cancel)
-					{
-						resultsFile = TempPath;
-						resultsFile += "song_";
-						resultsFile += Path.GetFileNameWithoutExtension(fileConfig);
-						resultsFile += ".csv";
+				if (dr == DialogResult.Yes)
+				{
+					if (Fyle.DebugMode) Clipboard.SetText(emsg);
+				}
+				if (dr != DialogResult.Cancel)
+				{
+					resultsFile = TempPath;
+					resultsFile += "song_";
+					resultsFile += Path.GetFileNameWithoutExtension(fileConfig);
+					resultsFile += ".csv";
 
-						//! FOR TESTING DEBUGGING, if set to re-use old files, OR if no file from a previous run exists
-						if ((!reuse) || (!Fyle.Exists(resultsFile)))
-						{
-							string runthis = annotatorProgram + " " + annotatorArguments;
+					//! FOR TESTING DEBUGGING, if set to re-use old files, OR if no file from a previous run exists
+					if ((!reuse) || (!Fyle.Exists(resultsFile)))
+					{
+						string runthis = annotatorProgram + " " + annotatorArguments;
 						runthis = "/c " + runthis; // + " 2>output.txt";
 
 						string vampCommandLast = runthis;
-							if (Fyle.DebugMode) Clipboard.SetText(runthis);
+						if (Fyle.DebugMode) Clipboard.SetText(runthis);
 
-							Process cmdProc = new Process();
-							ProcessStartInfo procInfo = new ProcessStartInfo();
+						Process cmdProc = new Process();
+						ProcessStartInfo procInfo = new ProcessStartInfo();
 						//x procInfo.FileName = annotatorProgram;
 						procInfo.FileName = "cmd.exe";
 						procInfo.RedirectStandardOutput = true;
@@ -195,7 +196,7 @@ namespace UtilORama4
 						//x procInfo.Arguments = annotatorArguments;
 						procInfo.Arguments = runthis;
 						procInfo.WorkingDirectory = TempPath;
-							cmdProc.StartInfo = procInfo;
+						cmdProc.StartInfo = procInfo;
 						cmdProc.EnableRaisingEvents = true;
 						//cmdProc.ErrorDataReceived += ProcessVampError;
 						//cmdProc.OutputDataReceived += ProcessVampError;
@@ -216,19 +217,19 @@ namespace UtilORama4
 					}
 
 					if (Fyle.Exists(resultsFile))
-						{
-							// return resultsFile;
-							// errCount = 99999;
-						}
-						else
-						{
+					{
+						// return resultsFile;
+						// errCount = 99999;
+					}
+					else
+					{
 						// NO RESULTS FILE!	
 						if (Fyle.DebugMode)
 						{
 							System.Diagnostics.Debugger.Break();
 						}
-						}
 					}
+				}
 			}
 			catch (Exception e)
 			{
@@ -334,7 +335,7 @@ namespace UtilORama4
 					(alignTo == vamps.AlignmentType.BeatsThird) ||
 					(alignTo == vamps.AlignmentType.BeatsQuarter) ||
 					(alignTo == vamps.AlignmentType.NoteOnsets))
-			{ alignFPS = 0;  }
+			{ alignFPS = 0; }
 
 			if (alignTo == vamps.AlignmentType.FPS10) alignFPS = 10;
 			if (alignTo == vamps.AlignmentType.FPS20) alignFPS = 20;
@@ -476,7 +477,7 @@ namespace UtilORama4
 									// So advance the counter and keep trying
 									msg = "Time " + theTime.ToString() + " is past the current [" + alignIndex.ToString() + "] effect " + effectTime.ToString();
 									msg += " and there are more effects left and it is past the next [";
-									msg += (alignIndex + 1).ToString() + "] effect too " + effects[alignIndex+1].starttime.ToString();
+									msg += (alignIndex + 1).ToString() + "] effect too " + effects[alignIndex + 1].starttime.ToString();
 									msg += " so advancing the index to " + (alignIndex + 1).ToString();
 									Debug.WriteLine(msg);
 									alignIndex++;
@@ -569,7 +570,7 @@ namespace UtilORama4
 				} // end if there is (or isn't} any effects in this collection
 			} // End if the AlignTo collection is (or is not) null
 
-						
+
 			return matchTime;
 		}
 

@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
-using LORUtils4; using FileHelper;
+using LOR4Utils;
+using FileHelper;
 using xUtils;
 
 
@@ -17,7 +18,7 @@ namespace UtilORama4
 {
 	public partial class frmConverter : Form
 	{
-		private LORSequence4 seq = null;
+		private LOR4Sequence seq = null;
 		private bool isWiz = false;
 		private bool gotx = false;
 		private bool gotLOR = false;
@@ -30,7 +31,7 @@ namespace UtilORama4
 		private static Properties.Settings heartOfTheSun = Properties.Settings.Default;
 		private StreamWriter writer = null;
 		private xTimings[] timeTracks = null;
-		List<LORChannel4> chList = new List<LORChannel4>();
+		List<LOR4Channel> chList = new List<LOR4Channel>();
 
 
 		public frmConverter()
@@ -263,10 +264,10 @@ namespace UtilORama4
 		private void btnBrowseLOR_Click(object sender, EventArgs e)
 		{
 			string stat = "";
-			string initDir = LORSequence4.DefaultSequencesPath;
+			string initDir = LOR4Sequence.DefaultSequencesPath;
 			string initFile = "";
 			string filt = "All Sequences (*.las, *.lms, *.lcc)|*.las;*.lms;*.lcc|Musical Sequences only (*.lms)|*.lms";
-			filt += "|Animated Sequences only (*.las)|*.las|LORChannel4 Configurations only(*.lcc)|*.lcc";
+			filt += "|Animated Sequences only (*.las)|*.las|LOR4Channel Configurations only(*.lcc)|*.lcc";
 
 			if (optExisting.Checked)
 			{
@@ -283,7 +284,7 @@ namespace UtilORama4
 				if (result == DialogResult.OK)
 				{
 					txtLORfile.Text = dlgFileOpen.FileName;
-					seq = new LORSequence4(dlgFileOpen.FileName);
+					seq = new LOR4Sequence(dlgFileOpen.FileName);
 					if (seq.Channels.Count > 0)
 					{
 						grpEffectType.Visible = false;
@@ -295,7 +296,7 @@ namespace UtilORama4
 						optTimings_CheckedChanged(null, null);
 						gotLOR = true;
 						stat = "Sequence contains " + seq.Channels.Count.ToString() + " channels and " + seq.TimingGrids.Count.ToString() + " timing grids.";
-						
+
 						cboLORItem.Items.Clear();
 						if (optTimings.Checked)
 						{
@@ -333,7 +334,7 @@ namespace UtilORama4
 				if (result == DialogResult.OK)
 				{
 					txtLORfile.Text = dlgFileSave.FileName;
-					seq = new LORSequence4();
+					seq = new LOR4Sequence();
 					seq.filename = dlgFileSave.FileName;
 					cboLORItem.DropDownStyle = ComboBoxStyle.DropDown;
 					gotItem = false;
@@ -368,7 +369,7 @@ namespace UtilORama4
 			{
 				// Can't find xLights show directory, lets try elsewhere
 				// Check LOR directory
-				initDir = LORUtils4.lutils.DefaultSequencesPath;
+				initDir = LOR4Utils.lutils.DefaultSequencesPath;
 				if (Directory.Exists(initDir))
 				{
 					// Its there, does it have a Timings subdirectory
@@ -420,9 +421,9 @@ namespace UtilORama4
 				if (result == DialogResult.OK)
 				{
 					ConvertTimings(dlgFileOpen.FileName);
-					
-					
-					
+
+
+
 					/*
 					txtXFile.Text = dlgFileOpen.FileName;
 					xChosen = true;
@@ -470,7 +471,7 @@ namespace UtilORama4
 
 		private void optTimings_CheckedChanged(object sender, EventArgs e)
 		{
-			
+
 			if (prevStateTimings != optTimings.Checked)
 			{
 				if (optExisting.Checked)
@@ -493,11 +494,11 @@ namespace UtilORama4
 						}
 						grpEffectType.Visible = false;
 					}
-					else // LORChannel4
+					else // LOR4Channel
 					{
 						if (seq.Channels.Count > 0)
 						{
-							chList = new List<LORChannel4>(); // Clear/Reset
+							chList = new List<LOR4Channel>(); // Clear/Reset
 							chList.Add(seq.Channels[0]);
 							for (int i = 1; i < seq.Channels.Count; i++)
 							{
@@ -516,7 +517,7 @@ namespace UtilORama4
 							}
 							chList.Sort();
 							cboLORItem.Items.Clear();
-							for (int l=0; l< chList.Count; l++)
+							for (int l = 0; l < chList.Count; l++)
 							{
 								cboLORItem.Items.Add(chList[l].Name);
 							}
@@ -548,7 +549,7 @@ namespace UtilORama4
 			} // End state actually changed
 		}
 
-		private void ConvertxTimingsToLORchannel(string xTimingsFile, LORChannel4 LORchannel)
+		private void ConvertxTimingsToLORchannel(string xTimingsFile, LOR4Channel LORchannel)
 		{
 			string lineIn = "";
 			string label = "";
@@ -580,9 +581,9 @@ namespace UtilORama4
 			while (!reader.EndOfStream)
 			{
 				lineIn = reader.ReadLine();
-				label = LORUtils4.lutils.getKeyWord(lineIn, "label");
-				st = LORUtils4.lutils.getKeyValue(lineIn, "starttime");
-				et = LORUtils4.lutils.getKeyValue(lineIn, "endtime");
+				label = LOR4Utils.lutils.getKeyWord(lineIn, "label");
+				st = LOR4Utils.lutils.getKeyValue(lineIn, "starttime");
+				et = LOR4Utils.lutils.getKeyValue(lineIn, "endtime");
 				// Convert (and round) from milliseconds to centiseconds
 				st = (st + 5) / 10;
 				et = (et + 5) / 10;
@@ -667,9 +668,9 @@ namespace UtilORama4
 			while (!reader.EndOfStream)
 			{
 				lineIn = reader.ReadLine();
-				label = LORUtils4.lutils.getKeyWord(lineIn, "label");
-				st = LORUtils4.lutils.getKeyValue(lineIn, "starttime");
-				et = LORUtils4.lutils.getKeyValue(lineIn, "endtime");
+				label = LOR4Utils.lutils.getKeyWord(lineIn, "label");
+				st = LOR4Utils.lutils.getKeyValue(lineIn, "starttime");
+				et = LOR4Utils.lutils.getKeyValue(lineIn, "endtime");
 				// Convert (and round) from milliseconds to centiseconds
 				st = (st + 5) / 10;
 				et = (et + 5) / 10;
@@ -695,7 +696,7 @@ namespace UtilORama4
 			}
 		}
 
-		private void ConvertLORchannelToxTimings(LORChannel4 LORchannel, string xTimingsFile)
+		private void ConvertLORchannelToxTimings(LOR4Channel LORchannel, string xTimingsFile)
 		{
 			int n = 1;
 			StreamWriter writer = new StreamWriter(xTimingsFile);
@@ -770,33 +771,33 @@ namespace UtilORama4
 			bool overWrite = false;
 			//if (optLORtox.Checked)
 			//{
-				if (optExisting.Checked)
+			if (optExisting.Checked)
+			{
+				if (optTimings.Checked)
 				{
-					if (optTimings.Checked)
+					LORTimings4 LORgrid = seq.TimingGrids[cboLORItem.SelectedIndex];
+					Bitmap bmp = LOR4Utils.lutils.RenderTimings(LORgrid, 0, LORgrid.Centiseconds, picLORPreview.Width, picLORPreview.Height);
+					picLORPreview.Image = bmp;
+					stat = "Timing Grid " + LORgrid.Name + " contains " + LORgrid.timings.Count.ToString() + " timings.";
+					if (seq.TimingGrids[cboLORItem.SelectedIndex].timings.Count > 1)
 					{
-						LORTimings4 LORgrid = seq.TimingGrids[cboLORItem.SelectedIndex];
-						Bitmap bmp = LORUtils4.lutils.RenderTimings(LORgrid, 0, LORgrid.Centiseconds, picLORPreview.Width, picLORPreview.Height);
-						picLORPreview.Image = bmp;
-						stat = "Timing Grid " + LORgrid.Name + " contains " + LORgrid.timings.Count.ToString() + " timings.";
-						if (seq.TimingGrids[cboLORItem.SelectedIndex].timings.Count > 1)
-						{
-							overWrite = true;
-						}
+						overWrite = true;
 					}
-					else // LORChannel4
+				}
+				else // LOR4Channel
+				{
+					LOR4Channel LORchannel = chList[cboLORItem.SelectedIndex];
+					Bitmap bmp = LOR4Utils.lutils.RenderEffects(LORchannel, 0, LORchannel.Centiseconds, picLORPreview.Width, picLORPreview.Height, true);
+					picLORPreview.Image = bmp;
+					stat = "LOR4Channel " + LORchannel.Name + " contains " + LORchannel.effects.Count.ToString() + " effects.";
+					if (LORchannel.effects.Count > 1)
 					{
-						LORChannel4 LORchannel = chList[cboLORItem.SelectedIndex];
-						Bitmap bmp = LORUtils4.lutils.RenderEffects(LORchannel, 0, LORchannel.Centiseconds, picLORPreview.Width, picLORPreview.Height, true);
-						picLORPreview.Image = bmp;
-						stat = "LORChannel4 " + LORchannel.Name + " contains " + LORchannel.effects.Count.ToString() + " effects.";
-						if (LORchannel.effects.Count > 1)
-						{
-							overWrite = true;
-						}
+						overWrite = true;
 					}
-					picLORPreview.Visible = true;
-					pnlStatus.Text = stat;
-					lblOverwrite.Visible = overWrite;
+				}
+				picLORPreview.Visible = true;
+				pnlStatus.Text = stat;
+				lblOverwrite.Visible = overWrite;
 				//}
 
 
@@ -871,7 +872,7 @@ namespace UtilORama4
 				lineIn = reader.ReadLine();
 			}
 			reader.Close();
-			label = LORUtils4.lutils.getKeyWord(lineIn, "name");
+			label = LOR4Utils.lutils.getKeyWord(lineIn, "name");
 			return label;
 		}
 
@@ -884,24 +885,24 @@ namespace UtilORama4
 					LORTimings4 LORgrid = seq.FindTimingGrid(cboLORItem.Text);
 					ConvertxTimingsToLORtimings(txtXFile.Text, LORgrid);
 				}
-				else // LORChannel4
+				else // LOR4Channel
 				{
 					if (optExisting.Checked)
 					{
-						LORChannel4 LORchannel = seq.FindChannel(cboLORItem.Text);
+						LOR4Channel LORchannel = seq.FindChannel(cboLORItem.Text);
 						ConvertxTimingsToLORchannel(txtXFile.Text, LORchannel);
 					}
 					else // New sequence
 					{
 						LORTrack4 LORtrack = seq.FindTrack("Time-O-Rama");
-						LORChannel4 LORchannel = seq.CreateNewChannel(cboLORItem.Text);
+						LOR4Channel LORchannel = seq.CreateNewChannel(cboLORItem.Text);
 						LORtrack.Members.Add(LORchannel);
 						ConvertxTimingsToLORchannel(txtXFile.Text, LORchannel);
 					}
 				} // End timing or channel
 			}
 			else // LOR to xLights
-			{ 
+			{
 				if (optTimings.Checked)
 				{
 					LORTimings4 LORgrid = seq.FindTimingGrid(cboLORItem.Text);
@@ -909,10 +910,10 @@ namespace UtilORama4
 				}
 				else
 				{
-					LORChannel4 LORchannel = seq.FindChannel(cboLORItem.Text);
+					LOR4Channel LORchannel = seq.FindChannel(cboLORItem.Text);
 					ConvertLORchannelToxTimings(LORchannel, txtXFile.Text);
 				}
-			
+
 			} // End x to LOR or LOR to x
 		} // End Convert
 
@@ -955,10 +956,10 @@ namespace UtilORama4
 		private void cboTiming_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			int i = cboTiming.SelectedIndex;
-			if (i< timeTracks.Length)
+			if (i < timeTracks.Length)
 			{
 				xTimings timeTrack = timeTracks[i];
-				Bitmap img= xutils.RenderTimings(timeTrack, 0, timeTrack.EndTime, picxPreview.Width, picxPreview.Height);
+				Bitmap img = xutils.RenderTimings(timeTrack, 0, timeTrack.EndTime, picxPreview.Width, picxPreview.Height);
 				picxPreview.Image = img;
 				picxPreview.Visible = true;
 			}
@@ -966,14 +967,14 @@ namespace UtilORama4
 
 		private void picxPreview_Click(object sender, EventArgs e)
 		{
-			
+
 		}
 
 		private void GridFix()
 		{
 			LORTimings4[] uniqueGrids = null;
 			int uniqueCount = 0;
-			for (int t=0; t< seq.TimingGrids.Count; t++)
+			for (int t = 0; t < seq.TimingGrids.Count; t++)
 			{
 				LORTimings4 grid = seq.TimingGrids[t];
 				if (uniqueCount == 0)
@@ -985,9 +986,9 @@ namespace UtilORama4
 				else
 				{
 					bool match = false;
-					for (int u=0; u< uniqueCount; u++)
+					for (int u = 0; u < uniqueCount; u++)
 					{
-						if (grid.Name.CompareTo(uniqueGrids[u].Name)==0)
+						if (grid.Name.CompareTo(uniqueGrids[u].Name) == 0)
 						{
 							match = true;
 						}
@@ -1087,7 +1088,7 @@ namespace UtilORama4
 						lineCount++;
 					}
 					else // lineIn.IndexOf("</EffectLayer>")
-					{ 
+					{
 						// Yep, /EffectLayer found, so end of this section
 						// Close out the LOR timing track
 						lineOut = "\t\t</timingGrid>";
@@ -1120,8 +1121,8 @@ namespace UtilORama4
 						{
 							// If it wasn't </timing> then it should have been <EffectLayer>
 							string foo = lineIn; // Break here for testing
-							// It was a subsection of a Lyric track, and there is at least one more subsection left
-							// Starting the next subsection of a Lyric track
+																	 // It was a subsection of a Lyric track, and there is at least one more subsection left
+																	 // Starting the next subsection of a Lyric track
 							string t2name = tname;
 							if (subSec == 0)
 							{
@@ -1142,7 +1143,7 @@ namespace UtilORama4
 					} // END /EffectLayer found, or not.  End of timing track
 				} // Inner while loop.  Was /EffectLayer found on previous pass?
 			} // Outer while loop.  Was /timing or /timings found on previous pass?
-			
+
 			// Done!  No more timing tracks in the xLights source file
 			// Close out the LOR file
 			lineOut = "\t</timingGrids>";

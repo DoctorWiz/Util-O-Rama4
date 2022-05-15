@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Diagnostics;
 using System.Text;
- 
 
-namespace LORUtils4
+
+namespace LOR4Utils
 {
 	public class LORMusic4
 	{
@@ -21,7 +21,7 @@ namespace LORUtils4
 		public const string FIELDmusicFilename = " musicFilename";
 		public const string FIELDmusicTitle = " musicTitle";
 		// TODO Add properties/methods for these
-		protected LORSequence4 parentSequence = null;
+		protected LOR4Sequence parentSequence = null;
 		protected bool isDirty = false;
 
 		public LORMusic4()
@@ -65,7 +65,7 @@ namespace LORUtils4
 
 	public class LORSavedIndex4
 	{
-		public LORMemberType4 MemberType = LORMemberType4.None;
+		public LOR4MemberType MemberType = LOR4MemberType.None;
 		public int objIndex = lutils.UNDEFINED;
 
 		public LORSavedIndex4 Clone()
@@ -104,15 +104,15 @@ namespace LORUtils4
 		private static readonly string FIELDController = " Controller";
 
 		// TODO Add properties and methods to access these
-		protected iLORMember4 myOwner = null;
+		protected iLOR4Member myOwner = null;
 		protected bool isDirty = false;
 
-		public LOROutput4(iLORMember4 theOwner)
+		public LOROutput4(iLOR4Member theOwner)
 		{
 			// Default Constructor
 			myOwner = theOwner;
 		}
-		public LOROutput4(iLORMember4 theOwner, string lineIn)
+		public LOROutput4(iLOR4Member theOwner, string lineIn)
 		{
 			myOwner = theOwner;
 			Parse(lineIn);
@@ -169,9 +169,9 @@ namespace LORUtils4
 			}
 			return ret;
 		}
-		
+
 		// For IEquatible
-			public bool Equals(LOROutput4 obj)
+		public bool Equals(LOROutput4 obj)
 		{
 			// Check for null values and compare run-time types.
 			if (obj == null || GetType() != obj.GetType())
@@ -180,7 +180,7 @@ namespace LORUtils4
 			LOROutput4 o = (LOROutput4)obj;
 			return ((deviceType == o.deviceType) && (unit == o.unit) && (circuit == o.circuit) && (network == o.network));
 		}
-		
+
 		public override bool Equals(Object obj)
 		{
 			// Check for null values and compare run-time types.
@@ -213,21 +213,21 @@ namespace LORUtils4
 			string ret = "T" + dt.ToString() + DELIM4 + "N" + network.ToString("00000");
 			ret += DELIM4 + "U" + unit.ToString("000") + DELIM4 + "C" + circuit.ToString("000");
 			return ret;
-						 ;
+			;
 		}
 
 		public void Parse(string lineIn)
 		{
 			//System.Diagnostics.Debugger.Break();
 			//string keywd = lutils.getKeyWord(lineIn, LORVizChannel4.FIELDsubParam);
-			//string keywd = lutils.getKeyWord(lineIn, LORChannel4.FIELDcolor);
+			//string keywd = lutils.getKeyWord(lineIn, LOR4Channel.FIELDcolor);
 			int idt = lineIn.IndexOf(FIELDdeviceType);  // Check for "deviceType" (lower case) (Sequences)
 																									//if (keywd.Length == 0)
 			if (idt > 0)
 			{
 				//isViz = false;
 				string dev = lutils.getKeyWord(lineIn, FIELDdeviceType); // Note: deviceType is NOT capitalized and is a String
-				deviceType = LORSeqEnums4.EnumDevice(dev);
+				deviceType = LOR4SeqEnums.EnumDevice(dev);
 				// for LOR, this is the network, for DMX it is the UniverseNumber
 				network = lutils.getKeyValue(lineIn, FIELDnetwork);
 				// for LOR, this is the channel, for DMX this is the DMXAddress
@@ -294,7 +294,7 @@ namespace LORUtils4
 				{
 					if (deviceType == LORDeviceType4.LOR)
 					{
-						ret.Append(lutils.SetKey(FIELDdeviceType, LORSeqEnums4.DeviceName(deviceType)));
+						ret.Append(lutils.SetKey(FIELDdeviceType, LOR4SeqEnums.DeviceName(deviceType)));
 						ret.Append(lutils.SetKey(FIELDunit, unit));
 						ret.Append(lutils.SetKey(FIELDcircuit, circuit));
 						if (network != lutils.UNDEFINED)
@@ -304,13 +304,13 @@ namespace LORUtils4
 					}
 					else if (deviceType == LORDeviceType4.DMX)
 					{
-						ret.Append(lutils.SetKey(FIELDdeviceType, LORSeqEnums4.DeviceName(deviceType)));
+						ret.Append(lutils.SetKey(FIELDdeviceType, LOR4SeqEnums.DeviceName(deviceType)));
 						ret.Append(lutils.SetKey(FIELDcircuit, circuit));
 						ret.Append(lutils.SetKey(FIELDnetwork, network));
 					}
 					else if (deviceType == LORDeviceType4.Dasher)
 					{
-						ret.Append(lutils.SetKey(FIELDdeviceType, LORSeqEnums4.DeviceName(deviceType)));
+						ret.Append(lutils.SetKey(FIELDdeviceType, LOR4SeqEnums.DeviceName(deviceType)));
 						ret.Append(lutils.SetKey(FIELDunit, unit));
 						ret.Append(lutils.SetKey(FIELDcircuit, circuit));
 					}
@@ -378,7 +378,7 @@ namespace LORUtils4
 					}
 					else
 					{
-						n = LORSeqEnums4.DeviceName(deviceType);
+						n = LOR4SeqEnums.DeviceName(deviceType);
 					}
 				}
 				return n;
@@ -387,27 +387,27 @@ namespace LORUtils4
 
 		public LOROutput4 Clone()
 		{
-			LOROutput4 oout	= new LOROutput4(myOwner);
+			LOROutput4 oout = new LOROutput4(myOwner);
 			oout.deviceType = deviceType;
-			oout.circuit		= circuit;
-			oout.network		= network;
-			oout.unit				= unit;
-			oout.isViz			= isViz;
+			oout.circuit = circuit;
+			oout.network = network;
+			oout.unit = unit;
+			oout.isViz = isViz;
 			return oout;
 		}
 
 
 	} // End LOROutput4 Class
-		
+
 	public class LOREffect4
 	{
-		public LORUtils4.LOREffectType4 EffectType = LOREffectType4.None;
+		public LOR4Utils.LOREffectType4 EffectType = LOREffectType4.None;
 		private int myStartCentisecond = lutils.UNDEFINED;
 		private int myEndCentisecond = 360001;
 		public int Intensity = lutils.UNDEFINED;
 		public int startIntensity = lutils.UNDEFINED;
 		public int endIntensity = lutils.UNDEFINED;
-		public LORChannel4 parent = null;
+		public LOR4Channel parent = null;
 		public int myIndex = lutils.UNDEFINED;
 
 		public const string FIELDintensity = " intensity";
@@ -473,7 +473,7 @@ namespace LORUtils4
 
 		public void Parse(string lineIn)
 		{
-			this.EffectType = LORSeqEnums4.EnumEffectType(lutils.getKeyWord(lineIn, lutils.FIELDtype));
+			this.EffectType = LOR4SeqEnums.EnumEffectType(lutils.getKeyWord(lineIn, lutils.FIELDtype));
 			myStartCentisecond = lutils.getKeyValue(lineIn, lutils.FIELDstartCentisecond);
 			myEndCentisecond = lutils.getKeyValue(lineIn, lutils.FIELDendCentisecond);
 			Intensity = lutils.getKeyValue(lineIn, FIELDintensity);
@@ -493,9 +493,9 @@ namespace LORUtils4
 		{
 			StringBuilder ret = new StringBuilder();
 
-			ret.Append(lutils.StartTable(LORSequence4.TABLEeffect, 3));
+			ret.Append(lutils.StartTable(LOR4Sequence.TABLEeffect, 3));
 
-			ret.Append(lutils.SetKey(lutils.FIELDtype, LORSeqEnums4.EffectName(this.EffectType).ToLower()));
+			ret.Append(lutils.SetKey(lutils.FIELDtype, LOR4SeqEnums.EffectName(this.EffectType).ToLower()));
 			ret.Append(lutils.SetKey(lutils.FIELDstartCentisecond, startCentisecond));
 			ret.Append(lutils.SetKey(lutils.FIELDendCentisecond, myEndCentisecond));
 			// For steady intensity (non-ramp/fade)
@@ -517,7 +517,7 @@ namespace LORUtils4
 		{
 			StringBuilder ret = new StringBuilder();
 
-			ret.Append(LORSeqEnums4.EffectTypeName(this.EffectTypeEX));
+			ret.Append(LOR4SeqEnums.EffectTypeName(this.EffectTypeEX));
 			ret.Append(" From ");
 			ret.Append(startCentisecond);
 			ret.Append(" to ");
@@ -607,7 +607,7 @@ namespace LORUtils4
 			{
 				if (Direction == 0) return true; else return false;
 			}
-		}	
+		}
 
 
 		public LOREffectType4 EffectTypeEX
@@ -644,7 +644,7 @@ namespace LORUtils4
 		public LOREffect4 Clone()
 		{
 			// See Also: Duplicate()
-			LOREffect4 ret = new LOREffect4(this.EffectType, this.startCentisecond,this.endCentisecond);
+			LOREffect4 ret = new LOREffect4(this.EffectType, this.startCentisecond, this.endCentisecond);
 			ret.Intensity = Intensity;
 			ret.startIntensity = startIntensity;
 			ret.endIntensity = endIntensity;
@@ -665,7 +665,7 @@ namespace LORUtils4
 		//public int columns = 0;
 		public string image = "";
 		public List<LORAnimationRow4> animationRows = new List<LORAnimationRow4>();
-		public LORSequence4 parentSequence = null;
+		public LOR4Sequence parentSequence = null;
 
 		public const string FIELDrows = " sections";
 		public const string FIELDcolumns = " columns";
@@ -692,11 +692,11 @@ namespace LORUtils4
 			}
 		}
 
-		public LORAnimation4(LORSequence4 myParent)
+		public LORAnimation4(LOR4Sequence myParent)
 		{
 			parentSequence = myParent;
 		}
-		public LORAnimation4(LORSequence4 myParent, string lineIn)
+		public LORAnimation4(LOR4Sequence myParent, string lineIn)
 		{
 			parentSequence = myParent;
 			Parse(lineIn);
@@ -708,7 +708,7 @@ namespace LORUtils4
 
 			//if (sections > 0)
 			//{
-			ret.Append(lutils.StartTable(LORSequence4.TABLEanimation, 1));
+			ret.Append(lutils.StartTable(LOR4Sequence.TABLEanimation, 1));
 
 			ret.Append(lutils.SetKey(FIELDrows, sections));
 			ret.Append(lutils.SetKey(FIELDcolumns, columns));
@@ -724,7 +724,7 @@ namespace LORUtils4
 				ret.Append(lutils.CRLF);
 				ret.Append(lutils.LEVEL1);
 				ret.Append(lutils.FINTBL);
-				ret.Append(LORSequence4.TABLEanimation);
+				ret.Append(LOR4Sequence.TABLEanimation);
 				ret.Append(lutils.FINFLD);
 			}
 			else
@@ -763,7 +763,7 @@ namespace LORUtils4
 		{
 			LORAnimation4 dupOut = new LORAnimation4(null);
 			dupOut.image = image;
-			foreach(LORAnimationRow4 row in animationRows)
+			foreach (LORAnimationRow4 row in animationRows)
 			{
 				LORAnimationRow4 newRow = row.Clone();
 				dupOut.animationRows.Add(newRow);
@@ -928,7 +928,7 @@ namespace LORUtils4
 			ret.Append(lutils.SPC);
 			ret.Append(lutils.SetKey(lutils.FIELDendCentisecond, endCentisecond));
 
-			ret.Append(lutils.StartTable(LORSequence4.TABLEloopLevel, 4));
+			ret.Append(lutils.StartTable(LOR4Sequence.TABLEloopLevel, 4));
 			ret.Append(lutils.FINFLD);
 			if (loopCount > 0)
 			{
@@ -973,7 +973,7 @@ namespace LORUtils4
 			StringBuilder ret = new StringBuilder();
 
 			ret.Append(lutils.CRLF);
-			ret.Append(lutils.StartTable(LORSequence4.TABLEloopLevel, 4));
+			ret.Append(lutils.StartTable(LOR4Sequence.TABLEloopLevel, 4));
 			if (loops.Count > 0)
 			{
 				ret.Append(lutils.SPC);
@@ -987,7 +987,7 @@ namespace LORUtils4
 					ret.Append(theLoop.LineOut());
 				}
 				ret.Append(lutils.CRLF);
-				ret.Append(lutils.EndTable(LORSequence4.TABLEloopLevel, 4));
+				ret.Append(lutils.EndTable(LOR4Sequence.TABLEloopLevel, 4));
 			}
 			else
 			{
@@ -1050,10 +1050,10 @@ namespace LORUtils4
 		public LORMusic4 music = new LORMusic4();
 		public int videoUsage = 0;
 		public string animationInfo = "";
-		public LORSequenceType4 sequenceType = LORSequenceType4.Undefined;
+		public LOR4SequenceType sequenceType = LOR4SequenceType.Undefined;
 		// TODO Change this to protected and add properties / methods for it
 		// Note: May be a Sequence or a Vizualization!
-		public iLORMember4 Parent = null;
+		public iLOR4Member Parent = null;
 		protected bool isDirty = false;
 
 
@@ -1068,11 +1068,11 @@ namespace LORUtils4
 		public const string FIELDmodifiedBy = " modifiedBy";
 		public const string FIELDvideoUsage = " videoUsage";
 
-		public LORSeqInfo4(LORSequence4 myParent)
+		public LORSeqInfo4(LOR4Sequence myParent)
 		{
 			Parent = myParent;
 		}
-		public LORSeqInfo4(LORSequence4 myParent, string lineIn)
+		public LORSeqInfo4(LOR4Sequence myParent, string lineIn)
 		{
 			Parent = myParent;
 			Parse(lineIn);
@@ -1098,11 +1098,11 @@ namespace LORUtils4
 				{
 					if (musical)
 					{
-						sequenceType = LORSequenceType4.Musical;
+						sequenceType = LOR4SequenceType.Musical;
 					}
 					else
 					{
-						sequenceType = LORSequenceType4.Animated;
+						sequenceType = LOR4SequenceType.Animated;
 					}
 					videoUsage = lutils.getKeyValue(lineIn, FIELDvideoUsage);
 				}
@@ -1111,18 +1111,18 @@ namespace LORUtils4
 					saveFileVersion = lutils.getKeyValue(lineIn, FIELDchannelConfigFileVersion);
 					if (saveFileVersion > 2)
 					{
-						sequenceType = LORSequenceType4.ChannelConfig;
+						sequenceType = LOR4SequenceType.ChannelConfig;
 					}
 				}
 			}
 			else // First fetch returned undefined
-			{ 
+			{
 				string sfv = lutils.getKeyWord(lineIn, FIELDlvizSaveFileVersion);
 				if (sfv.Length > 0)
 				{
-					saveFileVersion = Int32.Parse(sfv.Substring(0,1));
-					sequenceType = LORSequenceType4.Visualizer;
-  			}
+					saveFileVersion = Int32.Parse(sfv.Substring(0, 1));
+					sequenceType = LOR4SequenceType.Visualizer;
+				}
 			}
 
 		} // end Parse
@@ -1134,7 +1134,7 @@ namespace LORUtils4
 			// Use sequence.sequenceInfo when using WriteSequenceFile (which matches original unmodified file)
 			// Use sequence.fileInfo.sequenceInfo when using WriteSequenceInxxxxOrder (which creates a whole new file)
 			ret.Append(lutils.STFLD);
-			ret.Append(LORSequence4.TABLEsequence);
+			ret.Append(LOR4Sequence.TABLEsequence);
 
 			ret.Append(FIELDsaveFileVersion);
 			ret.Append(lutils.FIELDEQ);
@@ -1180,7 +1180,7 @@ namespace LORUtils4
 			ret.Append(lutils.XMLifyName(modifiedBy));
 			ret.Append(lutils.ENDQT);
 
-			if (sequenceType == LORSequenceType4.Musical)
+			if (sequenceType == LOR4SequenceType.Musical)
 			{
 				ret.Append(music.LineOut());
 			}
@@ -1196,7 +1196,7 @@ namespace LORUtils4
 		public string LastModified
 		{
 			get
-			{ 	
+			{
 				return lastModified.ToString("MM/dd/yyyy hh:mm:ss tt");
 			}
 		}
@@ -1209,7 +1209,7 @@ namespace LORUtils4
 			ret.Append(lutils.CRLF);
 
 			ret.Append(lutils.STFLD);
-			ret.Append(LORSequence4.TABLEsequence);
+			ret.Append(LOR4Sequence.TABLEsequence);
 
 			ret.Append(FIELDsaveFileVersion);
 			ret.Append(lutils.FIELDEQ);
@@ -1225,7 +1225,7 @@ namespace LORUtils4
 			ret.Append(lutils.FIELDEQ);
 			ret.Append(newCreatedAt);
 			ret.Append(lutils.ENDQT);
-			if (sequenceType == LORSequenceType4.Musical)
+			if (sequenceType == LOR4SequenceType.Musical)
 			{
 				ret.Append(music.ToString());
 			}
@@ -1255,7 +1255,7 @@ namespace LORUtils4
 			return data;
 		}
 	} // end LORSeqInfo4 class
-	
+
 	public class Err
 	{
 		// =0 means no errors or warnings
@@ -1291,5 +1291,5 @@ namespace LORUtils4
 			return ret;
 		}
 	} // end Err class
-	
+
 }

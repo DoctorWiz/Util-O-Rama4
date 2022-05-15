@@ -14,7 +14,7 @@ using System.Configuration;
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using LORUtils4;
+using LOR4Utils;
 using FileHelper;
 using xUtilities;
 using Musik;
@@ -73,7 +73,7 @@ namespace UtilORama4
 		private const string ProcTitle = "Analyzing ";
 		//private MRU mruAudio = new MRU();
 
-		//private LORSequence4 seq = new LORSequence4();
+		//private LOR4Sequence seq = new LOR4Sequence();
 		private bool dirtyTimes = false;
 		private const string helpPageV = "http://wizlights.com/xUtils/Vamperizer";
 		private const string helpPageL = "http://wizlights.com/utilorama/vamporama";
@@ -133,8 +133,8 @@ namespace UtilORama4
 		//private bool useChanCfg = false;
 		//private int firstCobjIdx = lutils.UNDEFINED;
 		//private int firstCsavedIndex = lutils.UNDEFINED;
-		//private LORChannel4[] noteChannels = null;
-		//private LORChannelGroup4[] octaveGroups = null;
+		//private LOR4Channel[] noteChannels = null;
+		//private LOR4ChannelGroup[] octaveGroups = null;
 
 		private double panelX = 300;
 		private double panelY = 300;

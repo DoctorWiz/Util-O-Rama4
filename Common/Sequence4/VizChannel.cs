@@ -9,9 +9,9 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using FileHelper;
 
-namespace LORUtils4
+namespace LOR4Utils
 {
-	public class LORVizChannel4 : LORMemberBase4, iLORMember4, IComparable<iLORMember4>
+	public class LORVizChannel4 : LORMemberBase4, iLOR4Member, IComparable<iLOR4Member>
 	{
 		//private const string STARTchannel = lutils.STFLD + lutils.TABLEchannel + lutils.FIELDname;
 
@@ -24,7 +24,7 @@ namespace LORUtils4
 		public int SubParam = lutils.UNDEFINED;
 		//public MultiColors MultiColors = new MultiColors();
 		public int[] colors = new int[5];
-		//protected LORMembership4 members = null;
+		//protected LOR4Membership members = null;
 
 		public bool LED = false;
 
@@ -43,7 +43,7 @@ namespace LORUtils4
 
 		//! CONSTRUCTORS
 
-		public LORVizChannel4(iLORMember4 theParent, string lineIn)
+		public LORVizChannel4(iLOR4Member theParent, string lineIn)
 		{
 			myParent = theParent;
 			//string seek = lutils.STFLD + lutils.TABLEchannel + lutils.FIELDname + lutils.FIELDEQ;
@@ -66,10 +66,10 @@ namespace LORUtils4
 
 
 		//! PROPERTIES, METHODS, ETC.
-		public override int CompareTo(iLORMember4 other)
+		public override int CompareTo(iLOR4Member other)
 		{
 			int result = 0;
-			if (LORMembership4.sortMode == LORMembership4.SORTbyOutput)
+			if (LOR4Membership.sortMode == LOR4Membership.SORTbyOutput)
 			{
 				Type t = other.GetType();
 				if (t == typeof(LORVizChannel4))
@@ -77,11 +77,11 @@ namespace LORUtils4
 					LORVizChannel4 ch = (LORVizChannel4)other;
 					result = output.ToString().CompareTo(ch.output.ToString());
 				}
-				if (t == typeof(LORChannel4))
+				if (t == typeof(LOR4Channel))
 				{
 					// Note: VizChannel output can be compared to LORChannel output
 					// but LORChannel output cannot be compared to VizChannel output
-					LORChannel4 ch = (LORChannel4)other;
+					LOR4Channel ch = (LOR4Channel)other;
 					result = output.ToString().CompareTo(ch.output.ToString());
 				}
 			}
@@ -148,11 +148,11 @@ namespace LORUtils4
 		}
 
 
-		public override LORMemberType4 MemberType
+		public override LOR4MemberType MemberType
 		{
 			get
 			{
-				return LORMemberType4.VizChannel;
+				return LOR4MemberType.VizChannel;
 			}
 		}
 
@@ -180,7 +180,7 @@ namespace LORUtils4
 
 		public override void Parse(string lineIn)
 		{
-			//LORSequence4 Parent = ID.Parent;
+			//LOR4Sequence Parent = ID.Parent;
 			myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
 			myItemID = lutils.getKeyValue(lineIn, LORVisualization4.FIELDvizID);
 			color = lutils.getKeyValue(lineIn, LORVisualization4.FIELDvizColor);
@@ -202,9 +202,9 @@ namespace LORUtils4
 
 		public override string LineOut()
 		{
-			// <LORChannel4 ID="1" Name="M5 Center Bushes (G) [L1.10]"
+			// <LOR4Channel ID="1" Name="M5 Center Bushes (G) [L1.10]"
 			// LORDeviceType4 ="1" Network="0"
-			// Controller ="1" LORChannel4="10"
+			// Controller ="1" LOR4Channel="10"
 			// Color ="65280"
 			// Sub_Type ="0" Sub_Parm="0"
 			// Multi_1 ="16777215" Multi_2="16777215" Multi_3="16777215" Multi_4="16777215" Multi_5="16777215"
@@ -220,7 +220,7 @@ namespace LORUtils4
 			ret.Append(lutils.SetKey(LORVisualization4.FIELDvizColor, (int)color));
 			ret.Append(lutils.SetKey(FIELDsubType, SubType));
 			ret.Append(lutils.SetKey(FIELDsubParam, SubParam));
-			
+
 			ret.Append(ColorsLineOut());
 
 			ret.Append(FIELDled);
@@ -243,7 +243,7 @@ namespace LORUtils4
 		{
 			StringBuilder ret = new StringBuilder();
 
-			for (int c=0; c<5; c++)
+			for (int c = 0; c < 5; c++)
 			{
 				ret.Append(lutils.SetKey(FIELDmultiColor + c.ToString(), colors[c]));
 			}
@@ -299,7 +299,7 @@ namespace LORUtils4
 
 		}
 
-		public void CopyFromSeqChannel (LORChannel4 source)
+		public void CopyFromSeqChannel(LOR4Channel source)
 		{
 			if (color == 0) color = source.color;
 			if (myName.Length == 0) ChangeName(source.Name);
@@ -310,7 +310,7 @@ namespace LORUtils4
 
 		}
 
-		public override iLORMember4 Clone()
+		public override iLOR4Member Clone()
 		{
 			LORVizChannel4 vch = (LORVizChannel4)base.Clone();
 			vch.output = output.Clone();
@@ -326,7 +326,7 @@ namespace LORUtils4
 			return vch;
 		}
 
-		public override iLORMember4 Clone(string newName)
+		public override iLOR4Member Clone(string newName)
 		{
 			LORVizChannel4 vch = (LORVizChannel4)this.Clone();
 			ChangeName(newName);
@@ -334,11 +334,11 @@ namespace LORUtils4
 		}
 
 
-		public LORChannel4 CopyToSeqChannel()
+		public LOR4Channel CopyToSeqChannel()
 		{
 			// See Also: Duplicate()
 			//int nextSI = ID.Parent.Members.highestSavedIndex + 1;
-			LORChannel4 ret = new LORChannel4(this, myName);
+			LOR4Channel ret = new LOR4Channel(this, myName);
 			ret.color = color;
 			ret.output.deviceType = output.deviceType;
 			ret.output.circuit = output.circuit;

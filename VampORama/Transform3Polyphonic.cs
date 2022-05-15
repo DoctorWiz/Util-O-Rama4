@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
-using LORUtils4;
+using LOR4Utils;
 using FileHelper;
 using xUtilities;
 
@@ -86,8 +86,8 @@ namespace UtilORama4
 		//public const int LABELNoteNameUnicode = 2;
 		//public const int LABELMidiNoteNumber = 3;
 
-		private static LORChannelGroup4 polyGroup = null;
-		public static LORChannel4[] polyChannels = null;
+		private static LOR4ChannelGroup polyGroup = null;
+		public static LOR4Channel[] polyChannels = null;
 
 		private static int idx = 0;
 		public enum DetectionMethods { ComplexDomain = 0, SpectralDifference = 1, PhaseDeviation = 2, BroadbandEnergyRise = 3 };
@@ -118,7 +118,7 @@ namespace UtilORama4
 			}
 		}
 
-		public static int PrepareToVamp(string fileSong, int pluginIndex,	int detectionMethod = METHOD1domain)
+		public static int PrepareToVamp(string fileSong, int pluginIndex, int detectionMethod = METHOD1domain)
 		{
 			// Song file should have already been copied to the temp folder and named song.mp3
 			// Annotator will use the same folder the song is in for it's files
@@ -310,7 +310,7 @@ namespace UtilORama4
 			LabelType = labelType;
 			AlignmentType = alignmentType;
 			Annotator.SetAlignment(alignmentType);
-			
+
 			string msg = "\r\n\r\n### PROCESSING POLYPHONIC TRANSCRIPTION ####################################";
 			Debug.WriteLine(msg);
 
@@ -347,7 +347,7 @@ namespace UtilORama4
 						lastStart = eStart;
 					}
 				} // end line contains a period
-				//TODO: Raise event for progress bar
+					//TODO: Raise event for progress bar
 			} // end while loop more lines remaining
 
 			reader.Close();
@@ -385,14 +385,14 @@ namespace UtilORama4
 			Annotator.SetAlignment(AlignmentType);
 
 
-			if (LabelType == vamps.LabelType.NoteNamesASCII)		polyCount = MusicalNotation.noteNamesASCII.Length;
+			if (LabelType == vamps.LabelType.NoteNamesASCII) polyCount = MusicalNotation.noteNamesASCII.Length;
 			if (LabelType == vamps.LabelType.NoteNamesUnicode) polyCount = MusicalNotation.noteNamesUnicode.Length;
 
 			// Part 1
 			// Get Track, Polyphonic Group, Octave Groups, and Poly Channels
 			polyGroup = Annotator.VampTrack.Members.FindChannelGroup(transformName, true);
 			Array.Resize(ref polyChannels, polyCount);
-			LORChannelGroup4 octoGroup = null;
+			LOR4ChannelGroup octoGroup = null;
 			for (int n = 0; n < polyCount; n++)
 			{
 				int g2 = (int)n / 12;
@@ -402,10 +402,10 @@ namespace UtilORama4
 					grpNum = g2;
 				}
 				string noteName = n.ToString();
-				if (LabelType == vamps.LabelType.NoteNamesASCII)		noteName = MusicalNotation.noteNamesASCII[n];
+				if (LabelType == vamps.LabelType.NoteNamesASCII) noteName = MusicalNotation.noteNamesASCII[n];
 				if (LabelType == vamps.LabelType.NoteNamesUnicode) noteName = MusicalNotation.noteNamesUnicode[n];
 
-				LORChannel4 chs = octoGroup.Members.FindChannel(PolyNoteNamePrefix + noteName, true, true);
+				LOR4Channel chs = octoGroup.Members.FindChannel(PolyNoteNamePrefix + noteName, true, true);
 				chs.color = SequenceFunctions.ChannelColor(n);
 				chs.effects.Clear();
 				polyChannels[n] = chs;
@@ -442,14 +442,14 @@ namespace UtilORama4
 								}
 								else
 								{
-									LOREffect4 eft = null;
+									LOR4Effect eft = null;
 									if (Annotator.UseRamps)
 									{
-										eft = new LOREffect4(LOREffectType4.FadeDown, csStart, csEnd, 100, 0);
+										eft = new LOR4Effect(LOR4EffectType.FadeDown, csStart, csEnd, 100, 0);
 									}
 									else
 									{
-										eft = new LOREffect4(LOREffectType4.Intensity, csStart, csEnd);
+										eft = new LOR4Effect(LOR4EffectType.Intensity, csStart, csEnd);
 									}
 									polyChannels[note].effects.Add(eft);
 								}
@@ -463,16 +463,16 @@ namespace UtilORama4
 
 			// Part 3
 			// Get rid of the empty ones
-			for (int g1 = 0; g1< polyGroup.Members.Count; g1++)
+			for (int g1 = 0; g1 < polyGroup.Members.Count; g1++)
 			{
-				if (polyGroup.Members[g1].MemberType == LORMemberType4.ChannelGroup)
+				if (polyGroup.Members[g1].MemberType == LOR4MemberType.ChannelGroup)
 				{
-					octoGroup = (LORChannelGroup4)polyGroup.Members[g1];
-					for (int n1 = 0; n1< octoGroup.Members.Count; n1++)
+					octoGroup = (LOR4ChannelGroup)polyGroup.Members[g1];
+					for (int n1 = 0; n1 < octoGroup.Members.Count; n1++)
 					{
-						if (octoGroup.Members[n1].MemberType == LORMemberType4.Channel)
+						if (octoGroup.Members[n1].MemberType == LOR4MemberType.Channel)
 						{
-							LORChannel4 ch = (LORChannel4)octoGroup.Members[n1];
+							LOR4Channel ch = (LOR4Channel)octoGroup.Members[n1];
 							if (ch.effects.Count < 1)
 							{
 								octoGroup.Members.Items.RemoveAt(n1);

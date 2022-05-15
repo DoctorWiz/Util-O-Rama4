@@ -7,7 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LORUtils4; using FileHelper;
+using LOR4Utils;
+using FileHelper;
 
 
 namespace UtilORama4
@@ -47,7 +48,7 @@ namespace UtilORama4
 			//ValidateName(txtName.Text);
 			//ValidateOutput();
 			//picColor.CanFocus = true;
-			
+
 		}
 
 		public void SetFormPosition()
@@ -65,7 +66,7 @@ namespace UtilORama4
 		{
 			cboType.Items.Clear();
 			//cboType.DataSource = Enum.GetValues(typeof(ChannelType));
-			for (int d=0; d< DMXChannel.DeviceTypes.Count; d++)
+			for (int d = 0; d < DMXChannel.DeviceTypes.Count; d++)
 			{
 				string dn = DMXChannel.DeviceTypes[d].Name;
 				cboType.Items.Add(DMXChannel.DeviceTypes[d]);
@@ -127,7 +128,7 @@ namespace UtilORama4
 			numOutput.Value = chan.OutputNum;
 			if (chan.DMXController != null)
 			{
-				for (int i=0; i< cboController.Items.Count; i++)
+				for (int i = 0; i < cboController.Items.Count; i++)
 				{
 					ListItem li = (ListItem)cboController.Items[i];
 					if (li.ID == chan.DMXController.ID)
@@ -179,7 +180,7 @@ namespace UtilORama4
 
 		private void numOutput_Validating(object sender, CancelEventArgs e)
 		{
-			
+
 		}
 
 		private void cboController_SelectedIndexChanged(object sender, EventArgs e)
@@ -192,10 +193,10 @@ namespace UtilORama4
 				if (channel.DMXController.ID != newID)
 				{
 					// Now we have to find it...
-					for (int u=0; u< universes.Count; u++)
+					for (int u = 0; u < universes.Count; u++)
 					{
 						DMXUniverse universe = universes[u];
-						for (int c=0; c< universe.DMXControllers.Count; c++)
+						for (int c = 0; c < universe.DMXControllers.Count; c++)
 						{
 							DMXController controller = universe.DMXControllers[c];
 							if (controller.ID == newID)
@@ -297,13 +298,13 @@ namespace UtilORama4
 
 		private void picColor_Click(object sender, EventArgs e)
 		{
-	/*
-	 * DialogResult dr = clrColors.ShowDialog(this);
-			if (dr == DialogResult.OK)
-			{
-				SetColor(clrColors.Color);
-			}
-*/
+			/*
+			 * DialogResult dr = clrColors.ShowDialog(this);
+					if (dr == DialogResult.OK)
+					{
+						SetColor(clrColors.Color);
+					}
+		*/
 		}
 
 		public void SetColor(Color color)
@@ -382,13 +383,13 @@ namespace UtilORama4
 				{
 					if (!loading)
 					{
-						this.Text = "LORChannel4: " + channel.Name + " (Modified)";
+						this.Text = "LOR4Channel: " + channel.Name + " (Modified)";
 						dirty = isDirty;
 					}
 				}
 				else
 				{
-					this.Text = "LORChannel4: " + channel.Name;
+					this.Text = "LOR4Channel: " + channel.Name;
 					dirty = isDirty;
 				}
 			}
@@ -478,7 +479,7 @@ namespace UtilORama4
 		private void cboType_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (!loading)
-			{ 
+			{
 				if (cboType.SelectedIndex >= 0)
 				{
 					if (cboType.SelectedItem != null)

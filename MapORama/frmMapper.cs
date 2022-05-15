@@ -11,20 +11,21 @@ using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
 using Microsoft.Win32;
-using LORUtils4; using FileHelper;
+using LOR4Utils;
+using FileHelper;
 using FuzzyString;
 using Syncfusion.Windows.Forms.Tools;
 
 namespace UtilORama4
 {
-	public partial class frmRemapper : Form
+	public partial class frmMapper : Form
 	{
 		private bool firstShown = false;
 		private Control currentToolTipControl = null;
 		private bool isWiz = Fyle.IsWizard || Fyle.IsAWizard;
 		private static Properties.Settings userSettings = Properties.Settings.Default;
 
-		public frmRemapper()
+		public frmMapper()
 		{
 			InitializeComponent();
 		} // Constructor
@@ -547,14 +548,14 @@ namespace UtilORama4
 			}
 		} // end btnMap_Click
 
-		private string UpdateSourceMappedTo(iLORMember4 sourceMember)
+		private string UpdateSourceMappedTo(iLOR4Member sourceMember)
 		{
 			string txt = sourceMember.Name;
 			if (currentSourceMember != null)
 			{
 				if (currentSourceMember.Tag == null)
 				{
-					currentSourceMember.Tag = new List<iLORMember4>();
+					currentSourceMember.Tag = new List<iLOR4Member>();
 				}
 				if (currentSourceMember.ZCount < 1)
 				{
@@ -563,7 +564,7 @@ namespace UtilORama4
 				else
 				{
 					txt += " is mapped to ";
-					List<iLORMember4> destMapList = (List<iLORMember4>)sourceMember.Tag;
+					List<iLOR4Member> destMapList = (List<iLOR4Member>)sourceMember.Tag;
 					for (int d = 0; d < destMapList.Count; d++)
 					{
 						txt += destMapList[d].Name + ", ";

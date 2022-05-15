@@ -8,7 +8,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using UtilORama;
-using LORUtils4; using FileHelper;
+using LOR4Utils;
+using FileHelper;
 using static Globals;
 using Shell32;
 

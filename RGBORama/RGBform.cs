@@ -1,4 +1,5 @@
-﻿using LORUtils4; using FileHelper;
+﻿using LOR4Utils;
+using FileHelper;
 using System;
 using System.Drawing;
 using System.IO;
@@ -8,7 +9,7 @@ using static Globals;
 
 namespace RGBORama
 {
-	
+
 
 
 
@@ -35,7 +36,7 @@ namespace RGBORama
 		private bool colorChanged = false;
 		//private bool changesMade = false;
 		private int changeCount = 0;
-		private LORSequence4 seq = new LORSequence4();
+		private LOR4Sequence seq = new LOR4Sequence();
 		public Preset[] Presets;
 		private PresetSet[] presetSets;
 
@@ -48,7 +49,7 @@ namespace RGBORama
 		//public int[] colorsSearch;
 		//public int[] colorsReplace;
 
-		
+
 
 
 
@@ -80,41 +81,41 @@ namespace RGBORama
 
 		private void optColor1_CheckedChanged(object sender, EventArgs e)
 		{
-				if (colorChanged)
-				{
-					saveColors();
-				}
+			if (colorChanged)
+			{
+				saveColors();
+			}
 
-				txtColorFrom1.Enabled = false;
-				txtColorFrom2.Enabled = false;
-				txtColorFrom3.Enabled = false;
-				txtColorFrom4.Enabled = false;
-				txtColorFrom5.Enabled = false;
-				txtColorFrom6.Enabled = false;
-				txtColorTo1.Enabled = false;
-				txtColorTo2.Enabled = false;
-				txtColorTo3.Enabled = false;
-				txtColorTo4.Enabled = false;
-				txtColorTo5.Enabled = false;
-				txtColorTo6.Enabled = false;
+			txtColorFrom1.Enabled = false;
+			txtColorFrom2.Enabled = false;
+			txtColorFrom3.Enabled = false;
+			txtColorFrom4.Enabled = false;
+			txtColorFrom5.Enabled = false;
+			txtColorFrom6.Enabled = false;
+			txtColorTo1.Enabled = false;
+			txtColorTo2.Enabled = false;
+			txtColorTo3.Enabled = false;
+			txtColorTo4.Enabled = false;
+			txtColorTo5.Enabled = false;
+			txtColorTo6.Enabled = false;
 		} // end optColor1_CheckedChanged
 
 		private void optColor3_CheckedChanged(object sender, EventArgs e)
 		{
-				txtColorFrom1.Enabled = true;
-				txtColorFrom2.Enabled = true;
-				txtColorFrom3.Enabled = true;
-				txtColorFrom4.Enabled = true;
-				txtColorFrom5.Enabled = true;
-				txtColorFrom6.Enabled = true;
-				txtColorTo1.Enabled = true;
-				txtColorTo2.Enabled = true;
-				txtColorTo3.Enabled = true;
-				txtColorTo4.Enabled = true;
-				txtColorTo5.Enabled = true;
-				txtColorTo6.Enabled = true;
+			txtColorFrom1.Enabled = true;
+			txtColorFrom2.Enabled = true;
+			txtColorFrom3.Enabled = true;
+			txtColorFrom4.Enabled = true;
+			txtColorFrom5.Enabled = true;
+			txtColorFrom6.Enabled = true;
+			txtColorTo1.Enabled = true;
+			txtColorTo2.Enabled = true;
+			txtColorTo3.Enabled = true;
+			txtColorTo4.Enabled = true;
+			txtColorTo5.Enabled = true;
+			txtColorTo6.Enabled = true;
 
-				txtColorFrom1.Focus();
+			txtColorFrom1.Focus();
 		} // end optColor3_CheckedChanged
 
 		private void btnBrowse_Click(object sender, EventArgs e)
@@ -139,7 +140,7 @@ namespace RGBORama
 				}
 
 				int errs = seq.ReadSequenceFile(workFile);
-				if (errs ==0)
+				if (errs == 0)
 				{
 					lastFile = workFile;
 					Properties.Settings.Default.lastFile = lastFile;
@@ -433,7 +434,7 @@ namespace RGBORama
 		{
 			ImBusy(true);
 			DialogResult ret = DialogResult.None;
-			frmChannels chanForm = new frmChannels((LORSequence4)seq.Clone());
+			frmChannels chanForm = new frmChannels((LOR4Sequence)seq.Clone());
 			ret = chanForm.ShowDialog(this);
 
 			if (ret == DialogResult.OK)
@@ -559,7 +560,7 @@ namespace RGBORama
 			return errState;
 		}
 
-		private int ExchangeColors(LORRGBChannel4 rgbCh)
+		private int ExchangeColors(LOR4RGBChannel rgbCh)
 		{
 			int errState = 0;
 			LOREffect4 redEffect = new LOREffect4();
@@ -588,7 +589,7 @@ namespace RGBORama
 			bluEffect.parent = rgbCh.redChannel;
 
 			// LORLoop4 thru entire song, by centiseconds
-			for (int cs=0; cs <= seq.Centiseconds; cs++)
+			for (int cs = 0; cs <= seq.Centiseconds; cs++)
 			{
 				bool colorChanged = false;
 				bool steady = true;
@@ -625,7 +626,7 @@ namespace RGBORama
 					if (colorChanged && steady)
 					{
 						// LORLoop4 thru colors in the search-replace list
-						for (int clrIdx=0; clrIdx < colorsSearch.Length; clrIdx++)
+						for (int clrIdx = 0; clrIdx < colorsSearch.Length; clrIdx++)
 						{
 							// Color Match?
 							if (curLorColor == colorsSearch[clrIdx])
@@ -711,7 +712,7 @@ namespace RGBORama
 			return steady;
 		}
 
-		
+
 		private void fillPresetList()
 		{
 			cboPresets.Items.Clear();
@@ -859,7 +860,7 @@ namespace RGBORama
 			int pi = Convert.ToInt16(pct);
 			//prgProgress.Value = pi;
 
-			string sMsg = "LORChannel4 " + (chanNo + 1).ToString() + " of " + seq.Channels.Count.ToString();
+			string sMsg = "LOR4Channel " + (chanNo + 1).ToString() + " of " + seq.Channels.Count.ToString();
 			//sMsg += ", Pass " + member.ToString() + " of 2";
 			//sMsg += ", Centisecond " + centiSecond.ToString() + " of " + seq.Centiseconds.ToString();
 			//Debug.Print(sMsg);

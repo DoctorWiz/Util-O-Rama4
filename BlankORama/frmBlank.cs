@@ -10,7 +10,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using FileHelper;
-using LORUtils4;
+using LOR4Utils;
 
 namespace UtilORama4
 {
@@ -218,7 +218,7 @@ namespace UtilORama4
 		private void pnlAbout_Click(object sender, EventArgs e)
 		{
 			ImBusy(true);
-			Form aboutBox = new About();
+			Form aboutBox = new frmAbout();
 			// aboutBox.setIcon = picAboutIcon.Image;
 			aboutBox.ShowDialog(this);
 			ImBusy(false);

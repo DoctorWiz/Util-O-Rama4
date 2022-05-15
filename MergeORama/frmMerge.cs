@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-using LORUtils4;
+using LOR4Utils;
 using FileHelper;
 using Microsoft.Win32;
 using Syncfusion.Windows.Forms.Tools;
@@ -22,9 +22,9 @@ namespace UtilORama4
 		private string lastFile1 = "";
 		private string lastFile2 = "";
 		private string lastNewFile = "";
-		private LORSequence4 seqOne = new LORSequence4("(Sequence One");
-		private LORSequence4 seqNew = null; //new LORSequence4("(New Sequence");
-		private LORSequence4 seqTwo = new LORSequence4("(Sequence Two");
+		private LOR4Sequence seqOne = new LOR4Sequence("(Sequence One");
+		private LOR4Sequence seqNew = null; //new LOR4Sequence("(New Sequence");
+		private LOR4Sequence seqTwo = new LOR4Sequence("(Sequence Two");
 
 		private const byte ACTIONkeepFirst = 1;
 		private const byte ACTIONuseSecond = 2;
@@ -51,14 +51,14 @@ namespace UtilORama4
 		{
 			//public int addIdx = lutils.UNDEFINED;
 			//public int newIdx = lutils.UNDEFINED;
-			public iLORMember4 addID = null;
-			public iLORMember4 newID = null;
+			public iLOR4Member addID = null;
+			public iLOR4Member newID = null;
 
 			public Map()
 			{
 				// default constructor
 			}
-			public Map(iLORMember4 idAdd, iLORMember4 idNew)
+			public Map(iLOR4Member idAdd, iLOR4Member idNew)
 			{
 				addID = idAdd;
 				newID = idNew;
@@ -407,7 +407,7 @@ namespace UtilORama4
 				this.Cursor = Cursors.Default;
 			}
 			this.Refresh();
-				
+
 		}
 
 		////////////////////////////////////////////
@@ -450,8 +450,8 @@ namespace UtilORama4
 					if (mergeTracks)
 					{
 						found = true; // Reset to default
-						// Search for it, do NOT create if not found
-						destGrid = (LORTimings4)seqNew.AllMembers.FindByName(sourceGrid.Name, LORMemberType4.Timings, false);
+													// Search for it, do NOT create if not found
+						destGrid = (LORTimings4)seqNew.AllMembers.FindByName(sourceGrid.Name, LOR4MemberType.Timings, false);
 						if (destGrid == null) // no match found
 						{
 							found = false;
@@ -514,7 +514,7 @@ namespace UtilORama4
 			/////////////
 
 			if (mergeTracks)
-			{ 
+			{
 				//foreach (LORTrack4 track2 in seqTwo.Tracks)
 				for (int t2Idx = 0; t2Idx < seqTwo.Tracks.Count; t2Idx++)
 				{
@@ -537,8 +537,8 @@ namespace UtilORama4
 					if (mergeTracksByName)
 					{
 						found = true; // reset to default
-						//destTrack = (LORTrack4)seqNew.AllMembers.FindByName(sourceTrack.Name, LORMemberType4.Track, true);
-						//destTrack = seqNew.AllMembers.FindTrack(sourceTrack.Name, true);
+													//destTrack = (LORTrack4)seqNew.AllMembers.FindByName(sourceTrack.Name, LOR4MemberType.Track, true);
+													//destTrack = seqNew.AllMembers.FindTrack(sourceTrack.Name, true);
 						destTrack = seqNew.FindTrack(sourceTrack.Name, true);
 						if (destTrack == null) // no matching name found
 						{
@@ -556,7 +556,7 @@ namespace UtilORama4
 					}
 					MergeMembers(destTrack.Members, sourceTrack.Members);
 
-					Console.WriteLine (destTrack.Name);
+					Console.WriteLine(destTrack.Name);
 				}
 
 			}
@@ -567,29 +567,29 @@ namespace UtilORama4
 		////////////////////////////////////////////
 		//!  *   M E R G E   S E Q U E N C E S   //
 		//////////////////////////////////////////
-		private void MergeMembers(LORMembership4 destMembers, LORMembership4 sourceMembers)
+		private void MergeMembers(LOR4Membership destMembers, LOR4Membership sourceMembers)
 		{
 			bool found = true;
-			
+
 			// May be called recursively
-			//foreach (iLORMember4 sourceMember in sourceMembers) // foreach and enumerable not working, fix!
+			//foreach (iLOR4Member sourceMember in sourceMembers) // foreach and enumerable not working, fix!
 			// Loop thru all members in the source
-			for (int smi=0; smi<sourceMembers.Count; smi++)
+			for (int smi = 0; smi < sourceMembers.Count; smi++)
 			{
 				// Get the current one
-				iLORMember4 sourceMember = sourceMembers[smi];
+				iLOR4Member sourceMember = sourceMembers[smi];
 				switch (sourceMember.MemberType)
 				{
-					case LORMemberType4.Channel:
-						LORChannel4 sourceCh = (LORChannel4)sourceMember;
-						LORChannel4 destCh = MergeChannel(sourceCh, destMembers);
+					case LOR4MemberType.Channel:
+						LOR4Channel sourceCh = (LOR4Channel)sourceMember;
+						LOR4Channel destCh = MergeChannel(sourceCh, destMembers);
 						break;
 
-					case LORMemberType4.RGBChannel:
+					case LOR4MemberType.RGBChannel:
 						found = true; // reset to default
-						//LORChannel4 destCh = null; // placeholder
-						LORRGBChannel4 sourceRGB = (LORRGBChannel4)sourceMember;
-						LORRGBChannel4 destRGB = (LORRGBChannel4)destMembers.FindRGBChannel(sourceRGB.Name, true);
+													//LOR4Channel destCh = null; // placeholder
+						LOR4RGBChannel sourceRGB = (LOR4RGBChannel)sourceMember;
+						LOR4RGBChannel destRGB = (LOR4RGBChannel)destMembers.FindRGBChannel(sourceRGB.Name, true);
 						if (destRGB == null)
 						{
 							if (Fyle.isWiz) brk = 1;
@@ -622,11 +622,11 @@ namespace UtilORama4
 						}
 						break;
 
-					case LORMemberType4.ChannelGroup:
-						LORChannelGroup4 sourceGroup = (LORChannelGroup4)sourceMember;
-					
-						//LORChannelGroup4 destGroup = (LORChannelGroup4)destMembers.Find(sourceGroup.Name, LORMemberType4.ChannelGroup, true);
-						LORChannelGroup4 destGroup = destMembers.FindChannelGroup(sourceGroup.Name, true);
+					case LOR4MemberType.ChannelGroup:
+						LOR4ChannelGroup sourceGroup = (LOR4ChannelGroup)sourceMember;
+
+						//LOR4ChannelGroup destGroup = (LOR4ChannelGroup)destMembers.Find(sourceGroup.Name, LOR4MemberType.ChannelGroup, true);
+						LOR4ChannelGroup destGroup = destMembers.FindChannelGroup(sourceGroup.Name, true);
 						// Should only happen once
 						//if (destGroup.SavedIndex == 31) System.Diagnostics.Debugger.Break();
 						//! Recurse
@@ -636,10 +636,10 @@ namespace UtilORama4
 			} // end loop thru 2nd Sequence's LORTrack4 Items
 		}
 
-		private LORChannel4 MergeChannel(LORChannel4 sourceCh, LORMembership4 destMembers)
+		private LOR4Channel MergeChannel(LOR4Channel sourceCh, LOR4Membership destMembers)
 		{
 			bool found = true; // reset to default
-			LORChannel4 destCh = (LORChannel4)destMembers.FindChannel(sourceCh.Name, true);
+			LOR4Channel destCh = (LOR4Channel)destMembers.FindChannel(sourceCh.Name, true);
 
 			if (destCh == null)
 			{
@@ -653,7 +653,7 @@ namespace UtilORama4
 			{
 				if (duplicateNameAction == ACTIONuseSecond)
 				{
-					//destCh = (LORChannel4)destMember;
+					//destCh = (LOR4Channel)destMember;
 				}
 				if (duplicateNameAction == ACTIONkeepBoth)
 				{
@@ -674,9 +674,9 @@ namespace UtilORama4
 			return destCh;
 		}
 
-		private void MergeRGBchildren(LORRGBChannel4 sourceRGB, LORRGBChannel4 destRGB)
+		private void MergeRGBchildren(LOR4RGBChannel sourceRGB, LOR4RGBChannel destRGB)
 		{
-			LORChannel4 destCh = MergeChannel(sourceRGB.redChannel, seqNew.AllMembers);
+			LOR4Channel destCh = MergeChannel(sourceRGB.redChannel, seqNew.AllMembers);
 			destRGB.redChannel = destCh;
 			destCh = MergeChannel(sourceRGB.grnChannel, seqNew.AllMembers);
 			destRGB.grnChannel = destCh;
@@ -814,11 +814,11 @@ namespace UtilORama4
 				//  CHANNEL GROUPS  //
 				/////////////////////
 
-				foreach (LORChannelGroup4 group2 in seqTwo.ChannelGroups)
+				foreach (LOR4ChannelGroup group2 in seqTwo.ChannelGroups)
 				//for (int groups2Idx = 0; groups2Idx < seqTwo.channelGroupCount; groups2Idx++)
 				{
 					int matchedExGroupsIdx = lutils.UNDEFINED;
-					foreach (LORChannelGroup4 newGroup in seqNew.ChannelGroups)
+					foreach (LOR4ChannelGroup newGroup in seqNew.ChannelGroups)
 					//for (int exGroupsIdx = 0; exGroupsIdx < seqNew.channelGroupCount; exGroupsIdx++)
 					{
 						matched = false;
@@ -833,7 +833,7 @@ namespace UtilORama4
 						groupMap.Add(gm);
 						if (matchedExGroupsIdx == lutils.UNDEFINED)
 						{
-							LORChannelGroup4 group3 = seqNew.CreateNewChannelGroup(group2.Name);
+							LOR4ChannelGroup group3 = seqNew.CreateNewChannelGroup(group2.Name);
 							gm = new Map(group3, newGroup);
 							groupMap.Add(gm);
 						}
@@ -1001,13 +1001,13 @@ namespace UtilORama4
 			//frmOptions optForm = new frmOptions();
 			//DialogResult result = optForm.Show(this);
 			DialogResult dr = DialogResult.OK; // optForm.ShowDialog(this);
-			//DialogResult result = optForm.DialogResult;
-			//if (dr == DialogResult.OK)
-			//{
-				//MergeSequences();
-			//}
+																				 //DialogResult result = optForm.DialogResult;
+																				 //if (dr == DialogResult.OK)
+																				 //{
+																				 //MergeSequences();
+																				 //}
 			return dr;
-			
+
 		}
 		private void treNewChannels_AfterSelect(object sender, TreeViewEventArgs e)
 		{
@@ -1057,30 +1057,30 @@ namespace UtilORama4
 		{
 			if (node.Tag != null)
 			{
-				iLORMember4 member = (iLORMember4)node.Tag;
+				iLOR4Member member = (iLOR4Member)node.Tag;
 				Member_Click(member);
 			}
 		}
 
-		private void Member_Click(iLORMember4 member)
+		private void Member_Click(iLOR4Member member)
 		{
-			switch(member.MemberType)
+			switch (member.MemberType)
 			{
-				case LORMemberType4.Channel:
+				case LOR4MemberType.Channel:
 					lutils.RenderEffects(member, ref picPreview, true);
 					picPreview.Visible = true;
 					break;
-				case LORMemberType4.RGBChannel:
+				case LOR4MemberType.RGBChannel:
 					lutils.RenderEffects(member, ref picPreview, false);
 					picPreview.Visible = true;
 					break;
-				case LORMemberType4.Track:
+				case LOR4MemberType.Track:
 					picPreview.Visible = false;
 					break;
-				case LORMemberType4.ChannelGroup:
+				case LOR4MemberType.ChannelGroup:
 					picPreview.Visible = false;
 					break;
-				case LORMemberType4.Cosmic:
+				case LOR4MemberType.Cosmic:
 					picPreview.Visible = false;
 					break;
 

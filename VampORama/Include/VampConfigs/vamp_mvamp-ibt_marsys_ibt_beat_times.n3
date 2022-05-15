@@ -1,0 +1,41 @@
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+@prefix vamp:     <http://purl.org/ontology/vamp/> .
+@prefix :         <#> .
+
+:transform_plugin a vamp:Plugin ;
+    vamp:identifier "marsyas_ibt" .
+
+:transform_library a vamp:PluginLibrary ;
+    vamp:identifier "mvamp-ibt" ;
+    vamp:available_plugin :transform_plugin .
+
+:transform a vamp:Transform ;
+    vamp:plugin :transform_plugin ;
+    vamp:step_size "512"^^xsd:int ; 
+    vamp:block_size "1024"^^xsd:int ; 
+    vamp:plugin_version """1""" ; 
+    vamp:parameter_binding [
+        vamp:parameter [ vamp:identifier "indtime" ] ;
+        vamp:value "5"^^xsd:float ;
+    ] ;
+    vamp:parameter_binding [
+        vamp:parameter [ vamp:identifier "induction" ] ;
+        vamp:value "0"^^xsd:float ;
+    ] ;
+    vamp:parameter_binding [
+        vamp:parameter [ vamp:identifier "maxbpm" ] ;
+        vamp:value "250"^^xsd:float ;
+    ] ;
+    vamp:parameter_binding [
+        vamp:parameter [ vamp:identifier "metrical_changes" ] ;
+        vamp:value "0"^^xsd:float ;
+    ] ;
+    vamp:parameter_binding [
+        vamp:parameter [ vamp:identifier "minbpm" ] ;
+        vamp:value "50"^^xsd:float ;
+    ] ;
+    vamp:parameter_binding [
+        vamp:parameter [ vamp:identifier "online" ] ;
+        vamp:value "0"^^xsd:float ;
+    ] ;
+    vamp:output [ vamp:identifier "beat_times" ] .

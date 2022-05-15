@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.IO;
-using LORUtils4; using FileHelper;
+using LOR4Utils;
+using FileHelper;
 using xUtilities;
 
 namespace UtilORama4
@@ -44,7 +45,7 @@ namespace UtilORama4
 		public static vamps.LabelType LabelType = vamps.LabelType.NoteNamesUnicode; // Default
 
 
-		public static readonly string[] availablePluginNames = {	"Queen Mary Note Onset Detector",
+		public static readonly string[] availablePluginNames = {  "Queen Mary Note Onset Detector",
 																											"Queen Mary Polyphonic Transcription",
 																											"OnsetDS Onset Detector",
 																											"Silvet Note Transcription",
@@ -77,7 +78,7 @@ namespace UtilORama4
 
 		public static readonly vamps.LabelType[] allowableLabels = { vamps.LabelType.None, vamps.LabelType.Numbers,
 																																	 vamps.LabelType.NoteNamesUnicode, vamps.LabelType.NoteNamesASCII,
-																																	vamps.LabelType.MIDINoteNumbers	};
+																																	vamps.LabelType.MIDINoteNumbers };
 
 		//public static readonly string[] availableLabels = {vamps.LABELNAMEnone, vamps.LABELNAMEnumbers,
 		//																											vamps.LABELNAMEnoteNamesUnicode, vamps.LABELNAMEnoteNamesASCII,
@@ -344,7 +345,7 @@ namespace UtilORama4
 						// if not, lets ATTEMPT a fix
 						if ((alignmentType == vamps.AlignmentType.BeatsQuarter) ||
 								(alignmentType == vamps.AlignmentType.NoteOnsets))
-						{ 
+						{
 							// If aligning to quarter beats or note onsets, add 3/4 of an average quarter beat then align
 							int ee = eStart + (int)Math.Round((Annotator.AverageBeatQuarterMS * .75D));
 							eEnd = Annotator.AlignTime(ee);
@@ -363,7 +364,7 @@ namespace UtilORama4
 					onsetCount++;
 					label = onsetCount.ToString(); // Default
 					noteNum = onsetCount; // Default
-					// Again, depending on which plugin was used, there may or may not be note info
+																// Again, depending on which plugin was used, there may or may not be note info
 					if (parts.Length > 2)
 					{
 						noteInfo = parts[2];
@@ -391,7 +392,7 @@ namespace UtilORama4
 						}
 					}
 					else
-					{ 
+					{
 						// Do nothing?
 						// (may need to mess with label, which is why this 'else' is here
 					}
@@ -399,7 +400,7 @@ namespace UtilORama4
 					// Remember this for next round (in order to skip ones which haven't advanced)
 					lastStart = eStart;
 				} // end enough parts
-				//TODO Raise event for progress bar
+					//TODO Raise event for progress bar
 			} // end while loop more lines remaining
 			reader.Close();
 			//Fyle.BUG("Check output window.  Did the alignments work as expected?");
@@ -411,7 +412,7 @@ namespace UtilORama4
 		{
 			// Ignore the timings passed in, and use the ones already cached for Bars and Beats
 			// (Other transforms will use the one passed in)
-			
+
 			//SequenceFunctions.Sequence = sequence;
 			int errs = 0;
 
@@ -446,14 +447,14 @@ namespace UtilORama4
 			int errs = 0;
 
 			//LORTrack4 vampTrack = SequenceFunctions.GetTrack("Vamp-O-Rama");
-			//LORChannelGroup4 onsetGroup = Annotator.Sequence.FindChannelGroup(transformName, Annotator.VampTrack.Members, true);
+			//LOR4ChannelGroup onsetGroup = Annotator.Sequence.FindChannelGroup(transformName, Annotator.VampTrack.Members, true);
 			if (xNoteOnsets != null)
 			{
 				if (xNoteOnsets.effects.Count > 0)
 				{
 					if (Annotator.UseRamps)
 					{
-						LORChannel4 chan = Annotator.VampTrack.Members.FindChannel(transformName, true, true);
+						LOR4Channel chan = Annotator.VampTrack.Members.FindChannel(transformName, true, true);
 						chan.color = lutils.Color_NettoLOR(System.Drawing.Color.DarkViolet);
 						SequenceFunctions.ImportNoteChannel(chan, xNoteOnsets);
 					}

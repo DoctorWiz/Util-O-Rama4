@@ -8,11 +8,11 @@ using System.Drawing;
 using System.Diagnostics;
 using FileHelper;
 
-namespace LORUtils4
+namespace LOR4Utils
 {
 
 
-	public class LORTrack4 : LORMemberBase4, iLORMember4, IComparable<iLORMember4>
+	public class LORTrack4 : LORMemberBase4, iLOR4Member, IComparable<iLOR4Member>
 	{
 		// Tracks are the ultimate top-level groups.  Level 2 and up are handled by 'ChannelGroups'
 		// Channel groups are optional, a sequence many not have any groups, but it will always have at least one track
@@ -23,17 +23,17 @@ namespace LORUtils4
 		// Channels, RGB Channels, and channel groups will not be displayed and will not be accessible unless added to one or
 		// more tracks, directly or subdirectly (a subitem of a group in a track).
 		// A LORTrack4 may not contain more than one copy of the same item-- directly.  Within a subgroup is OK.
-		// (See related notes in the LORChannelGroup4 class)
+		// (See related notes in the LOR4ChannelGroup class)
 
-		public LORMembership4 Members; // = new LORMembership4(null);
+		public LOR4Membership Members; // = new LOR4Membership(null);
 		public List<LORLoopLevel4> loopLevels = new List<LORLoopLevel4>();
 		public LORTimings4 timingGrid = null;
 
 		//! CONSTRUCTOR
-		public LORTrack4(iLORMember4 theParent, string lineIn)
+		public LORTrack4(iLOR4Member theParent, string lineIn)
 		{
 			myParent = theParent;
-			Members = new LORMembership4(this);
+			Members = new LOR4Membership(this);
 			Parse(lineIn);
 		}
 
@@ -48,7 +48,7 @@ namespace LORUtils4
 				int cs = 0;
 				for (int idx = 0; idx < Members.Count; idx++)
 				{
-					iLORMember4 mbr = Members[idx];
+					iLOR4Member mbr = Members[idx];
 					if (Members.Items[idx].Centiseconds > cs)
 					{
 						cs = Members.Items[idx].Centiseconds;
@@ -86,7 +86,7 @@ namespace LORUtils4
 							myCentiseconds = value;
 							for (int idx = 0; idx < Members.Count; idx++)
 							{
-								iLORMember4 mbr = Members[idx];
+								iLOR4Member mbr = Members[idx];
 								if (Members.Items[idx].Centiseconds > value)
 								{
 									Members.Items[idx].Centiseconds = value;
@@ -108,11 +108,11 @@ namespace LORUtils4
 		}
 
 
-		public override LORMemberType4 MemberType
+		public override LOR4MemberType MemberType
 		{
 			get
 			{
-				return LORMemberType4.Track;
+				return LOR4MemberType.Track;
 			}
 		}
 
@@ -125,7 +125,7 @@ namespace LORUtils4
 
 		public override void Parse(string lineIn)
 		{
-			string seek = lutils.STFLD + LORSequence4.TABLEtrack + lutils.FIELDtotalCentiseconds;
+			string seek = lutils.STFLD + LOR4Sequence.TABLEtrack + lutils.FIELDtotalCentiseconds;
 			//int pos = lineIn.IndexOf(seek);
 			int pos = lutils.ContainsKey(lineIn, seek);
 			if (pos > 0)
@@ -138,7 +138,7 @@ namespace LORUtils4
 			{
 				myName = lineIn;
 			}
-			int tempGridSaveID = lutils.getKeyValue(lineIn, LORSequence4.TABLEtimingGrid);
+			int tempGridSaveID = lutils.getKeyValue(lineIn, LOR4Sequence.TABLEtimingGrid);
 			if (tempGridSaveID < 0)
 			{
 				// For Channel Configs, there will be no timing grid
@@ -147,9 +147,9 @@ namespace LORUtils4
 			else
 			{
 				// Assign the LORTimings4 based on the SaveID
-				//iLORMember4 member = myParent.Members.bySaveID[tempGridSaveID];
+				//iLOR4Member member = myParent.Members.bySaveID[tempGridSaveID];
 				LORTimings4 tg = null;
-				LORSequence4 mySeq = (LORSequence4)myParent;
+				LOR4Sequence mySeq = (LOR4Sequence)myParent;
 				for (int i = 0; i < mySeq.TimingGrids.Count; i++)
 				{
 					if (mySeq.TimingGrids[i].SaveID == tempGridSaveID)
@@ -169,14 +169,14 @@ namespace LORUtils4
 		}
 
 
-		public override iLORMember4 Clone()
+		public override iLOR4Member Clone()
 		{
 			LORTrack4 tr = (LORTrack4)Clone();
 			tr.timingGrid = (LORTimings4)timingGrid.Clone();
 			return tr;
 		}
 
-		public override iLORMember4 Clone(string newName)
+		public override iLOR4Member Clone(string newName)
 		{
 			LORTrack4 tr = (LORTrack4)this.Clone();
 			ChangeName(newName);
@@ -214,7 +214,7 @@ namespace LORUtils4
 			// Write info about track
 			ret.Append(lutils.LEVEL2);
 			ret.Append(lutils.STFLD);
-			ret.Append(LORSequence4.TABLEtrack);
+			ret.Append(LOR4Sequence.TABLEtrack);
 			//! LOR writes it with the Name last
 			// In theory, it shouldn't matter
 			//if (Name.Length > 1)
@@ -228,7 +228,7 @@ namespace LORUtils4
 
 			int altID = timingGrid.AltSaveID;
 			ret.Append(lutils.SPC);
-			ret.Append(LORSequence4.TABLEtimingGrid);
+			ret.Append(LOR4Sequence.TABLEtimingGrid);
 			ret.Append(lutils.FIELDEQ);
 			ret.Append(altID.ToString());
 			ret.Append(lutils.ENDQT);
@@ -250,7 +250,7 @@ namespace LORUtils4
 			ret.Append(lutils.FINFLD);
 
 			// LORLoop4 thru all items in this track
-			foreach (iLORMember4 subID in Members.Items)
+			foreach (iLOR4Member subID in Members.Items)
 			{
 				bool sel = subID.Selected;
 				if (!selectedOnly || sel)
@@ -292,7 +292,7 @@ namespace LORUtils4
 				ret.Append(lutils.CRLF);
 				ret.Append(lutils.LEVEL3);
 				ret.Append(lutils.STFLD);
-				ret.Append(LORSequence4.TABLEloopLevels);
+				ret.Append(LOR4Sequence.TABLEloopLevels);
 				ret.Append(lutils.FINFLD);
 				foreach (LORLoopLevel4 ll in loopLevels)
 				{
@@ -302,7 +302,7 @@ namespace LORUtils4
 				ret.Append(lutils.CRLF);
 				ret.Append(lutils.LEVEL3);
 				ret.Append(lutils.FINTBL);
-				ret.Append(LORSequence4.TABLEloopLevels);
+				ret.Append(LOR4Sequence.TABLEloopLevels);
 				ret.Append(lutils.FINFLD);
 			}
 			else
@@ -310,20 +310,20 @@ namespace LORUtils4
 				ret.Append(lutils.CRLF);
 				ret.Append(lutils.LEVEL3);
 				ret.Append(lutils.STFLD);
-				ret.Append(LORSequence4.TABLEloopLevels);
+				ret.Append(LOR4Sequence.TABLEloopLevels);
 				ret.Append(lutils.ENDFLD);
 			}
 			ret.Append(lutils.CRLF);
 			ret.Append(lutils.LEVEL2);
 			ret.Append(lutils.FINTBL);
-			ret.Append(LORSequence4.TABLEtrack);
+			ret.Append(LOR4Sequence.TABLEtrack);
 			ret.Append(lutils.FINFLD);
 
 
 			return ret.ToString();
 		}
 
-		public int AddItem(iLORMember4 newPart)
+		public int AddItem(iLOR4Member newPart)
 		{
 			int retSI = lutils.UNDEFINED;
 			bool alreadyAdded = false;
@@ -333,7 +333,7 @@ namespace LORUtils4
 				{
 					//TODO: Using saved index, look up Name of item being added
 					string sMsg = newPart.Name + " has already been added to this LORTrack4 '" + myName + "'.";
-					//DialogResult rs = MessageBox.Show(sMsg, "LORChannel4 Groups", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+					//DialogResult rs = MessageBox.Show(sMsg, "LOR4Channel Groups", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 					if (System.Diagnostics.Debugger.IsAttached)
 						//System.Diagnostics.Debugger.Break();
 						//TODO: Make this just a warning, put "add" code below into an else block
@@ -356,8 +356,8 @@ namespace LORUtils4
 			int ret = lutils.UNDEFINED;
 			if (myParent != null)
 			{
-				LORSequence4 mySeq = (LORSequence4)myParent;
-				iLORMember4 newItem = mySeq.AllMembers.FindBySavedIndex(itemSavedIndex);
+				LOR4Sequence mySeq = (LOR4Sequence)myParent;
+				iLOR4Member newItem = mySeq.AllMembers.FindBySavedIndex(itemSavedIndex);
 				if (newItem != null)
 				{
 					ret = AddItem(newItem);

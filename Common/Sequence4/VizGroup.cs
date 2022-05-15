@@ -9,23 +9,23 @@ using System.Diagnostics;
 using System.IO;
 using FileHelper;
 
-namespace LORUtils4
+namespace LOR4Utils
 {
-	public class LORVizItemGroup4 : LORMemberBase4, iLORMember4, IComparable<iLORMember4>
+	public class LORVizItemGroup4 : LORMemberBase4, iLOR4Member, IComparable<iLOR4Member>
 	// An "Item" in a Visualization file is basically a group!
 	{
 		protected LORVisualization4 parentVisualization = null;
 		public bool Locked = false;
 		public int[] AssignedObjectsNumbers = null;
-		
+
 		// Will Contain just DrawObjects (for now anyway)
-		public LORMembership4 Members = null;
+		public LOR4Membership Members = null;
 
 		private static readonly string FIELDLocked = " Locked";
 		private static readonly string FIELDComment = " Comment";
 		private static readonly string FIELDObjectID = " Object";
 		private static readonly string FIELDAssignedID = "AssignedObject ID";
-		
+
 		// SuperStarStuff
 		// Since (for now) I don't have SuperStar, and
 		// Since (for now) We are not writing out Visualization files
@@ -54,12 +54,12 @@ namespace LORUtils4
 		// SuperStar since it is very expensive!  So I can just write out all these defaults in one go.
 		public static readonly string FIELDS_SS_DEFAULTS = " SSWU=\"0\" SSFF=\"\" SSReverseOrder=\"False\" SSForceRowColumn=\"False\" SSRow=\"0\" SSColumn=\"0\" SSUseMyOrder=\"False\" SSStar=\"False\" SSMatrixInd=\"0\" SSPropColorTemp=\"0\"";
 
-		public LORVizItemGroup4(iLORMember4 parent, string lineIn)
+		public LORVizItemGroup4(iLOR4Member parent, string lineIn)
 		{
-			
+
 			base.SetParent(parent);
 			myParent = parent;
-			Members = new LORMembership4(this);
+			Members = new LOR4Membership(this);
 			MakeDummies();
 			Parse(lineIn);
 
@@ -117,19 +117,19 @@ namespace LORUtils4
 			}
 		}
 
-		public override LORMemberType4 MemberType
+		public override LOR4MemberType MemberType
 		{
 			get
 			{
-				return LORMemberType4.VizItemGroup;
+				return LOR4MemberType.VizItemGroup;
 			}
 		}
 
-		public override int CompareTo(iLORMember4 other)
+		public override int CompareTo(iLOR4Member other)
 		{
 			int result = 1; // By default I win!
-			
-			if (LORMembership4.sortMode == LORMembership4.SORTbyOutput)
+
+			if (LOR4Membership.sortMode == LOR4Membership.SORTbyOutput)
 			{
 				if (Members != null)
 				{
@@ -144,11 +144,11 @@ namespace LORUtils4
 			{
 				result = base.CompareTo(other);
 			}
-			
+
 			return result;
 		}
-		
-		public override iLORMember4 Clone()
+
+		public override iLOR4Member Clone()
 		{
 			LORVizItemGroup4 newGrp = (LORVizItemGroup4)Clone();
 			newGrp.parentVisualization = parentVisualization;
@@ -160,7 +160,7 @@ namespace LORUtils4
 			return newGrp;
 		}
 
-		public override iLORMember4 Clone(string newName)
+		public override iLOR4Member Clone(string newName)
 		{
 			LORVizItemGroup4 newGrp = (LORVizItemGroup4)this.Clone();
 			newGrp.ChangeName(newName);
@@ -169,14 +169,14 @@ namespace LORUtils4
 
 		//public string LineOut()
 		//{
-			//TODO Add support for writing Visualization files
+		//TODO Add support for writing Visualization files
 		//	return "";
 		//}
 
 		public override void Parse(string lineIn)
 		{
 			myID = lutils.getKeyValue(lineIn, LORVisualization4.FIELDvizID);
-			myIndex = myID-1;
+			myIndex = myID - 1;
 			myName = lutils.getKeyWord(lineIn, lutils.FIELDname);
 			Locked = lutils.getKeyState(lineIn, FIELDLocked);
 			Comment = lutils.getKeyWord(lineIn, FIELDComment);
@@ -201,7 +201,7 @@ namespace LORUtils4
 						int oid = lutils.getKeyValue(lineIn, FIELDObjectID);
 						if (AssignedObjectsNumbers == null)
 						{
-							Array.Resize(ref AssignedObjectsNumbers, ox+1);
+							Array.Resize(ref AssignedObjectsNumbers, ox + 1);
 							AssignedObjectsNumbers[ox] = oid;
 						}
 						else

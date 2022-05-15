@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
-using LORUtils4;
+using LOR4Utils;
 using xUtils;
 using FileHelper;
 
@@ -37,9 +37,9 @@ namespace UtilORama4
 		protected bool nameIsBad = true;
 		public bool BadOutput = true;
 		protected object myTag = null;
-		public iLORMember4 TagLOR = null;
+		public iLOR4Member TagLOR = null;
 		public xMember TagX = null;
-		public iLORMember4 TagViz = null;
+		public iLOR4Member TagViz = null;
 		public bool ExactLOR = false;
 		public bool ExactX = false;
 		public bool ExactViz = false;
@@ -189,7 +189,7 @@ namespace UtilORama4
 				}
 			}
 		}
-	
+
 		public DMXUniverse DMXUniverse
 		{
 			get
@@ -315,7 +315,7 @@ namespace UtilORama4
 				ret = myName.ToLower().CompareTo(otherChannel.myName.ToLower());
 			}
 			else
-			{ 
+			{
 				if (xLightsAddress > otherChannel.xLightsAddress) ret = 1;
 				if (xLightsAddress < otherChannel.xLightsAddress) ret = -1;
 				if (ret == 0)
@@ -329,16 +329,16 @@ namespace UtilORama4
 		public DMXChannel Clone()
 		{
 			DMXChannel newChan = new DMXChannel();
-			newChan.myID						= myID;
-			newChan.Name					= myName;
-			newChan.myLocation			= myLocation;
-			newChan.myComment				= myComment;
-			newChan.isActive				= isActive;
-			newChan.Color					= Color;
+			newChan.myID = myID;
+			newChan.Name = myName;
+			newChan.myLocation = myLocation;
+			newChan.myComment = myComment;
+			newChan.isActive = isActive;
+			newChan.Color = Color;
 			newChan.DMXController = DMXController;
-			newChan.OutputNum			= myOutput;
+			newChan.OutputNum = myOutput;
 			newChan.DeviceType = DeviceType;
-			newChan.isEditing				= isEditing;
+			newChan.isEditing = isEditing;
 			//newChan.nameIsBad				= nameIsBad;
 			//newChan.BadOutput			= BadOutput;
 			//newChan.isDirty = isDirty;
@@ -370,16 +370,16 @@ namespace UtilORama4
 		public bool Equals(DMXChannel otherChannel)
 		{
 			bool eq = true;
-			if (myID									!= otherChannel.myID)								eq = false;
-			else if (myName.CompareTo(otherChannel.myName) != 0)					eq = false;
-			else if (myLocation.CompareTo(otherChannel.myLocation) != 0)	eq = false;
-			else if (myComment.CompareTo(otherChannel.myComment) != 0)		eq = false;
-			else if (isActive					!= otherChannel.isActive)						eq = false;
-			else if (Color.ToArgb() != otherChannel.Color.ToArgb())		eq = false;
+			if (myID != otherChannel.myID) eq = false;
+			else if (myName.CompareTo(otherChannel.myName) != 0) eq = false;
+			else if (myLocation.CompareTo(otherChannel.myLocation) != 0) eq = false;
+			else if (myComment.CompareTo(otherChannel.myComment) != 0) eq = false;
+			else if (isActive != otherChannel.isActive) eq = false;
+			else if (Color.ToArgb() != otherChannel.Color.ToArgb()) eq = false;
 			//DMXController = otherChannel.DMXController;
-			else if (myOutput			!= otherChannel.myOutput)				eq = false;
-			else if (DeviceType.ID		!= otherChannel.DeviceType.ID)			eq = false;
-			else if (isEditing				!= otherChannel.isEditing)					eq = false;
+			else if (myOutput != otherChannel.myOutput) eq = false;
+			else if (DeviceType.ID != otherChannel.DeviceType.ID) eq = false;
+			else if (isEditing != otherChannel.isEditing) eq = false;
 			//else if (nameIsBad				!= otherChannel.nameIsBad)					eq = false;
 			//else if (BadOutput			!= otherChannel.BadOutput)				eq = false;
 			//else if (isDirty != otherChannel.isDirty) eq = false;

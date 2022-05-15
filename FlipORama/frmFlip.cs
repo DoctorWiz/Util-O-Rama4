@@ -10,7 +10,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using FileHelper;
-using LORUtils4;
+using LOR4Utils;
 
 namespace UtilORama4
 {

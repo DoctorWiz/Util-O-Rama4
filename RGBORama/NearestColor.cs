@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;  //!Temp
 using System.Diagnostics; //!Temp
-using LORUtils4; using FileHelper;
+using LOR4Utils;
+using FileHelper;
 
 namespace UtilORama
 {
@@ -18,24 +19,24 @@ namespace UtilORama
 		// 140 total, 8 per line (thus 18 lines)
 		public static readonly int ColorCount = 140;
 		public static string[] ColorNames = {
-			"Black-Off",			"Red",						"Green",						"Blue",						"White",						"Yellow",				"Cyan",						"Magenta",
-			"AliceBlue",			"AntiqueWhite",		"Aqua",							"Aquamarine",			"Azure",						"Beige",				"Bisque",					"BlanchedAlmond",
-			"BlueViolet",			"Brown",					"BurlyWood",				"CadetBlue",			"Chartreuse",				"Chocolate",		"Coral",					"CornflowerBlue",
-			"Cornsilk",				"Crimson",				"DarkBlue",					"DarkCyan",				"DarkGoldenrod",		"DarkGray",			"DarkGreen",			"DarkKhaki",
-			"DarkMagena",			"DarkOliveGreen",	"DarkOrange",				"DarkOrchid",			"DarkRed",					"DarkSalmon",		"DarkSeaGreen",		"DarkSlateBlue",
-			"DarkSlateGray",	"DarkTurquoise",	"DarkViolet",				"DeepPink",				"DeepSkyBlue",			"DimGray",			"DodgerBlue",			"Firebrick",
-			"FloralWhite",		"ForestGreen",		"Fuschia",					"Gainsboro",			"GhostWhite",				"Gold",					"Goldenrod",			"Gray",
-			"DarkGreen",			"GreenYellow",		"Honeydew",					"HotPink",				"IndianRed",				"Indigo",				"Ivory",					"Khaki",
-			"Lavender",				"LavenderBlush",	"LawnGreen",				"LemonChiffon",		"LightBlue",				"LightCoral",		"LightCyan",			"LightGoldenrodYellow",
-			"LightGreen",			"LightGray",			"LightPink",				"LightSalmon",		"LightSeaGreen",		"LightSkyBlue",	"LightSlateGray",	"LightSteelBlue",
-			"LightYellow",		"LimeGreen",			"Linen",						"Maroon",					"MediumAquamarine",	"MediumBlue",		"MediumOrchid",		"MediumPurple",
-			"MediumSeaGreen",	"MediumSlateBlue","MediumSpringGreen","MediumTurquoise","MediumVioletRed",	"MidnightBlue",	"MintCream",			"MistyRose",
-			"Moccasin",				"NavajoWhite",		"Navy",							"OldLace",				"Olive",						"OliveDrab",		"Orange",					"OrangeRed",
-			"Orchid",					"PaleGoldenrod",	"PaleGreen",				"PaleTurquoise",	"PaleVioletRed",		"PapayaWhip",		"PeachPuff",			"Peru",
-			"Pink",						"Plum",						"PowderBlue",				"Purple",					"RosyBrown",				"RoyalBlue",		"SaddleBrown",		"Salmon",
-			"SandyBrown",			"SeaGreen",				"Seashell",					"Sienna",					"Silver",						"SkyBlue",			"SlateBlue",			"SlateGray",
-			"Snow",						"SpringGreen",		"SteelBlue",				"Tan",						"Teal",							"Thistle",			"Tomato",					"Turquoise",
-			"Violet",					"Wheat",					"WhiteSmoke",				"YellowGreen"     };
+			"Black-Off",      "Red",            "Green",            "Blue",           "White",            "Yellow",       "Cyan",           "Magenta",
+			"AliceBlue",      "AntiqueWhite",   "Aqua",             "Aquamarine",     "Azure",            "Beige",        "Bisque",         "BlanchedAlmond",
+			"BlueViolet",     "Brown",          "BurlyWood",        "CadetBlue",      "Chartreuse",       "Chocolate",    "Coral",          "CornflowerBlue",
+			"Cornsilk",       "Crimson",        "DarkBlue",         "DarkCyan",       "DarkGoldenrod",    "DarkGray",     "DarkGreen",      "DarkKhaki",
+			"DarkMagena",     "DarkOliveGreen", "DarkOrange",       "DarkOrchid",     "DarkRed",          "DarkSalmon",   "DarkSeaGreen",   "DarkSlateBlue",
+			"DarkSlateGray",  "DarkTurquoise",  "DarkViolet",       "DeepPink",       "DeepSkyBlue",      "DimGray",      "DodgerBlue",     "Firebrick",
+			"FloralWhite",    "ForestGreen",    "Fuschia",          "Gainsboro",      "GhostWhite",       "Gold",         "Goldenrod",      "Gray",
+			"DarkGreen",      "GreenYellow",    "Honeydew",         "HotPink",        "IndianRed",        "Indigo",       "Ivory",          "Khaki",
+			"Lavender",       "LavenderBlush",  "LawnGreen",        "LemonChiffon",   "LightBlue",        "LightCoral",   "LightCyan",      "LightGoldenrodYellow",
+			"LightGreen",     "LightGray",      "LightPink",        "LightSalmon",    "LightSeaGreen",    "LightSkyBlue", "LightSlateGray", "LightSteelBlue",
+			"LightYellow",    "LimeGreen",      "Linen",            "Maroon",         "MediumAquamarine", "MediumBlue",   "MediumOrchid",   "MediumPurple",
+			"MediumSeaGreen", "MediumSlateBlue","MediumSpringGreen","MediumTurquoise","MediumVioletRed",  "MidnightBlue", "MintCream",      "MistyRose",
+			"Moccasin",       "NavajoWhite",    "Navy",             "OldLace",        "Olive",            "OliveDrab",    "Orange",         "OrangeRed",
+			"Orchid",         "PaleGoldenrod",  "PaleGreen",        "PaleTurquoise",  "PaleVioletRed",    "PapayaWhip",   "PeachPuff",      "Peru",
+			"Pink",           "Plum",           "PowderBlue",       "Purple",         "RosyBrown",        "RoyalBlue",    "SaddleBrown",    "Salmon",
+			"SandyBrown",     "SeaGreen",       "Seashell",         "Sienna",         "Silver",           "SkyBlue",      "SlateBlue",      "SlateGray",
+			"Snow",           "SpringGreen",    "SteelBlue",        "Tan",            "Teal",             "Thistle",      "Tomato",         "Turquoise",
+			"Violet",         "Wheat",          "WhiteSmoke",       "YellowGreen"     };
 
 		// These colors are in .Net or HTML format Red-Grn-Blu
 		public static Int32[] NetColorVals = {
@@ -60,40 +61,40 @@ namespace UtilORama
 
 		// LOR colors as 24-bit ints in GBR order, full values 0-255 per color
 		public static Int32[] LORcolorValsFull = {
-			       0,      255,    65280, 16711680,	16777215,    65535,	16776960,	16711935,
-			16775408,	14150650,	16776960,	13959039,	16777200,	14480885,	12903679,	13495295,
-			14822282,  2763429,  8894686,	10526303,    65407,  1993170,  5275647,	15570276,
+						 0,      255,    65280, 16711680, 16777215,    65535, 16776960, 16711935,
+			16775408, 14150650, 16776960, 13959039, 16777200, 14480885, 12903679, 13495295,
+			14822282,  2763429,  8894686, 10526303,    65407,  1993170,  5275647, 15570276,
 			14481663,  3937500,  9109504,  9145088,   755384, 11119017,    25600,  7059389,
 			 9109643,  3107669,    36095, 13382297,      139,  8034025,  9157775,  9125192,
-			 5197615,	13749760,	13828244,	 9639167,	16760576,	 6908265,	16748574,  2237106,
-			15792895,  2263842,	16711935,	14474460,	16775416,    55295,  2139610,  8421504,
-			   32768,  3145645,	15794160,	11823615,  6053069,  8519755,	15794175,  9234160,
-			16443110,	16118015,    64636,	13499135,	15128749,  8421616,	16777184,	13826810,
-			13882323,	 9498256,	12695295,	 8036607,	11186720,	16436871,	10061943,	14599344,
-			14745599,	 3329330,	15134970,	     128,	11193702,	13434880,	13850042,	14381203,
-			 7451452,	15624315,	10156544,	13422920,	 8721863,	 7346457,	16449525,	14804223,
-			11920639,	11394815,	8388608,	15136253,	   32896,	 2330219,	   42495,    17919,
-			14053594,	11200750,	10025880,	15658671,	 9662683,	14020607,	12180223,	 4163021,
-			13353215,	14524637,	15130800,	 8388736,	 9408444,	14772545,	 1262987,  7504122,
-			 6333684,	 5737262,	15660543,	 2970272,	12632256,	15453831,	13458026,	 9470064,
-			16448255,	 8388352,	11829830,	 9221330,	 8421376,	14204888,	 4678655,	13688896,
-			15631086,	11788021,	16119285,	3329434 };
+			 5197615, 13749760, 13828244,  9639167, 16760576,  6908265, 16748574,  2237106,
+			15792895,  2263842, 16711935, 14474460, 16775416,    55295,  2139610,  8421504,
+				 32768,  3145645, 15794160, 11823615,  6053069,  8519755, 15794175,  9234160,
+			16443110, 16118015,    64636, 13499135, 15128749,  8421616, 16777184, 13826810,
+			13882323,  9498256, 12695295,  8036607, 11186720, 16436871, 10061943, 14599344,
+			14745599,  3329330, 15134970,      128, 11193702, 13434880, 13850042, 14381203,
+			 7451452, 15624315, 10156544, 13422920,  8721863,  7346457, 16449525, 14804223,
+			11920639, 11394815, 8388608,  15136253,    32896,  2330219,    42495,    17919,
+			14053594, 11200750, 10025880, 15658671,  9662683, 14020607, 12180223,  4163021,
+			13353215, 14524637, 15130800,  8388736,  9408444, 14772545,  1262987,  7504122,
+			 6333684,  5737262, 15660543,  2970272, 12632256, 15453831, 13458026,  9470064,
+			16448255,  8388352, 11829830,  9221330,  8421376, 14204888,  4678655, 13688896,
+			15631086, 11788021, 16119285, 3329434 };
 
 		// LOR colors preprocessed as 24-bit ints, in GBR order, as percentages 0-100% per color, rounded to nearest 5%
 		public static Int32[] LORcolorValsPct = {
-		        0,     100,   25600, 6553600, 6579300,   25700, 6579200, 6553700,
+						0,     100,   25600, 6553600, 6579300,   25700, 6579200, 6553700,
 			6578526, 5528674, 6579200, 5465138, 6579294, 5660768, 5069156, 5266532,
 			5837110, 1052737, 3491927, 4144677,   25650,  797010, 2044516, 6109735,
 			5661028, 1574998, 3604480, 3618560,  275784, 4342338,    9984, 2771018,
 			3604535, 1190433,   14180, 5248060,      55, 3160923, 3623480, 3610652,
 			2039570, 5394688, 5439546, 3803236, 6572800, 2697513, 6567948,  855366,
 			6185572,  866061, 6553700, 5658198, 6578529,   21604,  868693, 3289650,
-			  12800, 1205316, 6186078, 4663652, 2368592, 3342365, 6186084, 3627614,
+				12800, 1205316, 6186078, 4663652, 2368592, 3342365, 6186084, 3627614,
 			6445658, 6315620,   25393, 5268068, 5920068, 3289694, 6579288, 5399138,
 			5460819, 3693880, 4999012, 3161956, 4408845, 6443317, 3945775, 5721413,
 			5792868, 1331220, 5922402,      50, 4411432, 5242880, 5448009, 5647418,
 			2901528, 6105392, 3957248, 5263900, 3409998, 2886154, 6448224, 5790052,
-			4675940, 4478820, 3276800, 5922915,   12850,  931882,  	16740,    7012,
+			4675940, 4478820, 3276800, 5922915,   12850,  931882,   16740,    7012,
 			5516373, 4414301, 3957308, 6118725, 3812438, 5529188, 4805988, 1651792,
 			5262180, 5717847, 5920837, 3276850, 3684426, 5777689,  465719, 2962018,
 			2506848, 2242322, 6119524, 1187903, 4934475, 6050101, 5251882, 3682860,
@@ -119,7 +120,7 @@ namespace UtilORama
 			int nearestSoFar = 999;
 			int smallestDiff = 999;
 
-			for (int n=0; n< ColorNames.Length; n++)
+			for (int n = 0; n < ColorNames.Length; n++)
 			{
 				//int nr = (ColorVals[n] & 0xFF0000) >> 16;
 				//int ng = (ColorVals[n] & 0xFF00) >> 8;
@@ -129,7 +130,7 @@ namespace UtilORama
 				//d += Math.Abs(c.B - nb);
 
 				int d = ColorDistance(c, Color.FromArgb(NetColorVals[n]));
-				if (d<smallestDiff)
+				if (d < smallestDiff)
 				{
 					smallestDiff = d;
 					nearestSoFar = n;
@@ -157,31 +158,31 @@ namespace UtilORama
 			return nearestSoFar;
 		}
 
-	public static int FindNearestColorIndexPct(int LORcolorPct)
-	{
-		int nearestSoFar = 999;
-		int smallestDiff = 999;
-
-		for (int n = 0; n < ColorNames.Length; n++)
+		public static int FindNearestColorIndexPct(int LORcolorPct)
 		{
-			int d = ColorDistance(LORcolorPct, LORcolorValsPct[n]);
-			if (d < smallestDiff)
-			{
-				smallestDiff = d;
-				nearestSoFar = n;
-				if (d == 0) n = ColorNames.Length; // If exact match found, no need to check the rest, force exit of loop
-			}
-		}
-		return nearestSoFar;
-	}
+			int nearestSoFar = 999;
+			int smallestDiff = 999;
 
-public static int ColorDistance(Color c1, Color c2)
-	{
-		int d = Math.Abs(c1.R - c2.R);
-		d += Math.Abs(c1.G - c2.G);
-		d += Math.Abs(c1.B - c2.B);
-		return d;
-	}
+			for (int n = 0; n < ColorNames.Length; n++)
+			{
+				int d = ColorDistance(LORcolorPct, LORcolorValsPct[n]);
+				if (d < smallestDiff)
+				{
+					smallestDiff = d;
+					nearestSoFar = n;
+					if (d == 0) n = ColorNames.Length; // If exact match found, no need to check the rest, force exit of loop
+				}
+			}
+			return nearestSoFar;
+		}
+
+		public static int ColorDistance(Color c1, Color c2)
+		{
+			int d = Math.Abs(c1.R - c2.R);
+			d += Math.Abs(c1.G - c2.G);
+			d += Math.Abs(c1.B - c2.B);
+			return d;
+		}
 
 		public static int ColorDistance(int LORcolor, Color NetColor)
 		{

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
-using LORUtils4;
+using LOR4Utils;
 using FileHelper;
 using xUtilities;
 
@@ -71,7 +71,7 @@ namespace UtilORama4
 																																					vamps.AlignmentType.FPS60,
 																																					vamps.AlignmentType.NoteOnsets,
 																																					vamps.AlignmentType.BeatsQuarter };
-		
+
 		public static readonly vamps.LabelType[] allowableLabels = { vamps.LabelType.None,
 																																vamps.LabelType.NoteNamesUnicode,
 																																vamps.LabelType.NoteNamesASCII,
@@ -86,8 +86,8 @@ namespace UtilORama4
 																														"vamp_tipic_tipic_chroma-smoothed" };
 
 
-private static LORChannelGroup4 chromaGroup = null;
-		public static LORChannel4[] chromaChannels = null;
+		private static LOR4ChannelGroup chromaGroup = null;
+		public static LOR4Channel[] chromaChannels = null;
 
 		private static int idx = 0;
 		public enum DetectionMethods { ComplexDomain = 0, SpectralDifference = 1, PhaseDeviation = 2, BroadbandEnergyRise = 3 };
@@ -115,7 +115,7 @@ private static LORChannelGroup4 chromaGroup = null;
 			}
 		}
 
-		public static int PrepareToVamp(string fileSong, int pluginIndex,	int detectionMethod = METHOD1domain)
+		public static int PrepareToVamp(string fileSong, int pluginIndex, int detectionMethod = METHOD1domain)
 		{
 			// Song file should have already been copied to the temp folder and named song.mp3
 			// Annotator will use the same folder the song is in for it's files
@@ -253,7 +253,7 @@ private static LORChannelGroup4 chromaGroup = null;
 			LabelType = labelType;
 			AlignmentType = alignmentType;
 			Annotator.SetAlignment(alignmentType);
-			
+
 			string msg = "\r\n\r\n### PROCESSING Chromagram TRANSCRIPTION ####################################";
 			Debug.WriteLine(msg);
 
@@ -290,7 +290,7 @@ private static LORChannelGroup4 chromaGroup = null;
 						lastStart = eStart;
 					}
 				} // end line contains a period
-				//TODO: Raise event for progress bar
+					//TODO: Raise event for progress bar
 			} // end while loop more lines remaining
 
 			reader.Close();
@@ -335,7 +335,7 @@ private static LORChannelGroup4 chromaGroup = null;
 			Array.Resize(ref chromaChannels, chroCount);
 			for (int n = 0; n < chroCount; n++)
 			{
-				LORChannel4 chan = chromaGroup.Members.FindChannel(prefix + MusicalNotation.chromaNamesASCII[n], true, true);
+				LOR4Channel chan = chromaGroup.Members.FindChannel(prefix + MusicalNotation.chromaNamesASCII[n], true, true);
 				chan.color = SequenceFunctions.ChannelColor(n);
 				//chan.identity.Centiseconds = seq.totalCentiseconds;
 				chromaChannels[n] = chan;
@@ -364,8 +364,8 @@ private static LORChannelGroup4 chromaGroup = null;
 				string[] parts;
 				int ontime = 0;
 				//int note = 0;
-				LORChannel4 ch;
-				LOREffect4 ef;
+				LOR4Channel ch;
+				LOR4Effect ef;
 
 				Annotator.VampTrack.Selected = true;
 
@@ -471,8 +471,8 @@ private static LORChannelGroup4 chromaGroup = null;
 								//if (id.PartType == MemberType.Channel)
 								//{
 								//ch = (Channel)id.owner;
-								ef = new LOREffect4();
-								ef.EffectType = LOREffectType4.Intensity;
+								ef = new LOR4Effect();
+								ef.EffectType = LOR4EffectType.Intensity;
 								ef.startCentisecond = lastcs[note];
 								ef.endCentisecond = centisecs;
 								ef.startIntensity = lastiVal[note];

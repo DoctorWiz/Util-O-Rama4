@@ -1,0 +1,33 @@
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+@prefix vamp:     <http://purl.org/ontology/vamp/> .
+@prefix :         <#> .
+
+:transform_plugin a vamp:Plugin ;
+    vamp:identifier "cqchromavamp" .
+
+:transform_library a vamp:PluginLibrary ;
+    vamp:identifier "cqvamp" ;
+    vamp:available_plugin :transform_plugin .
+
+:transform a vamp:Transform ;
+    vamp:plugin :transform_plugin ;
+    vamp:step_size "1024"^^xsd:int ; 
+    vamp:block_size "1024"^^xsd:int ; 
+    vamp:plugin_version """2""" ; 
+    vamp:parameter_binding [
+        vamp:parameter [ vamp:identifier "bpo" ] ;
+        vamp:value "36"^^xsd:float ;
+    ] ;
+    vamp:parameter_binding [
+        vamp:parameter [ vamp:identifier "lowestoct" ] ;
+        vamp:value "0"^^xsd:float ;
+    ] ;
+    vamp:parameter_binding [
+        vamp:parameter [ vamp:identifier "octaves" ] ;
+        vamp:value "7"^^xsd:float ;
+    ] ;
+    vamp:parameter_binding [
+        vamp:parameter [ vamp:identifier "tuning" ] ;
+        vamp:value "440"^^xsd:float ;
+    ] ;
+    vamp:output [ vamp:identifier "chromagram" ] .

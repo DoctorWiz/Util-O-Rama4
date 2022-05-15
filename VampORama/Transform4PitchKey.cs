@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
-using LORUtils4;
+using LOR4Utils;
 using FileHelper;
 using xUtilities;
 
@@ -49,7 +49,7 @@ namespace UtilORama4
 		public static xTimings alignTimes = null;
 		//public static labelType labelType = labelType.none;
 
-		public static readonly string[] availablePluginNames = {	"Queen Mary Key Detector",
+		public static readonly string[] availablePluginNames = {  "Queen Mary Key Detector",
 																															"Cepstral Pitch Tracker",
 																															"Chordino Chord Notes",
 																															"Aubio Pitch Frequency",
@@ -70,7 +70,7 @@ namespace UtilORama4
 																																					vamps.AlignmentType.BeatsQuarter,
 																																					vamps.AlignmentType.Bars };
 
-		public static readonly string[] filesAvailableConfigs = {	"vamp_qm-vamp-plugins_qm-keydetector_key.n3",
+		public static readonly string[] filesAvailableConfigs = { "vamp_qm-vamp-plugins_qm-keydetector_key.n3",
 																															"vamp_cepstral-pitchtracker_cepstral-pitchtracker_notes.n3",
 																															"vamp_nnls-chroma_chordino_chordnotes.n3",
 																															"vamp_vamp-aubio_aubiopitch_frequency.n3" };
@@ -97,8 +97,8 @@ namespace UtilORama4
 		//public const int LABELNoteNameUnicode = 2;
 		//public const int LABELMidiNoteNumber = 3;
 
-		private static LORChannelGroup4 pitchKeyGroup = null;
-		public static LORChannel4[] pitchKeyChannels = null;
+		private static LOR4ChannelGroup pitchKeyGroup = null;
+		public static LOR4Channel[] pitchKeyChannels = null;
 
 		private static int idx = 0;
 
@@ -128,7 +128,7 @@ namespace UtilORama4
 		}
 
 
-		public static int PrepareToVamp(string fileSong, int pluginIndex,	int detectionMethod = METHOD1domain)
+		public static int PrepareToVamp(string fileSong, int pluginIndex, int detectionMethod = METHOD1domain)
 		{
 			// Song file should have already been copied to the temp folder and named song.mp3
 			// Annotator will use the same folder the song is in for it's files
@@ -371,7 +371,7 @@ namespace UtilORama4
 			int grpNum = -1;
 			int keyCount = 25; // 24 standard Keys numbered 1-24.  0 is included but invalid.
 			int lastStart = -1;
-			if (LabelType == vamps.LabelType.NoteNamesASCII)		keyCount = MusicalNotation.keyNamesASCII.Length;
+			if (LabelType == vamps.LabelType.NoteNamesASCII) keyCount = MusicalNotation.keyNamesASCII.Length;
 			if (LabelType == vamps.LabelType.NoteNamesUnicode) keyCount = MusicalNotation.keyNamesUnicode.Length;
 
 			// Part 1
@@ -384,11 +384,11 @@ namespace UtilORama4
 				// Default channel name is the key's number...
 				string keyName = n.ToString();
 				// ... But use the ASCII or Unicode Key representation if specified
-				if (LabelType == vamps.LabelType.KeyNamesASCII)	 keyName = MusicalNotation.keyNamesASCII[n];
+				if (LabelType == vamps.LabelType.KeyNamesASCII) keyName = MusicalNotation.keyNamesASCII[n];
 				if (LabelType == vamps.LabelType.KeyNamesUnicode) keyName = MusicalNotation.keyNamesUnicode[n];
 
-				LORChannel4 chs = pitchKeyGroup.Members.FindChannel(PitchKeyNamePrefix + keyName, true, true);
-				chs.color = SequenceFunctions.ChannelColor(n-1);
+				LOR4Channel chs = pitchKeyGroup.Members.FindChannel(PitchKeyNamePrefix + keyName, true, true);
+				chs.color = SequenceFunctions.ChannelColor(n - 1);
 				chs.effects.Clear();
 				pitchKeyChannels[n] = chs;
 			}
@@ -424,14 +424,14 @@ namespace UtilORama4
 								}
 								else
 								{
-									LOREffect4 eft = null;
+									LOR4Effect eft = null;
 									if (Annotator.UseRamps)
 									{
-										eft = new LOREffect4(LOREffectType4.FadeDown, csStart, csEnd, 100, 0);
+										eft = new LOR4Effect(LOR4EffectType.FadeDown, csStart, csEnd, 100, 0);
 									}
 									else
 									{
-										eft = new LOREffect4(LOREffectType4.Intensity, csStart, csEnd);
+										eft = new LOR4Effect(LOR4EffectType.Intensity, csStart, csEnd);
 									}
 									pitchKeyChannels[keyID].effects.Add(eft);
 								}
@@ -444,11 +444,11 @@ namespace UtilORama4
 
 			// Part 3
 			// Get rid of the empty ones
-			for (int n1 = 0; n1< pitchKeyGroup.Members.Count; n1++)
+			for (int n1 = 0; n1 < pitchKeyGroup.Members.Count; n1++)
 			{
-				if (pitchKeyGroup.Members[n1].MemberType == LORMemberType4.Channel)
+				if (pitchKeyGroup.Members[n1].MemberType == LOR4MemberType.Channel)
 				{
-					LORChannel4 ch = (LORChannel4)pitchKeyGroup.Members[n1];
+					LOR4Channel ch = (LOR4Channel)pitchKeyGroup.Members[n1];
 					if (ch.effects.Count < 1)
 					{
 						pitchKeyGroup.Members.Items.RemoveAt(n1);

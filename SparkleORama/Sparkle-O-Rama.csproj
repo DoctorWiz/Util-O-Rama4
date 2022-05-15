@@ -1,0 +1,82 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>UtilORama4</RootNamespace>
+		<Copyright>Copyright © 2022+ by Doctor Wizard 🧙 and W⚡zlights Software</Copyright>
+		<AssemblyName>Sparkle-O-Rama</AssemblyName>
+		<PlatformTarget>x64</PlatformTarget>
+		<RepositoryUrl>https://github.com/DoctorWiz/Util-O-Rama4/tree/master/SparkleORama</RepositoryUrl>
+		<PublishUrl>ftp://wizlights.com/utilorama/download/</PublishUrl>
+		<InstallUrl>http://wizlights.com/utilorama/download/</InstallUrl>
+		<SupportUrl>http://wizlights.com/utilorama/sparkleorama/default.html</SupportUrl>
+		<ProductName>Sparkle-O-Rama</ProductName>
+		<PublisherName>W⚡zlights Software</PublisherName>
+		<SuiteName>Util-O-Rama</SuiteName>
+		<CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+		<WebPage>http://wizlights.com/utilorama/sparkleorama/default.html</WebPage>
+		<ApplicationRevision>0</ApplicationRevision>
+		<ApplicationVersion>4.0.0.%2a</ApplicationVersion>
+		<PackageTags>Util-O-Rama; Light-O-Rama; Christmas; Sequences; Light Show; Sparkle; Random</PackageTags>
+		<Description>Create random changing sparkle effects on channels in Light-O-Rama Showtime S4 Sequences.</Description>
+		<ApplicationIcon>Sparkle-O-Rama.ico</ApplicationIcon>
+		<IsPublishable>False</IsPublishable>
+		<PackageProjectUrl>http://wizlights/utilorama/sparkleorama</PackageProjectUrl>
+		<PackageIcon>Sparkle-O-Rama.png</PackageIcon>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="desktop.ini" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="..\..\COMMON\FileHelper.cs" Link="FileHelper.cs" />
+		<Compile Include="..\..\COMMON\FormHelper.cs" Link="FormHelper.cs" />
+		<Compile Include="..\Common\About\About.cs" Link="About.cs" />
+		<Compile Include="..\Common\About\About.Designer.cs" Link="About.Designer.cs" />
+		<Compile Include="..\Common\Sequence4\LORUtils.cs" Link="LORUtils.cs" />
+		<Compile Include="..\Common\Sequence4\SeqChannel.cs" Link="SeqChannel.cs" />
+		<Compile Include="..\Common\Sequence4\SeqChannelGroup.cs" Link="SeqChannelGroup.cs" />
+		<Compile Include="..\Common\Sequence4\SeqCosmicDevice.cs" Link="SeqCosmicDevice.cs" />
+		<Compile Include="..\Common\Sequence4\SeqEnums.cs" Link="SeqEnums.cs" />
+		<Compile Include="..\Common\Sequence4\SeqMemberBase.cs" Link="SeqMemberBase.cs" />
+		<Compile Include="..\Common\Sequence4\SeqMemberInterface.cs" Link="SeqMemberInterface.cs" />
+		<Compile Include="..\Common\Sequence4\SeqMembership.cs" Link="SeqMembership.cs" />
+		<Compile Include="..\Common\Sequence4\SeqRGBChannel.cs" Link="SeqRGBChannel.cs" />
+		<Compile Include="..\Common\Sequence4\SeqSubs.cs" Link="SeqSubs.cs" />
+		<Compile Include="..\Common\Sequence4\SeqTimingGrid.cs" Link="SeqTimingGrid.cs" />
+		<Compile Include="..\Common\Sequence4\SeqTrack.cs" Link="SeqTrack.cs" />
+		<Compile Include="..\Common\Sequence4\Sequence4.cs" Link="Sequence4.cs" />
+		<Compile Include="..\Common\Sequence4\SFTreeUtils.cs" Link="SFTreeUtils.cs" />
+		<Compile Include="..\Common\Sequence4\Visualization4.cs" Link="Visualization4.cs" />
+		<Compile Include="..\Common\Sequence4\VizChannel.cs" Link="VizChannel.cs" />
+		<Compile Include="..\Common\Sequence4\VizDrawObject.cs" Link="VizDrawObject.cs" />
+		<Compile Include="..\Common\Sequence4\VizGroup.cs" Link="VizGroup.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Syncfusion.GridHelperClasses.Windows" Version="20.1.0.52" />
+		<PackageReference Include="Syncfusion.Tools.Windows" Version="20.1.0.52" />
+		<PackageReference Include="System.DirectoryServices.AccountManagement" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Properties\Settings.Designer.cs">
+			<DesignTimeSharedInput>True</DesignTimeSharedInput>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Settings.settings</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="Properties\Settings.settings">
+			<Generator>SettingsSingleFileGenerator</Generator>
+			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
+		</None>
+	</ItemGroup>
+
+</Project>

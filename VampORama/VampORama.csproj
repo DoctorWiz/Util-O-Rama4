@@ -1,448 +1,377 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
 	<PropertyGroup>
-		<TargetFramework>net6.0-windows</TargetFramework>
+		<Copyright>Copyright © 2022+ by Doctor Wizard 🧙 and W⚡zlights Software</Copyright>
 		<OutputType>WinExe</OutputType>
+		<TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
 		<RootNamespace>UtilORama4</RootNamespace>
 		<AssemblyName>Vamp-O-Rama</AssemblyName>
-		<LangVersion>8.0</LangVersion>
 		<Nullable>enable</Nullable>
-		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-		<IsWebBootstrapper>true</IsWebBootstrapper>
+		<UseWindowsForms>true</UseWindowsForms>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<StartupObject>UtilORama4.Program</StartupObject>
+		<ApplicationIcon>Graphics\VampHeadOverPurpleBulb.ico</ApplicationIcon>
+		<IsPublishable>False</IsPublishable>
+		<PlatformTarget>x64</PlatformTarget>
+		<PackageIcon>VampHeadOverPurpleBulb.png</PackageIcon>
+		<RepositoryUrl>https://github.com/DoctorWiz/Util-O-Rama4/tree/master/VampORama</RepositoryUrl>
 		<PublishUrl>ftp://wizlights.com/utilorama/download/</PublishUrl>
-		<Install>true</Install>
-		<InstallFrom>Web</InstallFrom>
-		<UpdateEnabled>true</UpdateEnabled>
-		<UpdateMode>Foreground</UpdateMode>
-		<UpdateInterval>7</UpdateInterval>
-		<UpdateIntervalUnits>Days</UpdateIntervalUnits>
-		<UpdatePeriodically>false</UpdatePeriodically>
-		<UpdateRequired>false</UpdateRequired>
-		<MapFileExtensions>true</MapFileExtensions>
 		<InstallUrl>http://wizlights.com/utilorama/download/</InstallUrl>
-		<SupportUrl>http://wizlights.com/xutils/xtune</SupportUrl>
+		<SupportUrl>http://wizlights.com/utilorama/vamporama/default.html</SupportUrl>
 		<ProductName>Vamp-O-Rama</ProductName>
-		<PublisherName>Wizster Software</PublisherName>
+		<PublisherName>W⚡zlights Software</PublisherName>
 		<SuiteName>Util-O-Rama</SuiteName>
 		<CreateWebPageOnPublish>true</CreateWebPageOnPublish>
-		<WebPage>publish.htm</WebPage>
+		<WebPage>http://wizlights.com/utilorama/vamporama/default.html</WebPage>
 		<ApplicationRevision>0</ApplicationRevision>
 		<ApplicationVersion>4.0.0.%2a</ApplicationVersion>
-		<UseApplicationTrust>false</UseApplicationTrust>
-		<PublishWizardCompleted>true</PublishWizardCompleted>
-		<BootstrapperEnabled>true</BootstrapperEnabled>
-		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-		<UseWindowsForms>true</UseWindowsForms>
-		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+		<PackageTags>Util-O-Rama; Light-O-Rama; xLights; Vamp; Queen Mary; Music; Christmas; Polyphonic Transcription; Light Show</PackageTags>
+		<Description>
+			Vamp your Christmas music and generate detailed timing tracks for Light-O-Rama Showtime S4 and xLights.  Uses the Queen Mary and other Vamp plugins but performs extensive post-processing on the output.
+		</Description>
 	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-		<PlatformTarget>x64</PlatformTarget>
-		<Optimize>true</Optimize>
-		<WarningLevel>4</WarningLevel>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <WarningLevel>0</WarningLevel>
 	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-		<WarningLevel>4</WarningLevel>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <WarningLevel>0</WarningLevel>
 	</PropertyGroup>
-	<PropertyGroup>
-		<ApplicationIcon>VampHeadOverPurpleBulb.ico</ApplicationIcon>
-	</PropertyGroup>
-	<PropertyGroup>
-		<ManifestCertificateThumbprint>DFEA86D9CB3FA985769C66E2F25E93D7E92C1ABB</ManifestCertificateThumbprint>
-	</PropertyGroup>
-	<PropertyGroup>
-		<ManifestKeyFile>TuneORama_TemporaryKey.pfx</ManifestKeyFile>
-	</PropertyGroup>
-	<PropertyGroup>
-		<GenerateManifests>true</GenerateManifests>
-	</PropertyGroup>
-	<PropertyGroup>
-		<SignManifests>false</SignManifests>
-	</PropertyGroup>
-	<PropertyGroup>
-		<StartupObject>UtilORama4.Program</StartupObject>
-		<Copyright>Copyright © 2022+ by Doctor Wizard 🧙 and W⚡zlights Software</Copyright>
-		<PackageProjectUrl>https://wizlights.com/utilorama</PackageProjectUrl>
-		<RepositoryType>git</RepositoryType>
-		<RepositoryUrl>https://github.com/DoctorWiz/Util-O-Rama4</RepositoryUrl>
-		<PackageTags>Util-O-Rama;Vamp-O-Rama;Vamperizer;Light-O-Rama;xLights;Vamp;Queen Mary</PackageTags>
-		<NeutralLanguage>en-US</NeutralLanguage>
-		<PackageIcon>Green Wrench Light Bulb.png</PackageIcon>
-		<Description>Vamp your Christmas music and generate detailed timing tracks for Light-O-Rama Showtime S4 and xLights.  Uses the Queen Mary and other Vamp plugins but performs extensive post-processing on the output.
-</Description>
-	</PropertyGroup>
+
 	<ItemGroup>
-		<Compile Remove="packages\PostSharp.6.2.13\**" />
-		<Compile Remove="packages\PostSharp.6.9.9\**" />
-		<Compile Remove="packages\PostSharp.Redist.6.2.13\**" />
-		<Compile Remove="packages\PostSharp.Redist.6.9.9\**" />
-		<Compile Remove="packages\Syncfusion.Core.WinForms.16.2.0.50\**" />
-		<Compile Remove="packages\Syncfusion.Core.WinForms.19.2.0.62\**" />
-		<Compile Remove="packages\Syncfusion.DataSource.WinForms.16.2.0.50\**" />
-		<Compile Remove="packages\Syncfusion.DataSource.WinForms.19.2.0.62\**" />
-		<Compile Remove="packages\Syncfusion.Grid.Base.16.2.0.50\**" />
-		<Compile Remove="packages\Syncfusion.GridCommon.WinForms.16.2.0.50\**" />
-		<Compile Remove="packages\Syncfusion.GridCommon.WinForms.19.2.0.62\**" />
-		<Compile Remove="packages\Syncfusion.Licensing.16.2.0.50\**" />
-		<Compile Remove="packages\Syncfusion.Licensing.19.2.0.62\**" />
-		<Compile Remove="packages\Syncfusion.SfListView.WinForms.16.2.0.50\**" />
-		<Compile Remove="packages\Syncfusion.SfListView.WinForms.19.2.0.62\**" />
-		<Compile Remove="packages\Syncfusion.Shared.Base.16.2.0.50\**" />
-		<Compile Remove="packages\Syncfusion.Shared.Base.19.2.0.62\**" />
-		<Compile Remove="packages\Syncfusion.Shared.Windows.16.2.0.50\**" />
-		<Compile Remove="packages\Syncfusion.Tools.Base.16.2.0.50\**" />
-		<EmbeddedResource Remove="packages\PostSharp.6.2.13\**" />
-		<EmbeddedResource Remove="packages\PostSharp.6.9.9\**" />
-		<EmbeddedResource Remove="packages\PostSharp.Redist.6.2.13\**" />
-		<EmbeddedResource Remove="packages\PostSharp.Redist.6.9.9\**" />
-		<EmbeddedResource Remove="packages\Syncfusion.Core.WinForms.16.2.0.50\**" />
-		<EmbeddedResource Remove="packages\Syncfusion.Core.WinForms.19.2.0.62\**" />
-		<EmbeddedResource Remove="packages\Syncfusion.DataSource.WinForms.16.2.0.50\**" />
-		<EmbeddedResource Remove="packages\Syncfusion.DataSource.WinForms.19.2.0.62\**" />
-		<EmbeddedResource Remove="packages\Syncfusion.Grid.Base.16.2.0.50\**" />
-		<EmbeddedResource Remove="packages\Syncfusion.GridCommon.WinForms.16.2.0.50\**" />
-		<EmbeddedResource Remove="packages\Syncfusion.GridCommon.WinForms.19.2.0.62\**" />
-		<EmbeddedResource Remove="packages\Syncfusion.Licensing.16.2.0.50\**" />
-		<EmbeddedResource Remove="packages\Syncfusion.Licensing.19.2.0.62\**" />
-		<EmbeddedResource Remove="packages\Syncfusion.SfListView.WinForms.16.2.0.50\**" />
-		<EmbeddedResource Remove="packages\Syncfusion.SfListView.WinForms.19.2.0.62\**" />
-		<EmbeddedResource Remove="packages\Syncfusion.Shared.Base.16.2.0.50\**" />
-		<EmbeddedResource Remove="packages\Syncfusion.Shared.Base.19.2.0.62\**" />
-		<EmbeddedResource Remove="packages\Syncfusion.Shared.Windows.16.2.0.50\**" />
-		<EmbeddedResource Remove="packages\Syncfusion.Tools.Base.16.2.0.50\**" />
-		<None Remove="packages\PostSharp.6.2.13\**" />
-		<None Remove="packages\PostSharp.6.9.9\**" />
-		<None Remove="packages\PostSharp.Redist.6.2.13\**" />
-		<None Remove="packages\PostSharp.Redist.6.9.9\**" />
-		<None Remove="packages\Syncfusion.Core.WinForms.16.2.0.50\**" />
-		<None Remove="packages\Syncfusion.Core.WinForms.19.2.0.62\**" />
-		<None Remove="packages\Syncfusion.DataSource.WinForms.16.2.0.50\**" />
-		<None Remove="packages\Syncfusion.DataSource.WinForms.19.2.0.62\**" />
-		<None Remove="packages\Syncfusion.Grid.Base.16.2.0.50\**" />
-		<None Remove="packages\Syncfusion.GridCommon.WinForms.16.2.0.50\**" />
-		<None Remove="packages\Syncfusion.GridCommon.WinForms.19.2.0.62\**" />
-		<None Remove="packages\Syncfusion.Licensing.16.2.0.50\**" />
-		<None Remove="packages\Syncfusion.Licensing.19.2.0.62\**" />
-		<None Remove="packages\Syncfusion.SfListView.WinForms.16.2.0.50\**" />
-		<None Remove="packages\Syncfusion.SfListView.WinForms.19.2.0.62\**" />
-		<None Remove="packages\Syncfusion.Shared.Base.16.2.0.50\**" />
-		<None Remove="packages\Syncfusion.Shared.Base.19.2.0.62\**" />
-		<None Remove="packages\Syncfusion.Shared.Windows.16.2.0.50\**" />
-		<None Remove="packages\Syncfusion.Tools.Base.16.2.0.50\**" />
+		<None Remove="desktop.ini" />
+		<None Remove="VampORamaError2022-05-09.log" />
 	</ItemGroup>
+
 	<ItemGroup>
-		<Reference Include="Syncfusion.Core.WinForms, Version=20.1460.0.47, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-			<HintPath>C:\Program Files (x86)\Syncfusion\Essential Studio\Windows\20.1.0.47\precompiledassemblies\4.6\Syncfusion.Core.WinForms.dll</HintPath>
-		</Reference>
-		<Reference Include="Syncfusion.Grid.Base, Version=20.1460.0.47, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-			<HintPath>C:\Program Files (x86)\Syncfusion\Essential Studio\Windows\20.1.0.47\precompiledassemblies\4.6\Syncfusion.Grid.Base.dll</HintPath>
-			<Private>True</Private>
-		</Reference>
-		<Reference Include="Syncfusion.Grid.Windows, Version=20.1460.0.47, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-			<HintPath>C:\Program Files (x86)\Syncfusion\Essential Studio\Windows\20.1.0.47\precompiledassemblies\4.6\Syncfusion.Grid.Windows.dll</HintPath>
-			<Private>True</Private>
-		</Reference>
-		<Reference Include="Syncfusion.Licensing, Version=20.1460.0.47, Culture=neutral, PublicKeyToken=632609b4d040f6b4, processorArchitecture=MSIL">
-			<HintPath>C:\Program Files (x86)\Syncfusion\Essential Studio\Windows\20.1.0.47\precompiledassemblies\4.6\Syncfusion.Licensing.dll</HintPath>
-		</Reference>
-		<Reference Include="Syncfusion.SfListView.WinForms, Version=20.1460.0.47, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-			<HintPath>C:\Program Files (x86)\Syncfusion\Essential Studio\Windows\20.1.0.47\precompiledassemblies\4.6\Syncfusion.SfListView.WinForms.dll</HintPath>
-		</Reference>
-		<Reference Include="Syncfusion.Shared.Windows, Version=20.1460.0.47, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-			<HintPath>C:\Program Files (x86)\Syncfusion\Essential Studio\Windows\20.1.0.47\precompiledassemblies\4.6\Syncfusion.Shared.Windows.dll</HintPath>
-			<Private>True</Private>
-		</Reference>
-		<Reference Include="Syncfusion.Tools.Base, Version=20.1460.0.47, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-			<HintPath>C:\Program Files (x86)\Syncfusion\Essential Studio\Windows\20.1.0.47\precompiledassemblies\4.6\Syncfusion.Tools.Base.dll</HintPath>
-			<Private>True</Private>
-		</Reference>
-		<Reference Include="Syncfusion.Tools.Windows, Version=20.1460.0.47, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-			<HintPath>C:\Program Files (x86)\Syncfusion\Essential Studio\Windows\20.1.0.47\precompiledassemblies\4.6\Syncfusion.Tools.Windows.dll</HintPath>
-			<Private>True</Private>
-		</Reference>
-		<Reference Include="System" />
-		<Reference Include="System.Core" />
-		<Reference Include="System.Design" />
-		<Reference Include="System.Xml.Linq" />
-		<Reference Include="System.Data" />
-		<Reference Include="System.Drawing" />
-		<Reference Include="System.Xml" />
-		<Reference Include="TagLibSharp">
-			<HintPath>..\..\COMMON\taglib-sharp-main\src\TaglibSharp\bin\Release\net462\TagLibSharp.dll</HintPath>
-		</Reference>
-		<Reference Include="ToggleSwitch">
-			<HintPath>..\..\Controls\ToggleSwitch\ToggleSwitch\bin\Release\ToggleSwitch.dll</HintPath>
-		</Reference>
+		<Compile Include="..\..\COMMON\FileHelper.cs" Link="FileHelper.cs" />
+		<Compile Include="..\..\COMMON\FormHelper.cs" Link="FormHelper.cs" />
+		<Compile Include="..\Common\About\About.cs" Link="About.cs" />
+		<Compile Include="..\Common\About\About.Designer.cs" Link="About.Designer.cs" />
+		<Compile Include="..\Common\Seq4\LORUtils.cs" Link="LORUtils.cs" />
+		<Compile Include="..\Common\Seq4\SeqChannel.cs" Link="SeqChannel.cs" />
+		<Compile Include="..\Common\Seq4\SeqChannelGroup.cs" Link="SeqChannelGroup.cs" />
+		<Compile Include="..\Common\Seq4\SeqCosmicDevice.cs" Link="SeqCosmicDevice.cs" />
+		<Compile Include="..\Common\Seq4\SeqEnums.cs" Link="SeqEnums.cs" />
+		<Compile Include="..\Common\Seq4\SeqMember.cs" Link="SeqMember.cs" />
+		<Compile Include="..\Common\Seq4\SeqMemberBase.cs" Link="SeqMemberBase.cs" />
+		<Compile Include="..\Common\Seq4\SeqMemberInterface.cs" Link="SeqMemberInterface.cs" />
+		<Compile Include="..\Common\Seq4\SeqMembership.cs" Link="SeqMembership.cs" />
+		<Compile Include="..\Common\Seq4\SeqRGBChannel.cs" Link="SeqRGBChannel.cs" />
+		<Compile Include="..\Common\Seq4\SeqSubs.cs" Link="SeqSubs.cs" />
+		<Compile Include="..\Common\Seq4\SeqTimingGrid.cs" Link="SeqTimingGrid.cs" />
+		<Compile Include="..\Common\Seq4\SeqTrack.cs" Link="SeqTrack.cs" />
+		<Compile Include="..\Common\Seq4\Sequence4.cs" Link="Sequence4.cs" />
+		<Compile Include="..\Common\Seq4\SFTreeUtils.cs" Link="SFTreeUtils.cs" />
+		<Compile Include="..\Common\Seq4\Visualization4.cs" Link="Visualization4.cs" />
+		<Compile Include="..\Common\Seq4\VizChannel.cs" Link="VizChannel.cs" />
+		<Compile Include="..\Common\Seq4\VizDrawObject.cs" Link="VizDrawObject.cs" />
+		<Compile Include="..\Common\Seq4\VizGroup.cs" Link="VizGroup.cs" />
+		<Compile Include="..\Common\xUtils\xTimings.cs" Link="xTimings.cs" />
+		<Compile Include="..\Common\xUtils\xUtils.cs" Link="xUtils.cs" />
 	</ItemGroup>
+
 	<ItemGroup>
-		<Compile Include="..\..\COMMON\csv.cs">
-			<Link>csv.cs</Link>
-		</Compile>
-		<Compile Include="..\..\COMMON\FileHelper.cs">
-			<Link>FileHelper.cs</Link>
-		</Compile>
-		<Compile Include="..\..\UtilORama4\Common\Sequence4\LORUtils.cs">
-			<Link>LORUtils.cs</Link>
-		</Compile>
-		<Compile Include="..\..\xUtils\Common\xTimings.cs">
-			<Link>xTimings.cs</Link>
-		</Compile>
-		<Compile Include="..\..\xUtils\Common\xUtils.cs">
-			<Link>xUtils.cs</Link>
-		</Compile>
-		<Compile Include="..\Common\Sequence4\SeqChannel.cs">
-			<Link>SeqChannel.cs</Link>
-			<DependentUpon>LORUtils.cs</DependentUpon>
-		</Compile>
-		<Compile Include="..\Common\Sequence4\SeqChannelGroup.cs">
-			<Link>SeqChannelGroup.cs</Link>
-			<DependentUpon>LORUtils.cs</DependentUpon>
-		</Compile>
-		<Compile Include="..\Common\Sequence4\SeqCosmicDevice.cs">
-			<Link>SeqCosmicDevice.cs</Link>
-			<DependentUpon>LORUtils.cs</DependentUpon>
-		</Compile>
-		<Compile Include="..\Common\Sequence4\SeqEnums.cs">
-			<Link>SeqEnums.cs</Link>
-			<DependentUpon>LORUtils.cs</DependentUpon>
-		</Compile>
-		<Compile Include="..\Common\Sequence4\SeqMemberBase.cs">
-			<Link>SeqMemberBase.cs</Link>
-			<DependentUpon>LORUtils.cs</DependentUpon>
-		</Compile>
-		<Compile Include="..\Common\Sequence4\SeqMemberInterface.cs">
-			<Link>SeqMemberInterface.cs</Link>
-			<DependentUpon>LORUtils.cs</DependentUpon>
-		</Compile>
-		<Compile Include="..\Common\Sequence4\SeqMembership.cs">
-			<Link>SeqMembership.cs</Link>
-			<DependentUpon>LORUtils.cs</DependentUpon>
-		</Compile>
-		<Compile Include="..\Common\Sequence4\SeqRGBChannel.cs">
-			<Link>SeqRGBChannel.cs</Link>
-			<DependentUpon>LORUtils.cs</DependentUpon>
-		</Compile>
-		<Compile Include="..\Common\Sequence4\SeqSubs.cs">
-			<Link>SeqSubs.cs</Link>
-			<DependentUpon>LORUtils.cs</DependentUpon>
-		</Compile>
-		<Compile Include="..\Common\Sequence4\SeqTimingGrid.cs">
-			<Link>SeqTimingGrid.cs</Link>
-			<DependentUpon>LORUtils.cs</DependentUpon>
-		</Compile>
-		<Compile Include="..\Common\Sequence4\SeqTrack.cs">
-			<Link>SeqTrack.cs</Link>
-			<DependentUpon>LORUtils.cs</DependentUpon>
-		</Compile>
-		<Compile Include="..\Common\Sequence4\Sequence4.cs">
-			<Link>Sequence4.cs</Link>
-			<DependentUpon>LORUtils.cs</DependentUpon>
-		</Compile>
-		<Compile Include="..\Common\Sequence4\Visualization4.cs">
-			<Link>Visualization4.cs</Link>
-			<DependentUpon>LORUtils.cs</DependentUpon>
-		</Compile>
-		<Compile Include="..\Common\Sequence4\VizChannel.cs">
-			<Link>VizChannel.cs</Link>
-			<DependentUpon>LORUtils.cs</DependentUpon>
-		</Compile>
-		<Compile Include="..\Common\Sequence4\VizDrawObject.cs">
-			<Link>VizDrawObject.cs</Link>
-			<DependentUpon>LORUtils.cs</DependentUpon>
-		</Compile>
-		<Compile Include="..\Common\Sequence4\VizGroup.cs">
-			<Link>VizGroup.cs</Link>
-			<DependentUpon>LORUtils.cs</DependentUpon>
+		<Content Include="Graphics\VampHeadOverPurpleBulb.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Syncfusion.GridHelperClasses.Windows" Version="20.1.0.52" />
+	  <PackageReference Include="Syncfusion.Tools.Windows" Version="20.1.0.52" />
+	  <PackageReference Include="System.DirectoryServices.AccountManagement" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="TagLibSharp">
+	    <HintPath>..\..\COMMON\taglib-sharp-main\src\TaglibSharp\bin\Release\net6.0-windows10.0.19041.0\TagLibSharp.dll</HintPath>
+	  </Reference>
+	  <Reference Include="ToggleSwitch">
+	    <HintPath>..\..\Controls\ToggleSwitch\ToggleSwitch\bin\Release\net6.0-windows10.0.19041.0\ToggleSwitch.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Properties\Resources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
 		</Compile>
 		<Compile Update="Properties\Settings.Designer.cs">
 		  <DesignTimeSharedInput>True</DesignTimeSharedInput>
 		  <AutoGen>True</AutoGen>
 		  <DependentUpon>Settings.settings</DependentUpon>
 		</Compile>
-		<Compile Update="Transform0Interface.cs">
-			<DependentUpon>Annotator.cs</DependentUpon>
-		</Compile>
-		<Compile Update="Transform1BarBeats.cs">
-			<DependentUpon>Transform0Interface.cs</DependentUpon>
-		</Compile>
-		<Compile Update="Transform2NoteOnsets.cs">
-			<DependentUpon>Transform0Interface.cs</DependentUpon>
-		</Compile>
-		<Compile Update="Transform3Polyphonic.cs">
-			<DependentUpon>Transform0Interface.cs</DependentUpon>
-		</Compile>
-		<Compile Update="Transform4PitchKey.cs">
-			<DependentUpon>Transform0Interface.cs</DependentUpon>
-		</Compile>
-		<Compile Update="Transform5Tempo.cs">
-			<DependentUpon>Transform0Interface.cs</DependentUpon>
-		</Compile>
-		<Compile Update="Transform6Segments.cs">
-			<DependentUpon>Transform0Interface.cs</DependentUpon>
-		</Compile>
-		<Compile Update="Transform7Chromagram.cs">
-			<DependentUpon>Transform0Interface.cs</DependentUpon>
-		</Compile>
-		<Compile Update="Transform8Chords.cs">
-			<DependentUpon>Transform0Interface.cs</DependentUpon>
-		</Compile>
 	</ItemGroup>
+
 	<ItemGroup>
-		<BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
-			<Visible>False</Visible>
-			<ProductName>Microsoft .NET Framework 4.5.2 %28x86 and x64%29</ProductName>
-			<Install>true</Install>
-		</BootstrapperPackage>
-		<BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-			<Visible>False</Visible>
-			<ProductName>.NET Framework 3.5 SP1</ProductName>
-			<Install>false</Install>
-		</BootstrapperPackage>
+		<EmbeddedResource Update="Properties\Resources.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
 	</ItemGroup>
+
 	<ItemGroup>
-		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-		<PackageReference Include="Syncfusion.DataSource.WinForms" Version="20.1.0.48" />
-		<PackageReference Include="Syncfusion.GridCommon.WinForms" Version="20.1.0.48" />
-		<PackageReference Include="Syncfusion.Shared.Base" Version="20.1.0.48" />
-		<PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.310801">
-			<PrivateAssets>all</PrivateAssets>
-		</PackageReference>
-		<PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
+		<None Update="Graphics\VampHeadOverPurpleBulb.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Update="Include\NeedSonicAnnotator.htm">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\Activate.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\BeamUp.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\Beeow.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\Boing.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\Bonnggg.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\Brain.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\Cheering.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\Click.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\Crap.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\Crash.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\D%27oh.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\Dammit.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\Doorbell.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\DrumRoll.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\Excellent.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\Gong.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\I%27mAWizard.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\Kalimbra.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\Log.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\Medieval.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\MeepMeep.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\Noooo.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\Ominnous.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\Pinball.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\Pop.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\SamCurseC.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\SamCurseF.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\ScaleUp.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\SystemWorks.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\Ta-da.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\ThatsThat.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\WahWahWah.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\Wheee.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\WhistleDown.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\WhistleUp.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\Woo-Hoo.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\WrongButton.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\Noises\Zooweep.wav">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\bbc-speech.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\mtg-melodia.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\qm-adaptivespectrogram.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\qm-chromagram.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\qm-constantq.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\qm-keydetector.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\qm-percussivedetector.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\qm-segmenter.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\qm-tempotracker.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\queenmary-segmenter.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_bbc-vamp-plugins_bbc-rhythm_tempo.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_bbc-vamp-plugins_bbc-speechmusic-segmenter_segmentation.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_beatroot-vamp_beatroot_beats.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_cepstral-pitchtracker_cepstral-pitchtracker_f0.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_cepstral-pitchtracker_cepstral-pitchtracker_notes.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_cqvamp_cqchromavamp_chromagram.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_mtg-melodia_melodia_melody.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_mvamp-ibt_marsyas_ibt_beat_times.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_mvamp-ibt_marsys_ibt_beat_times.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_nnls-chroma_chordino_chordnotes.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_nnls-chroma_chordino_chordnotes.n3acker_cepstral-pitchtracker_notes.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_nnls-chroma_chordino_harmonicchange.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_nnls-chroma_chordino_simplechord.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_nnls-chroma_nnls-chroma_chroma.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_qm-vamp-plugins_qm-barbeattracker_beats.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_qm-vamp-plugins_qm-chromagram_chromagram.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_qm-vamp-plugins_qm-keydetector_key.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_qm-vamp-plugins_qm-onsetdetector_onsets.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_qm-vamp-plugins_qm-segmenter_segmentation.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_qm-vamp-plugins_qm-tempotracker_output_beats.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_qm-vamp-plugins_qm-tempotracker_tempo.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_qm-vamp-plugins_qm-tonalchange_tcfunction.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_qm-vamp-plugins_qm-transcription_transcription.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_segmentino_segmentino_segmentation.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_silvet_silvet_chroma.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_silvet_silvet_onsets.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_tempogram_tempogram_cyclicTempogram.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_tipic_tipic_chroma-smoothed.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_tipic_tipic_chroma.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_vamp-aubio_aubionotes_notes.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_vamp-aubio_aubioonset_onsets.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_vamp-aubio_aubiopitch_frequency.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_vamp-aubio_aubiotempo_beats.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_vamp-aubio_aubiotempo_tempo.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Include\VampConfigs\vamp_vamp-onsetsds_onsetsds_onsets.n3">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Properties\Settings.settings">
+		  <Generator>SettingsSingleFileGenerator</Generator>
+		  <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+		</None>
 	</ItemGroup>
-	<ItemGroup>
-		<FrameworkReference Include="Microsoft.AspNetCore.App" />
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="Serilog" Version="2.10.0" />
-	</ItemGroup>
-	<ItemGroup>
-		<Compile Remove="Backup\Annotator.cs" />
-		<Compile Remove="Backup\console.cs" />
-		<Compile Remove="Backup\Ellipsis.cs" />
-		<Compile Remove="Backup\frmAbout.cs" />
-		<Compile Remove="Backup\frmAbout.Designer.cs" />
-		<Compile Remove="Backup\frmConsole.cs" />
-		<Compile Remove="Backup\frmConsole.Designer.cs" />
-		<Compile Remove="Backup\frmOutputLog.cs" />
-		<Compile Remove="Backup\frmOutputLog.Designer.cs" />
-		<Compile Remove="Backup\frmSettings.cs" />
-		<Compile Remove="Backup\frmSettings.Designer.cs" />
-		<Compile Remove="Backup\frmSplash.cs" />
-		<Compile Remove="Backup\frmSplash.Designer.cs" />
-		<Compile Remove="Backup\frmTweakInfo.cs" />
-		<Compile Remove="Backup\frmTweakInfo.Designer.cs" />
-		<Compile Remove="Backup\frmVamp.cs" />
-		<Compile Remove="Backup\frmVamp.Designer.cs" />
-		<Compile Remove="Backup\InvokeVamp.cs" />
-		<Compile Remove="Backup\LabelEllipsis.cs" />
-		<Compile Remove="Backup\LORseq.cs" />
-		<Compile Remove="Backup\MoreCtrls.cs" />
-		<Compile Remove="Backup\MRU.cs" />
-		<Compile Remove="Backup\MusicalNotation.cs" />
-		<Compile Remove="Backup\Nuvamp.cs" />
-		<Compile Remove="Backup\obj\Debug\.NETFramework,Version=v4.6.2.AssemblyAttributes.cs" />
-		<Compile Remove="Backup\obj\Debug\.NETFramework,Version=v4.7.2.AssemblyAttributes.cs" />
-		<Compile Remove="Backup\obj\Debug\.NETFramework,Version=v4.8.AssemblyAttributes.cs" />
-		<Compile Remove="Backup\obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
-		<Compile Remove="Backup\obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
-		<Compile Remove="Backup\obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
-		<Compile Remove="Backup\obj\Release\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
-		<Compile Remove="Backup\obj\Release\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
-		<Compile Remove="Backup\obj\Release\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
-		<Compile Remove="Backup\OLDvamp.cs" />
-		<Compile Remove="Backup\Options.cs" />
-		<Compile Remove="Backup\Options.Designer.cs" />
-		<Compile Remove="Backup\Program.cs" />
-		<Compile Remove="Backup\Properties\AssemblyInfo.cs" />
-		<Compile Remove="Backup\Properties\Resources.Designer.cs" />
-		<Compile Remove="Backup\Properties\Settings.Designer.cs" />
-		<Compile Remove="Backup\SeqFunctions.cs" />
-		<Compile Remove="Backup\SongFields.cs" />
-		<Compile Remove="Backup\Test\AsyncStreamReader.cs" />
-		<Compile Remove="Backup\Test\Class1.cs" />
-		<Compile Remove="Backup\Test\Form1.cs" />
-		<Compile Remove="Backup\Test\Form1.Designer.cs" />
-		<Compile Remove="Backup\Test\MRU.cs" />
-		<Compile Remove="Backup\Test\obj\Debug\.NETFramework,Version=v4.7.2.AssemblyAttributes.cs" />
-		<Compile Remove="Backup\Test\Program.cs" />
-		<Compile Remove="Backup\Test\Properties\AssemblyInfo.cs" />
-		<Compile Remove="Backup\Test\Properties\Resources.Designer.cs" />
-		<Compile Remove="Backup\Test\Properties\Settings.Designer.cs" />
-		<Compile Remove="Backup\TextBoxEllipsis.cs" />
-		<Compile Remove="Backup\TimesCollection.cs" />
-		<Compile Remove="Backup\Transform0Interface.cs" />
-		<Compile Remove="Backup\Transform1BarBeats.cs" />
-		<Compile Remove="Backup\Transform2NoteOnsets.cs" />
-		<Compile Remove="Backup\Transform3Polyphonic.cs" />
-		<Compile Remove="Backup\Transform4PitchKey.cs" />
-		<Compile Remove="Backup\Transform5Tempo.cs" />
-		<Compile Remove="Backup\Transform6Segments.cs" />
-		<Compile Remove="Backup\Transform7Chromagram.cs" />
-		<Compile Remove="Backup\Transform8Chords.cs" />
-		<Compile Remove="Backup\TransformBarBeats.cs" />
-		<Compile Remove="Backup\TransformNoteOnsets.cs" />
-		<Compile Remove="Backup\TransformPitchKey.cs" />
-		<Compile Remove="Backup\TransformPolyphonic.cs" />
-		<Compile Remove="Backup\TransformSegments.cs" />
-		<Compile Remove="Backup\TransformTempo.cs" />
-		<Compile Remove="Backup\TransformTranscribe.cs" />
-		<Compile Remove="Backup\Transform_Interface.cs" />
-		<Compile Remove="Backup\Transpose.cs" />
-		<Compile Remove="Backup\VampConstants.cs" />
-		<Compile Remove="console.cs" />
-		<Compile Remove="Ellipsis.cs" />
-		<Compile Remove="frmConsole.cs" />
-		<Compile Remove="frmConsole.Designer.cs" />
-		<Compile Remove="InvokeVamp.cs" />
-		<Compile Remove="LabelEllipsis.cs" />
-		<Compile Remove="Test\AsyncStreamReader.cs" />
-		<Compile Remove="Test\Class1.cs" />
-		<Compile Remove="Test\Form1.cs" />
-		<Compile Remove="Test\Form1.Designer.cs" />
-		<Compile Remove="Test\MRU.cs" />
-		<Compile Remove="Test\obj\Debug\.NETFramework,Version=v4.7.2.AssemblyAttributes.cs" />
-		<Compile Remove="Test\obj\Debug\.NETFramework,Version=v4.8.AssemblyAttributes.cs" />
-		<Compile Remove="Test\Program.cs" />
-		<Compile Remove="Test\Properties\AssemblyInfo.cs" />
-		<Compile Remove="Test\Properties\Resources.Designer.cs" />
-		<Compile Remove="Test\Properties\Settings.Designer.cs" />
-		<Compile Remove="TextBoxEllipsis.cs" />
-		<Compile Remove="TimesCollection.cs" />
-		<Compile Remove="TransformBarBeats.cs" />
-		<Compile Remove="TransformNoteOnsets.cs" />
-		<Compile Remove="TransformPitchKey.cs" />
-		<Compile Remove="TransformPolyphonic.cs" />
-		<Compile Remove="TransformSegments.cs" />
-		<Compile Remove="TransformTempo.cs" />
-		<Compile Remove="TransformTranscribe.cs" />
-		<Compile Remove="Transform_Interface.cs" />
-		<Compile Remove="Transpose.cs" />
-		<EmbeddedResource Remove="Backup\frmAbout.resx" />
-		<EmbeddedResource Remove="Backup\frmConsole.resx" />
-		<EmbeddedResource Remove="Backup\frmOutputLog.resx" />
-		<EmbeddedResource Remove="Backup\frmSettings.resx" />
-		<EmbeddedResource Remove="Backup\frmSplash.resx" />
-		<EmbeddedResource Remove="Backup\frmTweakInfo.resx" />
-		<EmbeddedResource Remove="Backup\frmVamp.resx" />
-		<EmbeddedResource Remove="Backup\Options.resx" />
-		<EmbeddedResource Remove="Backup\Properties\Resources.resx" />
-		<EmbeddedResource Remove="Backup\Test\Form1.resx" />
-		<EmbeddedResource Remove="Backup\Test\Properties\Resources.resx" />
-		<EmbeddedResource Remove="frmConsole.resx" />
-		<EmbeddedResource Remove="Test\Form1.resx" />
-		<EmbeddedResource Remove="Test\Properties\Resources.resx" />
-	</ItemGroup>
-	<ItemGroup>
-		<None Remove="VampORama.csproj.backup with PostSharp" />
-	</ItemGroup>
-	<ItemGroup>
-	  <None Include="..\Graphics\Green Wrench Light Bulb.png">
-	    <Pack>True</Pack>
-	    <PackagePath>\</PackagePath>
-	  </None>
-	</ItemGroup>
-	<ItemGroup>
-	  <None Update="Properties\Settings.settings">
-	    <Generator>SettingsSingleFileGenerator</Generator>
-	    <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-	  </None>
-	</ItemGroup>
+
 </Project>

@@ -36,6 +36,7 @@ namespace UtilORama4
 			this.pnlAbout = new System.Windows.Forms.ToolStripStatusLabel();
 			this.btnOK = new System.Windows.Forms.Button();
 			this.picAboutIcon = new System.Windows.Forms.PictureBox();
+			this.label1 = new System.Windows.Forms.Label();
 			this.staStatus.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picAboutIcon)).BeginInit();
 			this.SuspendLayout();
@@ -47,9 +48,10 @@ namespace UtilORama4
             this.pnlHelp,
             this.pnlStatus,
             this.pnlAbout});
-			this.staStatus.Location = new System.Drawing.Point(0, 300);
+			this.staStatus.Location = new System.Drawing.Point(0, 350);
 			this.staStatus.Name = "staStatus";
-			this.staStatus.Size = new System.Drawing.Size(480, 24);
+			this.staStatus.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
+			this.staStatus.Size = new System.Drawing.Size(560, 24);
 			this.staStatus.TabIndex = 63;
 			// 
 			// pnlHelp
@@ -58,7 +60,7 @@ namespace UtilORama4
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlHelp.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenInner;
-			this.pnlHelp.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.pnlHelp.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
 			this.pnlHelp.ForeColor = System.Drawing.SystemColors.Highlight;
 			this.pnlHelp.IsLink = true;
 			this.pnlHelp.Name = "pnlHelp";
@@ -73,7 +75,7 @@ namespace UtilORama4
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlStatus.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
 			this.pnlStatus.Name = "pnlStatus";
-			this.pnlStatus.Size = new System.Drawing.Size(368, 19);
+			this.pnlStatus.Size = new System.Drawing.Size(415, 19);
 			this.pnlStatus.Spring = true;
 			// 
 			// pnlAbout
@@ -82,7 +84,7 @@ namespace UtilORama4
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlAbout.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenInner;
-			this.pnlAbout.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.pnlAbout.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
 			this.pnlAbout.ForeColor = System.Drawing.SystemColors.Highlight;
 			this.pnlAbout.Name = "pnlAbout";
 			this.pnlAbout.Size = new System.Drawing.Size(52, 19);
@@ -91,35 +93,47 @@ namespace UtilORama4
 			// 
 			// btnOK
 			// 
-			this.btnOK.Location = new System.Drawing.Point(192, 265);
+			this.btnOK.Location = new System.Drawing.Point(224, 306);
+			this.btnOK.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnOK.Name = "btnOK";
-			this.btnOK.Size = new System.Drawing.Size(75, 23);
+			this.btnOK.Size = new System.Drawing.Size(88, 27);
 			this.btnOK.TabIndex = 67;
 			this.btnOK.Text = "OK";
 			this.btnOK.UseVisualStyleBackColor = true;
 			// 
 			// picAboutIcon
 			// 
-			this.picAboutIcon.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("picAboutIcon.BackgroundImage")));
 			this.picAboutIcon.Image = ((System.Drawing.Image)(resources.GetObject("picAboutIcon.Image")));
-			this.picAboutIcon.Location = new System.Drawing.Point(352, 265);
+			this.picAboutIcon.Location = new System.Drawing.Point(398, 162);
+			this.picAboutIcon.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.picAboutIcon.Name = "picAboutIcon";
 			this.picAboutIcon.Size = new System.Drawing.Size(128, 128);
 			this.picAboutIcon.TabIndex = 68;
 			this.picAboutIcon.TabStop = false;
 			this.picAboutIcon.Visible = false;
 			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(90, 37);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(283, 15);
+			this.label1.TabIndex = 69;
+			this.label1.Text = "This is a blank stub for future Util-O-Rama programs";
+			// 
 			// frmBlank
 			// 
 			this.AcceptButton = this.btnOK;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(480, 324);
+			this.ClientSize = new System.Drawing.Size(560, 374);
+			this.Controls.Add(this.label1);
 			this.Controls.Add(this.btnOK);
 			this.Controls.Add(this.staStatus);
 			this.Controls.Add(this.picAboutIcon);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.MaximizeBox = false;
 			this.Name = "frmBlank";
 			this.Text = "Util-O-Rama Blank";
@@ -141,6 +155,7 @@ namespace UtilORama4
 		private System.Windows.Forms.ToolStripStatusLabel pnlAbout;
 		private System.Windows.Forms.Button btnOK;
 		private System.Windows.Forms.PictureBox picAboutIcon;
+		private System.Windows.Forms.Label label1;
 	}
 }
 

@@ -8,62 +8,62 @@ using System.Drawing;
 using System.Diagnostics;
 using FileHelper;
 
-namespace LORUtils4
+namespace LOR4Utils
 {
-	public interface iLORMember4 : IComparable<iLORMember4>
+	public interface iLOR4Member : IComparable<iLOR4Member>
 	{
 		string Name
-		{	get; }
+		{ get; }
 		void ChangeName(string newName);
 		int Centiseconds
-		{	get; set;	}
+		{ get; set; }
 		int Index
-		{	get; }
+		{ get; }
 		void SetIndex(int theIndex);
-		int ID		{	get; }
+		int ID { get; }
 		void SetID(int newID);
 		int AltID
-		{	get; set;	}
+		{ get; set; }
 		int SavedIndex
 		{ get; }
 		void SetSavedIndex(int theSavedIndex);
-		
+
 		int color
 		{ get; set; }
 		Color Color
 		{ get; set; }
-		iLORMember4 Parent
-		{	get; }
-		void SetParent(iLORMember4 newParent);
+		iLOR4Member Parent
+		{ get; }
+		void SetParent(iLOR4Member newParent);
 		// For Channels, RGBChannels, ChannelGroups, Tracks, Timings, etc.  This will be the parent Sequence
 		// For VizChannels and VizDrawObjects this will be the parent Visualization
 		bool Selected
-		{	get; set;	}
+		{ get; set; }
 		bool Dirty
-		{	get; }
+		{ get; }
 		void MakeDirty(bool dirtyState = true);
-		LORMemberType4 MemberType
-		{	get; }
-		int CompareTo(iLORMember4 otherObj);
+		LOR4MemberType MemberType
+		{ get; }
+		int CompareTo(iLOR4Member otherObj);
 		string LineOut();
 		string ToString();
 		void Parse(string lineIn);
 		bool Written
-		{	get; }
-		iLORMember4 Clone();
-		iLORMember4 Clone(string newName);
+		{ get; }
+		iLOR4Member Clone();
+		iLOR4Member Clone(string newName);
 		object Tag
-		{	get; set; }
+		{ get; set; }
 		object Nodes
 		{ get; set; }
-		iLORMember4 MapTo
-		{	get; set;	}
+		iLOR4Member MapTo
+		{ get; set; }
 		bool ExactMatch
-		{	get; set;	}
+		{ get; set; }
 		int UniverseNumber
-		{	get; }
+		{ get; }
 		int DMXAddress
-		{	get; }
+		{ get; }
 		string Comment
 		{ get; set; }
 		int ZCount

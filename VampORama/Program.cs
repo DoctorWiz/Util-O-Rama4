@@ -1,26 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
 namespace UtilORama4
 {
-	static class Program
+	internal static class Program
 	{
 		/// <summary>
-		/// The main entry point for the application.
+		///  The main entry point for the application.
 		/// </summary>
 		static Form SplashForm;
 		static Form VampForm;
 		[STAThread]
-
-
 		static void Main()
 		{
-			Application.EnableVisualStyles();
-			Application.SetCompatibleTextRenderingDefault(false);
+			// To customize application configuration such as set high DPI settings or default font,
+			// see https://aka.ms/applicationconfiguration.
+			ApplicationConfiguration.Initialize();
+			//Application.Run(new frmVamp());
 
 			//Show Splash Form
 			SplashForm = new frmSplash(); // Form();
@@ -33,6 +26,8 @@ namespace UtilORama4
 			VampForm = new frmVamp(); // Form();
 			VampForm.Load += VampForm_LoadCompleted;
 			Application.Run(VampForm);
+
+
 		}
 
 		private static void VampForm_LoadCompleted(object sender, EventArgs e)
@@ -43,6 +38,9 @@ namespace UtilORama4
 			VampForm.Activate();
 			VampForm.TopMost = false;
 		}
+
+
+
 
 	}
 }

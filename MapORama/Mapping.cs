@@ -8,13 +8,14 @@ using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
 using Microsoft.Win32;
-using LORUtils4;
+using LOR4Utils;
 using FileHelper;
 using FuzzyString;
 using Syncfusion.Windows.Forms.Tools;
+
 namespace UtilORama4
 {
-	partial class frmRemapper : Form
+	partial class frmMapper //: Form
 	{
 		#region constants
 		private const int LIST_OLD = 1;
@@ -82,10 +83,10 @@ namespace UtilORama4
 		//public Color destHighlightColor = Color.FromArgb(128, 255, 128);
 
 		// These are used by MapList so need to be public
-		public LORSequence4 seqSource = new LORSequence4();
-		public LORSequence4 seqDest = new LORSequence4();
-		//public iLORMember4[] mapDestToSource = null; // Array indexed by Destination.SavedIndex, elements contain Source Members
-		//public List<iLORMember4>[] mapSourceToDest = null; // Array indexed by Source.SavedIindex, elements are Lists of Destination Members
+		public LOR4Sequence seqSource = new LOR4Sequence();
+		public LOR4Sequence seqDest = new LOR4Sequence();
+		//public iLOR4Member[] mapDestToSource = null; // Array indexed by Destination.SavedIndex, elements contain Source Members
+		//public List<iLOR4Member>[] mapSourceToDest = null; // Array indexed by Source.SavedIindex, elements are Lists of Destination Members
 		public int mappedMemberCount = 0;
 		public int mappedChannelCount = 0;
 		//public int[] mappedSIs; // Note: Redundant!  Done only for debugging purposes.
@@ -97,10 +98,10 @@ namespace UtilORama4
 		private int mapFileLineCount = 0;
 		private string saveFile = "";
 
-		//private List<iLORMember4> lastHighlightedDestMembers = new List<iLORMember4>();
-		//private iLORMember4 lastHighlightedSourceMember = null;
-		private iLORMember4 currentDestMember = null;
-		private iLORMember4 currentSourceMember = null;
+		//private List<iLOR4Member> lastHighlightedDestMembers = new List<iLOR4Member>();
+		//private iLOR4Member lastHighlightedSourceMember = null;
+		private iLOR4Member currentDestMember = null;
+		private iLOR4Member currentSourceMember = null;
 		private bool lastSelectionWasDest = false;
 		private bool lastSelectionWasSource = false;
 		private int mappedSourceChannelsCount = 0;
@@ -116,8 +117,8 @@ namespace UtilORama4
 		private string SeqFolder = "";
 		private TreeNodeAdv selectedSourceNode = null;
 		private TreeNodeAdv selectedDestNode = null;
-		private iLORMember4 selectedSourceMember = null;
-		private iLORMember4 selectedDestMember = null;
+		private iLOR4Member selectedSourceMember = null;
+		private iLOR4Member selectedDestMember = null;
 		//private int sourceSI = lutils.UNDEFINED;
 		//private int destSI = lutils.UNDEFINED;
 		// int activeList = 0;
@@ -137,7 +138,7 @@ namespace UtilORama4
 		public Color ColorMappedDestFG = Color.Black;
 		public Color ColorHighlightBG = Color.FromArgb(0, 0, 128); // Dark Blue
 		public Color ColorHighlightFG = Color.FromArgb(255, 255, 128); // LIght Yellow		
-		
+
 
 
 
@@ -151,7 +152,7 @@ namespace UtilORama4
 		/*
 	private class ChanInfo
 	{
-		public MemberType chType = LORMemberType4.None;
+		public MemberType chType = LOR4MemberType.None;
 		public int chIndex = 0;
 		public int SavedIndex = lutils.UNDEFINED;
 		public int mapCount = 0;
@@ -183,11 +184,11 @@ namespace UtilORama4
 			public double score;
 			public int savedIdx;
 			public int itemIdx;
-			public LORMemberType4 MemberType;
+			public LOR4MemberType MemberType;
 		}
 
 		#endregion
-		
+
 		#region File Operations
 		private void BrowseSourceFile()
 		{
@@ -279,29 +280,29 @@ namespace UtilORama4
 				Properties.Settings.Default.Save();
 				TreeUtils.TreeFillChannels(treeSource, seqSource, false, false);
 				mappedMemberCount = 0;
-				for (int i=0; i<seqSource.Channels.Count; i++)
+				for (int i = 0; i < seqSource.Channels.Count; i++)
 				{
-					seqSource.Channels[i].Tag = new List<iLORMember4>();
+					seqSource.Channels[i].Tag = new List<iLOR4Member>();
 				}
 				for (int i = 0; i < seqSource.RGBchannels.Count; i++)
 				{
-					seqSource.RGBchannels[i].Tag = new List<iLORMember4>();
+					seqSource.RGBchannels[i].Tag = new List<iLOR4Member>();
 				}
 				for (int i = 0; i < seqSource.ChannelGroups.Count; i++)
 				{
-					seqSource.ChannelGroups[i].Tag = new List<iLORMember4>();
+					seqSource.ChannelGroups[i].Tag = new List<iLOR4Member>();
 				}
 				for (int i = 0; i < seqSource.CosmicDevices.Count; i++)
 				{
-					seqSource.CosmicDevices[i].Tag = new List<iLORMember4>();
+					seqSource.CosmicDevices[i].Tag = new List<iLOR4Member>();
 				}
 				for (int i = 1; i < seqSource.Tracks.Count; i++)
 				{
-					seqSource.Tracks[i].Tag = new List<iLORMember4>();
+					seqSource.Tracks[i].Tag = new List<iLOR4Member>();
 				}
 				for (int i = 0; i < seqSource.TimingGrids.Count; i++)
 				{
-					seqSource.TimingGrids[i].Tag = new List<iLORMember4>();
+					seqSource.TimingGrids[i].Tag = new List<iLOR4Member>();
 				}
 			}
 			ImBusy(false);
@@ -392,18 +393,18 @@ namespace UtilORama4
 				mappedMemberCount = 0;
 				//if (seqSource.Channels.Count > 0)
 				//{
-					//Array.Resize(ref mapSourceToDest, seqSource.AllMembers.AllCount);
-					//for (int i = 0; i < mapSourceToDest.Length; i++)
-					//{
-						//mapSourceToDest[i] = new List<iLORMember4>();
-					//}
+				//Array.Resize(ref mapSourceToDest, seqSource.AllMembers.AllCount);
+				//for (int i = 0; i < mapSourceToDest.Length; i++)
+				//{
+				//mapSourceToDest[i] = new List<iLOR4Member>();
+				//}
 				//}
 				//Array.Resize(ref mapDestToSource, seqDest.AllMembers.AllCount);
 				//Array.Resize(ref mappedSIs, seqDest.AllMembers.AllCount);
 				//for (int i = 0; i < mapDestToSource.Length; i++)
 				//{
-					//mapDestToSource[i] = null;
-					//mappedSIs[i] = lutils.UNDEFINED;
+				//mapDestToSource[i] = null;
+				//mappedSIs[i] = lutils.UNDEFINED;
 				//}
 				string txt = "AutoLaunch " + txtDestFile.Text;
 				chkAutoLaunch.Text = txt;
@@ -425,11 +426,11 @@ namespace UtilORama4
 		public int SaveNewMappedSequence(string newSeqFileName)
 		{
 			ImBusy(true);
-			LORSequence4 seqNew = seqDest;
+			LOR4Sequence seqNew = seqDest;
 
 			seqNew.info = seqSource.info;
 			seqNew.info.filename = newSeqFileName;
-			seqNew.LORSequenceType4 = seqSource.LORSequenceType4;
+			seqNew.LOR4SequenceType = seqSource.LOR4SequenceType;
 			seqNew.Centiseconds = seqSource.Centiseconds;
 			seqNew.animation = seqSource.animation;
 			seqNew.videoUsage = seqSource.videoUsage;
@@ -475,12 +476,12 @@ namespace UtilORama4
 			}
 
 
-			for (int c=0; c< seqDest.Channels.Count; c++)
+			for (int c = 0; c < seqDest.Channels.Count; c++)
 			{
-				LORChannel4 destChannel = seqDest.Channels[c];
+				LOR4Channel destChannel = seqDest.Channels[c];
 				if (destChannel.MapTo != null)
 				{
-					LORChannel4 sourceChannel = (LORChannel4)destChannel.MapTo;
+					LOR4Channel sourceChannel = (LOR4Channel)destChannel.MapTo;
 					if (sourceChannel.effects.Count > 0)
 					{
 						if (destChannel.effects.Count > 0)
@@ -624,18 +625,18 @@ namespace UtilORama4
 			lineOut.Append("[Mapped Channels]");
 			writer.WriteLine(lineOut.ToString());
 			lineOut.Clear();
-			for (int i=0; i< seqDest.Channels.Count; i++)
+			for (int i = 0; i < seqDest.Channels.Count; i++)
 			{
-				LORChannel4 destMember = seqDest.Channels[i];
+				LOR4Channel destMember = seqDest.Channels[i];
 				if (destMember.MapTo != null)
 				{
-					lineOut.Append(LORSeqEnums4.MemberName(destMember.MemberType));
+					lineOut.Append(LOR4SeqEnums.MemberName(destMember.MemberType));
 					lineOut.Append(",");
 					lineOut.Append(destMember.Name);
 					lineOut.Append(",");
 					lineOut.Append(destMember.SavedIndex.ToString());
 					lineOut.Append(",");
-					iLORMember4 sourceMember = destMember.MapTo;
+					iLOR4Member sourceMember = destMember.MapTo;
 					lineOut.Append(sourceMember.Name);
 					lineOut.Append(",");
 					lineOut.Append(sourceMember.SavedIndex.ToString());
@@ -649,16 +650,16 @@ namespace UtilORama4
 			lineOut.Clear();
 			for (int i = 0; i < seqDest.RGBchannels.Count; i++)
 			{
-				LORRGBChannel4 destMember = seqDest.RGBchannels[i];
+				LOR4RGBChannel destMember = seqDest.RGBchannels[i];
 				if (destMember.MapTo != null)
 				{
-					lineOut.Append(LORSeqEnums4.MemberName(destMember.MemberType));
+					lineOut.Append(LOR4SeqEnums.MemberName(destMember.MemberType));
 					lineOut.Append(",");
 					lineOut.Append(destMember.Name);
 					lineOut.Append(",");
 					lineOut.Append(destMember.SavedIndex.ToString());
 					lineOut.Append(",");
-					iLORMember4 sourceMember = destMember.MapTo;
+					iLOR4Member sourceMember = destMember.MapTo;
 					lineOut.Append(sourceMember.Name);
 					lineOut.Append(",");
 					lineOut.Append(sourceMember.SavedIndex.ToString());
@@ -672,16 +673,16 @@ namespace UtilORama4
 			lineOut.Clear();
 			for (int i = 0; i < seqDest.ChannelGroups.Count; i++)
 			{
-				LORChannelGroup4 destMember = seqDest.ChannelGroups[i];
+				LOR4ChannelGroup destMember = seqDest.ChannelGroups[i];
 				if (destMember.MapTo != null)
 				{
-					lineOut.Append(LORSeqEnums4.MemberName(destMember.MemberType));
+					lineOut.Append(LOR4SeqEnums.MemberName(destMember.MemberType));
 					lineOut.Append(",");
 					lineOut.Append(destMember.Name);
 					lineOut.Append(",");
 					lineOut.Append(destMember.SavedIndex.ToString());
 					lineOut.Append(",");
-					iLORMember4 sourceMember = destMember.MapTo;
+					iLOR4Member sourceMember = destMember.MapTo;
 					lineOut.Append(sourceMember.Name);
 					lineOut.Append(",");
 					lineOut.Append(sourceMember.SavedIndex.ToString());
@@ -695,16 +696,16 @@ namespace UtilORama4
 			lineOut.Clear();
 			for (int i = 0; i < seqDest.CosmicDevices.Count; i++)
 			{
-				LORCosmic4 destMember = seqDest.CosmicDevices[i];
+				LOR4Cosmic destMember = seqDest.CosmicDevices[i];
 				if (destMember.MapTo != null)
 				{
-					lineOut.Append(LORSeqEnums4.MemberName(destMember.MemberType));
+					lineOut.Append(LOR4SeqEnums.MemberName(destMember.MemberType));
 					lineOut.Append(",");
 					lineOut.Append(destMember.Name);
 					lineOut.Append(",");
 					lineOut.Append(destMember.SavedIndex.ToString());
 					lineOut.Append(",");
-					iLORMember4 sourceMember = destMember.MapTo;
+					iLOR4Member sourceMember = destMember.MapTo;
 					lineOut.Append(sourceMember.Name);
 					lineOut.Append(",");
 					lineOut.Append(sourceMember.SavedIndex.ToString());
@@ -721,13 +722,13 @@ namespace UtilORama4
 				LORTrack4 destMember = seqDest.Tracks[i];
 				if (destMember.MapTo != null)
 				{
-					lineOut.Append(LORSeqEnums4.MemberName(destMember.MemberType));
+					lineOut.Append(LOR4SeqEnums.MemberName(destMember.MemberType));
 					lineOut.Append(",");
 					lineOut.Append(destMember.Name);
 					lineOut.Append(",");
 					lineOut.Append(destMember.SavedIndex.ToString());
 					lineOut.Append(",");
-					iLORMember4 sourceMember = destMember.MapTo;
+					iLOR4Member sourceMember = destMember.MapTo;
 					lineOut.Append(sourceMember.Name);
 					lineOut.Append(",");
 					lineOut.Append(sourceMember.SavedIndex.ToString());
@@ -769,11 +770,11 @@ namespace UtilORama4
 			int[] foundChannels;
 			int sourceSI = lutils.UNDEFINED;
 			int destSI = lutils.UNDEFINED;
-			//LORMemberType4 sourceType = LORMemberType4.None;
-			LORMemberType4 destType = LORMemberType4.None;
-			iLORMember4 destMember = null;
-			iLORMember4 sourceMember = null;
-			iLORMember4 foundID = null;
+			//LOR4MemberType sourceType = LOR4MemberType.None;
+			LOR4MemberType destType = LOR4MemberType.None;
+			iLOR4Member destMember = null;
+			iLOR4Member sourceMember = null;
+			iLOR4Member foundID = null;
 			string mfile = "";
 			string sfile = "";
 			long finalAlgorithms = Properties.Settings.Default.FuzzyFinalAlgorithms;
@@ -792,14 +793,14 @@ namespace UtilORama4
 			mappedMemberCount = 0;
 			int li = 0;
 			int errorStatus = 0;
-			Dictionary<string, iLORMember4>	destChanNames			= new Dictionary<string, iLORMember4>();
-			Dictionary<string, iLORMember4>	destRGBNames			= new Dictionary<string, iLORMember4>();
-			Dictionary<string, iLORMember4>	destGroupNames		= new Dictionary<string, iLORMember4>();
-			Dictionary<string, iLORMember4>	destTrackNames		= new Dictionary<string, iLORMember4>();
-			Dictionary<string, iLORMember4>	sourceChanNames		= new Dictionary<string, iLORMember4>();
-			Dictionary<string, iLORMember4>	sourceRGBNames		= new Dictionary<string, iLORMember4>();
-			Dictionary<string, iLORMember4>	sourceGroupNames	= new Dictionary<string, iLORMember4>();
-			Dictionary<string, iLORMember4>	sourceTrackNames	= new Dictionary<string, iLORMember4>();
+			Dictionary<string, iLOR4Member> destChanNames = new Dictionary<string, iLOR4Member>();
+			Dictionary<string, iLOR4Member> destRGBNames = new Dictionary<string, iLOR4Member>();
+			Dictionary<string, iLOR4Member> destGroupNames = new Dictionary<string, iLOR4Member>();
+			Dictionary<string, iLOR4Member> destTrackNames = new Dictionary<string, iLOR4Member>();
+			Dictionary<string, iLOR4Member> sourceChanNames = new Dictionary<string, iLOR4Member>();
+			Dictionary<string, iLOR4Member> sourceRGBNames = new Dictionary<string, iLOR4Member>();
+			Dictionary<string, iLOR4Member> sourceGroupNames = new Dictionary<string, iLOR4Member>();
+			Dictionary<string, iLOR4Member> sourceTrackNames = new Dictionary<string, iLOR4Member>();
 
 			//string msg = "GLB";
 			//msg += LeftBushesChildCount().ToString();
@@ -826,7 +827,7 @@ namespace UtilORama4
 				if (nam.Length < 1)
 				{ nam = "Channel " + seqDest.Channels[i].Index.ToString("0000"); }
 				while (destChanNames.ContainsKey(nam))
-				{	nam += seqDest.Channels[i].SavedIndex.ToString(); }
+				{ nam += seqDest.Channels[i].SavedIndex.ToString(); }
 				destChanNames.Add(nam, seqDest.Channels[i]);
 			}
 			// RGB Channels
@@ -930,7 +931,7 @@ namespace UtilORama4
 					if (!reader.EndOfStream)
 					{
 						lineIn = reader.ReadLine(); // Line 2
-						// This should be the CSV Column Headers, ignore and throw away
+																				// This should be the CSV Column Headers, ignore and throw away
 						lineCount = 2;
 						while ((lineIn = reader.ReadLine()) != null)
 						{
@@ -978,7 +979,7 @@ namespace UtilORama4
 					if (mapData.Length == 5)
 					{
 						theType = mapData[0].ToLower();
-						destType = LORMemberType4.None; // Reset default
+						destType = LOR4MemberType.None; // Reset default
 						destName = lutils.HumanizeName(mapData[1]).ToLower();
 						destSI = lutils.UNDEFINED; // Reset default
 						int.TryParse(mapData[2], out destSI);
@@ -988,7 +989,7 @@ namespace UtilORama4
 						switch (theType)
 						{
 							case "channel":
-								destType = LORMemberType4.Channel;
+								destType = LOR4MemberType.Channel;
 								if ((destSI >= 0) && (destSI < seqDest.AllMembers.HighestSavedIndex))
 								{
 									destMember = seqDest.AllMembers.BySavedIndex[destSI];
@@ -1003,7 +1004,7 @@ namespace UtilORama4
 											destMember = null;
 										}
 									}
-									if (destMember == null) 
+									if (destMember == null)
 									{
 										destChanNames.TryGetValue(destName, out destMember);
 									}
@@ -1023,7 +1024,7 @@ namespace UtilORama4
 													sourceMember = null;
 												}
 											}
-											if (sourceMember == null) 
+											if (sourceMember == null)
 											{ sourceChanNames.TryGetValue(sourceName, out sourceMember); }
 											if (sourceMember != null)
 											{
@@ -1034,7 +1035,7 @@ namespace UtilORama4
 								}
 								break;
 							case "rgbchannel":
-								destType = LORMemberType4.RGBChannel;
+								destType = LOR4MemberType.RGBChannel;
 								if ((destSI >= 0) && (destSI < seqDest.AllMembers.HighestSavedIndex))
 								{
 									destMember = seqDest.AllMembers.BySavedIndex[destSI];
@@ -1049,7 +1050,7 @@ namespace UtilORama4
 											destMember = null;
 										}
 									}
-									if (destMember == null) 
+									if (destMember == null)
 									{
 										destRGBNames.TryGetValue(destName, out destMember);
 									}
@@ -1069,7 +1070,7 @@ namespace UtilORama4
 													sourceMember = null;
 												}
 											}
-											if (sourceMember == null) 
+											if (sourceMember == null)
 											{ sourceRGBNames.TryGetValue(sourceName, out sourceMember); }
 											if (sourceMember != null)
 											{
@@ -1080,7 +1081,7 @@ namespace UtilORama4
 								}
 								break;
 							case "channelgroup":
-								destType = LORMemberType4.ChannelGroup;
+								destType = LOR4MemberType.ChannelGroup;
 								if ((destSI >= 0) && (destSI < seqDest.AllMembers.HighestSavedIndex))
 								{
 									destMember = seqDest.AllMembers.BySavedIndex[destSI];
@@ -1095,7 +1096,7 @@ namespace UtilORama4
 											destMember = null;
 										}
 									}
-									if (destMember == null) 
+									if (destMember == null)
 									{
 										destGroupNames.TryGetValue(destName, out destMember);
 									}
@@ -1115,7 +1116,7 @@ namespace UtilORama4
 													sourceMember = null;
 												}
 											}
-											if (sourceMember == null) 
+											if (sourceMember == null)
 											{ sourceGroupNames.TryGetValue(sourceName, out sourceMember); }
 											if (sourceMember != null)
 											{
@@ -1126,10 +1127,10 @@ namespace UtilORama4
 								}
 								break;
 							case "cosmicdevice":
-								destType = LORMemberType4.Cosmic;
+								destType = LOR4MemberType.Cosmic;
 								break;
 							case "track":
-								destType = LORMemberType4.Track;
+								destType = LOR4MemberType.Track;
 								if ((destSI >= 0) && (destSI < seqDest.AllMembers.HighestSavedIndex))
 								{
 									destMember = seqDest.AllMembers.BySavedIndex[destSI];
@@ -1144,7 +1145,7 @@ namespace UtilORama4
 											destMember = null;
 										}
 									}
-									if (destMember == null) 
+									if (destMember == null)
 									{
 										destTrackNames.TryGetValue(destName, out destMember);
 									}
@@ -1164,7 +1165,7 @@ namespace UtilORama4
 													sourceMember = null;
 												}
 											}
-											if (sourceMember == null) 
+											if (sourceMember == null)
 											{ sourceTrackNames.TryGetValue(sourceName, out sourceMember); }
 											if (sourceMember != null)
 											{
@@ -1209,7 +1210,7 @@ namespace UtilORama4
 						{
 							if (!reader.EndOfStream)
 							{
-								// Next line is the Destination LORChannel4
+								// Next line is the Destination LOR4Channel
 								lineIn = reader.ReadLine();
 								lineNum++;
 								//li = lineIn.IndexOf(FIELDdestChannel);
@@ -1220,11 +1221,11 @@ namespace UtilORama4
 									//lblMessage.Text = "Map \"" + destName + "\" to...";
 									//pnlMessage.Refresh();
 									destSI = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
-									destType = LORSeqEnums4.EnumMemberType(lutils.getKeyWord(lineIn, lutils.FIELDtype));
-									// Next line (let's assume its there) is the Source LORChannel4
+									destType = LOR4SeqEnums.EnumMemberType(lutils.getKeyWord(lineIn, lutils.FIELDtype));
+									// Next line (let's assume its there) is the Source LOR4Channel
 									if (!reader.EndOfStream)
 									{
-										// Next line is the Source LORChannel4
+										// Next line is the Source LOR4Channel
 										lineIn = reader.ReadLine();
 										lineNum++;
 										//li = lineIn.IndexOf(FIELDsourceChannel);
@@ -1286,7 +1287,7 @@ namespace UtilORama4
 																if (sourceSI > lutils.UNDEFINED)
 																{
 																	sourceMember = seqSource.AllMembers.BySavedIndex[sourceSI];
-																	//iLORMember4 destMember = seqDest.AllMembers.BySavedIndex[destSI];
+																	//iLOR4Member destMember = seqDest.AllMembers.BySavedIndex[destSI];
 																	if (sourceMember.MemberType == destMember.MemberType)
 																	{
 																		logMsg = "Fuzzy Matched " + destName + " to " + sourceName;
@@ -1549,11 +1550,11 @@ namespace UtilORama4
 			int sourceSI = lutils.UNDEFINED;
 			int destSI = lutils.UNDEFINED;
 			int[] matchSIs = null;
-			iLORMember4 srcID = null;
+			iLOR4Member srcID = null;
 			const string STATUSautoMap = "AutoMap \"";
 			const string STATUSto = "\" to...";
 
-			int w =  pnlStatus.Width;
+			int w = pnlStatus.Width;
 			int matchCount = 0;
 			pnlProgress.Width = w;
 			pnlProgress.Size = new Size(w, pnlProgress.Height);
@@ -1592,7 +1593,7 @@ namespace UtilORama4
 			//	staStatus.Refresh();
 			//int mcs = AutoMapMembersBySavedIndex(destTrack.Members);
 			int mcs = AutoMapMembersBySavedIndex(seqDest.AllMembers);
-				//matchCount += mcs;
+			//matchCount += mcs;
 			mappedMemberCount += mcs;
 			//}
 
@@ -1625,29 +1626,29 @@ namespace UtilORama4
 			bulkOp = false;
 			ImBusy(false);
 		}  // end LORTrack4 loop
-		
-		private int AutoMapMembersBySavedIndex(LORMembership4 destMembers)
+
+		private int AutoMapMembersBySavedIndex(LOR4Membership destMembers)
 		{
 			int matchCount = 0;
 			for (int memidx = 0; memidx < destMembers.Count; memidx++)
 			{
-				iLORMember4 destMember = destMembers[memidx];
-				if (destMember.MemberType != LORMemberType4.Track)
+				iLOR4Member destMember = destMembers[memidx];
+				if (destMember.MemberType != LOR4MemberType.Track)
 				{
 					if (destMember.MapTo == null) // Mapped already?
 					{
 						if (destMember.SavedIndex <= seqSource.AllMembers.HighestSavedIndex)
 						{
-							iLORMember4 newSourceMember = seqSource.AllMembers.BySavedIndex[destMember.SavedIndex];
+							iLOR4Member newSourceMember = seqSource.AllMembers.BySavedIndex[destMember.SavedIndex];
 							if (destMember.MemberType == newSourceMember.MemberType)
 							{
 								if (destMember.Name.ToLower().CompareTo(newSourceMember.Name.ToLower()) == 0)
 								{
 									bool newMaps = MapMembers(newSourceMember, destMember, false);
 									//matchCount += newMaps;
-									if (destMember.MemberType == LORMemberType4.ChannelGroup)
+									if (destMember.MemberType == LOR4MemberType.ChannelGroup)
 									{
-										//	LORChannelGroup4 destGroup = (LORChannelGroup4)destMember;
+										//	LOR4ChannelGroup destGroup = (LOR4ChannelGroup)destMember;
 										//	int mc = AutoMapMembersBySavedIndex(destGroup.Members); // Recurse
 										//	mappedMemberCount += mc;
 										lblMessage.Text = STATUSautoMap + destMember.Name + STATUSto;
@@ -1658,32 +1659,32 @@ namespace UtilORama4
 						}
 					}
 				}
-				pp ++;
+				pp++;
 				pnlProgress.Value = pp;
 				staStatus.Refresh();
 			}
 			return matchCount;
 		}
-		private int AutoMapMembersByName(LORMembership4 destMembers)
+		private int AutoMapMembersByName(LOR4Membership destMembers)
 		{
 			int matchCount = 0;
 			for (int memidx = 0; memidx < destMembers.Count; memidx++)
 			{
-				iLORMember4 destMember = destMembers[memidx];
-				if (destMember.MemberType != LORMemberType4.Track)
+				iLOR4Member destMember = destMembers[memidx];
+				if (destMember.MemberType != LOR4MemberType.Track)
 				{
 					if (destMember.MapTo == null) // Mapped already?
 					{
-						iLORMember4 newSourceMember = seqSource.AllMembers.FindByName(destMember.Name, destMember.MemberType, false);
+						iLOR4Member newSourceMember = seqSource.AllMembers.FindByName(destMember.Name, destMember.MemberType, false);
 						if (newSourceMember != null)
 						{
 							if (destMember.Name.ToLower().CompareTo(newSourceMember.Name.ToLower()) == 0)
 							{
 								bool newMaps = MapMembers(newSourceMember, destMember, false);
 								//matchCount += newMaps;
-								if (destMember.MemberType == LORMemberType4.ChannelGroup)
+								if (destMember.MemberType == LOR4MemberType.ChannelGroup)
 								{
-									//	LORChannelGroup4 destGroup = (LORChannelGroup4)destMember;
+									//	LOR4ChannelGroup destGroup = (LOR4ChannelGroup)destMember;
 									//	int mc = AutoMapMembersByName(destGroup.Members); // Recurse
 									//	mappedMemberCount += mc;
 									lblMessage.Text = STATUSautoMap + destMember.Name + STATUSto;
@@ -1694,47 +1695,47 @@ namespace UtilORama4
 						}
 					}
 				}
-				pp ++;
+				pp++;
 				pnlProgress.Value = pp;
 				staStatus.Refresh();
 			}
 			return matchCount;
 		}
-		private int AutoMapMembersByFuzzy(LORMembership4 destMembers)
+		private int AutoMapMembersByFuzzy(LOR4Membership destMembers)
 		{
 			int matchCount = 0;
 			for (int memidx = 0; memidx < destMembers.Count; memidx++)
 			{
-				iLORMember4 destMember = destMembers[memidx];
-				if (destMember.MemberType != LORMemberType4.Track)
+				iLOR4Member destMember = destMembers[memidx];
+				if (destMember.MemberType != LOR4MemberType.Track)
 				{
 					if (destMember.MapTo == null) // Mapped already?
 					{
 						lblMessage.Text = STATUSautoMap + destMember.Name + STATUSto;
 						pnlMessage.Refresh();
-						iLORMember4 newSourceMember = FuzzyFindName(destMember.Name, seqSource, destMember.MemberType);
+						iLOR4Member newSourceMember = FuzzyFindName(destMember.Name, seqSource, destMember.MemberType);
 						if (newSourceMember != null)
 						{
 							bool newMaps = MapMembers(newSourceMember, destMember, false);
 							//matchCount += newMaps;
-							//if (destMember.MemberType == LORMemberType4.ChannelGroup)
+							//if (destMember.MemberType == LOR4MemberType.ChannelGroup)
 							//{
-							//	LORChannelGroup4 destGroup = (LORChannelGroup4)destMember;
+							//	LOR4ChannelGroup destGroup = (LOR4ChannelGroup)destMember;
 							//	int mc = AutoMapMembersByName(destGroup.Members); // Recurse
 							//	matchCount += mc;
 							//}
 						}
 					}
 				}
-				pp+=8;
+				pp += 8;
 				pnlProgress.Value = pp;
 				staStatus.Refresh();
 			}
 			return matchCount;
 		}
-		public iLORMember4 FuzzyFindName(string theName, LORSequence4 sequence, LORMemberType4 theType)
+		public iLOR4Member FuzzyFindName(string theName, LOR4Sequence sequence, LOR4MemberType theType)
 		{
-			iLORMember4 ret = null;
+			iLOR4Member ret = null;
 			bool useFuzzy = Properties.Settings.Default.FuzzyUse;
 			bool writeLog = Properties.Settings.Default.FuzzyWriteLog;
 
@@ -1747,14 +1748,14 @@ namespace UtilORama4
 				writer = new StreamWriter(logFile, true);
 				writer.WriteLine("");
 				lineOut = "Looking for     \"" + theName + "\" in ";
-				lineOut += LORSeqEnums4.MemberName(theType) + "s in ";
+				lineOut += LOR4SeqEnums.MemberName(theType) + "s in ";
 				lineOut += Path.GetFileName(sequence.info.filename);
 				writer.WriteLine(lineOut);
 			}
 
 			if (sequence.AllMembers.ByName.ContainsKey(theName))
 			{
-				iLORMember4 r2 = sequence.AllMembers.ByName[theName];
+				iLOR4Member r2 = sequence.AllMembers.ByName[theName];
 				if (r2.MemberType == theType)
 				{
 					ret = r2;
@@ -1771,8 +1772,8 @@ namespace UtilORama4
 			{
 				if (useFuzzy)
 				{
-					//List<iLORMember4> matchedMembers = null;
-					List<iLORMember4> matchedMembers = new List<iLORMember4>();
+					//List<iLOR4Member> matchedMembers = null;
+					List<iLOR4Member> matchedMembers = new List<iLOR4Member>();
 					double[] scores = null;
 					int[] SIs = null;
 					int count = 0;
@@ -1794,9 +1795,9 @@ namespace UtilORama4
 						writer.WriteLine(lineOut);
 					}
 
-					if (theType == LORMemberType4.Channel)
+					if (theType == LOR4MemberType.Channel)
 					{
-						foreach (iLORMember4 member in sequence.Channels)
+						foreach (iLOR4Member member in sequence.Channels)
 						{
 							// get a quick prematch score
 							score = theName.RankEquality(member.Name, prematchAlgorithm);
@@ -1820,9 +1821,9 @@ namespace UtilORama4
 						}
 					}
 
-					if (theType == LORMemberType4.RGBChannel)
+					if (theType == LOR4MemberType.RGBChannel)
 					{
-						foreach (iLORMember4 member in sequence.RGBchannels)
+						foreach (iLOR4Member member in sequence.RGBchannels)
 						{
 							// get a quick prematch score
 							score = theName.RankEquality(member.Name, prematchAlgorithm);
@@ -1859,7 +1860,7 @@ namespace UtilORama4
 						for (int i = 0; i < count; i++)
 						{
 							// Get the ID, perform a more thorough final fuzzy match, and save the score
-							iLORMember4 member = sequence.AllMembers.BySavedIndex[SIs[i]];
+							iLOR4Member member = sequence.AllMembers.BySavedIndex[SIs[i]];
 							//score = theName.RankEquality(member.Name, finalAlgorithms);
 
 							string source = theName;
@@ -1906,23 +1907,23 @@ namespace UtilORama4
 
 
 
-							for (int al =1; al <= FuzzyFunctions.ALGORITHM_COUNT; al++)
+							for (int al = 1; al <= FuzzyFunctions.ALGORITHM_COUNT; al++)
 							{
-								long mask = (long)Math.Pow(2D, (double) al) / 2;
+								long mask = (long)Math.Pow(2D, (double)al) / 2;
 								//if ((finalAlgorithms & mask) > 0)
 								//{
-									var watch = System.Diagnostics.Stopwatch.StartNew();
-									thisScore = source.RankEquality(target, mask);
-									watch.Stop();
-									long elapsedMs = watch.ElapsedMilliseconds;
-									totTimes[al] += elapsedMs;
-									totCount[al]++;
-									valid = WankEquality(thisScore, minScore, maxScore, ref runningTotal, ref methodCount);
-									if (writeLog)
-									{
-										lineOut = WankLine(thisScore, valid, mask, elapsedMs);
-										writer.WriteLine(lineOut);
-									}
+								var watch = System.Diagnostics.Stopwatch.StartNew();
+								thisScore = source.RankEquality(target, mask);
+								watch.Stop();
+								long elapsedMs = watch.ElapsedMilliseconds;
+								totTimes[al] += elapsedMs;
+								totCount[al]++;
+								valid = WankEquality(thisScore, minScore, maxScore, ref runningTotal, ref methodCount);
+								if (writeLog)
+								{
+									lineOut = WankLine(thisScore, valid, mask, elapsedMs);
+									writer.WriteLine(lineOut);
+								}
 								//}
 							}
 							if (methodCount > 0)
@@ -1945,7 +1946,7 @@ namespace UtilORama4
 							for (int f = 0; f < count; f++)
 							{
 								lineOut = scores[f].ToString("0.0000") + " SI:";
-								iLORMember4 y = sequence.AllMembers.BySavedIndex[SIs[f]];
+								iLOR4Member y = sequence.AllMembers.BySavedIndex[SIs[f]];
 								lineOut += y.SavedIndex.ToString().PadLeft(5);
 								lineOut += "=\"" + y.Name + "\"";
 								writer.WriteLine(lineOut);
@@ -1964,7 +1965,7 @@ namespace UtilORama4
 								lineOut = "Best Match Is:";
 								writer.WriteLine(lineOut);
 								lineOut = scores[count - 1].ToString("0.0000") + " SI:";
-								iLORMember4 y = sequence.AllMembers.BySavedIndex[SIs[count - 1]];
+								iLOR4Member y = sequence.AllMembers.BySavedIndex[SIs[count - 1]];
 								lineOut += y.SavedIndex.ToString().PadLeft(5);
 								lineOut += "=\"" + y.Name + "\"";
 								writer.WriteLine(lineOut);
@@ -1988,9 +1989,9 @@ namespace UtilORama4
 			}
 			return ret;
 		}
-		public iLORMember4 FindByName(string theName, LORMembership4 children, LORMemberType4 PartType, long preAlgorithm, double minPreMatch, long finalAlgorithms, double minFinalMatch, bool ignoreSelected)
+		public iLOR4Member FindByName(string theName, LOR4Membership children, LOR4MemberType PartType, long preAlgorithm, double minPreMatch, long finalAlgorithms, double minFinalMatch, bool ignoreSelected)
 		{
-			iLORMember4 ret = null;
+			iLOR4Member ret = null;
 			if (children.ByName.TryGetValue(theName, out ret))
 			{
 				// Found the name, is the type correct?
@@ -2009,16 +2010,16 @@ namespace UtilORama4
 
 			return ret;
 		}
-		public iLORMember4 FuzzyFind(string theName, LORMembership4 children, long preAlgorithm, double minPreMatch, long finalAlgorithms, double minFinalMatch, bool ignoreSelected)
+		public iLOR4Member FuzzyFind(string theName, LOR4Membership children, long preAlgorithm, double minPreMatch, long finalAlgorithms, double minFinalMatch, bool ignoreSelected)
 		{
-			iLORMember4 ret = null;
+			iLOR4Member ret = null;
 			double[] scores = null;
 			int[] SIs = null;
 			int count = 0;
 			double score;
 
 			// Go thru all objects
-			foreach (iLORMember4 child in children.Items)
+			foreach (iLOR4Member child in children.Items)
 			{
 				if ((!child.Selected) || (!ignoreSelected))
 				{
@@ -2043,7 +2044,7 @@ namespace UtilORama4
 				for (int i = 0; i < count; i++)
 				{
 					// Get the ID, perform a more thorough final fuzzy match, and save the score
-					iLORMember4 child = children.BySavedIndex[SIs[i]];
+					iLOR4Member child = children.BySavedIndex[SIs[i]];
 					score = theName.RankEquality(child.Name, finalAlgorithms);
 					scores[i] = score;
 				}
@@ -2076,7 +2077,7 @@ namespace UtilORama4
 			string lineOut = theScore.ToString("0.0000 ") + FuzzyFunctions.AlgorithmNames(algorithm);
 			if (!isValid) lineOut += " Not";
 			lineOut += " Valid  ";
-			lineOut += elapsed.ToString() +"μs";
+			lineOut += elapsed.ToString() + "μs";
 
 			return lineOut;
 		}
@@ -2131,7 +2132,7 @@ namespace UtilORama4
 		{
 			if (sourceNode.Tag != null)
 			{
-				iLORMember4 sourceMember = (iLORMember4)sourceNode.Tag;
+				iLOR4Member sourceMember = (iLOR4Member)sourceNode.Tag;
 				// Did selection change?
 				if (currentSourceMember == null)
 				{
@@ -2150,7 +2151,7 @@ namespace UtilORama4
 		{
 			if (destNode.Tag != null)
 			{
-				iLORMember4 destMember = (iLORMember4)destNode.Tag;
+				iLOR4Member destMember = (iLOR4Member)destNode.Tag;
 				// Did selection change?
 				if (currentDestMember == null)
 				{
@@ -2165,9 +2166,9 @@ namespace UtilORama4
 				}
 			}
 		}
-		private void SourceMember_Click(iLORMember4 newSourceMember)
+		private void SourceMember_Click(iLOR4Member newSourceMember)
 		{
-			iLORMember4 lastSourceMember = currentSourceMember;
+			iLOR4Member lastSourceMember = currentSourceMember;
 			string sourceText = "";
 			// Are we already mapped to the last destination member?
 			bool wasMapped = false;
@@ -2180,13 +2181,13 @@ namespace UtilORama4
 			{
 				// Clear the previous selection
 				TreeUtils.HighlightMember(lastSourceMember, ColorUnselectedFG, ColorUnselectedBG);
-		
+
 				// Was the last source mapped to any destination(s)?
 				if (lastSourceMember.Tag != null)
 				{
-					List<iLORMember4> mapsTos = (List<iLORMember4>)lastSourceMember.Tag;
+					List<iLOR4Member> mapsTos = (List<iLOR4Member>)lastSourceMember.Tag;
 					// Clear the highlighting on those mapped destination(s)
-					for (int m=0; m< mapsTos.Count; m++)
+					for (int m = 0; m < mapsTos.Count; m++)
 					{
 						// Was it mapped to the currently selected destination?
 						if (mapsTos[m].ID == destID)
@@ -2208,30 +2209,30 @@ namespace UtilORama4
 			TreeUtils.HighlightMember(newSourceMember, ColorSourceSelectedFG, ColorSourceSelectedBG);
 			switch (newSourceMember.MemberType)
 			{
-				case LORMemberType4.Channel:
-					LORChannel4 chan = (LORChannel4)newSourceMember;
+				case LOR4MemberType.Channel:
+					LOR4Channel chan = (LOR4Channel)newSourceMember;
 					lutils.RenderEffects(chan, ref picPreviewSource, chkRamps.Checked);
 					picPreviewSource.Visible = true;
 					break;
-				case LORMemberType4.RGBChannel:
-					LORRGBChannel4 rgbc = (LORRGBChannel4)newSourceMember;
+				case LOR4MemberType.RGBChannel:
+					LOR4RGBChannel rgbc = (LOR4RGBChannel)newSourceMember;
 					lutils.RenderEffects(rgbc, ref picPreviewSource, chkRamps.Checked);
 					picPreviewSource.Visible = true;
 					break;
-				case LORMemberType4.ChannelGroup:
+				case LOR4MemberType.ChannelGroup:
 					picPreviewSource.Visible = false;
 					break;
-				case LORMemberType4.Track:
+				case LOR4MemberType.Track:
 					picPreviewSource.Visible = false;
 					break;
-				case LORMemberType4.Cosmic:
+				case LOR4MemberType.Cosmic:
 					picPreviewSource.Visible = false;
 					break;
 			}
 			// Is it mapped to any destination(s)?
 			if (newSourceMember.Tag != null)
 			{
-				List<iLORMember4> mapsTos = (List<iLORMember4>)newSourceMember.Tag;
+				List<iLOR4Member> mapsTos = (List<iLOR4Member>)newSourceMember.Tag;
 				// Clear the highlighting on those mapped destination(s)
 				for (int m = 0; m < mapsTos.Count; m++)
 				{
@@ -2255,9 +2256,9 @@ namespace UtilORama4
 			UpdateUI();
 		}
 
-		private void DestMember_Click(iLORMember4 newDestMember)
+		private void DestMember_Click(iLOR4Member newDestMember)
 		{
-			iLORMember4 lastDestMember = currentDestMember;
+			iLOR4Member lastDestMember = currentDestMember;
 			string destText = "";
 
 			bool wasMapped = false;
@@ -2314,29 +2315,29 @@ namespace UtilORama4
 			// Create and turn on preview, or hide it, according to member type
 			switch (newDestMember.MemberType)
 			{
-				case LORMemberType4.Channel:
-					LORChannel4 chan = (LORChannel4)newDestMember;
+				case LOR4MemberType.Channel:
+					LOR4Channel chan = (LOR4Channel)newDestMember;
 					lutils.RenderEffects(chan, ref picPreviewDest, chkRamps.Checked);
 					pnlOverwrite.Visible = true;
 					picPreviewDest.Visible = true;
 					break;
-				case LORMemberType4.RGBChannel:
-					LORRGBChannel4 rgbc = (LORRGBChannel4)newDestMember;
+				case LOR4MemberType.RGBChannel:
+					LOR4RGBChannel rgbc = (LOR4RGBChannel)newDestMember;
 					lutils.RenderEffects(rgbc, ref picPreviewDest, chkRamps.Checked);
 					pnlOverwrite.Visible = true;
 					picPreviewDest.Visible = true;
 					break;
-				case LORMemberType4.ChannelGroup:
+				case LOR4MemberType.ChannelGroup:
 					picPreviewDest.Visible = false;
 					break;
-				case LORMemberType4.Track:
+				case LOR4MemberType.Track:
 					picPreviewDest.Visible = false;
 					break;
-				case LORMemberType4.Cosmic:
+				case LOR4MemberType.Cosmic:
 					picPreviewDest.Visible = false;
 					break;
 			}
-			
+
 			// Remember this selection
 			currentDestMember = newDestMember;
 			// Update Map and UnMap button states
@@ -2363,9 +2364,9 @@ namespace UtilORama4
 				if (currentSourceMember.Tag != null)
 				{
 					lbltxt = currentSourceMember.Name;
-					List<iLORMember4> mapsTos = (List<iLORMember4>)currentSourceMember.Tag;
+					List<iLOR4Member> mapsTos = (List<iLOR4Member>)currentSourceMember.Tag;
 					// Clear the highlighting on those mapped destination(s)
-					if (mapsTos.Count>0)
+					if (mapsTos.Count > 0)
 					{
 						lbltxt += " maps to ";
 						for (int m = 0; m < mapsTos.Count; m++)
@@ -2409,7 +2410,7 @@ namespace UtilORama4
 
 
 		}
-		
+
 		private void UpdateMappability()
 		{
 			// https://stackoverflow.com/questions/1732140/displaying-tooltip-over-a-disabled-control
@@ -2427,7 +2428,7 @@ namespace UtilORama4
 				{
 					if (currentSourceMember.MemberType == currentDestMember.MemberType)
 					{
-						//if (currentSourceMember.MemberType == LORMemberType4.Channel)
+						//if (currentSourceMember.MemberType == LOR4MemberType.Channel)
 						if (true)
 						{
 							if (currentDestMember.MapTo != null)
@@ -2461,9 +2462,9 @@ namespace UtilORama4
 								{
 									lblDestAlreadyMapped.Visible = true;
 								}
-								if (currentDestMember.MemberType == LORMemberType4.Channel)
+								if (currentDestMember.MemberType == LOR4MemberType.Channel)
 								{
-									LORChannel4 ch = (LORChannel4)currentDestMember;
+									LOR4Channel ch = (LOR4Channel)currentDestMember;
 									if (ch.effects.Count > 0)
 									{
 										lblDestHasEffects.Visible = true;
@@ -2479,7 +2480,7 @@ namespace UtilORama4
 						}
 						else
 						{
-							if (currentSourceMember.MemberType == LORMemberType4.RGBChannel)
+							if (currentSourceMember.MemberType == LOR4MemberType.RGBChannel)
 							{
 
 							}
@@ -2508,7 +2509,7 @@ namespace UtilORama4
 
 
 		}
-		private bool IsCompatible(iLORMember4 sourceMember, iLORMember4 destMember)
+		private bool IsCompatible(iLOR4Member sourceMember, iLOR4Member destMember)
 		{
 			// not necessarily groups, called recursively
 			bool ret = true;
@@ -2525,32 +2526,32 @@ namespace UtilORama4
 			return ret;
 		} // end IsCompatible
 
-		private string CompatibleCodes(iLORMember4 member)
+		private string CompatibleCodes(iLOR4Member member)
 		{
 			string codes = "";
-			LORMembership4 membership = null;
+			LOR4Membership membership = null;
 			// Start the code with a letter to indicate its type
 			switch (member.MemberType)
 			{
-				case LORMemberType4.Channel:
+				case LOR4MemberType.Channel:
 					codes = "c";
 					break;
-				case LORMemberType4.RGBChannel:
+				case LOR4MemberType.RGBChannel:
 					codes = "r";
 					break;
-				case LORMemberType4.ChannelGroup:
+				case LOR4MemberType.ChannelGroup:
 					codes = "g";
-					LORChannelGroup4 group = (LORChannelGroup4)member;
+					LOR4ChannelGroup group = (LOR4ChannelGroup)member;
 					membership = group.Members;
 					break;
-				case LORMemberType4.Track:
+				case LOR4MemberType.Track:
 					codes = "t";
 					LORTrack4 track = (LORTrack4)member;
 					membership = track.Members;
 					break;
-				case LORMemberType4.Cosmic:
+				case LOR4MemberType.Cosmic:
 					codes = "p";
-					LORCosmic4 cosmic = (LORCosmic4)member;
+					LOR4Cosmic cosmic = (LOR4Cosmic)member;
 					membership = cosmic.Members;
 					break;
 			}
@@ -2562,7 +2563,7 @@ namespace UtilORama4
 			// If this is a group-type member (ChannelGroup, Track, CosmicDevice) get all it's descendants
 			if (membership != null)
 			{
-				for (int m=0; m<membership.Count; m++)
+				for (int m = 0; m < membership.Count; m++)
 				{
 					//! Recurse
 					codes += CompatibleCodes(membership[m]);
@@ -2577,7 +2578,7 @@ namespace UtilORama4
 		///////////////////////////////
 		//!  * * MAP  MEMBERS  * *  //
 		/////////////////////////////
-		private bool MapMembers(iLORMember4 sourceMember, iLORMember4 destMember, bool andChildren = true)
+		private bool MapMembers(iLOR4Member sourceMember, iLOR4Member destMember, bool andChildren = true)
 		{
 			bool success = false;
 			// Sanity checks, including:
@@ -2586,176 +2587,176 @@ namespace UtilORama4
 
 			if (sourceMember.MemberType == destMember.MemberType)
 			{
-				List<iLORMember4> destMapList = null;
+				List<iLOR4Member> destMapList = null;
 				if (sourceMember.Tag != null)
 				{
-					destMapList = new List<iLORMember4>();
+					destMapList = new List<iLOR4Member>();
 				}
 				else
 				{
-					destMapList = (List<iLORMember4>)sourceMember.Tag;
+					destMapList = (List<iLOR4Member>)sourceMember.Tag;
 				}
 
 				// Is the destination already mapped to something else?
 				if (destMember.MapTo != null)
+				{
+					// Is it mapped correctly already?
+					if (destMember.MapTo.ID != sourceMember.ID)
 					{
-						// Is it mapped correctly already?
-						if (destMember.MapTo.ID != sourceMember.ID)
-						{
-							// Remove prior mapping
-							//! Recurse
-							success = UnMapMembers(destMember.MapTo, destMember, andChildren);
-						}
+						// Remove prior mapping
+						//! Recurse
+						success = UnMapMembers(destMember.MapTo, destMember, andChildren);
 					}
-					// Use new MapTo property of the destination to hold a reference to the source
-					destMember.MapTo = sourceMember;
-					// source may map to more than one destination so can't use MapTo property
-					// Instead use Tag property to hold a list of members
-					destMapList.Add(destMember);
-					sourceMember.ZCount = destMapList.Count;
+				}
+				// Use new MapTo property of the destination to hold a reference to the source
+				destMember.MapTo = sourceMember;
+				// source may map to more than one destination so can't use MapTo property
+				// Instead use Tag property to hold a list of members
+				destMapList.Add(destMember);
+				sourceMember.ZCount = destMapList.Count;
 
 				//? Do I need to put the destMapList back into the tag again?
 				sourceMember.Tag = destMapList;
 
 
 
-					// Set selected flags as quick easy way to check if they are mampped
-					destMember.Selected = true;
-					sourceMember.Selected = true;
-					TreeUtils.EmboldenMember(sourceMember, true);
-					TreeUtils.EmboldenMember(destMember, true);
-					success = true;
+				// Set selected flags as quick easy way to check if they are mampped
+				destMember.Selected = true;
+				sourceMember.Selected = true;
+				TreeUtils.EmboldenMember(sourceMember, true);
+				TreeUtils.EmboldenMember(destMember, true);
+				success = true;
 
 
-					// Placeholders for memberships
-					LORMembership4 sourceMembers = null;
-					LORMembership4 destMembers = null;
-					switch (sourceMember.MemberType)
-					{
-						case LORMemberType4.Channel:
+				// Placeholders for memberships
+				LOR4Membership sourceMembers = null;
+				LOR4Membership destMembers = null;
+				switch (sourceMember.MemberType)
+				{
+					case LOR4MemberType.Channel:
 						// Nothing extra required
 						mappedDestChannelsCount++;
 						if (sourceMember.ZCount == 1) mappedSourceChannelsCount++;
-							break;
-						case LORMemberType4.RGBChannel:
+						break;
+					case LOR4MemberType.RGBChannel:
 						// Should we also map the children?
 						mappedSourceRGBChannelsCount++;
 						if (sourceMember.ZCount == 1) mappedDestRGBChannelsCount++;
 						if (andChildren)
 						{
-								LORRGBChannel4 sourceRGB = (LORRGBChannel4)sourceMember;
-								LORRGBChannel4 destRGB = (LORRGBChannel4)destMember;
-								// Map the Red, Green, Blue subchannels
-								// Assume success since there is not much chance of failure
-								MapMembers(sourceRGB.redChannel, destRGB.redChannel, false);
-								MapMembers(sourceRGB.grnChannel, destRGB.grnChannel, false);
-								MapMembers(sourceRGB.bluChannel, destRGB.bluChannel, false);
-							}
-							break;
-						case LORMemberType4.ChannelGroup:
+							LOR4RGBChannel sourceRGB = (LOR4RGBChannel)sourceMember;
+							LOR4RGBChannel destRGB = (LOR4RGBChannel)destMember;
+							// Map the Red, Green, Blue subchannels
+							// Assume success since there is not much chance of failure
+							MapMembers(sourceRGB.redChannel, destRGB.redChannel, false);
+							MapMembers(sourceRGB.grnChannel, destRGB.grnChannel, false);
+							MapMembers(sourceRGB.bluChannel, destRGB.bluChannel, false);
+						}
+						break;
+					case LOR4MemberType.ChannelGroup:
 						// Should we also map the children?
 						mappedDestGroupsCount++;
 						if (sourceMember.ZCount == 1) mappedSourceGroupsCount++;
 						if (andChildren)
 						{
-								// Sanity Check, are they compatible
-								if (IsCompatible(sourceMember, destMember))
-								{
-									// Need to cast them to get memberships
-									LORChannelGroup4 sourceGroup = (LORChannelGroup4)sourceMember;
-									LORChannelGroup4 destGroup = (LORChannelGroup4)destMember;
-									sourceMembers = sourceGroup.Members;
-									destMembers = destGroup.Members;
-								}
+							// Sanity Check, are they compatible
+							if (IsCompatible(sourceMember, destMember))
+							{
+								// Need to cast them to get memberships
+								LOR4ChannelGroup sourceGroup = (LOR4ChannelGroup)sourceMember;
+								LOR4ChannelGroup destGroup = (LOR4ChannelGroup)destMember;
+								sourceMembers = sourceGroup.Members;
+								destMembers = destGroup.Members;
 							}
-							break;
-						case LORMemberType4.Cosmic:
+						}
+						break;
+					case LOR4MemberType.Cosmic:
 						// Should we also map the children?
 						//mappedDestCosmicCount++;
 						//if (sourceMember.ZCount == 1) mappedSourceGroupsCount++;
 						if (andChildren)
 						{
-								// Sanity Check, are they compatible
-								if (IsCompatible(sourceMember, destMember))
-								{
-									LORCosmic4 sourceCosmic = (LORCosmic4)sourceMember;
-									LORCosmic4 destCosmic = (LORCosmic4)destMember;
-									sourceMembers = sourceCosmic.Members;
-									destMembers = destCosmic.Members;
-								}
+							// Sanity Check, are they compatible
+							if (IsCompatible(sourceMember, destMember))
+							{
+								LOR4Cosmic sourceCosmic = (LOR4Cosmic)sourceMember;
+								LOR4Cosmic destCosmic = (LOR4Cosmic)destMember;
+								sourceMembers = sourceCosmic.Members;
+								destMembers = destCosmic.Members;
 							}
-							break;
-						case LORMemberType4.Track:
+						}
+						break;
+					case LOR4MemberType.Track:
 						// Should we also map the children?
 						mappedDestTracksCount++;
 						if (sourceMember.ZCount < 2) mappedSourceTracksCount++;
 						if (andChildren)
 						{
-								// Sanity Check, are they compatible
-								if (IsCompatible(sourceMember, destMember))
-								{
-									LORTrack4 sourceTrack = (LORTrack4)sourceMember;
-									LORTrack4 destTrack = (LORTrack4)destMember;
-									sourceMembers = sourceTrack.Members;
-									destMembers = destTrack.Members;
-								}
-							}
-							break;
-					}
-
-					// Did we succeed at getting the child memberships?
-					if (destMembers != null)
-					{
-						if (sourceMembers.Count == destMembers.Count)
-						{
-							// Loop thru child members
-							for (int m = 0; m < destMembers.Count; m++)
+							// Sanity Check, are they compatible
+							if (IsCompatible(sourceMember, destMember))
 							{
-								// fetch the current destination child
-								iLORMember4 destChild = destMembers[m];
+								LORTrack4 sourceTrack = (LORTrack4)sourceMember;
+								LORTrack4 destTrack = (LORTrack4)destMember;
+								sourceMembers = sourceTrack.Members;
+								destMembers = destTrack.Members;
+							}
+						}
+						break;
+				}
+
+				// Did we succeed at getting the child memberships?
+				if (destMembers != null)
+				{
+					if (sourceMembers.Count == destMembers.Count)
+					{
+						// Loop thru child members
+						for (int m = 0; m < destMembers.Count; m++)
+						{
+							// fetch the current destination child
+							iLOR4Member destChild = destMembers[m];
 							// Fetch the source child from that
-							iLORMember4 sourceChild = sourceMembers[m];
-								// Sanity Check: They are supposedly compatible, and thus should have same number of children
-								if (sourceChild != null)
+							iLOR4Member sourceChild = sourceMembers[m];
+							// Sanity Check: They are supposedly compatible, and thus should have same number of children
+							if (sourceChild != null)
+							{
+								// Another sanity check, this should have already been vetted
+								if (sourceChild.MemberType == destChild.MemberType)
 								{
-									// Another sanity check, this should have already been vetted
-									if (sourceChild.MemberType == destChild.MemberType)
-									{
-										//! Recurse!
-										bool childSuccess = MapMembers(sourceChild, destChild, true);
-										// If a child mapping failed, extend that to this parent
-										if (!childSuccess) success = false;
-									}
-									else
-									{
-										// Child types don't Match!
-										System.Diagnostics.Debugger.Break();
-									}
+									//! Recurse!
+									bool childSuccess = MapMembers(sourceChild, destChild, true);
+									// If a child mapping failed, extend that to this parent
+									if (!childSuccess) success = false;
 								}
 								else
 								{
-									// destination child's MapTo not set to source child
+									// Child types don't Match!
 									System.Diagnostics.Debugger.Break();
-								} // End got the source child
+								}
 							}
+							else
+							{
+								// destination child's MapTo not set to source child
+								System.Diagnostics.Debugger.Break();
+							} // End got the source child
 						}
-						else
-						{
-							// source and destination do not have the same number of children
-							System.Diagnostics.Debugger.Break();
-						} // End source and destination child counts match
 					}
 					else
 					{
-						// Failed to get children of destination
-						//System.Diagnostics.Debugger.Break();
-					} // End got the destination children list
+						// source and destination do not have the same number of children
+						System.Diagnostics.Debugger.Break();
+					} // End source and destination child counts match
+				}
+				else
+				{
+					// Failed to get children of destination
+					//System.Diagnostics.Debugger.Break();
+				} // End got the destination children list
 
 			}
 			else
 			{
-				string msg = "Trying to map " + LORSeqEnums4.MemberName(sourceMember.MemberType) + "	'" + sourceMember.Name + "'";
-				msg += " to " + LORSeqEnums4.MemberName(destMember.MemberType) + " '" + destMember.Name + "'!";
+				string msg = "Trying to map " + LOR4SeqEnums.MemberName(sourceMember.MemberType) + "	'" + sourceMember.Name + "'";
+				msg += " to " + LOR4SeqEnums.MemberName(destMember.MemberType) + " '" + destMember.Name + "'!";
 				Fyle.BUG(msg);
 			}
 
@@ -2768,7 +2769,7 @@ namespace UtilORama4
 		//////////////////////////////////
 		//!  * * UN-MAP  MEMBERS  * *  //
 		////////////////////////////////
-		private bool UnMapMembers(iLORMember4 sourceMember, iLORMember4 destMember, bool andChildren = true)
+		private bool UnMapMembers(iLOR4Member sourceMember, iLOR4Member destMember, bool andChildren = true)
 		{
 			bool success = false;
 			if ((sourceMember.Selected) && (destMember.Selected))
@@ -2779,7 +2780,7 @@ namespace UtilORama4
 					{
 						if (destMember.MapTo.ID == sourceMember.ID)
 						{
-							List<iLORMember4> destMapList = (List<iLORMember4>)sourceMember.Tag;
+							List<iLOR4Member> destMapList = (List<iLOR4Member>)sourceMember.Tag;
 							destMember.MapTo = null;
 							for (int dm = 0; dm < destMapList.Count; dm++)
 							{
@@ -2798,21 +2799,21 @@ namespace UtilORama4
 							success = true;
 
 							// Placeholders for memberships
-							LORMembership4 sourceMembers = null;
-							LORMembership4 destMembers = null;
+							LOR4Membership sourceMembers = null;
+							LOR4Membership destMembers = null;
 							switch (sourceMember.MemberType)
 							{
-								case LORMemberType4.Channel:
+								case LOR4MemberType.Channel:
 									mappedDestChannelsCount--;
 									if (sourceMember.ZCount == 0) mappedSourceChannelsCount--;
 									break;
-								case LORMemberType4.RGBChannel:
+								case LOR4MemberType.RGBChannel:
 									mappedDestRGBChannelsCount--;
 									if (sourceMember.ZCount == 0) mappedSourceRGBChannelsCount--;
 									if (andChildren)
 									{
-										LORRGBChannel4 sourceRGB = (LORRGBChannel4)sourceMember;
-										LORRGBChannel4 destRGB = (LORRGBChannel4)destMember;
+										LOR4RGBChannel sourceRGB = (LOR4RGBChannel)sourceMember;
+										LOR4RGBChannel destRGB = (LOR4RGBChannel)destMember;
 										// Un-Map the Red, Green, Blue subchannels
 										// Assume success since there is not much chance of failure
 										UnMapMembers(sourceRGB.redChannel, destRGB.redChannel, false);
@@ -2821,19 +2822,19 @@ namespace UtilORama4
 									}
 									break;
 								// Based on type (group, track, cosmic) get their child memberships
-								case LORMemberType4.ChannelGroup:
+								case LOR4MemberType.ChannelGroup:
 									mappedDestGroupsCount--;
 									if (sourceMember.ZCount == 0) mappedSourceGroupsCount--;
 									if (andChildren)
 									{
 										// Need to cast them to get memberships
-										LORChannelGroup4 sourceGroup = (LORChannelGroup4)sourceMember;
-										LORChannelGroup4 destGroup = (LORChannelGroup4)destMember;
+										LOR4ChannelGroup sourceGroup = (LOR4ChannelGroup)sourceMember;
+										LOR4ChannelGroup destGroup = (LOR4ChannelGroup)destMember;
 										sourceMembers = sourceGroup.Members;
 										destMembers = destGroup.Members;
 									}
 									break;
-								case LORMemberType4.Track:
+								case LOR4MemberType.Track:
 									mappedDestTracksCount--;
 									if (sourceMember.ZCount == 0) mappedSourceTracksCount--;
 									if (andChildren)
@@ -2845,65 +2846,65 @@ namespace UtilORama4
 										destMembers = destTrack.Members;
 									}
 									break;
-								case LORMemberType4.Cosmic:
+								case LOR4MemberType.Cosmic:
 									//mappedDestCosmicCount--;
 									//if (sourceMember.ZCount == 0) mappedSourceCosmicCount--;
 									if (andChildren)
 									{
 										// Need to cast them to get memberships
-										LORCosmic4 sourceCosmic = (LORCosmic4)sourceMember;
-										LORCosmic4 destCosmic = (LORCosmic4)destMember;
+										LOR4Cosmic sourceCosmic = (LOR4Cosmic)sourceMember;
+										LOR4Cosmic destCosmic = (LOR4Cosmic)destMember;
 										sourceMembers = sourceCosmic.Members;
 										destMembers = destCosmic.Members;
 									}
 									break;
-								}
+							}
 
-								// Did we succeed at getting the child memberships?
-								if (destMembers != null)
+							// Did we succeed at getting the child memberships?
+							if (destMembers != null)
+							{
+								if (sourceMembers.Count == destMembers.Count)
 								{
-									if (sourceMembers.Count == destMembers.Count)
+									// Loop thru destination's children
+									for (int m = 0; m < destMembers.Count; m++)
 									{
-										// Loop thru destination's children
-										for (int m = 0; m < destMembers.Count; m++)
+										// Get the destination
+										iLOR4Member destChild = destMembers[m];
+										// Get the source from the destination's MapTo
+										iLOR4Member sourceChild = destChild.MapTo;
+										if (sourceChild != null)
 										{
-											// Get the destination
-											iLORMember4 destChild = destMembers[m];
-											// Get the source from the destination's MapTo
-											iLORMember4 sourceChild = destChild.MapTo;
-											if (sourceChild != null)
+											if (sourceChild.MemberType == destChild.MemberType)
 											{
-												if (sourceChild.MemberType == destChild.MemberType)
-												{
-													//! Recurse!
-													bool childSuccess = UnMapMembers(sourceChild, destChild, true);
-													// If a child mapping failed, extend that to this parent
-													if (!childSuccess) success = false;
-												}
-												else
-												{
-													// Child types don't Match!
-													System.Diagnostics.Debugger.Break();
-												}
+												//! Recurse!
+												bool childSuccess = UnMapMembers(sourceChild, destChild, true);
+												// If a child mapping failed, extend that to this parent
+												if (!childSuccess) success = false;
 											}
 											else
 											{
-												// Couldn't fetch source child from destination child's MapTo
+												// Child types don't Match!
 												System.Diagnostics.Debugger.Break();
 											}
-										} // loop thru dest members
-									}
-									else
-									{
-										// Child counts don't match!
-										//System.Diagnostics.Debugger.Break();
-									}
+										}
+										else
+										{
+											// Couldn't fetch source child from destination child's MapTo
+											System.Diagnostics.Debugger.Break();
+										}
+									} // loop thru dest members
 								}
 								else
 								{
-									// Could not fetch destination members!
+									// Child counts don't match!
 									//System.Diagnostics.Debugger.Break();
-								} // Member Type
+								}
+							}
+							else
+							{
+								// Could not fetch destination members!
+								//System.Diagnostics.Debugger.Break();
+							} // Member Type
 						} // End destination.MapTo = sourceMember
 					} // End destination MapTo !null
 					else
@@ -2914,8 +2915,8 @@ namespace UtilORama4
 				} // End if both source and destination are selected, and thus mapped
 				else
 				{
-					string msg = "Trying to map " + LORSeqEnums4.MemberName(sourceMember.MemberType) + "	'" + sourceMember.Name + "'";
-					msg += " to " + LORSeqEnums4.MemberName(destMember.MemberType) + " '" + destMember.Name + "'!";
+					string msg = "Trying to map " + LOR4SeqEnums.MemberName(sourceMember.MemberType) + "	'" + sourceMember.Name + "'";
+					msg += " to " + LOR4SeqEnums.MemberName(destMember.MemberType) + " '" + destMember.Name + "'!";
 					Fyle.BUG(msg);
 				} // End source and destinations type match
 			}
@@ -2965,40 +2966,40 @@ namespace UtilORama4
 
 		}
 
-		private void ClearAllMappings(iLORMember4 member)
+		private void ClearAllMappings(iLOR4Member member)
 		{
 			member.Selected = false;
 			member.MapTo = null;
-			member.Tag = new List<iLORMember4>();
+			member.Tag = new List<iLOR4Member>();
 			member.ZCount = 0;
-			LORMembership4 members = null;
-			switch(member.MemberType)
+			LOR4Membership members = null;
+			switch (member.MemberType)
 			{
-				case LORMemberType4.Channel:
+				case LOR4MemberType.Channel:
 					// Don't need to do anything additional
 					break;
-				case LORMemberType4.RGBChannel:
-					LORRGBChannel4 rgb = (LORRGBChannel4)member;
+				case LOR4MemberType.RGBChannel:
+					LOR4RGBChannel rgb = (LOR4RGBChannel)member;
 					ClearAllMappings(rgb.redChannel);
 					ClearAllMappings(rgb.grnChannel);
 					ClearAllMappings(rgb.bluChannel);
 					break;
-				case LORMemberType4.ChannelGroup:
-					LORChannelGroup4 group = (LORChannelGroup4)member;
+				case LOR4MemberType.ChannelGroup:
+					LOR4ChannelGroup group = (LOR4ChannelGroup)member;
 					members = group.Members;
 					break;
-				case LORMemberType4.Track:
+				case LOR4MemberType.Track:
 					LORTrack4 track = (LORTrack4)member;
 					members = track.Members;
 					break;
-				case LORMemberType4.Cosmic:
-					LORCosmic4 cosmic = (LORCosmic4)member;
+				case LOR4MemberType.Cosmic:
+					LOR4Cosmic cosmic = (LOR4Cosmic)member;
 					members = cosmic.Members;
 					break;
 			}
 			if (members != null)
 			{
-				for (int n=0; n< members.Count; n++)
+				for (int n = 0; n < members.Count; n++)
 				{
 					ClearAllMappings(members[n]);
 				}
@@ -3006,11 +3007,11 @@ namespace UtilORama4
 		}
 
 
-		#endregion 
+		#endregion
 		// End Map and Un-Map Region
 
 		#region Copy Beat LORTrack4
-		private void CopyBeats(LORSequence4 seqNew)
+		private void CopyBeats(LOR4Sequence seqNew)
 		{
 			LORTrack4 newDestTrack = null;
 			for (int t = 1; t < seqSource.Tracks.Count; t++)
@@ -3028,7 +3029,7 @@ namespace UtilORama4
 			}
 
 		}
-		private LORTrack4 CopyTrack(LORTrack4 sourceTrack, LORSequence4 seqNew)
+		private LORTrack4 CopyTrack(LORTrack4 sourceTrack, LOR4Sequence seqNew)
 		{
 			LORTrack4 newTrack = seqNew.FindTrack(sourceTrack.Name);
 			if (newTrack == null)
@@ -3041,30 +3042,30 @@ namespace UtilORama4
 
 			return newTrack;
 		}
-		private void CopyItems(LORMembership4 sourceParts, LORMembership4 destParts)
+		private void CopyItems(LOR4Membership sourceParts, LOR4Membership destParts)
 		{
-			//foreach(iLORMember4 member in SourceTrack.Members)
+			//foreach(iLOR4Member member in SourceTrack.Members)
 			for (int i = 0; i < sourceParts.Count; i++)
 			{
-				iLORMember4 member = sourceParts.Items[i];
-				LORMemberType4 partType = member.MemberType;
+				iLOR4Member member = sourceParts.Items[i];
+				LOR4MemberType partType = member.MemberType;
 				switch (partType)
 				{
-					case LORMemberType4.Channel:
-						LORChannel4 sourceCh = (LORChannel4)member;
-						LORChannel4 destCh = (LORChannel4)destParts.FindChannel(sourceCh.Name, true);
+					case LOR4MemberType.Channel:
+						LOR4Channel sourceCh = (LOR4Channel)member;
+						LOR4Channel destCh = (LOR4Channel)destParts.FindChannel(sourceCh.Name, true);
 						//if (destCh == null)
 						//{
 						//	destCh = seqDest.CreateNewChannel(sourceCh.Name);
-							//destCh = seqDest.CreateNewChannel(sourceCh.LineOut());
+						//destCh = seqDest.CreateNewChannel(sourceCh.LineOut());
 						//}
 						CopyChannel(sourceCh, destCh);
 						//destParts.Items.Add(destCh);
 						//destParts.Add(destCh);
 						break;
-					case LORMemberType4.RGBChannel:
-						LORRGBChannel4 sourceRGB = (LORRGBChannel4)member;
-						LORRGBChannel4 destRGB = (LORRGBChannel4)destParts.FindRGBChannel(sourceRGB.Name, true);
+					case LOR4MemberType.RGBChannel:
+						LOR4RGBChannel sourceRGB = (LOR4RGBChannel)member;
+						LOR4RGBChannel destRGB = (LOR4RGBChannel)destParts.FindRGBChannel(sourceRGB.Name, true);
 						//if (destRGB == null)
 						//{
 						//	destRGB = seqDest.CreateNewRGBChannel(sourceRGB.Name);
@@ -3073,9 +3074,9 @@ namespace UtilORama4
 						//destParts.Items.Add(destRGB);
 						//destParts.Add(destRGB);
 						break;
-					case LORMemberType4.ChannelGroup:
-						LORChannelGroup4 sourceGroup = (LORChannelGroup4)member;
-						LORChannelGroup4 destGroup = (LORChannelGroup4)destParts.FindChannelGroup(sourceGroup.Name, true);
+					case LOR4MemberType.ChannelGroup:
+						LOR4ChannelGroup sourceGroup = (LOR4ChannelGroup)member;
+						LOR4ChannelGroup destGroup = (LOR4ChannelGroup)destParts.FindChannelGroup(sourceGroup.Name, true);
 						//if (destGroup == null)
 						//{
 						//	destGroup = seqDest.CreateNewChannelGroup(sourceGroup.Name);
@@ -3088,7 +3089,7 @@ namespace UtilORama4
 			}
 		}
 
-		private LORChannel4 CopyChannel(LORChannel4 sourceChannel, LORChannel4 destChannel)
+		private LOR4Channel CopyChannel(LOR4Channel sourceChannel, LOR4Channel destChannel)
 		{
 			// Assume the name was set when destChannel was constructed
 			//destChannel.output.channel		= sourceChannel.output.channel;
@@ -3105,10 +3106,10 @@ namespace UtilORama4
 			destChannel.CopyEffects(sourceChannel.effects, false);
 			return destChannel;
 		}
-		private LORRGBChannel4 CopyRGBchannel(LORRGBChannel4 sourceRGB, LORRGBChannel4 destRGB)
+		private LOR4RGBChannel CopyRGBchannel(LOR4RGBChannel sourceRGB, LOR4RGBChannel destRGB)
 		{
-			// Copy RED LORChannel4
-			LORChannel4 chR = seqDest.FindChannel(sourceRGB.redChannel.Name);
+			// Copy RED LOR4Channel
+			LOR4Channel chR = seqDest.FindChannel(sourceRGB.redChannel.Name);
 			if (chR == null)
 			{
 				chR = seqDest.CreateNewChannel(sourceRGB.redChannel.Name);
@@ -3117,8 +3118,8 @@ namespace UtilORama4
 			chR.rgbParent = destRGB;
 			destRGB.redChannel = chR;
 
-			// Copy GREEN LORChannel4
-			LORChannel4 chG = seqDest.FindChannel(sourceRGB.grnChannel.Name);
+			// Copy GREEN LOR4Channel
+			LOR4Channel chG = seqDest.FindChannel(sourceRGB.grnChannel.Name);
 			if (chG == null)
 			{
 				chG = seqDest.CreateNewChannel(sourceRGB.grnChannel.Name);
@@ -3127,8 +3128,8 @@ namespace UtilORama4
 			chG.rgbParent = destRGB;
 			destRGB.grnChannel = chG;
 
-			// Copy BLUE LORChannel4
-			LORChannel4 chB = seqDest.FindChannel(sourceRGB.bluChannel.Name);
+			// Copy BLUE LOR4Channel
+			LOR4Channel chB = seqDest.FindChannel(sourceRGB.bluChannel.Name);
 			if (chB == null)
 			{
 				chB = seqDest.CreateNewChannel(sourceRGB.bluChannel.Name);

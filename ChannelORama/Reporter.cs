@@ -3,19 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LORUtils4;
+using LOR4Utils;
 using xUtils;
 
 namespace UtilORama4
 {
-	public enum ReportSort { NameManager, NameLOR, NamexLights, MatchLOR, MatchxLights,
-		AddressDMXManager, AddressDMXLOR, AddressManagerxLights, AddressxLightsxLights }
-	
-	
-	public class Reporter: IComparable<Reporter>
+	public enum ReportSort
+	{
+		NameManager, NameLOR, NamexLights, MatchLOR, MatchxLights,
+		AddressDMXManager, AddressDMXLOR, AddressManagerxLights, AddressxLightsxLights
+	}
+
+
+	public class Reporter : IComparable<Reporter>
 	{
 		public DMXChannel ChannelManager = null;
-		public iLORMember4 ChannelLOR = null;
+		public iLOR4Member ChannelLOR = null;
 		public xMember ChannelxLights = null;
 
 		// Whether the name was an EXACT match or not.
@@ -23,7 +26,7 @@ namespace UtilORama4
 		// false if match was fuzzy
 		public bool MatchExactLOR = false;
 		public bool MatchExactxLights = false;
-		
+
 		public ReportSort SortMode = ReportSort.NameManager;
 
 		// This CompareTo() is used by IEnumerable Interface
@@ -87,7 +90,7 @@ namespace UtilORama4
 			return ret;
 		}
 
-		public int CompareTo(iLORMember4 ChannelLOR)
+		public int CompareTo(iLOR4Member ChannelLOR)
 		{
 			int ret = 0;
 			switch (SortMode)

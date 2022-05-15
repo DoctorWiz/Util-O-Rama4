@@ -1,193 +1,93 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <OutputType>WinExe</OutputType>
-    <RootNamespace>UtilORama4</RootNamespace>
-    <AssemblyName>Merge-O-Rama</AssemblyName>
-    <LangVersion>8.0</LangVersion>
-    <Nullable>enable</Nullable>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <UseWindowsForms>true</UseWindowsForms>
-    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>MergeBulbs.ico</ApplicationIcon>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject>UtilORama4.Program</StartupObject>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System.Data.OracleClient" />
-    <Reference Include="System.Net" />
-    <Reference Include="System.Security" />
-    <Reference Include="System.ServiceProcess" />
-    <Reference Include="System.Transactions" />
-    <Reference Include="ToggleSwitch">
-      <HintPath>..\..\ToggleSwitch\ToggleSwitch\bin\Release\ToggleSwitch.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\..\COMMON\FileHelper.cs">
-      <Link>FileHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\About\About.cs" Link="About.cs" />
-    <Compile Include="..\Common\About\About.Designer.cs" Link="About.Designer.cs" />
-    <Compile Include="..\Common\Sequence4\LORUtils.cs">
-      <Link>LORUtils.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\SeqChannel.cs">
-      <Link>SeqChannel.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\SeqChannelGroup.cs">
-      <Link>SeqChannelGroup.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\SeqCosmicDevice.cs">
-      <Link>SeqCosmicDevice.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\SeqEnums.cs">
-      <Link>SeqEnums.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\SeqMemberBase.cs">
-      <Link>SeqMemberBase.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\SeqMemberInterface.cs">
-      <Link>SeqMemberInterface.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\SeqMembership.cs">
-      <Link>SeqMembership.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\SeqRGBChannel.cs">
-      <Link>SeqRGBChannel.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\SeqSubs.cs">
-      <Link>SeqSubs.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\SeqTimingGrid.cs">
-      <Link>SeqTimingGrid.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\SeqTrack.cs">
-      <Link>SeqTrack.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\Sequence4.cs">
-      <Link>Sequence4.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\SFTreeUtils.cs">
-      <Link>SFTreeUtils.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\Visualization4.cs">
-      <Link>Visualization4.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\VizChannel.cs">
-      <Link>VizChannel.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\VizDrawObject.cs">
-      <Link>VizDrawObject.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Sequence4\VizGroup.cs">
-      <Link>VizGroup.cs</Link>
-      <DependentUpon>LORUtils.cs</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="MergeBulbs.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Common\FuzzyString\FuzzyString.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="PostSharp" Version="6.10.9" />
-    <PackageReference Include="Syncfusion.BulletGraph.Windows" Version="20.1.0.48" />
-    <PackageReference Include="Syncfusion.Diagram.Utility.Windows" Version="20.1.0.48" />
-    <PackageReference Include="Syncfusion.Edit.Windows" Version="20.1.0.48" />
-    <PackageReference Include="Syncfusion.Gauge.Windows" Version="20.1.0.48" />
-    <PackageReference Include="Syncfusion.GridHelperClasses.Windows" Version="20.1.0.48" />
-    <PackageReference Include="Syncfusion.Grouping.Windows" Version="20.1.0.48" />
-    <PackageReference Include="Syncfusion.SfBarcode.Windows" Version="20.1.0.48" />
-    <PackageReference Include="Syncfusion.SfListView.WinForms" Version="20.1.0.48" />
-    <PackageReference Include="Syncfusion.TreeMap.Windows" Version="20.1.0.48" />
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.310801">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Backup\FormTools.cs" />
-    <Compile Remove="Backup\frmMerge.cs" />
-    <Compile Remove="Backup\frmMerge.Designer.cs" />
-    <Compile Remove="Backup\frmOptions.cs" />
-    <Compile Remove="Backup\frmOptions.Designer.cs" />
-    <Compile Remove="Backup\obj\Debug\.NETFramework,Version=v4.6.2.AssemblyAttributes.cs" />
-    <Compile Remove="Backup\obj\Debug\.NETFramework,Version=v4.7.2.AssemblyAttributes.cs" />
-    <Compile Remove="Backup\obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
-    <Compile Remove="Backup\obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
-    <Compile Remove="Backup\obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
-    <Compile Remove="Backup\obj\Release\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
-    <Compile Remove="Backup\obj\Release\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
-    <Compile Remove="Backup\obj\Release\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
-    <Compile Remove="Backup\OldAbout.cs" />
-    <Compile Remove="Backup\OldAbout.Designer.cs" />
-    <Compile Remove="Backup\Program.cs" />
-    <Compile Remove="Backup\Properties\AssemblyInfo.cs" />
-    <Compile Remove="Backup\Properties\Resources.Designer.cs" />
-    <Compile Remove="Backup\Properties\Settings.Designer.cs" />
-    <Compile Remove="FormTools.cs" />
-    <Compile Remove="frmOptions.cs" />
-    <Compile Remove="frmOptions.Designer.cs" />
-    <Compile Remove="OldAbout.cs" />
-    <Compile Remove="OldAbout.Designer.cs" />
-    <EmbeddedResource Remove="Backup\frmMerge.resx" />
-    <EmbeddedResource Remove="Backup\frmOptions.resx" />
-    <EmbeddedResource Remove="Backup\OldAbout.resx" />
-    <EmbeddedResource Remove="Backup\Properties\Resources.resx" />
-    <EmbeddedResource Remove="frmOptions.resx" />
-    <EmbeddedResource Remove="OldAbout.resx" />
-  </ItemGroup>
+
+	<PropertyGroup>
+		<Copyright>Copyright © 2022+ by Doctor Wizard 🧙 and W⚡zlights Software</Copyright>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
+		<RootNamespace>UtilORama4</RootNamespace>
+		<AssemblyName>Merge-O-Rama</AssemblyName>
+		<Nullable>enable</Nullable>
+		<UseWindowsForms>true</UseWindowsForms>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<PlatformTarget>x64</PlatformTarget>
+		<RepositoryUrl>https://github.com/DoctorWiz/Util-O-Rama4/tree/master/MergeORama</RepositoryUrl>
+		<PublishUrl>ftp://wizlights.com/utilorama/download/</PublishUrl>
+		<InstallUrl>http://wizlights.com/utilorama/download/</InstallUrl>
+		<SupportUrl>http://wizlights.com/utilorama/mergeorama/default.html</SupportUrl>
+		<ProductName>Merge-O-Rama</ProductName>
+		<PublisherName>W⚡zlights Software</PublisherName>
+		<SuiteName>Util-O-Rama</SuiteName>
+		<CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+		<WebPage>http://wizlights.com/utilorama/mergeorama/default.html</WebPage>
+		<ApplicationRevision>0</ApplicationRevision>
+		<ApplicationVersion>4.0.0.%2a</ApplicationVersion>
+		<PackageTags>Util-O-Rama; Light-O-Rama; xLights; Christmas; Channels; Merging; Sequences; Light Show</PackageTags>
+		<Description>Merges two Light-O-Rama Showtime S4 sequences into one.</Description>
+		<ApplicationIcon>MergeBulbs.ico</ApplicationIcon>
+		<IsPublishable>False</IsPublishable>
+		<PackageProjectUrl>http://wizlights/utilorama/mergeorama</PackageProjectUrl>
+		<PackageIcon>MergeBulb.png</PackageIcon>
+
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="desktop.ini" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="..\..\COMMON\FileHelper.cs" Link="FileHelper.cs" />
+		<Compile Include="..\..\COMMON\FormHelper.cs" Link="FormHelper.cs" />
+		<Compile Include="..\Common\About\About.cs" Link="About.cs" />
+		<Compile Include="..\Common\About\About.Designer.cs" Link="About.Designer.cs" />
+		<Compile Include="..\Common\Sequence4\LORUtils.cs" Link="LORUtils.cs" />
+		<Compile Include="..\Common\Sequence4\SeqChannel.cs" Link="SeqChannel.cs" />
+		<Compile Include="..\Common\Sequence4\SeqChannelGroup.cs" Link="SeqChannelGroup.cs" />
+		<Compile Include="..\Common\Sequence4\SeqCosmicDevice.cs" Link="SeqCosmicDevice.cs" />
+		<Compile Include="..\Common\Sequence4\SeqEnums.cs" Link="SeqEnums.cs" />
+		<Compile Include="..\Common\Sequence4\SeqMemberBase.cs" Link="SeqMemberBase.cs" />
+		<Compile Include="..\Common\Sequence4\SeqMemberInterface.cs" Link="SeqMemberInterface.cs" />
+		<Compile Include="..\Common\Sequence4\SeqMembership.cs" Link="SeqMembership.cs" />
+		<Compile Include="..\Common\Sequence4\SeqRGBChannel.cs" Link="SeqRGBChannel.cs" />
+		<Compile Include="..\Common\Sequence4\SeqSubs.cs" Link="SeqSubs.cs" />
+		<Compile Include="..\Common\Sequence4\SeqTimingGrid.cs" Link="SeqTimingGrid.cs" />
+		<Compile Include="..\Common\Sequence4\SeqTrack.cs" Link="SeqTrack.cs" />
+		<Compile Include="..\Common\Sequence4\Sequence4.cs" Link="Sequence4.cs" />
+		<Compile Include="..\Common\Sequence4\SFTreeUtils.cs" Link="SFTreeUtils.cs" />
+		<Compile Include="..\Common\Sequence4\Visualization4.cs" Link="Visualization4.cs" />
+		<Compile Include="..\Common\Sequence4\VizChannel.cs" Link="VizChannel.cs" />
+		<Compile Include="..\Common\Sequence4\VizDrawObject.cs" Link="VizDrawObject.cs" />
+		<Compile Include="..\Common\Sequence4\VizGroup.cs" Link="VizGroup.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="MergeBulbs.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="..\Graphics\MergeBulb.png">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Syncfusion.Tools.Windows" Version="20.1.0.52" />
+		<PackageReference Include="System.DirectoryServices.AccountManagement" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Properties\Settings.Designer.cs">
+			<DesignTimeSharedInput>True</DesignTimeSharedInput>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Settings.settings</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="Properties\Settings.settings">
+			<Generator>SettingsSingleFileGenerator</Generator>
+			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
+		</None>
+	</ItemGroup>
+
 </Project>

@@ -270,7 +270,7 @@
 			this.lblEffect.Name = "lblEffect";
 			this.lblEffect.Size = new System.Drawing.Size(35, 13);
 			this.lblEffect.TabIndex = 128;
-			this.lblEffect.Text = "LOREffect4";
+			this.lblEffect.Text = "LOR4Effect";
 			// 
 			// pnlRamps
 			// 
@@ -465,7 +465,7 @@
 			this.label14.Size = new System.Drawing.Size(222, 37);
 			this.label14.TabIndex = 132;
 			this.label14.Text = "Channels, Groups, Tracks, etc. will be Written to the Sequence file in the follow" +
-    "ing order:";
+		"ing order:";
 			// 
 			// label13
 			// 
@@ -476,7 +476,7 @@
 			this.label13.Size = new System.Drawing.Size(190, 42);
 			this.label13.TabIndex = 26;
 			this.label13.Text = "(This setting matters only if you view or edit the sequence files in a text edito" +
-    "r, Excel, or some other database tool.)";
+		"r, Excel, or some other database tool.)";
 			this.label13.UseMnemonic = false;
 			this.label13.Click += new System.EventHandler(this.label13_Click);
 			// 
@@ -573,7 +573,7 @@
 			this.label11.Name = "label11";
 			this.label11.Size = new System.Drawing.Size(35, 13);
 			this.label11.TabIndex = 133;
-			this.label11.Text = "LOREffect4";
+			this.label11.Text = "LOR4Effect";
 			// 
 			// panel3
 			// 

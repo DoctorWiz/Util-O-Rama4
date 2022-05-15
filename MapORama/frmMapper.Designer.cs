@@ -1,6 +1,6 @@
 ﻿namespace UtilORama4
 {
-	partial class frmRemapper
+	partial class frmMapper
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -29,9 +29,9 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			Syncfusion.Windows.Forms.Tools.TreeNodeAdvStyleInfo treeNodeAdvStyleInfo3 = new Syncfusion.Windows.Forms.Tools.TreeNodeAdvStyleInfo();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmRemapper));
 			Syncfusion.Windows.Forms.Tools.TreeNodeAdvStyleInfo treeNodeAdvStyleInfo1 = new Syncfusion.Windows.Forms.Tools.TreeNodeAdvStyleInfo();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMapper));
+			Syncfusion.Windows.Forms.Tools.TreeNodeAdvStyleInfo treeNodeAdvStyleInfo2 = new Syncfusion.Windows.Forms.Tools.TreeNodeAdvStyleInfo();
 			this.pnlAll = new System.Windows.Forms.Panel();
 			this.chkRamps = new System.Windows.Forms.CheckBox();
 			this.label1 = new System.Windows.Forms.Label();
@@ -155,9 +155,10 @@
 			this.pnlAll.Controls.Add(this.txtSourceFile);
 			this.pnlAll.Controls.Add(this.lblDestAlreadyMapped);
 			this.pnlAll.Controls.Add(this.picAboutIcon);
-			this.pnlAll.Location = new System.Drawing.Point(0, 26);
+			this.pnlAll.Location = new System.Drawing.Point(0, 30);
+			this.pnlAll.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.pnlAll.Name = "pnlAll";
-			this.pnlAll.Size = new System.Drawing.Size(762, 580);
+			this.pnlAll.Size = new System.Drawing.Size(889, 669);
 			this.pnlAll.TabIndex = 19;
 			this.pnlAll.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
 			this.pnlAll.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
@@ -167,9 +168,10 @@
 			// chkRamps
 			// 
 			this.chkRamps.AutoSize = true;
-			this.chkRamps.Location = new System.Drawing.Point(328, 540);
+			this.chkRamps.Location = new System.Drawing.Point(383, 623);
+			this.chkRamps.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chkRamps.Name = "chkRamps";
-			this.chkRamps.Size = new System.Drawing.Size(81, 17);
+			this.chkRamps.Size = new System.Drawing.Size(84, 19);
 			this.chkRamps.TabIndex = 131;
 			this.chkRamps.Text = "Use Ramps";
 			this.chkRamps.UseVisualStyleBackColor = true;
@@ -179,9 +181,10 @@
 			this.label1.AllowDrop = true;
 			this.label1.AutoSize = true;
 			this.label1.ForeColor = System.Drawing.Color.Orange;
-			this.label1.Location = new System.Drawing.Point(552, 16);
+			this.label1.Location = new System.Drawing.Point(644, 18);
+			this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(45, 13);
+			this.label1.Size = new System.Drawing.Size(51, 15);
 			this.label1.TabIndex = 130;
 			this.label1.Text = "(Master)";
 			// 
@@ -189,11 +192,12 @@
 			// 
 			this.lblDestHasEffects.AllowDrop = true;
 			this.lblDestHasEffects.Anchor = System.Windows.Forms.AnchorStyles.Top;
-			this.lblDestHasEffects.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblDestHasEffects.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
 			this.lblDestHasEffects.ForeColor = System.Drawing.Color.DarkRed;
-			this.lblDestHasEffects.Location = new System.Drawing.Point(324, 174);
+			this.lblDestHasEffects.Location = new System.Drawing.Point(378, 201);
+			this.lblDestHasEffects.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblDestHasEffects.Name = "lblDestHasEffects";
-			this.lblDestHasEffects.Size = new System.Drawing.Size(85, 27);
+			this.lblDestHasEffects.Size = new System.Drawing.Size(99, 31);
 			this.lblDestHasEffects.TabIndex = 119;
 			this.lblDestHasEffects.Text = "Destination already has effects";
 			this.lblDestHasEffects.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -204,16 +208,16 @@
 			// treeDest
 			// 
 			this.treeDest.BackColor = System.Drawing.Color.White;
-			treeNodeAdvStyleInfo3.CheckBoxTickThickness = 1;
-			treeNodeAdvStyleInfo3.CheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-			treeNodeAdvStyleInfo3.EnsureDefaultOptionedChild = true;
-			treeNodeAdvStyleInfo3.IntermediateCheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-			treeNodeAdvStyleInfo3.OptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-			treeNodeAdvStyleInfo3.SelectedOptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
-			treeNodeAdvStyleInfo3.TextColor = System.Drawing.Color.Black;
+			treeNodeAdvStyleInfo1.CheckBoxTickThickness = 1;
+			treeNodeAdvStyleInfo1.CheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+			treeNodeAdvStyleInfo1.EnsureDefaultOptionedChild = true;
+			treeNodeAdvStyleInfo1.IntermediateCheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+			treeNodeAdvStyleInfo1.OptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+			treeNodeAdvStyleInfo1.SelectedOptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
+			treeNodeAdvStyleInfo1.TextColor = System.Drawing.Color.Black;
 			this.treeDest.BaseStylePairs.AddRange(new Syncfusion.Windows.Forms.Tools.StyleNamePair[] {
-            new Syncfusion.Windows.Forms.Tools.StyleNamePair("Standard", treeNodeAdvStyleInfo3)});
-			this.treeDest.BeforeTouchSize = new System.Drawing.Size(300, 433);
+            new Syncfusion.Windows.Forms.Tools.StyleNamePair("Standard", treeNodeAdvStyleInfo1)});
+			this.treeDest.BeforeTouchSize = new System.Drawing.Size(349, 499);
 			this.treeDest.ForeColor = System.Drawing.Color.Black;
 			// 
 			// 
@@ -226,12 +230,13 @@
 			this.treeDest.HelpTextControl.Visible = true;
 			this.treeDest.InactiveSelectedNodeForeColor = System.Drawing.Color.Black;
 			this.treeDest.LeftImageList = this.imlTreeIcons;
-			this.treeDest.Location = new System.Drawing.Point(415, 99);
+			this.treeDest.Location = new System.Drawing.Point(484, 114);
+			this.treeDest.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.treeDest.MetroColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(165)))), ((int)(((byte)(220)))));
 			this.treeDest.Name = "treeDest";
 			this.treeDest.NodeStateImageList = this.imlTreeIcons;
 			this.treeDest.SelectedNodeForeColor = System.Drawing.Color.White;
-			this.treeDest.Size = new System.Drawing.Size(300, 433);
+			this.treeDest.Size = new System.Drawing.Size(349, 499);
 			this.treeDest.TabIndex = 118;
 			this.treeDest.Text = "Destination Channels";
 			this.treeDest.ThemeStyle.TreeNodeAdvStyle.CheckBoxTickThickness = 0;
@@ -249,6 +254,7 @@
 			// 
 			// imlTreeIcons
 			// 
+			this.imlTreeIcons.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
 			this.imlTreeIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imlTreeIcons.ImageStream")));
 			this.imlTreeIcons.TransparentColor = System.Drawing.Color.Transparent;
 			this.imlTreeIcons.Images.SetKeyName(0, "Universe");
@@ -287,16 +293,17 @@
 			// treeSource
 			// 
 			this.treeSource.BackColor = System.Drawing.Color.White;
-			treeNodeAdvStyleInfo1.CheckBoxTickThickness = 1;
-			treeNodeAdvStyleInfo1.CheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-			treeNodeAdvStyleInfo1.EnsureDefaultOptionedChild = true;
-			treeNodeAdvStyleInfo1.IntermediateCheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-			treeNodeAdvStyleInfo1.OptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-			treeNodeAdvStyleInfo1.SelectedOptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
-			treeNodeAdvStyleInfo1.TextColor = System.Drawing.Color.Black;
+			treeNodeAdvStyleInfo2.CheckBoxTickThickness = 1;
+			treeNodeAdvStyleInfo2.CheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+			treeNodeAdvStyleInfo2.EnsureDefaultOptionedChild = true;
+			treeNodeAdvStyleInfo2.IntermediateCheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+			treeNodeAdvStyleInfo2.OptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+			treeNodeAdvStyleInfo2.SelectedOptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
+			treeNodeAdvStyleInfo2.TextColor = System.Drawing.Color.Black;
 			this.treeSource.BaseStylePairs.AddRange(new Syncfusion.Windows.Forms.Tools.StyleNamePair[] {
-            new Syncfusion.Windows.Forms.Tools.StyleNamePair("Standard", treeNodeAdvStyleInfo1)});
-			this.treeSource.BeforeTouchSize = new System.Drawing.Size(300, 433);
+            new Syncfusion.Windows.Forms.Tools.StyleNamePair("Standard", treeNodeAdvStyleInfo2)});
+			this.treeSource.BeforeTouchSize = new System.Drawing.Size(349, 499);
+			this.treeSource.CanApplyTheme = false;
 			this.treeSource.ForeColor = System.Drawing.Color.Black;
 			// 
 			// 
@@ -309,11 +316,12 @@
 			this.treeSource.HelpTextControl.Visible = true;
 			this.treeSource.InactiveSelectedNodeForeColor = System.Drawing.Color.Black;
 			this.treeSource.LeftImageList = this.imlTreeIcons;
-			this.treeSource.Location = new System.Drawing.Point(15, 99);
+			this.treeSource.Location = new System.Drawing.Point(18, 114);
+			this.treeSource.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.treeSource.MetroColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(165)))), ((int)(((byte)(220)))));
 			this.treeSource.Name = "treeSource";
 			this.treeSource.SelectedNodeForeColor = System.Drawing.Color.White;
-			this.treeSource.Size = new System.Drawing.Size(300, 433);
+			this.treeSource.Size = new System.Drawing.Size(349, 499);
 			this.treeSource.TabIndex = 117;
 			this.treeSource.Text = "Source Channels";
 			this.treeSource.ThemeStyle.TreeNodeAdvStyle.CheckBoxTickThickness = 0;
@@ -332,33 +340,36 @@
 			// lblDestMappedTo
 			// 
 			this.lblDestMappedTo.AllowDrop = true;
-			this.lblDestMappedTo.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblDestMappedTo.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.lblDestMappedTo.ForeColor = System.Drawing.Color.DarkMagenta;
 			this.lblDestMappedTo.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.lblDestMappedTo.Location = new System.Drawing.Point(415, 560);
+			this.lblDestMappedTo.Location = new System.Drawing.Point(484, 646);
+			this.lblDestMappedTo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblDestMappedTo.Name = "lblDestMappedTo";
-			this.lblDestMappedTo.Size = new System.Drawing.Size(300, 45);
+			this.lblDestMappedTo.Size = new System.Drawing.Size(350, 52);
 			this.lblDestMappedTo.TabIndex = 116;
 			this.lblDestMappedTo.Text = "Mapped";
 			// 
 			// lblSourceMappedTo
 			// 
 			this.lblSourceMappedTo.AllowDrop = true;
-			this.lblSourceMappedTo.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblSourceMappedTo.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.lblSourceMappedTo.ForeColor = System.Drawing.Color.DarkMagenta;
 			this.lblSourceMappedTo.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.lblSourceMappedTo.Location = new System.Drawing.Point(15, 561);
+			this.lblSourceMappedTo.Location = new System.Drawing.Point(18, 647);
+			this.lblSourceMappedTo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblSourceMappedTo.Name = "lblSourceMappedTo";
-			this.lblSourceMappedTo.Size = new System.Drawing.Size(300, 45);
+			this.lblSourceMappedTo.Size = new System.Drawing.Size(350, 52);
 			this.lblSourceMappedTo.TabIndex = 115;
 			this.lblSourceMappedTo.Text = "Mapped";
 			// 
 			// pnlMapWarn
 			// 
 			this.pnlMapWarn.Controls.Add(this.btnMap);
-			this.pnlMapWarn.Location = new System.Drawing.Point(326, 140);
+			this.pnlMapWarn.Location = new System.Drawing.Point(380, 162);
+			this.pnlMapWarn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.pnlMapWarn.Name = "pnlMapWarn";
-			this.pnlMapWarn.Size = new System.Drawing.Size(78, 31);
+			this.pnlMapWarn.Size = new System.Drawing.Size(91, 36);
 			this.pnlMapWarn.TabIndex = 114;
 			// 
 			// btnMap
@@ -366,8 +377,9 @@
 			this.btnMap.AllowDrop = true;
 			this.btnMap.Enabled = false;
 			this.btnMap.Location = new System.Drawing.Point(1, 1);
+			this.btnMap.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnMap.Name = "btnMap";
-			this.btnMap.Size = new System.Drawing.Size(76, 29);
+			this.btnMap.Size = new System.Drawing.Size(89, 33);
 			this.btnMap.TabIndex = 33;
 			this.btnMap.Text = "Map";
 			this.btnMap.UseVisualStyleBackColor = true;
@@ -377,9 +389,10 @@
 			// 
 			this.pnlOverwrite.BackColor = System.Drawing.Color.Red;
 			this.pnlOverwrite.Controls.Add(this.picPreviewDest);
-			this.pnlOverwrite.Location = new System.Drawing.Point(414, 536);
+			this.pnlOverwrite.Location = new System.Drawing.Point(483, 618);
+			this.pnlOverwrite.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.pnlOverwrite.Name = "pnlOverwrite";
-			this.pnlOverwrite.Size = new System.Drawing.Size(302, 22);
+			this.pnlOverwrite.Size = new System.Drawing.Size(352, 25);
 			this.pnlOverwrite.TabIndex = 113;
 			this.pnlOverwrite.Visible = false;
 			// 
@@ -388,8 +401,9 @@
 			this.picPreviewDest.BackColor = System.Drawing.Color.Silver;
 			this.picPreviewDest.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.picPreviewDest.Location = new System.Drawing.Point(1, 1);
+			this.picPreviewDest.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.picPreviewDest.Name = "picPreviewDest";
-			this.picPreviewDest.Size = new System.Drawing.Size(300, 20);
+			this.picPreviewDest.Size = new System.Drawing.Size(350, 23);
 			this.picPreviewDest.TabIndex = 113;
 			this.picPreviewDest.TabStop = false;
 			this.picPreviewDest.Visible = false;
@@ -398,9 +412,10 @@
 			// 
 			this.picPreviewSource.BackColor = System.Drawing.Color.Silver;
 			this.picPreviewSource.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.picPreviewSource.Location = new System.Drawing.Point(15, 538);
+			this.picPreviewSource.Location = new System.Drawing.Point(18, 621);
+			this.picPreviewSource.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.picPreviewSource.Name = "picPreviewSource";
-			this.picPreviewSource.Size = new System.Drawing.Size(300, 20);
+			this.picPreviewSource.Size = new System.Drawing.Size(350, 23);
 			this.picPreviewSource.TabIndex = 111;
 			this.picPreviewSource.TabStop = false;
 			this.picPreviewSource.Visible = false;
@@ -408,12 +423,13 @@
 			// lblMapped
 			// 
 			this.lblMapped.AllowDrop = true;
-			this.lblMapped.Font = new System.Drawing.Font("DejaVu Sans Mono", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblMapped.Font = new System.Drawing.Font("DejaVu Sans Mono", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
 			this.lblMapped.ForeColor = System.Drawing.Color.DarkMagenta;
 			this.lblMapped.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.lblMapped.Location = new System.Drawing.Point(308, 452);
+			this.lblMapped.Location = new System.Drawing.Point(359, 522);
+			this.lblMapped.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblMapped.Name = "lblMapped";
-			this.lblMapped.Size = new System.Drawing.Size(111, 49);
+			this.lblMapped.Size = new System.Drawing.Size(130, 57);
 			this.lblMapped.TabIndex = 52;
 			this.lblMapped.Text = "Mapped";
 			this.lblMapped.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -421,21 +437,23 @@
 			// lblMappedCount
 			// 
 			this.lblMappedCount.AllowDrop = true;
-			this.lblMappedCount.Font = new System.Drawing.Font("DejaVu Sans Mono", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblMappedCount.Font = new System.Drawing.Font("DejaVu Sans Mono", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
 			this.lblMappedCount.ForeColor = System.Drawing.Color.DarkMagenta;
 			this.lblMappedCount.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.lblMappedCount.Location = new System.Drawing.Point(318, 489);
+			this.lblMappedCount.Location = new System.Drawing.Point(371, 564);
+			this.lblMappedCount.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblMappedCount.Name = "lblMappedCount";
-			this.lblMappedCount.Size = new System.Drawing.Size(81, 12);
+			this.lblMappedCount.Size = new System.Drawing.Size(94, 14);
 			this.lblMappedCount.TabIndex = 51;
 			this.lblMappedCount.Text = "0";
 			this.lblMappedCount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// btnEaves
 			// 
-			this.btnEaves.Location = new System.Drawing.Point(327, 490);
+			this.btnEaves.Location = new System.Drawing.Point(382, 565);
+			this.btnEaves.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnEaves.Name = "btnEaves";
-			this.btnEaves.Size = new System.Drawing.Size(32, 32);
+			this.btnEaves.Size = new System.Drawing.Size(37, 37);
 			this.btnEaves.TabIndex = 50;
 			this.btnEaves.Text = "E!";
 			this.btnEaves.UseVisualStyleBackColor = true;
@@ -445,9 +463,10 @@
 			// 
 			this.lblDebug.AllowDrop = true;
 			this.lblDebug.AutoSize = true;
-			this.lblDebug.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblDebug.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
 			this.lblDebug.ForeColor = System.Drawing.Color.BlueViolet;
-			this.lblDebug.Location = new System.Drawing.Point(362, 520);
+			this.lblDebug.Location = new System.Drawing.Point(422, 600);
+			this.lblDebug.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblDebug.Name = "lblDebug";
 			this.lblDebug.Size = new System.Drawing.Size(41, 12);
 			this.lblDebug.TabIndex = 49;
@@ -458,9 +477,10 @@
 			// 
 			this.btnAutoMap.AllowDrop = true;
 			this.btnAutoMap.Enabled = false;
-			this.btnAutoMap.Location = new System.Drawing.Point(327, 99);
+			this.btnAutoMap.Location = new System.Drawing.Point(382, 114);
+			this.btnAutoMap.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnAutoMap.Name = "btnAutoMap";
-			this.btnAutoMap.Size = new System.Drawing.Size(76, 29);
+			this.btnAutoMap.Size = new System.Drawing.Size(89, 33);
 			this.btnAutoMap.TabIndex = 42;
 			this.btnAutoMap.Text = "Auto Map";
 			this.btnAutoMap.UseVisualStyleBackColor = true;
@@ -473,9 +493,10 @@
 			// 
 			this.btnSummary.AllowDrop = true;
 			this.btnSummary.Enabled = false;
-			this.btnSummary.Location = new System.Drawing.Point(326, 263);
+			this.btnSummary.Location = new System.Drawing.Point(380, 303);
+			this.btnSummary.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnSummary.Name = "btnSummary";
-			this.btnSummary.Size = new System.Drawing.Size(76, 29);
+			this.btnSummary.Size = new System.Drawing.Size(89, 33);
 			this.btnSummary.TabIndex = 39;
 			this.btnSummary.Text = "Summary";
 			this.btnSummary.UseVisualStyleBackColor = true;
@@ -487,9 +508,10 @@
 			// 
 			this.btnUnmap.AllowDrop = true;
 			this.btnUnmap.Enabled = false;
-			this.btnUnmap.Location = new System.Drawing.Point(327, 228);
+			this.btnUnmap.Location = new System.Drawing.Point(382, 263);
+			this.btnUnmap.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnUnmap.Name = "btnUnmap";
-			this.btnUnmap.Size = new System.Drawing.Size(76, 29);
+			this.btnUnmap.Size = new System.Drawing.Size(89, 33);
 			this.btnUnmap.TabIndex = 33;
 			this.btnUnmap.Text = "Unmap";
 			this.btnUnmap.UseVisualStyleBackColor = true;
@@ -501,9 +523,10 @@
 			// 
 			this.lblDestTree.AllowDrop = true;
 			this.lblDestTree.AutoSize = true;
-			this.lblDestTree.Location = new System.Drawing.Point(415, 72);
+			this.lblDestTree.Location = new System.Drawing.Point(484, 83);
+			this.lblDestTree.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblDestTree.Name = "lblDestTree";
-			this.lblDestTree.Size = new System.Drawing.Size(101, 13);
+			this.lblDestTree.Size = new System.Drawing.Size(113, 15);
 			this.lblDestTree.TabIndex = 30;
 			this.lblDestTree.Text = "Channels to copy to";
 			this.lblDestTree.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
@@ -513,9 +536,10 @@
 			// 
 			this.lblSourceTree.AllowDrop = true;
 			this.lblSourceTree.AutoSize = true;
-			this.lblSourceTree.Location = new System.Drawing.Point(15, 72);
+			this.lblSourceTree.Location = new System.Drawing.Point(18, 83);
+			this.lblSourceTree.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblSourceTree.Name = "lblSourceTree";
-			this.lblSourceTree.Size = new System.Drawing.Size(113, 13);
+			this.lblSourceTree.Size = new System.Drawing.Size(125, 15);
 			this.lblSourceTree.TabIndex = 28;
 			this.lblSourceTree.Text = "Channels to be copied";
 			this.lblSourceTree.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
@@ -525,9 +549,10 @@
 			// 
 			this.lblDestFile.AllowDrop = true;
 			this.lblDestFile.AutoSize = true;
-			this.lblDestFile.Location = new System.Drawing.Point(415, 16);
+			this.lblDestFile.Location = new System.Drawing.Point(484, 18);
+			this.lblDestFile.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblDestFile.Name = "lblDestFile";
-			this.lblDestFile.Size = new System.Drawing.Size(131, 13);
+			this.lblDestFile.Size = new System.Drawing.Size(142, 15);
 			this.lblDestFile.TabIndex = 25;
 			this.lblDestFile.Text = "Destination Sequence File";
 			this.lblDestFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
@@ -536,9 +561,10 @@
 			// btnBrowseDest
 			// 
 			this.btnBrowseDest.AllowDrop = true;
-			this.btnBrowseDest.Location = new System.Drawing.Point(721, 40);
+			this.btnBrowseDest.Location = new System.Drawing.Point(841, 46);
+			this.btnBrowseDest.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnBrowseDest.Name = "btnBrowseDest";
-			this.btnBrowseDest.Size = new System.Drawing.Size(36, 20);
+			this.btnBrowseDest.Size = new System.Drawing.Size(42, 23);
 			this.btnBrowseDest.TabIndex = 24;
 			this.btnBrowseDest.Text = "...";
 			this.btnBrowseDest.UseVisualStyleBackColor = true;
@@ -550,9 +576,10 @@
 			// 
 			this.txtDestFile.AllowDrop = true;
 			this.txtDestFile.Enabled = false;
-			this.txtDestFile.Location = new System.Drawing.Point(415, 40);
+			this.txtDestFile.Location = new System.Drawing.Point(484, 46);
+			this.txtDestFile.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.txtDestFile.Name = "txtDestFile";
-			this.txtDestFile.Size = new System.Drawing.Size(300, 20);
+			this.txtDestFile.Size = new System.Drawing.Size(349, 23);
 			this.txtDestFile.TabIndex = 23;
 			this.txtDestFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
 			this.txtDestFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
@@ -561,9 +588,10 @@
 			// 
 			this.lblSourceFile.AllowDrop = true;
 			this.lblSourceFile.AutoSize = true;
-			this.lblSourceFile.Location = new System.Drawing.Point(15, 16);
+			this.lblSourceFile.Location = new System.Drawing.Point(18, 18);
+			this.lblSourceFile.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblSourceFile.Name = "lblSourceFile";
-			this.lblSourceFile.Size = new System.Drawing.Size(112, 13);
+			this.lblSourceFile.Size = new System.Drawing.Size(118, 15);
 			this.lblSourceFile.TabIndex = 21;
 			this.lblSourceFile.Text = "Source Sequence File";
 			this.lblSourceFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
@@ -572,9 +600,10 @@
 			// btnBrowseSource
 			// 
 			this.btnBrowseSource.AllowDrop = true;
-			this.btnBrowseSource.Location = new System.Drawing.Point(321, 40);
+			this.btnBrowseSource.Location = new System.Drawing.Point(374, 46);
+			this.btnBrowseSource.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnBrowseSource.Name = "btnBrowseSource";
-			this.btnBrowseSource.Size = new System.Drawing.Size(36, 20);
+			this.btnBrowseSource.Size = new System.Drawing.Size(42, 23);
 			this.btnBrowseSource.TabIndex = 20;
 			this.btnBrowseSource.Text = "...";
 			this.btnBrowseSource.UseVisualStyleBackColor = true;
@@ -586,9 +615,10 @@
 			// 
 			this.txtSourceFile.AllowDrop = true;
 			this.txtSourceFile.Enabled = false;
-			this.txtSourceFile.Location = new System.Drawing.Point(15, 40);
+			this.txtSourceFile.Location = new System.Drawing.Point(18, 46);
+			this.txtSourceFile.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.txtSourceFile.Name = "txtSourceFile";
-			this.txtSourceFile.Size = new System.Drawing.Size(300, 20);
+			this.txtSourceFile.Size = new System.Drawing.Size(349, 23);
 			this.txtSourceFile.TabIndex = 19;
 			this.txtSourceFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
 			this.txtSourceFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
@@ -597,11 +627,12 @@
 			// 
 			this.lblDestAlreadyMapped.AllowDrop = true;
 			this.lblDestAlreadyMapped.Anchor = System.Windows.Forms.AnchorStyles.Top;
-			this.lblDestAlreadyMapped.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblDestAlreadyMapped.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
 			this.lblDestAlreadyMapped.ForeColor = System.Drawing.Color.DarkOrange;
-			this.lblDestAlreadyMapped.Location = new System.Drawing.Point(309, 201);
+			this.lblDestAlreadyMapped.Location = new System.Drawing.Point(360, 232);
+			this.lblDestAlreadyMapped.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblDestAlreadyMapped.Name = "lblDestAlreadyMapped";
-			this.lblDestAlreadyMapped.Size = new System.Drawing.Size(110, 27);
+			this.lblDestAlreadyMapped.Size = new System.Drawing.Size(128, 31);
 			this.lblDestAlreadyMapped.TabIndex = 120;
 			this.lblDestAlreadyMapped.Text = "Destination already mapped to other source";
 			this.lblDestAlreadyMapped.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -611,7 +642,8 @@
 			// picAboutIcon
 			// 
 			this.picAboutIcon.Image = ((System.Drawing.Image)(resources.GetObject("picAboutIcon.Image")));
-			this.picAboutIcon.Location = new System.Drawing.Point(298, 312);
+			this.picAboutIcon.Location = new System.Drawing.Point(361, 370);
+			this.picAboutIcon.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.picAboutIcon.Name = "picAboutIcon";
 			this.picAboutIcon.Size = new System.Drawing.Size(128, 128);
 			this.picAboutIcon.TabIndex = 129;
@@ -622,9 +654,10 @@
 			this.chkCopyBeats.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
 			this.chkCopyBeats.Checked = true;
 			this.chkCopyBeats.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkCopyBeats.Location = new System.Drawing.Point(15, 691);
+			this.chkCopyBeats.Location = new System.Drawing.Point(18, 797);
+			this.chkCopyBeats.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chkCopyBeats.Name = "chkCopyBeats";
-			this.chkCopyBeats.Size = new System.Drawing.Size(250, 60);
+			this.chkCopyBeats.Size = new System.Drawing.Size(292, 69);
 			this.chkCopyBeats.TabIndex = 48;
 			this.chkCopyBeats.Text = "Copy Beat Track(s)";
 			this.chkCopyBeats.TextAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -633,9 +666,10 @@
 			// chkAutoLaunch
 			// 
 			this.chkAutoLaunch.AutoSize = true;
-			this.chkAutoLaunch.Location = new System.Drawing.Point(432, 680);
+			this.chkAutoLaunch.Location = new System.Drawing.Point(504, 785);
+			this.chkAutoLaunch.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chkAutoLaunch.Name = "chkAutoLaunch";
-			this.chkAutoLaunch.Size = new System.Drawing.Size(84, 17);
+			this.chkAutoLaunch.Size = new System.Drawing.Size(91, 19);
 			this.chkAutoLaunch.TabIndex = 47;
 			this.chkAutoLaunch.Text = "AutoLaunch";
 			this.chkAutoLaunch.UseVisualStyleBackColor = true;
@@ -644,19 +678,21 @@
 			// pnlMessage
 			// 
 			this.pnlMessage.Controls.Add(this.lblMessage);
-			this.pnlMessage.Location = new System.Drawing.Point(15, 612);
+			this.pnlMessage.Location = new System.Drawing.Point(18, 706);
+			this.pnlMessage.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.pnlMessage.Name = "pnlMessage";
-			this.pnlMessage.Size = new System.Drawing.Size(700, 15);
+			this.pnlMessage.Size = new System.Drawing.Size(817, 17);
 			this.pnlMessage.TabIndex = 43;
 			// 
 			// lblMessage
 			// 
 			this.lblMessage.AllowDrop = true;
-			this.lblMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
 			this.lblMessage.ForeColor = System.Drawing.SystemColors.HotTrack;
 			this.lblMessage.Location = new System.Drawing.Point(1, 1);
+			this.lblMessage.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblMessage.Name = "lblMessage";
-			this.lblMessage.Size = new System.Drawing.Size(698, 13);
+			this.lblMessage.Size = new System.Drawing.Size(814, 15);
 			this.lblMessage.TabIndex = 42;
 			this.lblMessage.Text = "Status Message";
 			this.lblMessage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -666,9 +702,10 @@
 			// 
 			this.btnSaveMap.AllowDrop = true;
 			this.btnSaveMap.Enabled = false;
-			this.btnSaveMap.Location = new System.Drawing.Point(506, 638);
+			this.btnSaveMap.Location = new System.Drawing.Point(590, 736);
+			this.btnSaveMap.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnSaveMap.Name = "btnSaveMap";
-			this.btnSaveMap.Size = new System.Drawing.Size(100, 25);
+			this.btnSaveMap.Size = new System.Drawing.Size(117, 29);
 			this.btnSaveMap.TabIndex = 34;
 			this.btnSaveMap.Text = "Save Mapping...";
 			this.btnSaveMap.UseVisualStyleBackColor = true;
@@ -680,9 +717,10 @@
 			// 
 			this.txtMappingFile.AllowDrop = true;
 			this.txtMappingFile.Enabled = false;
-			this.txtMappingFile.Location = new System.Drawing.Point(200, 641);
+			this.txtMappingFile.Location = new System.Drawing.Point(233, 740);
+			this.txtMappingFile.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.txtMappingFile.Name = "txtMappingFile";
-			this.txtMappingFile.Size = new System.Drawing.Size(300, 20);
+			this.txtMappingFile.Size = new System.Drawing.Size(349, 23);
 			this.txtMappingFile.TabIndex = 36;
 			this.txtMappingFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
 			this.txtMappingFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
@@ -690,9 +728,10 @@
 			// btnLoadMap
 			// 
 			this.btnLoadMap.AllowDrop = true;
-			this.btnLoadMap.Location = new System.Drawing.Point(94, 638);
+			this.btnLoadMap.Location = new System.Drawing.Point(110, 736);
+			this.btnLoadMap.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnLoadMap.Name = "btnLoadMap";
-			this.btnLoadMap.Size = new System.Drawing.Size(100, 25);
+			this.btnLoadMap.Size = new System.Drawing.Size(117, 29);
 			this.btnLoadMap.TabIndex = 35;
 			this.btnLoadMap.Text = "Load Mapping...";
 			this.btnLoadMap.UseVisualStyleBackColor = true;
@@ -704,9 +743,10 @@
 			// 
 			this.btnSaveNewSeq.AllowDrop = true;
 			this.btnSaveNewSeq.Enabled = false;
-			this.btnSaveNewSeq.Location = new System.Drawing.Point(296, 667);
+			this.btnSaveNewSeq.Location = new System.Drawing.Point(345, 770);
+			this.btnSaveNewSeq.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnSaveNewSeq.Name = "btnSaveNewSeq";
-			this.btnSaveNewSeq.Size = new System.Drawing.Size(129, 62);
+			this.btnSaveNewSeq.Size = new System.Drawing.Size(150, 72);
 			this.btnSaveNewSeq.TabIndex = 31;
 			this.btnSaveNewSeq.Text = "Make New Sequence";
 			this.btnSaveNewSeq.UseVisualStyleBackColor = true;
@@ -727,12 +767,13 @@
 			this.prgBarInner.CustomWaitingRender = false;
 			this.prgBarInner.ForeColor = System.Drawing.Color.Lime;
 			this.prgBarInner.ForegroundImage = null;
-			this.prgBarInner.Location = new System.Drawing.Point(226, 700);
+			this.prgBarInner.Location = new System.Drawing.Point(264, 808);
+			this.prgBarInner.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.prgBarInner.MultipleColors = new System.Drawing.Color[] {
         System.Drawing.Color.Empty};
 			this.prgBarInner.Name = "prgBarInner";
 			this.prgBarInner.SegmentWidth = 12;
-			this.prgBarInner.Size = new System.Drawing.Size(762, 20);
+			this.prgBarInner.Size = new System.Drawing.Size(889, 23);
 			this.prgBarInner.TabIndex = 46;
 			this.prgBarInner.Text = "progressBarAdv2";
 			this.prgBarInner.TextStyle = Syncfusion.Windows.Forms.Tools.ProgressBarTextStyles.Custom;
@@ -750,12 +791,13 @@
 			this.prgBarOuter.ForegroundImage = null;
 			this.prgBarOuter.GradientEndColor = System.Drawing.Color.Red;
 			this.prgBarOuter.GradientStartColor = System.Drawing.Color.Lime;
-			this.prgBarOuter.Location = new System.Drawing.Point(209, 680);
+			this.prgBarOuter.Location = new System.Drawing.Point(244, 785);
+			this.prgBarOuter.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.prgBarOuter.MultipleColors = new System.Drawing.Color[] {
         System.Drawing.Color.Empty};
 			this.prgBarOuter.Name = "prgBarOuter";
 			this.prgBarOuter.SegmentWidth = 12;
-			this.prgBarOuter.Size = new System.Drawing.Size(762, 40);
+			this.prgBarOuter.Size = new System.Drawing.Size(889, 46);
 			this.prgBarOuter.TabIndex = 44;
 			this.prgBarOuter.Text = "progressBarAdv1";
 			this.prgBarOuter.Visible = false;
@@ -773,7 +815,8 @@
             this.mnuMapMenu});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Size = new System.Drawing.Size(761, 24);
+			this.menuStrip1.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
+			this.menuStrip1.Size = new System.Drawing.Size(888, 24);
 			this.menuStrip1.TabIndex = 108;
 			this.menuStrip1.Text = "menuStrip1";
 			this.menuStrip1.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
@@ -1017,9 +1060,10 @@
             this.pnlProgress,
             this.pnlStatus,
             this.pnlAbout});
-			this.staStatus.Location = new System.Drawing.Point(0, 732);
+			this.staStatus.Location = new System.Drawing.Point(0, 848);
 			this.staStatus.Name = "staStatus";
-			this.staStatus.Size = new System.Drawing.Size(761, 24);
+			this.staStatus.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
+			this.staStatus.Size = new System.Drawing.Size(888, 24);
 			this.staStatus.TabIndex = 107;
 			this.staStatus.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
 			this.staStatus.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
@@ -1030,7 +1074,7 @@
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlHelp.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenInner;
-			this.pnlHelp.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.pnlHelp.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
 			this.pnlHelp.ForeColor = System.Drawing.SystemColors.Highlight;
 			this.pnlHelp.IsLink = true;
 			this.pnlHelp.Name = "pnlHelp";
@@ -1041,7 +1085,7 @@
 			// pnlProgress
 			// 
 			this.pnlProgress.Name = "pnlProgress";
-			this.pnlProgress.Size = new System.Drawing.Size(100, 18);
+			this.pnlProgress.Size = new System.Drawing.Size(117, 21);
 			this.pnlProgress.Visible = false;
 			// 
 			// pnlStatus
@@ -1051,7 +1095,7 @@
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlStatus.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
 			this.pnlStatus.Name = "pnlStatus";
-			this.pnlStatus.Size = new System.Drawing.Size(649, 19);
+			this.pnlStatus.Size = new System.Drawing.Size(774, 19);
 			this.pnlStatus.Spring = true;
 			// 
 			// pnlAbout
@@ -1060,7 +1104,7 @@
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlAbout.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenInner;
-			this.pnlAbout.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.pnlAbout.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
 			this.pnlAbout.ForeColor = System.Drawing.SystemColors.Highlight;
 			this.pnlAbout.Name = "pnlAbout";
 			this.pnlAbout.Size = new System.Drawing.Size(52, 19);
@@ -1070,20 +1114,20 @@
 			// chkFuzzy
 			// 
 			this.chkFuzzy.AutoSize = true;
-			this.chkFuzzy.Font = new System.Drawing.Font("Fuzzed", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.chkFuzzy.Location = new System.Drawing.Point(94, 667);
+			this.chkFuzzy.Font = new System.Drawing.Font("Fuzzed", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.chkFuzzy.Location = new System.Drawing.Point(110, 770);
+			this.chkFuzzy.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chkFuzzy.Name = "chkFuzzy";
 			this.chkFuzzy.Size = new System.Drawing.Size(113, 18);
 			this.chkFuzzy.TabIndex = 109;
 			this.chkFuzzy.Text = "Fuzzy Match";
 			this.chkFuzzy.UseVisualStyleBackColor = true;
 			// 
-			// frmRemapper
+			// frmMapper
 			// 
 			this.AllowDrop = true;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(761, 756);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+			this.ClientSize = new System.Drawing.Size(888, 872);
 			this.Controls.Add(this.chkFuzzy);
 			this.Controls.Add(this.menuStrip1);
 			this.Controls.Add(this.staStatus);
@@ -1099,8 +1143,10 @@
 			this.Controls.Add(this.btnSaveMap);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.MaximizeBox = false;
-			this.Name = "frmRemapper";
+			this.Name = "frmMapper";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Map-O-Rama";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmRemapper_FormClosing);
 			this.Load += new System.EventHandler(this.frmRemapper_Load);

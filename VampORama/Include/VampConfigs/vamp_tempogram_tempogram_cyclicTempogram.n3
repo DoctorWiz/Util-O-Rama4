@@ -1,0 +1,53 @@
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+@prefix vamp:     <http://purl.org/ontology/vamp/> .
+@prefix :         <#> .
+
+:transform_plugin a vamp:Plugin ;
+    vamp:identifier "tempogram" .
+
+:transform_library a vamp:PluginLibrary ;
+    vamp:identifier "tempogram" ;
+    vamp:available_plugin :transform_plugin .
+
+:transform a vamp:Transform ;
+    vamp:plugin :transform_plugin ;
+    vamp:step_size "1024"^^xsd:int ; 
+    vamp:block_size "2048"^^xsd:int ; 
+    vamp:plugin_version """1""" ; 
+    vamp:parameter_binding [
+        vamp:parameter [ vamp:identifier "C" ] ;
+        vamp:value "1000"^^xsd:float ;
+    ] ;
+    vamp:parameter_binding [
+        vamp:parameter [ vamp:identifier "log2FftLength" ] ;
+        vamp:value "10"^^xsd:float ;
+    ] ;
+    vamp:parameter_binding [
+        vamp:parameter [ vamp:identifier "log2HopSize" ] ;
+        vamp:value "6"^^xsd:float ;
+    ] ;
+    vamp:parameter_binding [
+        vamp:parameter [ vamp:identifier "log2TN" ] ;
+        vamp:value "10"^^xsd:float ;
+    ] ;
+    vamp:parameter_binding [
+        vamp:parameter [ vamp:identifier "maxBPM" ] ;
+        vamp:value "480"^^xsd:float ;
+    ] ;
+    vamp:parameter_binding [
+        vamp:parameter [ vamp:identifier "minBPM" ] ;
+        vamp:value "30"^^xsd:float ;
+    ] ;
+    vamp:parameter_binding [
+        vamp:parameter [ vamp:identifier "minDB" ] ;
+        vamp:value "-74"^^xsd:float ;
+    ] ;
+    vamp:parameter_binding [
+        vamp:parameter [ vamp:identifier "octDiv" ] ;
+        vamp:value "30"^^xsd:float ;
+    ] ;
+    vamp:parameter_binding [
+        vamp:parameter [ vamp:identifier "refBPM" ] ;
+        vamp:value "60"^^xsd:float ;
+    ] ;
+    vamp:output [ vamp:identifier "cyclicTempogram" ] .

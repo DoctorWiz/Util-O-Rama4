@@ -6,14 +6,15 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using LORUtils4; using FileHelper;
+using LOR4Utils;
+using FileHelper;
 
 
 namespace RGBORama
 {
 	public partial class frmChannels : Form
 	{
-		public LORSequence4 seq = null;
+		public LOR4Sequence seq = null;
 		List<List<TreeNode>> nodeList = new List<List<TreeNode>>();
 
 
@@ -22,7 +23,7 @@ namespace RGBORama
 			InitializeComponent();
 		}
 
-		public frmChannels(LORSequence4 theSequence)
+		public frmChannels(LOR4Sequence theSequence)
 		{
 			InitializeComponent();
 			seq = theSequence;

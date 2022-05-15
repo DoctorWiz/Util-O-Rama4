@@ -68,9 +68,9 @@
 			this.imlTreeIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imlTreeIcons.ImageStream")));
 			this.imlTreeIcons.TransparentColor = System.Drawing.Color.Transparent;
 			this.imlTreeIcons.Images.SetKeyName(0, "LORTrack4");
-			this.imlTreeIcons.Images.SetKeyName(1, "LORChannelGroup4");
-			this.imlTreeIcons.Images.SetKeyName(2, "LORRGBChannel4");
-			this.imlTreeIcons.Images.SetKeyName(3, "LORChannel4");
+			this.imlTreeIcons.Images.SetKeyName(1, "LOR4ChannelGroup");
+			this.imlTreeIcons.Images.SetKeyName(2, "LOR4RGBChannel");
+			this.imlTreeIcons.Images.SetKeyName(3, "LOR4Channel");
 			this.imlTreeIcons.Images.SetKeyName(4, "RedCh");
 			this.imlTreeIcons.Images.SetKeyName(5, "GrnCh");
 			this.imlTreeIcons.Images.SetKeyName(6, "BluCh");

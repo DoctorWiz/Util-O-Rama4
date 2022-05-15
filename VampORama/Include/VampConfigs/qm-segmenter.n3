@@ -1,0 +1,10 @@
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+@prefix vamp:     <http://purl.org/ontology/vamp/> .
+@prefix :         <#> .
+
+:transform a vamp:Transform ;
+    vamp:plugin <http://vamp-plugins.org/rdf/plugins/segmentino#segmentino> ;
+    vamp:step_size "557"^^xsd:int ; 
+    vamp:block_size "16384"^^xsd:int ; 
+    vamp:plugin_version """2""" ; 
+    .

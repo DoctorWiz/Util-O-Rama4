@@ -1,31 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using LORUtils4; using FileHelper;
-
 namespace UtilORama4
 {
-	static class Program
+	internal static class Program
 	{
 		/// <summary>
-		/// The main entry point for the application.
+		///  The main entry point for the application.
 		/// </summary>
 		[STAThread]
 		static void Main()
 		{
-			Application.EnableVisualStyles();
-			Application.SetHighDpiMode(HighDpiMode.SystemAware);
-			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new frmRemapper());
+			// To customize application configuration such as set high DPI settings or default font,
+			// see https://aka.ms/applicationconfiguration.
+			ApplicationConfiguration.Initialize();
+			Application.Run(new frmMapper());
 		}
 	}
-
-	public class MapInfo
-	{
-		public iLORMember4 Source = null;
-		public iLORMember4 Dest = null;
-	}
-
 }

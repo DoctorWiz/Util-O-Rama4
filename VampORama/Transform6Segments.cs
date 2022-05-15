@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
-using LORUtils4;
+using LOR4Utils;
 using FileHelper;
 using xUtilities;
 
@@ -90,15 +90,15 @@ namespace UtilORama4
 		//public const int LABELMidiNoteNumber = 3;
 
 		private static LORTrack4 vampTrack = Annotator.VampTrack;
-		private static LORSequence4 sequence = Annotator.Sequence;
+		private static LOR4Sequence sequence = Annotator.Sequence;
 
 
-		public static LORChannelGroup4 segmentGroup = null;
+		public static LOR4ChannelGroup segmentGroup = null;
 		// Be careful not to confuse these---
 		// SegmentChannel is a single channel containing ramp/fade effects for each segment
 		// segmentChannels is a set of channels each containing on-off effects for a different segment
-		public static LORChannel4 SegmentChannel = null;
-		public static LORChannel4[] segmentChannels = null;
+		public static LOR4Channel SegmentChannel = null;
+		public static LOR4Channel[] segmentChannels = null;
 
 		private static int idx = 0;
 		public static int segmentCount = 0;
@@ -376,8 +376,8 @@ namespace UtilORama4
 							}
 							else
 							{
-								LOREffect4 eftR = new LOREffect4(LOREffectType4.FadeDown, csStart, csEnd, 100, 0);
-								LOREffect4 eftO = new LOREffect4(LOREffectType4.Intensity, csStart, csEnd, 100);
+								LOR4Effect eftR = new LOR4Effect(LOR4EffectType.FadeDown, csStart, csEnd, 100, 0);
+								LOR4Effect eftO = new LOR4Effect(LOR4EffectType.Intensity, csStart, csEnd, 100);
 								int segNo = timing.Number;
 								if ((segNo < 1) || (segNo > segmentCount))
 								{

@@ -43,8 +43,8 @@
 			// lstMap
 			// 
 			this.lstMap.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.hedSource,
-            this.hedDest});
+						this.hedSource,
+						this.hedDest});
 			this.lstMap.FullRowSelect = true;
 			this.lstMap.GridLines = true;
 			this.lstMap.Location = new System.Drawing.Point(27, 29);
@@ -60,12 +60,12 @@
 			// 
 			// hedSource
 			// 
-			this.hedSource.Text = "Source LORChannel4";
+			this.hedSource.Text = "Source LOR4Channel";
 			this.hedSource.Width = 319;
 			// 
 			// hedDest
 			// 
-			this.hedDest.Text = "Destination LORChannel4";
+			this.hedDest.Text = "Destination LOR4Channel";
 			this.hedDest.Width = 321;
 			// 
 			// button1
@@ -96,9 +96,9 @@
 			this.imlTreeIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imlTreeIcons.ImageStream")));
 			this.imlTreeIcons.TransparentColor = System.Drawing.Color.Transparent;
 			this.imlTreeIcons.Images.SetKeyName(0, "LORTrack4");
-			this.imlTreeIcons.Images.SetKeyName(1, "LORChannelGroup4");
-			this.imlTreeIcons.Images.SetKeyName(2, "LORRGBChannel4");
-			this.imlTreeIcons.Images.SetKeyName(3, "LORChannel4");
+			this.imlTreeIcons.Images.SetKeyName(1, "LOR4ChannelGroup");
+			this.imlTreeIcons.Images.SetKeyName(2, "LOR4RGBChannel");
+			this.imlTreeIcons.Images.SetKeyName(3, "LOR4Channel");
 			this.imlTreeIcons.Images.SetKeyName(4, "RedCh");
 			this.imlTreeIcons.Images.SetKeyName(5, "GrnCh");
 			this.imlTreeIcons.Images.SetKeyName(6, "BluCh");
@@ -138,7 +138,7 @@
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "frmMapList";
-			this.Text = "LORChannel4 Mapping Summary";
+			this.Text = "LOR4Channel Mapping Summary";
 			this.Load += new System.EventHandler(this.frmMapList_Load);
 			this.Paint += new System.Windows.Forms.PaintEventHandler(this.frmMapList_Paint);
 			this.ResumeLayout(false);

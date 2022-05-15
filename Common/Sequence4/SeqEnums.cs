@@ -1,12 +1,12 @@
 ﻿//!////////////////////////////////////////////////////////////////////////////////////////////////////
 //!                                                                                                ///
-//?  SeqEnums: LORSequence4 related Enumerators                                                   ///
+//?  SeqEnums: LOR4Sequence related Enumerators                                                   ///
 //?  Including: LORDeviceType4 - Controllers such as LOR, DMX, Cosmic, etc.                      ///
 //?					LOREffectType4 - Intensity, Shimmer, Twinkle, Fade-Up, etc.                        ///
 //?					LORTimingGridType4 - Freeform or Fixed.                                           ///
 //?					LORRGBChild4 - Red, Green, Blue.                                                 ///
-//?					LORSequenceType4 - Musical, Animation, Visualization                            ///
-//?					LORMemberType4 - Channel, RGB Channel, Channel Group, Track, Timing Grid, etc. ///
+//?					LOR4SequenceType - Musical, Animation, Visualization                            ///
+//?					LOR4MemberType - Channel, RGB Channel, Channel Group, Track, Timing Grid, etc. ///
 //!                                                                                        ///
 //!//////////////////////////////////////////////////////////////////////////////////////////
 
@@ -16,69 +16,69 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LORUtils4
+namespace LOR4Utils
 {
 	public enum LORDeviceType4
-	{ None=lutils.UNDEFINED, LOR=1, DMX=7, Digital=3, Cosmic=2, Dasher=4 };
+	{ None = lutils.UNDEFINED, LOR = 1, DMX = 7, Digital = 3, Cosmic = 2, Dasher = 4 };
 
 	//public enum LOREffectType4 { None=lutils.UNDEFINED, Intensity=1, Shimmer, Twinkle, DMX }
 	public enum LOREffectType4 { None = lutils.UNDEFINED, Intensity = 1, Shimmer, Twinkle, DMX, Constant, FadeUp, FadeDown }
 
 	//internal enum timingGridType
 	public enum LORTimingGridType4
-	{ None=lutils.UNDEFINED, Freeform=1, FixedGrid };
+	{ None = lutils.UNDEFINED, Freeform = 1, FixedGrid };
 
-	//internal enum LORMemberType4
-//	public enum LORMemberType4
-//	{ None=lutils.UNDEFINED, LORChannel4=1, LORRGBChannel4=2, LORChannelGroup4=4, LORTrack4=8, LORTimings4=16, Items=7, FullTrack=15; RGBonly=14, RegularOnly=13, All=31, Sequence=32 }
+	//internal enum LOR4MemberType
+	//	public enum LOR4MemberType
+	//	{ None=lutils.UNDEFINED, LOR4Channel=1, LOR4RGBChannel=2, LOR4ChannelGroup=4, LORTrack4=8, LORTimings4=16, Items=7, FullTrack=15; RGBonly=14, RegularOnly=13, All=31, Sequence=32 }
 	public enum LORRGBChild4
-	{ None=lutils.UNDEFINED, Red=1, Green, Blue }
+	{ None = lutils.UNDEFINED, Red = 1, Green, Blue }
 
-	public enum LORSequenceType4
-	{ Undefined=lutils.UNDEFINED, Animated=1, Musical, Clipboard, ChannelConfig, Visualizer }
+	public enum LOR4SequenceType
+	{ Undefined = lutils.UNDEFINED, Animated = 1, Musical, Clipboard, ChannelConfig, Visualizer }
 
 	public enum MatchType
-	{ Unmatched=0, Source=-1, Destination=1}
+	{ Unmatched = 0, Source = -1, Destination = 1 }
 
-	public enum LORMemberType4
+	public enum LOR4MemberType
 	{
 		// * MEMBER TYPES *
-		None					=	0,
-		Channel				=	LORSeqEnums4.MEMBER_Channel,
-		RGBChannel		= LORSeqEnums4.MEMBER_RGBchannel,
-		ChannelGroup	=	LORSeqEnums4.MEMBER_ChannelGroup,
-		Cosmic				=	LORSeqEnums4.MEMBER_CosmicDevice,
-		Track					=	LORSeqEnums4.MEMBER_Track,
-		Timings				=	LORSeqEnums4.MEMBER_TimingGrid,
-		Sequence			=	LORSeqEnums4.MEMBER_Sequence,
-		RegularOnly		=	LORSeqEnums4.MEMBER_Channel |
-										LORSeqEnums4.MEMBER_ChannelGroup |
-										LORSeqEnums4.MEMBER_Track,
-		RGBonly				=	LORSeqEnums4.MEMBER_RGBchannel |
-										LORSeqEnums4.MEMBER_ChannelGroup |
-										LORSeqEnums4.MEMBER_Track,
-		GroupsOnly		=	LORSeqEnums4.MEMBER_ChannelGroup |
-										LORSeqEnums4.MEMBER_Track,
-		Items					=	LORSeqEnums4.MEMBER_Channel |
-										LORSeqEnums4.MEMBER_RGBchannel |
-										LORSeqEnums4.MEMBER_ChannelGroup |
-										LORSeqEnums4.MEMBER_CosmicDevice,
-		FullTrack			=	LORSeqEnums4.MEMBER_Channel |
-										LORSeqEnums4.MEMBER_RGBchannel |
-										LORSeqEnums4.MEMBER_ChannelGroup |
-										LORSeqEnums4.MEMBER_CosmicDevice |
-										LORSeqEnums4.MEMBER_Track,
-		Visualization	= LORSeqEnums4.MEMBER_Vizualization,
-		VizChannel		=	LORSeqEnums4.MEMBER_VizChannel,
-		VizDrawObject	=	LORSeqEnums4.MEMBER_VizDrawObject,
-		VizItemGroup	= LORSeqEnums4.MEMBER_VizItemGroup
+		None = 0,
+		Channel = LOR4SeqEnums.MEMBER_Channel,
+		RGBChannel = LOR4SeqEnums.MEMBER_RGBchannel,
+		ChannelGroup = LOR4SeqEnums.MEMBER_ChannelGroup,
+		Cosmic = LOR4SeqEnums.MEMBER_CosmicDevice,
+		Track = LOR4SeqEnums.MEMBER_Track,
+		Timings = LOR4SeqEnums.MEMBER_TimingGrid,
+		Sequence = LOR4SeqEnums.MEMBER_Sequence,
+		RegularOnly = LOR4SeqEnums.MEMBER_Channel |
+										LOR4SeqEnums.MEMBER_ChannelGroup |
+										LOR4SeqEnums.MEMBER_Track,
+		RGBonly = LOR4SeqEnums.MEMBER_RGBchannel |
+										LOR4SeqEnums.MEMBER_ChannelGroup |
+										LOR4SeqEnums.MEMBER_Track,
+		GroupsOnly = LOR4SeqEnums.MEMBER_ChannelGroup |
+										LOR4SeqEnums.MEMBER_Track,
+		Items = LOR4SeqEnums.MEMBER_Channel |
+										LOR4SeqEnums.MEMBER_RGBchannel |
+										LOR4SeqEnums.MEMBER_ChannelGroup |
+										LOR4SeqEnums.MEMBER_CosmicDevice,
+		FullTrack = LOR4SeqEnums.MEMBER_Channel |
+										LOR4SeqEnums.MEMBER_RGBchannel |
+										LOR4SeqEnums.MEMBER_ChannelGroup |
+										LOR4SeqEnums.MEMBER_CosmicDevice |
+										LOR4SeqEnums.MEMBER_Track,
+		Visualization = LOR4SeqEnums.MEMBER_Vizualization,
+		VizChannel = LOR4SeqEnums.MEMBER_VizChannel,
+		VizDrawObject = LOR4SeqEnums.MEMBER_VizDrawObject,
+		VizItemGroup = LOR4SeqEnums.MEMBER_VizItemGroup
 
 		// What is RegularOnly s'posed to be for?
 		// Should I include CosmicDevice in groups?
 		// What is RGBonly for, and why does it contain groups and tracks?
 	}
 
-	public static class LORSeqEnums4
+	public static class LOR4SeqEnums
 	{
 		// * MEMBER TYPES *
 		public const int MEMBER_Channel = 1;
@@ -228,37 +228,37 @@ namespace LORUtils4
 			return valueOut;
 		}
 
-		public static LORMemberType4 EnumMemberType(string typeName)
+		public static LOR4MemberType EnumMemberType(string typeName)
 		{
 			// Only supported the 5 needed for Identity owners
-			LORMemberType4 valueOut = LORMemberType4.None;
+			LOR4MemberType valueOut = LOR4MemberType.None;
 			if (typeName == OBJchannel)
 			{
-				valueOut = LORMemberType4.Channel;
+				valueOut = LOR4MemberType.Channel;
 			}
 			else if (typeName == OBJrgbChannel)
 			{
-				valueOut = LORMemberType4.RGBChannel;
+				valueOut = LOR4MemberType.RGBChannel;
 			}
 			else if (typeName == OBJchannelGroup)
 			{
-				valueOut = LORMemberType4.ChannelGroup;
+				valueOut = LOR4MemberType.ChannelGroup;
 			}
 			else if (typeName == OBJtrack)
 			{
-				valueOut = LORMemberType4.Track;
+				valueOut = LOR4MemberType.Track;
 			}
 			else if (typeName == OBJtimingGrid)
 			{
-				valueOut = LORMemberType4.Timings;
+				valueOut = LOR4MemberType.Timings;
 			}
 			else if (typeName == OBJsequence)
 			{
-				valueOut = LORMemberType4.Sequence;
+				valueOut = LOR4MemberType.Sequence;
 			}
 			else if (typeName == OBJcosmicDevice)
 			{
-				valueOut = LORMemberType4.Cosmic;
+				valueOut = LOR4MemberType.Cosmic;
 			}
 			return valueOut;
 		}
@@ -349,7 +349,7 @@ namespace LORUtils4
 		{
 			// Note: This is the versio used for outputing to sequence files.
 			// For the human friendly version, see 'EffectTypeName' above
-			
+
 			// Use this as default unless overridden below
 			string valueOut = EFFECTintensity;
 			switch (effType)
@@ -387,31 +387,31 @@ namespace LORUtils4
 			return valueOut;
 		}
 
-		public static string MemberName(LORMemberType4 memberType)
+		public static string MemberName(LOR4MemberType memberType)
 		{
 			// Only doing the 5 needed for Members
 			string valueOut = "";
 			switch (memberType)
 			{
-				case LORMemberType4.Channel:
+				case LOR4MemberType.Channel:
 					valueOut = OBJchannel;
 					break;
-				case LORMemberType4.RGBChannel:
+				case LOR4MemberType.RGBChannel:
 					valueOut = OBJrgbChannel;
 					break;
-				case LORMemberType4.ChannelGroup:
+				case LOR4MemberType.ChannelGroup:
 					valueOut = OBJchannelGroup;
 					break;
-				case LORMemberType4.Cosmic:
+				case LOR4MemberType.Cosmic:
 					valueOut = OBJcosmicDevice;
 					break;
-				case LORMemberType4.Track:
+				case LOR4MemberType.Track:
 					valueOut = OBJtrack;
 					break;
-				case LORMemberType4.Timings:
+				case LOR4MemberType.Timings:
 					valueOut = OBJtimingGrid;
 					break;
-				case LORMemberType4.Sequence:
+				case LOR4MemberType.Sequence:
 					valueOut = OBJsequence;
 					break;
 			}
@@ -422,8 +422,8 @@ namespace LORUtils4
 
 
 
-	} // end clas LORSeqEnums4
+	} // end clas LOR4SeqEnums
 
 
 
-} // end namespace LORUtils4
+} // end namespace LOR4Utils
