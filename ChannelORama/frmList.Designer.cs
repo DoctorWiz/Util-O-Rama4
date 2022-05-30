@@ -65,9 +65,10 @@ namespace UtilORama4
             this.pnlHelp,
             this.pnlStatus,
             this.pnlAbout});
-			this.staStatus.Location = new System.Drawing.Point(0, 451);
+			this.staStatus.Location = new System.Drawing.Point(0, 524);
 			this.staStatus.Name = "staStatus";
-			this.staStatus.Size = new System.Drawing.Size(489, 24);
+			this.staStatus.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
+			this.staStatus.Size = new System.Drawing.Size(570, 24);
 			this.staStatus.TabIndex = 8;
 			// 
 			// pnlHelp
@@ -76,7 +77,7 @@ namespace UtilORama4
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlHelp.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenInner;
-			this.pnlHelp.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.pnlHelp.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
 			this.pnlHelp.ForeColor = System.Drawing.SystemColors.Highlight;
 			this.pnlHelp.IsLink = true;
 			this.pnlHelp.Name = "pnlHelp";
@@ -92,7 +93,7 @@ namespace UtilORama4
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlStatus.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
 			this.pnlStatus.Name = "pnlStatus";
-			this.pnlStatus.Size = new System.Drawing.Size(377, 19);
+			this.pnlStatus.Size = new System.Drawing.Size(456, 19);
 			this.pnlStatus.Spring = true;
 			// 
 			// pnlAbout
@@ -101,7 +102,7 @@ namespace UtilORama4
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlAbout.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenInner;
-			this.pnlAbout.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.pnlAbout.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
 			this.pnlAbout.ForeColor = System.Drawing.SystemColors.Highlight;
 			this.pnlAbout.Name = "pnlAbout";
 			this.pnlAbout.Size = new System.Drawing.Size(52, 19);
@@ -112,9 +113,10 @@ namespace UtilORama4
 			// btnOK
 			// 
 			this.btnOK.Enabled = false;
-			this.btnOK.Location = new System.Drawing.Point(393, 424);
+			this.btnOK.Location = new System.Drawing.Point(458, 489);
+			this.btnOK.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnOK.Name = "btnOK";
-			this.btnOK.Size = new System.Drawing.Size(75, 23);
+			this.btnOK.Size = new System.Drawing.Size(88, 27);
 			this.btnOK.TabIndex = 11;
 			this.btnOK.Text = "OK";
 			this.btnOK.UseVisualStyleBackColor = true;
@@ -124,7 +126,8 @@ namespace UtilORama4
 			// 
 			this.picAboutIcon.ErrorImage = null;
 			this.picAboutIcon.Image = ((System.Drawing.Image)(resources.GetObject("picAboutIcon.Image")));
-			this.picAboutIcon.Location = new System.Drawing.Point(419, 355);
+			this.picAboutIcon.Location = new System.Drawing.Point(489, 410);
+			this.picAboutIcon.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.picAboutIcon.Name = "picAboutIcon";
 			this.picAboutIcon.Size = new System.Drawing.Size(128, 128);
 			this.picAboutIcon.TabIndex = 68;
@@ -135,9 +138,10 @@ namespace UtilORama4
 			// 
 			this.btnUniverse.Image = ((System.Drawing.Image)(resources.GetObject("btnUniverse.Image")));
 			this.btnUniverse.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.btnUniverse.Location = new System.Drawing.Point(405, 12);
+			this.btnUniverse.Location = new System.Drawing.Point(472, 14);
+			this.btnUniverse.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnUniverse.Name = "btnUniverse";
-			this.btnUniverse.Size = new System.Drawing.Size(75, 40);
+			this.btnUniverse.Size = new System.Drawing.Size(88, 46);
 			this.btnUniverse.TabIndex = 1;
 			this.btnUniverse.Text = "Add\r\nUniverse\r\n";
 			this.btnUniverse.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -150,9 +154,10 @@ namespace UtilORama4
 			this.btnController.Enabled = false;
 			this.btnController.Image = ((System.Drawing.Image)(resources.GetObject("btnController.Image")));
 			this.btnController.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.btnController.Location = new System.Drawing.Point(393, 58);
+			this.btnController.Location = new System.Drawing.Point(458, 67);
+			this.btnController.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnController.Name = "btnController";
-			this.btnController.Size = new System.Drawing.Size(75, 40);
+			this.btnController.Size = new System.Drawing.Size(88, 46);
 			this.btnController.TabIndex = 2;
 			this.btnController.Text = "Add\r\nController";
 			this.btnController.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -165,9 +170,10 @@ namespace UtilORama4
 			this.btnChannel.Enabled = false;
 			this.btnChannel.Image = ((System.Drawing.Image)(resources.GetObject("btnChannel.Image")));
 			this.btnChannel.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.btnChannel.Location = new System.Drawing.Point(393, 104);
+			this.btnChannel.Location = new System.Drawing.Point(458, 120);
+			this.btnChannel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnChannel.Name = "btnChannel";
-			this.btnChannel.Size = new System.Drawing.Size(75, 40);
+			this.btnChannel.Size = new System.Drawing.Size(88, 46);
 			this.btnChannel.TabIndex = 3;
 			this.btnChannel.Text = "Add\r\nChannel\r\n";
 			this.btnChannel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -180,9 +186,10 @@ namespace UtilORama4
 			this.btnReport.Enabled = false;
 			this.btnReport.Image = ((System.Drawing.Image)(resources.GetObject("btnReport.Image")));
 			this.btnReport.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.btnReport.Location = new System.Drawing.Point(393, 196);
+			this.btnReport.Location = new System.Drawing.Point(458, 226);
+			this.btnReport.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnReport.Name = "btnReport";
-			this.btnReport.Size = new System.Drawing.Size(75, 40);
+			this.btnReport.Size = new System.Drawing.Size(88, 46);
 			this.btnReport.TabIndex = 5;
 			this.btnReport.Text = "Export\r\nCSV";
 			this.btnReport.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -193,9 +200,10 @@ namespace UtilORama4
 			// btnCompareLOR
 			// 
 			this.btnCompareLOR.Enabled = false;
-			this.btnCompareLOR.Location = new System.Drawing.Point(438, 264);
+			this.btnCompareLOR.Location = new System.Drawing.Point(511, 305);
+			this.btnCompareLOR.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnCompareLOR.Name = "btnCompareLOR";
-			this.btnCompareLOR.Size = new System.Drawing.Size(75, 40);
+			this.btnCompareLOR.Size = new System.Drawing.Size(88, 46);
 			this.btnCompareLOR.TabIndex = 9;
 			this.btnCompareLOR.Text = "Compare\r\nLOR Seq\r\n";
 			this.btnCompareLOR.UseVisualStyleBackColor = true;
@@ -204,9 +212,10 @@ namespace UtilORama4
 			// btnComparex
 			// 
 			this.btnComparex.Enabled = false;
-			this.btnComparex.Location = new System.Drawing.Point(438, 288);
+			this.btnComparex.Location = new System.Drawing.Point(511, 332);
+			this.btnComparex.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnComparex.Name = "btnComparex";
-			this.btnComparex.Size = new System.Drawing.Size(75, 40);
+			this.btnComparex.Size = new System.Drawing.Size(88, 46);
 			this.btnComparex.TabIndex = 10;
 			this.btnComparex.Text = "Compare\r\nxLights\r\n";
 			this.btnComparex.UseVisualStyleBackColor = true;
@@ -217,9 +226,10 @@ namespace UtilORama4
 			this.btnFind.Enabled = false;
 			this.btnFind.Image = ((System.Drawing.Image)(resources.GetObject("btnFind.Image")));
 			this.btnFind.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.btnFind.Location = new System.Drawing.Point(393, 150);
+			this.btnFind.Location = new System.Drawing.Point(458, 173);
+			this.btnFind.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnFind.Name = "btnFind";
-			this.btnFind.Size = new System.Drawing.Size(75, 40);
+			this.btnFind.Size = new System.Drawing.Size(88, 46);
 			this.btnFind.TabIndex = 4;
 			this.btnFind.Text = "Find...";
 			this.btnFind.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -229,9 +239,10 @@ namespace UtilORama4
 			// btnWiz
 			// 
 			this.btnWiz.Image = ((System.Drawing.Image)(resources.GetObject("btnWiz.Image")));
-			this.btnWiz.Location = new System.Drawing.Point(393, 242);
+			this.btnWiz.Location = new System.Drawing.Point(458, 279);
+			this.btnWiz.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnWiz.Name = "btnWiz";
-			this.btnWiz.Size = new System.Drawing.Size(75, 40);
+			this.btnWiz.Size = new System.Drawing.Size(88, 46);
 			this.btnWiz.TabIndex = 6;
 			this.toolTips.SetToolTip(this.btnWiz, "Channel Comparison Wizard\r\n\r\nCompare Managed Channels to:\r\n    Light-O-Rama Showt" +
         "ime S4 Channels\r\n    Light-O-Rama Visualizer Channels & Groups\r\n    xLights Mode" +
@@ -244,9 +255,10 @@ namespace UtilORama4
 			// 
 			this.btnSave.Image = ((System.Drawing.Image)(resources.GetObject("btnSave.Image")));
 			this.btnSave.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.btnSave.Location = new System.Drawing.Point(393, 378);
+			this.btnSave.Location = new System.Drawing.Point(458, 436);
+			this.btnSave.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnSave.Name = "btnSave";
-			this.btnSave.Size = new System.Drawing.Size(75, 40);
+			this.btnSave.Size = new System.Drawing.Size(88, 46);
 			this.btnSave.TabIndex = 7;
 			this.btnSave.Text = "Save";
 			this.btnSave.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -259,9 +271,10 @@ namespace UtilORama4
 			this.btnExportSeq.Enabled = false;
 			this.btnExportSeq.Image = ((System.Drawing.Image)(resources.GetObject("btnExportSeq.Image")));
 			this.btnExportSeq.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.btnExportSeq.Location = new System.Drawing.Point(419, 288);
+			this.btnExportSeq.Location = new System.Drawing.Point(458, 357);
+			this.btnExportSeq.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnExportSeq.Name = "btnExportSeq";
-			this.btnExportSeq.Size = new System.Drawing.Size(75, 40);
+			this.btnExportSeq.Size = new System.Drawing.Size(88, 46);
 			this.btnExportSeq.TabIndex = 119;
 			this.btnExportSeq.Text = "Export\r\nSequence";
 			this.btnExportSeq.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -271,6 +284,7 @@ namespace UtilORama4
 			// 
 			// imlTreeIcons
 			// 
+			this.imlTreeIcons.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
 			this.imlTreeIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imlTreeIcons.ImageStream")));
 			this.imlTreeIcons.TransparentColor = System.Drawing.Color.Transparent;
 			this.imlTreeIcons.Images.SetKeyName(0, "Universe");
@@ -318,7 +332,7 @@ namespace UtilORama4
 			treeNodeAdvStyleInfo1.TextColor = System.Drawing.Color.Black;
 			this.treeChannels.BaseStylePairs.AddRange(new Syncfusion.Windows.Forms.Tools.StyleNamePair[] {
             new Syncfusion.Windows.Forms.Tools.StyleNamePair("Standard", treeNodeAdvStyleInfo1)});
-			this.treeChannels.BeforeTouchSize = new System.Drawing.Size(360, 423);
+			this.treeChannels.BeforeTouchSize = new System.Drawing.Size(419, 487);
 			this.treeChannels.ForeColor = System.Drawing.Color.Black;
 			// 
 			// 
@@ -331,11 +345,12 @@ namespace UtilORama4
 			this.treeChannels.HelpTextControl.Visible = true;
 			this.treeChannels.InactiveSelectedNodeForeColor = System.Drawing.SystemColors.ControlText;
 			this.treeChannels.LeftImageList = this.imlTreeIcons;
-			this.treeChannels.Location = new System.Drawing.Point(12, 12);
+			this.treeChannels.Location = new System.Drawing.Point(14, 14);
+			this.treeChannels.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.treeChannels.MetroColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(165)))), ((int)(((byte)(220)))));
 			this.treeChannels.Name = "treeChannels";
 			this.treeChannels.SelectedNodeForeColor = System.Drawing.SystemColors.HighlightText;
-			this.treeChannels.Size = new System.Drawing.Size(360, 423);
+			this.treeChannels.Size = new System.Drawing.Size(419, 487);
 			this.treeChannels.TabIndex = 118;
 			this.treeChannels.Text = "Source Channels";
 			this.treeChannels.ThemeStyle.TreeNodeAdvStyle.CheckBoxTickThickness = 0;
@@ -361,9 +376,9 @@ namespace UtilORama4
 			// frmList
 			// 
 			this.AcceptButton = this.btnOK;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(489, 475);
+			this.ClientSize = new System.Drawing.Size(570, 548);
 			this.Controls.Add(this.btnExportSeq);
 			this.Controls.Add(this.treeChannels);
 			this.Controls.Add(this.btnSave);
@@ -379,9 +394,10 @@ namespace UtilORama4
 			this.Controls.Add(this.staStatus);
 			this.Controls.Add(this.picAboutIcon);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.MaximizeBox = false;
-			this.MaximumSize = new System.Drawing.Size(800, 950);
-			this.MinimumSize = new System.Drawing.Size(350, 400);
+			this.MaximumSize = new System.Drawing.Size(931, 1090);
+			this.MinimumSize = new System.Drawing.Size(406, 456);
 			this.Name = "frmList";
 			this.Text = "Chan-O-Rama  Channel Manager";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmList_FormClosing);

@@ -1,10 +1,10 @@
 ﻿//!////////////////////////////////////////////////////////////////////////////////////////////////////
 //!                                                                                                ///
 //?  SeqEnums: LOR4Sequence related Enumerators                                                   ///
-//?  Including: LORDeviceType4 - Controllers such as LOR, DMX, Cosmic, etc.                      ///
-//?					LOREffectType4 - Intensity, Shimmer, Twinkle, Fade-Up, etc.                        ///
-//?					LORTimingGridType4 - Freeform or Fixed.                                           ///
-//?					LORRGBChild4 - Red, Green, Blue.                                                 ///
+//?  Including: LOR4DeviceType - Controllers such as LOR, DMX, Cosmic, etc.                      ///
+//?					LOR4EffectType - Intensity, Shimmer, Twinkle, Fade-Up, etc.                        ///
+//?					LOR4TimingGridType - Freeform or Fixed.                                           ///
+//?					LOR4RGBChild - Red, Green, Blue.                                                 ///
 //?					LOR4SequenceType - Musical, Animation, Visualization                            ///
 //?					LOR4MemberType - Channel, RGB Channel, Channel Group, Track, Timing Grid, etc. ///
 //!                                                                                        ///
@@ -16,26 +16,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LOR4Utils
+namespace LOR4
 {
-	public enum LORDeviceType4
-	{ None = lutils.UNDEFINED, LOR = 1, DMX = 7, Digital = 3, Cosmic = 2, Dasher = 4 };
+	public enum LOR4DeviceType
+	{ None = LOR4Admin.UNDEFINED, LOR = 1, DMX = 7, Digital = 3, Cosmic = 2, Dasher = 4 };
 
-	//public enum LOREffectType4 { None=lutils.UNDEFINED, Intensity=1, Shimmer, Twinkle, DMX }
-	public enum LOREffectType4 { None = lutils.UNDEFINED, Intensity = 1, Shimmer, Twinkle, DMX, Constant, FadeUp, FadeDown }
+	//public enum LOR4EffectType { None=LOR4Admin.UNDEFINED, Intensity=1, Shimmer, Twinkle, DMX }
+	public enum LOR4EffectType { None = LOR4Admin.UNDEFINED, Intensity = 1, Shimmer, Twinkle, DMX, Constant, FadeUp, FadeDown }
 
 	//internal enum timingGridType
-	public enum LORTimingGridType4
-	{ None = lutils.UNDEFINED, Freeform = 1, FixedGrid };
+	public enum LOR4TimingGridType
+	{ None = LOR4Admin.UNDEFINED, Freeform = 1, FixedGrid };
 
 	//internal enum LOR4MemberType
 	//	public enum LOR4MemberType
-	//	{ None=lutils.UNDEFINED, LOR4Channel=1, LOR4RGBChannel=2, LOR4ChannelGroup=4, LORTrack4=8, LORTimings4=16, Items=7, FullTrack=15; RGBonly=14, RegularOnly=13, All=31, Sequence=32 }
-	public enum LORRGBChild4
-	{ None = lutils.UNDEFINED, Red = 1, Green, Blue }
+	//	{ None=LOR4Admin.UNDEFINED, LOR4Channel=1, LOR4RGBChannel=2, LOR4ChannelGroup=4, LOR4Track=8, LOR4Timings=16, Items=7, FullTrack=15; RGBonly=14, RegularOnly=13, All=31, Sequence=32 }
+	public enum LOR4RGBChild
+	{ None = LOR4Admin.UNDEFINED, Red = 1, Green, Blue }
 
 	public enum LOR4SequenceType
-	{ Undefined = lutils.UNDEFINED, Animated = 1, Musical, Clipboard, ChannelConfig, Visualizer }
+	{ Undefined = LOR4Admin.UNDEFINED, Animated = 1, Musical, Clipboard, ChannelConfig, Visualizer }
 
 	public enum MatchType
 	{ Unmatched = 0, Source = -1, Destination = 1 }
@@ -123,46 +123,46 @@ namespace LOR4Utils
 		public const string OBJitems = "Items";
 
 
-		public static LORDeviceType4 EnumDevice(string deviceName)
+		public static LOR4DeviceType EnumDevice(string deviceName)
 		{
-			LORDeviceType4 valueOut = LORDeviceType4.None;
+			LOR4DeviceType valueOut = LOR4DeviceType.None;
 
 			if (deviceName == DEVICElor)
 			{
-				valueOut = LORDeviceType4.LOR;
+				valueOut = LOR4DeviceType.LOR;
 			}
 			else if (deviceName == "1") // Visualizer
 			{
-				valueOut = LORDeviceType4.LOR;
+				valueOut = LOR4DeviceType.LOR;
 			}
 			else if (deviceName == DEVICEdmx)
 			{
-				valueOut = LORDeviceType4.DMX;
+				valueOut = LOR4DeviceType.DMX;
 			}
 			else if (deviceName == "7") // Visualizer
 			{
-				valueOut = LORDeviceType4.DMX;
+				valueOut = LOR4DeviceType.DMX;
 			}
 			else if (deviceName == DEVICEdigital)
 			{
-				valueOut = LORDeviceType4.Digital;
+				valueOut = LOR4DeviceType.Digital;
 			}
 			else if (deviceName == DEVICEdasher)
 			{
-				valueOut = LORDeviceType4.Dasher;
+				valueOut = LOR4DeviceType.Dasher;
 			}
 			else if (deviceName == DEVICEcosmic)
 			{
-				valueOut = LORDeviceType4.Cosmic;
+				valueOut = LOR4DeviceType.Cosmic;
 			}
 			else if (deviceName == "")
 			{
-				valueOut = LORDeviceType4.None;
+				valueOut = LOR4DeviceType.None;
 			}
 			else
 			{
 				// TODO: throw exception here!
-				valueOut = LORDeviceType4.None;
+				valueOut = LOR4DeviceType.None;
 				string sMsg = "Unrecognized Device Type: ";
 				sMsg += deviceName;
 				//DialogResult dr = MessageBox.Show(sMsg, "Unrecognized Keyword", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -172,30 +172,30 @@ namespace LOR4Utils
 			return valueOut;
 		}
 
-		public static LOREffectType4 EnumEffectType(string effectName)
+		public static LOR4EffectType EnumEffectType(string effectName)
 		{
-			LOREffectType4 valueOut = LOREffectType4.None;
+			LOR4EffectType valueOut = LOR4EffectType.None;
 
 			if (effectName == EFFECTintensity)
 			{
-				valueOut = LOREffectType4.Intensity;
+				valueOut = LOR4EffectType.Intensity;
 			}
 			else if (effectName == EFFECTshimmer)
 			{
-				valueOut = LOREffectType4.Shimmer;
+				valueOut = LOR4EffectType.Shimmer;
 			}
 			else if (effectName == EFFECTtwinkle)
 			{
-				valueOut = LOREffectType4.Twinkle;
+				valueOut = LOR4EffectType.Twinkle;
 			}
 			else if (effectName == EFFECTdmx)
 			{
-				valueOut = LOREffectType4.DMX;
+				valueOut = LOR4EffectType.DMX;
 			}
 			else
 			{
 				// TODO: throw exception here
-				valueOut = LOREffectType4.None;
+				valueOut = LOR4EffectType.None;
 				string sMsg = "Unrecognized Effect Name: ";
 				sMsg += effectName;
 				//DialogResult dr = MessageBox.Show(sMsg, "Unrecognized Keyword", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -204,22 +204,22 @@ namespace LOR4Utils
 			return valueOut;
 		}
 
-		public static LORTimingGridType4 EnumGridType(string typeName)
+		public static LOR4TimingGridType EnumGridType(string typeName)
 		{
-			LORTimingGridType4 valueOut = LORTimingGridType4.None;
+			LOR4TimingGridType valueOut = LOR4TimingGridType.None;
 
 			if (typeName == GRIDfreeform)
 			{
-				valueOut = LORTimingGridType4.Freeform;
+				valueOut = LOR4TimingGridType.Freeform;
 			}
 			else if (typeName == "fixed")
 			{
-				valueOut = LORTimingGridType4.FixedGrid;
+				valueOut = LOR4TimingGridType.FixedGrid;
 			}
 			else
 			{
 				// TODO: throw exception here
-				valueOut = LORTimingGridType4.None;
+				valueOut = LOR4TimingGridType.None;
 				string sMsg = "Unrecognized Timing Grid Type: ";
 				sMsg += typeName;
 				//DialogResult dr = MessageBox.Show(sMsg, "Unrecognized Keyword", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -264,32 +264,32 @@ namespace LOR4Utils
 		}
 
 
-		public static string DeviceName(LORDeviceType4 devType)
+		public static string DeviceName(LOR4DeviceType devType)
 		{
 			string valueOut = "";
 			switch (devType)
 			{
-				case LORDeviceType4.LOR:
+				case LOR4DeviceType.LOR:
 					valueOut = DEVICElor;
 					break;
 
-				case LORDeviceType4.DMX:
+				case LOR4DeviceType.DMX:
 					valueOut = DEVICEdmx;
 					break;
 
-				case LORDeviceType4.None:
+				case LOR4DeviceType.None:
 					valueOut = DEVICEnone;
 					break;
 
-				case LORDeviceType4.Digital:
+				case LOR4DeviceType.Digital:
 					valueOut = DEVICEdigital;
 					break;
 
-				case LORDeviceType4.Cosmic:
+				case LOR4DeviceType.Cosmic:
 					valueOut = DEVICEcosmic;
 					break;
 
-				case LORDeviceType4.Dasher:
+				case LOR4DeviceType.Dasher:
 					valueOut = DEVICEdasher;
 					break;
 
@@ -307,45 +307,45 @@ namespace LOR4Utils
 			return valueOut;
 		}
 
-		public static string EffectTypeName(LOREffectType4 effType)
+		public static string EffectTypeName(LOR4EffectType effType)
 		{
 			// Note: This is the human friendly version
 			// For the versio used for outputing to sequenc files, see 'EffectName' below
 			string valueOut = "";
 			switch (effType)
 			{
-				case LOREffectType4.Intensity:
+				case LOR4EffectType.Intensity:
 					valueOut = EFFECTintensity;
 					break;
 
-				case LOREffectType4.Shimmer:
+				case LOR4EffectType.Shimmer:
 					valueOut = EFFECTshimmer;
 					break;
 
-				case LOREffectType4.Twinkle:
+				case LOR4EffectType.Twinkle:
 					valueOut = EFFECTtwinkle;
 					break;
 
-				case LOREffectType4.DMX:
+				case LOR4EffectType.DMX:
 					valueOut = EFFECTdmx;
 					break;
 
-				case LOREffectType4.Constant:
+				case LOR4EffectType.Constant:
 					valueOut = EFFECTconstant;
 					break;
 
-				case LOREffectType4.FadeUp:
+				case LOR4EffectType.FadeUp:
 					valueOut = EFFECTfadeUp;
 					break;
 
-				case LOREffectType4.FadeDown:
+				case LOR4EffectType.FadeDown:
 					valueOut = EFFECTfadeDown;
 					break;
 			}
 			return valueOut;
 		}
 
-		public static string EffectName(LOREffectType4 effType)
+		public static string EffectName(LOR4EffectType effType)
 		{
 			// Note: This is the versio used for outputing to sequence files.
 			// For the human friendly version, see 'EffectTypeName' above
@@ -354,15 +354,15 @@ namespace LOR4Utils
 			string valueOut = EFFECTintensity;
 			switch (effType)
 			{
-				case LOREffectType4.Shimmer:
+				case LOR4EffectType.Shimmer:
 					valueOut = EFFECTshimmer;
 					break;
 
-				case LOREffectType4.Twinkle:
+				case LOR4EffectType.Twinkle:
 					valueOut = EFFECTtwinkle;
 					break;
 
-				case LOREffectType4.DMX:
+				case LOR4EffectType.DMX:
 					valueOut = EFFECTdmx;
 					break;
 			}
@@ -371,16 +371,16 @@ namespace LOR4Utils
 
 
 
-		public static string TimingName(LORTimingGridType4 grdType)
+		public static string TimingName(LOR4TimingGridType grdType)
 		{
 			string valueOut = "";
 			switch (grdType)
 			{
-				case LORTimingGridType4.Freeform:
+				case LOR4TimingGridType.Freeform:
 					valueOut = GRIDfreeform;
 					break;
 
-				case LORTimingGridType4.FixedGrid:
+				case LOR4TimingGridType.FixedGrid:
 					valueOut = GRIDfixed;
 					break;
 			}
@@ -426,4 +426,4 @@ namespace LOR4Utils
 
 
 
-} // end namespace LOR4Utils
+} // end namespace LOR4

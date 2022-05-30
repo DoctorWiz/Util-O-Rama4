@@ -9,8 +9,9 @@ using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LOR4Utils;
-//using xUtils;
+using LOR4;
+using FileHelper;
+//using xAdmin;
 
 namespace UtilORama4
 {
@@ -221,7 +222,7 @@ namespace UtilORama4
 		private void pnlAbout_Click(object sender, EventArgs e)
 		{
 			ImBusy(true);
-			Form aboutBox = new About();
+			Form aboutBox = new frmAbout();
 			// aboutBox.setIcon = picAboutIcon.Image;
 			aboutBox.ShowDialog(this);
 			ImBusy(false);
@@ -230,7 +231,7 @@ namespace UtilORama4
 
 		private string PathToDB(int year)
 		{
-			string ret = utils.DefaultDocumentsPath;
+			string ret = Fyle.DefaultDocumentsPath;
 			ret += "Christmas\\";
 			ret += year.ToString();
 			ret += "\\Docs\\ChannelDB\\";

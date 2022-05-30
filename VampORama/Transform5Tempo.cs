@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
-using LOR4Utils;
+using LOR4;
 using FileHelper;
-using xUtilities;
+using xLights22;
 
 namespace UtilORama4
 {
@@ -251,7 +251,7 @@ namespace UtilORama4
 			Debug.WriteLine(msg);
 
 			pcount = 0; // reset for re-use
-			xTempo.effects.Clear();
+			xTempo.Markers.Clear();
 
 			StreamReader reader = new StreamReader(resultsFile);
 			// First, lets get the first line of the file which has the start time of the first
@@ -266,7 +266,7 @@ namespace UtilORama4
 				if (parts.Length > 1)
 				{
 					// Try parsing fields 0 start time (in decimal seconds)
-					millisecs = xUtils.ParseMilliseconds(parts[0]);
+					millisecs = xAdmin.ParseMilliseconds(parts[0]);
 					eStart = Annotator.AlignTime(millisecs);
 					// Get BPM
 					string strbpm = parts[1];
@@ -288,7 +288,7 @@ namespace UtilORama4
 				if (parts.Length > 1)
 				{
 					// Try parsing fields 0 start time (in decimal seconds)
-					millisecs = xUtils.ParseMilliseconds(parts[0]);
+					millisecs = xAdmin.ParseMilliseconds(parts[0]);
 					eEnd = Annotator.AlignTime(millisecs);
 					if (eEnd < eStart) // Data integrity check
 					{
@@ -305,8 +305,8 @@ namespace UtilORama4
 							if (labelType == vamps.LabelType.TempoName)
 							{ eName += " " + MusicalNotation.FindTempoName(bpm); }
 							// Create new xEffect with these values, add to timings list
-							xEffect xef = new xEffect(eName, eStart, eEnd, bpm);
-							xTempo.effects.Add(xef);
+							xMarker xef = new xMarker(eName, eStart, eEnd, bpm);
+							xTempo.Markers.Add(xef);
 
 							// End of this one is the start of the next one
 							eStart = eEnd;
@@ -334,8 +334,8 @@ namespace UtilORama4
 				string eName = bpm.ToString();
 				if (labelType == vamps.LabelType.TempoName)
 				{ eName += " " + MusicalNotation.FindTempoName(bpm); }
-				xEffect xef = new xEffect(eName, eStart, eEnd, bpm);
-				xTempo.effects.Add(xef);
+				xMarker xef = new xMarker(eName, eStart, eEnd, bpm);
+				xTempo.Markers.Add(xef);
 			}
 			//Fyle.BUG("Check output window.  Did the alignments work as expected?");
 
@@ -350,10 +350,10 @@ namespace UtilORama4
 
 			if (xTempo != null)
 			{
-				if (xTempo.effects.Count > 0)
+				if (xTempo.Markers.Count > 0)
 				{
 					string gridName = "7 " + transformName;
-					LORTimings4 polyGrid = Annotator.Sequence.FindTimingGrid(gridName, true);
+					LOR4Timings polyGrid = Annotator.Sequence.FindTimingGrid(gridName, true);
 					SequenceFunctions.ImportTimingGrid(polyGrid, xTempo);
 				}
 			}
@@ -386,9 +386,9 @@ namespace UtilORama4
 
 			// Part 2
 			// Find the slowest and fastest tempo
-			for (int f = 0; f < xTempo.effects.Count; f++)
+			for (int f = 0; f < xTempo.Markers.Count; f++)
 			{
-				xEffect timing = xTempo.effects[f];
+				xMarker timing = xTempo.Markers[f];
 				if (timing.Number > 12)
 				{
 					if (timing.Number < tempoLow) tempoLow = timing.Number;
@@ -407,11 +407,11 @@ namespace UtilORama4
 			// Create an effect in the appropriate Key or Pitch Channel for each timing
 			if (xTempo != null)
 			{
-				if (xTempo.effects.Count > 0)
+				if (xTempo.Markers.Count > 0)
 				{
-					for (int f = 0; f < xTempo.effects.Count; f++)
+					for (int f = 0; f < xTempo.Markers.Count; f++)
 					{
-						xEffect timing = xTempo.effects[f];
+						xMarker timing = xTempo.Markers[f];
 						int bpm = timing.Number;
 						if ((bpm < 10) || (bpm > 250)) // Data integrity check
 						{
@@ -531,7 +531,7 @@ namespace UtilORama4
 			// Part 1
 			// Get the Vamp Track and create the Tempo Channel
 			tempoChannel = Annotator.Sequence.FindChannel(TempoNamePrefix + "Tempo", Annotator.VampTrack.Members, true, true);
-			tempoChannel.color = lutils.Color_NettoLOR(System.Drawing.Color.Black);
+			tempoChannel.color = LOR4Admin.Color_NettoLOR(System.Drawing.Color.Black);
 			tempoChannel.effects.Clear();
 
 			// Part 2

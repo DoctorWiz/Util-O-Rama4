@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
-using LOR4Utils;
-using xUtils;
+using LOR4;
+using xLights22;
 using FileHelper;
 
 namespace UtilORama4
@@ -38,7 +38,7 @@ namespace UtilORama4
 		public bool BadOutput = true;
 		protected object myTag = null;
 		public iLOR4Member TagLOR = null;
-		public xMember TagX = null;
+		public ixMember TagX = null;
 		public iLOR4Member TagViz = null;
 		public bool ExactLOR = false;
 		public bool ExactX = false;
@@ -230,11 +230,11 @@ namespace UtilORama4
 		{
 			get
 			{
-				return lutils.Color_NettoLOR(Color);
+				return LOR4Admin.Color_NettoLOR(Color);
 			}
 			set
 			{
-				Color = lutils.Color_LORtoNet(value);
+				Color = LOR4Admin.Color_LORtoNet(value);
 			}
 		}
 

@@ -9,7 +9,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using FileHelper;
 
-namespace LOR4Utils
+namespace LOR4
 {
 	public class LOR4Membership : IEnumerator, IEnumerable  //  IEnumerator<iLOR4Member>
 	{
@@ -17,25 +17,25 @@ namespace LOR4Utils
 		private List<iLOR4Member> myByDisplayOrderList = new List<iLOR4Member>();   // The Main List
 		private List<iLOR4Member> myByIDList = new List<iLOR4Member>();
 		private List<iLOR4Member> myByAltIDList = new List<iLOR4Member>();
-		//private List<LORTimings4>					myBySaveIDList =				new List<LORTimings4>();
-		//private List<LORTimings4>					myByAltSaveIDList =			new List<LORTimings4>();
-		//private List<LORTrack4>						myByTrackIndexList =		new List<LORTrack4>();
-		//private List<LORTrack4>						myByAltTrackIndexList = new List<LORTrack4>();
-		//private List<LORVizDrawObject4>		myByObjectIDList =			new List<LORVizDrawObject4>();
-		//private List<LORVizDrawObject4>		myByAltObjectIDList =		new List<LORVizDrawObject4>();
-		//private List<LORVizItemGroup4>		myByItemIDList =				new List<LORVizItemGroup4>();
-		//private List<LORVizItemGroup4>		myByAltItemIDList =			new List<LORVizItemGroup4>();
+		//private List<LOR4Timings>					myBySaveIDList =				new List<LOR4Timings>();
+		//private List<LOR4Timings>					myByAltSaveIDList =			new List<LOR4Timings>();
+		//private List<LOR4Track>						myByTrackIndexList =		new List<LOR4Track>();
+		//private List<LOR4Track>						myByAltTrackIndexList = new List<LOR4Track>();
+		//private List<LOR4VizDrawObject>		myByObjectIDList =			new List<LOR4VizDrawObject>();
+		//private List<LOR4VizDrawObject>		myByAltObjectIDList =		new List<LOR4VizDrawObject>();
+		//private List<LOR4VizItemGroup>		myByItemIDList =				new List<LOR4VizItemGroup>();
+		//private List<LOR4VizItemGroup>		myByAltItemIDList =			new List<LOR4VizItemGroup>();
 		private SortedDictionary<string, iLOR4Member> myByNameDictionary = new SortedDictionary<string, iLOR4Member>();
 
-		private int myHighestID = lutils.UNDEFINED;
-		private int myHighestAltID = lutils.UNDEFINED;
+		private int myHighestID = LOR4Admin.UNDEFINED;
+		private int myHighestAltID = LOR4Admin.UNDEFINED;
 
 		// B-cuz item numbers in Visualizations are 1-based (instead of normal 0-based)
 		//private int myHighestItemID = 0;
-		//public int AltHighestItemID = lutils.UNDEFINED;
+		//public int AltHighestItemID = LOR4Admin.UNDEFINED;
 		// B-cuz drawobjects in Visualizations do the same thing
 		//private int myHighestObjectID = 0;
-		//public int AltHighestObjectID = lutils.UNDEFINED;
+		//public int AltHighestObjectID = LOR4Admin.UNDEFINED;
 		//iLOR4Member Parent = null;  // Parent SEQUENCE
 		protected iLOR4Member myOwner = null;  // Parent GROUP or TRACK or Sequence or Visualization
 		private iLOR4Member myParent = null;
@@ -93,19 +93,19 @@ namespace LOR4Utils
 				// But Channels, Groups, and DrawObjects in Visualizations start at 1 (Grrrrr)
 				// So add a dummy object at the [0] start of the lists
 				/*
-				LORVizChannel4 lvc = new LORVizChannel4(this.Parent, "\0\0DUMMY VIZCHANNEL AT INDEX [0] - DO NOT USE!");
+				LOR4VizChannel lvc = new LOR4VizChannel(this.Parent, "\0\0DUMMY VIZCHANNEL AT INDEX [0] - DO NOT USE!");
 				lvc.SetIndex(0);
 				lvc.SetSavedIndex(0);
 				lvc.SetParent(myParent);
 				myHighestSavedIndex = 0;
 				myBySavedIndexList.Add(lvc);
-				LORVizDrawObject4 lvdo = new LORVizDrawObject4(this.Parent, "\0\0DUMMY VIZDRAWOBJECT AT INDEX [0] - DO NOT USE!");
+				LOR4VizDrawObject lvdo = new LOR4VizDrawObject(this.Parent, "\0\0DUMMY VIZDRAWOBJECT AT INDEX [0] - DO NOT USE!");
 				lvdo.SetIndex(0);
 				lvdo.SetSavedIndex(0);
 				lvdo.SetParent(myParent);
 				if (myParent != null)
 				{
-					LORVisualization4 pv = (LORVisualization4)myParent;
+					LOR4Visualization pv = (LOR4Visualization)myParent;
 					if (pv.VizChannels.Count > 0)
 					{
 						lvdo.redChannel = pv.VizChannels[0];
@@ -113,7 +113,7 @@ namespace LOR4Utils
 				}
 				myHighestObjectID = 0;
 				myByObjectIDList.Add(lvdo);
-				LORVizItemGroup4 lvig = new LORVizItemGroup4(this.Parent, "\0\0DUMMY VIZITEMGROUP AT INDEX [0] - DO NOT USE!");
+				LOR4VizItemGroup lvig = new LOR4VizItemGroup(this.Parent, "\0\0DUMMY VIZITEMGROUP AT INDEX [0] - DO NOT USE!");
 				lvig.SetIndex(0);
 				lvig.SetSavedIndex(0);
 				lvig.SetParent(myParent);
@@ -123,7 +123,7 @@ namespace LOR4Utils
 			}
 			if (theOwner.MemberType == LOR4MemberType.VizItemGroup)
 			{
-				//LORVizDrawObject4 lvdo = new LORVizDrawObject4(this.Parent, "\0\0DUMMY VIZDRAWOBJECT AT INDEX [0] - DO NOT USE!");
+				//LOR4VizDrawObject lvdo = new LOR4VizDrawObject(this.Parent, "\0\0DUMMY VIZDRAWOBJECT AT INDEX [0] - DO NOT USE!");
 				//lvdo.SetIndex(0);
 				//lvdo.SetSavedIndex(0);
 				//lvdo.SetParent(myParent);
@@ -139,24 +139,24 @@ namespace LOR4Utils
 			myByDisplayOrderList = new List<iLOR4Member>();   // The Main List
 			myByIDList = new List<iLOR4Member>();
 			myByAltIDList = new List<iLOR4Member>();
-			//myBySaveIDList = new List<LORTimings4>();
-			//myByAltSaveIDList = new List<LORTimings4>();
-			//myByTrackIndexList = new List<LORTrack4>();
-			//myByAltTrackIndexList = new List<LORTrack4>();
-			//myByObjectIDList = new List<LORVizDrawObject4>();
-			//myByAltObjectIDList = new List<LORVizDrawObject4>();
-			//myByItemIDList = new List<LORVizItemGroup4>();
-			//myByAltItemIDList = new List<LORVizItemGroup4>();
+			//myBySaveIDList = new List<LOR4Timings>();
+			//myByAltSaveIDList = new List<LOR4Timings>();
+			//myByTrackIndexList = new List<LOR4Track>();
+			//myByAltTrackIndexList = new List<LOR4Track>();
+			//myByObjectIDList = new List<LOR4VizDrawObject>();
+			//myByAltObjectIDList = new List<LOR4VizDrawObject>();
+			//myByItemIDList = new List<LOR4VizItemGroup>();
+			//myByAltItemIDList = new List<LOR4VizItemGroup>();
 
 			myByNameDictionary = new SortedDictionary<string, iLOR4Member>();
-			myHighestID = lutils.UNDEFINED;
-			myHighestAltID = lutils.UNDEFINED;
-			//myHighestSaveID = lutils.UNDEFINED;
-			//AltHighestSaveID = lutils.UNDEFINED;
-			//myHighestItemID = lutils.UNDEFINED;
-			//AltHighestItemID = lutils.UNDEFINED;
-			//myHighestObjectID = lutils.UNDEFINED;
-			//AltHighestObjectID = lutils.UNDEFINED;
+			myHighestID = LOR4Admin.UNDEFINED;
+			myHighestAltID = LOR4Admin.UNDEFINED;
+			//myHighestSaveID = LOR4Admin.UNDEFINED;
+			//AltHighestSaveID = LOR4Admin.UNDEFINED;
+			//myHighestItemID = LOR4Admin.UNDEFINED;
+			//AltHighestItemID = LOR4Admin.UNDEFINED;
+			//myHighestObjectID = LOR4Admin.UNDEFINED;
+			//AltHighestObjectID = LOR4Admin.UNDEFINED;
 			//myOwner = null;  // Parent GROUP or TRACK
 			//myParentSeq = null;
 			sortMode = SORTbyID;
@@ -450,9 +450,9 @@ namespace LOR4Utils
 		// LOR4Membership.Add(Member)
 		public int Add(iLOR4Member newMember)
 		{
-			int psi = lutils.UNDEFINED;
-			int tc = lutils.UNDEFINED;
-			int psv = lutils.UNDEFINED;
+			int psi = LOR4Admin.UNDEFINED;
+			int tc = LOR4Admin.UNDEFINED;
+			int psv = LOR4Admin.UNDEFINED;
 			LOR4MemberType parentType = myParent.MemberType;
 			LOR4MemberType ownerType = myOwner.MemberType;
 			LOR4MemberType newMemberType = newMember.MemberType;
@@ -912,8 +912,11 @@ namespace LOR4Utils
 				if (myByDisplayOrderList[i] == null)
 				{
 					string newName = "Member " + i.ToString("0000");
-					LORMemberBase4 mbr = new LORMemberBase4(myParent, newName);
-					mbr.SetID(i);
+					string msg = "There is a null item in the membership of ";
+					msg += this.Owner.Name + " at index " + i.ToString();
+					Fyle.BUG(msg, Fyle.Noises.SamCurseF);
+					//LOR4MemberBase mbr = new(myParent, newName);
+					//mbr.SetID(i);
 				}
 				//System.Diagnostics.Debugger.Break();
 				if (myByDisplayOrderList[i].Parent == null) System.Diagnostics.Debugger.Break();
@@ -957,16 +960,16 @@ namespace LOR4Utils
 							LOR4RGBChannel grp = parentSeq.CreateNewRGBChannel(theName);
 
 							LOR4Channel ch = parentSeq.CreateNewChannel(theName + " (R)");
-							ch.color = lutils.LORCOLOR_RED;
-							ch.rgbChild = LORRGBChild4.Red;
+							ch.color = LOR4Admin.LORCOLOR_RED;
+							ch.rgbChild = LOR4RGBChild.Red;
 							grp.redChannel = ch;
 							ch = parentSeq.CreateNewChannel(theName + " (G)");
-							ch.color = lutils.LORCOLOR_GRN;
-							ch.rgbChild = LORRGBChild4.Green;
+							ch.color = LOR4Admin.LORCOLOR_GRN;
+							ch.rgbChild = LOR4RGBChild.Green;
 							grp.grnChannel = ch;
 							ch = parentSeq.CreateNewChannel(theName + " (B)");
-							ch.color = lutils.LORCOLOR_BLU;
-							ch.rgbChild = LORRGBChild4.Blue;
+							ch.color = LOR4Admin.LORCOLOR_BLU;
+							ch.rgbChild = LOR4RGBChild.Blue;
 							grp.bluChannel = ch;
 
 
@@ -997,7 +1000,7 @@ namespace LOR4Utils
 
 					if (myParent.MemberType == LOR4MemberType.Visualization)
 					{
-						LORVisualization4 parentViz = (LORVisualization4)Parent;
+						LOR4Visualization parentViz = (LOR4Visualization)Parent;
 						if (theType == LOR4MemberType.VizChannel)
 						{
 							//ret = parentViz.CreateVizChannel(theName);
@@ -1079,43 +1082,43 @@ namespace LOR4Utils
 			}
 			return ret;
 		}
-		public LORTrack4 FindTrack(string trackName, bool createIfNotFound = false)
+		public LOR4Track FindTrack(string trackName, bool createIfNotFound = false)
 		{
-			LORTrack4 ret = null;
+			LOR4Track ret = null;
 			iLOR4Member member = FindByName(trackName, LOR4MemberType.Track, createIfNotFound);
 			if (member != null)
 			{
-				ret = (LORTrack4)member;
+				ret = (LOR4Track)member;
 			}
 			return ret;
 		}
-		public LORVizChannel4 FindVizChannel(string channelName, bool createIfNotFound = false)
+		public LOR4VizChannel FindVizChannel(string channelName, bool createIfNotFound = false)
 		{
-			LORVizChannel4 ret = null;
+			LOR4VizChannel ret = null;
 			iLOR4Member member = FindByName(channelName, LOR4MemberType.Channel, createIfNotFound);
 			if (member != null)
 			{
-				ret = (LORVizChannel4)member;
+				ret = (LOR4VizChannel)member;
 			}
 			return ret;
 		}
-		public LORVizDrawObject4 FindVizDrawObject(string drawObjectName, bool createIfNotFound = false)
+		public LOR4VizDrawObject FindVizDrawObject(string drawObjectName, bool createIfNotFound = false)
 		{
-			LORVizDrawObject4 ret = null;
+			LOR4VizDrawObject ret = null;
 			iLOR4Member member = FindByName(drawObjectName, LOR4MemberType.RGBChannel, createIfNotFound);
 			if (member != null)
 			{
-				ret = (LORVizDrawObject4)member;
+				ret = (LOR4VizDrawObject)member;
 			}
 			return ret;
 		}
-		public LORVizItemGroup4 FindVizItemGroup(string itemGroupName, bool createIfNotFound = false)
+		public LOR4VizItemGroup FindVizItemGroup(string itemGroupName, bool createIfNotFound = false)
 		{
-			LORVizItemGroup4 ret = null;
+			LOR4VizItemGroup ret = null;
 			iLOR4Member member = FindByName(itemGroupName, LOR4MemberType.ChannelGroup, createIfNotFound);
 			if (member != null)
 			{
-				ret = (LORVizItemGroup4)member;
+				ret = (LOR4VizItemGroup)member;
 			}
 			return ret;
 		}
@@ -1137,7 +1140,7 @@ namespace LOR4Utils
 		{
 			iLOR4Member ret = null;
 			int idx = BinarySearch(theName, Members);
-			if (idx > lutils.UNDEFINED)
+			if (idx > LOR4Admin.UNDEFINED)
 			{
 				ret= Members[idx];
 			}
@@ -1176,10 +1179,10 @@ namespace LOR4Utils
 		{
 			foreach (iLOR4Member member in myByIDList)
 			{
-				member.AltID = lutils.UNDEFINED;
+				member.AltID = LOR4Admin.UNDEFINED;
 				//member.Written = false;
 			}
-			myHighestAltID = lutils.UNDEFINED;
+			myHighestAltID = LOR4Admin.UNDEFINED;
 		}
 		public int DescendantCount(bool selectedOnly = false, bool countPlain = true, bool countRGBparents = false, bool countRGBchildren = true)
 		{

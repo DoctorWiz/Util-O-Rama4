@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-using LOR4Utils;
+using LOR4;
 using FileHelper;
 using Microsoft.Win32;
 using Syncfusion.Windows.Forms.Tools;
@@ -49,8 +49,8 @@ namespace UtilORama4
 
 		private class Map
 		{
-			//public int addIdx = lutils.UNDEFINED;
-			//public int newIdx = lutils.UNDEFINED;
+			//public int addIdx = LOR4Admin.UNDEFINED;
+			//public int newIdx = LOR4Admin.UNDEFINED;
 			public iLOR4Member addID = null;
 			public iLOR4Member newID = null;
 
@@ -66,7 +66,7 @@ namespace UtilORama4
 
 		}
 
-		int nodeIndex = lutils.UNDEFINED;
+		int nodeIndex = LOR4Admin.UNDEFINED;
 
 		public frmMerge()
 		{
@@ -81,16 +81,16 @@ namespace UtilORama4
 		private void InitForm()
 		{
 			GetTheControlsFromTheHeartOfTheSun();
-			basePath = lutils.DefaultUserDataPath;
+			basePath = LOR4Admin.DefaultUserDataPath;
 
-			seqFolder = lutils.DefaultSequencesPath;
+			seqFolder = LOR4Admin.DefaultSequencesPath;
 
 			bool valid = false;
 			if (lastFile1.Length > 6)
 			{
 				valid = Fyle.IsValidPath(lastFile1, true);
 			}
-			if (!valid) lastFile1 = lutils.DefaultSequencesPath;
+			if (!valid) lastFile1 = LOR4Admin.DefaultSequencesPath;
 			valid = false;
 			if (Fyle.Exists(lastFile1))
 			{
@@ -100,13 +100,13 @@ namespace UtilORama4
 			{
 				valid = Fyle.IsValidPath(lastFile2, true);
 			}
-			if (!valid) lastFile2 = lutils.DefaultSequencesPath;
+			if (!valid) lastFile2 = LOR4Admin.DefaultSequencesPath;
 			valid = false;
 			if (lastNewFile.Length > 6)
 			{
 				valid = Fyle.IsValidPath(lastNewFile, true);
 			}
-			if (!valid) lastNewFile = lutils.DefaultSequencesPath;
+			if (!valid) lastNewFile = LOR4Admin.DefaultSequencesPath;
 			button1.Visible = isWiz;
 
 
@@ -292,12 +292,12 @@ namespace UtilORama4
 		{
 			string initDir = "q:\\dfkjalshjdfklja";
 			if (lastFile1.Length > 6) initDir = Path.GetDirectoryName(lastFile1);
-			if (!Directory.Exists(initDir)) initDir = lutils.DefaultChannelConfigsPath;
-			if (!Directory.Exists(initDir)) initDir = lutils.DefaultSequencesPath;
+			if (!Directory.Exists(initDir)) initDir = LOR4Admin.DefaultChannelConfigsPath;
+			if (!Directory.Exists(initDir)) initDir = LOR4Admin.DefaultSequencesPath;
 			if (!Directory.Exists(initDir)) initDir = Fyle.DefaultDocumentsPath;
 			if (!Directory.Exists(initDir))
 			{
-				initDir = lutils.DefaultSequencesPath;
+				initDir = LOR4Admin.DefaultSequencesPath;
 			}
 			string initFile = "";
 			if (File.Exists(lastFile1))
@@ -344,12 +344,12 @@ namespace UtilORama4
 		{
 			string initDir = "q:\\dfkjalshjdfklja";
 			if (lastFile2.Length > 6) initDir = Path.GetDirectoryName(lastFile2);
-			if (!Directory.Exists(initDir)) initDir = lutils.DefaultChannelConfigsPath;
-			if (!Directory.Exists(initDir)) initDir = lutils.DefaultSequencesPath;
+			if (!Directory.Exists(initDir)) initDir = LOR4Admin.DefaultChannelConfigsPath;
+			if (!Directory.Exists(initDir)) initDir = LOR4Admin.DefaultSequencesPath;
 			if (!Directory.Exists(initDir)) initDir = Fyle.DefaultDocumentsPath;
 			if (!Directory.Exists(initDir))
 			{
-				initDir = lutils.DefaultSequencesPath;
+				initDir = LOR4Admin.DefaultSequencesPath;
 			}
 			string initFile = "";
 			if (File.Exists(lastFile2))
@@ -443,15 +443,15 @@ namespace UtilORama4
 			{
 				for (int g2Idx = 0; g2Idx < seqTwo.TimingGrids.Count; g2Idx++)
 				{
-					LORTimings4 sourceGrid = seqTwo.TimingGrids[g2Idx];
+					LOR4Timings sourceGrid = seqTwo.TimingGrids[g2Idx];
 					sourceGrid.timings.Sort();
-					LORTimings4 destGrid = null;
+					LOR4Timings destGrid = null;
 					// Grids treated like tracks.  Merge or Append?
 					if (mergeTracks)
 					{
 						found = true; // Reset to default
 													// Search for it, do NOT create if not found
-						destGrid = (LORTimings4)seqNew.AllMembers.FindByName(sourceGrid.Name, LOR4MemberType.Timings, false);
+						destGrid = (LOR4Timings)seqNew.AllMembers.FindByName(sourceGrid.Name, LOR4MemberType.Timings, false);
 						if (destGrid == null) // no match found
 						{
 							found = false;
@@ -460,16 +460,16 @@ namespace UtilORama4
 						else // match found!
 						{
 							// Check for conflicting types and warn user
-							if (sourceGrid.TimingGridType == LORTimingGridType4.FixedGrid)
+							if (sourceGrid.TimingGridType == LOR4TimingGridType.FixedGrid)
 							{
-								if (destGrid.TimingGridType == LORTimingGridType4.Freeform)
+								if (destGrid.TimingGridType == LOR4TimingGridType.Freeform)
 								{
 									GridMismatchError(sourceGrid.Name);
 								}
 							}
-							if (sourceGrid.TimingGridType == LORTimingGridType4.Freeform)
+							if (sourceGrid.TimingGridType == LOR4TimingGridType.Freeform)
 							{
-								if (destGrid.TimingGridType == LORTimingGridType4.FixedGrid)
+								if (destGrid.TimingGridType == LOR4TimingGridType.FixedGrid)
 								{
 									GridMismatchError(sourceGrid.Name);
 								}
@@ -501,7 +501,7 @@ namespace UtilORama4
 						// Copy type, spacing and timings
 						destGrid.TimingGridType = sourceGrid.TimingGridType;
 						destGrid.spacing = sourceGrid.spacing;
-						if (destGrid.TimingGridType == LORTimingGridType4.Freeform)
+						if (destGrid.TimingGridType == LOR4TimingGridType.Freeform)
 						{
 							destGrid.CopyTimings(sourceGrid.timings, false);
 						}
@@ -515,11 +515,11 @@ namespace UtilORama4
 
 			if (mergeTracks)
 			{
-				//foreach (LORTrack4 track2 in seqTwo.Tracks)
+				//foreach (LOR4Track track2 in seqTwo.Tracks)
 				for (int t2Idx = 0; t2Idx < seqTwo.Tracks.Count; t2Idx++)
 				{
-					LORTrack4 sourceTrack = seqTwo.Tracks[t2Idx];
-					LORTrack4 destTrack = null;
+					LOR4Track sourceTrack = seqTwo.Tracks[t2Idx];
+					LOR4Track destTrack = null;
 					if (mergeTracksByNumber)
 					{
 						// Merge by number or name?
@@ -537,7 +537,7 @@ namespace UtilORama4
 					if (mergeTracksByName)
 					{
 						found = true; // reset to default
-													//destTrack = (LORTrack4)seqNew.AllMembers.FindByName(sourceTrack.Name, LOR4MemberType.Track, true);
+													//destTrack = (LOR4Track)seqNew.AllMembers.FindByName(sourceTrack.Name, LOR4MemberType.Track, true);
 													//destTrack = seqNew.AllMembers.FindTrack(sourceTrack.Name, true);
 						destTrack = seqNew.FindTrack(sourceTrack.Name, true);
 						if (destTrack == null) // no matching name found
@@ -633,7 +633,7 @@ namespace UtilORama4
 						MergeMembers(destGroup.Members, sourceGroup.Members);
 						break;
 				} // End switch
-			} // end loop thru 2nd Sequence's LORTrack4 Items
+			} // end loop thru 2nd Sequence's LOR4Track Items
 		}
 
 		private LOR4Channel MergeChannel(LOR4Channel sourceCh, LOR4Membership destMembers)
@@ -729,7 +729,7 @@ namespace UtilORama4
 			{
 				seqTwo.TimingGrids[timings2Idx].timings.Sort();
 				matched = false;
-				int matchingExTimingsGridIdx = lutils.UNDEFINED;
+				int matchingExTimingsGridIdx = LOR4Admin.UNDEFINED;
 				for (int exTimingGridsIdx = 0; exTimingGridsIdx < seqNew.TimingGrids.Count; exTimingGridsIdx++)
 				{
 					// Compare names
@@ -751,7 +751,7 @@ namespace UtilORama4
 					// Create a new timing grid and copy the name and type
 					int newSaveID = seqNew.AllMembers.HighestItemID + 1; // .HighestSaveID + 1;
 
-					LORTimings4 tGrid = seqNew.CreateNewTimingGrid(seqTwo.TimingGrids[timings2Idx].Name);
+					LOR4Timings tGrid = seqNew.CreateNewTimingGrid(seqTwo.TimingGrids[timings2Idx].Name);
 					//tGrid.type = seqTwo.TimingGrids[timings2Idx].type;
 					tGrid.spacing = seqTwo.TimingGrids[timings2Idx].spacing;
 					// Create a new array for timings, and copy them
@@ -763,14 +763,14 @@ namespace UtilORama4
 			//  TRACKS  //
 			/////////////
 
-			foreach (LORTrack4 track2 in seqTwo.Tracks)
+			foreach (LOR4Track track2 in seqTwo.Tracks)
 			//for (int tracks2Idx = 0; tracks2Idx < seqTwo.Tracks.Count; tracks2Idx++)
 			{
 				matched = false;
 				if (mergeTracks)
 				{
-					int matchedExTracksIdx = lutils.UNDEFINED;
-					foreach (LORTrack4 newTrack in seqNew.Tracks)
+					int matchedExTracksIdx = LOR4Admin.UNDEFINED;
+					foreach (LOR4Track newTrack in seqNew.Tracks)
 					//for (int exTracksIdx = 0; exTracksIdx < seqNew.Tracks.Count; exTracksIdx++)
 					{
 						if (mergeTracksByName)
@@ -797,7 +797,7 @@ namespace UtilORama4
 								break;
 							}
 						}
-					} // New Sequence LORTrack4 LORLoop4
+					} // New Sequence LOR4Track LOR4Loop
 					if (matched)
 					{
 						//MergeTracks(t2Idx, exIdx);
@@ -817,7 +817,7 @@ namespace UtilORama4
 				foreach (LOR4ChannelGroup group2 in seqTwo.ChannelGroups)
 				//for (int groups2Idx = 0; groups2Idx < seqTwo.channelGroupCount; groups2Idx++)
 				{
-					int matchedExGroupsIdx = lutils.UNDEFINED;
+					int matchedExGroupsIdx = LOR4Admin.UNDEFINED;
 					foreach (LOR4ChannelGroup newGroup in seqNew.ChannelGroups)
 					//for (int exGroupsIdx = 0; exGroupsIdx < seqNew.channelGroupCount; exGroupsIdx++)
 					{
@@ -831,7 +831,7 @@ namespace UtilORama4
 						//Array.Resize(ref groupMap, newGroupCount + 1);
 						Map gm = new Map(group2, newGroup);
 						groupMap.Add(gm);
-						if (matchedExGroupsIdx == lutils.UNDEFINED)
+						if (matchedExGroupsIdx == LOR4Admin.UNDEFINED)
 						{
 							LOR4ChannelGroup group3 = seqNew.CreateNewChannelGroup(group2.Name);
 							gm = new Map(group3, newGroup);
@@ -866,7 +866,7 @@ namespace UtilORama4
 
 
 		}
-		private void MergeTimingGrids(LORTimings4 destGrid, LORTimings4 sourceGrid)
+		private void MergeTimingGrids(LOR4Timings destGrid, LOR4Timings sourceGrid)
 		{
 			int t2Idx = 0;
 			int exIdx = 0;
@@ -956,7 +956,7 @@ namespace UtilORama4
 			}
 			if (!Directory.Exists(initDir))
 			{
-				initDir = lutils.DefaultSequencesPath;
+				initDir = LOR4Admin.DefaultSequencesPath;
 			}
 			string initFile = Path.GetFileNameWithoutExtension(lastFile1);
 			initFile += " merged with ";
@@ -1067,11 +1067,11 @@ namespace UtilORama4
 			switch (member.MemberType)
 			{
 				case LOR4MemberType.Channel:
-					lutils.RenderEffects(member, ref picPreview, true);
+					LOR4Admin.RenderEffects(member, ref picPreview, true);
 					picPreview.Visible = true;
 					break;
 				case LOR4MemberType.RGBChannel:
-					lutils.RenderEffects(member, ref picPreview, false);
+					LOR4Admin.RenderEffects(member, ref picPreview, false);
 					picPreview.Visible = true;
 					break;
 				case LOR4MemberType.Track:

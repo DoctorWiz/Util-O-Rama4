@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using LOR4Utils;
+using LOR4;
 using FileHelper;
 
 
@@ -27,7 +27,7 @@ namespace RGBORama
 		{
 			InitializeComponent();
 			seq = theSequence;
-			lutils.TreeFillChannels(treeChannels, seq, nodeList, false, false);
+			LOR4Admin.TreeFillChannels(treeChannels, seq, nodeList, false, false);
 		}
 
 		private void cmdOK_Click(object sender, EventArgs e)

@@ -75,7 +75,7 @@ namespace UtilORama4
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlStatus.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
 			this.pnlStatus.Name = "pnlStatus";
-			this.pnlStatus.Size = new System.Drawing.Size(415, 19);
+			this.pnlStatus.Size = new System.Drawing.Size(446, 19);
 			this.pnlStatus.Spring = true;
 			// 
 			// pnlAbout

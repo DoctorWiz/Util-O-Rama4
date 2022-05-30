@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UtilORama4
+namespace xLights22
 {
 	public class xTimings
 	{
 		public string Name = "";
-		public string sourceVersion = "2021.17";
-		public List<xEffect> effects = new List<xEffect>();
+		public string sourceVersion = "2022.1";
+		public List<xMarker> Markers = new List<xMarker>();
 		//public int effectCount = 0;
 		public readonly static string SourceVersion = "2019.32";
 		public readonly static string XMLinfo = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -20,13 +20,11 @@ namespace UtilORama4
 		public static string FIELD_name = "name";
 		public static string FIELD_source = "SourceVersion";
 		public static string TABLE_layers = "EffectLayer";
-		public static string TABLE_LORtime5 = "LORTiming";
 		public static string FIELD_version = "version";
 		public static string TABLE_Grids = "TimingGrids";
 		public static string TABLE_grid = "timingGrid";
 		public static string TABLE_FreeGrid = "TimingGridFree";
 		public static string TABLE_BeatChans = "BeatChannels";
-		//public static string FIELD_centisecond = "centisecond";
 		public static string FIELD_millisecond = "millisecond";
 		public static string FIELD_saveID = "saveID";
 		public static string FIELD_type = "type";
@@ -54,13 +52,26 @@ namespace UtilORama4
 		public xTimings(string theName)
 		{
 			Name = theName;
+			//xSequence.TimingTracks.Add(this);
 		}
 
-		public void Add(xEffect newEffect)
+		public xMarker Add(string lineIn)
 		{
-			if (effects.Count > 0)
+			// In theory you could create new marker with just a name, but
+			// that would be pretty dumb.  When adding a marker you should
+			// at least provide a start time.
+			// THUS trying to create a new marker from just a string indicates
+			// it is importing a line from a timing file
+			xMarker newMark = new xMarker(lineIn);
+			Add(newMark);
+			return newMark;
+		}
+
+		public void Add(xMarker newMark)
+		{
+			if (Markers.Count > 0)
 			{
-				if (newEffect.starttime < effects[effects.Count - 1].endtime)
+				if (newMark.starttime < Markers[Markers.Count - 1].endtime)
 				{
 					// Is this truly an error?  How will xLights respond?
 					//System.Diagnostics.Debugger.Break();
@@ -68,71 +79,148 @@ namespace UtilORama4
 				}
 				else
 				{
-					effects.Add(newEffect);
-					maxMillis = newEffect.endtime;
+					Markers.Add(newMark);
+					maxMillis = newMark.endtime;
 					//					effectCount++;
-					//Array.Resize(ref effects, effectCount);
-					//effects[effectCount - 1] = newEffect;
+					//Array.Resize(ref Markers, effectCount);
+					//Markers[effectCount - 1] = newMarkect;
 				}
 			}
 			else
 			{
-				effects.Add(newEffect);
-				maxMillis = newEffect.endtime;
+				Markers.Add(newMark);
+				maxMillis = newMark.endtime;
 				//effectCount = 1;
-				//Array.Resize(ref effects, 1);
-				//effects[0] = newEffect;
+				//Array.Resize(ref Markers, 1);
+				//Markers[0] = newMarkect;
 			}
-			//Annotator.HighTime = newEffect.endtime;
+			//Annotator.HighTime = newMarkect.endtime;
 
 		}
 
-		public xEffect Add(string theLabel, int startTime, int endTime, int number)
+		public xMarker Add(string theLabel, int startTime, int endTime, int number)
 		{
-			xEffect newEff = new xEffect(theLabel, startTime, endTime);
-			newEff.Number = number;
-			Add(newEff);
-			return newEff;
+			xMarker newMark = new xMarker(theLabel, startTime, endTime);
+			newMark.Number = number;
+			Add(newMark);
+			return newMark;
 		}
 
-		public xEffect Add(string theLabel, int startTime, int endTime)
+		public xMarker Add(string theLabel, int startTime, int endTime)
 		{
-			xEffect newEff = new xEffect(theLabel, startTime, endTime);
-			Add(newEff);
-			return newEff;
+			xMarker newMark = new xMarker(theLabel, startTime, endTime);
+			Add(newMark);
+			return newMark;
 		}
 
-		public xEffect Add(int startTime, int endTime)
+		public xMarker Add(int startTime, int endTime)
 		{
-			xEffect newEff = new xEffect(startTime, endTime);
-			Add(newEff);
-			return newEff;
+			xMarker newMark = new xMarker(startTime, endTime);
+			Add(newMark);
+			return newMark;
 		}
 
-		public xEffect Add(int endTime)
+		public xMarker Add(int endTime)
 		{
-			xEffect newEff = new xEffect(endTime);
-			Add(newEff);
-			return newEff;
+			xMarker newMark = new xMarker(endTime);
+			Add(newMark);
+			return newMark;
 		}
 
-		public xEffect Add(string theLabel, int endTime)
+		public xMarker Add(string theLabel, int endTime)
 		{
-			xEffect newEff = new xEffect(theLabel, endTime);
-			Add(newEff);
-			return newEff;
+			xMarker newMark = new xMarker(theLabel, endTime);
+			Add(newMark);
+			return newMark;
 		}
 
 		public void Clear()
 		{
 			Name = "";
 			sourceVersion = "2019.32";
-			//effects = null;
-			effects = new List<xEffect>();
+			//Markers = null;
+			Markers = new List<xMarker>();
 			//effectCount = 0;
 		}
 
-		public string LineOutX()
+		public int Import(string fileName, string trackName = "")
+		{
+			// Behavior if no name specified: will import the first timing track of a multi-track timing file
+			//   or the [only] track in a single-track file.
+			// If a name is specified it will not import the timing track unless the name matches
+			//   regardless of whether or not it is a single or multi-tracked file
+			int err = 0;
+			int trackNo = 0;
+			string lineIn = "";
+			StreamReader reader = new StreamReader(fileName);
+			while (!reader.EndOfStream)
+			{
+
+			}
+
+			return err;
+		}
+
+		public int Import(string fileName, int whichTrack = 1)
+		{
+			// In case of a multi-track timing file, this will import only the first one
+			//    unless otherwise specified
+			int err = 0;
+			int trackNo = 0;
+			string lineIn = "";
+			StreamReader reader = new StreamReader(fileName);
+			while (!reader.EndOfStream)
+			{
+				lineIn = reader.ReadLine();
+				// If 2nd line of file is <timings> it is a multi-track file
+				// If 2nd line of file starts with <timing name= it is either a single-track file
+				// or it is a lyric track (which has 3 timing tracks)
+				if (lineIn == "<timings>")
+				{
+					trackNo++;
+					if (whichTrack == trackNo)
+					{
+						lineIn = reader.ReadLine();
+						Parse(lineIn);
+						bool go = true;
+						while ((!reader.EndOfStream) && go)
+						{
+							lineIn = reader.ReadLine();
+							if (lineIn.IndexOf("</EffectLayer>") > 0)
+							{
+								go = false;
+							}
+							else
+							{
+								xMarker marker = new xMarker(lineIn);
+
+							}
+						}
+
+					}
+				}
+			}
+			reader.Close();
+			return err;
+		}
+
+		public int Export(string fileName)
+		{
+			int err = 0;
+			StreamWriter writer = new StreamWriter(fileName);
+			writer.WriteLine(xAdmin.XML_HEADER);
+			string lineOut = LineOut();
+			writer.WriteLine(lineOut);
+			writer.Close();
+			return err;
+		}
+
+		public void Parse(string lineIn)
+		{
+			Name = xAdmin.getKeyWord(lineIn, "name");
+		}
+
+		public string LineOut()
 		{
 			StringBuilder ret = new StringBuilder();
 			//  <timing
@@ -146,7 +234,7 @@ namespace UtilORama4
 			ret.Append(Name);
 			ret.Append(VALUE_end);
 			ret.Append(SPC);
-			//  SourceVersion="2019.21">
+			//  SourceVersion="2022.1">
 			ret.Append(FIELD_source);
 			ret.Append(VALUE_start);
 			ret.Append(sourceVersion);
@@ -160,9 +248,10 @@ namespace UtilORama4
 			ret.Append(RECORD_end);
 			ret.Append(CRLF);
 
-			for (int i = 0; i < effects.Count; i++)
+			for (int i = 0; i < Markers.Count; i++)
 			{
-				ret.Append(effects[i].LineOutX());
+				ret.Append(Markers[i].LineOut());
+				ret.Append("\r\n");
 			}
 
 			//     </EffectLayer>
@@ -180,126 +269,6 @@ namespace UtilORama4
 			return ret.ToString();
 		}
 
-		public string LineOut4()
-		{
-			const int ver = 1;
-			StringBuilder ret = new StringBuilder();
-			//  	<timingGrids>
-			//ret.Append(LEVEL1);
-			//ret.Append(RECORD_start);
-			//ret.Append(TABLE_grid);
-			//ret.Append(PLURAL);
-			//ret.Append(RECORD_end);
-			//ret.Append(CRLF);
-			//
-			ret.Append(LEVEL2);
-			ret.Append(RECORD_start);
-			ret.Append(TABLE_grid);
-			ret.Append(SPC);
-
-			ret.Append(FIELD_saveID);
-			ret.Append(VALUE_start);
-			ret.Append(SAVEID_X);
-			ret.Append(VALUE_end);
-			ret.Append(SPC);
-
-			ret.Append(FIELD_name);
-			ret.Append(VALUE_start);
-			ret.Append(Name);
-			ret.Append(VALUE_end);
-			ret.Append(SPC);
-
-			ret.Append(FIELD_type);
-			ret.Append(VALUE_start);
-			ret.Append(TYPE_freeform);
-			ret.Append(VALUE_end);
-			ret.Append(RECORD_end);
-			ret.Append(CRLF);
-
-			for (int i = 0; i < effects.Count; i++)
-			{
-				ret.Append(effects[i].LineOut4());
-			}
-
-			//      </TimingGridFree>
-			ret.Append(LEVEL2);
-			ret.Append(RECORDS_done);
-			ret.Append(TABLE_grid);
-			ret.Append(RECORD_end);
-
-			return ret.ToString();
-		}
-
-		public string LineOut5()
-		{
-			const int ver = 1;
-			StringBuilder ret = new StringBuilder();
-			//  <?xml version="1.0" encoding="utf-8"?>
-			ret.Append(LEVEL0);
-			ret.Append(XMLinfo);
-			ret.Append(CRLF);
-			//  <LORTiming version="1">
-			ret.Append(LEVEL0);
-			ret.Append(RECORD_start);
-			ret.Append(TABLE_LORtime5);
-			ret.Append(SPC);
-			ret.Append(FIELD_version);
-			ret.Append(VALUE_start);
-			ret.Append(ver.ToString());
-			ret.Append(VALUE_end);
-			ret.Append(RECORD_end);
-			ret.Append(CRLF);
-			//    <TimingGrids>
-			ret.Append(LEVEL1);
-			ret.Append(RECORD_start);
-			ret.Append(TABLE_Grids);
-			ret.Append(RECORD_end);
-			ret.Append(CRLF);
-			//    <TimingGridFree name="Full Beats - Whole Notes">
-			ret.Append(LEVEL2);
-			ret.Append(RECORD_start);
-			ret.Append(TABLE_FreeGrid);
-			ret.Append(SPC);
-			ret.Append(FIELD_name);
-			ret.Append(VALUE_start);
-			ret.Append(Name);
-			ret.Append(VALUE_end);
-			ret.Append(RECORD_end);
-			ret.Append(CRLF);
-
-			for (int i = 0; i < effects.Count; i++)
-			{
-				ret.Append(effects[i].LineOut5());
-			}
-
-			//      </TimingGridFree>
-			ret.Append(LEVEL2);
-			ret.Append(RECORDS_done);
-			ret.Append(TABLE_FreeGrid);
-			ret.Append(RECORD_end);
-			ret.Append(CRLF);
-			//    </TimingGrids>
-			ret.Append(LEVEL1);
-			ret.Append(RECORDS_done);
-			ret.Append(TABLE_Grids);
-			ret.Append(RECORD_end);
-			ret.Append(CRLF);
-			//    <BeatChannels />
-			ret.Append(LEVEL1);
-			ret.Append(RECORD_start);
-			ret.Append(TABLE_BeatChans);
-			ret.Append(SPC);
-			ret.Append(RECORD_done);
-			ret.Append(CRLF);
-			//  </LORTiming>
-			ret.Append(LEVEL0);
-			ret.Append(RECORDS_done);
-			ret.Append(TABLE_LORtime5);
-			ret.Append(RECORD_end);
-
-			return ret.ToString();
-		}
-
 		public int Milliseconds
 		{
 			get
@@ -308,9 +277,13 @@ namespace UtilORama4
 			}
 		}
 	}
+	//! END xTimings class
 
 
-	public class xEffect : IComparable<xEffect>
+	//!/////////////////////
+	//!  xMarkers Class  //
+	//!///////////////////
+	public class xMarker : IComparable<xMarker>
 	{
 		public string Label = "";
 		public object Tag = null;
@@ -319,26 +292,17 @@ namespace UtilORama4
 		private int _endtime = 0; //999999999;
 		private static int lastEnd = 0;
 
-		public static string TABLE_Effect = "Effect";
-		public static string FIELD_label = "label";
-		public static string FIELD_start = "starttime";
-		public static string FIELD_end = "endtime";
-		public static string TABLE_timing = "timing";
-		public static string TABLE_LORtime5 = "<Timing version=\"1\">";
-		public static string TABLE_Grids = "<TimingGrids>";
-		public static string TABLE_FreeGrid = "";
-		//public static string FIELD_centisecond = "centisecond";
-		public static string FIELD_millisecond = "millisecond";
-		public static string LEVEL2 = "    ";
-		public static string RECORD_start = "<";
-		public static string RECORD_end = "/>";
-		public static string RECORD_final = ">";
-		public static string SPC = " ";
-		public static string CRLF = "\r\n";
-		public static string VALUE_start = "=\"";
-		public static string VALUE_end = "\"";
+		public xMarker(string lineIn)
+		{
+			// In theory you could create new marker with just a name, but
+			// that would be pretty dumb.  When adding a marker you should
+			// at least provide a start time.
+			// THUS trying to create a new marker from just a string indicates
+			// it is importing a line from a timing file
+			Parse(lineIn);
+		}
 
-		public xEffect(string theLabel, int startTime, int endTime)
+		public xMarker(string theLabel, int startTime, int endTime)
 		{
 			if (startTime >= endTime)
 			{
@@ -354,7 +318,7 @@ namespace UtilORama4
 			}
 		}
 
-		public xEffect(string theLabel, int startTime, int endTime, int number)
+		public xMarker(string theLabel, int startTime, int endTime, int number)
 		{
 			if (startTime >= endTime)
 			{
@@ -371,7 +335,7 @@ namespace UtilORama4
 			}
 		}
 
-		public xEffect(int startTime, int endTime)
+		public xMarker(int startTime, int endTime)
 		{
 			if (startTime >= endTime)
 			{
@@ -386,7 +350,7 @@ namespace UtilORama4
 			}
 		}
 
-		public xEffect(int endTime)
+		public xMarker(int endTime)
 		{
 			if (lastEnd >= endTime)
 			{
@@ -401,7 +365,7 @@ namespace UtilORama4
 			}
 		}
 
-		public xEffect(string theLabel, int endTime)
+		public xMarker(string theLabel, int endTime)
 		{
 			if (lastEnd >= endTime)
 			{
@@ -457,85 +421,36 @@ namespace UtilORama4
 			}
 		}
 
-		public int CompareTo(xEffect otherEffect)
+		public int CompareTo(xMarker otherEffect)
 		{
 			return _starttime.CompareTo(otherEffect.starttime);
 		}
-		public string LineOutX()
+
+		public void Parse(string lineIn)
+		{
+			Label = xAdmin.getKeyWord(lineIn, "label");
+			_starttime = xAdmin.getKeyValue(lineIn, "starttime");
+			_endtime = xAdmin.getKeyValue(lineIn, "endtime");
+			lastEnd = _endtime;
+		}
+
+		public string LineOut()
 		{
 			StringBuilder ret = new StringBuilder();
-			//    <LOR4Effect 
-			ret.Append(LEVEL2);
-			ret.Append(RECORD_start);
-			ret.Append(TABLE_Effect);
-			ret.Append(SPC);
-			//  label="foo" 
-			ret.Append(FIELD_label);
-			ret.Append(VALUE_start);
+			ret.Append(xAdmin.LEVEL3);
+			ret.Append("<Effect label=\"");
 			ret.Append(Label);
-			ret.Append(VALUE_end);
-			ret.Append(SPC);
-			//  starttime="50" 
-			ret.Append(FIELD_start);
-			ret.Append(VALUE_start);
+			ret.Append("\" starttime=\"");
 			ret.Append(_starttime.ToString());
-			ret.Append(VALUE_end);
-			ret.Append(SPC);
-			//  endtime="350" />
-			ret.Append(FIELD_end);
-			ret.Append(VALUE_start);
+			ret.Append("\" endtime=\"");
 			ret.Append(_endtime.ToString());
-			ret.Append(VALUE_end);
-			ret.Append(SPC);
-
-			ret.Append(RECORD_end);
-			ret.Append(CRLF);
-
+			ret.Append("\" />");
 			return ret.ToString();
 		}
 
-		public string LineOut4()
-		{
-			StringBuilder ret = new StringBuilder();
-			int cs = _starttime / 10;
-			//    <timing 
-			ret.Append(LEVEL2);
-			ret.Append(RECORD_start);
-			ret.Append(TABLE_timing);
-			ret.Append(SPC);
-			//  label="foo" 
-			ret.Append(FIELD_millisecond);
-			ret.Append(VALUE_start);
-			ret.Append(cs.ToString());
-			ret.Append(VALUE_end);
-			ret.Append(SPC);
-
-			ret.Append(RECORD_end);
-			ret.Append(CRLF);
-
-			return ret.ToString();
-		}
-
-		public string LineOut5()
-		{
-			StringBuilder ret = new StringBuilder();
-			int cs = _starttime / 10;
-			//    <timing 
-			ret.Append(LEVEL2);
-			ret.Append(RECORD_start);
-			ret.Append(TABLE_timing);
-			ret.Append(SPC);
-			//  label="foo" 
-			ret.Append(FIELD_millisecond);
-			ret.Append(VALUE_start);
-			ret.Append(cs.ToString());
-			ret.Append(VALUE_end);
-			ret.Append(SPC);
-
-			ret.Append(RECORD_end);
-			ret.Append(CRLF);
-
-			return ret.ToString();
-		}
 	}
+
+
+
+
 }

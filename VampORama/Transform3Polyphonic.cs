@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
-using LOR4Utils;
+using LOR4;
 using FileHelper;
-using xUtilities;
+using xLights22;
 
 namespace UtilORama4
 {
@@ -248,7 +248,7 @@ namespace UtilORama4
 			AlignmentType = alignmentType;
 			Annotator.SetAlignment(alignmentType);
 
-			xPolyphonic.effects.Clear();
+			xPolyphonic.Markers.Clear();
 
 			StreamReader reader = new StreamReader(resultsFile);
 			while (!reader.EndOfStream)
@@ -257,9 +257,9 @@ namespace UtilORama4
 				string[] parts = lineIn.Split(',');
 				if (parts.Length > 2) ;
 				{
-					millisecs = xUtils.ParseMilliseconds(parts[0]);
+					millisecs = xAdmin.ParseMilliseconds(parts[0]);
 					eStart = Annotator.AlignTime(millisecs);
-					duration = xUtils.ParseMilliseconds(parts[1]);
+					duration = xAdmin.ParseMilliseconds(parts[1]);
 					int ee = eStart + duration;
 					eEnd = Annotator.AlignTime(ee);
 					// Note: Unlike other annotator transforms, we will NOT be checking to see
@@ -314,7 +314,7 @@ namespace UtilORama4
 			string msg = "\r\n\r\n### PROCESSING POLYPHONIC TRANSCRIPTION ####################################";
 			Debug.WriteLine(msg);
 
-			xPolyphonic.effects.Clear();
+			xPolyphonic.Markers.Clear();
 
 			StreamReader reader = new StreamReader(resultsFile);
 			while (!reader.EndOfStream)
@@ -323,9 +323,9 @@ namespace UtilORama4
 				string[] parts = lineIn.Split(',');
 				if (parts.Length > 2) ;
 				{
-					millisecs = xUtils.ParseMilliseconds(parts[0]);
+					millisecs = xAdmin.ParseMilliseconds(parts[0]);
 					eStart = Annotator.AlignTime(millisecs);
-					duration = xUtils.ParseMilliseconds(parts[1]);
+					duration = xAdmin.ParseMilliseconds(parts[1]);
 					int ee = eStart + duration;
 					eEnd = Annotator.AlignTime(ee);
 					// Note: Unlike other annotator transforms, we will NOT be checking to see
@@ -363,11 +363,11 @@ namespace UtilORama4
 
 			if (xPolyphonic != null)
 			{
-				if (xPolyphonic.effects.Count > 0)
+				if (xPolyphonic.Markers.Count > 0)
 				{
 					// Note: Number '5' is the same as None Onsets because this returns, effectively, the same results
 					string gridName = "5 " + transformName;
-					LORTimings4 polyGrid = Annotator.Sequence.FindTimingGrid(gridName, true);
+					LOR4Timings polyGrid = Annotator.Sequence.FindTimingGrid(gridName, true);
 					SequenceFunctions.ImportTimingGrid(polyGrid, xPolyphonic);
 				}
 			}
@@ -415,11 +415,11 @@ namespace UtilORama4
 			// Create an effect in the appropriate Note Poly Channel for each timing
 			if (xPolyphonic != null)
 			{
-				if (xPolyphonic.effects.Count > 0)
+				if (xPolyphonic.Markers.Count > 0)
 				{
-					for (int f = 0; f < xPolyphonic.effects.Count; f++)
+					for (int f = 0; f < xPolyphonic.Markers.Count; f++)
 					{
-						xEffect timing = xPolyphonic.effects[f];
+						xMarker timing = xPolyphonic.Markers[f];
 						int note = timing.Number;
 						if (note < 1) // Data integrity check
 						{

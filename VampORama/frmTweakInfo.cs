@@ -7,8 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using xUtilities;
-using LOR4Utils;
+using xLights22;
+using LOR4;
 using FileHelper;
 
 namespace UtilORama4
@@ -18,11 +18,11 @@ namespace UtilORama4
 		public frmTweakInfo()
 		{
 			InitializeComponent();
-			string xooo = xUtils.ShowDirectory;
-			string looo = lutils.DefaultSequencesPath;
+			string xooo = xAdmin.ShowDirectory;
+			string looo = LOR4Admin.DefaultSequencesPath;
 			if ((xooo.Length > 3) && (looo.Length < 3))
 			{
-				this.linkProgram.Text = "C:\\Program Files\\xUtils\\Vamperizer";
+				this.linkProgram.Text = "C:\\Program Files\\xAdmin\\Vamperizer";
 			}
 		}
 

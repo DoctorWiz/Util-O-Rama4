@@ -8,7 +8,7 @@ using System.Drawing;
 using System.Diagnostics;
 using FileHelper;
 
-namespace LOR4Utils
+namespace LOR4
 {
 	public interface iLOR4Member : IComparable<iLOR4Member>
 	{
@@ -28,15 +28,20 @@ namespace LOR4Utils
 		{ get; }
 		void SetSavedIndex(int theSavedIndex);
 
+		// For LOR members, color (lower case) is a LOR color in format int32 0x00BBGGRR (Blue, Green, Red)(No Alpha)
+		// for xLights members, Color (upper case) is a standard .Net/HTML color in format 0xAARRGGBB (Alpha, Red, Green, Blue)
+		// LOR4 has functions for converting back and forth
 		int color
 		{ get; set; }
 		Color Color
 		{ get; set; }
+
+		// For Channels, RGBChannels, ChannelGroups, Tracks, Timings, etc.  This will be the parent Sequence
+		// For VizChannels and VizDrawObjects this will be the parent Visualization
 		iLOR4Member Parent
 		{ get; }
 		void SetParent(iLOR4Member newParent);
-		// For Channels, RGBChannels, ChannelGroups, Tracks, Timings, etc.  This will be the parent Sequence
-		// For VizChannels and VizDrawObjects this will be the parent Visualization
+
 		bool Selected
 		{ get; set; }
 		bool Dirty
@@ -64,6 +69,7 @@ namespace LOR4Utils
 		{ get; }
 		int DMXAddress
 		{ get; }
+		void SetAddress(int universe, int dmxAddress);
 		string Comment
 		{ get; set; }
 		int ZCount

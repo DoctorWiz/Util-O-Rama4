@@ -9,12 +9,12 @@ using System.Diagnostics;
 using System.IO;
 using FileHelper;
 
-namespace LOR4Utils
+namespace LOR4
 {
-	public class LORVizItemGroup4 : LORMemberBase4, iLOR4Member, IComparable<iLOR4Member>
+	public class LOR4VizItemGroup : LOR4MemberBase, iLOR4Member, IComparable<iLOR4Member>
 	// An "Item" in a Visualization file is basically a group!
 	{
-		protected LORVisualization4 parentVisualization = null;
+		protected LOR4Visualization parentVisualization = null;
 		public bool Locked = false;
 		public int[] AssignedObjectsNumbers = null;
 
@@ -54,7 +54,7 @@ namespace LOR4Utils
 		// SuperStar since it is very expensive!  So I can just write out all these defaults in one go.
 		public static readonly string FIELDS_SS_DEFAULTS = " SSWU=\"0\" SSFF=\"\" SSReverseOrder=\"False\" SSForceRowColumn=\"False\" SSRow=\"0\" SSColumn=\"0\" SSUseMyOrder=\"False\" SSStar=\"False\" SSMatrixInd=\"0\" SSPropColorTemp=\"0\"";
 
-		public LORVizItemGroup4(iLOR4Member parent, string lineIn)
+		public LOR4VizItemGroup(iLOR4Member parent, string lineIn)
 		{
 
 			base.SetParent(parent);
@@ -72,16 +72,16 @@ namespace LOR4Utils
 				// SavedIndices and SaveIDs in Sequences start at 0. Cool! Great! No Prob!
 				// But Channels, Groups, and DrawObjects in Visualizations start at 1 (Grrrrr)
 				// So add a dummy object at the [0] start of the lists
-				LORVisualization4 vp = (LORVisualization4)myParent;
+				LOR4Visualization vp = (LOR4Visualization)myParent;
 
 
-				LORVizDrawObject4 lvdo = new LORVizDrawObject4(myParent, "DUMMY");
+				LOR4VizDrawObject lvdo = new LOR4VizDrawObject(myParent, "DUMMY");
 				lvdo.SetIndex(0);
 				lvdo.SetID(0);
 
 
 
-				//LORVizDrawObject4 lvdo = vp.VizDrawObjects[0];
+				//LOR4VizDrawObject lvdo = vp.VizDrawObjects[0];
 				Members.Add(lvdo);
 			}
 		}
@@ -96,7 +96,7 @@ namespace LOR4Utils
 		{
 			get
 			{
-				int un = lutils.UNDEFINED;
+				int un = LOR4Admin.UNDEFINED;
 				if (Members.Count > 1)
 				{
 					un = Members.Items[1].UniverseNumber;
@@ -108,7 +108,7 @@ namespace LOR4Utils
 		{
 			get
 			{
-				int da = lutils.UNDEFINED;
+				int da = LOR4Admin.UNDEFINED;
 				if (Members.Count > 1)
 				{
 					da = Members.Items[1].DMXAddress;
@@ -150,7 +150,7 @@ namespace LOR4Utils
 
 		public override iLOR4Member Clone()
 		{
-			LORVizItemGroup4 newGrp = (LORVizItemGroup4)Clone();
+			LOR4VizItemGroup newGrp = (LOR4VizItemGroup)Clone();
 			newGrp.parentVisualization = parentVisualization;
 			newGrp.Locked = Locked;
 			newGrp.Comment = newGrp.Comment;
@@ -162,7 +162,7 @@ namespace LOR4Utils
 
 		public override iLOR4Member Clone(string newName)
 		{
-			LORVizItemGroup4 newGrp = (LORVizItemGroup4)this.Clone();
+			LOR4VizItemGroup newGrp = (LOR4VizItemGroup)this.Clone();
 			newGrp.ChangeName(newName);
 			return newGrp;
 		}
@@ -175,11 +175,11 @@ namespace LOR4Utils
 
 		public override void Parse(string lineIn)
 		{
-			myID = lutils.getKeyValue(lineIn, LORVisualization4.FIELDvizID);
+			myID = LOR4Admin.getKeyValue(lineIn, LOR4Visualization.FIELDvizID);
 			myIndex = myID - 1;
-			myName = lutils.getKeyWord(lineIn, lutils.FIELDname);
-			Locked = lutils.getKeyState(lineIn, FIELDLocked);
-			Comment = lutils.getKeyWord(lineIn, FIELDComment);
+			myName = LOR4Admin.getKeyWord(lineIn, LOR4Admin.FIELDname);
+			Locked = LOR4Admin.getKeyState(lineIn, FIELDLocked);
+			Comment = LOR4Admin.getKeyWord(lineIn, FIELDComment);
 		}
 
 
@@ -197,8 +197,8 @@ namespace LOR4Utils
 					if (iEnd > 0) keepGoing = false;
 					if (keepGoing)
 					{
-						int ox = lutils.getKeyValue(lineIn, FIELDAssignedID);
-						int oid = lutils.getKeyValue(lineIn, FIELDObjectID);
+						int ox = LOR4Admin.getKeyValue(lineIn, FIELDAssignedID);
+						int oid = LOR4Admin.getKeyValue(lineIn, FIELDObjectID);
 						if (AssignedObjectsNumbers == null)
 						{
 							Array.Resize(ref AssignedObjectsNumbers, ox + 1);
@@ -239,11 +239,11 @@ namespace LOR4Utils
 
 		public override Color Color
 		{
-			get { return lutils.Color_LORtoNet(this.color); }
+			get { return LOR4Admin.Color_LORtoNet(this.color); }
 			set { Color ignore = value; }
 		}
 
 
-	} // End Class LORVizItemGroup4
+	} // End Class LOR4VizItemGroup
 } // End Namespace
 

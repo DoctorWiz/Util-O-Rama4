@@ -7,8 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using FuzzyString;
-using LOR4Utils;
+using FuzzORama;
+using LOR4;
 using FileHelper;
 using System.IO;
 
@@ -103,65 +103,13 @@ namespace UtilORama4
 			string txt = cboPrematch.Text;
 			string start = txt.Substring(0, 3);
 
-			if (start == "Cos")
-			{
-				alg = FuzzyString.FuzzyFunctions.USE_COSINE;
-			}
-			else if (start == "Pad")
-			{
-				alg = FuzzyString.FuzzyFunctions.USE_PADDEDHAMMING;
-			}
-			else if (start == "Ham")
-			{
-				alg = FuzzyString.FuzzyFunctions.USE_HAMMINGWIZMO;
-			}
-			else if (start == "Jac")
-			{
-				alg = FuzzyString.FuzzyFunctions.USE_JACCARD;
-			}
-			else if (start == "Lev")
-			{
-				alg = FuzzyString.FuzzyFunctions.USE_LEVENSHTEIN;
-			}
-			else if (start == "Dam")
+			if (start == "Dam")
 			{
 				alg = FuzzyString.FuzzyFunctions.USE_DAMERAULEVENSHTEIN;
-			}
-			else if (start == "Nor")
-			{
-				alg = FuzzyString.FuzzyFunctions.USE_NORMALIZEDLEVENSHTEIN;
 			}
 			else if (start == "Yet")
 			{
 				alg = FuzzyString.FuzzyFunctions.USE_YETILEVENSHTEIN;
-			}
-			else if (start == "Wei")
-			{
-				alg = FuzzyString.FuzzyFunctions.USE_WEIGHTEDLEVENSHTEIN;
-			}
-			else if (start == "Met")
-			{
-				alg = FuzzyString.FuzzyFunctions.USE_METRIC;
-			}
-			else if (start == "Nee")
-			{
-				alg = FuzzyString.FuzzyFunctions.USE_NEEDLEMANWUNSCH;
-			}
-			else if (start == "N-G")
-			{
-				//alg = FuzzyString.FuzzyFunctions.USE_NGRAM;
-			}
-			else if (start == "Q-G")
-			{
-				alg = FuzzyString.FuzzyFunctions.USE_QGRAM;
-			}
-			else if (start == "Opt")
-			{
-				alg = FuzzyString.FuzzyFunctions.USE_OPTIMALSTRINGALIGNMENT;
-			}
-			else if (start == "Ove")
-			{
-				alg = FuzzyString.FuzzyFunctions.USE_OVERLAPCOEFFICIENT;
 			}
 			else if (start == "Sif")
 			{
@@ -171,25 +119,9 @@ namespace UtilORama4
 			{
 				alg = FuzzyString.FuzzyFunctions.USE_SORENSENDICE;
 			}
-			else if (txt.IndexOf("Dev") > 0)
-			{
-				alg = FuzzyString.FuzzyFunctions.USE_CHAPMANLENGTHDEVIATION;
-			}
-			else if (txt.IndexOf("Mean") > 0)
-			{
-				alg = FuzzyString.FuzzyFunctions.USE_CHAPMANMEANLENGTH;
-			}
-			else if (txt.Substring(0, 6) == "Jaro Si")
-			{
-				alg = FuzzyString.FuzzyFunctions.USE_JARO;
-			}
 			else if (txt.IndexOf("Wink") > 0)
 			{
 				alg = FuzzyString.FuzzyFunctions.USE_JAROWINKLER;
-			}
-			else if (txt.IndexOf("Seq") > 0)
-			{
-				alg = FuzzyString.FuzzyFunctions.USE_LONGESTCOMMONSUBSEQUENCE;
 			}
 			else if (txt.IndexOf("String") > 0)
 			{
@@ -211,38 +143,11 @@ namespace UtilORama4
 
 		private void SetPreCombo(long theAlgorithm)
 		{
-			int idx = lutils.UNDEFINED;
+			int idx = LOR4Admin.UNDEFINED;
 			switch (theAlgorithm)
 			{
-				case FuzzyFunctions.USE_CHAPMANLENGTHDEVIATION:
-					idx = 0;
-					break;
-				case FuzzyFunctions.USE_CHAPMANMEANLENGTH:
-					idx = 1;
-					break;
-				case FuzzyFunctions.USE_COSINE:
-					idx = 1;
-					break;
-				case FuzzyFunctions.USE_PADDEDHAMMING:
-					idx = 3;
-					break;
-				case FuzzyFunctions.USE_HAMMINGWIZMO:
-					idx = 4;
-					break;
-				case FuzzyFunctions.USE_JACCARD:
-					idx = 5;
-					break;
-				case FuzzyFunctions.USE_JARO:
-					idx = 6;
-					break;
 				case FuzzyFunctions.USE_JAROWINKLER:
 					idx = 7;
-					break;
-				case FuzzyFunctions.USE_LEVENSHTEIN:
-					idx = 8;
-					break;
-				case FuzzyFunctions.USE_NORMALIZEDLEVENSHTEIN:
-					idx = 9;
 					break;
 				case FuzzyFunctions.USE_DAMERAULEVENSHTEIN:
 					idx = 10;
@@ -250,32 +155,8 @@ namespace UtilORama4
 				case FuzzyFunctions.USE_YETILEVENSHTEIN:
 					idx = 11;
 					break;
-				case FuzzyFunctions.USE_WEIGHTEDLEVENSHTEIN:
-					idx = 12;
-					break;
-				case FuzzyFunctions.USE_LONGESTCOMMONSUBSEQUENCE:
-					idx = 13;
-					break;
 				case FuzzyFunctions.USE_LONGESTCOMMONSUBSTRING:
 					idx = 14;
-					break;
-				case FuzzyFunctions.USE_METRIC:
-					idx = 15;
-					break;
-				case FuzzyFunctions.USE_NEEDLEMANWUNSCH:
-					idx = 16;
-					break;
-				//case FuzzyFunctions.USE_NGRAM:
-				//	idx = 17;
-				//	break;
-				case FuzzyFunctions.USE_QGRAM:
-					idx = 18;
-					break;
-				case FuzzyFunctions.USE_OPTIMALSTRINGALIGNMENT:
-					idx = 19;
-					break;
-				case FuzzyFunctions.USE_OVERLAPCOEFFICIENT:
-					idx = 20;
 					break;
 				case FuzzyFunctions.USE_SIFT:
 					idx = 21;

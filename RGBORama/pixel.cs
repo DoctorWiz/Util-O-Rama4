@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using LOR4Utils;
+using LOR4;
 using FileHelper;
 
 namespace RGBORama
@@ -12,9 +12,9 @@ namespace RGBORama
 		public int redIntensity = 0;    // Or StartIntensity for Ramps (in which case redEndIntensity will be >= 0)
 		public int grnIntensity = 0;
 		public int bluIntensity = 0;
-		public LOREffectType4 redEffectType = LOREffectType4.Intensity;
-		public LOREffectType4 grnEffectType = LOREffectType4.Intensity;
-		public LOREffectType4 bluEffectType = LOREffectType4.Intensity;
+		public LOR4EffectType redEffectType = LOR4EffectType.Intensity;
+		public LOR4EffectType grnEffectType = LOR4EffectType.Intensity;
+		public LOR4EffectType bluEffectType = LOR4EffectType.Intensity;
 		public int redEndIntensity = -1;
 		public int grnEndIntensity = -1;
 		public int bluEndIntensity = -1;

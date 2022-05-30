@@ -10,9 +10,9 @@ using System.Reflection;
 using System.Windows.Forms;
 using System.IO;
 using System.Media;
-using LOR4Utils;
+using LOR4;
 using FileHelper;
-using FuzzyString;
+using FuzzORama;
 using Syncfusion.Windows.Forms.Tools;
 
 
@@ -53,7 +53,7 @@ namespace UtilORama4
 		private string fileSelCur = ""; // Currently loaded Selections File
 		private string fileSelectionsLast = "";
 		private LOR4Sequence seq = new LOR4Sequence();
-		private int nodeIndex = lutils.UNDEFINED;
+		private int nodeIndex = LOR4Admin.UNDEFINED;
 		private int selectionCount = 0;
 		private int member = 1;
 		private bool dirtySel = false;
@@ -194,18 +194,18 @@ namespace UtilORama4
 			string descr = "";
 			for (int tg = 0; tg < seq.TimingGrids.Count; tg++)
 			{
-				LORTimings4 theGrid = seq.TimingGrids[tg];
+				LOR4Timings theGrid = seq.TimingGrids[tg];
 				descr = theGrid.Name;
 				descr += " \t";
-				if (theGrid.TimingGridType == LORTimingGridType4.FixedGrid)
+				if (theGrid.TimingGridType == LOR4TimingGridType.FixedGrid)
 				{
 					descr += "Fixed: ";
-					string tmg = lutils.FormatTime(theGrid.spacing);
+					string tmg = LOR4Admin.FormatTime(theGrid.spacing);
 					descr += tmg.Substring(tmg.Length - 4) + ": \t";
 					for (int x = 1; x < 4; x++)
 					{
 						int c = theGrid.spacing * x;
-						string tc = lutils.FormatTime(c);
+						string tc = LOR4Admin.FormatTime(c);
 						descr += tc.Substring(tc.Length - 4);
 						if (x < 3)
 						{
@@ -213,14 +213,14 @@ namespace UtilORama4
 						}
 					}
 				}
-				if (theGrid.TimingGridType == LORTimingGridType4.Freeform)
+				if (theGrid.TimingGridType == LOR4TimingGridType.Freeform)
 				{
 					descr += "Freeform: \t";
 					for (int x = 0; x < 3; x++)
 					{
 						if (x < theGrid.timings.Count)
 						{
-							string tc = lutils.FormatTime(theGrid.timings[x]);
+							string tc = LOR4Admin.FormatTime(theGrid.timings[x]);
 							descr += tc.Substring(tc.Length - 4);
 							if (x < 2)
 							{
@@ -290,7 +290,7 @@ namespace UtilORama4
 			{
 				valid = Fyle.IsValidPath(fileSequenceLast, true);
 			}
-			if (!valid) fileSequenceLast = lutils.DefaultSequencesPath;
+			if (!valid) fileSequenceLast = LOR4Admin.DefaultSequencesPath;
 			if (Fyle.Exists(fileSequenceLast))
 			{
 				LoadSequence(fileSequenceLast, true);
@@ -349,7 +349,7 @@ namespace UtilORama4
 				byte isFile = 0;
 				if (arg.Substring(1, 2).CompareTo(":\\") == 0) isFile = 1;  // Local File
 				if (arg.Substring(0, 2).CompareTo("\\\\") == 0) isFile = 1; // UNC file
-				if (arg.Substring(4).IndexOf(".") > lutils.UNDEFINED) isFile++;  // contains a period
+				if (arg.Substring(4).IndexOf(".") > LOR4Admin.UNDEFINED) isFile++;  // contains a period
 				if (Fyle.InvalidCharacterCount(arg) == 0) isFile++;
 				if (isFile == 3)
 				{
@@ -417,7 +417,7 @@ namespace UtilORama4
 				//byte isFile = 0;
 				//if (arg.Substring(1, 2).CompareTo(":\\") == 0) isFile = 1;  // Local File
 				//if (arg.Substring(0, 2).CompareTo("\\\\") == 0) isFile = 1; // UNC file
-				//if (arg.Substring(4).IndexOf(".") > lutils.UNDEFINED) isFile++;  // contains a period
+				//if (arg.Substring(4).IndexOf(".") > LOR4Admin.UNDEFINED) isFile++;  // contains a period
 				//if (InvalidCharacterCount(arg) == 0) isFile++;
 				//if (isFile == 2)
 				//{
@@ -819,7 +819,7 @@ namespace UtilORama4
 					if (m.MemberType == LOR4MemberType.Channel)
 					{
 						LOR4Channel ch = (LOR4Channel)m;
-						Bitmap bmp = lutils.RenderEffects(ch, 0, ch.Centiseconds, 300, 20, true);
+						Bitmap bmp = LOR4Admin.RenderEffects(ch, 0, ch.Centiseconds, 300, 20, true);
 						picPreview.Visible = true;
 						picPreview.Image = bmp;
 						//picPreview.Refresh();
@@ -827,7 +827,7 @@ namespace UtilORama4
 					if (m.MemberType == LOR4MemberType.RGBChannel)
 					{
 						LOR4RGBChannel rgb = (LOR4RGBChannel)m;
-						Bitmap bmp = lutils.RenderEffects(rgb, 0, seq.Centiseconds, 300, 21, false);
+						Bitmap bmp = LOR4Admin.RenderEffects(rgb, 0, seq.Centiseconds, 300, 21, false);
 						picPreview.Image = bmp;
 						picPreview.Visible = true;
 					}
@@ -888,7 +888,7 @@ namespace UtilORama4
 			{
 				if (m.Selected)
 				{
-					LORTrack4 trk = (LORTrack4)m;
+					LOR4Track trk = (LOR4Track)m;
 					gridItem_Checked[trk.timingGrid.SaveID] = true;
 					lstGrids.Refresh();
 				}
@@ -984,7 +984,7 @@ namespace UtilORama4
 				// Can't imagine that we would ever make it this far, but, just in case...
 				if (ext.CompareTo(".lcc") == 0)
 				{
-					initDir = lutils.DefaultChannelConfigsPath;
+					initDir = LOR4Admin.DefaultChannelConfigsPath;
 				}
 				else
 				{
@@ -1090,24 +1090,24 @@ namespace UtilORama4
 				{
 					if (File.Exists(fileSeqCur))
 					{
-						initFile = Path.GetFileNameWithoutExtension(fileSeqCur) + lutils.EXT_CHLIST;
+						initFile = Path.GetFileNameWithoutExtension(fileSeqCur) + LOR4Admin.EXT_CHLIST;
 					}
 					if (initFile.Length < 5)
 					{
-						initFile = Path.GetFileNameWithoutExtension(fileSequenceLast) + lutils.EXT_CHLIST;
+						initFile = Path.GetFileNameWithoutExtension(fileSequenceLast) + LOR4Admin.EXT_CHLIST;
 					}
 				}
 			}
 			if (initDir.Length < 5)
 			{
-				initDir = lutils.DefaultChannelConfigsPath;
+				initDir = LOR4Admin.DefaultChannelConfigsPath;
 			}
 			dlgFileSave.FileName = initFile;
 			dlgFileSave.InitialDirectory = initDir;
 			dlgFileSave.OverwritePrompt = false;
 			dlgFileSave.CheckPathExists = true;
-			dlgFileSave.DefaultExt = lutils.EXT_CHLIST;
-			dlgFileSave.Filter = lutils.FILE_CHLIST;
+			dlgFileSave.DefaultExt = LOR4Admin.EXT_CHLIST;
+			dlgFileSave.Filter = LOR4Admin.FILE_CHLIST;
 			dlgFileSave.FilterIndex = 0;
 			dlgFileSave.SupportMultiDottedExtensions = true;
 			dlgFileSave.ValidateNames = true;
@@ -1150,11 +1150,11 @@ namespace UtilORama4
 			int lineCount = 0;
 			StreamWriter writer = new StreamWriter(fileName);
 			string lineOut = ""; // line to be written out, gets modified if necessary
-													 //int pos1 = lutils.UNDEFINED; // positions of certain key text in the line
+													 //int pos1 = LOR4Admin.UNDEFINED; // positions of certain key text in the line
 
-			lineOut = lutils.FILEDESCR_CHLIST;
+			lineOut = LOR4Admin.FILEDESCR_CHLIST;
 			writer.WriteLine(lineOut);
-			lineOut = lutils.CSVHEAD_CHLIST;
+			lineOut = LOR4Admin.CSVHEAD_CHLIST;
 			writer.WriteLine(lineOut);
 
 
@@ -1163,7 +1163,7 @@ namespace UtilORama4
 			//TODO:     ALL members of the sequence (including grandchildren and descendants) are now in .AllMembers
 			//TODO:       This change is in progress and partially complete.
 			//TODO: SaveSelectedChannels(writer, seq.Members);
-			foreach (LORTrack4 track in seq.Tracks)
+			foreach (LOR4Track track in seq.Tracks)
 			{
 				if (track.Selected)
 				{
@@ -1232,7 +1232,7 @@ namespace UtilORama4
 			{
 				LOR4MemberType type = member.MemberType;
 				lineOut = type.ToString() + Fyle.COMMA;
-				lineOut += "\"" + lutils.XMLifyName(member.Name) + "\",";
+				lineOut += "\"" + LOR4Admin.XMLifyName(member.Name) + "\",";
 				lineOut += member.SavedIndex.ToString(); // + Fyle.DELIM6;
 																								 //lineOut += member.Index.ToString() + Fyle.DELIM6;
 				if (type == LOR4MemberType.Channel)
@@ -1250,14 +1250,14 @@ namespace UtilORama4
 
 		private void btnBrowseSelections_Click(object sender, EventArgs e)
 		{
-			dlgFileOpen.DefaultExt = lutils.EXT_CHLIST; // *.ChList
-			dlgFileOpen.Filter = lutils.FILE_CHLIST; // LOR4Channel Selections|*.ChSel
+			dlgFileOpen.DefaultExt = LOR4Admin.EXT_CHLIST; // *.ChList
+			dlgFileOpen.Filter = LOR4Admin.FILE_CHLIST; // LOR4Channel Selections|*.ChSel
 			dlgFileOpen.FilterIndex = 0;
 			dlgFileOpen.CheckPathExists = true;
 			dlgFileOpen.SupportMultiDottedExtensions = true;
 			dlgFileOpen.ValidateNames = true;
 
-			string initDir = lutils.DefaultChannelConfigsPath;
+			string initDir = LOR4Admin.DefaultChannelConfigsPath;
 			string initFile = "";
 			if (fileSelCur.Length > 4)
 			{
@@ -1362,7 +1362,7 @@ namespace UtilORama4
 				reader = new StreamReader(selFile);
 				// Read (and throw away) the first line containing the file description
 				if (!reader.EndOfStream) lineIn = reader.ReadLine();
-				if (lineIn == lutils.FILEDESCR_CHLIST)
+				if (lineIn == LOR4Admin.FILEDESCR_CHLIST)
 				{
 					// Read (and throw away) the second line containing the file description
 					if (!reader.EndOfStream) lineIn = reader.ReadLine();
@@ -1388,9 +1388,9 @@ namespace UtilORama4
 									(itsType == LOR4MemberType.Timings))
 							{
 								string theName = parts[1];
-								string itsName = lutils.HumanizeName(theName);
+								string itsName = LOR4Admin.HumanizeName(theName);
 								string theSI = parts[2];
-								int itsSI = lutils.UNDEFINED;
+								int itsSI = LOR4Admin.UNDEFINED;
 								int.TryParse(theSI, out itsSI);
 								iLOR4Member member = null;
 
@@ -1692,7 +1692,7 @@ namespace UtilORama4
 		{
 			iLOR4Member ret = null;
 			int idx = BinarySearch(theName, members.Items);
-			if (idx > lutils.UNDEFINED)
+			if (idx > LOR4Admin.UNDEFINED)
 			{
 				ret = members.Items[idx];
 			}
@@ -1730,7 +1730,7 @@ namespace UtilORama4
 			if (count > 0)
 			{
 				Array.Resize(ref scores, count);
-				// LORLoop4 thru qualifying prematches
+				// LOR4Loop thru qualifying prematches
 				for (int i = 0; i < count; i++)
 				{
 					// Get the ID, perform a more thorough final fuzzy match, and save the score
@@ -1754,7 +1754,7 @@ namespace UtilORama4
 
 		private int FuzzyFindName(string[] allNames, string theName, long preAlgorithm, double minPreMatch, long finalAlgorithms, double minFinalMatch, bool ignoreSelected)
 		{
-			int foundIdx = lutils.UNDEFINED;
+			int foundIdx = LOR4Admin.UNDEFINED;
 			double[] scores = null;
 			int[] SIs = null;
 			int count = 0;
@@ -1784,7 +1784,7 @@ namespace UtilORama4
 			if (count > 0)
 			{
 				Array.Resize(ref scores, count);
-				// LORLoop4 thru qualifying prematches
+				// LOR4Loop thru qualifying prematches
 				for (int i = 0; i < count; i++)
 				{
 					// Get the ID, perform a more thorough final fuzzy match, and save the score
@@ -1875,7 +1875,7 @@ namespace UtilORama4
 					//}
 					//if (m.MemberType == LOR4MemberType.Track)
 					//{
-					//	LORTrack4 tr = (LORTrack4)m;
+					//	LOR4Track tr = (LOR4Track)m;
 					//	int sc = tr.Members.SelectedMemberCount;
 					//}
 					if (m.Selected)

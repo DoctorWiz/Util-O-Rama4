@@ -37,11 +37,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Include="..\..\COMMON\FileHelper.cs" Link="FileHelper.cs" />
-		<Compile Include="..\..\COMMON\FormHelper.cs" Link="FormHelper.cs" />
+		<Compile Include="..\..\COMMON\FileHelper\FileHelper.cs" Link="FileHelper.cs" />
+		<Compile Include="..\..\COMMON\FormHelper\FormHelper.cs" Link="FormHelper.cs" />
 		<Compile Include="..\Common\About\About.cs" Link="About.cs" />
 		<Compile Include="..\Common\About\About.Designer.cs" Link="About.Designer.cs" />
-		<Compile Include="..\Common\Sequence4\LORUtils.cs" Link="LORUtils.cs" />
+		<Compile Include="..\Common\Sequence4\Seq4Admin.cs" Link="Seq4Admin.cs" />
 		<Compile Include="..\Common\Sequence4\SeqChannel.cs" Link="SeqChannel.cs" />
 		<Compile Include="..\Common\Sequence4\SeqChannelGroup.cs" Link="SeqChannelGroup.cs" />
 		<Compile Include="..\Common\Sequence4\SeqCosmicDevice.cs" Link="SeqCosmicDevice.cs" />
@@ -53,12 +53,9 @@
 		<Compile Include="..\Common\Sequence4\SeqSubs.cs" Link="SeqSubs.cs" />
 		<Compile Include="..\Common\Sequence4\SeqTimingGrid.cs" Link="SeqTimingGrid.cs" />
 		<Compile Include="..\Common\Sequence4\SeqTrack.cs" Link="SeqTrack.cs" />
+		<Compile Include="..\Common\Sequence4\SeqTreeUtils.cs" Link="SeqTreeUtils.cs" />
 		<Compile Include="..\Common\Sequence4\Sequence4.cs" Link="Sequence4.cs" />
-		<Compile Include="..\Common\Sequence4\SFTreeUtils.cs" Link="SFTreeUtils.cs" />
-		<Compile Include="..\Common\Sequence4\Visualization4.cs" Link="Visualization4.cs" />
-		<Compile Include="..\Common\Sequence4\VizChannel.cs" Link="VizChannel.cs" />
-		<Compile Include="..\Common\Sequence4\VizDrawObject.cs" Link="VizDrawObject.cs" />
-		<Compile Include="..\Common\Sequence4\VizGroup.cs" Link="VizGroup.cs" />
+		<Compile Include="..\Common\Sequence4\VizStub.cs" Link="VizStub.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -73,13 +70,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Common\FuzzyString\FuzzyString.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="Syncfusion.GridHelperClasses.Windows" Version="20.1.0.52" />
 		<PackageReference Include="Syncfusion.Tools.Windows" Version="20.1.0.52" />
 		<PackageReference Include="System.DirectoryServices.AccountManagement" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Common\FuzzORama\FuzzORama.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="FuzzyString">
+			<HintPath>..\Common\FuzzyString\bin\Release\net6.0-windows10.0.19041.0\FuzzyString.dll</HintPath>
+		</Reference>
 	</ItemGroup>
 
 	<ItemGroup>

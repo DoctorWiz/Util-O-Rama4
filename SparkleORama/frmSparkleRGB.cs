@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LOR4Utils;
+using LOR4;
 using FileHelper;
 
 namespace SparkleORama
@@ -26,10 +26,10 @@ namespace SparkleORama
 
 		private LOR4Channel SelectControlChannel()
 		{
-			return SelectControlChannel(LORRGBChild4.None);
+			return SelectControlChannel(LOR4RGBChild.None);
 		}
 
-		private LOR4Channel SelectControlChannel(LORRGBChild4 rgbAllowed)
+		private LOR4Channel SelectControlChannel(LOR4RGBChild rgbAllowed)
 		{
 			LOR4Channel ch = null;
 

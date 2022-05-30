@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
-using LOR4Utils;
+using LOR4;
+using xLights22;
 using FileHelper;
 
 namespace UtilORama4
@@ -12,8 +13,8 @@ namespace UtilORama4
 	public static class SequenceFunctions
 	{
 		//private static LOR4ChannelGroup octaveGroups = null;
-		private static int firstCobjIdx = lutils.UNDEFINED;
-		private static int firstCsavedIndex = lutils.UNDEFINED;
+		private static int firstCobjIdx = LOR4Admin.UNDEFINED;
+		private static int firstCsavedIndex = LOR4Admin.UNDEFINED;
 
 		// Note: these are LOR colors which are 24-bit int in BGR order
 		//       (NOT .Net colors in RGB order)
@@ -30,30 +31,30 @@ namespace UtilORama4
 
 		}
 
-		//public static int ImportTimingGrid(LORTimings4 beatGrid, xTimings xEffects)
+		//public static int ImportTimingGrid(LOR4Timings beatGrid, xTimings markfects)
 		//{
 		//string grdName = beatGrid.Name;
-		//return ImportTimingGrid(beatGrid, grdName, xEffects);
+		//return ImportTimingGrid(beatGrid, grdName, markfects);
 		//}
 
-		public static int ImportTimingGrid(LORTimings4 beatGrid, xTimings xEffects)
+		public static int ImportTimingGrid(LOR4Timings beatGrid, xTimings xTimes)
 		{
 			int errs = 0;
 			int lastStart = -1;
 			//string gName = beatGrid.Name;
-			string xName = xEffects.Name;
+			string xName = xTimes.Name;
 
 			// If grid already has timings (from a previous run) clear them, start over fresh
 			if (beatGrid.timings.Count > 0)
 			{
 				beatGrid.timings.Clear();
 			}
-			int tc = xEffects.effects.Count;
+			int tc = xTimes.Markers.Count;
 			beatGrid.TimingGridType = LOR4TimingGridType.Freeform;
-			for (int q = 0; q < xEffects.effects.Count; q++)
+			for (int q = 0; q < xTimes.Markers.Count; q++)
 			{
-				xEffect xef = xEffects.effects[q];
-				int t = ms2cs(xef.starttime);
+				xMarker mark = xTimes.Markers[q];
+				int t = ms2cs(mark.starttime);
 
 				if (t > Annotator.Sequence.Centiseconds) Annotator.Sequence.Centiseconds = t;
 				if (t > Annotator.VampTrack.Centiseconds) Annotator.VampTrack.Centiseconds = t;
@@ -81,11 +82,11 @@ namespace UtilORama4
 			return errs;
 		}
 
-		public static int LessEfficient_ImportBeatChannel(LOR4Channel beatCh, xTimings xEffects, int divider)
+		public static int LessEfficient_ImportBeatChannel(LOR4Channel beatCh, xTimings xTimes, int divider)
 		{
 			int errs = 0;
 			// Detect if we are doing 'Bars' channel for special handling
-			xEffect xef = null;
+			xMarker mark = null;
 			LOR4Effect lef = null;
 			bool bars = false;
 			int st = 0;
@@ -105,11 +106,11 @@ namespace UtilORama4
 			if (Annotator.UseRamps)
 			{
 				// Ramps are very simple, just add a fade-down effect for each effect
-				for (int q = 0; q < xEffects.effects.Count; q++)
+				for (int q = 0; q < xTimes.Markers.Count; q++)
 				{
-					xef = xEffects.effects[q];
-					st = ms2cs(xef.starttime);
-					et = ms2cs(xef.endtime);
+					mark = xTimes.Markers[q];
+					st = ms2cs(mark.starttime);
+					et = ms2cs(mark.endtime);
 					lef = new LOR4Effect(LOR4EffectType.FadeDown, st, et, 100, 0);
 					beatCh.AddEffect(lef);
 				}
@@ -117,16 +118,16 @@ namespace UtilORama4
 			else // On-Off, NOT ramps
 			{
 				int q = 0;
-				int efc = xEffects.effects.Count;
+				int efc = xTimes.Markers.Count;
 				while (q < efc)
 				{
 					cancel = false; // reset
-					xef = xEffects.effects[q];
-					st = ms2cs(xef.starttime);
+					mark = xTimes.Markers[q];
+					st = ms2cs(mark.starttime);
 					if (divider == 1)
 					{
 						// Quarter and Third Beats (Sixteenth and twelth notes)
-						eh = ms2cs(xef.endtime);
+						eh = ms2cs(mark.endtime);
 						len = eh - st;
 						et = st + (len / 2);
 					} // End divider = 1;
@@ -142,13 +143,13 @@ namespace UtilORama4
 								// Start from the NEXT beat, if it exists
 								if ((q + 1) < efc)
 								{
-									xef = xEffects.effects[q + 1];
-									st = ms2cs(xef.starttime);
+									mark = xTimes.Markers[q + 1];
+									st = ms2cs(mark.starttime);
 									// End is the START of the NEXT beat, if it exists
 									if ((q + 2) < efc)
 									{
-										xef = xEffects.effects[q + 2];
-										et = ms2cs(xef.starttime);
+										mark = xTimes.Markers[q + 2];
+										et = ms2cs(mark.starttime);
 									}
 									else
 									{
@@ -164,8 +165,8 @@ namespace UtilORama4
 								// End time is the START of the next beat, if it exists
 								if ((q + 1) < efc)
 								{
-									xef = xEffects.effects[q + 1];
-									et = ms2cs(xef.starttime);
+									mark = xTimes.Markers[q + 1];
+									et = ms2cs(mark.starttime);
 								}
 								else
 								{
@@ -185,13 +186,13 @@ namespace UtilORama4
 								// Start from the first beat, if it exists
 								if ((q + offset) < efc)
 								{
-									xef = xEffects.effects[q + 1];
-									st = ms2cs(xef.starttime);
+									mark = xTimes.Markers[q + 1];
+									st = ms2cs(mark.starttime);
 									// End is the START of the 2 beats later, if it exists
 									if ((q + offset + 2) < efc)
 									{
-										xef = xEffects.effects[q + 2];
-										et = ms2cs(xef.starttime);
+										mark = xTimes.Markers[q + 2];
+										et = ms2cs(mark.starttime);
 									}
 									else
 									{
@@ -211,13 +212,13 @@ namespace UtilORama4
 								// Start from the first beat, if it exists
 								if ((q + offset) < efc)
 								{
-									xef = xEffects.effects[q + 1];
-									st = ms2cs(xef.starttime);
+									mark = xTimes.Markers[q + 1];
+									st = ms2cs(mark.starttime);
 									// End is the START of 6 (3/4 time) or 8 (4/4 time) later
 									if ((q + offset + 2) < efc)
 									{
-										xef = xEffects.effects[Annotator.BeatsPerBar * 2];
-										et = ms2cs(xef.starttime);
+										mark = xTimes.Markers[Annotator.BeatsPerBar * 2];
+										et = ms2cs(mark.starttime);
 									}
 									else
 									{
@@ -242,11 +243,11 @@ namespace UtilORama4
 			return beatCh.effects.Count;
 		}
 
-		public static int ImportBeatChannel(LOR4Channel beatCh, xTimings xEffects, int divider)
+		public static int ImportBeatChannel(LOR4Channel beatCh, xTimings xTimes, int divider)
 		{
 			//int errs = 0;
 			// Detect if we are doing 'Bars' channel for special handling
-			xEffect xef = null;
+			xMarker mark = null;
 			LOR4Effect lorEffect = null;
 			//bool bars = false;
 			int effectStart = 0;
@@ -266,11 +267,11 @@ namespace UtilORama4
 			if (Annotator.UseRamps)
 			{
 				// Ramps are very simple, just add a fade-down effect for each effect
-				for (int q = 0; q < xEffects.effects.Count; q++)
+				for (int q = 0; q < xTimes.Markers.Count; q++)
 				{
-					xef = xEffects.effects[q];
-					effectStart = ms2cs(xef.starttime);
-					effectEnd = ms2cs(xef.endtime);
+					mark = xTimes.Markers[q];
+					effectStart = ms2cs(mark.starttime);
+					effectEnd = ms2cs(mark.endtime);
 					lorEffect = new LOR4Effect(LOR4EffectType.FadeDown, effectStart, effectEnd, 100, 0);
 					beatCh.AddEffect(lorEffect);
 					//TODO Raise event for progress bar
@@ -283,14 +284,14 @@ namespace UtilORama4
 				int j = ofs * divider;
 				// Index of effect to get start time
 				int effectIndexStart = j * div;
-				int effectCount = xEffects.effects.Count;
+				int effectCount = xTimes.Markers.Count;
 				while (effectIndexStart < effectCount)
 				{
-					xef = xEffects.effects[effectIndexStart];
-					effectStart = ms2cs(xef.starttime);
+					mark = xTimes.Markers[effectIndexStart];
+					effectStart = ms2cs(mark.starttime);
 					if (divider < 2)
 					{
-						int xEnd = ms2cs(xef.endtime);
+						int xEnd = ms2cs(mark.endtime);
 						int len = xEnd - effectStart;
 						effectEnd = effectStart + (len / 2);
 					}
@@ -299,8 +300,8 @@ namespace UtilORama4
 						int effectIndexEnd = effectIndexStart + (divider / 2);
 						if ((effectIndexEnd) < effectCount)
 						{
-							xef = xEffects.effects[effectIndexEnd];
-							effectEnd = ms2cs(xef.starttime);
+							mark = xTimes.Markers[effectIndexEnd];
+							effectEnd = ms2cs(mark.starttime);
 						}
 						else
 						{
@@ -320,11 +321,11 @@ namespace UtilORama4
 
 
 
-		public static int ImportNoteChannel(LOR4Channel noteCh, xTimings xEffects)
+		public static int ImportNoteChannel(LOR4Channel noteCh, xTimings xTimes)
 		{
 			int errs = 0;
 			// Detect if we are doing 'Bars' channel for special handling
-			xEffect xef = null;
+			xMarker mark = null;
 			LOR4Effect lef = null;
 			bool bars = false;
 			int st = 0;
@@ -335,11 +336,11 @@ namespace UtilORama4
 			{
 				noteCh.effects.Clear();
 			}
-			for (int q = 0; q < xEffects.effects.Count; q++)
+			for (int q = 0; q < xTimes.Markers.Count; q++)
 			{
-				xef = xEffects.effects[q];
-				st = ms2cs(xef.starttime);
-				et = ms2cs(xef.endtime);
+				mark = xTimes.Markers[q];
+				st = ms2cs(mark.starttime);
+				et = ms2cs(mark.endtime);
 				if (Annotator.UseRamps)
 				{
 					// Ramps are very simple, just add a fade-down effect for each effect
@@ -359,11 +360,11 @@ namespace UtilORama4
 
 
 
-		public static int OLD2_ImportBeatChannel(LOR4Channel beatCh, xTimings xEffects, int barDivs, int firstBeat, bool ramps)
+		public static int OLD2_ImportBeatChannel(LOR4Channel beatCh, xTimings xTimes, int barDivs, int firstBeat, bool ramps)
 		{
 			int errs = 0;
 			// Detect if we are doing 'Bars' channel for special handling
-			xEffect xef = null;
+			xMarker mark = null;
 			LOR4Effect lef = null;
 			bool bars = false;
 			int b = beatCh.Name.IndexOf("Bars");
@@ -376,11 +377,11 @@ namespace UtilORama4
 				beatCh.effects.Clear();
 			}
 			//int lb = barDivs - 1;
-			for (int q = 0; q < xEffects.effects.Count; q++)
+			for (int q = 0; q < xTimes.Markers.Count; q++)
 			{
-				xef = xEffects.effects[q];
-				int st = ms2cs(xef.starttime);
-				int et = ms2cs(xef.endtime);
+				mark = xTimes.Markers[q];
+				int st = ms2cs(mark.starttime);
+				int et = ms2cs(mark.endtime);
 				if (ramps)
 				{
 					lef = new LOR4Effect(LOR4EffectType.FadeDown, st, et, 100, 0);
@@ -391,9 +392,9 @@ namespace UtilORama4
 					int n = ((q + 1) % barDivs);
 					if ((n == firstBeat) || bars)
 					{
-						xef = xEffects.effects[q];
-						st = ms2cs(xef.starttime);
-						et = ms2cs(xef.endtime);
+						mark = xTimes.Markers[q];
+						st = ms2cs(mark.starttime);
+						et = ms2cs(mark.endtime);
 						if (et > Annotator.Sequence.Centiseconds) Annotator.Sequence.Centiseconds = et;
 						if (et > Annotator.VampTrack.Centiseconds) Annotator.VampTrack.Centiseconds = et;
 						if (et > beatCh.Centiseconds) beatCh.Centiseconds = et;
@@ -416,10 +417,10 @@ namespace UtilORama4
 						{
 							lef.endCentisecond = et;
 						}
-						//if (q < (xEffects.effects.Count - 1))
+						//if (q < (xTimes.Markers.Count - 1))
 						//{
 						// Alternative
-						//	lef.endCentisecond = ms2cs(xEffects.effects[q].starttime);
+						//	lef.endCentisecond = ms2cs(xTimes.Markers[q].starttime);
 						//}
 						beatCh.AddEffect(lef);
 					}
@@ -455,7 +456,7 @@ namespace UtilORama4
 			// Tests for, and works with either a track or a channel group as the parent
 			if (parent.MemberType == LOR4MemberType.Track)
 			{
-				LORTrack4 trk = (LORTrack4)parent;
+				LOR4Track trk = (LOR4Track)parent;
 				trk.Members.Add(child);
 			}
 			if (parent.MemberType == LOR4MemberType.ChannelGroup)
@@ -564,7 +565,7 @@ namespace UtilORama4
 			//{
 			//	if (parent.MemberType == LOR4MemberType.Track)
 			//	{
-			//		parentSubs = ((LORTrack4)parent).Members;
+			//		parentSubs = ((LOR4Track)parent).Members;
 			//	}
 			//	else
 			//	{

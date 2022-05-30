@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
-using LOR4Utils;
+using LOR4;
 using FileHelper;
-using xUtilities;
+using xLights22;
 
 namespace UtilORama4
 {
@@ -221,7 +221,7 @@ namespace UtilORama4
 			string msg = "\r\n\r\n### PROCESSING CHORDS TRANSCRIPTION ####################################";
 			Debug.WriteLine(msg);
 
-			xChords.effects.Clear();
+			xChords.Markers.Clear();
 
 			//? CHORD NOTES PLUGIN
 			if (lastPluginUsed == PLUGINNotes)
@@ -233,9 +233,9 @@ namespace UtilORama4
 					parts = lineIn.Split(',');
 					if (parts.Length > 2)
 					{
-						millisecs = xUtils.ParseMilliseconds(parts[0]);
+						millisecs = xAdmin.ParseMilliseconds(parts[0]);
 						eStart = Annotator.AlignTime(millisecs);
-						duration = xUtils.ParseMilliseconds(parts[1]);
+						duration = xAdmin.ParseMilliseconds(parts[1]);
 						int ee = eStart + duration;
 						eEnd = Annotator.AlignTime(ee);
 						// Note: Unlike other annotator transforms, we will NOT be checking to see
@@ -254,9 +254,9 @@ namespace UtilORama4
 
 							if ((eStart == lastStart) & (eEnd == lastEnd))
 							{
-								string lbl = xChords.effects[xChords.effects.Count - 1].Label;
+								string lbl = xChords.Markers[xChords.Markers.Count - 1].Label;
 								noteLabel = lbl + "; " + noteLabel;
-								xChords.effects[xChords.effects.Count - 1].Label = noteLabel;
+								xChords.Markers[xChords.Markers.Count - 1].Label = noteLabel;
 							}
 							else
 							{
@@ -287,7 +287,7 @@ namespace UtilORama4
 					if (parts.Length > 1)
 					{
 						// Try parsing fields 0 start time (in decimal seconds)
-						millisecs = xUtils.ParseMilliseconds(parts[0]);
+						millisecs = xAdmin.ParseMilliseconds(parts[0]);
 						eStart = Annotator.AlignTime(millisecs);
 						// Get Name of chord
 						cName = parts[1];
@@ -303,7 +303,7 @@ namespace UtilORama4
 					if (parts.Length > 1)
 					{
 						// Try parsing fields 0 start time (in decimal seconds)
-						millisecs = xUtils.ParseMilliseconds(parts[0]);
+						millisecs = xAdmin.ParseMilliseconds(parts[0]);
 						eEnd = Annotator.AlignTime(millisecs);
 						if (eEnd < eStart) // Data integrity check
 						{
@@ -319,8 +319,8 @@ namespace UtilORama4
 								if (cName != "N") // No chord, Nothing, Null
 								{
 									// Create new xEffect with these values, add to timings list
-									xEffect xef = new xEffect(cName, eStart, eEnd, pcount);
-									xChords.effects.Add(xef);
+									xMarker xef = new xMarker(cName, eStart, eEnd, pcount);
+									xChords.Markers.Add(xef);
 								}
 
 								// End of this one is the start of the next one
@@ -341,8 +341,8 @@ namespace UtilORama4
 					eEnd = Annotator.songTimeMS;
 					if (cName != "N")
 					{
-						xEffect xef = new xEffect(cName, eStart, eEnd, pcount);
-						xChords.effects.Add(xef);
+						xMarker xef = new xMarker(cName, eStart, eEnd, pcount);
+						xChords.Markers.Add(xef);
 					}
 				}
 
@@ -360,11 +360,11 @@ namespace UtilORama4
 
 			if (xChords != null)
 			{
-				if (xChords.effects.Count > 0)
+				if (xChords.Markers.Count > 0)
 				{
 					// Note: Number '5' is the same as None Onsets because this returns, effectively, the same results
 					string gridName = "5 " + transformName;
-					LORTimings4 polyGrid = Annotator.Sequence.FindTimingGrid(gridName, true);
+					LOR4Timings polyGrid = Annotator.Sequence.FindTimingGrid(gridName, true);
 					SequenceFunctions.ImportTimingGrid(polyGrid, xChords);
 				}
 			}
@@ -410,11 +410,11 @@ namespace UtilORama4
 			// Create an effect in the appropriate Note Poly Channel for each timing
 			if (xChords != null)
 			{
-				if (xChords.effects.Count > 0)
+				if (xChords.Markers.Count > 0)
 				{
-					for (int f = 0; f < xChords.effects.Count; f++)
+					for (int f = 0; f < xChords.Markers.Count; f++)
 					{
-						xEffect timing = xChords.effects[f];
+						xMarker timing = xChords.Markers[f];
 						int note = timing.Number;
 						if (note < 1) // Data integrity check
 						{
@@ -558,9 +558,9 @@ namespace UtilORama4
 						parts = lineIn.Split(',');
 						if (parts.Length > 2)
 						{
-							millisecs = xUtils.ParseMilliseconds(parts[0]);
+							millisecs = xAdmin.ParseMilliseconds(parts[0]);
 							msStart = Annotator.AlignTime(millisecs);
-							duration = xUtils.ParseMilliseconds(parts[1]);
+							duration = xAdmin.ParseMilliseconds(parts[1]);
 							int ee = msStart + duration;
 							msEnd = Annotator.AlignTime(ee);
 							// Convert Milliseconds to Centiseconds
@@ -645,7 +645,7 @@ namespace UtilORama4
 						if (parts.Length > 1)
 						{
 							// Try parsing fields 0 start time (in decimal seconds)
-							millisecs = xUtils.ParseMilliseconds(parts[0]);
+							millisecs = xAdmin.ParseMilliseconds(parts[0]);
 							msStart = Annotator.AlignTime(millisecs);
 							// Get Name of chord
 							cName = parts[1];
@@ -660,7 +660,7 @@ namespace UtilORama4
 						if (parts.Length > 1)
 						{
 							// Try parsing fields 0 start time (in decimal seconds)
-							millisecs = xUtils.ParseMilliseconds(parts[0]);
+							millisecs = xAdmin.ParseMilliseconds(parts[0]);
 							msEnd = Annotator.AlignTime(millisecs);
 							if (msEnd < msStart) // Data integrity check
 							{
@@ -735,7 +735,7 @@ namespace UtilORama4
 
 		public static int ChordColor(string chordName)
 		{
-			int ret = lutils.LORCOLOR_BLK;
+			int ret = LOR4Admin.LORCOLOR_BLK;
 			int i = -2;
 			if (chordName.Length > 1)
 			{

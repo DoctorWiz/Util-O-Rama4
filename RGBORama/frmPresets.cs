@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using UtilORama;
-using LOR4Utils;
+using LOR4;
 using FileHelper;
 using static Globals;
 using Shell32;
@@ -54,7 +54,7 @@ namespace RGBORama
 			try
 			{
 
-				DirectoryInfo di = new DirectoryInfo(lutils.DefaultChannelConfigsPath);
+				DirectoryInfo di = new DirectoryInfo(LOR4Admin.DefaultChannelConfigsPath);
 				string pattern = "*" + PRESETEXT;
 				if (JustFavs)
 				{
@@ -141,7 +141,7 @@ namespace RGBORama
 		{
 			int count = 0;
 
-			string theFile = lutils.DefaultChannelConfigsPath + theName + PRESETEXT;
+			string theFile = LOR4Admin.DefaultChannelConfigsPath + theName + PRESETEXT;
 			try
 			{
 				if (!System.IO.File.Exists(theFile))
@@ -232,7 +232,7 @@ namespace RGBORama
 			// if newName is blank, use existing name
 			int count = 0;
 
-			string theFile = lutils.DefaultChannelConfigsPath + newName + PRESETEXT;
+			string theFile = LOR4Admin.DefaultChannelConfigsPath + newName + PRESETEXT;
 			if (isFav)
 			{
 				theFile += STAR;
@@ -268,7 +268,7 @@ namespace RGBORama
 			bool success = false;
 			bool izFav = false;
 
-			string oldFile = lutils.DefaultChannelConfigsPath + oldName + PRESETEXT;
+			string oldFile = LOR4Admin.DefaultChannelConfigsPath + oldName + PRESETEXT;
 			try
 			{
 				if (!System.IO.File.Exists(oldFile))
@@ -278,7 +278,7 @@ namespace RGBORama
 				}
 				if (!System.IO.File.Exists(oldFile))
 				{
-					string newFile = lutils.DefaultChannelConfigsPath + newName + PRESETEXT;
+					string newFile = LOR4Admin.DefaultChannelConfigsPath + newName + PRESETEXT;
 					if (izFav) newFile += STAR;
 					System.IO.File.Move(oldFile, newFile);
 					success = true;
@@ -296,13 +296,13 @@ namespace RGBORama
 			bool success = false;
 			bool izFav = false;
 
-			string oldFile = lutils.DefaultChannelConfigsPath + theName + PRESETEXT;
+			string oldFile = LOR4Admin.DefaultChannelConfigsPath + theName + PRESETEXT;
 			if (!newFavState) oldFile += STAR;
 			try
 			{
 				if (System.IO.File.Exists(oldFile))
 				{
-					string newFile = lutils.DefaultChannelConfigsPath + theName + PRESETEXT;
+					string newFile = LOR4Admin.DefaultChannelConfigsPath + theName + PRESETEXT;
 					if (newFavState) newFile += STAR;
 					if (!System.IO.File.Exists(newFile))
 					{
@@ -323,7 +323,7 @@ namespace RGBORama
 		{
 			bool success = false;
 
-			string theFile = lutils.DefaultChannelConfigsPath + theName + PRESETEXT;
+			string theFile = LOR4Admin.DefaultChannelConfigsPath + theName + PRESETEXT;
 			try
 			{
 				if (!System.IO.File.Exists(theFile))

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LOR4Utils;
-using xUtils;
+using LOR4;
+using xLights22;
 
 namespace UtilORama4
 {
@@ -19,7 +19,7 @@ namespace UtilORama4
 	{
 		public DMXChannel ChannelManager = null;
 		public iLOR4Member ChannelLOR = null;
-		public xMember ChannelxLights = null;
+		public ixMember ChannelxLights = null;
 
 		// Whether the name was an EXACT match or not.
 		// true if match was exact
@@ -150,7 +150,7 @@ namespace UtilORama4
 			return ret;
 		}
 
-		public int CompareTo(xMember ChannelxLights)
+		public int CompareTo(ixMember ChannelxLights)
 		{
 			int ret = 0;
 			switch (SortMode)

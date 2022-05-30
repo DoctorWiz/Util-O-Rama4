@@ -8,31 +8,31 @@ using System.Drawing;
 using System.Diagnostics;
 using FileHelper;
 
-namespace LOR4Utils
+namespace LOR4
 {
 
-	public class LOR4Channel : LORMemberBase4, iLOR4Member, IComparable<iLOR4Member>
+	public class LOR4Channel : LOR4MemberBase, iLOR4Member, IComparable<iLOR4Member>
 	{
-		private const string STARTchannel = lutils.STFLD + lutils.TABLEchannel + lutils.FIELDname;
+		private const string STARTchannel = LOR4Admin.STFLD + LOR4Admin.TABLEchannel + LOR4Admin.FIELDname;
 		//public int color = 0;
-		public LOROutput4 output = null;
-		public LORRGBChild4 rgbChild = LORRGBChild4.None;
+		public LOR4Output output = null;
+		public LOR4RGBChild rgbChild = LOR4RGBChild.None;
 		public LOR4RGBChannel rgbParent = null;
-		public List<LOREffect4> effects = new List<LOREffect4>();
+		public List<LOR4Effect> effects = new List<LOR4Effect>();
 		public const string FIELDcolor = " color";
 
 		//! CONSTRUCTORS
 		/*public LOR4Channel(string theName, int theSavedIndex)
 		{
 			myName = theName;
-			output = new LOROutput4(this);
+			output = new LOR4Output(this);
 			mySavedIndex = theSavedIndex;
 		}
 		*/
 		public LOR4Channel(iLOR4Member theParent, string lineIn)
 		{
 			myParent = theParent;
-			output = new LOROutput4(this);
+			output = new LOR4Output(this);
 			Parse(lineIn);
 		}
 
@@ -40,10 +40,10 @@ namespace LOR4Utils
 		/*
 		public LOR4Channel(string lineIn)
 		{
-			output = new LOROutput4(this);
-			string seek = lutils.STFLD + lutils.TABLEchannel + lutils.FIELDname;
+			output = new LOR4Output(this);
+			string seek = LOR4Admin.STFLD + LOR4Admin.TABLEchannel + LOR4Admin.FIELDname;
 			//int pos = lineIn.IndexOf(seek);
-			int pos = lutils.ContainsKey(lineIn, seek);
+			int pos = LOR4Admin.ContainsKey(lineIn, seek);
 			if (pos > 0)
 			{
 				Parse(lineIn);
@@ -85,9 +85,9 @@ namespace LOR4Utils
 					LOR4Channel ch = (LOR4Channel)other;
 					result = output.ToString().CompareTo(ch.output.ToString());
 				}
-				if (t == typeof(LORVizChannel4))
+				if (t == typeof(LOR4VizChannel))
 				{
-					LORVizChannel4 ch = (LORVizChannel4)other;
+					LOR4VizChannel ch = (LOR4VizChannel)other;
 					result = output.ToString().CompareTo(ch.output.ToString());
 				}
 			}
@@ -105,11 +105,11 @@ namespace LOR4Utils
 		{
 			get
 			{
-				return lutils.Color_LORtoNet(color);
+				return LOR4Admin.Color_LORtoNet(color);
 			}
 			set
 			{
-				color = lutils.Color_NettoLOR(value);
+				color = LOR4Admin.Color_NettoLOR(value);
 			}
 
 		}
@@ -121,19 +121,19 @@ namespace LOR4Utils
 
 		public override void Parse(string lineIn)
 		{
-			string seek = lutils.STFLD + lutils.TABLEchannel + lutils.FIELDname;
-			int pos = lutils.ContainsKey(lineIn, seek);
+			string seek = LOR4Admin.STFLD + LOR4Admin.TABLEchannel + LOR4Admin.FIELDname;
+			int pos = LOR4Admin.ContainsKey(lineIn, seek);
 			if (pos > 0)
 			{
-				myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
-				myID = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
-				color = (int)lutils.getKeyValue(lineIn, FIELDcolor);
-				myCentiseconds = lutils.getKeyValue(lineIn, lutils.FIELDcentiseconds);
+				myName = LOR4Admin.HumanizeName(LOR4Admin.getKeyWord(lineIn, LOR4Admin.FIELDname));
+				myID = LOR4Admin.getKeyValue(lineIn, LOR4Admin.FIELDsavedIndex);
+				color = (int)LOR4Admin.getKeyValue(lineIn, FIELDcolor);
+				myCentiseconds = LOR4Admin.getKeyValue(lineIn, LOR4Admin.FIELDcentiseconds);
 
 				//! NOT supported by ShowTime.  Will not exist in sequence files saved from ShowTime (return blank "")
 				// Preserved only in sequence files saved in Util-O-Rama
 				// Only intended for temporary use within Util-O-Rama anyway so no big deal
-				myComment = lutils.getKeyWord(lineIn, lutils.FIELDcomment);
+				myComment = LOR4Admin.getKeyWord(lineIn, LOR4Admin.FIELDcomment);
 
 				output.Parse(lineIn);
 			}
@@ -162,20 +162,20 @@ namespace LOR4Utils
 
 		public override iLOR4Member Clone(string newName)
 		{
-			//LOR4Channel chan = new LOR4Channel(newName, lutils.UNDEFINED);
+			//LOR4Channel chan = new LOR4Channel(newName, LOR4Admin.UNDEFINED);
 			LOR4Channel chan = (LOR4Channel)base.Clone();
 			chan.ChangeName(newName);
 			return chan;
 		}
 
-		public List<LOREffect4> CloneEffects()
+		public List<LOR4Effect> CloneEffects()
 		{
-			List<LOREffect4> newList = new List<LOREffect4>();
-			foreach (LOREffect4 ef in effects)
+			List<LOR4Effect> newList = new List<LOR4Effect>();
+			foreach (LOR4Effect ef in effects)
 			{
 				if (ef.endCentisecond > ef.startCentisecond)
 				{
-					LOREffect4 F = ef.Clone();
+					LOR4Effect F = ef.Clone();
 					newList.Add(F);
 				}
 				else
@@ -189,38 +189,38 @@ namespace LOR4Utils
 		public string LineOut(bool noEffects)
 		{
 			StringBuilder ret = new StringBuilder();
-			ret.Append(lutils.LEVEL2);
-			ret.Append(lutils.STFLD);
-			ret.Append(lutils.TABLEchannel);
+			ret.Append(LOR4Admin.LEVEL2);
+			ret.Append(LOR4Admin.STFLD);
+			ret.Append(LOR4Admin.TABLEchannel);
 
-			ret.Append(lutils.FIELDname);
-			ret.Append(lutils.FIELDEQ);
-			ret.Append(lutils.XMLifyName(myName));
-			ret.Append(lutils.ENDQT);
+			ret.Append(LOR4Admin.FIELDname);
+			ret.Append(LOR4Admin.FIELDEQ);
+			ret.Append(LOR4Admin.XMLifyName(myName));
+			ret.Append(LOR4Admin.ENDQT);
 
 			ret.Append(FIELDcolor);
-			ret.Append(lutils.FIELDEQ);
+			ret.Append(LOR4Admin.FIELDEQ);
 			ret.Append(color.ToString());
-			ret.Append(lutils.ENDQT);
+			ret.Append(LOR4Admin.ENDQT);
 
-			ret.Append(lutils.FIELDcentiseconds);
-			ret.Append(lutils.FIELDEQ);
+			ret.Append(LOR4Admin.FIELDcentiseconds);
+			ret.Append(LOR4Admin.FIELDEQ);
 			ret.Append(myCentiseconds.ToString());
-			ret.Append(lutils.ENDQT);
+			ret.Append(LOR4Admin.ENDQT);
 
 			ret.Append(output.LineOut());
 
-			ret.Append(lutils.FIELDsavedIndex);
-			ret.Append(lutils.FIELDEQ);
+			ret.Append(LOR4Admin.FIELDsavedIndex);
+			ret.Append(LOR4Admin.FIELDEQ);
 			ret.Append(myAltID.ToString());
-			ret.Append(lutils.ENDQT);
+			ret.Append(LOR4Admin.ENDQT);
 
 
 			//! EXPERIMENTAL-- MAY CRASH SHOWTIME
-			//ret.Append(lutils.FIELDcomment);
-			//ret.Append(lutils.FIELDEQ);
+			//ret.Append(LOR4Admin.FIELDcomment);
+			//ret.Append(LOR4Admin.FIELDEQ);
 			//ret.Append(myComment);
-			//ret.Append(lutils.ENDQT);
+			//ret.Append(LOR4Admin.ENDQT);
 			//! Yup!  Error "Unexpected save file information found" when trying to open the file.
 			//! So much for being able to save any extraneous data.
 
@@ -229,22 +229,22 @@ namespace LOR4Utils
 			if (!noEffects && (effects.Count > 0))
 			{
 				// complete channel line with regular '>' then do effects
-				ret.Append(lutils.FINFLD);
-				foreach (LOREffect4 thisEffect in effects)
+				ret.Append(LOR4Admin.FINFLD);
+				foreach (LOR4Effect thisEffect in effects)
 				{
-					ret.Append(lutils.CRLF);
+					ret.Append(LOR4Admin.CRLF);
 					ret.Append(thisEffect.LineOut());
 				}
-				ret.Append(lutils.CRLF);
-				ret.Append(lutils.LEVEL2);
-				ret.Append(lutils.FINTBL);
-				ret.Append(lutils.TABLEchannel);
-				ret.Append(lutils.FINFLD);
+				ret.Append(LOR4Admin.CRLF);
+				ret.Append(LOR4Admin.LEVEL2);
+				ret.Append(LOR4Admin.FINTBL);
+				ret.Append(LOR4Admin.TABLEchannel);
+				ret.Append(LOR4Admin.FINFLD);
 			}
 			else // NO effects for this channal
 			{
 				// complete channel line with field end '/>'
-				ret.Append(lutils.ENDFLD);
+				ret.Append(LOR4Admin.ENDFLD);
 			}
 
 			return ret.ToString();
@@ -256,7 +256,7 @@ namespace LOR4Utils
 			if (destination.color == 0) destination.color = color;
 			if (destination.Name.Length == 0) destination.ChangeName(myName);
 			if (destination.myParent == null) destination.myParent = this.myParent;
-			//if (destination.output.deviceType == LORDeviceType4.None)
+			//if (destination.output.deviceType == LOR4DeviceType.None)
 			//{
 			destination.output.deviceType = output.deviceType;
 			destination.output.circuit = output.circuit;
@@ -266,7 +266,7 @@ namespace LOR4Utils
 			if (withEffects)
 			{
 				//destination.Centiseconds = myCentiseconds;
-				//foreach (LOREffect4 thisEffect in effects)
+				//foreach (LOR4Effect thisEffect in effects)
 				//{
 				//	destination.effects.Add(thisEffect.Clone());
 				//}
@@ -279,7 +279,7 @@ namespace LOR4Utils
 			if (color == 0) color = source.color;
 			if (myName.Length == 0) ChangeName(source.Name);
 			if (this.myParent == null) this.myParent = source.myParent;
-			//if (output.deviceType == LORDeviceType4.None)
+			//if (output.deviceType == LOR4DeviceType.None)
 			//{
 			output.deviceType = source.output.deviceType;
 			output.circuit = source.output.circuit;
@@ -289,7 +289,7 @@ namespace LOR4Utils
 			if (withEffects)
 			{
 				//myCentiseconds = source.Centiseconds;
-				//foreach (LOREffect4 theEffect in source.effects)
+				//foreach (LOR4Effect theEffect in source.effects)
 				//{
 				//effects.Add(theEffect.Clone());
 				//	AddEffect(theEffect.Clone());
@@ -308,10 +308,10 @@ namespace LOR4Utils
 			ret.rgbChild = rgbChild;
 			ret.rgbParent = rgbParent;
 			ret.SetParent(Parent);
-			List<LOREffect4> newEffects = new List<LOREffect4>();
+			List<LOR4Effect> newEffects = new List<LOR4Effect>();
 			if (withEffects)
 			{
-				//foreach (LOREffect4 thisEffect in effects)
+				//foreach (LOR4Effect thisEffect in effects)
 				//{
 				//	newEffects.Add(thisEffect.Clone());
 				//}
@@ -321,7 +321,7 @@ namespace LOR4Utils
 			return ret;
 		}
 
-		public void AddEffect(LOREffect4 theEffect)
+		public void AddEffect(LOR4Effect theEffect)
 		{
 			theEffect.parent = this;
 			theEffect.myIndex = effects.Count;
@@ -336,20 +336,20 @@ namespace LOR4Utils
 
 		public void AddEffect(string lineIn)
 		{
-			LOREffect4 theEffect = new LOREffect4(lineIn);
+			LOR4Effect theEffect = new LOR4Effect(lineIn);
 			AddEffect(theEffect);
 			if (myParent != null) myParent.MakeDirty(true);
 		}
 
-		public int CopyEffects(List<LOREffect4> effectList, bool Merge)
+		public int CopyEffects(List<LOR4Effect> effectList, bool Merge)
 		{
-			LOREffect4 newEffect = null;
+			LOR4Effect newEffect = null;
 			if (!Merge)
 			{
 				//! Note: clears any pre-existing effects!
 				effects.Clear();
 			}
-			foreach (LOREffect4 thisEffect in effectList)
+			foreach (LOR4Effect thisEffect in effectList)
 			{
 				newEffect = thisEffect.Clone();
 				newEffect.parent = this;

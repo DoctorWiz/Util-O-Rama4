@@ -13,7 +13,7 @@ using System.Media;
 using System.Configuration;
 using System.Threading;
 using Microsoft.Win32;
-using xUtilities;
+using xLights22;
 using Musik;
 //using Ini;
 using TagLib;
@@ -28,7 +28,7 @@ using TagLib.Asf;
 using TagLib.MusePack;
 using TagLib.NonContainer;
 using System.Diagnostics.Eventing.Reader;
-using LOR4Utils;
+using LOR4;
 using FileHelper;
 
 namespace UtilORama4
@@ -82,13 +82,13 @@ namespace UtilORama4
 
 		private static int alignIndex = 0;
 		//private static bool Fyle.DebugMode = Fyle.IsWizard || Fyle.IsAWizard;
-		//public static LORTrack4 VampTrack = null;
+		//public static LOR4Track VampTrack = null;
 
 		public static LOR4Sequence Sequence = null;
 		public const string VAMPTRACKname = "Vamp-O-Rama";
-		public static LORTrack4 VampTrack = null;
-		public static LORTimings4 GridBeats = null;
-		public static LORTimings4 GridOnsets = null;
+		public static LOR4Track VampTrack = null;
+		public static LOR4Timings GridBeats = null;
+		public static LOR4Timings GridOnsets = null;
 		private static LOR4Channel[] noteChannels = null;
 
 		// Note this is a temporary (bad pun) temp location
@@ -387,7 +387,7 @@ namespace UtilORama4
 					{
 						if (xAlignTo != null)
 						{
-							if (xAlignTo.effects.Count > 0)
+							if (xAlignTo.Markers.Count > 0)
 							{
 								int ns = AlignToNearestTiming(theTime);
 								ret = ns;
@@ -405,7 +405,7 @@ namespace UtilORama4
 
 		private static int AlignToNearestTiming(int theTime)
 		{
-			//! Important: Reset alignIndex to xUtils.UNDEFINED before starting new timings and/or different alignTimes.
+			//! Important: Reset alignIndex to xAdmin.UNDEFINED before starting new timings and/or different alignTimes.
 			//! alignTimes are assumed to be in ascending numerical order.
 
 			int retIdx = -1;
@@ -416,7 +416,7 @@ namespace UtilORama4
 			int effectTime = 0;
 			int newStart = theTime;
 			string msg = "";
-			List<xEffect> effects = xAlignTo.effects;
+			List<xMarker> Markers = xAlignTo.Markers;
 
 			if (xAlignTo == null)
 			{
@@ -424,7 +424,7 @@ namespace UtilORama4
 			}
 			else
 			{
-				if (effects.Count < 1)
+				if (Markers.Count < 1)
 				{
 					Fyle.BUG("AlignTo timings are empty!");
 				}
@@ -432,12 +432,12 @@ namespace UtilORama4
 				{
 					while (keepTrying)
 					{
-						effectTime = effects[alignIndex].starttime;
+						effectTime = Markers[alignIndex].starttime;
 						// Is the time passed in past or equal to our current effect?
 						if (theTime > effectTime)
 						{
 							// Is the current effect the last one?
-							if (alignIndex > (effects.Count - 2))
+							if (alignIndex > (Markers.Count - 2))
 							{
 								// Yup, last effect, we reached the end
 								// How far past the last one is it?
@@ -471,13 +471,13 @@ namespace UtilORama4
 							else // it is or isn't the last effect (and the time is past the current one)
 							{
 								// So how does it compare to the next one
-								if (theTime > effects[alignIndex + 1].starttime)
+								if (theTime > Markers[alignIndex + 1].starttime)
 								{
 									// Past the next one too
 									// So advance the counter and keep trying
 									msg = "Time " + theTime.ToString() + " is past the current [" + alignIndex.ToString() + "] effect " + effectTime.ToString();
 									msg += " and there are more effects left and it is past the next [";
-									msg += (alignIndex + 1).ToString() + "] effect too " + effects[alignIndex + 1].starttime.ToString();
+									msg += (alignIndex + 1).ToString() + "] effect too " + Markers[alignIndex + 1].starttime.ToString();
 									msg += " so advancing the index to " + (alignIndex + 1).ToString();
 									Debug.WriteLine(msg);
 									alignIndex++;
@@ -493,7 +493,7 @@ namespace UtilORama4
 									// How far past the current effect is it?
 									diffLo = theTime - effectTime;
 									// And how far is it from the next effect
-									diffHi = effects[alignIndex + 1].starttime - theTime;
+									diffHi = Markers[alignIndex + 1].starttime - theTime;
 									// Closer to the current effect.starttime or the next one?
 									if (diffLo < diffHi)
 									{
@@ -509,7 +509,7 @@ namespace UtilORama4
 									else
 									{
 										// Closer to the next one
-										matchTime = effects[alignIndex + 1].starttime;
+										matchTime = Markers[alignIndex + 1].starttime;
 										msg = "Time " + theTime.ToString() + " is between the cuurent [" + alignIndex.ToString() + "] effect " + effectTime.ToString();
 										msg += " and the next [" + (alignIndex + 1).ToString() + "] effect " + songTimeMS.ToString() + " but is closer to the next effect ";
 										msg += diffLo.ToString() + ">" + diffHi.ToString() + " so set to next effect " + matchTime.ToString();
@@ -648,7 +648,7 @@ namespace UtilORama4
 				totalMilliseconds = value * 10;
 				if (Sequence != null)
 				{
-					if ((value > lutils.MINCentiseconds) && (value < lutils.MAXCentiseconds))
+					if ((value > LOR4Admin.MINCentiseconds) && (value < LOR4Admin.MAXCentiseconds))
 					{
 						Sequence.CentiFix(value);
 					}

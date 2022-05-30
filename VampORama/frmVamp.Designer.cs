@@ -62,7 +62,7 @@
 			this.mnuFileDivider2 = new System.Windows.Forms.ToolStripSeparator();
 			this.mnuExit = new System.Windows.Forms.ToolStripMenuItem();
 			this.mnuGenerate = new System.Windows.Forms.ToolStripMenuItem();
-			this.mnuTimingMarks = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuTimingMarkers = new System.Windows.Forms.ToolStripMenuItem();
 			this.mnuTranscription = new System.Windows.Forms.ToolStripMenuItem();
 			this.grpTimings = new System.Windows.Forms.GroupBox();
 			this.grpChords = new System.Windows.Forms.GroupBox();
@@ -201,9 +201,9 @@
 			this.grpExplore = new System.Windows.Forms.GroupBox();
 			this.btnResetDefaults = new System.Windows.Forms.Button();
 			this.grpAudio = new System.Windows.Forms.GroupBox();
+			this.cboFile_Audio = new System.Windows.Forms.ComboBox();
 			this.lblSongTime = new System.Windows.Forms.Label();
 			this.btnBrowseAudio = new System.Windows.Forms.Button();
-			this.txtFileAudio = new System.Windows.Forms.TextBox();
 			this.lblFileAudio = new System.Windows.Forms.Label();
 			this.lblStep1 = new System.Windows.Forms.Label();
 			this.grpSavex = new System.Windows.Forms.GroupBox();
@@ -597,17 +597,17 @@
 			// mnuGenerate
 			// 
 			this.mnuGenerate.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-						this.mnuTimingMarks,
+						this.mnuTimingMarkers,
 						this.mnuTranscription});
 			this.mnuGenerate.Name = "mnuGenerate";
 			this.mnuGenerate.Size = new System.Drawing.Size(66, 24);
 			this.mnuGenerate.Text = "&Generate";
 			// 
-			// mnuTimingMarks
+			// mnuTimingMarkers
 			// 
-			this.mnuTimingMarks.Name = "mnuTimingMarks";
-			this.mnuTimingMarks.Size = new System.Drawing.Size(205, 22);
-			this.mnuTimingMarks.Text = "&Timing Marks";
+			this.mnuTimingMarkers.Name = "mnuTimingMarkers";
+			this.mnuTimingMarkers.Size = new System.Drawing.Size(205, 22);
+			this.mnuTimingMarkers.Text = "&Timing Markers";
 			// 
 			// mnuTranscription
 			// 
@@ -838,6 +838,7 @@
 			this.swRamps.Location = new System.Drawing.Point(43, 1);
 			this.swRamps.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.swRamps.Name = "swRamps";
+			this.swRamps.OffFont = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.swRamps.OnFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.swRamps.Size = new System.Drawing.Size(37, 18);
 			this.swRamps.Style = JCS.ToggleSwitch.ToggleSwitchStyle.OSX;
@@ -894,6 +895,7 @@
 			this.swTrackBeat.Location = new System.Drawing.Point(54, 1);
 			this.swTrackBeat.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.swTrackBeat.Name = "swTrackBeat";
+			this.swTrackBeat.OffFont = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.swTrackBeat.OnFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.swTrackBeat.Size = new System.Drawing.Size(37, 18);
 			this.swTrackBeat.Style = JCS.ToggleSwitch.ToggleSwitchStyle.OSX;
@@ -2570,9 +2572,9 @@
 			// 
 			// grpAudio
 			// 
+			this.grpAudio.Controls.Add(this.cboFile_Audio);
 			this.grpAudio.Controls.Add(this.lblSongTime);
 			this.grpAudio.Controls.Add(this.btnBrowseAudio);
-			this.grpAudio.Controls.Add(this.txtFileAudio);
 			this.grpAudio.Controls.Add(this.lblFileAudio);
 			this.grpAudio.Controls.Add(this.lblStep1);
 			this.grpAudio.Enabled = false;
@@ -2584,6 +2586,15 @@
 			this.grpAudio.TabIndex = 122;
 			this.grpAudio.TabStop = false;
 			this.grpAudio.Text = "      Select Audio File";
+			// 
+			// cboFile_Audio
+			// 
+			this.cboFile_Audio.FormattingEnabled = true;
+			this.cboFile_Audio.Location = new System.Drawing.Point(19, 41);
+			this.cboFile_Audio.Name = "cboFile_Audio";
+			this.cboFile_Audio.Size = new System.Drawing.Size(259, 23);
+			this.cboFile_Audio.TabIndex = 164;
+			this.cboFile_Audio.SelectedIndexChanged += new System.EventHandler(this.cboFile_Audio_SelectedIndexChanged);
 			// 
 			// lblSongTime
 			// 
@@ -2609,18 +2620,6 @@
 			this.btnBrowseAudio.Text = "Browse...";
 			this.btnBrowseAudio.UseVisualStyleBackColor = true;
 			this.btnBrowseAudio.Click += new System.EventHandler(this.btnBrowseAudio_Click);
-			// 
-			// txtFileAudio
-			// 
-			this.txtFileAudio.AllowDrop = true;
-			this.txtFileAudio.Location = new System.Drawing.Point(22, 40);
-			this.txtFileAudio.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.txtFileAudio.Name = "txtFileAudio";
-			this.txtFileAudio.ReadOnly = true;
-			this.txtFileAudio.Size = new System.Drawing.Size(255, 23);
-			this.txtFileAudio.TabIndex = 123;
-			this.txtFileAudio.TextChanged += new System.EventHandler(this.txtFileAudio_TextChanged);
-			this.txtFileAudio.Leave += new System.EventHandler(this.txtFileAudio_Leave);
 			// 
 			// lblFileAudio
 			// 
@@ -2774,7 +2773,7 @@
 			this.imlTreeIcons.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
 			this.imlTreeIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imlTreeIcons.ImageStream")));
 			this.imlTreeIcons.TransparentColor = System.Drawing.Color.Transparent;
-			this.imlTreeIcons.Images.SetKeyName(0, "LORTrack4");
+			this.imlTreeIcons.Images.SetKeyName(0, "LOR4Track");
 			this.imlTreeIcons.Images.SetKeyName(1, "LOR4ChannelGroup");
 			this.imlTreeIcons.Images.SetKeyName(2, "LOR4RGBChannel");
 			this.imlTreeIcons.Images.SetKeyName(3, "LOR4Channel");
@@ -3228,7 +3227,7 @@
 		private System.Windows.Forms.ToolStripSeparator mnuFileDivider2;
 		private System.Windows.Forms.ToolStripMenuItem mnuExit;
 		private System.Windows.Forms.ToolStripMenuItem mnuGenerate;
-		private System.Windows.Forms.ToolStripMenuItem mnuTimingMarks;
+		private System.Windows.Forms.ToolStripMenuItem mnuTimingMarkers;
 		private System.Windows.Forms.ToolStripMenuItem mnuTranscription;
 		private System.Windows.Forms.ToolStripMenuItem mnuOptionsAnnotator;
 		private System.Windows.Forms.ToolStripMenuItem mnuOptionsVamp;
@@ -3239,7 +3238,6 @@
 		private System.Windows.Forms.Button btnTrackSettings;
 		private System.Windows.Forms.GroupBox grpAudio;
 		private System.Windows.Forms.Button btnBrowseAudio;
-		private System.Windows.Forms.TextBox txtFileAudio;
 		private System.Windows.Forms.Label lblFileAudio;
 		private System.Windows.Forms.Label lblStep1;
 		private System.Windows.Forms.GroupBox grpSavex;
@@ -3425,6 +3423,7 @@
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.ComboBox cboAlignChords;
 		private System.Windows.Forms.CheckBox chkChords;
+		private ComboBox cboFile_Audio;
 	}
 }
 

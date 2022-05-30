@@ -13,8 +13,8 @@ using System.Media;
 using System.Configuration;
 using System.Threading;
 using Microsoft.Win32;
-using xUtilities;
-using LOR4Utils;
+using xLights22;
+using LOR4;
 using FileHelper;
 using Musik;
 //using Ini;
@@ -629,7 +629,7 @@ namespace UtilORama4
 			//!////////////////
 			//! NOTE ONSETS //
 			//!/////////////
-			if ((chkNoteOnsets.Checked) || (VampNoteOnsets.Timings.effects.Count < 1))
+			if ((chkNoteOnsets.Checked) || (VampNoteOnsets.Timings.Markers.Count < 1))
 			{
 				if (Fyle.Exists(VampNoteOnsets.FileResults))
 				{
@@ -653,7 +653,7 @@ namespace UtilORama4
 			//!///////////////////////
 			//! POLYPHONIC TRANSCRIPTION //
 			//!/////////////////////
-			if ((chkPolyphonic.Checked) || (VampPolyphonic.Timings.effects.Count < 1))
+			if ((chkPolyphonic.Checked) || (VampPolyphonic.Timings.Markers.Count < 1))
 			{
 				if (Fyle.Exists(VampPolyphonic.FileResults))
 				{
@@ -681,7 +681,7 @@ namespace UtilORama4
 			//!///////////////////////
 			//! PITCH & KEY //
 			//!/////////////////////
-			if ((chkPitchKey.Checked) || (VampPitchKey.Timings.effects.Count < 1))
+			if ((chkPitchKey.Checked) || (VampPitchKey.Timings.Markers.Count < 1))
 			{
 				if (Fyle.Exists(VampPitchKey.FileResults))
 				{
@@ -707,7 +707,7 @@ namespace UtilORama4
 			//!///////////////////////
 			//!  T E M P O  //
 			//!/////////////////////
-			if ((chkTempo.Checked) || (VampTempo.Timings.effects.Count < 1))
+			if ((chkTempo.Checked) || (VampTempo.Timings.Markers.Count < 1))
 			{
 				if (Fyle.Exists(VampTempo.FileResults))
 				{
@@ -732,7 +732,7 @@ namespace UtilORama4
 			//!///////////////////////
 			//!  SEGMENTS  //
 			//!/////////////////////
-			if ((chkSegments.Checked) || (VampSegments.Timings.effects.Count < 1))
+			if ((chkSegments.Checked) || (VampSegments.Timings.Markers.Count < 1))
 			{
 				if (Fyle.Exists(VampSegments.FileResults))
 				{
@@ -757,7 +757,7 @@ namespace UtilORama4
 			//!///////////////////
 			//!   CHROMAGRAM   //
 			//!/////////////////
-			if ((chkChromagram.Checked) || (VampChromagram.Timings.effects.Count < 1))
+			if ((chkChromagram.Checked) || (VampChromagram.Timings.Markers.Count < 1))
 			{
 				if (Fyle.Exists(VampChromagram.FileResults))
 				{
@@ -783,7 +783,7 @@ namespace UtilORama4
 			//!///////////////////////
 			//!  CHORDS CHORDINO //
 			//!/////////////////////
-			if ((chkChords.Checked) || (VampChords.Timings.effects.Count < 1))
+			if ((chkChords.Checked) || (VampChords.Timings.Markers.Count < 1))
 			{
 				if (Fyle.Exists(VampChords.FileResults))
 				{
@@ -838,7 +838,7 @@ namespace UtilORama4
 
 			if (allInOne)
 			{
-				writer = BeginTimingsXFile(fileName);
+				writer = BeingxTimingsFile(fileName);
 				writer.WriteLine(lineOut);
 				writeCount++;
 			}
@@ -851,15 +851,15 @@ namespace UtilORama4
 				//! BARS
 				if (VampBarBeats.xBars != null)
 				{
-					if (VampBarBeats.xBars.effects.Count > 0)
+					if (VampBarBeats.xBars.Markers.Count > 0)
 					{
 						StatusUpdate("Exporting Bar Timings");
 						if (!allInOne)
 						{
-							writer = BeginTimingsXFile(fileBaseName + " - " + VampBarBeats.xBars.Name + exten);
+							writer = BeingxTimingsFile(fileBaseName + " - " + VampBarBeats.xBars.Name + exten);
 							writeCount++;
 						}
-						lineOut = xTimingsOutX(VampBarBeats.xBars, vamps.LabelType.Numbers, allInOne);
+						lineOut = xTimingsOut(VampBarBeats.xBars, vamps.LabelType.Numbers, allInOne);
 						writer.WriteLine(lineOut);
 					}
 				}
@@ -868,15 +868,15 @@ namespace UtilORama4
 				{
 					if (VampBarBeats.xBeatsFull != null)
 					{
-						if (VampBarBeats.xBeatsFull.effects.Count > 0)
+						if (VampBarBeats.xBeatsFull.Markers.Count > 0)
 						{
 							StatusUpdate("Exporting Full Beat Timings");
 							if (!allInOne)
 							{
-								writer = BeginTimingsXFile(fileBaseName + " - " + VampBarBeats.xBeatsFull.Name + exten);
+								writer = BeingxTimingsFile(fileBaseName + " - " + VampBarBeats.xBeatsFull.Name + exten);
 								writeCount++;
 							}
-							lineOut = xTimingsOutX(VampBarBeats.xBeatsFull, vamps.LabelType.Numbers, allInOne);
+							lineOut = xTimingsOut(VampBarBeats.xBeatsFull, vamps.LabelType.Numbers, allInOne);
 							writer.WriteLine(lineOut);
 						}
 					}
@@ -886,15 +886,15 @@ namespace UtilORama4
 				{
 					if (VampBarBeats.xBeatsHalf != null)
 					{
-						if (VampBarBeats.xBeatsHalf.effects.Count > 0)
+						if (VampBarBeats.xBeatsHalf.Markers.Count > 0)
 						{
 							StatusUpdate("Exporting Half Beat Timings");
 							if (!allInOne)
 							{
-								writer = BeginTimingsXFile(fileBaseName + " - " + VampBarBeats.xBeatsHalf.Name + exten);
+								writer = BeingxTimingsFile(fileBaseName + " - " + VampBarBeats.xBeatsHalf.Name + exten);
 								writeCount++;
 							}
-							lineOut = xTimingsOutX(VampBarBeats.xBeatsHalf, vamps.LabelType.Numbers, allInOne);
+							lineOut = xTimingsOut(VampBarBeats.xBeatsHalf, vamps.LabelType.Numbers, allInOne);
 							writer.WriteLine(lineOut);
 						}
 					}
@@ -904,15 +904,15 @@ namespace UtilORama4
 				{
 					if (VampBarBeats.xBeatsThird != null)
 					{
-						if (VampBarBeats.xBeatsThird.effects.Count > 0)
+						if (VampBarBeats.xBeatsThird.Markers.Count > 0)
 						{
 							StatusUpdate("Exporting Third Beat Timings");
 							if (!allInOne)
 							{
-								writer = BeginTimingsXFile(fileBaseName + " - " + VampBarBeats.xBeatsThird.Name + exten);
+								writer = BeingxTimingsFile(fileBaseName + " - " + VampBarBeats.xBeatsThird.Name + exten);
 								writeCount++;
 							}
-							lineOut = xTimingsOutX(VampBarBeats.xBeatsThird, vamps.LabelType.Numbers, allInOne);
+							lineOut = xTimingsOut(VampBarBeats.xBeatsThird, vamps.LabelType.Numbers, allInOne);
 							writer.WriteLine(lineOut);
 						}
 					}
@@ -922,15 +922,15 @@ namespace UtilORama4
 				{
 					if (VampBarBeats.xBeatsQuarter != null)
 					{
-						if (VampBarBeats.xBeatsQuarter.effects.Count > 0)
+						if (VampBarBeats.xBeatsQuarter.Markers.Count > 0)
 						{
 							StatusUpdate("Exporting Quarter Beat Timings");
 							if (!allInOne)
 							{
-								writer = BeginTimingsXFile(fileBaseName + " - " + VampBarBeats.xBeatsQuarter.Name + exten);
+								writer = BeingxTimingsFile(fileBaseName + " - " + VampBarBeats.xBeatsQuarter.Name + exten);
 								writeCount++;
 							}
-							lineOut = xTimingsOutX(VampBarBeats.xBeatsQuarter, vamps.LabelType.Numbers, allInOne);
+							lineOut = xTimingsOut(VampBarBeats.xBeatsQuarter, vamps.LabelType.Numbers, allInOne);
 							writer.WriteLine(lineOut);
 						}
 					}
@@ -942,16 +942,16 @@ namespace UtilORama4
 			{
 				if (VampNoteOnsets.Timings != null)
 				{
-					if (VampNoteOnsets.Timings.effects.Count > 0)
+					if (VampNoteOnsets.Timings.Markers.Count > 0)
 					{
 						StatusUpdate("Exporting Note Onset Timings");
 						if (!allInOne)
 						{
-							writer = BeginTimingsXFile(fileBaseName + " - " + VampNoteOnsets.Timings.Name + exten);
+							writer = BeingxTimingsFile(fileBaseName + " - " + VampNoteOnsets.Timings.Name + exten);
 							writeCount++;
 						}
 						vamps.LabelType lt = vamps.GetLabelTypeFromName(cboLabelsOnsets.Text);
-						lineOut = xTimingsOutX(VampNoteOnsets.Timings, lt, allInOne);
+						lineOut = xTimingsOut(VampNoteOnsets.Timings, lt, allInOne);
 						writer.WriteLine(lineOut);
 						writeCount++;
 					}
@@ -963,16 +963,16 @@ namespace UtilORama4
 			{
 				if (VampPolyphonic.Timings != null)
 				{
-					if (VampPolyphonic.Timings.effects.Count > 0)
+					if (VampPolyphonic.Timings.Markers.Count > 0)
 					{
 						StatusUpdate("Exporting Polyphonic Transcription Timings");
 						if (!allInOne)
 						{
-							writer = BeginTimingsXFile(fileBaseName + " - " + VampPolyphonic.Timings.Name + exten);
+							writer = BeingxTimingsFile(fileBaseName + " - " + VampPolyphonic.Timings.Name + exten);
 							writeCount++;
 						}
 						vamps.LabelType lt = vamps.GetLabelTypeFromName(cboLabelsPolyphonic.Text);
-						lineOut = xTimingsOutX(VampPolyphonic.Timings, lt, allInOne);
+						lineOut = xTimingsOut(VampPolyphonic.Timings, lt, allInOne);
 						writer.WriteLine(lineOut);
 						writeCount++;
 					}
@@ -984,17 +984,17 @@ namespace UtilORama4
 			{
 				if (VampPitchKey.Timings != null)
 				{
-					if (VampPitchKey.Timings.effects.Count > 0)
+					if (VampPitchKey.Timings.Markers.Count > 0)
 					{
 						StatusUpdate("Exporting Pitch and Key Timings");
 						if (!allInOne)
 						{
-							writer = BeginTimingsXFile(fileBaseName + " - " + VampPitchKey.Timings.Name + exten);
+							writer = BeingxTimingsFile(fileBaseName + " - " + VampPitchKey.Timings.Name + exten);
 							writeCount++;
 						}
 
 						vamps.LabelType lt = vamps.GetLabelTypeFromName(cboLabelsPitchKey.Text);
-						lineOut = xTimingsOutX(VampPitchKey.Timings, lt, allInOne);
+						lineOut = xTimingsOut(VampPitchKey.Timings, lt, allInOne);
 						writer.WriteLine(lineOut);
 						writeCount++;
 					}
@@ -1006,16 +1006,16 @@ namespace UtilORama4
 			{
 				if (VampTempo.Timings != null)
 				{
-					if (VampTempo.Timings.effects.Count > 0)
+					if (VampTempo.Timings.Markers.Count > 0)
 					{
 						StatusUpdate("Exporting Tempo Change Timings");
 						if (!allInOne)
 						{
-							writer = BeginTimingsXFile(fileBaseName + " - " + VampTempo.Timings.Name + exten);
+							writer = BeingxTimingsFile(fileBaseName + " - " + VampTempo.Timings.Name + exten);
 							writeCount++;
 						}
 						vamps.LabelType lt = vamps.GetLabelTypeFromName(cboLabelsTempo.Text);
-						lineOut = xTimingsOutX(VampTempo.Timings, lt, allInOne);
+						lineOut = xTimingsOut(VampTempo.Timings, lt, allInOne);
 						writer.WriteLine(lineOut);
 						writeCount++;
 					}
@@ -1027,16 +1027,16 @@ namespace UtilORama4
 			{
 				if (VampSegments.Timings != null)
 				{
-					if (VampSegments.Timings.effects.Count > 0)
+					if (VampSegments.Timings.Markers.Count > 0)
 					{
 						StatusUpdate("Exporting Segment Timings");
 						if (!allInOne)
 						{
-							writer = BeginTimingsXFile(fileBaseName + " - " + VampSegments.Timings.Name + exten);
+							writer = BeingxTimingsFile(fileBaseName + " - " + VampSegments.Timings.Name + exten);
 							writeCount++;
 						}
 						vamps.LabelType lt = vamps.GetLabelTypeFromName(cboLabelsSegments.Text);
-						lineOut = xTimingsOutX(VampSegments.Timings, lt, allInOne);
+						lineOut = xTimingsOut(VampSegments.Timings, lt, allInOne);
 						writer.WriteLine(lineOut);
 						writeCount++;
 					}
@@ -1050,16 +1050,16 @@ namespace UtilORama4
 				{
 					// Chromagram does not create useful timings
 					/*
-					if (VampChromagram.Timings.effects.Count > 0)
+					if (VampChromagram.Timings.Markers.Count > 0)
 					{
 						StatusUpdate("Exporting Chromagram Timings");
 						if (!allInOne)
 						{
-							writer = BeginTimingsXFile(fileBaseName + " - " + VampChromagram.Timings.Name + exten);
+							writer = BeingxTimingsFile(fileBaseName + " - " + VampChromagram.Timings.Name + exten);
 							writeCount++;
 						}
 						vamps.LabelType lt = vamps.GetLabelTypeFromName(cboLabelsChromagram.Text);
-						lineOut = xTimingsOutX(VampChromagram.Timings, lt, allInOne);
+						lineOut = xTimingsOut(VampChromagram.Timings, lt, allInOne);
 						writer.WriteLine(lineOut);
 						writeCount++;
 					}
@@ -1072,16 +1072,16 @@ namespace UtilORama4
 			{
 				if (VampChords.Timings != null)
 				{
-					if (VampChords.Timings.effects.Count > 0)
+					if (VampChords.Timings.Markers.Count > 0)
 					{
 						StatusUpdate("Exporting Chord Timings");
 						if (!allInOne)
 						{
-							writer = BeginTimingsXFile(fileBaseName + " - " + VampChords.Timings.Name + exten);
+							writer = BeingxTimingsFile(fileBaseName + " - " + VampChords.Timings.Name + exten);
 							writeCount++;
 						}
 						vamps.LabelType lt = vamps.GetLabelTypeFromName(cboLabelsChords.Text);
-						lineOut = xTimingsOutX(VampChords.Timings, lt, allInOne);
+						lineOut = xTimingsOut(VampChords.Timings, lt, allInOne);
 						writer.WriteLine(lineOut);
 						writeCount++;
 					}
@@ -1128,7 +1128,7 @@ namespace UtilORama4
 			{
 				if (lightORamaInstalled && chkLOR.Checked)
 				{
-					if (VampNoteOnsets.Timings.effects.Count > 0)
+					if (VampNoteOnsets.Timings.Markers.Count > 0)
 					{
 						StatusUpdate("Exporting Note Onset Annotations");
 						VampNoteOnsets.xTimingsToLORtimings();
@@ -1143,7 +1143,7 @@ namespace UtilORama4
 			{
 				if (lightORamaInstalled && chkLOR.Checked)
 				{
-					if (VampPolyphonic.Timings.effects.Count > 0)
+					if (VampPolyphonic.Timings.Markers.Count > 0)
 					{
 						StatusUpdate("Exporting Polyphonic Transcription Annotations");
 						VampPolyphonic.xTimingsToLORtimings();
@@ -1158,7 +1158,7 @@ namespace UtilORama4
 			{
 				if (lightORamaInstalled && chkLOR.Checked)
 				{
-					if (VampPitchKey.Timings.effects.Count > 0)
+					if (VampPitchKey.Timings.Markers.Count > 0)
 					{
 						StatusUpdate("Exporting Pitch and Key Annotations");
 						VampPitchKey.xTimingsToLORtimings();
@@ -1177,7 +1177,7 @@ namespace UtilORama4
 			{
 				if (lightORamaInstalled && chkLOR.Checked)
 				{
-					if (VampTempo.Timings.effects.Count > 0)
+					if (VampTempo.Timings.Markers.Count > 0)
 					{
 						StatusUpdate("Exporting Tempo Change Annotations");
 						VampTempo.xTimingsToLORtimings();
@@ -1193,7 +1193,7 @@ namespace UtilORama4
 			{
 				if (lightORamaInstalled && chkLOR.Checked)
 				{
-					if (VampSegments.Timings.effects.Count > 0)
+					if (VampSegments.Timings.Markers.Count > 0)
 					{
 						StatusUpdate("Exporting Segment Annotations");
 						VampSegments.xTimingsToLORtimings();
@@ -1209,7 +1209,7 @@ namespace UtilORama4
 			{
 				if (lightORamaInstalled && chkLOR.Checked)
 				{
-					//if (VampChromagram.Timings.effects.Count > 0)
+					//if (VampChromagram.Timings.Markers.Count > 0)
 					// {
 					StatusUpdate("Exporting Chromagram Annotations");
 					// Chromagram does not create useful timings
@@ -1226,7 +1226,7 @@ namespace UtilORama4
 			{
 				if (lightORamaInstalled && chkLOR.Checked)
 				{
-					if (VampChords.Timings.effects.Count > 0)
+					if (VampChords.Timings.Markers.Count > 0)
 					{
 						StatusUpdate("Exporting Chord Annotations");
 						VampChords.xTimingsToLORtimings();
@@ -1420,7 +1420,7 @@ namespace UtilORama4
 			return newFile;
 		}
 
-		public StreamWriter BeginTimingsXFile(string fileName)
+		public StreamWriter BeingxTimingsFile(string fileName)
 		{
 			if (writer != null)
 			{
@@ -1431,7 +1431,7 @@ namespace UtilORama4
 			return writer;
 		}
 
-		public string xTimingsOutX(xTimings timings, vamps.LabelType labelType, bool indent = false)
+		public string xTimingsOut(xTimings timings, vamps.LabelType labelType, bool indent = false)
 		{
 
 			string label = "";
@@ -1444,7 +1444,7 @@ namespace UtilORama4
 				level1 = "    ";
 				level2 = "      ";
 			}
-			xEffect effect = null;
+			xMarker mark = null;
 
 			StringBuilder ret = new StringBuilder();
 			//  <timing
@@ -1472,36 +1472,36 @@ namespace UtilORama4
 			ret.Append(xTimings.RECORD_end);
 			ret.Append(xTimings.CRLF);
 
-			for (int i = 0; i < timings.effects.Count; i++)
+			for (int i = 0; i < timings.Markers.Count; i++)
 			{
-				effect = timings.effects[i];
+				mark = timings.Markers[i];
 				ret.Append(level2);
 				ret.Append(xTimings.RECORD_start);
-				ret.Append(xEffect.TABLE_Effect);
+				ret.Append(xTimings.TABLE_Effect);
 				ret.Append(xTimings.SPC);
 				//  label="foo" 
-				ret.Append(xEffect.FIELD_label);
+				ret.Append(xTimings.FIELD_label);
 				ret.Append(xTimings.VALUE_start);
 
 				//string newLabel = GetLabel(effect.Number, labelType);
-				ret.Append(effect.Label);
+				ret.Append(mark.Label);
 
 				ret.Append(xTimings.VALUE_end);
 				ret.Append(xTimings.SPC);
 				//  starttime="50" 
-				ret.Append(xEffect.FIELD_start);
+				ret.Append(xTimings.FIELD_start);
 				ret.Append(xTimings.VALUE_start);
-				ret.Append(effect.starttime.ToString());
+				ret.Append(mark.starttime.ToString());
 				ret.Append(xTimings.VALUE_end);
 				ret.Append(xTimings.SPC);
 				//  endtime="350" />
-				ret.Append(xEffect.FIELD_end);
+				ret.Append(xTimings.FIELD_end);
 				ret.Append(xTimings.VALUE_start);
-				ret.Append(effect.endtime.ToString());
+				ret.Append(mark.endtime.ToString());
 				ret.Append(xTimings.VALUE_end);
 				ret.Append(xTimings.SPC);
 
-				ret.Append(xEffect.RECORD_end);
+				ret.Append(xTimings.RECORD_end);
 				ret.Append(xTimings.CRLF);
 			}
 
@@ -1803,7 +1803,7 @@ namespace UtilORama4
 			//if (firstBeat > beatsPerBar) firstBeat = beatsPerBar;
 
 			//fileSongTemp = pathWork + "song.mp3";
-			//errs = lutils.SafeCopy(fileAudioLast, fileSongTemp);
+			//errs = LOR4Admin.SafeCopy(fileAudioLast, fileSongTemp);
 			//audioData.Filename = fileSongTemp;
 			//audioData = ReadAudioFile(fileSongTemp);
 			fileSongTemp = PrepAudioFile(fileAudioLast);

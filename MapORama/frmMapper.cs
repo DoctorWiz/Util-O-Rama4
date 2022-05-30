@@ -11,9 +11,9 @@ using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
 using Microsoft.Win32;
-using LOR4Utils;
+using LOR4;
 using FileHelper;
-using FuzzyString;
+using FuzzORama;
 using Syncfusion.Windows.Forms.Tools;
 
 namespace UtilORama4
@@ -93,7 +93,7 @@ namespace UtilORama4
 		private void RecallSettings()
 		{
 			bool valid = false;
-			SeqFolder = lutils.DefaultSequencesPath;
+			SeqFolder = LOR4Admin.DefaultSequencesPath;
 			logHomeDir = Fyle.GetTempPath();
 
 			destFile = userSettings.LastDestFile;
@@ -101,10 +101,10 @@ namespace UtilORama4
 			{
 				valid = Fyle.IsValidPath(destFile, true);
 			}
-			if (!valid) destFile = lutils.DefaultChannelConfigsPath;
+			if (!valid) destFile = LOR4Admin.DefaultChannelConfigsPath;
 			if (!File.Exists(destFile))
 			{
-				destFile = lutils.DefaultChannelConfigsPath;
+				destFile = LOR4Admin.DefaultChannelConfigsPath;
 				userSettings.LastDestFile = destFile;
 			}
 
@@ -114,10 +114,10 @@ namespace UtilORama4
 			{
 				valid = Fyle.IsValidPath(sourceFile, true);
 			}
-			if (!valid) sourceFile = lutils.DefaultSequencesPath;
+			if (!valid) sourceFile = LOR4Admin.DefaultSequencesPath;
 			if (!File.Exists(sourceFile))
 			{
-				sourceFile = lutils.DefaultSequencesPath;
+				sourceFile = LOR4Admin.DefaultSequencesPath;
 				userSettings.LastSourceFile = sourceFile;
 			}
 
@@ -127,10 +127,10 @@ namespace UtilORama4
 			{
 				valid = Fyle.IsValidPath(mapFile, true);
 			}
-			if (!valid) mapFile = lutils.DefaultChannelConfigsPath;
+			if (!valid) mapFile = LOR4Admin.DefaultChannelConfigsPath;
 			if (!File.Exists(mapFile))
 			{
-				mapFile = lutils.DefaultChannelConfigsPath;
+				mapFile = LOR4Admin.DefaultChannelConfigsPath;
 			}
 
 			valid = false;
@@ -139,10 +139,10 @@ namespace UtilORama4
 			{
 				valid = Fyle.IsValidPath(saveFile, true);
 			}
-			if (!valid) saveFile = lutils.DefaultSequencesPath;
+			if (!valid) saveFile = LOR4Admin.DefaultSequencesPath;
 			if (!File.Exists(saveFile))
 			{
-				saveFile = lutils.DefaultSequencesPath;
+				saveFile = LOR4Admin.DefaultSequencesPath;
 			}
 
 			sourceOnRight = userSettings.SourceOnRight;
@@ -317,7 +317,7 @@ namespace UtilORama4
 				byte isFile = 0;
 				if (arg.Substring(1, 2).CompareTo(":\\") == 0) isFile = 1;  // Local File
 				if (arg.Substring(0, 2).CompareTo("\\\\") == 0) isFile = 1; // UNC file
-				if (arg.Substring(4).IndexOf(".") > lutils.UNDEFINED) isFile++;  // contains a period
+				if (arg.Substring(4).IndexOf(".") > LOR4Admin.UNDEFINED) isFile++;  // contains a period
 				if (Fyle.InvalidCharacterCount(arg) == 0) isFile++;
 				if (isFile == 3)
 				{
@@ -385,7 +385,7 @@ namespace UtilORama4
 				//byte isFile = 0;
 				//if (arg.Substring(1, 2).CompareTo(":\\") == 0) isFile = 1;  // Local File
 				//if (arg.Substring(0, 2).CompareTo("\\\\") == 0) isFile = 1; // UNC file
-				//if (arg.Substring(4).IndexOf(".") > lutils.UNDEFINED) isFile++;  // contains a period
+				//if (arg.Substring(4).IndexOf(".") > LOR4Admin.UNDEFINED) isFile++;  // contains a period
 				//if (InvalidCharacterCount(arg) == 0) isFile++;
 				//if (isFile == 2)
 				//{
@@ -631,7 +631,7 @@ namespace UtilORama4
 					{
 						//seqSource.ReadSequenceFile(sourceFile);
 						LoadSourceFile(sourceFile);
-						//lutils.TreeFillChannels(treeSource, seqSource, sourceNodesBySI, false, false);
+						//LOR4Admin.TreeFillChannels(treeSource, seqSource, sourceNodesBySI, false, false);
 						// Is a destination also already loaded?
 					}
 				} // end last sequence file exists

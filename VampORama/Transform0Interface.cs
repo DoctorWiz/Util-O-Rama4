@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LOR4Utils;
+using LOR4;
+using xLights22;
 using FileHelper;
 
 namespace UtilORama4

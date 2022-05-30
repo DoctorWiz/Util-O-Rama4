@@ -68,10 +68,10 @@
 			// 
 			this.staStatus.AllowDrop = true;
 			this.staStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.pnlHelp,
-            this.pnlProgress,
-            this.pnlStatus,
-            this.pnlAbout});
+						this.pnlHelp,
+						this.pnlProgress,
+						this.pnlStatus,
+						this.pnlAbout});
 			this.staStatus.Location = new System.Drawing.Point(0, 611);
 			this.staStatus.Name = "staStatus";
 			this.staStatus.Size = new System.Drawing.Size(608, 24);
@@ -82,9 +82,9 @@
 			// 
 			// pnlHelp
 			// 
-			this.pnlHelp.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+			this.pnlHelp.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+						| System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+						| System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlHelp.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenInner;
 			this.pnlHelp.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.pnlHelp.ForeColor = System.Drawing.SystemColors.Highlight;
@@ -102,9 +102,9 @@
 			// 
 			// pnlStatus
 			// 
-			this.pnlStatus.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+			this.pnlStatus.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+						| System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+						| System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlStatus.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
 			this.pnlStatus.Name = "pnlStatus";
 			this.pnlStatus.Size = new System.Drawing.Size(496, 19);
@@ -112,9 +112,9 @@
 			// 
 			// pnlAbout
 			// 
-			this.pnlAbout.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+			this.pnlAbout.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+						| System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+						| System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlAbout.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenInner;
 			this.pnlAbout.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.pnlAbout.ForeColor = System.Drawing.SystemColors.Highlight;
@@ -180,7 +180,7 @@
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MinimumSize = new System.Drawing.Size(400, 400);
 			this.Name = "frmReport";
-			this.Text = "LORSeqInfo4-Rama";
+			this.Text = "LOR4SeqInfo-Rama";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmReport_FormClosing);
 			this.Load += new System.EventHandler(this.frmReport_Load);
 			this.ResizeEnd += new System.EventHandler(this.frmReport_ResizeEnd);

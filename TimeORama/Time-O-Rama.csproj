@@ -55,8 +55,8 @@
 		<Compile Include="..\Common\Sequence4\VizChannel.cs" Link="VizChannel.cs" />
 		<Compile Include="..\Common\Sequence4\VizDrawObject.cs" Link="VizDrawObject.cs" />
 		<Compile Include="..\Common\Sequence4\VizGroup.cs" Link="VizGroup.cs" />
-		<Compile Include="..\Common\xUtils\xTimings.cs" Link="xTimings.cs" />
-		<Compile Include="..\Common\xUtils\xUtils.cs" Link="xUtils.cs" />
+		<Compile Include="..\Common\xAdmin\xTimings.cs" Link="xTimings.cs" />
+		<Compile Include="..\Common\xAdmin\xAdmin.cs" Link="xAdmin.cs" />
 	</ItemGroup>
 
 	<ItemGroup>

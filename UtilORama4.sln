@@ -5,8 +5,6 @@ VisualStudioVersion = 17.1.32407.343
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MergeORama", "MergeORama\MergeORama.csproj", "{2380F7A0-0247-4F52-ABCA-1E95D599AF77}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FuzzyString", "Common\FuzzyString\FuzzyString.csproj", "{2AAA900B-64FB-4874-9444-64AE33ACA970}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{ED4532EF-88FF-48FC-9C92-FAD9965ACF9C}"
 	ProjectSection(SolutionItems) = preProject
 		BugTracking.txt = BugTracking.txt
@@ -61,6 +59,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Split-O-Rama", "SplitORama\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Time-O-Rama", "TimeORama\Time-O-Rama.csproj", "{619738CA-B74D-4A3E-865C-1179ED3A9F9A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FuzzORama", "Common\FuzzORama\FuzzORama.csproj", "{4E46F278-D947-41DE-9128-5E97D786AB0B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,14 +77,6 @@ Global
 		{2380F7A0-0247-4F52-ABCA-1E95D599AF77}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2380F7A0-0247-4F52-ABCA-1E95D599AF77}.Release|x64.ActiveCfg = Release|Any CPU
 		{2380F7A0-0247-4F52-ABCA-1E95D599AF77}.Release|x64.Build.0 = Release|Any CPU
-		{2AAA900B-64FB-4874-9444-64AE33ACA970}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2AAA900B-64FB-4874-9444-64AE33ACA970}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2AAA900B-64FB-4874-9444-64AE33ACA970}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{2AAA900B-64FB-4874-9444-64AE33ACA970}.Debug|x64.Build.0 = Debug|Any CPU
-		{2AAA900B-64FB-4874-9444-64AE33ACA970}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2AAA900B-64FB-4874-9444-64AE33ACA970}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2AAA900B-64FB-4874-9444-64AE33ACA970}.Release|x64.ActiveCfg = Release|Any CPU
-		{2AAA900B-64FB-4874-9444-64AE33ACA970}.Release|x64.Build.0 = Release|Any CPU
 		{D0CB347F-7311-4A9E-BD42-D9474B0A28A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D0CB347F-7311-4A9E-BD42-D9474B0A28A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0CB347F-7311-4A9E-BD42-D9474B0A28A5}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -201,6 +193,14 @@ Global
 		{619738CA-B74D-4A3E-865C-1179ED3A9F9A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{619738CA-B74D-4A3E-865C-1179ED3A9F9A}.Release|x64.ActiveCfg = Release|Any CPU
 		{619738CA-B74D-4A3E-865C-1179ED3A9F9A}.Release|x64.Build.0 = Release|Any CPU
+		{4E46F278-D947-41DE-9128-5E97D786AB0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E46F278-D947-41DE-9128-5E97D786AB0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E46F278-D947-41DE-9128-5E97D786AB0B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4E46F278-D947-41DE-9128-5E97D786AB0B}.Debug|x64.Build.0 = Debug|Any CPU
+		{4E46F278-D947-41DE-9128-5E97D786AB0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E46F278-D947-41DE-9128-5E97D786AB0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E46F278-D947-41DE-9128-5E97D786AB0B}.Release|x64.ActiveCfg = Release|Any CPU
+		{4E46F278-D947-41DE-9128-5E97D786AB0B}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

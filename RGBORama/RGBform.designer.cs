@@ -1,33 +1,33 @@
 ﻿namespace RGBORama
 {
-    partial class frmRGB
-    {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
-        private System.ComponentModel.IContainer components = null;
+	partial class frmRGB
+	{
+		/// <summary>
+		/// Required designer variable.
+		/// </summary>
+		private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing && (components != null))
+			{
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
 
-        #region Windows Form Designer generated code
+		#region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent()
-        {
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmRGB));
 			this.grpTime = new System.Windows.Forms.GroupBox();
 			this.label1 = new System.Windows.Forms.Label();
@@ -605,7 +605,7 @@
 			this.groupBox1.Size = new System.Drawing.Size(494, 73);
 			this.groupBox1.TabIndex = 31;
 			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = " Step 6: LOROutput4 File ";
+			this.groupBox1.Text = " Step 6: LOR4Output File ";
 			// 
 			// btnBrowseOutput
 			// 
@@ -825,10 +825,10 @@
 			// 
 			this.staStatus.AllowDrop = true;
 			this.staStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.pnlHelp,
-            this.pnlProgress,
-            this.pnlStatus,
-            this.pnlAbout});
+						this.pnlHelp,
+						this.pnlProgress,
+						this.pnlStatus,
+						this.pnlAbout});
 			this.staStatus.Location = new System.Drawing.Point(0, 563);
 			this.staStatus.Name = "staStatus";
 			this.staStatus.Size = new System.Drawing.Size(517, 24);
@@ -836,9 +836,9 @@
 			// 
 			// pnlHelp
 			// 
-			this.pnlHelp.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+			this.pnlHelp.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+						| System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+						| System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlHelp.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenInner;
 			this.pnlHelp.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.pnlHelp.ForeColor = System.Drawing.SystemColors.Highlight;
@@ -856,9 +856,9 @@
 			// 
 			// pnlStatus
 			// 
-			this.pnlStatus.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+			this.pnlStatus.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+						| System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+						| System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlStatus.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
 			this.pnlStatus.Name = "pnlStatus";
 			this.pnlStatus.Size = new System.Drawing.Size(405, 19);
@@ -866,9 +866,9 @@
 			// 
 			// pnlAbout
 			// 
-			this.pnlAbout.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+			this.pnlAbout.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+						| System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+						| System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlAbout.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenInner;
 			this.pnlAbout.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.pnlAbout.ForeColor = System.Drawing.SystemColors.Highlight;
@@ -928,54 +928,54 @@
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
-        }
+		}
 
-        #endregion
+		#endregion
 
-        private System.Windows.Forms.GroupBox grpTime;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox txtTimeTo;
-        private System.Windows.Forms.TextBox txtTimeFrom;
-        private System.Windows.Forms.RadioButton optTime2;
-        private System.Windows.Forms.RadioButton optTime1;
-        private System.Windows.Forms.GroupBox grpColors;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox txtColorTo6;
-        private System.Windows.Forms.TextBox txtColorTo5;
-        private System.Windows.Forms.TextBox txtColorTo4;
-        private System.Windows.Forms.TextBox txtColorTo3;
-        private System.Windows.Forms.TextBox txtColorTo2;
-        private System.Windows.Forms.TextBox txtColorTo1;
-        private System.Windows.Forms.TextBox txtColorFrom6;
-        private System.Windows.Forms.TextBox txtColorFrom5;
-        private System.Windows.Forms.TextBox txtColorFrom4;
-        private System.Windows.Forms.TextBox txtColorFrom3;
-        private System.Windows.Forms.TextBox txtColorFrom2;
-        private System.Windows.Forms.TextBox txtColorFrom1;
-        private System.Windows.Forms.GroupBox grpFile;
-        private System.Windows.Forms.Button btnBrowseInput;
-        private System.Windows.Forms.TextBox txtInputFilename;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.OpenFileDialog dlgFileOpen;
-        private System.Windows.Forms.Button btnEditPresets;
-        private System.Windows.Forms.ComboBox cboPresets;
-        private System.Windows.Forms.PictureBox picFrom3;
-        private System.Windows.Forms.PictureBox picFrom2;
-        private System.Windows.Forms.PictureBox picFrom1;
-        private System.Windows.Forms.PictureBox picTo5;
-        private System.Windows.Forms.PictureBox picTo4;
-        private System.Windows.Forms.PictureBox picTo3;
-        private System.Windows.Forms.PictureBox picTo2;
-        private System.Windows.Forms.PictureBox picTo1;
-        private System.Windows.Forms.PictureBox picFrom6;
-        private System.Windows.Forms.PictureBox picFrom5;
-        private System.Windows.Forms.PictureBox picFrom4;
-        private System.Windows.Forms.PictureBox picTo6;
+		private System.Windows.Forms.GroupBox grpTime;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.TextBox txtTimeTo;
+		private System.Windows.Forms.TextBox txtTimeFrom;
+		private System.Windows.Forms.RadioButton optTime2;
+		private System.Windows.Forms.RadioButton optTime1;
+		private System.Windows.Forms.GroupBox grpColors;
+		private System.Windows.Forms.Label label7;
+		private System.Windows.Forms.Label label6;
+		private System.Windows.Forms.Label label5;
+		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.TextBox txtColorTo6;
+		private System.Windows.Forms.TextBox txtColorTo5;
+		private System.Windows.Forms.TextBox txtColorTo4;
+		private System.Windows.Forms.TextBox txtColorTo3;
+		private System.Windows.Forms.TextBox txtColorTo2;
+		private System.Windows.Forms.TextBox txtColorTo1;
+		private System.Windows.Forms.TextBox txtColorFrom6;
+		private System.Windows.Forms.TextBox txtColorFrom5;
+		private System.Windows.Forms.TextBox txtColorFrom4;
+		private System.Windows.Forms.TextBox txtColorFrom3;
+		private System.Windows.Forms.TextBox txtColorFrom2;
+		private System.Windows.Forms.TextBox txtColorFrom1;
+		private System.Windows.Forms.GroupBox grpFile;
+		private System.Windows.Forms.Button btnBrowseInput;
+		private System.Windows.Forms.TextBox txtInputFilename;
+		private System.Windows.Forms.Label label8;
+		private System.Windows.Forms.OpenFileDialog dlgFileOpen;
+		private System.Windows.Forms.Button btnEditPresets;
+		private System.Windows.Forms.ComboBox cboPresets;
+		private System.Windows.Forms.PictureBox picFrom3;
+		private System.Windows.Forms.PictureBox picFrom2;
+		private System.Windows.Forms.PictureBox picFrom1;
+		private System.Windows.Forms.PictureBox picTo5;
+		private System.Windows.Forms.PictureBox picTo4;
+		private System.Windows.Forms.PictureBox picTo3;
+		private System.Windows.Forms.PictureBox picTo2;
+		private System.Windows.Forms.PictureBox picTo1;
+		private System.Windows.Forms.PictureBox picFrom6;
+		private System.Windows.Forms.PictureBox picFrom5;
+		private System.Windows.Forms.PictureBox picFrom4;
+		private System.Windows.Forms.PictureBox picTo6;
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.Button btnBrowseOutput;
 		private System.Windows.Forms.TextBox txtOutputFilename;

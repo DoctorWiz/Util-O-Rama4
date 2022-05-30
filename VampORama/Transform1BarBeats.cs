@@ -5,9 +5,9 @@ using System.Text;
 //using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-using LOR4Utils;
+using LOR4;
 using FileHelper;
-using xUtilities;
+using xLights22;
 
 namespace UtilORama4
 {
@@ -234,7 +234,7 @@ namespace UtilORama4
 						break;
 					//case PLUGINporto:
 					// Porto Beat Tracker
-					//err = lutils.SafeCopy(fileConfigFrom, fileConfigTo);
+					//err = LOR4Admin.SafeCopy(fileConfigFrom, fileConfigTo);
 					//break;
 					case PLUGINaubio:
 						// Aubio Beat Tracker
@@ -293,7 +293,7 @@ namespace UtilORama4
 			int err = 0;
 			string msg = "";
 
-			if ((xBars == null) || (xBars.effects.Count < 2) || (!Annotator.ReuseResults))
+			if ((xBars == null) || (xBars.Markers.Count < 2) || (!Annotator.ReuseResults))
 			{
 				int onsetCount = 0;
 				string lineIn = "";
@@ -337,12 +337,12 @@ namespace UtilORama4
 					lineIn = reader.ReadLine();
 
 					ppos = lineIn.IndexOf('.');
-					if (ppos > xUtils.UNDEFINED)
+					if (ppos > xAdmin.UNDEFINED)
 					{
 
 						string[] parts = lineIn.Split(',');
 
-						millisecs = xUtils.ParseMilliseconds(parts[0]);
+						millisecs = xAdmin.ParseMilliseconds(parts[0]);
 						millisecs = Annotator.AlignTime(millisecs);
 						lastBeat = millisecs;
 						lastBar = millisecs;
@@ -352,12 +352,12 @@ namespace UtilORama4
 				{
 					lineIn = reader.ReadLine();
 					ppos = lineIn.IndexOf('.');
-					if (ppos > xUtils.UNDEFINED)
+					if (ppos > xAdmin.UNDEFINED)
 					{
 
 						string[] parts = lineIn.Split(',');
 
-						millisecs = xUtils.ParseMilliseconds(parts[0]);
+						millisecs = xAdmin.ParseMilliseconds(parts[0]);
 						// FULL BEATS - QUARTER NOTES
 						millisecs = Annotator.AlignTime(millisecs);
 						beatLength = millisecs - lastBeat;
@@ -429,15 +429,15 @@ namespace UtilORama4
 				reader.Close();
 				Annotator.TotalMilliseconds = lastBeat;
 				Annotator.TotalCentiseconds = lastBeat / 10;
-				//int t = xBars.effects[0].starttime;
+				//int t = xBars.Markers[0].starttime;
 				int t = 0;
 				int f = 1;
 
 
 			}
 			// Temp, for debugging while stepping thru code
-			int bc = xBars.effects.Count;
-			int bf = xBeatsFull.effects.Count;
+			int bc = xBars.Markers.Count;
+			int bf = xBeatsFull.Markers.Count;
 
 
 			Annotator.xBars = xBars;
@@ -448,38 +448,38 @@ namespace UtilORama4
 			//Annotator.xFrames = xFrames;
 
 			// If at least 2 bars, calculate the average
-			if (xBars.effects.Count > 1)
+			if (xBars.Markers.Count > 1)
 			{
 				// subtract first starttime from last
-				int barTime = xBars.effects[xBars.effects.Count - 1].starttime - xBars.effects[0].starttime;
+				int barTime = xBars.Markers[xBars.Markers.Count - 1].starttime - xBars.Markers[0].starttime;
 				// Divide by the count-1
-				AverageBarMS = (int)Math.Round(barTime / (double)(xBars.effects.Count) - 1);
+				AverageBarMS = (int)Math.Round(barTime / (double)(xBars.Markers.Count) - 1);
 				Annotator.AverageBarMS = AverageBarMS;
 			}
 			// If at least 2 full beats, calculate the average, same as above
-			if (xBeatsFull.effects.Count > 1)
+			if (xBeatsFull.Markers.Count > 1)
 			{
-				int beatTime = xBeatsFull.effects[xBeatsFull.effects.Count - 1].starttime - xBeatsFull.effects[0].starttime;
-				AverageBeatFullMS = (int)Math.Round(beatTime / (double)(xBeatsFull.effects.Count) - 1);
+				int beatTime = xBeatsFull.Markers[xBeatsFull.Markers.Count - 1].starttime - xBeatsFull.Markers[0].starttime;
+				AverageBeatFullMS = (int)Math.Round(beatTime / (double)(xBeatsFull.Markers.Count) - 1);
 				Annotator.AverageBeatFullMS = AverageBeatFullMS;
 			}
 			// And again for quarter beats
-			if (xBeatsQuarter.effects.Count > 1)
+			if (xBeatsQuarter.Markers.Count > 1)
 			{
-				int quarterTime = xBeatsQuarter.effects[xBeatsQuarter.effects.Count - 1].starttime - xBeatsQuarter.effects[0].starttime;
-				AverageBeatQuarterMS = (int)Math.Round(quarterTime / (double)(xBeatsQuarter.effects.Count) - 1);
+				int quarterTime = xBeatsQuarter.Markers[xBeatsQuarter.Markers.Count - 1].starttime - xBeatsQuarter.Markers[0].starttime;
+				AverageBeatQuarterMS = (int)Math.Round(quarterTime / (double)(xBeatsQuarter.Markers.Count) - 1);
 				Annotator.AverageBeatQuarterMS = AverageBeatQuarterMS;
 			}
 
-			msg = "Added " + xBars.effects.Count.ToString() + " Bars";
+			msg = "Added " + xBars.Markers.Count.ToString() + " Bars";
 			//TODO Raise event to send this to the output window			
-			msg = "Added " + xBeatsFull.effects.Count.ToString() + " Full Beats";
+			msg = "Added " + xBeatsFull.Markers.Count.ToString() + " Full Beats";
 			//TODO Raise event to send this to the output window			
-			msg = "Added " + xBeatsHalf.effects.Count.ToString() + " Half Beats";
+			msg = "Added " + xBeatsHalf.Markers.Count.ToString() + " Half Beats";
 			//TODO Raise event to send this to the output window			
-			msg = "Added " + xBeatsThird.effects.Count.ToString() + " Third Beats";
+			msg = "Added " + xBeatsThird.Markers.Count.ToString() + " Third Beats";
 			//TODO Raise event to send this to the output window			
-			msg = "Added " + xBeatsQuarter.effects.Count.ToString() + " Quarter Beats";
+			msg = "Added " + xBeatsQuarter.Markers.Count.ToString() + " Quarter Beats";
 			//TODO Raise event to send this to the output window			
 
 
@@ -501,22 +501,22 @@ namespace UtilORama4
 			return errs;
 		}
 
-		public static LORTimings4 xTimingToLORtimings(xTimings timings, string gridName)
+		public static LOR4Timings xTimingToLORtimings(xTimings timings, string gridName)
 		{
-			LORTimings4 beatGrid = null;
+			LOR4Timings beatGrid = null;
 			int errs = 0;
 			//string theName = timings.Name;
 			if (timings != null)
 			{
-				if (timings.effects.Count > 0)
+				if (timings.Markers.Count > 0)
 				{
-					int tec = timings.effects.Count;
+					int tec = timings.Markers.Count;
 					beatGrid = Annotator.Sequence.FindTimingGrid(gridName, true);
 					errs = SequenceFunctions.ImportTimingGrid(beatGrid, timings);
 					if (tec != beatGrid.timings.Count)
 					{
 						string msg = "Warning:\r\nxTimings '" + gridName + "' has ";
-						msg += timings.effects.Count.ToString() + " effects, but\r\n";
+						msg += timings.Markers.Count.ToString() + " effects, but\r\n";
 						msg += "Timing Grid '" + gridName + "' has ";
 						msg += beatGrid.timings.Count.ToString() + " effects.\r\n";
 						msg += "   (This may be because of tightly close timings)";
@@ -540,9 +540,9 @@ namespace UtilORama4
 
 			if (xBars != null)
 			{
-				if (xBars.effects.Count > 0)
+				if (xBars.Markers.Count > 0)
 				{
-					LORTimings4 gridBars = sequence.FindTimingGrid(xBars.Name, true);
+					LOR4Timings gridBars = sequence.FindTimingGrid(xBars.Name, true);
 					SequenceFunctions.ImportTimingGrid(gridBars, xBars);
 				}
 			}
@@ -551,9 +551,9 @@ namespace UtilORama4
 			{
 				if (xBeatsFull != null)
 				{
-					if (xBeatsFull.effects.Count > 0)
+					if (xBeatsFull.Markers.Count > 0)
 					{
-						LORTimings4 gridBeats = sequence.FindTimingGrid(beatsFullName, true);
+						LOR4Timings gridBeats = sequence.FindTimingGrid(beatsFullName, true);
 						SequenceFunctions.ImportTimingGrid(gridBeats, xBeatsFull);
 						Annotator.GridBeats = gridBeats;
 						if (Annotator.VampTrack.timingGrid == null)
@@ -568,9 +568,9 @@ namespace UtilORama4
 			{
 				if (xBeatsHalf != null)
 				{
-					if (xBeatsHalf.effects.Count > 0)
+					if (xBeatsHalf.Markers.Count > 0)
 					{
-						LORTimings4 gridHalf = sequence.FindTimingGrid(beatsHalfName, true);
+						LOR4Timings gridHalf = sequence.FindTimingGrid(beatsHalfName, true);
 						SequenceFunctions.ImportTimingGrid(gridHalf, xBeatsHalf);
 					}
 				}
@@ -580,9 +580,9 @@ namespace UtilORama4
 			{
 				if (xBeatsThird != null)
 				{
-					if (xBeatsThird.effects.Count > 0)
+					if (xBeatsThird.Markers.Count > 0)
 					{
-						LORTimings4 gridThird = sequence.FindTimingGrid(beatsThirdName, true);
+						LOR4Timings gridThird = sequence.FindTimingGrid(beatsThirdName, true);
 						SequenceFunctions.ImportTimingGrid(gridThird, xBeatsThird);
 					}
 				}
@@ -592,9 +592,9 @@ namespace UtilORama4
 			{
 				if (xBeatsQuarter != null)
 				{
-					if (xBeatsQuarter.effects.Count > 0)
+					if (xBeatsQuarter.Markers.Count > 0)
 					{
-						LORTimings4 gridQuarter = sequence.FindTimingGrid(beatsQuarterName, true);
+						LOR4Timings gridQuarter = sequence.FindTimingGrid(beatsQuarterName, true);
 						SequenceFunctions.ImportTimingGrid(gridQuarter, xBeatsQuarter);
 					}
 				}
@@ -609,24 +609,24 @@ namespace UtilORama4
 			int errs = 0;
 			if (Annotator.UseRamps)
 			{
-				errs += xTimingToLORChannels(xBars, lutils.Color_NettoLOR(System.Drawing.Color.Red));
-				errs += xTimingToLORChannels(xBeatsFull, lutils.Color_NettoLOR(System.Drawing.Color.DarkOrange));
-				errs += xTimingToLORChannels(xBeatsHalf, lutils.Color_NettoLOR(System.Drawing.Color.Gold));
-				errs += xTimingToLORChannels(xBeatsThird, lutils.Color_NettoLOR(System.Drawing.Color.Lime));
-				errs += xTimingToLORChannels(xBeatsQuarter, lutils.Color_NettoLOR(System.Drawing.Color.Blue));
+				errs += xTimingToLORChannels(xBars, LOR4Admin.Color_NettoLOR(System.Drawing.Color.Red));
+				errs += xTimingToLORChannels(xBeatsFull, LOR4Admin.Color_NettoLOR(System.Drawing.Color.DarkOrange));
+				errs += xTimingToLORChannels(xBeatsHalf, LOR4Admin.Color_NettoLOR(System.Drawing.Color.Gold));
+				errs += xTimingToLORChannels(xBeatsThird, LOR4Admin.Color_NettoLOR(System.Drawing.Color.Lime));
+				errs += xTimingToLORChannels(xBeatsQuarter, LOR4Admin.Color_NettoLOR(System.Drawing.Color.Blue));
 			}
 			else
 			{
 				// Actually Bars
-				errs += xTimingToLORChannels(xBeatsQuarter, lutils.Color_NettoLOR(System.Drawing.Color.Red), xBars.Name, Annotator.BeatsPerBar * 4);
+				errs += xTimingToLORChannels(xBeatsQuarter, LOR4Admin.Color_NettoLOR(System.Drawing.Color.Red), xBars.Name, Annotator.BeatsPerBar * 4);
 				// Actually Full Beats
-				errs += xTimingToLORChannels(xBeatsQuarter, lutils.Color_NettoLOR(System.Drawing.Color.DarkOrange), xBeatsFull.Name, Annotator.BeatsPerBar);
+				errs += xTimingToLORChannels(xBeatsQuarter, LOR4Admin.Color_NettoLOR(System.Drawing.Color.DarkOrange), xBeatsFull.Name, Annotator.BeatsPerBar);
 				// Actually Half Beats
-				errs += xTimingToLORChannels(xBeatsQuarter, lutils.Color_NettoLOR(System.Drawing.Color.Gold), xBeatsHalf.Name, 2);
+				errs += xTimingToLORChannels(xBeatsQuarter, LOR4Admin.Color_NettoLOR(System.Drawing.Color.Gold), xBeatsHalf.Name, 2);
 				// Third Beats
-				errs += xTimingToLORChannels(xBeatsThird, lutils.Color_NettoLOR(System.Drawing.Color.Lime));
+				errs += xTimingToLORChannels(xBeatsThird, LOR4Admin.Color_NettoLOR(System.Drawing.Color.Lime));
 				// Finally, Quarter Beats
-				errs += xTimingToLORChannels(xBeatsQuarter, lutils.Color_NettoLOR(System.Drawing.Color.Blue));
+				errs += xTimingToLORChannels(xBeatsQuarter, LOR4Admin.Color_NettoLOR(System.Drawing.Color.Blue));
 			}
 
 			return errs;
@@ -639,10 +639,10 @@ namespace UtilORama4
 			int errs = 0;
 			if (timings != null)
 			{
-				if (timings.effects.Count > 0)
+				if (timings.Markers.Count > 0)
 				{
 					if (beatName == "") beatName = timings.Name;
-					int tec = timings.effects.Count;
+					int tec = timings.Markers.Count;
 					//int bpb = Annotator.BeatsPerBar;
 					string tname = timings.Name.Substring(6, 4);
 					LOR4ChannelGroup beatGroup = Annotator.VampTrack.Members.FindChannelGroup("Bars and Beats", true);
@@ -671,11 +671,11 @@ public xTimings xFrames = new xTimings("Frames");
 
 
 
-		//LORTrack4 vampTrack = sequence.FindTrack("Vamp-O-Rama", true);
+		//LOR4Track vampTrack = sequence.FindTrack("Vamp-O-Rama", true);
 		LOR4ChannelGroup beatGroup = sequence.FindChannelGroup("Bars and Beats", Annotator.VampTrack.Members, true);
 		if (xBars != null)
 		{
-			if (xBars.effects.Count > 0)
+			if (xBars.Markers.Count > 0)
 			{
 				//if (ramps)
 				//{
@@ -692,7 +692,7 @@ public xTimings xFrames = new xTimings("Frames");
 		{
 			if (xBeatsFull != null)
 			{
-				if (xBeatsFull.effects.Count > 0)
+				if (xBeatsFull.Markers.Count > 0)
 				{
 					LOR4Channel beatCh = sequence.FindChannel("Beats-Full", beatGroup.Members, true, true);
 					SequenceFunctions.ImportBeatChannel(beatCh, xBeatsFull, BeatsPerBar, firstBeat, ramps);
@@ -704,7 +704,7 @@ public xTimings xFrames = new xTimings("Frames");
 		{
 			if (xBeatsHalf != null)
 			{
-				if (xBeatsHalf.effects.Count > 0)
+				if (xBeatsHalf.Markers.Count > 0)
 				{
 					LOR4Channel beatCh = sequence.FindChannel("Beats-Half", beatGroup.Members, true, true);
 					SequenceFunctions.ImportBeatChannel(beatCh, xBeatsHalf, BeatsPerBar * 2, firstBeat, ramps);
@@ -716,7 +716,7 @@ public xTimings xFrames = new xTimings("Frames");
 		{
 			if (xBeatsThird != null)
 			{
-				if (xBeatsThird.effects.Count > 0)
+				if (xBeatsThird.Markers.Count > 0)
 				{
 					LOR4Channel beatCh = sequence.FindChannel("Beats-Third", beatGroup.Members, true, true);
 					SequenceFunctions.ImportBeatChannel(beatCh, xBeatsThird, BeatsPerBar * 3, firstBeat, ramps);
@@ -728,7 +728,7 @@ public xTimings xFrames = new xTimings("Frames");
 		{
 			if (xBeatsQuarter != null)
 			{
-				if (xBeatsQuarter.effects.Count > 0)
+				if (xBeatsQuarter.Markers.Count > 0)
 				{
 					LOR4Channel beatCh = sequence.FindChannel("Beats-Quarter", beatGroup.Members, true, true);
 					SequenceFunctions.ImportBeatChannel(beatCh, xBeatsQuarter, BeatsPerBar * 4, firstBeat, ramps);

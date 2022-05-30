@@ -8,15 +8,15 @@ using System.Drawing;
 using System.Diagnostics;
 using FileHelper;
 
-namespace LOR4Utils
+namespace LOR4
 {
-	public class LORMemberBase4 : iLOR4Member, IComparable<iLOR4Member>
+	public abstract class LOR4MemberBase : iLOR4Member, IComparable<iLOR4Member>
 	{
 		protected string myName = "";
-		protected int myCentiseconds = lutils.UNDEFINED;
-		protected int myIndex = lutils.UNDEFINED;
-		protected int myID = lutils.UNDEFINED;
-		protected int myAltID = lutils.UNDEFINED;
+		protected int myCentiseconds = LOR4Admin.UNDEFINED;
+		protected int myIndex = LOR4Admin.UNDEFINED;
+		protected int myID = LOR4Admin.UNDEFINED;
+		protected int myAltID = LOR4Admin.UNDEFINED;
 		protected int mycolor = 0; // Note: LOR color, 12-bit int in BGR order
 															 // Do not confuse with .Net or HTML color, 16 bits in ARGB order
 		protected iLOR4Member myParent = null;
@@ -32,21 +32,15 @@ namespace LOR4Utils
 		// Holds a List<TreeNodeAdv> but is not defined that way, so that this base member is NOT dependant on
 		// SyncFusion's TreeViewAdv in projects that don't use it.
 		protected object myNodes = null;
-		protected int myUniverseNumber = lutils.UNDEFINED;
-		protected int myDMXAddress = lutils.UNDEFINED;
+		protected int myUniverseNumber = LOR4Admin.UNDEFINED;
+		protected int myDMXAddress = LOR4Admin.UNDEFINED;
 		protected string myComment = ""; // Not really a comment somuch as a general purpose temporary string.
 		protected int miscNumber = 0; // General purpose temporary integer.  Use varies according to utility and function.
 
-		public LORMemberBase4()
+		internal LOR4MemberBase()
 		// Necessary to be the base member of other members
 		// Should never be called directly!
 		{ }
-
-		public LORMemberBase4(iLOR4Member theParent, string lineIn)
-		{
-			myParent = theParent;
-			Parse(lineIn);
-		}
 
 		public string Name
 		{ get { return myName; } }
@@ -141,7 +135,7 @@ namespace LOR4Utils
 		{ get { return mycolor; } set { mycolor = value; } }
 		// Whereas Color property with capital C returns the .Net or HTML color in ARGB order
 		public virtual Color Color
-		{ get { return lutils.Color_LORtoNet(mycolor); } set { mycolor = lutils.Color_NettoLOR(value); } }
+		{ get { return LOR4Admin.Color_LORtoNet(mycolor); } set { mycolor = LOR4Admin.Color_NettoLOR(value); } }
 
 
 		public virtual iLOR4Member Parent
@@ -159,9 +153,9 @@ namespace LOR4Utils
 				}
 				else
 				{
-					if (t.Equals(typeof(LORVisualization4)))
+					if (t.Equals(typeof(LOR4Visualization)))
 					{
-						myParent = (LORVisualization4)newParent;
+						myParent = (LOR4Visualization)newParent;
 					}
 					else
 					{
@@ -215,8 +209,8 @@ namespace LOR4Utils
 
 				//! TODO: Find out why we are getting null members in visualizations
 				//! This is an ugly kludgy fix in the meantime
-				LORMemberBase4 bass = new LORMemberBase4(this, "WTF");
-				other = bass;
+				//LOR4MemberBase bass = new LOR4MemberBase(this, "WTF");
+				//other = bass;
 			}
 			else
 			{
@@ -276,10 +270,10 @@ namespace LOR4Utils
 			if ((nu + nl) > 0)
 			{
 				//LOR4Sequence Parent = ID.Parent;
-				myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
-				if (myName.Length == 0) myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, " Name"));
-				myID = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
-				myCentiseconds = lutils.getKeyValue(lineIn, lutils.FIELDcentiseconds);
+				myName = LOR4Admin.HumanizeName(LOR4Admin.getKeyWord(lineIn, LOR4Admin.FIELDname));
+				if (myName.Length == 0) myName = LOR4Admin.HumanizeName(LOR4Admin.getKeyWord(lineIn, " Name"));
+				myID = LOR4Admin.getKeyValue(lineIn, LOR4Admin.FIELDsavedIndex);
+				myCentiseconds = LOR4Admin.getKeyValue(lineIn, LOR4Admin.FIELDcentiseconds);
 			}
 			else
 			{
@@ -294,33 +288,75 @@ namespace LOR4Utils
 			{
 				// Sneaky trick: Uses AltSavedIndex to tell if it has been renumbered and thus written
 				bool r = false;
-				if (myAltID > lutils.UNDEFINED) r = true;
+				if (myAltID > LOR4Admin.UNDEFINED) r = true;
 				return r;
 			}
 		}
 
 		public virtual iLOR4Member Clone()
 		{
-			return this.Clone(myName);
+			return Clone(myName);
 		}
 
 		public virtual iLOR4Member Clone(string newName)
 		{
-			LORMemberBase4 mbr = new LORMemberBase4(myParent, newName);
-			mbr.myCentiseconds = myCentiseconds;
-			mbr.myIndex = myIndex;
-			mbr.myID = myID;
-			mbr.myAltID = myAltID;
-			mbr.imSelected = imSelected;
+			iLOR4Member mbr = null;
+
+			switch (this.MemberType)
+			{
+				case LOR4MemberType.Channel:
+					mbr = new LOR4Channel(myParent, newName);
+					break;
+				case LOR4MemberType.RGBChannel:
+					mbr = new LOR4RGBChannel(myParent, newName);
+					break;
+				case LOR4MemberType.ChannelGroup:
+					mbr = new LOR4ChannelGroup(myParent, newName);
+					break;
+				case LOR4MemberType.Cosmic:
+					mbr = new LOR4Cosmic(myParent, newName);
+					break;
+				case LOR4MemberType.Track:
+					mbr = new LOR4Track(myParent, newName);
+					break;
+				case LOR4MemberType.Timings:
+					mbr = new LOR4Timings(myParent, newName);
+					break;
+				case LOR4MemberType.Sequence:
+					mbr = new LOR4Sequence(newName);
+					break;
+				case LOR4MemberType.Visualization:
+					mbr = new LOR4Visualization(myParent, newName);
+					break;
+				case LOR4MemberType.VizChannel:
+					mbr = new LOR4VizChannel(myParent, newName);
+					break;
+				case LOR4MemberType.VizDrawObject:
+					mbr = new LOR4VizDrawObject(myParent, newName);
+					break;
+				case LOR4MemberType.VizItemGroup:
+					mbr = new LOR4VizItemGroup(myParent, newName);
+					break;
+			}
+
+			mbr.Centiseconds = myCentiseconds;
+			mbr.SetIndex(myIndex);
+			mbr.SetID(myID);
+			mbr.AltID = myAltID;
+			mbr.SetSavedIndex(myID);
+			mbr.Selected = imSelected;
+			mbr.color = mycolor;
 			mbr.Tag = myTag;
-			mbr.myNodes = myNodes;
-			mbr.mappedTo = mappedTo;
-			mbr.isDirty = isDirty;
-			mbr.myParent = myParent;
-			mbr.isExactMatch = isExactMatch;
-			mbr.myUniverseNumber = myUniverseNumber;
-			mbr.myDMXAddress = myDMXAddress;
-			mbr.myComment = myComment;
+			mbr.Nodes = myNodes;
+			mbr.MapTo = mappedTo;
+			mbr.MakeDirty(isDirty);
+			mbr.SetParent(myParent);
+			mbr.ExactMatch = isExactMatch;
+			mbr.SetAddress(myUniverseNumber, myDMXAddress);
+			mbr.Comment = myComment;
+			mbr.ZCount = miscNumber;
+
+			//LOR4MemberBase mbr = new LOR4MemberBase(myParent, newName);
 			return mbr;
 		}
 
@@ -371,6 +407,11 @@ namespace LOR4Utils
 		{ get { return myUniverseNumber; } }
 		public virtual int DMXAddress
 		{ get { return myDMXAddress; } }
+		public virtual void SetAddress(int universe, int dmxAddress)
+		{
+			myUniverseNumber = universe;
+			myDMXAddress = dmxAddress;
+		}
 
 		// Not supported by ShowTime, and not saved along with the sequence file.  Included only for temporary use in Util-O-Rama
 		public string Comment
@@ -378,5 +419,5 @@ namespace LOR4Utils
 		public int ZCount
 		{ get { return miscNumber; } set { miscNumber = value; } }
 
-	}// End class LORMemberBase4
+	}// End class LOR4MemberBase
 }

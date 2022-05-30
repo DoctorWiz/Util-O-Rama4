@@ -1,4 +1,4 @@
-﻿using LOR4Utils;
+﻿using LOR4;
 using FileHelper;
 using System;
 using System.Drawing;
@@ -43,7 +43,7 @@ namespace RGBORama
 		private int presetSetCount = 0;
 		//private int colorChangeCount = 0;
 
-		//private LOREffect4[] NEWeffects;
+		//private LOR4Effect[] NEWeffects;
 		//private int newEffectCount = 0;
 
 		//public int[] colorsSearch;
@@ -57,7 +57,7 @@ namespace RGBORama
 
 
 
-		private int startCentisecond = lutils.UNDEFINED;
+		private int startCentisecond = LOR4Admin.UNDEFINED;
 		private const int WHOLESONG = 999999;
 		private int endCentisecond = WHOLESONG;
 
@@ -158,7 +158,7 @@ namespace RGBORama
 						} // End else (lastFile.Substring(0, basePath.Length).CompareTo(basePath) == 0)
 					} // end if (lastFile.Length > basePath.Length)
 
-					string t = "All of " + lutils.FormatTime(seq.Centiseconds) + " Selected";
+					string t = "All of " + LOR4Admin.FormatTime(seq.Centiseconds) + " Selected";
 					lblSelectionTime.Text = t;
 					lblSelectionTime.Visible = true;
 					t = "All of " + seq.RGBchannels.Count.ToString() + " RGB Channels Selected";
@@ -563,9 +563,9 @@ namespace RGBORama
 		private int ExchangeColors(LOR4RGBChannel rgbCh)
 		{
 			int errState = 0;
-			LOREffect4 redEffect = new LOREffect4();
-			LOREffect4 grnEffect = new LOREffect4();
-			LOREffect4 bluEffect = new LOREffect4();
+			LOR4Effect redEffect = new LOR4Effect();
+			LOR4Effect grnEffect = new LOR4Effect();
+			LOR4Effect bluEffect = new LOR4Effect();
 			int redEffIdx = 0;
 			int grnEffIdx = 0;
 			int bluEffIdx = 0;
@@ -573,22 +573,22 @@ namespace RGBORama
 			int curLorColor = 0;
 			//bool steady = false;
 
-			redEffect.EffectType = LOREffectType4.Intensity;
+			redEffect.EffectType = LOR4EffectType.Intensity;
 			redEffect.startCentisecond = 0;
 			redEffect.Intensity = 0;
 			redEffect.parent = rgbCh.redChannel;
 
-			grnEffect.EffectType = LOREffectType4.Intensity;
+			grnEffect.EffectType = LOR4EffectType.Intensity;
 			grnEffect.startCentisecond = 0;
 			grnEffect.Intensity = 0;
 			grnEffect.parent = rgbCh.redChannel;
 
-			bluEffect.EffectType = LOREffectType4.Intensity;
+			bluEffect.EffectType = LOR4EffectType.Intensity;
 			bluEffect.startCentisecond = 0;
 			bluEffect.Intensity = 0;
 			bluEffect.parent = rgbCh.redChannel;
 
-			// LORLoop4 thru entire song, by centiseconds
+			// LOR4Loop thru entire song, by centiseconds
 			for (int cs = 0; cs <= seq.Centiseconds; cs++)
 			{
 				bool colorChanged = false;
@@ -615,7 +615,7 @@ namespace RGBORama
 				// If something changed
 				if (colorChanged)
 				{
-					curLorColor = lutils.Color_RGBtoLOR(redEffect.Intensity, grnEffect.Intensity, bluEffect.Intensity);
+					curLorColor = LOR4Admin.Color_RGBtoLOR(redEffect.Intensity, grnEffect.Intensity, bluEffect.Intensity);
 					steady = redEffect.Steady && grnEffect.Steady && bluEffect.Steady;
 				}
 
@@ -625,7 +625,7 @@ namespace RGBORama
 					// Was there a change?  Is it to a steady color?
 					if (colorChanged && steady)
 					{
-						// LORLoop4 thru colors in the search-replace list
+						// LOR4Loop thru colors in the search-replace list
 						for (int clrIdx = 0; clrIdx < colorsSearch.Length; clrIdx++)
 						{
 							// Color Match?
@@ -635,7 +635,7 @@ namespace RGBORama
 								// Check for that, and split the effect if necessary
 								if (redEffect.startCentisecond < cs)
 								{
-									LOREffect4 ef = redEffect.Clone();
+									LOR4Effect ef = redEffect.Clone();
 									redEffect.endCentisecond = cs - 1;
 									ef.startCentisecond = cs;
 									redEffect = ef;
@@ -643,7 +643,7 @@ namespace RGBORama
 								}
 								if (grnEffect.startCentisecond != cs)
 								{
-									LOREffect4 ef = grnEffect.Clone();
+									LOR4Effect ef = grnEffect.Clone();
 									grnEffect.endCentisecond = cs - 1;
 									ef.startCentisecond = cs;
 									grnEffect = ef;
@@ -651,7 +651,7 @@ namespace RGBORama
 								}
 								if (bluEffect.startCentisecond != cs)
 								{
-									LOREffect4 ef = bluEffect.Clone();
+									LOR4Effect ef = bluEffect.Clone();
 									bluEffect.endCentisecond = cs - 1;
 									ef.startCentisecond = cs;
 									bluEffect = ef;
@@ -664,21 +664,21 @@ namespace RGBORama
 								{
 									if (redEffect.endCentisecond > endCentisecond)
 									{
-										LOREffect4 ef = redEffect.Clone();
+										LOR4Effect ef = redEffect.Clone();
 										redEffect.endCentisecond = endCentisecond;
 										ef.startCentisecond = endCentisecond + 1;
 										rgbCh.redChannel.effects.Add(ef);
 									}
 									if (grnEffect.endCentisecond > endCentisecond)
 									{
-										LOREffect4 ef = grnEffect.Clone();
+										LOR4Effect ef = grnEffect.Clone();
 										grnEffect.endCentisecond = endCentisecond;
 										ef.startCentisecond = endCentisecond + 1;
 										rgbCh.grnChannel.effects.Add(ef);
 									}
 									if (bluEffect.endCentisecond > endCentisecond)
 									{
-										LOREffect4 ef = bluEffect.Clone();
+										LOR4Effect ef = bluEffect.Clone();
 										bluEffect.endCentisecond = endCentisecond;
 										ef.startCentisecond = endCentisecond + 1;
 										rgbCh.bluChannel.effects.Add(ef);
@@ -705,7 +705,7 @@ namespace RGBORama
 		} // End ExchangeColors
 
 
-		private bool steadyEffect(LOREffect4 theEffect)
+		private bool steadyEffect(LOR4Effect theEffect)
 		{
 			bool steady = true;
 
@@ -834,19 +834,19 @@ namespace RGBORama
 			return nc;
 		}
 
-		public LOREffectType4 GetBestEffectType(LOREffectType4 FirstType, LOREffectType4 SecondType, LOREffectType4 ThirdType)
+		public LOR4EffectType GetBestEffectType(LOR4EffectType FirstType, LOR4EffectType SecondType, LOR4EffectType ThirdType)
 		{
-			LOREffectType4 returnType = LOREffectType4.Intensity;
+			LOR4EffectType returnType = LOR4EffectType.Intensity;
 
-			if (FirstType > LOREffectType4.None)
+			if (FirstType > LOR4EffectType.None)
 			{
 				returnType = FirstType;
 			}
-			else if (SecondType > LOREffectType4.None)
+			else if (SecondType > LOR4EffectType.None)
 			{
 				returnType = SecondType;
 			}
-			else if (ThirdType > LOREffectType4.None)
+			else if (ThirdType > LOR4EffectType.None)
 			{
 				returnType = ThirdType;
 			}
@@ -914,7 +914,7 @@ namespace RGBORama
 			int errStatus = 0;
 
 			//string basePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\Light-O-Rama 2015\\Sequences\\";
-			string basePath = lutils.DefaultChannelConfigsPath;
+			string basePath = LOR4Admin.DefaultChannelConfigsPath;
 			string fileName = basePath + "ColorChanger Presets.xml";
 
 			StreamReader reader = new StreamReader(fileName);
@@ -963,7 +963,7 @@ namespace RGBORama
 				{
 					curPreset++;
 					PresetSet ps = new PresetSet();
-					ps.name = lutils.getKeyWord(lineIn, FIELDname);
+					ps.name = LOR4Admin.getKeyWord(lineIn, FIELDname);
 					presetSets[curPreset] = ps;
 
 					lineIn = reader.ReadLine();
@@ -975,14 +975,14 @@ namespace RGBORama
 						curChange++;
 						Array.Resize(ref colorChanges, curChange + 1);
 						ColorChange cc = new ColorChange();
-						cc.fromName = lutils.getKeyWord(lineIn, FIELDfromName);
-						cc.fromR = lutils.getKeyValue(lineIn, FIELDfromR);
-						cc.fromG = lutils.getKeyValue(lineIn, FIELDfromG);
-						cc.fromB = lutils.getKeyValue(lineIn, FIELDfromB);
-						cc.toName = lutils.getKeyWord(lineIn, FIELDtoName);
-						cc.toR = lutils.getKeyValue(lineIn, FIELDtoR);
-						cc.toG = lutils.getKeyValue(lineIn, FIELDtoG);
-						cc.toB = lutils.getKeyValue(lineIn, FIELDtoB);
+						cc.fromName = LOR4Admin.getKeyWord(lineIn, FIELDfromName);
+						cc.fromR = LOR4Admin.getKeyValue(lineIn, FIELDfromR);
+						cc.fromG = LOR4Admin.getKeyValue(lineIn, FIELDfromG);
+						cc.fromB = LOR4Admin.getKeyValue(lineIn, FIELDfromB);
+						cc.toName = LOR4Admin.getKeyWord(lineIn, FIELDtoName);
+						cc.toR = LOR4Admin.getKeyValue(lineIn, FIELDtoR);
+						cc.toG = LOR4Admin.getKeyValue(lineIn, FIELDtoG);
+						cc.toB = LOR4Admin.getKeyValue(lineIn, FIELDtoB);
 						colorChanges[curChange] = cc;
 
 						lineIn = reader.ReadLine();

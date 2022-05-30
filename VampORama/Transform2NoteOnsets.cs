@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.IO;
-using LOR4Utils;
+using LOR4;
 using FileHelper;
-using xUtilities;
+using xLights22;
 
 namespace UtilORama4
 {
@@ -306,7 +306,7 @@ namespace UtilORama4
 			Debug.WriteLine(msg);
 
 			pcount = 0;
-			xNoteOnsets.effects.Clear();
+			xNoteOnsets.Markers.Clear();
 
 			int onsetCount = 0;
 			int noteNum = -1;
@@ -321,7 +321,7 @@ namespace UtilORama4
 			{
 				lineIn = reader.ReadLine();
 				parts = lineIn.Split(',');
-				millisecs = xUtils.ParseMilliseconds(parts[0]);
+				millisecs = xAdmin.ParseMilliseconds(parts[0]);
 				eStart = Annotator.AlignTime(millisecs);
 				// Has it advanced since the last one?
 				if (eStart > lastStart)
@@ -332,7 +332,7 @@ namespace UtilORama4
 					// But if there is another column- for duration- lets use it
 					if (parts.Length > 1)
 					{
-						milliLen = xUtils.ParseMilliseconds(parts[1]);
+						milliLen = xAdmin.ParseMilliseconds(parts[1]);
 						int ee = eStart + milliLen;
 						eEnd = Annotator.AlignTime(ee);
 					}
@@ -418,10 +418,10 @@ namespace UtilORama4
 
 			if (xNoteOnsets != null)
 			{
-				if (xNoteOnsets.effects.Count > 0)
+				if (xNoteOnsets.Markers.Count > 0)
 				{
 					string gridName = "5 " + transformName;
-					LORTimings4 gridOnsets = Annotator.Sequence.FindTimingGrid(gridName, true);
+					LOR4Timings gridOnsets = Annotator.Sequence.FindTimingGrid(gridName, true);
 					SequenceFunctions.ImportTimingGrid(gridOnsets, xNoteOnsets);
 					// Save a reference to the Note Onsets timing grid
 					Annotator.GridOnsets = gridOnsets;
@@ -446,16 +446,16 @@ namespace UtilORama4
 		{
 			int errs = 0;
 
-			//LORTrack4 vampTrack = SequenceFunctions.GetTrack("Vamp-O-Rama");
+			//LOR4Track vampTrack = SequenceFunctions.GetTrack("Vamp-O-Rama");
 			//LOR4ChannelGroup onsetGroup = Annotator.Sequence.FindChannelGroup(transformName, Annotator.VampTrack.Members, true);
 			if (xNoteOnsets != null)
 			{
-				if (xNoteOnsets.effects.Count > 0)
+				if (xNoteOnsets.Markers.Count > 0)
 				{
 					if (Annotator.UseRamps)
 					{
 						LOR4Channel chan = Annotator.VampTrack.Members.FindChannel(transformName, true, true);
-						chan.color = lutils.Color_NettoLOR(System.Drawing.Color.DarkViolet);
+						chan.color = LOR4Admin.Color_NettoLOR(System.Drawing.Color.DarkViolet);
 						SequenceFunctions.ImportNoteChannel(chan, xNoteOnsets);
 					}
 				}

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LOR4Utils;
+using LOR4;
 using FileHelper;
 
 
@@ -326,7 +326,7 @@ namespace UtilORama4
 				{
 					btnColor.BackColor = color;
 					btnColor.Image = null;
-					//cname = lutils.NearestColorName(color);
+					//cname = LOR4Admin.NearestColorName(color);
 
 				}
 			}
@@ -354,10 +354,10 @@ namespace UtilORama4
 			{
 				if (!channel.DMXController.DMXChannels[c].Editing)
 				{
-					if (numOutput.Value == channel.DMXController.DMXChannels[c].LOROutput4) ;
+					if (numOutput.Value == channel.DMXController.DMXChannels[c].LOR4Output) ;
 					{
 						channel.badOutput = true;
-						tipText = "LOROutput4 " + numOutput.Value.ToString() + " is already being used by channel ";
+						tipText = "LOR4Output " + numOutput.Value.ToString() + " is already being used by channel ";
 						tipText += channel.DMXController.DMXChannels[c].Name;
 						tipText += " on controller " + channel.DMXController.LetterID + ": " + channel.DMXController.Name;
 						tipTool.SetToolTip(numOutput, tipText);

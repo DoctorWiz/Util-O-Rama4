@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
-using LOR4Utils;
+using LOR4;
 using FileHelper;
-using xUtilities;
+using xLights22;
 
 namespace UtilORama4
 {
@@ -257,7 +257,7 @@ namespace UtilORama4
 			string msg = "\r\n\r\n### PROCESSING Chromagram TRANSCRIPTION ####################################";
 			Debug.WriteLine(msg);
 
-			xChromagram.effects.Clear();
+			xChromagram.Markers.Clear();
 
 			StreamReader reader = new StreamReader(resultsFile);
 			while (!reader.EndOfStream)
@@ -266,9 +266,9 @@ namespace UtilORama4
 				string[] parts = lineIn.Split(',');
 				if (parts.Length > 2) ;
 				{
-					millisecs = xUtils.ParseMilliseconds(parts[0]);
+					millisecs = xAdmin.ParseMilliseconds(parts[0]);
 					eStart = Annotator.AlignTime(millisecs);
-					duration = xUtils.ParseMilliseconds(parts[1]);
+					duration = xAdmin.ParseMilliseconds(parts[1]);
 					int ee = eStart + duration;
 					eEnd = Annotator.AlignTime(ee);
 					// Note: Unlike other annotator transforms, we will NOT be checking to see
@@ -306,11 +306,11 @@ namespace UtilORama4
 
 			if (xChromagram != null)
 			{
-				if (xChromagram.effects.Count > 0)
+				if (xChromagram.Markers.Count > 0)
 				{
 					// Note: Number '5' is the same as None Onsets because this returns, effectively, the same results
 					string gridName = "5 " + transformName;
-					LORTimings4 polyGrid = Annotator.Sequence.FindTimingGrid(gridName, true);
+					LOR4Timings polyGrid = Annotator.Sequence.FindTimingGrid(gridName, true);
 					SequenceFunctions.ImportTimingGrid(polyGrid, xChromagram);
 				}
 			}
@@ -369,7 +369,7 @@ namespace UtilORama4
 
 				Annotator.VampTrack.Selected = true;
 
-				LORTimings4 tg = Annotator.GridOnsets;
+				LOR4Timings tg = Annotator.GridOnsets;
 				Annotator.VampTrack.timingGrid = tg;
 				tg.Selected = true;
 				CreateChromaChannels(); // grp, "Chroma ", doGroups);
@@ -436,7 +436,7 @@ namespace UtilORama4
 					if (parts.Length == 13)
 					{
 						pcount++;
-						int ms = xUtils.ParseMilliseconds(parts[0]);
+						int ms = xAdmin.ParseMilliseconds(parts[0]);
 						centisecs = (int)Math.Round(ms / 10D);
 						//Debug.Write(centisecs);
 						//Debug.Write(":");

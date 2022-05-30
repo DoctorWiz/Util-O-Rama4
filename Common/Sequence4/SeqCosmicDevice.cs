@@ -8,12 +8,12 @@ using System.Drawing;
 using System.Diagnostics;
 using FileHelper;
 
-namespace LOR4Utils
+namespace LOR4
 {
 
 
 
-	public class LOR4Cosmic : LORMemberBase4, iLOR4Member, IComparable<iLOR4Member>
+	public class LOR4Cosmic : LOR4MemberBase, iLOR4Member, IComparable<iLOR4Member>
 	{
 		// Cosmic Color Devices are basically the same thing as ChannelGroups
 		// Channel Groups and Cosmic Devices are Level 2 and Up, Level 1 is the Tracks (which are similar to a group)
@@ -22,7 +22,7 @@ namespace LOR4Utils
 		// See additional notes in the LOR4ChannelGroup class
 
 		public const string TABLEcosmicDeviceDevice = "colorCosmicDevice";
-		private const string STARTcosmicDevice = lutils.STFLD + TABLEcosmicDeviceDevice + lutils.SPC;
+		private const string STARTcosmicDevice = LOR4Admin.STFLD + TABLEcosmicDeviceDevice + LOR4Admin.SPC;
 		public LOR4Membership Members; // = new LOR4Membership(this);
 
 		//! CONSTRUCTORS
@@ -84,15 +84,15 @@ namespace LOR4Utils
 
 		public override void Parse(string lineIn)
 		{
-			string seek = lutils.STFLD + LOR4Sequence.TABLEcosmicDevice + lutils.FIELDtotalCentiseconds;
+			string seek = LOR4Admin.STFLD + LOR4Sequence.TABLEcosmicDevice + LOR4Admin.FIELDtotalCentiseconds;
 			//int pos = lineIn.IndexOf(seek);
-			int pos = lutils.ContainsKey(lineIn, seek);
+			int pos = LOR4Admin.ContainsKey(lineIn, seek);
 			if (pos > 0)
 			{
-				myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
-				myID = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
+				myName = LOR4Admin.HumanizeName(LOR4Admin.getKeyWord(lineIn, LOR4Admin.FIELDname));
+				myID = LOR4Admin.getKeyValue(lineIn, LOR4Admin.FIELDsavedIndex);
 				//Members = new LOR4Membership(this);
-				myCentiseconds = lutils.getKeyValue(lineIn, lutils.FIELDtotalCentiseconds);
+				myCentiseconds = LOR4Admin.getKeyValue(lineIn, LOR4Admin.FIELDtotalCentiseconds);
 			}
 			else
 			{
@@ -124,69 +124,69 @@ namespace LOR4Utils
 		{
 			StringBuilder ret = new StringBuilder();
 
-			ret.Append(lutils.LEVEL2);
-			ret.Append(lutils.STFLD);
+			ret.Append(LOR4Admin.LEVEL2);
+			ret.Append(LOR4Admin.STFLD);
 			ret.Append(LOR4Sequence.TABLEcosmicDevice);
 
-			ret.Append(lutils.FIELDtotalCentiseconds);
-			ret.Append(lutils.FIELDEQ);
+			ret.Append(LOR4Admin.FIELDtotalCentiseconds);
+			ret.Append(LOR4Admin.FIELDEQ);
 			ret.Append(myCentiseconds.ToString());
-			ret.Append(lutils.ENDQT);
+			ret.Append(LOR4Admin.ENDQT);
 
-			ret.Append(lutils.FIELDname);
-			ret.Append(lutils.FIELDEQ);
-			ret.Append(lutils.XMLifyName(myName));
-			ret.Append(lutils.ENDQT);
+			ret.Append(LOR4Admin.FIELDname);
+			ret.Append(LOR4Admin.FIELDEQ);
+			ret.Append(LOR4Admin.XMLifyName(myName));
+			ret.Append(LOR4Admin.ENDQT);
 
-			ret.Append(lutils.FIELDsavedIndex);
-			ret.Append(lutils.FIELDEQ);
+			ret.Append(LOR4Admin.FIELDsavedIndex);
+			ret.Append(LOR4Admin.FIELDEQ);
 			ret.Append(myAltID.ToString());
-			ret.Append(lutils.ENDQT);
-			ret.Append(lutils.FINFLD);
+			ret.Append(LOR4Admin.ENDQT);
+			ret.Append(LOR4Admin.FINFLD);
 
-			ret.Append(lutils.CRLF); ;
-			ret.Append(lutils.STFLD);
+			ret.Append(LOR4Admin.CRLF); ;
+			ret.Append(LOR4Admin.STFLD);
 			ret.Append(LOR4Sequence.TABLEchannelGroup);
-			ret.Append(lutils.PLURAL);
-			ret.Append(lutils.FINFLD);
+			ret.Append(LOR4Admin.PLURAL);
+			ret.Append(LOR4Admin.FINFLD);
 
 			foreach (iLOR4Member member in Members.Items)
 			{
 				int osi = member.ID;
 				int asi = member.AltID;
-				if (asi > lutils.UNDEFINED)
+				if (asi > LOR4Admin.UNDEFINED)
 				{
-					ret.Append(lutils.CRLF);
-					ret.Append(lutils.LEVEL4);
-					ret.Append(lutils.STFLD);
+					ret.Append(LOR4Admin.CRLF);
+					ret.Append(LOR4Admin.LEVEL4);
+					ret.Append(LOR4Admin.STFLD);
 					ret.Append(LOR4Sequence.TABLEchannelGroup);
 
-					ret.Append(lutils.FIELDsavedIndex);
-					ret.Append(lutils.FIELDEQ);
+					ret.Append(LOR4Admin.FIELDsavedIndex);
+					ret.Append(LOR4Admin.FIELDEQ);
 					ret.Append(asi.ToString());
-					ret.Append(lutils.ENDQT);
-					ret.Append(lutils.ENDFLD);
+					ret.Append(LOR4Admin.ENDQT);
+					ret.Append(LOR4Admin.ENDFLD);
 				}
 			}
-			ret.Append(lutils.CRLF);
-			ret.Append(lutils.LEVEL3);
-			ret.Append(lutils.FINTBL);
+			ret.Append(LOR4Admin.CRLF);
+			ret.Append(LOR4Admin.LEVEL3);
+			ret.Append(LOR4Admin.FINTBL);
 			ret.Append(LOR4Sequence.TABLEchannelGroup);
-			ret.Append(lutils.PLURAL);
-			ret.Append(lutils.FINFLD);
+			ret.Append(LOR4Admin.PLURAL);
+			ret.Append(LOR4Admin.FINFLD);
 
-			ret.Append(lutils.CRLF);
-			ret.Append(lutils.LEVEL2);
-			ret.Append(lutils.FINTBL);
+			ret.Append(LOR4Admin.CRLF);
+			ret.Append(LOR4Admin.LEVEL2);
+			ret.Append(LOR4Admin.FINTBL);
 			ret.Append(LOR4Sequence.TABLEcosmicDevice);
-			ret.Append(lutils.FINFLD);
+			ret.Append(LOR4Admin.FINFLD);
 
 			return ret.ToString();
 		}
 
 		public int AddItem(iLOR4Member newPart)
 		{
-			int retSI = lutils.UNDEFINED;
+			int retSI = LOR4Admin.UNDEFINED;
 			bool alreadyAdded = false;
 			for (int i = 0; i < Members.Count; i++)
 			{
@@ -215,7 +215,7 @@ namespace LOR4Utils
 		public int AddItem(int itemSavedIndex)
 		{
 			// Adds an EXISTING item to this Group's membership
-			int ret = lutils.UNDEFINED;
+			int ret = LOR4Admin.UNDEFINED;
 			if (myParent != null)
 			{
 				LOR4Sequence mySeq = (LOR4Sequence)myParent;

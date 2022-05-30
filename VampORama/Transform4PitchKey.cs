@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
-using LOR4Utils;
+using LOR4;
 using FileHelper;
-using xUtilities;
+using xLights22;
 
 namespace UtilORama4
 {
@@ -260,7 +260,7 @@ namespace UtilORama4
 			Debug.WriteLine(msg);
 
 			pcount = 0; // reset for re-use
-			xPitchKey.effects.Clear();
+			xPitchKey.Markers.Clear();
 
 			StreamReader reader = new StreamReader(resultsFile);
 			// First, lets get the first line of the file which has the start time of the first
@@ -272,7 +272,7 @@ namespace UtilORama4
 				if (parts.Length == 3)
 				{
 					// Try parsing fields 0 start time (in decimal seconds)
-					millisecs = xUtils.ParseMilliseconds(parts[0]);
+					millisecs = xAdmin.ParseMilliseconds(parts[0]);
 					eStart = Annotator.AlignTime(millisecs);
 					// Get MIDI note (pitch-key) number
 					int.TryParse(parts[1], out keyID);
@@ -292,7 +292,7 @@ namespace UtilORama4
 				if (parts.Length == 3)
 				{
 					// Try parsing fields 0 start time (in decimal seconds)
-					millisecs = xUtils.ParseMilliseconds(parts[0]);
+					millisecs = xAdmin.ParseMilliseconds(parts[0]);
 					eEnd = Annotator.AlignTime(millisecs);
 					if (eEnd <= eStart) // Data integrity check
 					{
@@ -309,8 +309,8 @@ namespace UtilORama4
 							if (labelType == vamps.LabelType.KeyNamesUnicode) keyName = MusicalNotation.keyNamesUnicode[keyID];
 							if (labelType == vamps.LabelType.KeyNamesASCII) keyName = MusicalNotation.keyNamesASCII[keyID];
 							// Create new xEffect with these values, add to timings list
-							xEffect xef = new xEffect(keyName, eStart, eEnd, keyID);
-							xPitchKey.effects.Add(xef);
+							xMarker xef = new xMarker(keyName, eStart, eEnd, keyID);
+							xPitchKey.Markers.Add(xef);
 
 							// End of this one is the start of the next one
 							eStart = eEnd;
@@ -338,8 +338,8 @@ namespace UtilORama4
 				if (labelType == vamps.LabelType.KeyNamesUnicode) keyName = MusicalNotation.keyNamesUnicode[keyID];
 				if (labelType == vamps.LabelType.KeyNamesASCII) keyName = MusicalNotation.keyNamesASCII[keyID];
 				// Create new xEffect with these values, add to timings list
-				xEffect xef = new xEffect(MusicalNotation.noteNamesUnicode[keyID], eStart, eEnd, keyID);
-				xPitchKey.effects.Add(xef);
+				xMarker xef = new xMarker(MusicalNotation.noteNamesUnicode[keyID], eStart, eEnd, keyID);
+				xPitchKey.Markers.Add(xef);
 			}
 			//Fyle.BUG("Check output window.  Did the alignments work as expected?");
 
@@ -354,10 +354,10 @@ namespace UtilORama4
 
 			if (xPitchKey != null)
 			{
-				if (xPitchKey.effects.Count > 0)
+				if (xPitchKey.Markers.Count > 0)
 				{
 					string gridName = "6 " + transformName;
-					LORTimings4 polyGrid = Annotator.Sequence.FindTimingGrid(gridName, true);
+					LOR4Timings polyGrid = Annotator.Sequence.FindTimingGrid(gridName, true);
 					SequenceFunctions.ImportTimingGrid(polyGrid, xPitchKey);
 				}
 			}
@@ -397,11 +397,11 @@ namespace UtilORama4
 			// Create an effect in the appropriate Key or Pitch Channel for each timing
 			if (xPitchKey != null)
 			{
-				if (xPitchKey.effects.Count > 0)
+				if (xPitchKey.Markers.Count > 0)
 				{
-					for (int f = 0; f < xPitchKey.effects.Count; f++)
+					for (int f = 0; f < xPitchKey.Markers.Count; f++)
 					{
-						xEffect timing = xPitchKey.effects[f];
+						xMarker timing = xPitchKey.Markers[f];
 						int keyID = timing.Number;
 						if (keyID < 1) // Data integrity check
 						{

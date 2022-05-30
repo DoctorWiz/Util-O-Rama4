@@ -8,7 +8,7 @@ using System.Drawing;
 using System.Diagnostics;
 using FileHelper;
 
-namespace LOR4Utils
+namespace LOR4
 {
 
 	//////////////////////////////////////////////
@@ -17,7 +17,7 @@ namespace LOR4Utils
 	//
 	////////////////////////////////////////////////
 
-	public class LOR4RGBChannel : LORMemberBase4, iLOR4Member, IComparable<iLOR4Member>
+	public class LOR4RGBChannel : LOR4MemberBase, iLOR4Member, IComparable<iLOR4Member>
 	{
 		public LOR4Channel redChannel = null;
 		public LOR4Channel grnChannel = null;
@@ -27,9 +27,9 @@ namespace LOR4Utils
 		/*
 		public LOR4RGBChannel(string lineIn)
 		{
-			string seek = lutils.STFLD + LOR4Sequence.TABLErgbChannel + lutils.FIELDtotalCentiseconds;
+			string seek = LOR4Admin.STFLD + LOR4Sequence.TABLErgbChannel + LOR4Admin.FIELDtotalCentiseconds;
 			//int pos = lineIn.IndexOf(seek);
-			int pos = lutils.ContainsKey(lineIn, seek);
+			int pos = LOR4Admin.ContainsKey(lineIn, seek);
 			if (pos > 0)
 			{
 				Parse(lineIn);
@@ -49,9 +49,9 @@ namespace LOR4Utils
 		/*
 		public LOR4RGBChannel(string lineIn, int theSavedIndex)
 		{
-			string seek = lutils.STFLD + LOR4Sequence.TABLErgbChannel + lutils.FIELDtotalCentiseconds;
+			string seek = LOR4Admin.STFLD + LOR4Sequence.TABLErgbChannel + LOR4Admin.FIELDtotalCentiseconds;
 			//int pos = lineIn.IndexOf(seek);
-			int pos = lutils.ContainsKey(lineIn, seek);
+			int pos = LOR4Admin.ContainsKey(lineIn, seek);
 			if (pos > 0)
 			{
 				Parse(lineIn);
@@ -89,7 +89,7 @@ namespace LOR4Utils
 			{
 				if (value != myCentiseconds)
 				{
-					if (value > lutils.MAXCentiseconds)
+					if (value > LOR4Admin.MAXCentiseconds)
 					{
 						string m = "WARNING!! Setting Centiseconds to more than 60 minutes!  Are you sure?";
 						Fyle.WriteLogEntry(m, "Warning");
@@ -100,7 +100,7 @@ namespace LOR4Utils
 					}
 					else
 					{
-						if (value < lutils.MINCentiseconds)
+						if (value < LOR4Admin.MINCentiseconds)
 						{
 							string m = "WARNING!! Setting Centiseconds to less than 1 second!  Are you sure?";
 							Fyle.WriteLogEntry(m, "Warning");
@@ -139,13 +139,13 @@ namespace LOR4Utils
 
 		public override int color
 		{
-			get { return lutils.LORCOLOR_RGB; }
+			get { return LOR4Admin.LORCOLOR_RGB; }
 			set { int ignore = value; }
 		}
 
 		public override Color Color
 		{
-			get { return lutils.Color_LORtoNet(this.color); }
+			get { return LOR4Admin.Color_LORtoNet(this.color); }
 			set { Color ignore = value; }
 		}
 
@@ -165,13 +165,13 @@ namespace LOR4Utils
 
 		public override void Parse(string lineIn)
 		{
-			string seek = lutils.STFLD + LOR4Sequence.TABLErgbChannel + lutils.FIELDtotalCentiseconds;
-			int pos = lutils.ContainsKey(lineIn, seek);
+			string seek = LOR4Admin.STFLD + LOR4Sequence.TABLErgbChannel + LOR4Admin.FIELDtotalCentiseconds;
+			int pos = LOR4Admin.ContainsKey(lineIn, seek);
 			if (pos > 0)
 			{
-				myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
-				myID = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
-				myCentiseconds = lutils.getKeyValue(lineIn, lutils.FIELDtotalCentiseconds);
+				myName = LOR4Admin.HumanizeName(LOR4Admin.getKeyWord(lineIn, LOR4Admin.FIELDname));
+				myID = LOR4Admin.getKeyValue(lineIn, LOR4Admin.FIELDsavedIndex);
+				myCentiseconds = LOR4Admin.getKeyValue(lineIn, LOR4Admin.FIELDtotalCentiseconds);
 			}
 			else
 			{
@@ -192,7 +192,7 @@ namespace LOR4Utils
 
 		public override iLOR4Member Clone(string newName)
 		{
-			LOR4RGBChannel rgb = (LOR4RGBChannel)this.Clone();  //   new LOR4RGBChannel(newName, lutils.UNDEFINED);
+			LOR4RGBChannel rgb = (LOR4RGBChannel)this.Clone();  //   new LOR4RGBChannel(newName, LOR4Admin.UNDEFINED);
 			rgb.ChangeName(newName);
 			return rgb;
 		}
@@ -201,11 +201,11 @@ namespace LOR4Utils
 		{
 			StringBuilder ret = new StringBuilder();
 
-			//int redSavedIndex = lutils.UNDEFINED;
-			//int grnSavedIndex = lutils.UNDEFINED;
-			//int bluSavedIndex = lutils.UNDEFINED;
+			//int redSavedIndex = LOR4Admin.UNDEFINED;
+			//int grnSavedIndex = LOR4Admin.UNDEFINED;
+			//int bluSavedIndex = LOR4Admin.UNDEFINED;
 
-			int AltSavedIndex = lutils.UNDEFINED;
+			int AltSavedIndex = LOR4Admin.UNDEFINED;
 
 			if ((itemTypes == LOR4MemberType.Items) || (itemTypes == LOR4MemberType.Channel))
 			// Type NONE actually means ALL in this case
@@ -218,83 +218,83 @@ namespace LOR4Utils
 
 			if ((itemTypes == LOR4MemberType.Items) || (itemTypes == LOR4MemberType.RGBChannel))
 			{
-				ret.Append(lutils.LEVEL2);
-				ret.Append(lutils.STFLD);
+				ret.Append(LOR4Admin.LEVEL2);
+				ret.Append(LOR4Admin.STFLD);
 				ret.Append(LOR4Sequence.TABLErgbChannel);
-				ret.Append(lutils.FIELDtotalCentiseconds);
-				ret.Append(lutils.FIELDEQ);
+				ret.Append(LOR4Admin.FIELDtotalCentiseconds);
+				ret.Append(LOR4Admin.FIELDEQ);
 				ret.Append(myCentiseconds.ToString());
-				ret.Append(lutils.ENDQT);
+				ret.Append(LOR4Admin.ENDQT);
 
-				ret.Append(lutils.FIELDname);
-				ret.Append(lutils.FIELDEQ);
-				ret.Append(lutils.XMLifyName(myName));
-				ret.Append(lutils.ENDQT);
+				ret.Append(LOR4Admin.FIELDname);
+				ret.Append(LOR4Admin.FIELDEQ);
+				ret.Append(LOR4Admin.XMLifyName(myName));
+				ret.Append(LOR4Admin.ENDQT);
 
-				ret.Append(lutils.FIELDsavedIndex);
-				ret.Append(lutils.FIELDEQ);
+				ret.Append(LOR4Admin.FIELDsavedIndex);
+				ret.Append(LOR4Admin.FIELDEQ);
 				ret.Append(myAltID.ToString());
-				ret.Append(lutils.ENDQT);
+				ret.Append(LOR4Admin.ENDQT);
 
-				ret.Append(lutils.FINFLD);
+				ret.Append(LOR4Admin.FINFLD);
 
 				// Start SubChannels
-				ret.Append(lutils.CRLF);
-				ret.Append(lutils.LEVEL3);
-				ret.Append(lutils.STFLD);
-				ret.Append(lutils.TABLEchannel);
-				ret.Append(lutils.PLURAL);
-				ret.Append(lutils.FINFLD);
+				ret.Append(LOR4Admin.CRLF);
+				ret.Append(LOR4Admin.LEVEL3);
+				ret.Append(LOR4Admin.STFLD);
+				ret.Append(LOR4Admin.TABLEchannel);
+				ret.Append(LOR4Admin.PLURAL);
+				ret.Append(LOR4Admin.FINFLD);
 
 				// RED subchannel
 				AltSavedIndex = redChannel.AltSavedIndex;
-				ret.Append(lutils.CRLF);
-				ret.Append(lutils.LEVEL4);
-				ret.Append(lutils.STFLD);
-				ret.Append(lutils.TABLEchannel);
-				ret.Append(lutils.FIELDsavedIndex);
-				ret.Append(lutils.FIELDEQ);
+				ret.Append(LOR4Admin.CRLF);
+				ret.Append(LOR4Admin.LEVEL4);
+				ret.Append(LOR4Admin.STFLD);
+				ret.Append(LOR4Admin.TABLEchannel);
+				ret.Append(LOR4Admin.FIELDsavedIndex);
+				ret.Append(LOR4Admin.FIELDEQ);
 				ret.Append(AltSavedIndex.ToString());
-				ret.Append(lutils.ENDQT);
-				ret.Append(lutils.ENDFLD);
+				ret.Append(LOR4Admin.ENDQT);
+				ret.Append(LOR4Admin.ENDFLD);
 
 				// GREEN subchannel
 				AltSavedIndex = grnChannel.AltSavedIndex;
-				ret.Append(lutils.CRLF);
-				ret.Append(lutils.LEVEL4);
-				ret.Append(lutils.STFLD);
-				ret.Append(lutils.TABLEchannel);
-				ret.Append(lutils.FIELDsavedIndex);
-				ret.Append(lutils.FIELDEQ);
+				ret.Append(LOR4Admin.CRLF);
+				ret.Append(LOR4Admin.LEVEL4);
+				ret.Append(LOR4Admin.STFLD);
+				ret.Append(LOR4Admin.TABLEchannel);
+				ret.Append(LOR4Admin.FIELDsavedIndex);
+				ret.Append(LOR4Admin.FIELDEQ);
 				ret.Append(AltSavedIndex.ToString());
-				ret.Append(lutils.ENDQT);
-				ret.Append(lutils.ENDFLD);
+				ret.Append(LOR4Admin.ENDQT);
+				ret.Append(LOR4Admin.ENDFLD);
 
 				// BLUE subchannel
 				AltSavedIndex = bluChannel.AltSavedIndex;
-				ret.Append(lutils.CRLF);
-				ret.Append(lutils.LEVEL4);
-				ret.Append(lutils.STFLD);
-				ret.Append(lutils.TABLEchannel);
-				ret.Append(lutils.FIELDsavedIndex);
-				ret.Append(lutils.FIELDEQ);
+				ret.Append(LOR4Admin.CRLF);
+				ret.Append(LOR4Admin.LEVEL4);
+				ret.Append(LOR4Admin.STFLD);
+				ret.Append(LOR4Admin.TABLEchannel);
+				ret.Append(LOR4Admin.FIELDsavedIndex);
+				ret.Append(LOR4Admin.FIELDEQ);
 				ret.Append(AltSavedIndex.ToString());
-				ret.Append(lutils.ENDQT);
-				ret.Append(lutils.ENDFLD);
+				ret.Append(LOR4Admin.ENDQT);
+				ret.Append(LOR4Admin.ENDFLD);
 
 				// End SubChannels
-				ret.Append(lutils.CRLF);
-				ret.Append(lutils.LEVEL3);
-				ret.Append(lutils.FINTBL);
-				ret.Append(lutils.TABLEchannel);
-				ret.Append(lutils.PLURAL);
-				ret.Append(lutils.FINFLD);
+				ret.Append(LOR4Admin.CRLF);
+				ret.Append(LOR4Admin.LEVEL3);
+				ret.Append(LOR4Admin.FINTBL);
+				ret.Append(LOR4Admin.TABLEchannel);
+				ret.Append(LOR4Admin.PLURAL);
+				ret.Append(LOR4Admin.FINFLD);
 
-				ret.Append(lutils.CRLF);
-				ret.Append(lutils.LEVEL2);
-				ret.Append(lutils.FINTBL);
+				ret.Append(LOR4Admin.CRLF);
+				ret.Append(LOR4Admin.LEVEL2);
+				ret.Append(LOR4Admin.FINTBL);
 				ret.Append(LOR4Sequence.TABLErgbChannel);
-				ret.Append(lutils.FINFLD);
+				ret.Append(LOR4Admin.FINFLD);
 			} // end LOR4MemberType Channel or LOR4RGBChannel
 
 			return ret.ToString();

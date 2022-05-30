@@ -66,9 +66,10 @@ namespace UtilORama4
 			// btnOK
 			// 
 			this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.btnOK.Location = new System.Drawing.Point(213, 376);
+			this.btnOK.Location = new System.Drawing.Point(248, 434);
+			this.btnOK.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnOK.Name = "btnOK";
-			this.btnOK.Size = new System.Drawing.Size(75, 23);
+			this.btnOK.Size = new System.Drawing.Size(88, 27);
 			this.btnOK.TabIndex = 19;
 			this.btnOK.Text = "OK";
 			this.btnOK.UseVisualStyleBackColor = true;
@@ -76,9 +77,10 @@ namespace UtilORama4
 			// btnCancel
 			// 
 			this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.btnCancel.Location = new System.Drawing.Point(294, 376);
+			this.btnCancel.Location = new System.Drawing.Point(343, 434);
+			this.btnCancel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnCancel.Name = "btnCancel";
-			this.btnCancel.Size = new System.Drawing.Size(75, 23);
+			this.btnCancel.Size = new System.Drawing.Size(88, 27);
 			this.btnCancel.TabIndex = 20;
 			this.btnCancel.Text = "Cancel";
 			this.btnCancel.UseVisualStyleBackColor = true;
@@ -86,18 +88,20 @@ namespace UtilORama4
 			// lblName
 			// 
 			this.lblName.AutoSize = true;
-			this.lblName.Location = new System.Drawing.Point(26, 19);
+			this.lblName.Location = new System.Drawing.Point(30, 22);
+			this.lblName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblName.Name = "lblName";
-			this.lblName.Size = new System.Drawing.Size(38, 13);
+			this.lblName.Size = new System.Drawing.Size(42, 15);
 			this.lblName.TabIndex = 0;
 			this.lblName.Text = "Name:";
 			// 
 			// txtName
 			// 
-			this.txtName.Location = new System.Drawing.Point(70, 16);
+			this.txtName.Location = new System.Drawing.Point(82, 18);
+			this.txtName.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.txtName.MaxLength = 100;
 			this.txtName.Name = "txtName";
-			this.txtName.Size = new System.Drawing.Size(300, 20);
+			this.txtName.Size = new System.Drawing.Size(349, 23);
 			this.txtName.TabIndex = 1;
 			this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
 			this.txtName.Leave += new System.EventHandler(this.txtName_Leave);
@@ -105,10 +109,11 @@ namespace UtilORama4
 			// 
 			// txtLocation
 			// 
-			this.txtLocation.Location = new System.Drawing.Point(70, 48);
+			this.txtLocation.Location = new System.Drawing.Point(82, 55);
+			this.txtLocation.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.txtLocation.MaxLength = 40;
 			this.txtLocation.Name = "txtLocation";
-			this.txtLocation.Size = new System.Drawing.Size(200, 20);
+			this.txtLocation.Size = new System.Drawing.Size(233, 23);
 			this.txtLocation.TabIndex = 3;
 			this.tipTool.SetToolTip(this.txtLocation, "Where is the item(s) on this channel located?");
 			this.txtLocation.Validating += new System.ComponentModel.CancelEventHandler(this.txtLocation_Validating);
@@ -116,18 +121,20 @@ namespace UtilORama4
 			// lblLocation
 			// 
 			this.lblLocation.AutoSize = true;
-			this.lblLocation.Location = new System.Drawing.Point(13, 51);
+			this.lblLocation.Location = new System.Drawing.Point(15, 59);
+			this.lblLocation.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblLocation.Name = "lblLocation";
-			this.lblLocation.Size = new System.Drawing.Size(51, 13);
+			this.lblLocation.Size = new System.Drawing.Size(56, 15);
 			this.lblLocation.TabIndex = 2;
 			this.lblLocation.Text = "Location:";
 			// 
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(30, 83);
+			this.label1.Location = new System.Drawing.Point(35, 96);
+			this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(34, 13);
+			this.label1.Size = new System.Drawing.Size(34, 15);
 			this.label1.TabIndex = 6;
 			this.label1.Text = "Type:";
 			// 
@@ -135,9 +142,10 @@ namespace UtilORama4
 			// 
 			this.cboType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cboType.FormattingEnabled = true;
-			this.cboType.Location = new System.Drawing.Point(70, 80);
+			this.cboType.Location = new System.Drawing.Point(82, 92);
+			this.cboType.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboType.Name = "cboType";
-			this.cboType.Size = new System.Drawing.Size(200, 21);
+			this.cboType.Size = new System.Drawing.Size(233, 23);
 			this.cboType.TabIndex = 7;
 			this.tipTool.SetToolTip(this.cboType, "What type of device(s) or prop(s) are connected to this channel?");
 			this.cboType.SelectedIndexChanged += new System.EventHandler(this.cboType_SelectedIndexChanged);
@@ -148,9 +156,10 @@ namespace UtilORama4
 			this.picColor2.BackColor = System.Drawing.Color.White;
 			this.picColor2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.picColor2.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.picColor2.Location = new System.Drawing.Point(140, 375);
+			this.picColor2.Location = new System.Drawing.Point(163, 433);
+			this.picColor2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.picColor2.Name = "picColor2";
-			this.picColor2.Size = new System.Drawing.Size(24, 24);
+			this.picColor2.Size = new System.Drawing.Size(20, 20);
 			this.picColor2.TabIndex = 8;
 			this.picColor2.TabStop = false;
 			this.tipTool.SetToolTip(this.picColor2, "White");
@@ -160,9 +169,10 @@ namespace UtilORama4
 			// lblColor
 			// 
 			this.lblColor.AutoSize = true;
-			this.lblColor.Location = new System.Drawing.Point(305, 51);
+			this.lblColor.Location = new System.Drawing.Point(356, 59);
+			this.lblColor.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblColor.Name = "lblColor";
-			this.lblColor.Size = new System.Drawing.Size(34, 13);
+			this.lblColor.Size = new System.Drawing.Size(39, 15);
 			this.lblColor.TabIndex = 4;
 			this.lblColor.Text = "Color:";
 			this.lblColor.Click += new System.EventHandler(this.lblColor_Click);
@@ -171,9 +181,10 @@ namespace UtilORama4
 			// 
 			this.cboController.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cboController.FormattingEnabled = true;
-			this.cboController.Location = new System.Drawing.Point(70, 112);
+			this.cboController.Location = new System.Drawing.Point(82, 129);
+			this.cboController.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.cboController.Name = "cboController";
-			this.cboController.Size = new System.Drawing.Size(200, 21);
+			this.cboController.Size = new System.Drawing.Size(233, 23);
 			this.cboController.TabIndex = 10;
 			this.tipTool.SetToolTip(this.cboController, "Select the controller this channel is connected to.");
 			this.cboController.SelectedIndexChanged += new System.EventHandler(this.cboController_SelectedIndexChanged);
@@ -182,52 +193,56 @@ namespace UtilORama4
 			// lblController
 			// 
 			this.lblController.AutoSize = true;
-			this.lblController.Location = new System.Drawing.Point(10, 115);
+			this.lblController.Location = new System.Drawing.Point(12, 133);
+			this.lblController.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblController.Name = "lblController";
-			this.lblController.Size = new System.Drawing.Size(54, 13);
+			this.lblController.Size = new System.Drawing.Size(63, 15);
 			this.lblController.TabIndex = 9;
 			this.lblController.Text = "Controller:";
 			// 
 			// numOutput
 			// 
-			this.numOutput.Location = new System.Drawing.Point(326, 113);
+			this.numOutput.Location = new System.Drawing.Point(380, 130);
+			this.numOutput.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.numOutput.Maximum = new decimal(new int[] {
-            32,
-            0,
-            0,
-            0});
+						32,
+						0,
+						0,
+						0});
 			this.numOutput.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+						1,
+						0,
+						0,
+						0});
 			this.numOutput.Name = "numOutput";
-			this.numOutput.Size = new System.Drawing.Size(44, 20);
+			this.numOutput.Size = new System.Drawing.Size(51, 23);
 			this.numOutput.TabIndex = 12;
 			this.tipTool.SetToolTip(this.numOutput, "Select the output # on this controller that this channel is connected to.");
 			this.numOutput.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+						1,
+						0,
+						0,
+						0});
 			this.numOutput.ValueChanged += new System.EventHandler(this.numOutput_ValueChanged);
 			this.numOutput.Validating += new System.ComponentModel.CancelEventHandler(this.numOutput_Validating);
 			// 
 			// lblOutput
 			// 
 			this.lblOutput.AutoSize = true;
-			this.lblOutput.Location = new System.Drawing.Point(281, 115);
+			this.lblOutput.Location = new System.Drawing.Point(328, 133);
+			this.lblOutput.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblOutput.Name = "lblOutput";
-			this.lblOutput.Size = new System.Drawing.Size(42, 13);
+			this.lblOutput.Size = new System.Drawing.Size(48, 15);
 			this.lblOutput.TabIndex = 11;
 			this.lblOutput.Text = "Output:";
 			// 
 			// lblUniverse
 			// 
 			this.lblUniverse.AutoSize = true;
-			this.lblUniverse.Location = new System.Drawing.Point(75, 152);
+			this.lblUniverse.Location = new System.Drawing.Point(88, 175);
+			this.lblUniverse.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblUniverse.Name = "lblUniverse";
-			this.lblUniverse.Size = new System.Drawing.Size(61, 13);
+			this.lblUniverse.Size = new System.Drawing.Size(64, 15);
 			this.lblUniverse.TabIndex = 14;
 			this.lblUniverse.Text = "Universe: 1";
 			this.tipTool.SetToolTip(this.lblUniverse, "The DMX Universe this controller and this channel are connected to.");
@@ -235,9 +250,10 @@ namespace UtilORama4
 			// lblDMXAddress
 			// 
 			this.lblDMXAddress.AutoSize = true;
-			this.lblDMXAddress.Location = new System.Drawing.Point(80, 168);
+			this.lblDMXAddress.Location = new System.Drawing.Point(93, 194);
+			this.lblDMXAddress.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblDMXAddress.Name = "lblDMXAddress";
-			this.lblDMXAddress.Size = new System.Drawing.Size(84, 13);
+			this.lblDMXAddress.Size = new System.Drawing.Size(90, 15);
 			this.lblDMXAddress.TabIndex = 15;
 			this.lblDMXAddress.Text = "DMX Address: 1";
 			this.tipTool.SetToolTip(this.lblDMXAddress, "The DMX address of this channel in this DMX Universe.");
@@ -245,9 +261,10 @@ namespace UtilORama4
 			// lblxLighsAddress
 			// 
 			this.lblxLighsAddress.AutoSize = true;
-			this.lblxLighsAddress.Location = new System.Drawing.Point(80, 184);
+			this.lblxLighsAddress.Location = new System.Drawing.Point(93, 212);
+			this.lblxLighsAddress.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblxLighsAddress.Name = "lblxLighsAddress";
-			this.lblxLighsAddress.Size = new System.Drawing.Size(93, 13);
+			this.lblxLighsAddress.Size = new System.Drawing.Size(102, 15);
 			this.lblxLighsAddress.TabIndex = 16;
 			this.lblxLighsAddress.Text = "xLights Address: 1";
 			this.tipTool.SetToolTip(this.lblxLighsAddress, "The xLights address of this channel.");
@@ -257,9 +274,10 @@ namespace UtilORama4
 			this.chkActive.AutoSize = true;
 			this.chkActive.Checked = true;
 			this.chkActive.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkActive.Location = new System.Drawing.Point(314, 82);
+			this.chkActive.Location = new System.Drawing.Point(366, 95);
+			this.chkActive.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chkActive.Name = "chkActive";
-			this.chkActive.Size = new System.Drawing.Size(56, 17);
+			this.chkActive.Size = new System.Drawing.Size(59, 19);
 			this.chkActive.TabIndex = 8;
 			this.chkActive.Text = "Active";
 			this.tipTool.SetToolTip(this.chkActive, "Is this channel in active use?");
@@ -270,19 +288,21 @@ namespace UtilORama4
 			// lblModel
 			// 
 			this.lblModel.AutoSize = true;
-			this.lblModel.Location = new System.Drawing.Point(70, 136);
+			this.lblModel.Location = new System.Drawing.Point(82, 157);
+			this.lblModel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblModel.Name = "lblModel";
-			this.lblModel.Size = new System.Drawing.Size(118, 13);
+			this.lblModel.Size = new System.Drawing.Size(119, 15);
 			this.lblModel.TabIndex = 13;
 			this.lblModel.Text = "LOR LOR1602W Gen3";
 			this.tipTool.SetToolTip(this.lblModel, "The brand and model of this controller.");
 			// 
 			// txtComment
 			// 
-			this.txtComment.Location = new System.Drawing.Point(70, 259);
+			this.txtComment.Location = new System.Drawing.Point(82, 299);
+			this.txtComment.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.txtComment.Multiline = true;
 			this.txtComment.Name = "txtComment";
-			this.txtComment.Size = new System.Drawing.Size(300, 97);
+			this.txtComment.Size = new System.Drawing.Size(349, 111);
 			this.txtComment.TabIndex = 18;
 			this.tipTool.SetToolTip(this.txtComment, "Comments, notes, and other important information about this channel.");
 			this.txtComment.Validating += new System.ComponentModel.CancelEventHandler(this.txtComment_Validating);
@@ -290,19 +310,21 @@ namespace UtilORama4
 			// label4
 			// 
 			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(13, 262);
+			this.label4.Location = new System.Drawing.Point(15, 302);
+			this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(54, 13);
+			this.label4.Size = new System.Drawing.Size(64, 15);
 			this.label4.TabIndex = 17;
 			this.label4.Text = "Comment:";
 			// 
 			// picMulticolor
 			// 
 			this.picMulticolor.BackColor = System.Drawing.Color.White;
-			this.picMulticolor.Image = global::UtilORama4.Properties.Resources.MultiColorPreview;
-			this.picMulticolor.Location = new System.Drawing.Point(33, 375);
+			this.picMulticolor.Image = ((System.Drawing.Image)(resources.GetObject("picMulticolor.Image")));
+			this.picMulticolor.Location = new System.Drawing.Point(38, 433);
+			this.picMulticolor.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.picMulticolor.Name = "picMulticolor";
-			this.picMulticolor.Size = new System.Drawing.Size(24, 24);
+			this.picMulticolor.Size = new System.Drawing.Size(20, 20);
 			this.picMulticolor.TabIndex = 20;
 			this.picMulticolor.TabStop = false;
 			this.tipTool.SetToolTip(this.picMulticolor, "White");
@@ -312,9 +334,10 @@ namespace UtilORama4
 			// 
 			this.picRGB.BackColor = System.Drawing.Color.White;
 			this.picRGB.Image = ((System.Drawing.Image)(resources.GetObject("picRGB.Image")));
-			this.picRGB.Location = new System.Drawing.Point(83, 376);
+			this.picRGB.Location = new System.Drawing.Point(97, 434);
+			this.picRGB.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.picRGB.Name = "picRGB";
-			this.picRGB.Size = new System.Drawing.Size(24, 24);
+			this.picRGB.Size = new System.Drawing.Size(20, 20);
 			this.picRGB.TabIndex = 21;
 			this.picRGB.TabStop = false;
 			this.tipTool.SetToolTip(this.picRGB, "White");
@@ -324,9 +347,10 @@ namespace UtilORama4
 			// 
 			this.btnColor.BackColor = System.Drawing.Color.White;
 			this.btnColor.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.btnColor.Location = new System.Drawing.Point(343, 46);
+			this.btnColor.Location = new System.Drawing.Point(400, 53);
+			this.btnColor.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnColor.Name = "btnColor";
-			this.btnColor.Size = new System.Drawing.Size(28, 28);
+			this.btnColor.Size = new System.Drawing.Size(33, 32);
 			this.btnColor.TabIndex = 5;
 			this.btnColor.UseVisualStyleBackColor = false;
 			this.btnColor.Click += new System.EventHandler(this.btnColor_Click);
@@ -334,10 +358,10 @@ namespace UtilORama4
 			// frmChannel
 			// 
 			this.AcceptButton = this.btnOK;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.btnCancel;
-			this.ClientSize = new System.Drawing.Size(384, 411);
+			this.ClientSize = new System.Drawing.Size(448, 474);
 			this.Controls.Add(this.btnColor);
 			this.Controls.Add(this.picRGB);
 			this.Controls.Add(this.picMulticolor);
@@ -363,6 +387,7 @@ namespace UtilORama4
 			this.Controls.Add(this.btnCancel);
 			this.Controls.Add(this.btnOK);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.MinimizeBox = false;
 			this.Name = "frmChannel";
 			this.ShowInTaskbar = false;

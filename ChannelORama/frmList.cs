@@ -10,14 +10,13 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Media;
-using ReadWriteCsv;
-using LOR4Utils;
-using FileHelper;
-using xUtils;
-//using FuzzyString;
-using Syncfusion.Windows.Forms.Tools;
-
-//using xUtils;
+using Syncfusion.Windows.Forms.Tools;   // SyncFusion TreeView Advanced
+using ReadWriteCsv;   // Comma Separated Values
+using LOR4;     // Light-O-Rama Showtime vS4 Sequences and Visualizations
+using xLights22;    // xLights RGBEffects and Sequences
+using FileHelper;   // Extended file functions (example: SafeRename)
+using FormHelper;   // Extended WinForms functions such as SaveView and RestoreView
+using FuzzORama;    // Fuzzy String Matching-- Util-O-Rama version (optimized for channel names)
 
 namespace UtilORama4
 {
@@ -44,8 +43,8 @@ namespace UtilORama4
 		public bool dirty = false;
 		private bool isWiz = Fyle.IsWizard || Fyle.IsAWizard;
 
-		private xRGBEffects xSeq = null;
-		private LORVisualization4 lViz = null;
+		//private xRGBEffects xSeq = null;
+		private LOR4Visualization lViz = null;
 
 		private int[] TREEICONuniverse = { 0 };
 		private int[] TREEICONcontroller = { 1 };
@@ -78,12 +77,12 @@ namespace UtilORama4
 			string vizFile = "W:\\Documents\\Christmas\\2021\\Light-O-Rama\\Wizlights\\Visualizations\\Wizlights 2021.lee";
 
 
-			xSeq = new xRGBEffects();
-			lViz = new LORVisualization4(null, vizFile);
+			//xSeq = new xRGBEffects();
+			lViz = new LOR4Visualization(null, vizFile);
 
-			int ccc = lViz.VizChannels.Count;
-			int ddd = lViz.VizDrawObjects.Count;
-			int ggg = lViz.VizItemGroups.Count;
+			//int ccc = lViz.VizChannels.Count;
+			//int ddd = lViz.VizDrawObjects.Count;
+			//int ggg = lViz.VizItemGroups.Count;
 
 
 			//MatchUp(seqFile);
@@ -94,158 +93,8 @@ namespace UtilORama4
 
 		private void frmList_Load(object sender, EventArgs e)
 		{
-			RestoreFormPosition();
+			this.RestoreView(); // Use default parameters
 			GetTheControlsFromTheHeartOfTheSun();
-		}
-
-
-		private void SaveFormPosition()
-		{
-			// Get current location, size, and state
-			Point myLoc = this.Location;
-			Size mySize = this.Size;
-			FormWindowState myState = this.WindowState;
-			// if minimized or maximized
-			if (myState != FormWindowState.Normal)
-			{
-				// override with the restore location and size
-				myLoc = new Point(this.RestoreBounds.X, this.RestoreBounds.Y);
-				mySize = new Size(this.RestoreBounds.Width, this.RestoreBounds.Height);
-			}
-
-			// Save it for later!
-			int x = this.Left;
-			heartOfTheSun.Location = myLoc;
-			heartOfTheSun.Size = mySize;
-			heartOfTheSun.WindowState = (int)myState;
-			heartOfTheSun.Save();
-		} // End SaveFormPostion
-
-		private void RestoreFormPosition()
-		{
-			// Multi-Monitor aware
-			// AND NOW with overlooked support for fixed borders!
-			// with bounds checking
-			// repositions as necessary
-			// should(?) be able to handle an additional screen that is no longer there,
-			// a repositioned taskbar or gadgets bar,
-			// or a resolution change.
-
-			// Note: If the saved position spans more than one screen
-			// the form will be repositioned to fit all within the
-			// screen containing the center point of the form.
-			// Thus, when restoring the position, it will no longer
-			// span monitors.
-			// This is by design!
-			// Alternative 1: Position it entirely in the screen containing
-			// the top left corner
-
-			Point savedLoc = heartOfTheSun.Location;
-			Size savedSize = heartOfTheSun.Size;
-			if (this.FormBorderStyle != FormBorderStyle.Sizable)
-			{
-				savedSize = new Size(this.Width, this.Height);
-				this.MinimumSize = this.Size;
-				this.MaximumSize = this.Size;
-			}
-			FormWindowState savedState = (FormWindowState)heartOfTheSun.WindowState;
-			int x = savedLoc.X; // Default to saved postion and size, will override if necessary
-			int y = savedLoc.Y;
-			int w = savedSize.Width;
-			int h = savedSize.Height;
-			Point center = new Point(x + w / w, y + h / 2); // Find center point
-			int onScreen = 0; // Default to primary screen if not found on screen 2+
-			Screen screen = Screen.AllScreens[0];
-
-			// Find which screen it is on
-			for (int si = 0; si < Screen.AllScreens.Length; si++)
-			{
-				// Alternative 1: Change "Contains(center)" to "Contains(savedLoc)"
-				if (Screen.AllScreens[si].WorkingArea.Contains(center))
-				{
-					screen = Screen.AllScreens[si];
-					onScreen = si;
-				}
-			}
-			Rectangle bounds = screen.WorkingArea;
-			// Alternate 2:
-			//Rectangle bounds = Screen.GetWorkingArea(center);
-
-			// Test Horizontal Positioning, correct if necessary
-			if (this.MinimumSize.Width > bounds.Width)
-			{
-				// Houston, we have a problem, monitor is too narrow
-				System.Diagnostics.Debugger.Break();
-				w = this.MinimumSize.Width;
-				// Center it horizontally over the working area...
-				//x = (bounds.Width - w) / 2 + bounds.Left;
-				// OR position it on left edge
-				x = bounds.Left;
-			}
-			else
-			{
-				// Should fit horizontally
-				// Is it too far left?
-				if (x < bounds.Left) x = bounds.Left; // Move over
-																							// Is it too wide?
-				if (w > bounds.Width) w = bounds.Width; // Shrink it
-																								// Is it too far right?
-				if ((x + w) > bounds.Right)
-				{
-					// Keep width, move it over
-					x = (bounds.Width - w) + bounds.Left;
-				}
-			}
-
-			// Test Vertical Positioning, correct if necessary
-			if (this.MinimumSize.Height > bounds.Height)
-			{
-				// Houston, we have a problem, monitor is too short
-				System.Diagnostics.Debugger.Break();
-				h = this.MinimumSize.Height;
-				// Center it vertically over the working area...
-				//y = (bounds.Height - h) / 2 + bounds.Top;
-				// OR position at the top edge
-				y = bounds.Top;
-			}
-			else
-			{
-				// Should fit vertically
-				// Is it too high?
-				if (y < bounds.Top) y = bounds.Top; // Move it down
-																						// Is it too tall;
-				if (h > bounds.Height) h = bounds.Height; // Shorten it
-																									// Is it too low?
-				if ((y + h) > bounds.Bottom)
-				{
-					// Kepp height, raise it up
-					y = (bounds.Height - h) + bounds.Top;
-				}
-			}
-
-			// Position and Size should be safe!
-			// Move and Resize the form
-			this.SetDesktopLocation(x, y);
-			this.Size = new Size(w, h);
-
-			// Window State
-			if (savedState == FormWindowState.Maximized)
-			{
-				if (this.MaximizeBox)
-				{
-					// Optional.  Personally, I think it should always be reloaded non-maximized.
-					//this.WindowState = savedState;
-				}
-			}
-			if (savedState == FormWindowState.Minimized)
-			{
-				if (this.MinimizeBox)
-				{
-					// Don't think it's right to reload to a minimized state (confuses the user),
-					// but you can enable this if you want.
-					//this.WindowState = savedState;
-				}
-			}
 		}
 
 		private void SetTheControlsForTheHeartOfTheSun()
@@ -500,7 +349,7 @@ namespace UtilORama4
 
 							int i = 1;
 							int.TryParse(row[2], out i);
-							channel.OutputNum = i;               // Field 2 = LOROutput4 Number
+							channel.OutputNum = i;               // Field 2 = LOR4Output Number
 
 							channel.Name = row[3];                // Field 3 = Name
 							chanName = channel.Name;              // For debugging exceptions
@@ -540,7 +389,7 @@ namespace UtilORama4
 								}
 							}
 							//Color color = System.Drawing.ColorTranslator.FromHtml(colhex);
-							Color color = LOR4Utils.lutils.HexToColor(colhex);
+							Color color = LOR4.LOR4Admin.HexToColor(colhex);
 							channel.Color = color;
 
 							AllChannels.Add(channel);
@@ -570,7 +419,7 @@ namespace UtilORama4
 						}
 						catch (Exception ex)
 						{
-							int ln = LOR4Utils.lutils.ExceptionLineNumber(ex);
+							int ln = LOR4.LOR4Admin.ExceptionLineNumber(ex);
 							string msg = "Error on line " + ln.ToString() + "\r\n";
 							msg += ex.ToString() + " while reading Channel " + chanName;
 							if (isWiz)
@@ -594,7 +443,7 @@ namespace UtilORama4
 				}
 				catch (Exception ex)
 				{
-					int ln = LOR4Utils.lutils.ExceptionLineNumber(ex);
+					int ln = LOR4.LOR4Admin.ExceptionLineNumber(ex);
 					string msg = "Error " + ex.ToString() + " on line " + ln.ToString() + " while reading Channels file " + chnFile;
 					if (isWiz)
 					{
@@ -632,7 +481,7 @@ namespace UtilORama4
 								int ord = 0;
 								if (row.Count > 2)
 								{
-									int.TryParse(row[2], out ord); // Field 2 = LOROutput4 Number
+									int.TryParse(row[2], out ord); // Field 2 = LOR4Output Number
 								}
 								DMXDeviceType deviceType = new DMXDeviceType(devName, devID, ord);
 								deviceTypes.Add(deviceType);
@@ -640,7 +489,7 @@ namespace UtilORama4
 						}
 						catch (Exception ex)
 						{
-							int ln = LOR4Utils.lutils.ExceptionLineNumber(ex);
+							int ln = LOR4.LOR4Admin.ExceptionLineNumber(ex);
 							string msg = "Error on line " + ln.ToString() + "\r\n";
 							msg += ex.ToString() + " while reading Channel " + devName;
 							if (isWiz)
@@ -654,7 +503,7 @@ namespace UtilORama4
 				}
 				catch (Exception ex)
 				{
-					int ln = LOR4Utils.lutils.ExceptionLineNumber(ex);
+					int ln = LOR4.LOR4Admin.ExceptionLineNumber(ex);
 					string msg = "Error " + ex.ToString() + " on line " + ln.ToString() + " while reading Channels file " + chnFile;
 					if (isWiz)
 					{
@@ -830,7 +679,7 @@ namespace UtilORama4
 				// Create first line which is headers;
 				row.Add("Universe");    // Field 0
 				row.Add("Controller");  // Field 1
-				row.Add("LOROutput4");      // Field 2
+				row.Add("LOR4Output");      // Field 2
 				row.Add("Name");        // Field 3
 				row.Add("Location");    // Field 4
 				row.Add("Comment");     // Field 5
@@ -857,7 +706,7 @@ namespace UtilORama4
 						row.Add(channel.Comment);                               // Field 5
 						row.Add(channel.Active.ToString());                     // Field 6
 						row.Add(channel.DeviceType.ID.ToString());         // Field 7
-						row.Add(LOR4Utils.lutils.ColorToHex(channel.Color));                // Field 8
+						row.Add(LOR4.LOR4Admin.ColorToHex(channel.Color));                // Field 8
 
 						writer.WriteRow(row);
 					}
@@ -1088,12 +937,12 @@ namespace UtilORama4
 			for (int ch = 0; ch < controller.DMXChannels.Count; ch++)
 			{
 				DMXChannel channel = controller.DMXChannels[ch];
-				//nodeText = channel.LOROutput4.ToString() + ": " + channel.Name;
+				//nodeText = channel.LOR4Output.ToString() + ": " + channel.Name;
 				nodeText = channel.ToString();
 				Syncfusion.Windows.Forms.Tools.TreeNodeAdv chanNode = new Syncfusion.Windows.Forms.Tools.TreeNodeAdv(nodeText);
 				ctlNode.Nodes.Add(chanNode); // treeChannels.Nodes.Add(nodeText); //   treeChannels.Nodes.Add(nodeText);
 				ImageList icons = treeChannels.LeftImageList;
-				int iconIndex = LOR4Utils.lutils.ColorIcon(icons, channel.Color);
+				int iconIndex = LOR4.LOR4Admin.ColorIcon(icons, channel.Color);
 				int[] ico = { iconIndex };
 				chanNode.LeftImageIndices = ico;
 				chanNode.Tag = channel;
@@ -1156,11 +1005,11 @@ namespace UtilORama4
 					if (node.Tag.GetType() == typeof(DMXChannel))
 					{
 						DMXChannel channel = (DMXChannel)node.Tag;
-						//string nodeText = channel.LOROutput4.ToString() + ": " + channel.Name;
+						//string nodeText = channel.LOR4Output.ToString() + ": " + channel.Name;
 						string nodeText = channel.ToString();
 						node.Text = nodeText;
 						ImageList icons = treeChannels.LeftImageList;
-						int iconIndex = LOR4Utils.lutils.ColorIcon(icons, channel.Color);
+						int iconIndex = LOR4.LOR4Admin.ColorIcon(icons, channel.Color);
 						int[] ico = { iconIndex };
 						node.LeftImageIndices = ico;
 					}
@@ -1321,7 +1170,7 @@ namespace UtilORama4
 			bool needSort = false;
 			DMXChannel channelToEdit = (DMXChannel)node.Tag;
 			DMXController oldCtlr = channelToEdit.DMXController;
-			//int oldOutput = channelToEdit.LOROutput4;
+			//int oldOutput = channelToEdit.LOR4Output;
 			//int oldUnivNum = channelToEdit.UniverseNumber;
 			//int oldDMXaddr = channelToEdit.DMXAddress;
 			//DMXChannel channelClone = channelToEdit.Clone();
@@ -1344,7 +1193,7 @@ namespace UtilORama4
 						channelToEdit.Clone(channelClone); // Copy back
 						UpdateChannelNode(node);
 						// Did output number change?
-						//if (channelToEdit.LOROutput4 != channelClone.LOROutput4)
+						//if (channelToEdit.LOR4Output != channelClone.LOR4Output)
 						if ((channelToEdit.UniverseNumber != channelClone.UniverseNumber) ||
 								(channelToEdit.DMXAddress != channelClone.DMXAddress) ||
 								(channelToEdit.xLightsAddress != channelClone.xLightsAddress))
@@ -1410,7 +1259,7 @@ namespace UtilORama4
 			{
 				// So when the effing form throws an effing excepttion for some effing reaason when it is effing closed
 				// Consider that a cancel
-				int ln = LOR4Utils.lutils.ExceptionLineNumber(ex);
+				int ln = LOR4.LOR4Admin.ExceptionLineNumber(ex);
 				string msg = "Error on line " + ln.ToString() + "\r\n";
 				msg += ex.ToString() + " while exiting Channel editor " + channelToEdit.Name;
 				if (isWiz)
@@ -1471,7 +1320,7 @@ namespace UtilORama4
 							TreeNodeAdv node = new TreeNodeAdv(channel.ToString());
 							parentNode.Nodes.Add(node);
 							node.Tag = channel;
-							int ImageIndex = LOR4Utils.lutils.ColorIcon(imlTreeIcons, channel.Color);
+							int ImageIndex = LOR4.LOR4Admin.ColorIcon(imlTreeIcons, channel.Color);
 							int[] ico = { ImageIndex };
 							node.LeftImageIndices = ico;
 							channel.Tag = node;
@@ -1612,7 +1461,7 @@ namespace UtilORama4
 			}
 			if (!e.Cancel)
 			{
-				SaveFormPosition();
+				this.SaveView();
 				GetTheControlsFromTheHeartOfTheSun();
 			}
 		}
@@ -1631,7 +1480,7 @@ namespace UtilORama4
 				// Create first line which is headers;
 				row.Add("Universe");         // Field 0
 				row.Add("Controller");       // Field 1
-				row.Add("LOROutput4");           // Field 2
+				row.Add("LOR4Output");           // Field 2
 				row.Add("DMX Address");      // Field 3
 				row.Add("xLights Address");  // Field 4
 
@@ -1656,7 +1505,7 @@ namespace UtilORama4
 						row = new CsvRow();
 						row.Add(universe.UniverseNumber.ToString());       // Field 0 - Universe
 						row.Add("");                                  // Field 1 - Controller
-						row.Add("");                                  // Field 2 - LOROutput4
+						row.Add("");                                  // Field 2 - LOR4Output
 						row.Add("");                                  // Field 3 - DMX Address
 						row.Add(universe.xLightsAddress.ToString());  // Field 4 - xLights Address
 						row.Add(universe.Active.ToString());               // Field 5 - Active
@@ -1676,7 +1525,7 @@ namespace UtilORama4
 								row = new CsvRow();
 								row.Add(universe.UniverseNumber.ToString());       // Field 0 - Universe
 								row.Add(controller.LetterID);                        // Field 1 - Controller
-								row.Add("");                                  // Field 2 - LOROutput4
+								row.Add("");                                  // Field 2 - LOR4Output
 								row.Add(controller.DMXStartAddress.ToString());      // Field 3 - DMX Address
 								row.Add(controller.xLightsAddress.ToString());  // Field 4 - xLights Address
 								row.Add(controller.Active.ToString());               // Field 5 - Active
@@ -1696,13 +1545,13 @@ namespace UtilORama4
 										row = new CsvRow();
 										row.Add(channel.UniverseNumber.ToString());  // Field 0 - Universe
 										row.Add(channel.DMXController.LetterID);     // Field 1 - Controller
-										row.Add(channel.OutputNum.ToString());       // Field 2 - LOROutput4
+										row.Add(channel.OutputNum.ToString());       // Field 2 - LOR4Output
 										row.Add(channel.DMXAddress.ToString());      // Field 3 - DMX Address
 										row.Add(channel.xLightsAddress.ToString());  // Field 4 - xLights Address
 										row.Add(channel.Active.ToString());          // Field 5 - Active
 										row.Add(channel.Name);                       // Field 6 - Name
 										row.Add(channel.DeviceType.Name);              // Field 7 - Type
-										row.Add(LOR4Utils.lutils.ColorToHex(channel.Color));    // Field 8 - Color
+										row.Add(LOR4.LOR4Admin.ColorToHex(channel.Color));    // Field 8 - Color
 										row.Add(channel.Location);                   // Field 9 - Location
 										row.Add(channel.Comment);                    // Field 10 - comment
 										writer.WriteRow(row);
@@ -1711,19 +1560,19 @@ namespace UtilORama4
 									{
 
 									} // End Channel Catch
-								} // End Channel LORLoop4
+								} // End Channel LOR4Loop
 							} // End Controller Try
 							catch (Exception ex)
 							{
 
 							} // End Controller Catch
-						} // End Controller LORLoop4
+						} // End Controller LOR4Loop
 					} // End Universe Try
 					catch (Exception ex)
 					{
 
 					} // End Universe Catch
-				} // End Universe LORLoop4
+				} // End Universe LOR4Loop
 				writer.Close();
 				Fyle.LaunchFile(sprFile);
 			} // End Writer Try
@@ -1882,6 +1731,12 @@ namespace UtilORama4
 			int xCNM = 0;
 			int xCNG = 0;
 			LOR4Sequence lseq = new LOR4Sequence(seqFile);
+			//xSequence xSeq = new xSequence(seqFile);
+			xRGBEffects RGBEffects = new xRGBEffects();
+			double score = 0;
+			double bestScore = 0;
+			int bestIndex = -1;
+			LOR4MemberType bestType = LOR4MemberType.None;
 
 			/////////////////////////////
 			/// GENERATE REPORT DATA ///
@@ -1903,9 +1758,7 @@ namespace UtilORama4
 			lseq.Channels.Sort();
 			//xRGBEffects.SortByName = true;
 			xRGBEffects.SortByName = sortByName;
-			xModel.AllModels.Sort();
-			xSeq.xModelGroups.Sort();
-			List<FuzzyList> fuzzies = new List<FuzzyList>();
+			//List<FuzzyList> fuzzies = new List<FuzzyList>();
 			lViz.VizChannels.Sort();
 
 			string matchReportFile = "W:\\Documents\\SourceCode\\Windows\\UtilORama4\\ChannelORama\\!Temp!\\FuzzyReport.txt";
@@ -1939,14 +1792,14 @@ namespace UtilORama4
 						lorCN = l + 1;
 						l = lseq.Channels.Count; // Force exit of loop
 					}
-				} // LOR channel LORLoop4
+				} // LOR channel LOR4Loop
 
 				///////////////////////////////////////////////////////
 				/// Match Managed Channels Exactly to Viz Channels ///
 				/////////////////////////////////////////////////////
 				for (int v = vizCN; v < lViz.VizChannels.Count; v++)
 				{
-					LORVizChannel4 chanViz = lViz.VizChannels[v];
+					LOR4VizChannel chanViz = lViz.VizChannels[v];
 					if (mgrName.CompareTo(chanViz.Name.ToLower()) == 0)
 					{
 						chanMgr.TagViz = chanViz;
@@ -1963,7 +1816,7 @@ namespace UtilORama4
 				//////////////////////////////////////////////////////
 				for (int v = vizCN; v < lViz.VizItemGroups.Count; v++)
 				{
-					LORVizItemGroup4 grpViz = lViz.VizItemGroups[v];
+					LOR4VizItemGroup grpViz = lViz.VizItemGroups[v];
 					if (mgrName.CompareTo(grpViz.Name.ToLower()) == 0)
 					{
 						chanMgr.TagViz = grpViz;
@@ -1980,7 +1833,7 @@ namespace UtilORama4
 				///////////////////////////////////////////////////////
 				for (int v = vizCN; v < lViz.VizDrawObjects.Count; v++)
 				{
-					LORVizDrawObject4 drobViz = lViz.VizDrawObjects[v];
+					LOR4VizDrawObject drobViz = lViz.VizDrawObjects[v];
 					if (mgrName.CompareTo(drobViz.Name.ToLower()) == 0)
 					{
 						chanMgr.TagViz = drobViz;
@@ -1995,9 +1848,9 @@ namespace UtilORama4
 				//////////////////////////////////////////////////
 				/// Match Managed Channels Exactly to xModels ///
 				////////////////////////////////////////////////
-				for (int x = xCNM; x < xModel.AllModels.Count; x++)
+				for (int x = xCNM; x < RGBEffects.Models.Count; x++)
 				{
-					xModel chanx = xModel.AllModels[x];
+					xModel chanx = RGBEffects.Models[x];
 
 					if (mgrName.CompareTo(chanx.Name.ToLower()) == 0)
 					{
@@ -2006,16 +1859,16 @@ namespace UtilORama4
 						chanMgr.ExactX = true;
 						chanx.ExactMatch = true;
 						xCNM = x + 1;
-						x = xModel.AllModels.Count; // Force exit of loop
+						x = RGBEffects.Models.Count; // Force exit of loop
 					}
-				} // xModels LORLoop4
+				} // RGBEffectss LOR4Loop
 
 				///////////////////////////////////////////////////////
 				/// Match Managed Channels Exactly to xModelGroups ///
 				/////////////////////////////////////////////////////
-				for (int x = xCNG; x < xSeq.xModelGroups.Count; x++)
+				for (int x = xCNG; x < RGBEffects.ModelGroups.Count; x++)
 				{
-					xModelGroup groupx = xSeq.xModelGroups[x];
+					xModelGroup groupx = RGBEffects.ModelGroups[x];
 
 					if (mgrName.CompareTo(groupx.Name.ToLower()) == 0)
 					{
@@ -2024,9 +1877,9 @@ namespace UtilORama4
 						chanMgr.ExactX = true;
 						groupx.ExactMatch = true;
 						xCNG = x + 1;
-						x = xSeq.xModelGroups.Count; // Force exit of loop
+						x = RGBEffects.ModelGroups.Count; // Force exit of loop
 					}
-				} // End xModelGroups LORLoop4
+				} // End RGBEffectsGroups LOR4Loop
 			} // End Channel Manager DMX Channels loop looking for Exact Matches
 
 			////////////////////////////////
@@ -2044,33 +1897,37 @@ namespace UtilORama4
 
 				if (chanMgr.TagLOR == null)
 				{
-					fuzzies.Clear();
+					bestScore = 0;
+					bestIndex = -1;
 					for (int l = 0; l < lseq.Channels.Count; l++)
 					{
 						LOR4Channel chanLOR = lseq.Channels[l];
 						if (chanLOR.Tag == null)
 						{
-							double score = mgrName.YetiLevenshteinSimilarity(chanLOR.Name.ToLower());
+							score = mgrName.FuzzyScoreFast(chanLOR.Name.ToLower());
 							ReportMatch(matchWriter, score, mgrName, chanLOR.Name);
-							//if (score > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
-							if (score > .30D)
+							if (score > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
+							//if (score > .30D)
 							{
-								score = mgrName.RankEquality(chanLOR.Name.ToLower());
-								//if (score > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
-								if (score > .40D)
+								score = mgrName.FuzzyScoreAccurate(chanLOR.Name.ToLower());
+								if (score > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
+								//if (score > .40D)
 								{
-									FuzzyList fuzzie = new FuzzyList(chanMgr, chanLOR, score);
-									fuzzies.Add(fuzzie);
+									if (score > bestScore)
+									{
+										bestScore = score;
+										bestIndex = l;
+									}
+
 								}
 							}
 						} // current LOR channel has no tag and thus no exact matches
 					} // End loop thru LOR channels
-					if (fuzzies.Count > 0)
+					if (bestIndex >= 0)
 					{
-						fuzzies.Sort();
-						chanMgr.TagLOR = (iLOR4Member)fuzzies[0].Item2;
-						LOR4Channel chanLor = (LOR4Channel)fuzzies[0].Item2;
-						chanLor.Tag = chanMgr;
+						chanMgr.Tag = lseq.Channels[bestIndex];
+						lseq.Channels[bestIndex].Tag = chanMgr;
+
 					}
 				}
 
@@ -2079,23 +1936,28 @@ namespace UtilORama4
 				///////////////////////////////////////////////////
 				if (chanMgr.TagViz == null)
 				{
-					fuzzies.Clear();
+					bestScore = 0;
+					bestIndex = -1;
 					for (int v = 0; v < lViz.VizChannels.Count; v++)
 					{
-						LORVizChannel4 chanViz = lViz.VizChannels[v];
+						LOR4VizChannel chanViz = lViz.VizChannels[v];
 						if (chanViz.Tag == null)
 						{
-							double score = mgrName.YetiLevenshteinSimilarity(chanViz.Name.ToLower());
+							score = mgrName.FuzzyScoreFast(chanViz.Name.ToLower());
 							ReportMatch(matchWriter, score, mgrName, chanViz.Name);
-							//if (score > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
-							if (score > .30D)
+							if (score > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
+							//if (score > .30D)
 							{
-								score = mgrName.RankEquality(chanViz.Name.ToLower());
-								//if (score > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
-								if (score > .40D)
+								score = mgrName.FuzzyScoreAccurate(chanViz.Name.ToLower());
+								if (score > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
+								//if (score > .40D)
 								{
-									FuzzyList fuzzie = new FuzzyList(chanMgr, chanViz, score);
-									fuzzies.Add(fuzzie);
+									if (score > bestScore)
+									{
+										bestScore = score;
+										bestIndex = v;
+										bestType = LOR4MemberType.VizChannel;
+									}
 								}
 							}
 						} // current Viz channel has no tag and thus no exact matches
@@ -2103,33 +1965,43 @@ namespace UtilORama4
 
 					for (int v = 0; v < lViz.VizDrawObjects.Count; v++)
 					{
-						LORVizDrawObject4 chanViz = lViz.VizDrawObjects[v];
+						LOR4VizDrawObject chanViz = lViz.VizDrawObjects[v];
 						if (chanViz.Tag == null)
 						{
-							double score = mgrName.YetiLevenshteinSimilarity(chanViz.Name.ToLower());
+							score = mgrName.FuzzyScoreFast(chanViz.Name.ToLower());
 							ReportMatch(matchWriter, score, mgrName, chanViz.Name);
-							//if (score > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
-							if (score > .30D)
+							if (score > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
+							//if (score > .30D)
 							{
-								score = mgrName.RankEquality(chanViz.Name.ToLower());
-								//if (score > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
-								if (score > .40D)
+								score = mgrName.FuzzyScoreAccurate(chanViz.Name.ToLower());
+								if (score > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
+								//if (score > .40D)
 								{
-									FuzzyList fuzzie = new FuzzyList(chanMgr, chanViz, score);
-									fuzzies.Add(fuzzie);
+									if (score > bestScore)
+									{
+										bestScore = score;
+										bestIndex = v;
+										bestType = LOR4MemberType.VizDrawObject;
+									}
 								}
 							}
 						} // current Viz channel has no tag and thus no exact matches
 					} // End loop thru Viz channels
 
+					//! What about VizItemGroups??
 
-
-					if (fuzzies.Count > 0)
+					if (bestIndex >= 0)
 					{
-						fuzzies.Sort();
-						chanMgr.TagViz = (iLOR4Member)fuzzies[0].Item2;
-						iLOR4Member chanViz = (iLOR4Member)fuzzies[0].Item2;
-						chanViz.Tag = chanMgr;
+						if (bestType == LOR4MemberType.VizChannel)
+						{
+							chanMgr.TagViz = lViz.VizChannels[bestIndex];
+							lViz.VizChannels[bestIndex].Tag = chanMgr;
+						}
+						if (bestType == LOR4MemberType.VizDrawObject)
+						{
+							chanMgr.TagViz = lViz.VizChannels[bestIndex];
+							lViz.VizChannels[bestIndex].Tag = chanMgr;
+						}
 					}
 				}
 
@@ -2138,18 +2010,19 @@ namespace UtilORama4
 				//////////////////////////////////////////////
 				if (chanMgr.TagViz == null)
 				{
-					fuzzies.Clear();
+					bestScore = 0;
+					bestIndex = -1;
 					int attemptCount = 0;
-					for (int x = 0; x < xModel.AllModels.Count; x++)
+					for (int x = 0; x < RGBEffects.Models.Count; x++)
 					{
-						xModel chanx = xModel.AllModels[x];
+						xModel chanx = RGBEffects.Models[x];
 						if (chanx.Tag == null)
 						{
 							attemptCount++;
 							//double score = mgrName.YetiLevenshteinSimilarity(chanx.Name.ToLower());
-							double score = mgrName.RankEquality(chanx.Name.ToLower(), FuzzyFunctions.USE_SUGGESTED_PREMATCH);
+							score = mgrName.FuzzyScoreFast(chanx.Name.ToLower());
 							ReportMatch(matchWriter, score, mgrName, chanx.Name);
-							if (score > 0D)
+							if (score > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
 							{
 								// Hey! We Got Something!!
 								if (isWiz)
@@ -2158,14 +2031,15 @@ namespace UtilORama4
 								}
 							}
 
-							if (score > .30D)
+							if (score > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
 							{
 								//score = mgrName.RankEquality(chanx.Name.ToLower());
-								score = mgrName.RankEquality(chanx.Name.ToLower(), FuzzyFunctions.USE_SUGGESTED_FINALMATCH);
-								if (score > .40D)
+								score = mgrName.FuzzyScoreAccurate(chanx.Name.ToLower());
+								if (score > bestScore)
 								{
-									FuzzyList fuzzie = new FuzzyList(chanMgr, chanx, score);
-									fuzzies.Add(fuzzie);
+									bestScore = score;
+									bestIndex = x;
+									bestType = LOR4MemberType.Channel;
 								}
 							}
 							int nn = attemptCount;
@@ -2173,35 +2047,44 @@ namespace UtilORama4
 					} // End loop thru LOR channels
 
 					/////////////////////////////////////////////////////////
-					/// Fuzzy Match Managed Channels to LOR xModelGroups ///
+					/// Fuzzy Match Managed Channels to xModelGroups ///
 					///////////////////////////////////////////////////////
-					for (int x = 0; x < xSeq.xModelGroups.Count; x++)
+					for (int x = 0; x < RGBEffects.ModelGroups.Count; x++)
 					{
-						xModelGroup groupx = xSeq.xModelGroups[x];
+						xModelGroup groupx = RGBEffects.ModelGroups[x];
 						if (groupx.Tag == null)
 						{
-							double score = mgrName.YetiLevenshteinSimilarity(groupx.Name.ToLower());
+							score = mgrName.FuzzyScoreFast(groupx.Name.ToLower());
 							ReportMatch(matchWriter, score, mgrName, groupx.Name);
-							//if (score > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
-							if (score > .30D)
+							if (score > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
+							//if (score > .30D)
 							{
-								score = mgrName.RankEquality(groupx.Name.ToLower());
-								//if (score > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
-								if (score > .40D)
+								score = mgrName.FuzzyScoreAccurate(groupx.Name.ToLower());
+								if (score > bestScore)
+								//if (score > .40D)
 								{
-									FuzzyList fuzzie = new FuzzyList(chanMgr, groupx, score);
-									fuzzies.Add(fuzzie);
+									bestScore = score;
+									bestIndex = x;
+									bestType = LOR4MemberType.ChannelGroup;
 								}
 							}
 						} // current LOR channel has no tag and thus no exact matches
 					} // End loop thru LOR channels
 
-					if (fuzzies.Count > 0)
+					//! What about xRGBModels and xPixelModels?
+
+					if (bestIndex >= 0)
 					{
-						fuzzies.Sort();
-						chanMgr.TagX = (xMember)fuzzies[0].Item2;
-						xMember chanx = (xMember)fuzzies[0].Item2;
-						chanx.Tag = chanMgr;
+						if (bestType == LOR4MemberType.Channel)
+						{
+							chanMgr.TagX = RGBEffects.Models[bestIndex];
+							RGBEffects.Models[bestIndex].Tag = chanMgr;
+						}
+						if (bestType == LOR4MemberType.ChannelGroup)
+						{
+							chanMgr.TagX = RGBEffects.ModelGroups[bestIndex];
+							RGBEffects.ModelGroups[bestIndex].Tag = chanMgr;
+						}
 					}
 
 				} // current chanMgr has no tag and thus no exact match
@@ -2465,7 +2348,7 @@ namespace UtilORama4
 				DMXChannel chanMgr = AllChannels[m];
 				if (chanMgr.TagX != null)
 				{
-					xMember chanx = (xMember)chanMgr.TagX;
+					ixMember chanx = (ixMember)chanMgr.TagX;
 					if (chanx.ExactMatch)
 					{
 						StringBuilder lineOut = new StringBuilder("  Exact: ");
@@ -2496,7 +2379,7 @@ namespace UtilORama4
 				DMXChannel chanMgr = AllChannels[m];
 				if (chanMgr.TagX != null)
 				{
-					xMember chanx = (xMember)chanMgr.TagX;
+					ixMember chanx = (ixMember)chanMgr.TagX;
 					if (!chanx.ExactMatch)
 					{
 						StringBuilder lineOut = new StringBuilder("  Fuzzy: ");
@@ -2535,9 +2418,9 @@ namespace UtilORama4
 
 			writer.WriteLine("");
 			writer.WriteLine("[xLights Models and Groups with NO Managed Match]");
-			for (int x = 0; x < xModel.AllModels.Count; x++)
+			for (int x = 0; x < RGBEffects.Models.Count; x++)
 			{
-				xModel chanx = xModel.AllModels[x];
+				xModel chanx = RGBEffects.Models[x];
 				if (chanx.Tag == null)
 				{
 					StringBuilder lineOut = new StringBuilder("  NoMatch Group: ");
@@ -2545,9 +2428,9 @@ namespace UtilORama4
 					writer.WriteLine(lineOut);
 				}
 			}
-			for (int x = 0; x < xSeq.xModelGroups.Count; x++)
+			for (int x = 0; x < RGBEffects.ModelGroups.Count; x++)
 			{
-				xModelGroup chanx = xSeq.xModelGroups[x];
+				xModelGroup chanx = RGBEffects.ModelGroups[x];
 				if (chanx.Tag == null)
 				{
 					StringBuilder lineOut = new StringBuilder("  NoMatch: ");
@@ -2568,14 +2451,48 @@ namespace UtilORama4
 			LOR4Membership.sortMode = oldLORsort;
 			lseq.Channels.Sort();
 			xRGBEffects.SortByName = false;
-			xModel.AllModels.Sort();
-			xSeq.xModelGroups.Sort();
+			RGBEffects.Models.Sort();
+			RGBEffects.ModelGroups.Sort();
 
 			Fyle.LaunchFile(reportFile);
 
 
 			return ret;
 		}
+
+		private int FuzzyFindInList(string findName, List<iLOR4Member> members, ref double score)
+		{
+			int idx = -1;
+			double s = 0;
+			double bestScore = 0;
+
+			for (int i = 0; i < members.Count; i++)
+			{
+				iLOR4Member member = members[i];
+				if (member.Tag == null)
+				{
+					s = findName.FuzzyScoreFast(member.Name.ToLower());
+					//ReportMatch(matchWriter, s, findName, member.Name);
+					if (score > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
+					{
+						s = findName.FuzzyScoreAccurate(member.Name.ToLower());
+						if (score > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
+						{
+							if (s > score)
+							{
+								score = s;
+								idx = 1;
+							} // if this is the best score yet
+						} // if final score passes threshold
+					} // if prematch score passes threshold
+				} // current member has no tag and thus no exact matches
+			} // Loop thru member list
+
+			return idx;
+		}
+
+
+
 
 		private void ReportMatch(StreamWriter writer, double score, string name1, string name2)
 		{

@@ -260,7 +260,7 @@
 			this.grpTrackPoly.Size = new System.Drawing.Size(340, 240);
 			this.grpTrackPoly.TabIndex = 19;
 			this.grpTrackPoly.TabStop = false;
-			this.grpTrackPoly.Text = " LORTrack4 && Channels - Polyphonic Transcription";
+			this.grpTrackPoly.Text = " LOR4Track && Channels - Polyphonic Transcription";
 			this.grpTrackPoly.Visible = false;
 			// 
 			// lblEffect
@@ -349,7 +349,7 @@
 			this.lblGridBeatsDiv.Name = "lblGridBeatsDiv";
 			this.lblGridBeatsDiv.Size = new System.Drawing.Size(111, 13);
 			this.lblGridBeatsDiv.TabIndex = 131;
-			this.lblGridBeatsDiv.Text = "Timing marks per beat";
+			this.lblGridBeatsDiv.Text = "Timing Markers per beat";
 			// 
 			// lblGridSignature
 			// 
@@ -523,7 +523,7 @@
 			this.grpTrackBeats.Size = new System.Drawing.Size(340, 260);
 			this.grpTrackBeats.TabIndex = 23;
 			this.grpTrackBeats.TabStop = false;
-			this.grpTrackBeats.Text = " LORTrack4 && Channels - Beats ";
+			this.grpTrackBeats.Text = " LOR4Track && Channels - Beats ";
 			this.grpTrackBeats.Visible = false;
 			// 
 			// pnlTrackBeatsX
@@ -624,7 +624,7 @@
 			this.lblTrackBeatsDiv.Name = "lblTrackBeatsDiv";
 			this.lblTrackBeatsDiv.Size = new System.Drawing.Size(111, 13);
 			this.lblTrackBeatsDiv.TabIndex = 131;
-			this.lblTrackBeatsDiv.Text = "Timing marks per beat";
+			this.lblTrackBeatsDiv.Text = "Timing Markers per beat";
 			// 
 			// lblTrackSignature
 			// 
@@ -687,7 +687,7 @@
 			this.grpTrackSpectro.Size = new System.Drawing.Size(340, 260);
 			this.grpTrackSpectro.TabIndex = 25;
 			this.grpTrackSpectro.TabStop = false;
-			this.grpTrackSpectro.Text = " LORTrack4 && Channels- Spectrogram ";
+			this.grpTrackSpectro.Text = " LOR4Track && Channels- Spectrogram ";
 			this.grpTrackSpectro.Visible = false;
 			// 
 			// chkSpectroOctaveGrouping

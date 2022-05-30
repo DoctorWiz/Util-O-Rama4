@@ -14,9 +14,11 @@ using System.Configuration;
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using LOR4Utils;
+using LOR4;
 using FileHelper;
-using xUtilities;
+using FormHelper;
+using RecentlyUsed;
+using xLights22;
 using Musik;
 //using Ini;
 using TagLib;
@@ -52,7 +54,7 @@ namespace UtilORama4
 		//private string fileSeqCur = ""; // Last Sequence File Loaded
 		private string fileTimingsLast
 			= ""; // Last Saved Sequence
-		private string pathTimingsLast = xUtils.ShowDirectory;
+		private string pathTimingsLast = xAdmin.ShowDirectory;
 		private string pathAudio = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
 		//private string fileSeqLast = ""; // last file ran.
 		//private string fileAudioOriginal = ""; // the file name extracted from the sequence
@@ -66,8 +68,8 @@ namespace UtilORama4
 		private string newFile = "";
 		//int milliseconds = 0;
 		private static Properties.Settings userSettings = Properties.Settings.Default;
-		private MRU mruTimings = new MRU(userSettings, "filesTiming", 10);
-		private MRU mruAudio = new MRU(userSettings, "filesAudio", 10);
+		private MRU mruTimings = new MRU("TimingFiles");
+		private MRU mruAudio = new MRU("AudioFiles");
 		//private List<xTimings> timingsList = new List<xTimings>();
 		private const string OutputTitle = "Sonic Annotator Output Log";
 		private const string ProcTitle = "Analyzing ";
@@ -75,7 +77,7 @@ namespace UtilORama4
 
 		//private LOR4Sequence seq = new LOR4Sequence();
 		private bool dirtyTimes = false;
-		private const string helpPageV = "http://wizlights.com/xUtils/Vamperizer";
+		private const string helpPageV = "http://wizlights.com/xAdmin/Vamperizer";
 		private const string helpPageL = "http://wizlights.com/utilorama/vamporama";
 
 		//private string applicationName = "Vamperizer";
@@ -131,8 +133,8 @@ namespace UtilORama4
 		//private bool doKey = true;
 		//private bool doSpeech = true;
 		//private bool useChanCfg = false;
-		//private int firstCobjIdx = lutils.UNDEFINED;
-		//private int firstCsavedIndex = lutils.UNDEFINED;
+		//private int firstCobjIdx = LOR4Admin.UNDEFINED;
+		//private int firstCsavedIndex = LOR4Admin.UNDEFINED;
 		//private LOR4Channel[] noteChannels = null;
 		//private LOR4ChannelGroup[] octaveGroups = null;
 
@@ -188,23 +190,19 @@ namespace UtilORama4
 			for (int i = 0; i < args.Length; i++)
 			{
 				string lc = args[i].ToLower();
-				if (lc.IndexOf("debug") >= 0)
-				{
-					Fyle.DebugMode = true;
-				}
 			}
 			string mySubDir = "UtilORama\\";
-			RestoreFormPosition();
+			this.RestoreView();
 
-			string sfoo = xUtils.ShowDirectory;
+			string sfoo = xAdmin.ShowDirectory;
 			if (sfoo.Length > 3) xLightsInstalled = true;
-			sfoo = lutils.DefaultSequencesPath;
+			sfoo = LOR4Admin.DefaultSequencesPath;
 			if (sfoo.Length > 3) lightORamaInstalled = true;
 			if (xLightsInstalled && !lightORamaInstalled)
 			{
 				vampMode = true;
 				myTitle = "Vamperizer";
-				mySubDir = "xUtils\\";
+				mySubDir = "xAdmin\\";
 				applicationName = myTitle;
 				//appFolder = "Vamperizer";
 			}
@@ -282,48 +280,24 @@ namespace UtilORama4
 			// mruAudio = new MRU(userSettings, "Audio", 10);
 			//mruAudio.ReadFromConfig(Properties.Settings.Default);
 			//mruAudio.Validate();
-			string f = mruAudio.GetItem(0);
-			fileAudioLast = mruAudio.GetItem(0);
-			if (f.Length > 5)
-			{
-				f = Path.GetDirectoryName(fileAudioLast);
-			}
-			else
-			{
-				f = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
-			}
-			pathAudio = f;
-
-			if (System.IO.File.Exists(fileAudioLast))
-			{
-				//audioData = ReadAudioFile(fileAudioLast);
-				fileAudioWork = PrepAudioFile(fileAudioLast);
-				string songInfo = audioData.Title + " by " + audioData.Artist;
-				this.Text = myTitle + " - " + songInfo;
-				lblSongTime.Text = FormatSongTime(audioData.Duration);
-			}
-
-
-
-
 
 
 
 			//mruTimings = new MRU(userSettings, "Timings", 10);
 			//mruTimings.ReadFromConfig();
 			//mruTimings.Validate();
-			f = mruTimings.GetItem(0);
-			if (f.Length < 5)
+			string tim0 = mruTimings.GetItem(0);
+			if (tim0.Length < 5)
 			{
-				f = xUtils.ShowDirectory;
+				tim0 = xAdmin.ShowDirectory;
 			}
-			pathTimingsLast = f;
+			pathTimingsLast = tim0;
 
 			RestoreUserSettings();
 
 			if (!chkReuse.Checked)
 			{
-				int errs = xUtils.ClearTempDir(tempPath);
+				int errs = xAdmin.ClearTempDir(tempPath);
 			}
 
 			ProcessCommandLine();
@@ -366,8 +340,8 @@ namespace UtilORama4
 					//{
 					//Annotator.Sequence.ReadSequenceFile(fileSeqLast);
 					//fileCurrent = fileSeqLast;
-					//lutils.FillChannels(treChannels, seq, siNodes);
-					//txtSequenceFile.Text = xUtils.ShortenLongPath(fileCurrent, 80);
+					//LOR4Admin.FillChannels(treChannels, seq, siNodes);
+					//txtSequenceFile.Text = xAdmin.ShortenLongPath(fileCurrent, 80);
 					//}
 					//string pathLast = Path.GetDirectoryName(fileTimingsLast);
 					//if (Directory.Exists(pathLast)
@@ -381,39 +355,81 @@ namespace UtilORama4
 					// 1 and only 1 file specified on command line
 					//Annotator.Sequence.ReadSequenceFile(batch_fileList[0]);
 					//fileSeqLast = batch_fileList[0];
-					//lutils.FillChannels(treChannels, seq, siNodes);
+					//LOR4Admin.FillChannels(treChannels, seq, siNodes);
 					//userSettings.fileTimingsLast = fileSeqLast;
 					//userSettings.Save();
 				}
 			}
 
-
-
-			//txtFileAudio.Text = xUtils.ShortenLongPath(fileAudioLast, 80);
-			grpAudio.Enabled = true;
-
-			bool gotit = false;
-			if (fileAudioLast.Length > 5)
-			{
-				if (System.IO.File.Exists(fileAudioLast))
-				{
-					txtFileAudio.Text = ShortenPath(fileAudioLast, 100);
-					grpAnalyze.Enabled = true;
-					//this.Text = myTitle + " - " + Path.GetFileName(fileAudioLast);
-					//grpOptions.Enabled = true;
-					SelectStep(2);
-					gotit = true;
-				}
-			}
-			if (!gotit)
-			{
-				btnBrowseAudio.PerformClick();
-			}
-
-
+			FillAudioFileCombo();
 
 			ImBusy(false);
 
+		}
+
+		private void FillAudioFileCombo()
+		{
+			cboFile_Audio.Items.Clear();
+			for (int m = 0; m < mruAudio.MaxItems; m++)
+			{
+				string f = mruAudio.GetItem(m);
+				if (f.Length > 2)
+				{
+					if (Fyle.Exists(f))
+					{
+						cboFile_Audio.Items.Add(f);
+					}
+				}
+			}
+
+		}
+
+		private void cboFile_Audio_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			fileAudioLast = "";
+			pathAudio = "";
+			bool valid = false;
+
+			if (cboFile_Audio.Items.Count > 0)
+			{
+				cboFile_Audio.SelectedIndex = 0;
+				string fileTemp = cboFile_Audio.Text;
+				if (fileTemp.Length > 5)
+				{
+					pathAudio = Fyle.GetDirectory(fileTemp);
+					if (Fyle.PathExists(fileTemp))
+					{
+						if (Fyle.Exists(fileAudioLast))
+						{
+							valid = true;
+							grpAnalyze.Enabled = true;
+							SelectStep(2);
+							fileAudioWork = PrepAudioFile(fileAudioLast);
+							string songInfo = audioData.Title + " by " + audioData.Artist;
+							this.Text = myTitle + " - " + songInfo;
+							lblSongTime.Text = FormatSongTime(audioData.Duration);
+						}
+					}
+				}
+			}
+
+
+			if (pathAudio.Length < 3)
+			{
+				pathAudio = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+			}
+
+
+			if (!valid)
+			{
+				grpAnalyze.Enabled = false;
+				SelectStep(1);
+				fileAudioWork = "";
+				string songInfo = "";
+				this.Text = myTitle;
+				lblSongTime.Text = "0:00.00";
+				btnBrowseAudio.PerformClick();
+			}
 		}
 
 
@@ -466,12 +482,7 @@ namespace UtilORama4
 
 			userSettings.Save();
 
-			mruAudio.AddNew(fileAudioLast);
-			if (mruAudio.appSettings == null)
-			{
-				mruAudio.appSettings = userSettings;
-			}
-			mruAudio.SaveToConfig();
+			mruAudio.UseItem(fileAudioLast);
 
 		}
 
@@ -480,13 +491,14 @@ namespace UtilORama4
 			fileAudioLast = userSettings.MRUfilesAudio0;
 			if (System.IO.File.Exists(fileAudioLast))
 			{
-				txtFileAudio.Text = Path.GetFileName(fileAudioLast);
-				txtFileAudio.ForeColor = SystemColors.ControlText;
+				//TODO Rework this to use the MRU
+				cboFile_Audio.Text = Path.GetFileName(fileAudioLast);
+				cboFile_Audio.ForeColor = SystemColors.ControlText;
 			}
 			else
 			{
-				txtFileAudio.Text = "Select Audio File...";
-				txtFileAudio.ForeColor = SystemColors.GrayText;
+				cboFile_Audio.Text = "Select Audio File...";
+				cboFile_Audio.ForeColor = SystemColors.GrayText;
 			}
 
 		}
@@ -511,19 +523,20 @@ namespace UtilORama4
 
 					//userSettings.fileAudioLast = fileAudioLast;
 				}
-				txtFileAudio.Text = ShortenPath(fileAudioLast, 100);
+				//TODO: Rework this to use the MRU
+				cboFile_Audio.Text = ShortenPath(fileAudioLast, 100);
 				//userSettings.Save();
 			}
 
 			bool enable = false;
 			if (System.IO.File.Exists(fileAudioLast))
 			{
-				txtFileAudio.ForeColor = SystemColors.ControlText;
+				cboFile_Audio.ForeColor = SystemColors.ControlText;
 				enable = false;
 			}
 			else
 			{
-				txtFileAudio.ForeColor = System.Drawing.Color.DarkRed;
+				cboFile_Audio.ForeColor = System.Drawing.Color.DarkRed;
 				enable = false;
 			}
 			btnOK.Enabled = enable;
@@ -542,8 +555,8 @@ namespace UtilORama4
 				byte isFile = 0;
 				if (arg.Substring(1, 2).CompareTo(":\\") == 0) isFile = 1;  // Local File
 				if (arg.Substring(0, 2).CompareTo("\\\\") == 0) isFile = 1; // UNC file
-				if (arg.Substring(4).IndexOf(".") > xUtils.UNDEFINED) isFile++;  // contains a period
-				if (xUtils.InvalidCharacterCount(arg) == 0) isFile++;
+				if (arg.Substring(4).IndexOf(".") > xAdmin.UNDEFINED) isFile++;  // contains a period
+				if (xAdmin.InvalidCharacterCount(arg) == 0) isFile++;
 				if (isFile == 3)
 				{
 					if (System.IO.File.Exists(arg))
@@ -610,7 +623,7 @@ namespace UtilORama4
 				//byte isFile = 0;
 				//if (arg.Substring(1, 2).CompareTo(":\\") == 0) isFile = 1;  // Local File
 				//if (arg.Substring(0, 2).CompareTo("\\\\") == 0) isFile = 1; // UNC file
-				//if (arg.Substring(4).IndexOf(".") > xUtils.UNDEFINED) isFile++;  // contains a period
+				//if (arg.Substring(4).IndexOf(".") > xAdmin.UNDEFINED) isFile++;  // contains a period
 				//if (InvalidCharacterCount(arg) == 0) isFile++;
 				//if (isFile == 2)
 				//{
@@ -656,8 +669,9 @@ namespace UtilORama4
 					userSettings.fileTimingsLast = fileCurrent;
 					userSettings.Save();
 
-					txtFileAudio.Text = ShrinkPath(fileCurrent, 80);
-					//xUtils.FillChannels(treChannels, seq, siNodes, false, false);
+					//TODO: Rework to use MRU
+					cboFile_Audio.Text = ShrinkPath(fileCurrent, 80);
+					//xAdmin.FillChannels(treChannels, seq, siNodes, false, false);
 					dirtyTimes = false;
 					ImBusy(false);
 
@@ -780,7 +794,7 @@ namespace UtilORama4
 					{
 						if (!debugMode)
 						{
-							int errs = xUtils.ClearTempDir(tempPath);
+							int errs = xAdmin.ClearTempDir(tempPath);
 						}
 					}
 					//CloseForm();
@@ -796,7 +810,7 @@ namespace UtilORama4
 			{
 				if (!chkReuse.Checked)
 				{
-					int errs = xUtils.ClearTempDir(tempPath);
+					int errs = xAdmin.ClearTempDir(tempPath);
 				}
 				//CloseForm();
 				SaveUserSettings();
@@ -807,12 +821,13 @@ namespace UtilORama4
 
 		private void CloseForm()
 		{
-			SaveFormPosition();
+			this.SaveView();
 			//SaveUserSettings();
 			//this.Close();
 			//Application.Exit();
 		}
 
+		/*
 		private void SaveFormPosition()
 		{
 			// Get current location, size, and state
@@ -962,7 +977,7 @@ namespace UtilORama4
 			}
 
 		}
-
+*/
 		private void btnSavexL_Click(object sender, EventArgs e)
 		{
 			string newFileIn;
@@ -970,14 +985,14 @@ namespace UtilORama4
 			string filt = "xLights Timings *.xtimings|*.xtiming";
 			string tit = "Save Timings As...";
 			string initDir = Properties.Settings.Default.LastxLightsTimingsSavePath;
-			if (initDir.Length < 5) initDir = xUtils.ShowDirectory;
-			if (!Directory.Exists(initDir)) initDir = xUtils.ShowDirectory;
+			if (initDir.Length < 5) initDir = xAdmin.ShowDirectory;
+			if (!Directory.Exists(initDir)) initDir = xAdmin.ShowDirectory;
 
 			string initFile = Path.GetFileNameWithoutExtension(fileAudioLast);
 
 			dlgFileSave.Filter = filt;
 			dlgFileSave.FilterIndex = 1;
-			dlgFileSave.FileName = initFile; // xUtils.ShowDirectory + Path.GetFileNameWithoutExtension(fileAudioLast) + ".xtiming";
+			dlgFileSave.FileName = initFile; // xAdmin.ShowDirectory + Path.GetFileNameWithoutExtension(fileAudioLast) + ".xtiming";
 			dlgFileSave.CheckPathExists = true;
 			dlgFileSave.InitialDirectory = initDir;
 			dlgFileSave.DefaultExt = ".xtiming";
@@ -999,8 +1014,7 @@ namespace UtilORama4
 					fileTimingsLast = dlgFileSave.FileName;
 					Properties.Settings.Default.LastxLightsTimingsSavePath = Path.GetDirectoryName(dlgFileSave.FileName);
 					ExportSelectedVampsToxLights(dlgFileSave.FileName);
-					mruTimings.AddNew(fileTimingsLast);
-					mruTimings.SaveToConfig();
+					mruTimings.UseItem(fileTimingsLast);
 					dirtyTimes = false;
 					//SystemSounds.Beep.Play();
 					Fyle.MakeNoise(Fyle.Noises.TaDa);
@@ -1284,11 +1298,11 @@ namespace UtilORama4
 				if (!Directory.Exists(initDir))
 				{
 					// No good?  Next try the default audio path for Light-O-Rama Showtime
-					initDir = lutils.DefaultAudioPath;
+					initDir = LOR4Admin.DefaultAudioPath;
 					if (!Directory.Exists(initDir))
 					{
 						// Still no good?  Try the Audio Folder under the xLights show directory
-						initDir = xUtils.ShowDirectory + "\\Audio";
+						initDir = xAdmin.ShowDirectory + "\\Audio";
 						if (!Directory.Exists(initDir))
 						{
 							// STILL no good?  Last chance- the user's MyMusic folder
@@ -1317,7 +1331,7 @@ namespace UtilORama4
 				if (result == DialogResult.OK)
 				{
 					fileAudioLast = dlgFileOpen.FileName;
-					txtFileAudio.Text = ShrinkPath(fileAudioLast, 100);
+					cboFile_Audio.Text = ShrinkPath(fileAudioLast, 100);
 					//int errs = ClearTempDir();
 					//AnalyzeSong(dlgFileOpen.FileName);
 					//grpSequence.Enabled = true;
@@ -1753,7 +1767,7 @@ namespace UtilORama4
 					//! REMARKED OUT FOR TESTING DEBUGGING, LEAVE FILES
 					if (!chkReuse.Checked)
 					{
-						//int errs = xUtils.ClearTempDir(tempPath);
+						//int errs = xAdmin.ClearTempDir(tempPath);
 					}
 					//! UNREMARK AFTER TESTING!
 					//Vamperize(fileAudioLast);
@@ -1777,7 +1791,7 @@ namespace UtilORama4
 
 				// Finally, do we need to re-prep the annotations
 				bool rePrepTimes = false; // reset flag
-				if (Annotator.xBars.effects.Count < 1) rePrepTimes = true;
+				if (Annotator.xBars.Markers.Count < 1) rePrepTimes = true;
 				if (!chkReuse.Checked) rePrepTimes = true;
 				rePrepTimes = true; //! Manual Override for debugging!
 				if (rePrepTimes)
@@ -1907,11 +1921,11 @@ namespace UtilORama4
 		/// <param name="path">The file path to shorten</param>
 		/// <param name="maxLength">The max length of the output path (including the ellipsis if inserted)</param>
 		/// <returns>The path with some of the middle directory paths replaced with an ellipsis (or the entire path if it is already shorter than maxLength)</returns>
-		/// <remarks>
+		/// <reMarkers>
 		/// Shortens the path by removing some of the "middle directories" in the path and inserting an ellipsis. If the filename and root path (drive letter or UNC server name)     in itself exceeds the maxLength, the filename will be cut to fit.
 		/// UNC-paths and relative paths are also supported.
 		/// The inserted ellipsis is not a true ellipsis char, but a string of three dots.
-		/// </remarks>
+		/// </reMarkers>
 		/// <example>
 		/// ShortenPath(@"c:\websites\myproject\www_myproj\App_Data\themegafile.txt", 50)
 		/// Result: "c:\websites\myproject\...\App_Data\themegafile.txt"
@@ -2078,11 +2092,11 @@ namespace UtilORama4
 			// Whereas the sequence probably came from the LOR folder (or subfolder of it)
 			// And therefore quite different.
 			string pathExport = "";
-			mruTimings.Validate();
+			mruTimings.ValidateFiles();
 			pathExport = Path.GetDirectoryName(mruTimings.GetItem(0));
 			if (pathExport.Length < 4)
 			{
-				pathExport = xUtils.ShowDirectory;
+				pathExport = xAdmin.ShowDirectory;
 
 				if (!Directory.Exists(pathExport))
 				{
@@ -2121,7 +2135,7 @@ namespace UtilORama4
 				{
 					string newFile = dlgFileSave.FileName;
 					//ExportSelectedTimings(newFile);
-					//xUtils.PlayNotifyGenericSound();
+					//xAdmin.PlayNotifyGenericSound();
 					SystemSounds.Exclamation.Play();
 				}
 			} // end dialog result = OK
@@ -2147,8 +2161,7 @@ namespace UtilORama4
 
 			if (optMultiPer.Checked) userSettings.saveFormat = 2;
 			else userSettings.saveFormat = 1;
-			mruTimings.AddNew(fileName);
-			mruTimings.SaveToConfig();
+			mruTimings.UseItem(fileName);
 			// Get path and name for export files
 
 			//if (chkBars.Checked)
@@ -2159,7 +2172,7 @@ namespace UtilORama4
 				//! BARS
 				if (VampBarBeats.xBars != null)
 				{
-					if (VampBarBeats.xBars.effects.Count > 0)
+					if (VampBarBeats.xBars.Markers.Count > 0)
 					{
 						//WriteTimingFile4(transBarBeats.xBars, fileName);
 						//WriteTimingFile5(transBarBeats.xBars, fileName);
@@ -2171,7 +2184,7 @@ namespace UtilORama4
 				{
 					if (VampBarBeats.xBeatsFull != null)
 					{
-						if (VampBarBeats.xBeatsFull.effects.Count > 0)
+						if (VampBarBeats.xBeatsFull.Markers.Count > 0)
 						{
 							//WriteTimingFile4(transBarBeats.xBeatsFull, fileName);
 							//WriteTimingFile5(transBarBeats.xBeatsFull, fileName);
@@ -2184,7 +2197,7 @@ namespace UtilORama4
 				{
 					if (VampBarBeats.xBeatsHalf != null)
 					{
-						if (VampBarBeats.xBeatsHalf.effects.Count > 0)
+						if (VampBarBeats.xBeatsHalf.Markers.Count > 0)
 						{
 							//WriteTimingFile4(transBarBeats.xBeatsHalf, fileName);
 							//WriteTimingFile5(transBarBeats.xBeatsHalf, fileName);
@@ -2197,7 +2210,7 @@ namespace UtilORama4
 				{
 					if (VampBarBeats.xBeatsThird != null)
 					{
-						if (VampBarBeats.xBeatsThird.effects.Count > 0)
+						if (VampBarBeats.xBeatsThird.Markers.Count > 0)
 						{
 							//WriteTimingFile4(transBarBeats.xBeatsThird, fileName);
 							//WriteTimingFile5(transBarBeats.xBeatsThird, fileName);
@@ -2210,7 +2223,7 @@ namespace UtilORama4
 				{
 					if (VampBarBeats.xBeatsQuarter != null)
 					{
-						if (VampBarBeats.xBeatsQuarter.effects.Count > 0)
+						if (VampBarBeats.xBeatsQuarter.Markers.Count > 0)
 						{
 							//WriteTimingFile4(transBarBeats.xBeatsQuarter, fileName);
 							//WriteTimingFile5(transBarBeats.xBeatsQuarter, fileName);
@@ -2226,7 +2239,7 @@ namespace UtilORama4
 			{
 				if (VampNoteOnsets.Timings != null)
 				{
-					if (VampNoteOnsets.Timings.effects.Count > 0)
+					if (VampNoteOnsets.Timings.Markers.Count > 0)
 					{
 						WriteTimingFile4(VampNoteOnsets.Timings, fileName);
 						writeCount++;
@@ -2240,7 +2253,7 @@ namespace UtilORama4
 			{
 				if (VampPolyphonic.Timings != null)
 				{
-					if (VampPolyphonic.Timings.effects.Count > 0)
+					if (VampPolyphonic.Timings.Markers.Count > 0)
 					{
 						WriteTimingFile4(VampPolyphonic.Timings, fileName);
 						writeCount++;
@@ -2253,7 +2266,7 @@ namespace UtilORama4
 			{
 				if (VampPitchKey.Timings != null)
 				{
-					if (VampPitchKey.Timings.effects.Count > 0)
+					if (VampPitchKey.Timings.Markers.Count > 0)
 					{
 						WriteTimingFile4(VampPitchKey.Timings, fileName);
 						writeCount++;
@@ -2266,7 +2279,7 @@ namespace UtilORama4
 			{
 				if (VampTempo.Timings != null)
 				{
-					if (VampTempo.Timings.effects.Count > 0)
+					if (VampTempo.Timings.Markers.Count > 0)
 					{
 						WriteTimingFile4(VampTempo.Timings, fileName);
 						writeCount++;
@@ -2279,7 +2292,7 @@ namespace UtilORama4
 			{
 				if (VampSegments.Timings != null)
 				{
-					if (VampSegments.Timings.effects.Count > 0)
+					if (VampSegments.Timings.Markers.Count > 0)
 					{
 						WriteTimingFile4(VampSegments.Timings, fileName);
 						writeCount++;
@@ -2293,7 +2306,7 @@ namespace UtilORama4
 			{
 				if (xTimes.xKey != null)
 				{
-					if (xTimes.xKey.effects.Count > 0)
+					if (xTimes.xKey.Markers.Count > 0)
 					{
 						WriteTimingFileX(xTimes.xKey, fileName);
 						WriteTimingFile4(xTimes.xKey, fileName);
@@ -2306,7 +2319,7 @@ namespace UtilORama4
 			{
 				if (xTimes.xSegments != null)
 				{
-					if (xTimes.xSegments.effects.Count > 0)
+					if (xTimes.xSegments.Markers.Count > 0)
 					{
 						WriteTimingFileX(xTimes.xSegments, fileName);
 						WriteTimingFile4(xTimes.xSegments, fileName);
@@ -2349,7 +2362,7 @@ namespace UtilORama4
 				System.IO.File.Delete(expFile);
 			}
 			// Copy the tempfile to the new file name and delete the old temp file
-			err = lutils.SafeCopy(timingsTemp, expFile);
+			err = LOR4Admin.SafeCopy(timingsTemp, expFile);
 			System.IO.File.Delete(timingsTemp);
 		}
 		*/
@@ -2413,7 +2426,7 @@ namespace UtilORama4
 			//writer.WriteLine(lineOut);
 
 			// Write this xTiming to an export file
-			string xDat = timings.LineOut4();
+			string xDat = timings.LineOut();
 			writer.WriteLine(xDat);
 
 			writer.Close();
@@ -2449,7 +2462,7 @@ namespace UtilORama4
 			string lineOut = "";
 
 			// Write this xTiming to an export file
-			string xDat = timings.LineOut5();
+			string xDat = timings.LineOut();
 			writer.WriteLine(xDat);
 
 			writer.Close();
@@ -2734,7 +2747,7 @@ namespace UtilORama4
 			{
 				if (audioData.Title == "")
 				{
-					string txt = txtFileAudio.Text;
+					string txt = cboFile_Audio.Text;
 					if (txt.Length > 3)
 					{
 						if (System.IO.File.Exists(txt))
@@ -2760,11 +2773,11 @@ namespace UtilORama4
 			}
 			if (OK)
 			{
-				txtFileAudio.ForeColor = SystemColors.ControlText;
+				cboFile_Audio.ForeColor = SystemColors.ControlText;
 			}
 			else
 			{
-				txtFileAudio.ForeColor = Color.Red;
+				cboFile_Audio.ForeColor = Color.Red;
 			}
 			grpAnalyze.Enabled = OK;
 			grpTimings.Enabled = OK;
@@ -2801,12 +2814,12 @@ namespace UtilORama4
 
 		private void chkLOR_CheckedChanged(object sender, EventArgs e)
 		{
-			string f = lutils.DefaultSequencesPath;
+			string f = LOR4Admin.DefaultSequencesPath;
 			if (f.Length > 3)
 			{
 				btnExploreLOR.Visible = chkLOR.Checked;
 			}
-			f = lutils.SequenceEditor;
+			f = LOR4Admin.SequenceEditor;
 			if (f.Length > 3)
 			{
 				btnSequenceEditor.Visible = chkLOR.Checked;
@@ -2815,12 +2828,12 @@ namespace UtilORama4
 
 		private void chkxLights_CheckedChanged(object sender, EventArgs e)
 		{
-			string f = xUtils.ShowDirectory;
+			string f = xAdmin.ShowDirectory;
 			if (f.Length > 3)
 			{
 				btnExplorexLights.Visible = chkxLights.Checked;
 			}
-			f = xUtils.SequenceEditor;
+			f = xAdmin.SequenceEditor;
 			if (f.Length > 3)
 			{
 				btnLaunchxLights.Visible = chkxLights.Checked;
@@ -2831,7 +2844,7 @@ namespace UtilORama4
 		{
 			Process explore = new Process();
 			explore.StartInfo.FileName = "explorer.exe";
-			explore.StartInfo.Arguments = lutils.DefaultSequencesPath;
+			explore.StartInfo.Arguments = LOR4Admin.DefaultSequencesPath;
 			explore.Start();
 
 		}
@@ -2840,7 +2853,7 @@ namespace UtilORama4
 		{
 			Process explore = new Process();
 			explore.StartInfo.FileName = "explorer.exe";
-			explore.StartInfo.Arguments = xUtils.ShowDirectory;
+			explore.StartInfo.Arguments = xAdmin.ShowDirectory;
 			explore.Start();
 
 		}
@@ -2848,7 +2861,7 @@ namespace UtilORama4
 		private void btnSequenceEditor_Click(object sender, EventArgs e)
 		{
 			Process app = new Process();
-			string exe = lutils.SequenceEditor;
+			string exe = LOR4Admin.SequenceEditor;
 			if (exe.Length > 10)
 			{
 				app.StartInfo.FileName = exe;
@@ -2860,7 +2873,7 @@ namespace UtilORama4
 		private void btnLaunchxLights_Click(object sender, EventArgs e)
 		{
 			Process app = new Process();
-			string exe = xUtils.SequenceEditor;
+			string exe = xAdmin.SequenceEditor;
 			if (exe.Length > 10)
 			{
 				app.StartInfo.FileName = exe;
@@ -3050,6 +3063,7 @@ namespace UtilORama4
 			btnOK.Visible = !analyzed;
 
 		}
+
 	}
 
 	/*

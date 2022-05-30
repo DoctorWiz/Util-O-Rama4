@@ -9,10 +9,10 @@ using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LOR4Utils;
+using LOR4;
 using FileHelper;
-using xUtils;
-//using FuzzyString;
+using xAdmin;
+//using FuzzORama;
 using ReadWriteCsv;
 //using DarkMode;
 
@@ -33,7 +33,7 @@ namespace UtilORama4
 
 
 		LOR4Sequence sequence = null;
-		LORVisualization4 visualization = null;
+		LOR4Visualization visualization = null;
 		public List<LOR4Channel> channelList = new List<LOR4Channel>();
 		public List<LOR4RGBChannel> RGBList = new List<LOR4RGBChannel>();
 		public List<LOR4ChannelGroup> groupList = new List<LOR4ChannelGroup>();
@@ -461,7 +461,7 @@ namespace UtilORama4
 				int ip = lineIn.IndexOf(" name=\"");
 				if (ip >= 0)
 				{
-					theName = xutils.getKeyWord(lineIn, "name");
+					theName = xAdmin.getKeyWord(lineIn, "name");
 
 					ip = lineIn.IndexOf("<model ");
 					if (ip >= 0)
@@ -472,15 +472,15 @@ namespace UtilORama4
 						if (ip >= 0)
 						{
 							mbrType = xMemberType.Model; // Default
-							string st = xutils.getKeyWord(lineIn, "StringType");
+							string st = xAdmin.getKeyWord(lineIn, "StringType");
 							xModel xch = new xModel(theName);
 							//TODO Get its color!
-							string hColor = xutils.getKeyWord(lineIn, "CustomColor");
+							string hColor = xAdmin.getKeyWord(lineIn, "CustomColor");
 							if (hColor.Length == 7)
 							{
-								xch.Color = xutils.ColorHTMLtoNet(hColor);
+								xch.Color = xAdmin.ColorHTMLtoNet(hColor);
 							}
-							xch.StartChannel = xutils.getKeyWord(lineIn, "StartChannel");
+							xch.StartChannel = xAdmin.getKeyWord(lineIn, "StartChannel");
 							xModelList.Add(xch);
 							count++;
 							member = xch;
@@ -495,7 +495,7 @@ namespace UtilORama4
 								xPixels xpx = new xPixels(theName);
 								xPixelList.Add(xpx);
 								//count++;
-								xpx.StartChannel = xutils.getKeyWord(lineIn, "StartChannel");
+								xpx.StartChannel = xAdmin.getKeyWord(lineIn, "StartChannel");
 								xpx.Color = Color.FromArgb(128, 64, 64);
 								member = xpx;
 							}
@@ -509,7 +509,7 @@ namespace UtilORama4
 									xRGBmodel xrgb = new xRGBmodel(theName);
 									xRGBList.Add(xrgb);
 									count++;
-									xrgb.StartChannel = xutils.getKeyWord(lineIn, "StartChannel");
+									xrgb.StartChannel = xAdmin.getKeyWord(lineIn, "StartChannel");
 									xrgb.Color = Color.FromArgb(64, 0, 0);
 									member = xrgb;
 								}
@@ -541,7 +541,7 @@ namespace UtilORama4
 		{
 			bool stopLooking = false;
 			// Start with xLights show directory
-			string initDir = xutils.ShowDirectory;
+			string initDir = xAdmin.ShowDirectory;
 			if (Directory.Exists(initDir))
 			{
 				//
@@ -550,7 +550,7 @@ namespace UtilORama4
 			{
 				// Can't find xLights show directory, lets try elsewhere
 				// Check LOR directory
-				initDir = LOR4Utils.lutils.DefaultSequencesPath;
+				initDir = LOR4.LOR4Admin.DefaultSequencesPath;
 				if (Directory.Exists(initDir))
 				{
 					// Cool!  Good for us!
@@ -611,7 +611,7 @@ namespace UtilORama4
 		{
 			bool stopLooking = false;
 			// Start with LOR Showtime directory
-			string initDir = LOR4Utils.lutils.DefaultSequencesPath;
+			string initDir = LOR4.LOR4Admin.DefaultSequencesPath;
 			if (Directory.Exists(initDir))
 			{
 				// If it exists, see if it has a Sequences subdirectory
@@ -626,7 +626,7 @@ namespace UtilORama4
 			{
 				// Can't find LOR Showtime directory, lets try elsewhere
 				// Check xLights show folder
-				initDir = xutils.ShowDirectory;
+				initDir = xAdmin.ShowDirectory;
 				if (Directory.Exists(initDir))
 				{
 					// Its there, does it have a Timings subdirectory
@@ -1021,7 +1021,7 @@ namespace UtilORama4
 					outInfo = chanLor.UniverseNumber.ToString() + "/" +
 										chanLor.DMXAddress.ToString();
 					mup.OutputLOR = outInfo;
-					mup.ColorLOR = lutils.Color_LORtoHTML(chanLor.color);
+					mup.ColorLOR = LOR4Admin.Color_LORtoHTML(chanLor.color);
 					mup.ExactLOR = true;
 					chanLor.ExactMatch = true;
 					chanLor.Selected = true;
@@ -1076,7 +1076,7 @@ namespace UtilORama4
 							outInfo = chanLor.UniverseNumber.ToString() + "/" +
 												chanLor.DMXAddress.ToString();
 							mup.OutputLOR = outInfo;
-							mup.ColorLOR = lutils.Color_LORtoHTML(chanLor.color);
+							mup.ColorLOR = LOR4Admin.Color_LORtoHTML(chanLor.color);
 							mup.ExactLOR = false;
 							chanLor.ExactMatch = false;
 							chanLor.Selected = true;
@@ -1099,7 +1099,7 @@ namespace UtilORama4
 					status = "Searching Visualization for " + datName;
 					StatusUpdate(status);
 
-					LORVizChannel4 vch = visualization.FindVizChannel(datName, false);
+					LOR4VizChannel vch = visualization.FindVizChannel(datName, false);
 					if (vch != null)
 					{
 						mup.IndexViz = vch.Index;
@@ -1107,7 +1107,7 @@ namespace UtilORama4
 						outInfo = vch.UniverseNumber.ToString() + "/" +
 											vch.DMXAddress.ToString();
 						mup.OutputViz = outInfo;
-						mup.ColorViz = lutils.Color_LORtoHTML(vch.color);
+						mup.ColorViz = LOR4Admin.Color_LORtoHTML(vch.color);
 						mup.TypeViz = 1;
 						mup.ExactViz = true;
 						vch.ExactMatch = true;
@@ -1117,7 +1117,7 @@ namespace UtilORama4
 					}
 					if (vch == null)
 					{
-						LORVizDrawObject4 vdo = visualization.FindDrawObject(datName);
+						LOR4VizDrawObject vdo = visualization.FindDrawObject(datName);
 						if (vdo != null)
 						{
 							mup.IndexViz = vdo.Index;
@@ -1125,7 +1125,7 @@ namespace UtilORama4
 							outInfo = vdo.UniverseNumber.ToString() + "/" +
 												vdo.DMXAddress.ToString();
 							mup.OutputViz = outInfo;
-							mup.ColorViz = lutils.Color_LORtoHTML(vdo.color);
+							mup.ColorViz = LOR4Admin.Color_LORtoHTML(vdo.color);
 							mup.TypeViz = 3;
 							mup.ExactViz = true;
 							vdo.ExactMatch = true;
@@ -1135,7 +1135,7 @@ namespace UtilORama4
 						} // end if it matched something
 						if (vdo == null)
 						{
-							LORVizItemGroup4 vgr = visualization.FindItemGroup(datName);
+							LOR4VizItemGroup vgr = visualization.FindItemGroup(datName);
 							if (vgr != null)
 							{
 								mup.IndexViz = vgr.Index;
@@ -1143,7 +1143,7 @@ namespace UtilORama4
 								outInfo = vgr.UniverseNumber.ToString() + "/" +
 													vgr.DMXAddress.ToString();
 								mup.OutputViz = outInfo;
-								mup.ColorViz = lutils.Color_LORtoHTML(vgr.color);
+								mup.ColorViz = LOR4Admin.Color_LORtoHTML(vgr.color);
 								mup.TypeViz = 2;
 								mup.ExactViz = true;
 								vgr.ExactMatch = true;
@@ -1171,7 +1171,7 @@ namespace UtilORama4
 						int matchType = -1;
 						for (int v = 1; v < visualization.VizChannels.Count; v++)
 						{
-							LORVizChannel4 member = visualization.VizChannels[v];
+							LOR4VizChannel member = visualization.VizChannels[v];
 							if (!member.Selected)
 							{
 								string vName = member.Name;
@@ -1195,7 +1195,7 @@ namespace UtilORama4
 
 						for (int v = 1; v < visualization.VizItemGroups.Count; v++)
 						{
-							LORVizItemGroup4 member = visualization.VizItemGroups[v];
+							LOR4VizItemGroup member = visualization.VizItemGroups[v];
 							if (!member.Selected)
 							{
 								string vName = member.Name;
@@ -1219,7 +1219,7 @@ namespace UtilORama4
 
 						for (int v = 1; v < visualization.VizDrawObjects.Count; v++)
 						{
-							LORVizDrawObject4 member = visualization.VizDrawObjects[v];
+							LOR4VizDrawObject member = visualization.VizDrawObjects[v];
 							if (!member.Selected)
 							{
 								string vName = member.Name;
@@ -1264,7 +1264,7 @@ namespace UtilORama4
 								outInfo = member.UniverseNumber.ToString() + "/" +
 													member.DMXAddress.ToString();
 								mup.OutputViz = outInfo;
-								mup.ColorViz = lutils.Color_LORtoHTML(member.color);
+								mup.ColorViz = LOR4Admin.Color_LORtoHTML(member.color);
 								mup.IndexViz = highMatch;
 								mup.TypeViz = matchType;
 								mup.ExactViz = false;
@@ -1302,7 +1302,7 @@ namespace UtilORama4
 							mup.IndexxLights = x;
 							outInfo = xModelList[x].StartChannel.ToString();
 							mup.OutputxLights = outInfo;
-							mup.ColorxLights = lutils.Color_NettoHTML(xModelList[x].Color);
+							mup.ColorxLights = LOR4Admin.Color_NettoHTML(xModelList[x].Color);
 							mup.TypexLights = 1;
 							mup.ExactxLights = true;
 							xModelList[x].ExactMatch = true;
@@ -1324,7 +1324,7 @@ namespace UtilORama4
 								mup.NamexLights = xGroupList[x].Name;
 								outInfo = xGroupList[x].StartChannel.ToString();
 								mup.OutputxLights = outInfo;
-								mup.ColorxLights = lutils.Color_NettoHTML(xGroupList[x].Color);
+								mup.ColorxLights = LOR4Admin.Color_NettoHTML(xGroupList[x].Color);
 								mup.TypexLights = 2;
 								mup.ExactxLights = true;
 								xModelList[x].ExactMatch = true;
@@ -1423,7 +1423,7 @@ namespace UtilORama4
 							mup.TypexLights = matchType;
 							outInfo = member.StartChannel;
 							mup.OutputxLights = outInfo;
-							mup.ColorxLights = lutils.Color_NettoHTML(member.Color);
+							mup.ColorxLights = LOR4Admin.Color_NettoHTML(member.Color);
 							mup.ExactxLights = false;
 							member.ExactMatch = false;
 							member.Selected = true;
@@ -1446,7 +1446,7 @@ namespace UtilORama4
 					mup.SavedIndex = chan.SavedIndex;
 					mup.OutputLOR = chan.UniverseNumber.ToString() + "/" +
 						chan.DMXAddress.ToString();
-					mup.ColorLOR = lutils.Color_LORtoHTML(chan.color);
+					mup.ColorLOR = LOR4Admin.Color_LORtoHTML(chan.color);
 					matchups.Add(mup);
 				}
 			}
@@ -1456,7 +1456,7 @@ namespace UtilORama4
 			while (true == false)
 			//for (int c = 1; c < visualization.VizChannels.Count; c++)
 			{
-				LORVizChannel4 chan = visualization.VizChannels[c];
+				LOR4VizChannel chan = visualization.VizChannels[c];
 				if (!chan.Selected)
 				{
 					Matchup mup = new Matchup();
@@ -1465,14 +1465,14 @@ namespace UtilORama4
 					mup.TypeViz = 1;
 					mup.OutputViz = chan.UniverseNumber.ToString() + "/" +
 						chan.DMXAddress.ToString();
-					mup.ColorLOR = lutils.Color_LORtoHTML(chan.color);
+					mup.ColorLOR = LOR4Admin.Color_LORtoHTML(chan.color);
 					matchups.Add(mup);
 				}
 			}
 			while (true == false)
 			//for (int c = 1; c < visualization.VizItemGroups.Count; c++)
 			{
-				LORVizItemGroup4 grp = visualization.VizItemGroups[c];
+				LOR4VizItemGroup grp = visualization.VizItemGroups[c];
 				if (!grp.Selected)
 				{
 					Matchup mup = new Matchup();
@@ -1487,7 +1487,7 @@ namespace UtilORama4
 			while (true == false)
 			//for (int c = 1; c < visualization.VizDrawObjects.Count; c++)
 			{
-				LORVizDrawObject4 vdo = visualization.VizDrawObjects[c];
+				LOR4VizDrawObject vdo = visualization.VizDrawObjects[c];
 				if (!vdo.Selected)
 				{
 					Matchup mup = new Matchup();
@@ -1512,7 +1512,7 @@ namespace UtilORama4
 					mup.IndexxLights = c;
 					mup.TypexLights = 1;
 					mup.OutputxLights = chan.StartChannel;
-					mup.ColorLOR = lutils.Color_NettoHTML(chan.Color);
+					mup.ColorLOR = LOR4Admin.Color_NettoHTML(chan.Color);
 					matchups.Add(mup);
 				}
 			}
@@ -1577,7 +1577,7 @@ namespace UtilORama4
 					if (mup.IndexDat >= 0)
 					{
 						DMXChannel chan = datChannels[mup.IndexDat];
-						lineOut.Append(lutils.XMLifyName(mup.NameDat));  // Field 0, Column A
+						lineOut.Append(LOR4Admin.XMLifyName(mup.NameDat));  // Field 0, Column A
 						lineOut.Append(",");
 						lineOut.Append(mup.OutputDat); // Field 1, Column B
 						lineOut.Append(",");
@@ -1599,7 +1599,7 @@ namespace UtilORama4
 					if (mup.IndexLOR >= 0)
 					{
 						// LOR Channel name, and does it match?
-						lineOut.Append(lutils.XMLifyName(mup.NameLOR)); // Field 3, Column D
+						lineOut.Append(LOR4Admin.XMLifyName(mup.NameLOR)); // Field 3, Column D
 						lineOut.Append(",");
 						if (mup.IndexDat < 0)
 						{
@@ -1650,7 +1650,7 @@ namespace UtilORama4
 					if (mup.IndexViz >= 0)
 					{
 						// VizChannel name, and does it match?
-						lineOut.Append(lutils.XMLifyName(mup.NameViz));
+						lineOut.Append(LOR4Admin.XMLifyName(mup.NameViz));
 						lineOut.Append(",");
 						if (mup.IndexDat < 0)
 						{
@@ -1706,7 +1706,7 @@ namespace UtilORama4
 					if (mup.IndexxLights >= 0)
 					{
 						// xLights name, and does it match?
-						lineOut.Append(lutils.XMLifyName(mup.NamexLights));
+						lineOut.Append(LOR4Admin.XMLifyName(mup.NamexLights));
 						lineOut.Append(",");
 						if (mup.IndexDat < 0)
 						{
@@ -1883,7 +1883,7 @@ namespace UtilORama4
 					{
 						lineOut.Append("None,,");
 					}
-					string clr = "#" + LOR4Utils.lutils.Color_LORtoHTML(lc.color);
+					string clr = "#" + LOR4.LOR4Admin.Color_LORtoHTML(lc.color);
 					lineOut.Append(clr);
 					writer.WriteLine(lineOut.ToString());
 					lineCount++;
@@ -2262,7 +2262,7 @@ namespace UtilORama4
 
 							int i = 1;
 							int.TryParse(row[2], out i);
-							channel.OutputNum = i;               // Field 2 = LOROutput4 Number
+							channel.OutputNum = i;               // Field 2 = LOR4Output Number
 
 							channel.Name = row[3];                // Field 3 = Name
 							chanName = channel.Name;              // For debugging exceptions
@@ -2302,7 +2302,7 @@ namespace UtilORama4
 								}
 							}
 							//Color color = System.Drawing.ColorTranslator.FromHtml(colhex);
-							Color color = LOR4Utils.lutils.HexToColor(colhex);
+							Color color = LOR4.LOR4Admin.HexToColor(colhex);
 							channel.Color = color;
 
 							allChannels.Add(channel);
@@ -2333,7 +2333,7 @@ namespace UtilORama4
 						}
 						catch (Exception ex)
 						{
-							int ln = LOR4Utils.lutils.ExceptionLineNumber(ex);
+							int ln = LOR4.LOR4Admin.ExceptionLineNumber(ex);
 							string msg = "Error on line " + ln.ToString() + "\r\n";
 							msg += ex.ToString() + " while reading Channel " + chanName;
 							if (Fyle.isWiz)
@@ -2357,7 +2357,7 @@ namespace UtilORama4
 				}
 				catch (Exception ex)
 				{
-					int ln = LOR4Utils.lutils.ExceptionLineNumber(ex);
+					int ln = LOR4.LOR4Admin.ExceptionLineNumber(ex);
 					string msg = "Error " + ex.ToString() + " on line " + ln.ToString() + " while reading Channels file " + chnFile;
 					if (Fyle.isWiz)
 					{
@@ -2403,7 +2403,7 @@ namespace UtilORama4
 						}
 						catch (Exception ex)
 						{
-							int ln = LOR4Utils.lutils.ExceptionLineNumber(ex);
+							int ln = LOR4.LOR4Admin.ExceptionLineNumber(ex);
 							string msg = "Error on line " + ln.ToString() + "\r\n";
 							msg += ex.ToString() + " while reading Channel " + devName;
 							if (Fyle.isWiz)
@@ -2417,7 +2417,7 @@ namespace UtilORama4
 				}
 				catch (Exception ex)
 				{
-					int ln = LOR4Utils.lutils.ExceptionLineNumber(ex);
+					int ln = LOR4.LOR4Admin.ExceptionLineNumber(ex);
 					string msg = "Error " + ex.ToString() + " on line " + ln.ToString() + " while reading Channels file " + chnFile;
 					if (Fyle.isWiz)
 					{
@@ -2501,7 +2501,7 @@ namespace UtilORama4
 
 			string p = Path.GetDirectoryName(fileVisualization);
 			if (Directory.Exists(p)) initDir = p;
-			if (initDir.Length < 2) initDir = LOR4Utils.lutils.DefaultVisualizationsPath;
+			if (initDir.Length < 2) initDir = LOR4.LOR4Admin.DefaultVisualizationsPath;
 			// Have we got something (anything!) yet?
 			if (!Directory.Exists(initDir))
 			{
@@ -2510,7 +2510,7 @@ namespace UtilORama4
 			}
 
 			string initFile = "";
-			string filt = lutils.FILE_LEE;
+			string filt = LOR4Admin.FILE_LEE;
 
 			dlgFileOpen.Filter = filt;
 			dlgFileOpen.FilterIndex = 0;
@@ -2537,7 +2537,7 @@ namespace UtilORama4
 			ImBusy(true);
 
 
-			visualization = new LORVisualization4(null, fileVizName);
+			visualization = new LOR4Visualization(null, fileVizName);
 			if (visualization.VizChannels.Count > 0)
 			{
 				fileVisualization = fileVizName;

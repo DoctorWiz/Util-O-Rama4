@@ -8,9 +8,9 @@ using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
 using Microsoft.Win32;
-using LOR4Utils;
+using LOR4;
 using FileHelper;
-using FuzzyString;
+using FuzzORama;
 using Syncfusion.Windows.Forms.Tools;
 
 namespace UtilORama4
@@ -119,8 +119,8 @@ namespace UtilORama4
 		private TreeNodeAdv selectedDestNode = null;
 		private iLOR4Member selectedSourceMember = null;
 		private iLOR4Member selectedDestMember = null;
-		//private int sourceSI = lutils.UNDEFINED;
-		//private int destSI = lutils.UNDEFINED;
+		//private int sourceSI = LOR4Admin.UNDEFINED;
+		//private int destSI = LOR4Admin.UNDEFINED;
 		// int activeList = 0;
 		public string statMsg = "Hello World!";
 		//private Assembly assy = this.GetType().Assembly;
@@ -154,15 +154,15 @@ namespace UtilORama4
 	{
 		public MemberType chType = LOR4MemberType.None;
 		public int chIndex = 0;
-		public int SavedIndex = lutils.UNDEFINED;
+		public int SavedIndex = LOR4Admin.UNDEFINED;
 		public int mapCount = 0;
 		//public int[] mapChIndexes;
 		//public int[] mapSavedIndexes;
-		public int nodeIndex = lutils.UNDEFINED;
+		public int nodeIndex = LOR4Admin.UNDEFINED;
 	}
 	*/
 
-		private int nodeIndex = lutils.UNDEFINED;
+		private int nodeIndex = LOR4Admin.UNDEFINED;
 		// Note Destination->Source mappings are a 1:Many relationship.
 		// A Destination channel can map to only one Source channel
 		// But a Source channel may map to more than one Destination channel
@@ -192,7 +192,7 @@ namespace UtilORama4
 		#region File Operations
 		private void BrowseSourceFile()
 		{
-			string initDir = lutils.DefaultSequencesPath;
+			string initDir = LOR4Admin.DefaultSequencesPath;
 			string initFile = "";
 			if (sourceFile.Length > 4)
 			{
@@ -208,8 +208,8 @@ namespace UtilORama4
 			}
 
 
-			dlgFileOpen.Filter = lutils.FILT_OPEN_ANY;
-			dlgFileOpen.DefaultExt = lutils.EXT_LMS;
+			dlgFileOpen.Filter = LOR4Admin.FILT_OPEN_ANY;
+			dlgFileOpen.DefaultExt = LOR4Admin.EXT_LMS;
 			dlgFileOpen.InitialDirectory = initDir;
 			dlgFileOpen.FileName = initFile;
 			dlgFileOpen.CheckFileExists = true;
@@ -238,10 +238,10 @@ namespace UtilORama4
 			int err = seqSource.ReadSequenceFile(sourceChannelFile);
 			if (err < 100)
 			{
-				// Search for any sort of Beats, Song Parts, Tune-O-Rama, or Vamperizer LORTrack4
+				// Search for any sort of Beats, Song Parts, Tune-O-Rama, or Vamperizer LOR4Track
 				// Default = not found
 				beatTracks = 0;
-				// LORLoop4 thru tracks checking names
+				// LOR4Loop thru tracks checking names
 				for (int t = 1; t < seqSource.Tracks.Count; t++)
 				{
 					string tn = seqSource.Tracks[t].Name.ToLower();
@@ -311,7 +311,7 @@ namespace UtilORama4
 		private void BrowseDestFile()
 		{
 
-			string initDir = lutils.DefaultSequencesPath;
+			string initDir = LOR4Admin.DefaultSequencesPath;
 			string initFile = "";
 			if (destFile.Length > 4)
 			{
@@ -327,8 +327,8 @@ namespace UtilORama4
 			}
 
 
-			dlgFileOpen.Filter = lutils.FILT_OPEN_CFG;
-			dlgFileOpen.DefaultExt = lutils.EXT_LCC;
+			dlgFileOpen.Filter = LOR4Admin.FILT_OPEN_CFG;
+			dlgFileOpen.DefaultExt = LOR4Admin.EXT_LCC;
 			dlgFileOpen.InitialDirectory = initDir;
 			dlgFileOpen.FileName = initFile;
 			dlgFileOpen.CheckFileExists = true;
@@ -404,7 +404,7 @@ namespace UtilORama4
 				//for (int i = 0; i < mapDestToSource.Length; i++)
 				//{
 				//mapDestToSource[i] = null;
-				//mappedSIs[i] = lutils.UNDEFINED;
+				//mappedSIs[i] = LOR4Admin.UNDEFINED;
 				//}
 				string txt = "AutoLaunch " + txtDestFile.Text;
 				chkAutoLaunch.Text = txt;
@@ -442,10 +442,10 @@ namespace UtilORama4
 
 			//seqNew.ClearAllEffects();
 
-			//seqNew.TimingGrids = new List<LORTimings4>();
-			foreach (LORTimings4 sourceGrid in seqSource.TimingGrids)
+			//seqNew.TimingGrids = new List<LOR4Timings>();
+			foreach (LOR4Timings sourceGrid in seqSource.TimingGrids)
 			{
-				LORTimings4 newGrid = null;
+				LOR4Timings newGrid = null;
 				for (int gridIndex = 0; gridIndex < seqNew.TimingGrids.Count; gridIndex++)
 				{
 					if (sourceGrid.Name.ToLower() == seqNew.TimingGrids[gridIndex].Name.ToLower())
@@ -508,10 +508,10 @@ namespace UtilORama4
 		}
 		private void SaveMap()
 		{
-			dlgFileSave.DefaultExt = lutils.EXT_CHMAP;
-			dlgFileSave.Filter = lutils.FILE_CHMAP;
+			dlgFileSave.DefaultExt = LOR4Admin.EXT_CHMAP;
+			dlgFileSave.Filter = LOR4Admin.FILE_CHMAP;
 			dlgFileSave.FilterIndex = 0;
-			string initDir = lutils.DefaultChannelConfigsPath;
+			string initDir = LOR4Admin.DefaultChannelConfigsPath;
 			string initFile = "";
 			if (mapFile.Length > 4)
 			{
@@ -562,10 +562,10 @@ namespace UtilORama4
 		} // end btnSaveMap Click event
 		private void BrowseForMap()
 		{
-			dlgFileOpen.DefaultExt = lutils.EXT_CHMAP;
-			dlgFileOpen.Filter = lutils.FILE_CHMAP;
+			dlgFileOpen.DefaultExt = LOR4Admin.EXT_CHMAP;
+			dlgFileOpen.Filter = LOR4Admin.FILE_CHMAP;
 			dlgFileOpen.FilterIndex = 0;
-			string initDir = lutils.DefaultChannelConfigsPath;
+			string initDir = LOR4Admin.DefaultChannelConfigsPath;
 			string initFile = "";
 			if (mapFile.Length > 4)
 			{
@@ -612,7 +612,7 @@ namespace UtilORama4
 			int lineCount = 0;
 			StreamWriter writer = new StreamWriter(fileName);
 			StringBuilder lineOut = new StringBuilder(); ; // line to be written out, gets modified if necessary
-																										 //int pos1 = lutils.UNDEFINED; // positions of certain key text in the line
+																										 //int pos1 = LOR4Admin.UNDEFINED; // positions of certain key text in the line
 
 			lineOut.Append("Util-O-Rama Channel Map  created ");
 			lineOut.Append(nowtime);
@@ -719,7 +719,7 @@ namespace UtilORama4
 			lineOut.Clear();
 			for (int i = 1; i < seqDest.Tracks.Count; i++)
 			{
-				LORTrack4 destMember = seqDest.Tracks[i];
+				LOR4Track destMember = seqDest.Tracks[i];
 				if (destMember.MapTo != null)
 				{
 					lineOut.Append(LOR4SeqEnums.MemberName(destMember.MemberType));
@@ -768,8 +768,8 @@ namespace UtilORama4
 			string temp = "";
 			//int tempNum;
 			int[] foundChannels;
-			int sourceSI = lutils.UNDEFINED;
-			int destSI = lutils.UNDEFINED;
+			int sourceSI = LOR4Admin.UNDEFINED;
+			int destSI = LOR4Admin.UNDEFINED;
 			//LOR4MemberType sourceType = LOR4MemberType.None;
 			LOR4MemberType destType = LOR4MemberType.None;
 			iLOR4Member destMember = null;
@@ -980,11 +980,11 @@ namespace UtilORama4
 					{
 						theType = mapData[0].ToLower();
 						destType = LOR4MemberType.None; // Reset default
-						destName = lutils.HumanizeName(mapData[1]).ToLower();
-						destSI = lutils.UNDEFINED; // Reset default
+						destName = LOR4Admin.HumanizeName(mapData[1]).ToLower();
+						destSI = LOR4Admin.UNDEFINED; // Reset default
 						int.TryParse(mapData[2], out destSI);
-						sourceName = lutils.HumanizeName(mapData[3]).ToLower(); ;
-						sourceSI = lutils.UNDEFINED;
+						sourceName = LOR4Admin.HumanizeName(mapData[3]).ToLower(); ;
+						sourceSI = LOR4Admin.UNDEFINED;
 						int.TryParse(mapData[4], out sourceSI);
 						switch (theType)
 						{
@@ -1204,8 +1204,8 @@ namespace UtilORama4
 					{
 						lineNum++;
 						// Line just read should be "    <channels>"
-						//li = lineIn.IndexOf(lutils.STTBL + TABLEchannels + lutils.ENDTBL);
-						li = lutils.FastIndexOf(lineIn, lutils.STTBL + TABLEchannels + lutils.ENDTBL);
+						//li = lineIn.IndexOf(LOR4Admin.STTBL + TABLEchannels + LOR4Admin.ENDTBL);
+						li = LOR4Admin.FastIndexOf(lineIn, LOR4Admin.STTBL + TABLEchannels + LOR4Admin.ENDTBL);
 						if (li > 0)
 						{
 							if (!reader.EndOfStream)
@@ -1214,14 +1214,14 @@ namespace UtilORama4
 								lineIn = reader.ReadLine();
 								lineNum++;
 								//li = lineIn.IndexOf(FIELDdestChannel);
-								li = lutils.FastIndexOf(lineIn, FIELDdestChannel);
+								li = LOR4Admin.FastIndexOf(lineIn, FIELDdestChannel);
 								if (li > 0)
 								{
-									destName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
+									destName = LOR4Admin.HumanizeName(LOR4Admin.getKeyWord(lineIn, LOR4Admin.FIELDname));
 									//lblMessage.Text = "Map \"" + destName + "\" to...";
 									//pnlMessage.Refresh();
-									destSI = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
-									destType = LOR4SeqEnums.EnumMemberType(lutils.getKeyWord(lineIn, lutils.FIELDtype));
+									destSI = LOR4Admin.getKeyValue(lineIn, LOR4Admin.FIELDsavedIndex);
+									destType = LOR4SeqEnums.EnumMemberType(LOR4Admin.getKeyWord(lineIn, LOR4Admin.FIELDtype));
 									// Next line (let's assume its there) is the Source LOR4Channel
 									if (!reader.EndOfStream)
 									{
@@ -1229,10 +1229,10 @@ namespace UtilORama4
 										lineIn = reader.ReadLine();
 										lineNum++;
 										//li = lineIn.IndexOf(FIELDsourceChannel);
-										li = lutils.FastIndexOf(lineIn, FIELDsourceChannel);
+										li = LOR4Admin.FastIndexOf(lineIn, FIELDsourceChannel);
 										if (li > 0)
 										{
-											sourceName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
+											sourceName = LOR4Admin.HumanizeName(LOR4Admin.getKeyWord(lineIn, LOR4Admin.FIELDname));
 											if (sourceOnRight)
 											{
 												lblMessage.Text = destName + " to " + sourceName;
@@ -1243,7 +1243,7 @@ namespace UtilORama4
 											}
 											prgBarInner.CustomText = lblMessage.Text;
 											pnlMessage.Refresh();
-											sourceSI = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
+											sourceSI = LOR4Admin.getKeyValue(lineIn, LOR4Admin.FIELDsavedIndex);
 
 											if (!seqDest.AllMembers.BySavedIndex[destSI].Selected)
 											{
@@ -1263,7 +1263,7 @@ namespace UtilORama4
 													}
 
 													// Got it yet?
-													if (destSI > lutils.UNDEFINED)
+													if (destSI > LOR4Admin.UNDEFINED)
 													{
 														if (sourceSI < seqSource.AllMembers.BySavedIndex.Count)
 														{
@@ -1284,7 +1284,7 @@ namespace UtilORama4
 																} // if not Selected
 
 																// Got it yet?
-																if (sourceSI > lutils.UNDEFINED)
+																if (sourceSI > LOR4Admin.UNDEFINED)
 																{
 																	sourceMember = seqSource.AllMembers.BySavedIndex[sourceSI];
 																	//iLOR4Member destMember = seqDest.AllMembers.BySavedIndex[destSI];
@@ -1355,17 +1355,17 @@ namespace UtilORama4
 			ImBusy(true);
 			string xt = Path.GetExtension(sourceFile).ToLower();
 			dlgFileSave.DefaultExt = xt;
-			if (xt == lutils.EXT_LAS)
+			if (xt == LOR4Admin.EXT_LAS)
 			{
-				dlgFileSave.Filter = lutils.FILE_LAS;
+				dlgFileSave.Filter = LOR4Admin.FILE_LAS;
 			}
-			if (xt == lutils.EXT_LMS)
+			if (xt == LOR4Admin.EXT_LMS)
 			{
-				dlgFileSave.Filter = lutils.FILE_LMS;
+				dlgFileSave.Filter = LOR4Admin.FILE_LMS;
 			}
-			//dlgFileSave.Filter = lutils.FILT_SAVE_EITHER;
+			//dlgFileSave.Filter = LOR4Admin.FILT_SAVE_EITHER;
 			dlgFileSave.FilterIndex = 0;
-			//if (xt.CompareTo(lutils.EXT_LAS) == 0) dlgFileSave.FilterIndex = 1;
+			//if (xt.CompareTo(LOR4Admin.EXT_LAS) == 0) dlgFileSave.FilterIndex = 1;
 			string initDir = SeqFolder;
 			string initFile = "";
 			if (sourceFile.Length > 4)
@@ -1547,8 +1547,8 @@ namespace UtilORama4
 			bulkOp = true;
 
 			string sourceName = "";
-			int sourceSI = lutils.UNDEFINED;
-			int destSI = lutils.UNDEFINED;
+			int sourceSI = LOR4Admin.UNDEFINED;
+			int destSI = LOR4Admin.UNDEFINED;
 			int[] matchSIs = null;
 			iLOR4Member srcID = null;
 			const string STATUSautoMap = "AutoMap \"";
@@ -1585,7 +1585,7 @@ namespace UtilORama4
 			// TRACKS
 			//for (int tridx = 1; tridx < seqDest.Tracks.Count; tridx++)
 			//{
-			//	LORTrack4 destTrack = seqDest.Tracks[tridx];
+			//	LOR4Track destTrack = seqDest.Tracks[tridx];
 			//	lblMessage.Text = STATUSautoMap + destTrack.Name + STATUSto;
 			//	pnlMessage.Refresh();
 			//	pp++;
@@ -1599,7 +1599,7 @@ namespace UtilORama4
 
 			//for (int tridx = 1; tridx < seqDest.Tracks.Count; tridx++)
 			//{
-			//LORTrack4 destTrack = seqDest.Tracks[tridx];
+			//LOR4Track destTrack = seqDest.Tracks[tridx];
 			//lblMessage.Text = STATUSautoMap + destTrack.Name + STATUSto;
 			//pnlMessage.Refresh();
 			//pp++;
@@ -1613,7 +1613,7 @@ namespace UtilORama4
 
 			//for (int tridx = 1; tridx < seqDest.Tracks.Count; tridx++)
 			//{
-			//LORTrack4 destTrack = seqDest.Tracks[tridx];
+			//LOR4Track destTrack = seqDest.Tracks[tridx];
 			//int mc = AutoMapMembersByFuzzy(destTrack.Members);
 			int mcc = AutoMapMembersByFuzzy(seqDest.AllMembers);
 			//matchCount += mcc;
@@ -1625,7 +1625,7 @@ namespace UtilORama4
 			//UpdateMappedCount(0);
 			bulkOp = false;
 			ImBusy(false);
-		}  // end LORTrack4 loop
+		}  // end LOR4Track loop
 
 		private int AutoMapMembersBySavedIndex(LOR4Membership destMembers)
 		{
@@ -1779,33 +1779,44 @@ namespace UtilORama4
 					int count = 0;
 					long[] totTimes = null;
 					int[] totCount = null;
-					Array.Resize(ref totTimes, FuzzyFunctions.ALGORITHM_COUNT + 1);
-					Array.Resize(ref totCount, FuzzyFunctions.ALGORITHM_COUNT + 1);
-					double score;
-					long finalAlgorithms = Properties.Settings.Default.FuzzyFinalAlgorithms;
-					long prematchAlgorithm = Properties.Settings.Default.FuzzyPrematchAlgorithm;
-					bool caseSensitive = Properties.Settings.Default.FuzzyCaseSensitive;
-					double minPrematchScore = Properties.Settings.Default.FuzzyMinPrematch;
-					double minFinalMatchScore = Properties.Settings.Default.FuzzyMinFinal;
+					//Array.Resize(ref totTimes, FuzzyFunctions.ALGORITHM_COUNT + 1);
+					//Array.Resize(ref totCount, FuzzyFunctions.ALGORITHM_COUNT + 1);
+					double score = 0;
+					double highestScore = 0;
+					double bestMatch = -1;
+					//long finalAlgorithms = Properties.Settings.Default.FuzzyFinalAlgorithms;
+					//long prematchAlgorithm = Properties.Settings.Default.FuzzyPrematchAlgorithm;
+					//bool caseSensitive = Properties.Settings.Default.FuzzyCaseSensitive;
+					//double minPrematchScore = Properties.Settings.Default.FuzzyMinPrematch;
+					//double minFinalMatchScore = Properties.Settings.Default.FuzzyMinFinal;
 
 					// Now perform all other requested algorithms
 					if (writeLog)
 					{
-						lineOut = "Fuzzy Prematches with a minimum of " + minPrematchScore.ToString() + ":";
-						writer.WriteLine(lineOut);
+						//lineOut = "Fuzzy Prematches with a minimum of " + minPrematchScore.ToString() + ":";
+						//writer.WriteLine(lineOut);
 					}
 
 					if (theType == LOR4MemberType.Channel)
 					{
-						foreach (iLOR4Member member in sequence.Channels)
+						//foreach (iLOR4Member member in sequence.Channels)
+						for (int m = 0; m < sequence.Channels.Count; m++)
 						{
+							iLOR4Member member = sequence.Channels[m];
+							highestScore = 0;
+							bestMatch = -1;
 							// get a quick prematch score
-							score = theName.RankEquality(member.Name, prematchAlgorithm);
+							score = theName.FuzzyScoreFast(member.Name);
 							// fi the score is above the minimum PreMatch
-							if (score * 100 > minPrematchScore)
+							if (score > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
 							{
-								// Increment count and save the SavedIndex
-								// NOte: No need to save the PreMatch score
+								score = theName.FuzzyScoreAccurate(member.Name);
+								if (score > highestScore)
+								{
+									highestScore = score;
+									bestMatch = m;
+								}
+
 								count++;
 								Array.Resize(ref SIs, count);
 								SIs[count - 1] = member.SavedIndex;
@@ -1856,7 +1867,7 @@ namespace UtilORama4
 					{
 						// Resize scores array to final size
 						Array.Resize(ref scores, count);
-						// LORLoop4 thru qualifying prematches
+						// LOR4Loop thru qualifying prematches
 						for (int i = 0; i < count; i++)
 						{
 							// Get the ID, perform a more thorough final fuzzy match, and save the score
@@ -1879,8 +1890,8 @@ namespace UtilORama4
 							lineOut = "<";
 							if ((finalAlgorithms & FuzzyFunctions.USE_CASEINSENSITIVE) > 0)
 							{
-								source = source.Capitalize();
-								target = target.Capitalize();
+								source = source.ToUpper();
+								target = target.ToUpper();
 								lineOut += "Not ";
 							}
 							if (writeLog)
@@ -2040,7 +2051,7 @@ namespace UtilORama4
 			if (count > 0)
 			{
 				Array.Resize(ref scores, count);
-				// LORLoop4 thru qualifying prematches
+				// LOR4Loop thru qualifying prematches
 				for (int i = 0; i < count; i++)
 				{
 					// Get the ID, perform a more thorough final fuzzy match, and save the score
@@ -2173,7 +2184,7 @@ namespace UtilORama4
 			// Are we already mapped to the last destination member?
 			bool wasMapped = false;
 			bool isMapped = false;
-			int destID = lutils.UNDEFINED;
+			int destID = LOR4Admin.UNDEFINED;
 			if (currentDestMember != null) destID = currentDestMember.ID;
 
 			// Was a source previously selected
@@ -2211,12 +2222,12 @@ namespace UtilORama4
 			{
 				case LOR4MemberType.Channel:
 					LOR4Channel chan = (LOR4Channel)newSourceMember;
-					lutils.RenderEffects(chan, ref picPreviewSource, chkRamps.Checked);
+					LOR4Admin.RenderEffects(chan, ref picPreviewSource, chkRamps.Checked);
 					picPreviewSource.Visible = true;
 					break;
 				case LOR4MemberType.RGBChannel:
 					LOR4RGBChannel rgbc = (LOR4RGBChannel)newSourceMember;
-					lutils.RenderEffects(rgbc, ref picPreviewSource, chkRamps.Checked);
+					LOR4Admin.RenderEffects(rgbc, ref picPreviewSource, chkRamps.Checked);
 					picPreviewSource.Visible = true;
 					break;
 				case LOR4MemberType.ChannelGroup:
@@ -2263,7 +2274,7 @@ namespace UtilORama4
 
 			bool wasMapped = false;
 			bool isMapped = false;
-			int sourceID = lutils.UNDEFINED;
+			int sourceID = LOR4Admin.UNDEFINED;
 			if (currentSourceMember != null) sourceID = currentSourceMember.ID;
 
 			// Was a destination previously selected
@@ -2317,13 +2328,13 @@ namespace UtilORama4
 			{
 				case LOR4MemberType.Channel:
 					LOR4Channel chan = (LOR4Channel)newDestMember;
-					lutils.RenderEffects(chan, ref picPreviewDest, chkRamps.Checked);
+					LOR4Admin.RenderEffects(chan, ref picPreviewDest, chkRamps.Checked);
 					pnlOverwrite.Visible = true;
 					picPreviewDest.Visible = true;
 					break;
 				case LOR4MemberType.RGBChannel:
 					LOR4RGBChannel rgbc = (LOR4RGBChannel)newDestMember;
-					lutils.RenderEffects(rgbc, ref picPreviewDest, chkRamps.Checked);
+					LOR4Admin.RenderEffects(rgbc, ref picPreviewDest, chkRamps.Checked);
 					pnlOverwrite.Visible = true;
 					picPreviewDest.Visible = true;
 					break;
@@ -2352,8 +2363,8 @@ namespace UtilORama4
 
 		private void UpdateMapLabels()
 		{
-			//int sourceID = lutils.UNDEFINED;
-			//int destID = lutils.UNDEFINED;
+			//int sourceID = LOR4Admin.UNDEFINED;
+			//int destID = LOR4Admin.UNDEFINED;
 			string lbltxt = "";
 			//if (currentDestMember != null) destID = currentDestMember.ID;
 			if (currentSourceMember != null)
@@ -2546,7 +2557,7 @@ namespace UtilORama4
 					break;
 				case LOR4MemberType.Track:
 					codes = "t";
-					LORTrack4 track = (LORTrack4)member;
+					LOR4Track track = (LOR4Track)member;
 					membership = track.Members;
 					break;
 				case LOR4MemberType.Cosmic:
@@ -2695,8 +2706,8 @@ namespace UtilORama4
 							// Sanity Check, are they compatible
 							if (IsCompatible(sourceMember, destMember))
 							{
-								LORTrack4 sourceTrack = (LORTrack4)sourceMember;
-								LORTrack4 destTrack = (LORTrack4)destMember;
+								LOR4Track sourceTrack = (LOR4Track)sourceMember;
+								LOR4Track destTrack = (LOR4Track)destMember;
 								sourceMembers = sourceTrack.Members;
 								destMembers = destTrack.Members;
 							}
@@ -2840,8 +2851,8 @@ namespace UtilORama4
 									if (andChildren)
 									{
 										// Need to cast them to get memberships
-										LORTrack4 sourceTrack = (LORTrack4)sourceMember;
-										LORTrack4 destTrack = (LORTrack4)destMember;
+										LOR4Track sourceTrack = (LOR4Track)sourceMember;
+										LOR4Track destTrack = (LOR4Track)destMember;
 										sourceMembers = sourceTrack.Members;
 										destMembers = destTrack.Members;
 									}
@@ -2989,7 +3000,7 @@ namespace UtilORama4
 					members = group.Members;
 					break;
 				case LOR4MemberType.Track:
-					LORTrack4 track = (LORTrack4)member;
+					LOR4Track track = (LOR4Track)member;
 					members = track.Members;
 					break;
 				case LOR4MemberType.Cosmic:
@@ -3010,10 +3021,10 @@ namespace UtilORama4
 		#endregion
 		// End Map and Un-Map Region
 
-		#region Copy Beat LORTrack4
+		#region Copy Beat LOR4Track
 		private void CopyBeats(LOR4Sequence seqNew)
 		{
-			LORTrack4 newDestTrack = null;
+			LOR4Track newDestTrack = null;
 			for (int t = 1; t < seqSource.Tracks.Count; t++)
 			{
 				string tn = seqSource.Tracks[t].Name.ToLower();
@@ -3029,9 +3040,9 @@ namespace UtilORama4
 			}
 
 		}
-		private LORTrack4 CopyTrack(LORTrack4 sourceTrack, LOR4Sequence seqNew)
+		private LOR4Track CopyTrack(LOR4Track sourceTrack, LOR4Sequence seqNew)
 		{
-			LORTrack4 newTrack = seqNew.FindTrack(sourceTrack.Name);
+			LOR4Track newTrack = seqNew.FindTrack(sourceTrack.Name);
 			if (newTrack == null)
 			{
 				newTrack = seqNew.CreateNewTrack(sourceTrack.LineOut());

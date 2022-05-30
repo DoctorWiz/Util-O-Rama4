@@ -11,7 +11,7 @@ namespace Musik
 		public string Album;
 		public string Year;
 		public uint DiscNo;      // Disc Number
-		public uint Track;       // LORTrack4 No. (May not be #, may be string in format ##/## (LORTrack4 x of count))
+		public uint Track;       // LOR4Track No. (May not be #, may be string in format ##/## (LOR4Track x of count))
 		public string Artist;      // Audio Artist
 		public string Composer;
 		public string Title;
@@ -205,7 +205,7 @@ namespace Musik
 					break;
 
 				case (int)AudioField.Title:
-					sOut = "LORTrack4 Title";
+					sOut = "LOR4Track Title";
 					break;
 
 				case (int)AudioField.Genre:

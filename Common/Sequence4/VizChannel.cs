@@ -9,19 +9,19 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using FileHelper;
 
-namespace LOR4Utils
+namespace LOR4
 {
-	public class LORVizChannel4 : LORMemberBase4, iLOR4Member, IComparable<iLOR4Member>
+	public class LOR4VizChannel : LOR4MemberBase, iLOR4Member, IComparable<iLOR4Member>
 	{
-		//private const string STARTchannel = lutils.STFLD + lutils.TABLEchannel + lutils.FIELDname;
+		//private const string STARTchannel = LOR4Admin.STFLD + LOR4Admin.TABLEchannel + LOR4Admin.FIELDname;
 
 		//public int color = 0;
-		public LOROutput4 output = null;
-		public LORRGBChild4 rgbChild = LORRGBChild4.None;
-		public LORVizDrawObject4 DrawObject = null;
-		//public List<LOREffect4> effects = new List<LOREffect4>();
-		public int SubType = lutils.UNDEFINED;
-		public int SubParam = lutils.UNDEFINED;
+		public LOR4Output output = null;
+		public LOR4RGBChild rgbChild = LOR4RGBChild.None;
+		public LOR4VizDrawObject DrawObject = null;
+		//public List<LOR4Effect> effects = new List<LOR4Effect>();
+		public int SubType = LOR4Admin.UNDEFINED;
+		public int SubParam = LOR4Admin.UNDEFINED;
 		//public MultiColors MultiColors = new MultiColors();
 		public int[] colors = new int[5];
 		//protected LOR4Membership members = null;
@@ -39,17 +39,17 @@ namespace LOR4Utils
 		// 1 = the sub-channel for a single color draw object, or
 		// 1 = the red channel for an RGB draw object
 		// 2 and 3 are the blue and green channels for an RGB draw object
-		private int myItemID = lutils.UNDEFINED;
+		private int myItemID = LOR4Admin.UNDEFINED;
 
 		//! CONSTRUCTORS
 
-		public LORVizChannel4(iLOR4Member theParent, string lineIn)
+		public LOR4VizChannel(iLOR4Member theParent, string lineIn)
 		{
 			myParent = theParent;
-			//string seek = lutils.STFLD + lutils.TABLEchannel + lutils.FIELDname + lutils.FIELDEQ;
+			//string seek = LOR4Admin.STFLD + LOR4Admin.TABLEchannel + LOR4Admin.FIELDname + LOR4Admin.FIELDEQ;
 			string seek = "<Channel ID=";
 			//int pos = lineIn.IndexOf(seek);
-			int pos = lutils.ContainsKey(lineIn, seek);
+			int pos = LOR4Admin.ContainsKey(lineIn, seek);
 			if (pos > 0)
 			{
 				Parse(lineIn);
@@ -72,9 +72,9 @@ namespace LOR4Utils
 			if (LOR4Membership.sortMode == LOR4Membership.SORTbyOutput)
 			{
 				Type t = other.GetType();
-				if (t == typeof(LORVizChannel4))
+				if (t == typeof(LOR4VizChannel))
 				{
-					LORVizChannel4 ch = (LORVizChannel4)other;
+					LOR4VizChannel ch = (LOR4VizChannel)other;
 					result = output.ToString().CompareTo(ch.output.ToString());
 				}
 				if (t == typeof(LOR4Channel))
@@ -141,7 +141,7 @@ namespace LOR4Utils
 			}
 		}
 
-		public LORVizDrawObject4 Owner
+		public LOR4VizDrawObject Owner
 		{
 			get { return DrawObject; }
 			set { DrawObject = value; }
@@ -169,11 +169,11 @@ namespace LOR4Utils
 		{
 			get
 			{
-				return lutils.Color_LORtoNet(mycolor);
+				return LOR4Admin.Color_LORtoNet(mycolor);
 			}
 			set
 			{
-				mycolor = lutils.Color_NettoLOR(value);
+				mycolor = LOR4Admin.Color_NettoLOR(value);
 			}
 
 		}
@@ -181,29 +181,29 @@ namespace LOR4Utils
 		public override void Parse(string lineIn)
 		{
 			//LOR4Sequence Parent = ID.Parent;
-			myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
-			myItemID = lutils.getKeyValue(lineIn, LORVisualization4.FIELDvizID);
-			color = lutils.getKeyValue(lineIn, LORVisualization4.FIELDvizColor);
-			//myCentiseconds = lutils.getKeyValue(lineIn, lutils.FIELDcentiseconds);
+			myName = LOR4Admin.HumanizeName(LOR4Admin.getKeyWord(lineIn, LOR4Admin.FIELDname));
+			myItemID = LOR4Admin.getKeyValue(lineIn, LOR4Visualization.FIELDvizID);
+			color = LOR4Admin.getKeyValue(lineIn, LOR4Visualization.FIELDvizColor);
+			//myCentiseconds = LOR4Admin.getKeyValue(lineIn, LOR4Admin.FIELDcentiseconds);
 			if (output == null)
-			{ output = new LOROutput4(this, lineIn); }
+			{ output = new LOR4Output(this, lineIn); }
 			else
 			{ output.Parse(lineIn); }
-			SubType = lutils.getKeyValue(lineIn, FIELDsubType);
-			SubParam = lutils.getKeyValue(lineIn, FIELDsubParam);
-			colors[0] = lutils.getKeyValue(lineIn, FIELDmultiColor + "1");
-			colors[1] = lutils.getKeyValue(lineIn, FIELDmultiColor + "2");
-			colors[2] = lutils.getKeyValue(lineIn, FIELDmultiColor + "3");
-			colors[3] = lutils.getKeyValue(lineIn, FIELDmultiColor + "4");
-			colors[4] = lutils.getKeyValue(lineIn, FIELDmultiColor + "5");
-			LED = lutils.getKeyState(lineIn, FIELDled);
+			SubType = LOR4Admin.getKeyValue(lineIn, FIELDsubType);
+			SubParam = LOR4Admin.getKeyValue(lineIn, FIELDsubParam);
+			colors[0] = LOR4Admin.getKeyValue(lineIn, FIELDmultiColor + "1");
+			colors[1] = LOR4Admin.getKeyValue(lineIn, FIELDmultiColor + "2");
+			colors[2] = LOR4Admin.getKeyValue(lineIn, FIELDmultiColor + "3");
+			colors[3] = LOR4Admin.getKeyValue(lineIn, FIELDmultiColor + "4");
+			colors[4] = LOR4Admin.getKeyValue(lineIn, FIELDmultiColor + "5");
+			LED = LOR4Admin.getKeyState(lineIn, FIELDled);
 			if (myParent != null) myParent.MakeDirty(true);
 		}
 
 		public override string LineOut()
 		{
 			// <LOR4Channel ID="1" Name="M5 Center Bushes (G) [L1.10]"
-			// LORDeviceType4 ="1" Network="0"
+			// LOR4DeviceType ="1" Network="0"
 			// Controller ="1" LOR4Channel="10"
 			// Color ="65280"
 			// Sub_Type ="0" Sub_Parm="0"
@@ -212,19 +212,19 @@ namespace LOR4Utils
 
 			StringBuilder ret = new StringBuilder();
 
-			ret.Append(lutils.StartTable(LORVisualization4.TABLEvizChannel, 2));
+			ret.Append(LOR4Admin.StartTable(LOR4Visualization.TABLEvizChannel, 2));
 
-			ret.Append(lutils.SetKey(LORVisualization4.FIELDvizID, myItemID));
-			ret.Append(lutils.SetKey(LORVisualization4.FIELDvizName, lutils.XMLifyName(myName)));
+			ret.Append(LOR4Admin.SetKey(LOR4Visualization.FIELDvizID, myItemID));
+			ret.Append(LOR4Admin.SetKey(LOR4Visualization.FIELDvizName, LOR4Admin.XMLifyName(myName)));
 			ret.Append(output.LineOut());
-			ret.Append(lutils.SetKey(LORVisualization4.FIELDvizColor, (int)color));
-			ret.Append(lutils.SetKey(FIELDsubType, SubType));
-			ret.Append(lutils.SetKey(FIELDsubParam, SubParam));
+			ret.Append(LOR4Admin.SetKey(LOR4Visualization.FIELDvizColor, (int)color));
+			ret.Append(LOR4Admin.SetKey(FIELDsubType, SubType));
+			ret.Append(LOR4Admin.SetKey(FIELDsubParam, SubParam));
 
 			ret.Append(ColorsLineOut());
 
 			ret.Append(FIELDled);
-			ret.Append(lutils.FIELDEQ);
+			ret.Append(LOR4Admin.FIELDEQ);
 			if (LED)
 			{
 				ret.Append("True");  // Would be nice if LOR used standard "true" (Lower Case) but NOOOooooooo
@@ -233,8 +233,8 @@ namespace LOR4Utils
 			{
 				ret.Append("False");
 			}
-			ret.Append(lutils.ENDQT);
-			ret.Append(lutils.ENDFLD);
+			ret.Append(LOR4Admin.ENDQT);
+			ret.Append(LOR4Admin.ENDFLD);
 
 			return ret.ToString();
 		}
@@ -245,7 +245,7 @@ namespace LOR4Utils
 
 			for (int c = 0; c < 5; c++)
 			{
-				ret.Append(lutils.SetKey(FIELDmultiColor + c.ToString(), colors[c]));
+				ret.Append(LOR4Admin.SetKey(FIELDmultiColor + c.ToString(), colors[c]));
 			}
 
 			return ret.ToString();
@@ -256,14 +256,14 @@ namespace LOR4Utils
 		public override int DMXAddress
 		{ get { return output.channel; } }
 
-		public void CloneTo(LORVizChannel4 destination)
+		public void CloneTo(LOR4VizChannel destination)
 		{
 			if (destination.color == 0) destination.color = color;
 			if (destination.Name.Length == 0) destination.ChangeName(myName);
 			if (destination.myParent == null) destination.myParent = this.myParent;
 			destination.SubType = SubType;
 			destination.SubParam = SubParam;
-			if (destination.output.deviceType == LORDeviceType4.None)
+			if (destination.output.deviceType == LOR4DeviceType.None)
 			{
 				destination.output.deviceType = output.deviceType;
 				destination.output.circuit = output.circuit;
@@ -277,14 +277,14 @@ namespace LOR4Utils
 			destination.LED = LED;
 		}
 
-		public void CloneFrom(LORVizChannel4 source)
+		public void CloneFrom(LOR4VizChannel source)
 		{
 			if (color == 0) color = source.color;
 			if (myName.Length == 0) ChangeName(source.Name);
 			if (this.myParent == null) this.myParent = source.myParent;
 			SubType = source.SubType;
 			SubParam = source.SubParam;
-			if (output.deviceType == LORDeviceType4.None)
+			if (output.deviceType == LOR4DeviceType.None)
 			{
 				output.deviceType = source.output.deviceType;
 				output.circuit = source.output.circuit;
@@ -312,7 +312,7 @@ namespace LOR4Utils
 
 		public override iLOR4Member Clone()
 		{
-			LORVizChannel4 vch = (LORVizChannel4)base.Clone();
+			LOR4VizChannel vch = (LOR4VizChannel)base.Clone();
 			vch.output = output.Clone();
 			vch.Owner = Owner;
 			vch.color = color;
@@ -328,7 +328,7 @@ namespace LOR4Utils
 
 		public override iLOR4Member Clone(string newName)
 		{
-			LORVizChannel4 vch = (LORVizChannel4)this.Clone();
+			LOR4VizChannel vch = (LOR4VizChannel)this.Clone();
 			ChangeName(newName);
 			return vch;
 		}
@@ -347,7 +347,7 @@ namespace LOR4Utils
 			return ret;
 		}
 
-	} // End LORVizChannel4
+	} // End LOR4VizChannel
 
 	/*
 	public class MultiColors
@@ -377,11 +377,11 @@ namespace LOR4Utils
 
 		public void Parse(string lineIn)
 		{
-			color1 = lutils.getKeyValue(lineIn, LORVizChannel4.FIELDmultiColor + "1");
-			color2 = lutils.getKeyValue(lineIn, LORVizChannel4.FIELDmultiColor + "2");
-			color3 = lutils.getKeyValue(lineIn, LORVizChannel4.FIELDmultiColor + "3");
-			color4 = lutils.getKeyValue(lineIn, LORVizChannel4.FIELDmultiColor + "4");
-			color5 = lutils.getKeyValue(lineIn, LORVizChannel4.FIELDmultiColor + "5");
+			color1 = LOR4Admin.getKeyValue(lineIn, LOR4VizChannel.FIELDmultiColor + "1");
+			color2 = LOR4Admin.getKeyValue(lineIn, LOR4VizChannel.FIELDmultiColor + "2");
+			color3 = LOR4Admin.getKeyValue(lineIn, LOR4VizChannel.FIELDmultiColor + "3");
+			color4 = LOR4Admin.getKeyValue(lineIn, LOR4VizChannel.FIELDmultiColor + "4");
+			color5 = LOR4Admin.getKeyValue(lineIn, LOR4VizChannel.FIELDmultiColor + "5");
 		}
 
 
@@ -389,35 +389,35 @@ namespace LOR4Utils
 		{
 			StringBuilder ret = new StringBuilder();
 
-			ret.Append(LORVizChannel4.FIELDmultiColor);
+			ret.Append(LOR4VizChannel.FIELDmultiColor);
 			ret.Append("1");
-			ret.Append(lutils.FIELDEQ);
+			ret.Append(LOR4Admin.FIELDEQ);
 			ret.Append(color1);
-			ret.Append(lutils.ENDQT);
+			ret.Append(LOR4Admin.ENDQT);
 
-			ret.Append(LORVizChannel4.FIELDmultiColor);
+			ret.Append(LOR4VizChannel.FIELDmultiColor);
 			ret.Append("2");
-			ret.Append(lutils.FIELDEQ);
+			ret.Append(LOR4Admin.FIELDEQ);
 			ret.Append(color2);
-			ret.Append(lutils.ENDQT);
+			ret.Append(LOR4Admin.ENDQT);
 
-			ret.Append(LORVizChannel4.FIELDmultiColor);
+			ret.Append(LOR4VizChannel.FIELDmultiColor);
 			ret.Append("3");
-			ret.Append(lutils.FIELDEQ);
+			ret.Append(LOR4Admin.FIELDEQ);
 			ret.Append(color3);
-			ret.Append(lutils.ENDQT);
+			ret.Append(LOR4Admin.ENDQT);
 
-			ret.Append(LORVizChannel4.FIELDmultiColor);
+			ret.Append(LOR4VizChannel.FIELDmultiColor);
 			ret.Append("4");
-			ret.Append(lutils.FIELDEQ);
+			ret.Append(LOR4Admin.FIELDEQ);
 			ret.Append(color4);
-			ret.Append(lutils.ENDQT);
+			ret.Append(LOR4Admin.ENDQT);
 
-			ret.Append(LORVizChannel4.FIELDmultiColor);
+			ret.Append(LOR4VizChannel.FIELDmultiColor);
 			ret.Append("5");
-			ret.Append(lutils.FIELDEQ);
+			ret.Append(LOR4Admin.FIELDEQ);
 			ret.Append(color5);
-			ret.Append(lutils.ENDQT);
+			ret.Append(LOR4Admin.ENDQT);
 
 			return ret.ToString();
 		}

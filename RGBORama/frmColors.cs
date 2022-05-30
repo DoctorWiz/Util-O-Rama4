@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
-using LOR4Utils;
+using LOR4;
 
 namespace UtilORama4
 {

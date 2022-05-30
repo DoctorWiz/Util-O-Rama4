@@ -9,25 +9,25 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using FileHelper;
 
-namespace LOR4Utils
+namespace LOR4
 {
 
-	public class LORVizDrawObject4 : LORMemberBase4, iLOR4Member, IComparable<iLOR4Member>
+	public class LOR4VizDrawObject : LOR4MemberBase, iLOR4Member, IComparable<iLOR4Member>
 	{
 		public bool isRGB = false;
-		public int BulbSize = lutils.UNDEFINED;
-		public int BulbSpacing = lutils.UNDEFINED;
+		public int BulbSize = LOR4Admin.UNDEFINED;
+		public int BulbSpacing = LOR4Admin.UNDEFINED;
 		//public string Comment = ""; // Now included in base class
-		public int BulbShape = lutils.UNDEFINED;  //? Enum?
+		public int BulbShape = LOR4Admin.UNDEFINED;  //? Enum?
 		public int ZOrder = 0;
-		public int AssignedItem = lutils.UNDEFINED;
+		public int AssignedItem = LOR4Admin.UNDEFINED;
 		public bool Locked = false;
-		public int FixtureType = lutils.UNDEFINED; //? Enum?
-		public int ChannelType = lutils.UNDEFINED; //? Enum?
+		public int FixtureType = LOR4Admin.UNDEFINED; //? Enum?
+		public int ChannelType = LOR4Admin.UNDEFINED; //? Enum?
 		public int MaxOpacity = 0; // Percent?
-		public LORVizChannel4 redChannel = null;
-		public LORVizChannel4 grnChannel = null;
-		public LORVizChannel4 bluChannel = null;
+		public LOR4VizChannel redChannel = null;
+		public LOR4VizChannel grnChannel = null;
+		public LOR4VizChannel bluChannel = null;
 
 		private static readonly string FIELDbulbSpacing = " BulbSpacing";
 		private static readonly string FIELDcomment = " Comment";
@@ -39,13 +39,13 @@ namespace LOR4Utils
 		private static readonly string FIELDchannelType = " Channel_Type";
 		private static readonly string FIELDmaxOpacity = " Max_Opacity";
 
-		public LORVizDrawObject4(iLOR4Member theParent, string lineIn)
+		public LOR4VizDrawObject(iLOR4Member theParent, string lineIn)
 		{
 			myParent = theParent;
 			Parse(lineIn);
 		}
 
-		public LORVizChannel4 subChannel
+		public LOR4VizChannel subChannel
 		{
 			get
 			{
@@ -70,7 +70,7 @@ namespace LOR4Utils
 		{
 			get
 			{
-				int ret = lutils.UNDEFINED;
+				int ret = LOR4Admin.UNDEFINED;
 				if (redChannel == null)
 				{
 					string m1 = "WTF does DrawObject '" + myName + "' not have a red channel?!";
@@ -97,7 +97,7 @@ namespace LOR4Utils
 		{
 			get
 			{
-				int ret = lutils.UNDEFINED;
+				int ret = LOR4Admin.UNDEFINED;
 				if (redChannel == null)
 				{
 					string m1 = "WTF does DrawObject '" + myName + "' not have a red channel?!";
@@ -122,7 +122,7 @@ namespace LOR4Utils
 
 		public override void Parse(string lineIn)
 		{
-			// <LORVizDrawObject4 ID="141"
+			// <LOR4VizDrawObject ID="141"
 			// Name ="Pixel 154 / S2.004 / U3.010-012" BulbSize="1"
 			// BulbSpacing ="1"
 			// Comment =""
@@ -134,18 +134,18 @@ namespace LOR4Utils
 			// Channel_Type ="2"
 			// Max_Opacity ="0">
 
-			myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
-			myID = lutils.getKeyValue(lineIn, LORVisualization4.FIELDvizID);
+			myName = LOR4Admin.HumanizeName(LOR4Admin.getKeyWord(lineIn, LOR4Admin.FIELDname));
+			myID = LOR4Admin.getKeyValue(lineIn, LOR4Visualization.FIELDvizID);
 			myIndex = myID;
-			BulbSpacing = lutils.getKeyValue(lineIn, FIELDbulbSpacing);
-			Comment = lutils.HumanizeName(lutils.getKeyWord(lineIn, FIELDcomment));
-			BulbShape = lutils.getKeyValue(lineIn, FIELDbulbShape);
-			ZOrder = lutils.getKeyValue(lineIn, FIELDzOrder);
-			AssignedItem = lutils.getKeyValue(lineIn, FIELDassignedItem);
-			Locked = lutils.getKeyState(lineIn, FIELDlocked);
-			FixtureType = lutils.getKeyValue(lineIn, FIELDfixtureType);
-			ChannelType = lutils.getKeyValue(lineIn, FIELDchannelType);
-			MaxOpacity = lutils.getKeyValue(lineIn, FIELDmaxOpacity);
+			BulbSpacing = LOR4Admin.getKeyValue(lineIn, FIELDbulbSpacing);
+			Comment = LOR4Admin.HumanizeName(LOR4Admin.getKeyWord(lineIn, FIELDcomment));
+			BulbShape = LOR4Admin.getKeyValue(lineIn, FIELDbulbShape);
+			ZOrder = LOR4Admin.getKeyValue(lineIn, FIELDzOrder);
+			AssignedItem = LOR4Admin.getKeyValue(lineIn, FIELDassignedItem);
+			Locked = LOR4Admin.getKeyState(lineIn, FIELDlocked);
+			FixtureType = LOR4Admin.getKeyValue(lineIn, FIELDfixtureType);
+			ChannelType = LOR4Admin.getKeyValue(lineIn, FIELDchannelType);
+			MaxOpacity = LOR4Admin.getKeyValue(lineIn, FIELDmaxOpacity);
 
 		}
 
@@ -155,18 +155,18 @@ namespace LOR4Utils
 		{
 			StringBuilder ret = new StringBuilder();
 
-			ret.Append(lutils.StartTable(LORVisualization4.TABLEdrawObject, 2));
+			ret.Append(LOR4Admin.StartTable(LOR4Visualization.TABLEdrawObject, 2));
 
-			ret.Append(lutils.SetKey(LORVisualization4.FIELDvizID, DrawObjectID));
-			ret.Append(lutils.SetKey(LORVisualization4.FIELDvizName, lutils.XMLifyName(myName)));
-			ret.Append(lutils.SetKey(FIELDbulbSpacing, BulbSpacing));
-			ret.Append(lutils.SetKey(FIELDcomment, Comment));
-			ret.Append(lutils.SetKey(FIELDbulbShape, BulbShape));
-			ret.Append(lutils.SetKey(FIELDzOrder, ZOrder));
-			ret.Append(lutils.SetKey(FIELDassignedItem, AssignedItem));
+			ret.Append(LOR4Admin.SetKey(LOR4Visualization.FIELDvizID, DrawObjectID));
+			ret.Append(LOR4Admin.SetKey(LOR4Visualization.FIELDvizName, LOR4Admin.XMLifyName(myName)));
+			ret.Append(LOR4Admin.SetKey(FIELDbulbSpacing, BulbSpacing));
+			ret.Append(LOR4Admin.SetKey(FIELDcomment, Comment));
+			ret.Append(LOR4Admin.SetKey(FIELDbulbShape, BulbShape));
+			ret.Append(LOR4Admin.SetKey(FIELDzOrder, ZOrder));
+			ret.Append(LOR4Admin.SetKey(FIELDassignedItem, AssignedItem));
 
 			ret.Append(FIELDlocked);
-			ret.Append(lutils.FIELDEQ);
+			ret.Append(LOR4Admin.FIELDEQ);
 			// Would be nice if LOR used standard "true" (Lower Case) but NOOOooooooo
 			if (Locked)
 			{
@@ -176,19 +176,19 @@ namespace LOR4Utils
 			{
 				ret.Append("False");
 			}
-			ret.Append(lutils.ENDQT);
+			ret.Append(LOR4Admin.ENDQT);
 
-			ret.Append(lutils.SetKey(FIELDfixtureType, FixtureType));
-			ret.Append(lutils.SetKey(FIELDchannelType, ChannelType));
-			ret.Append(lutils.SetKey(FIELDmaxOpacity, MaxOpacity));
-			ret.Append(lutils.ENDFLD);
+			ret.Append(LOR4Admin.SetKey(FIELDfixtureType, FixtureType));
+			ret.Append(LOR4Admin.SetKey(FIELDchannelType, ChannelType));
+			ret.Append(LOR4Admin.SetKey(FIELDmaxOpacity, MaxOpacity));
+			ret.Append(LOR4Admin.ENDFLD);
 
 			return ret.ToString();
 		}
 
 		public override iLOR4Member Clone()
 		{
-			LORVizDrawObject4 newDO = (LORVizDrawObject4)Clone();
+			LOR4VizDrawObject newDO = (LOR4VizDrawObject)Clone();
 			newDO.isRGB = isRGB;
 			newDO.BulbSize = BulbSize;
 			newDO.BulbSpacing = BulbSpacing;
@@ -209,7 +209,7 @@ namespace LOR4Utils
 
 		public override iLOR4Member Clone(string newName)
 		{
-			iLOR4Member newDO = (LORVizDrawObject4)this.Clone();
+			iLOR4Member newDO = (LOR4VizDrawObject)this.Clone();
 			newDO.ChangeName(newName);
 			return newDO;
 		}
@@ -219,7 +219,7 @@ namespace LOR4Utils
 			get
 			{
 				if (isRGB)
-				{ return lutils.LORCOLOR_RGB; }
+				{ return LOR4Admin.LORCOLOR_RGB; }
 				else
 				{
 					if (redChannel != null)
@@ -237,7 +237,7 @@ namespace LOR4Utils
 
 		public override Color Color
 		{
-			get { return lutils.Color_LORtoNet(this.color); }
+			get { return LOR4Admin.Color_LORtoNet(this.color); }
 			set { Color ignore = value; }
 		}
 
@@ -246,7 +246,7 @@ namespace LOR4Utils
 
 
 
-	} // End LORVizDrawObject4 class
+	} // End LOR4VizDrawObject class
 
 
 

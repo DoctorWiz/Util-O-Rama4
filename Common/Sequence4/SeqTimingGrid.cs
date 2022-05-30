@@ -8,26 +8,26 @@ using System.Drawing;
 using System.Diagnostics;
 using FileHelper;
 
-namespace LOR4Utils
+namespace LOR4
 {
-	public class LORTimings4 : LORMemberBase4, iLOR4Member, IComparable<iLOR4Member>
+	public class LOR4Timings : LOR4MemberBase, iLOR4Member, IComparable<iLOR4Member>
 	{
-		public LOR4Utils.LORTimingGridType4 TimingGridType = LOR4Utils.LORTimingGridType4.None;
-		public int spacing = lutils.UNDEFINED;
+		public LOR4.LOR4TimingGridType TimingGridType = LOR4.LOR4TimingGridType.None;
+		public int spacing = LOR4Admin.UNDEFINED;
 		public List<int> timings = new List<int>();
 		public const string FIELDsaveID = " saveID";
 		public const string TABLEtiming = "timing";
 		public const string FIELDspacing = " spacing";
 
 		//! CONSTRUCTORS
-		public LORTimings4(iLOR4Member theParent, string lineIn)
+		public LOR4Timings(iLOR4Member theParent, string lineIn)
 		{
 			myParent = theParent;
 			Parse(lineIn);
 
 
 #if DEBUG
-			//string msg = "LORTimings4.LORTimings4(" + lineIn + ") // Constructor";
+			//string msg = "LOR4Timings.LOR4Timings(" + lineIn + ") // Constructor";
 			//Debug.WriteLine(msg);
 #endif
 		}
@@ -48,45 +48,45 @@ namespace LOR4Utils
 		{
 			StringBuilder ret = new StringBuilder();
 
-			ret.Append(lutils.LEVEL2);
-			ret.Append(lutils.STFLD);
+			ret.Append(LOR4Admin.LEVEL2);
+			ret.Append(LOR4Admin.STFLD);
 			ret.Append(LOR4Sequence.TABLEtimingGrid);
 
-			ret.Append(lutils.SetKey(FIELDsaveID, myAltID));
+			ret.Append(LOR4Admin.SetKey(FIELDsaveID, myAltID));
 			if (myName.Length > 1)
 			{
-				ret.Append(lutils.SetKey(lutils.FIELDname, lutils.XMLifyName(myName)));
+				ret.Append(LOR4Admin.SetKey(LOR4Admin.FIELDname, LOR4Admin.XMLifyName(myName)));
 			}
-			ret.Append(lutils.SetKey(lutils.FIELDtype, LOR4SeqEnums.TimingName(this.TimingGridType)));
+			ret.Append(LOR4Admin.SetKey(LOR4Admin.FIELDtype, LOR4SeqEnums.TimingName(this.TimingGridType)));
 			if (spacing > 1)
 			{
-				ret.Append(lutils.SetKey(FIELDspacing, spacing));
+				ret.Append(LOR4Admin.SetKey(FIELDspacing, spacing));
 			}
-			if (this.TimingGridType == LOR4Utils.LORTimingGridType4.FixedGrid)
+			if (this.TimingGridType == LOR4.LOR4TimingGridType.FixedGrid)
 			{
-				ret.Append(lutils.ENDFLD);
+				ret.Append(LOR4Admin.ENDFLD);
 			}
-			else if (this.TimingGridType == LOR4Utils.LORTimingGridType4.Freeform)
+			else if (this.TimingGridType == LOR4.LOR4TimingGridType.Freeform)
 			{
-				ret.Append(lutils.FINFLD);
+				ret.Append(LOR4Admin.FINFLD);
 
 				//foreach (int tm in timings)
 				for (int tm = 0; tm < timings.Count; tm++)
 				{
-					ret.Append(lutils.CRLF);
-					ret.Append(lutils.LEVEL3);
-					ret.Append(lutils.STFLD);
+					ret.Append(LOR4Admin.CRLF);
+					ret.Append(LOR4Admin.LEVEL3);
+					ret.Append(LOR4Admin.STFLD);
 					ret.Append(TABLEtiming);
 
-					ret.Append(lutils.SetKey(lutils.FIELDcentisecond, timings[tm]));
-					ret.Append(lutils.ENDFLD);
+					ret.Append(LOR4Admin.SetKey(LOR4Admin.FIELDcentisecond, timings[tm]));
+					ret.Append(LOR4Admin.ENDFLD);
 				}
 
-				ret.Append(lutils.CRLF);
-				ret.Append(lutils.LEVEL2);
-				ret.Append(lutils.FINTBL);
+				ret.Append(LOR4Admin.CRLF);
+				ret.Append(LOR4Admin.LEVEL2);
+				ret.Append(LOR4Admin.FINTBL);
 				ret.Append(LOR4Sequence.TABLEtimingGrid);
-				ret.Append(lutils.FINFLD);
+				ret.Append(LOR4Admin.FINFLD);
 			}
 
 			return ret.ToString();
@@ -94,16 +94,16 @@ namespace LOR4Utils
 
 		public override void Parse(string lineIn)
 		{
-			string seek = lutils.STFLD + LOR4Sequence.TABLEtimingGrid + FIELDsaveID;
+			string seek = LOR4Admin.STFLD + LOR4Sequence.TABLEtimingGrid + FIELDsaveID;
 			//int pos = lineIn.IndexOf(seek);
-			int pos = lutils.ContainsKey(lineIn, seek);
+			int pos = LOR4Admin.ContainsKey(lineIn, seek);
 			if (pos > 0)
 			{
-				myName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
-				myID = lutils.getKeyValue(lineIn, FIELDsaveID);
-				Centiseconds = lutils.getKeyValue(lineIn, lutils.FIELDcentiseconds);
-				this.TimingGridType = LOR4SeqEnums.EnumGridType(lutils.getKeyWord(lineIn, lutils.FIELDtype));
-				spacing = lutils.getKeyValue(lineIn, FIELDspacing);
+				myName = LOR4Admin.HumanizeName(LOR4Admin.getKeyWord(lineIn, LOR4Admin.FIELDname));
+				myID = LOR4Admin.getKeyValue(lineIn, FIELDsaveID);
+				Centiseconds = LOR4Admin.getKeyValue(lineIn, LOR4Admin.FIELDcentiseconds);
+				this.TimingGridType = LOR4SeqEnums.EnumGridType(LOR4Admin.getKeyWord(lineIn, LOR4Admin.FIELDtype));
+				spacing = LOR4Admin.getKeyValue(lineIn, FIELDspacing);
 			}
 			else
 			{
@@ -115,10 +115,10 @@ namespace LOR4Utils
 
 		public override iLOR4Member Clone()
 		{
-			LORTimings4 grid = (LORTimings4)Clone();
+			LOR4Timings grid = (LOR4Timings)Clone();
 			grid.TimingGridType = this.TimingGridType;
 			grid.spacing = spacing;
-			if (this.TimingGridType == LOR4Utils.LORTimingGridType4.Freeform)
+			if (this.TimingGridType == LOR4.LOR4TimingGridType.Freeform)
 			{
 				foreach (int time in timings)
 				{
@@ -130,7 +130,7 @@ namespace LOR4Utils
 
 		public override iLOR4Member Clone(string newName)
 		{
-			LORTimings4 grid = (LORTimings4)this.Clone();
+			LOR4Timings grid = (LOR4Timings)this.Clone();
 			ChangeName(newName);
 			return grid;
 		}
@@ -241,14 +241,14 @@ namespace LOR4Utils
 		{
 			get
 			{
-				return lutils.UNDEFINED;
+				return LOR4Admin.UNDEFINED;
 			}
 		}
 		public override int DMXAddress
 		{
 			get
 			{
-				return lutils.UNDEFINED;
+				return LOR4Admin.UNDEFINED;
 			}
 		}
 

@@ -10,7 +10,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Syncfusion.Windows.Forms.Tools;
-using LOR4Utils;
+using LOR4;
 using FileHelper;
 
 namespace UtilORama4
@@ -396,7 +396,7 @@ namespace UtilORama4
 		#region File Operations
 		private void BrowseForSourceSequence()
 		{
-			string initDir = lutils.DefaultSequencesPath;
+			string initDir = LOR4Admin.DefaultSequencesPath;
 			string initFile = "";
 			if (filenameSource.Length > 4)
 			{
@@ -412,8 +412,8 @@ namespace UtilORama4
 			}
 
 
-			dlgFileOpen.Filter = lutils.FILT_OPEN_ANY;
-			dlgFileOpen.DefaultExt = lutils.EXT_LMS;
+			dlgFileOpen.Filter = LOR4Admin.FILT_OPEN_ANY;
+			dlgFileOpen.DefaultExt = LOR4Admin.EXT_LMS;
 			dlgFileOpen.InitialDirectory = initDir;
 			dlgFileOpen.FileName = initFile;
 			dlgFileOpen.CheckFileExists = true;
@@ -474,10 +474,10 @@ namespace UtilORama4
 
 			seqNew.ClearAllEffects();
 
-			//seqNew.TimingGrids = new List<LORTimings4>();
-			foreach (LORTimings4 sourceGrid in seqSource.TimingGrids)
+			//seqNew.TimingGrids = new List<LOR4Timings>();
+			foreach (LOR4Timings sourceGrid in seqSource.TimingGrids)
 			{
-				LORTimings4 newGrid = null;
+				LOR4Timings newGrid = null;
 				for (int gridIndex = 0; gridIndex < seqNew.TimingGrids.Count; gridIndex++)
 				{
 					if (sourceGrid.Name.ToLower() == seqNew.TimingGrids[gridIndex].Name.ToLower())
@@ -567,7 +567,7 @@ namespace UtilORama4
 						else // newer obj is NOT an LOR4RGBChannel
 						{
 							// Channel Group = do nothing (?)
-							// LORTrack4 = do nothing (?)
+							// LOR4Track = do nothing (?)
 							// Timing Grid = do nothing (?)
 						} // end if newer obj is an LOR4RGBChannel (or not)
 					} // end if newer obj is channel (or not)
@@ -599,7 +599,7 @@ namespace UtilORama4
 			{
 				cg.Centiseconds = seqSource.Centiseconds;
 			}
-			foreach (LORTrack4 tr in seqMaster.Tracks)
+			foreach (LOR4Track tr in seqMaster.Tracks)
 			{
 				tr.Centiseconds = seqSource.Centiseconds;
 			}
@@ -643,116 +643,116 @@ namespace UtilORama4
 				// DELIME = "💡"
 
 				// File Header
-				lineOut = lutils.DELIME + " Util-O-Rama Dim-O-Rama Channel List " + lutils.DELIME;
+				lineOut = LOR4Admin.DELIME + " Util-O-Rama Dim-O-Rama Channel List " + LOR4Admin.DELIME;
 				writer.WriteLine(lineOut);
 				// Dim Section; Channels and RGB Channels to be dimmed or scaled, and by how much
-				lineOut = lutils.DELIMC + "Dim" + lutils.DELIMC + txtDim.Text;
+				lineOut = LOR4Admin.DELIMC + "Dim" + LOR4Admin.DELIMC + txtDim.Text;
 				writer.WriteLine(lineOut);
 				// Channels to be dimmed or scaled, Saved Index and Name
-				lineOut = lutils.DELIMA + "Channels" + lutils.DELIMA;
+				lineOut = LOR4Admin.DELIMA + "Channels" + LOR4Admin.DELIMA;
 				writer.WriteLine(lineOut);
 				for (int c = 0; c < seqSource.Channels.Count; c++)
 				{
 					int q = seqSource.Channels[c].ZCount & RULE_DIM;
 					if (q == RULE_DIM)
 					{
-						lineOut = seqSource.Channels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.Channels[c].Name;
+						lineOut = seqSource.Channels[c].SavedIndex.ToString() + LOR4Admin.DELIM5 + seqSource.Channels[c].Name;
 						writer.WriteLine(lineOut);
 					}
 				}
 				// RGB Channels to be dimmed or scaled, Saved Index and Name
-				lineOut = lutils.DELIMA + "RGBChannels" + lutils.DELIMA;
+				lineOut = LOR4Admin.DELIMA + "RGBChannels" + LOR4Admin.DELIMA;
 				writer.WriteLine(lineOut);
 				for (int c = 0; c < seqSource.RGBchannels.Count; c++)
 				{
 					int q = seqSource.RGBchannels[c].ZCount & RULE_DIM;
 					if (q == RULE_DIM)
 					{
-						lineOut = seqSource.RGBchannels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.RGBchannels[c].Name;
+						lineOut = seqSource.RGBchannels[c].SavedIndex.ToString() + LOR4Admin.DELIM5 + seqSource.RGBchannels[c].Name;
 						writer.WriteLine(lineOut);
 					}
 				}
 
 				// Trim Section; Channels and RGB Channels to be trimmed or truncated, and by how much
-				lineOut = lutils.DELIMC + "Trim" + lutils.DELIMC + txtTrim.Text;
+				lineOut = LOR4Admin.DELIMC + "Trim" + LOR4Admin.DELIMC + txtTrim.Text;
 				writer.WriteLine(lineOut);
 				// Channels to be trimmed or truncated, Saved Index and Name
-				lineOut = lutils.DELIMA + "Channels" + lutils.DELIMA;
+				lineOut = LOR4Admin.DELIMA + "Channels" + LOR4Admin.DELIMA;
 				writer.WriteLine(lineOut);
 				for (int c = 0; c < seqSource.Channels.Count; c++)
 				{
 					int q = seqSource.Channels[c].ZCount & RULE_TRIM;
 					if (q == RULE_TRIM)
 					{
-						lineOut = seqSource.Channels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.Channels[c].Name;
+						lineOut = seqSource.Channels[c].SavedIndex.ToString() + LOR4Admin.DELIM5 + seqSource.Channels[c].Name;
 						writer.WriteLine(lineOut);
 					}
 				}
 				// RGB Channels to be trimmed or truncated, Saved Index and Name
-				lineOut = lutils.DELIMA + "RGBChannels" + lutils.DELIMA;
+				lineOut = LOR4Admin.DELIMA + "RGBChannels" + LOR4Admin.DELIMA;
 				writer.WriteLine(lineOut);
 				for (int c = 0; c < seqSource.RGBchannels.Count; c++)
 				{
 					int q = seqSource.RGBchannels[c].ZCount & RULE_TRIM;
 					if (q == RULE_TRIM)
 					{
-						lineOut = seqSource.RGBchannels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.RGBchannels[c].Name;
+						lineOut = seqSource.RGBchannels[c].SavedIndex.ToString() + LOR4Admin.DELIM5 + seqSource.RGBchannels[c].Name;
 						writer.WriteLine(lineOut);
 					}
 				}
 
 				// On-Off Section; Channels and RGB Channels to set strictly On or Off
-				lineOut = lutils.DELIMC + "OnOff" + lutils.DELIMC;
+				lineOut = LOR4Admin.DELIMC + "OnOff" + LOR4Admin.DELIMC;
 				writer.WriteLine(lineOut);
 				// Channels to be set on or off, Saved Index and Name
-				lineOut = lutils.DELIMA + "Channels" + lutils.DELIMA;
+				lineOut = LOR4Admin.DELIMA + "Channels" + LOR4Admin.DELIMA;
 				writer.WriteLine(lineOut);
 				for (int c = 0; c < seqSource.Channels.Count; c++)
 				{
 					int q = seqSource.Channels[c].ZCount & RULE_ONOFF;
 					if (q == RULE_ONOFF)
 					{
-						lineOut = seqSource.Channels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.Channels[c].Name;
+						lineOut = seqSource.Channels[c].SavedIndex.ToString() + LOR4Admin.DELIM5 + seqSource.Channels[c].Name;
 						writer.WriteLine(lineOut);
 					}
 				}
 				// RGB Channels to be set strictly on or off
-				lineOut = lutils.DELIMA + "RGBChannels" + lutils.DELIMA;
+				lineOut = LOR4Admin.DELIMA + "RGBChannels" + LOR4Admin.DELIMA;
 				writer.WriteLine(lineOut);
 				for (int c = 0; c < seqSource.RGBchannels.Count; c++)
 				{
 					int q = seqSource.RGBchannels[c].ZCount & RULE_ONOFF;
 					if (q == RULE_ONOFF)
 					{
-						lineOut = seqSource.RGBchannels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.RGBchannels[c].Name;
+						lineOut = seqSource.RGBchannels[c].SavedIndex.ToString() + LOR4Admin.DELIM5 + seqSource.RGBchannels[c].Name;
 						writer.WriteLine(lineOut);
 					}
 				}
 
 				// Minimum Time Section; Channels and RGB Channels to be left on or off for a minimum number of seconds, and how many
-				lineOut = lutils.DELIMC + "MinTime" + lutils.DELIMC + txtTime.Text;
+				lineOut = LOR4Admin.DELIMC + "MinTime" + LOR4Admin.DELIMC + txtTime.Text;
 				writer.WriteLine(lineOut);
 				// Channels to be be on or off for a minimum time
-				lineOut = lutils.DELIMA + "Channels" + lutils.DELIMA;
+				lineOut = LOR4Admin.DELIMA + "Channels" + LOR4Admin.DELIMA;
 				writer.WriteLine(lineOut);
 				for (int c = 0; c < seqSource.Channels.Count; c++)
 				{
 					int q = seqSource.Channels[c].ZCount & RULE_MINTIME;
 					if (q == RULE_MINTIME)
 					{
-						lineOut = seqSource.Channels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.Channels[c].Name;
+						lineOut = seqSource.Channels[c].SavedIndex.ToString() + LOR4Admin.DELIM5 + seqSource.Channels[c].Name;
 						writer.WriteLine(lineOut);
 					}
 				}
 				// RGB Channels to be on or off for a minimum time
-				lineOut = lutils.DELIMA + "RGBChannels" + lutils.DELIMA;
+				lineOut = LOR4Admin.DELIMA + "RGBChannels" + LOR4Admin.DELIMA;
 				writer.WriteLine(lineOut);
 				for (int c = 0; c < seqSource.RGBchannels.Count; c++)
 				{
 					int q = seqSource.RGBchannels[c].ZCount & RULE_ONOFF;
 					if (q == RULE_ONOFF)
 					{
-						lineOut = seqSource.RGBchannels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.RGBchannels[c].Name;
+						lineOut = seqSource.RGBchannels[c].SavedIndex.ToString() + LOR4Admin.DELIM5 + seqSource.RGBchannels[c].Name;
 						writer.WriteLine(lineOut);
 					}
 				}
@@ -760,33 +760,33 @@ namespace UtilORama4
 				// And finally, just for the benefit of us humans
 				// Will be ignored when this file is read back in, written out only for reference and debugging by humans
 				// No Change Section; Channels and RGB Channels to be left alone and get no changes
-				lineOut = lutils.DELIMC + "NoChange" + lutils.DELIMC;
+				lineOut = LOR4Admin.DELIMC + "NoChange" + LOR4Admin.DELIMC;
 				writer.WriteLine(lineOut);
 				// Channels to get no changes and be left alone
-				lineOut = lutils.DELIMA + "Channels" + lutils.DELIMA;
+				lineOut = LOR4Admin.DELIMA + "Channels" + LOR4Admin.DELIMA;
 				writer.WriteLine(lineOut);
 				for (int c = 0; c < seqSource.Channels.Count; c++)
 				{
 					if (seqSource.Channels[c].ZCount == RULE_NOCHANGE)
 					{
-						lineOut = seqSource.Channels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.Channels[c].Name;
+						lineOut = seqSource.Channels[c].SavedIndex.ToString() + LOR4Admin.DELIM5 + seqSource.Channels[c].Name;
 						writer.WriteLine(lineOut);
 					}
 				}
 				// RGB Channels to be ignored, left alone, not changed
-				lineOut = lutils.DELIMA + "RGBChannels" + lutils.DELIMA;
+				lineOut = LOR4Admin.DELIMA + "RGBChannels" + LOR4Admin.DELIMA;
 				writer.WriteLine(lineOut);
 				for (int c = 0; c < seqSource.RGBchannels.Count; c++)
 				{
 					if (seqSource.RGBchannels[c].ZCount == RULE_NOCHANGE)
 					{
-						lineOut = seqSource.RGBchannels[c].SavedIndex.ToString() + lutils.DELIM5 + seqSource.RGBchannels[c].Name;
+						lineOut = seqSource.RGBchannels[c].SavedIndex.ToString() + LOR4Admin.DELIM5 + seqSource.RGBchannels[c].Name;
 						writer.WriteLine(lineOut);
 					}
 				}
 
 				// Again, just for us easily confused humans...
-				lineOut = lutils.DELIME + " (End of File) " + lutils.DELIME;
+				lineOut = LOR4Admin.DELIME + " (End of File) " + LOR4Admin.DELIME;
 				writer.WriteLine(lineOut);
 
 				writer.Close();
@@ -809,7 +809,7 @@ namespace UtilORama4
 			dlgFileOpen.DefaultExt = EXT_DIMMAP;
 			dlgFileOpen.Filter = FILE_DIMMAP;
 			dlgFileOpen.FilterIndex = 0;
-			string initDir = lutils.DefaultChannelConfigsPath;
+			string initDir = LOR4Admin.DefaultChannelConfigsPath;
 			string initFile = "";
 			if (filenameMap.Length > 4)
 			{
@@ -863,7 +863,7 @@ namespace UtilORama4
 				{
 					lineIn = reader.ReadLine();
 					// And does it start with the proper header?
-					if (lineIn.Substring(0, 1) == lutils.DELIME)
+					if (lineIn.Substring(0, 1) == LOR4Admin.DELIME)
 					{
 						int ipos = lineIn.IndexOf("Dim-O-Rama ");
 						if (ipos > 0)
@@ -872,7 +872,7 @@ namespace UtilORama4
 							int percent = 0;
 							bool rgb = false;
 							string[] parts = null;
-							int si = lutils.UNDEFINED;
+							int si = LOR4Admin.UNDEFINED;
 							string name = "";
 							LOR4Channel chan = null;
 							LOR4RGBChannel rgbchan = null;
@@ -880,17 +880,17 @@ namespace UtilORama4
 							while (!reader.EndOfStream)
 							{
 								lineIn = reader.ReadLine();
-								ipos = lineIn.IndexOf(lutils.DELIMA + "Channels" + lutils.DELIMA);
+								ipos = lineIn.IndexOf(LOR4Admin.DELIMA + "Channels" + LOR4Admin.DELIMA);
 								if (ipos == 0)
 								{ rgb = false; }
 								else
 								{
-									ipos = lineIn.IndexOf(lutils.DELIMA + "RGBChannels" + lutils.DELIMA);
+									ipos = lineIn.IndexOf(LOR4Admin.DELIMA + "RGBChannels" + LOR4Admin.DELIMA);
 									if (ipos == 0)
 									{ rgb = true; }
 									else
 									{
-										ipos = lineIn.IndexOf(lutils.DELIMC + "Dim" + lutils.DELIMC);
+										ipos = lineIn.IndexOf(LOR4Admin.DELIMC + "Dim" + LOR4Admin.DELIMC);
 										if (ipos == 0)
 										{
 											rule = RULE_DIM;
@@ -900,7 +900,7 @@ namespace UtilORama4
 										}
 										else
 										{
-											ipos = lineIn.IndexOf(lutils.DELIMC + "Trim" + lutils.DELIMC);
+											ipos = lineIn.IndexOf(LOR4Admin.DELIMC + "Trim" + LOR4Admin.DELIMC);
 											if (ipos == 0)
 											{
 												rule = RULE_TRIM;
@@ -910,14 +910,14 @@ namespace UtilORama4
 											}
 											else
 											{
-												ipos = lineIn.IndexOf(lutils.DELIMC + "OnOff" + lutils.DELIMC);
+												ipos = lineIn.IndexOf(LOR4Admin.DELIMC + "OnOff" + LOR4Admin.DELIMC);
 												if (ipos == 0)
 												{
 													rule = RULE_ONOFF;
 												}
 												else
 												{
-													ipos = lineIn.IndexOf(lutils.DELIMC + "MinTime" + lutils.DELIMC);
+													ipos = lineIn.IndexOf(LOR4Admin.DELIMC + "MinTime" + LOR4Admin.DELIMC);
 													if (ipos == 0)
 													{
 														rule = RULE_DIM;
@@ -927,7 +927,7 @@ namespace UtilORama4
 													}
 													else
 													{
-														ipos = lineIn.IndexOf(lutils.DELIMC + "NoChange" + lutils.DELIMC);
+														ipos = lineIn.IndexOf(LOR4Admin.DELIMC + "NoChange" + LOR4Admin.DELIMC);
 														if (ipos == 0)
 														{
 															rule = RULE_NOCHANGE;
@@ -942,7 +942,7 @@ namespace UtilORama4
 								{
 									if (rule > RULE_NOCHANGE)
 									{
-										parts = lineIn.Split(lutils.DELIM5);
+										parts = lineIn.Split(LOR4Admin.DELIM5);
 										si = int.Parse(parts[0]);
 										name = parts[1];
 										if (rgb)
@@ -1089,8 +1089,8 @@ namespace UtilORama4
 			string temp = "";
 			//int tempNum;
 			int[] foundChannels;
-			int sourceSI = lutils.UNDEFINED;
-			int masterSI = lutils.UNDEFINED;
+			int sourceSI = LOR4Admin.UNDEFINED;
+			int masterSI = LOR4Admin.UNDEFINED;
 			LOR4MemberType sourceType = LOR4MemberType.None;
 			LOR4MemberType masterType = LOR4MemberType.None;
 			iLOR4Member masterMember = null;
@@ -1156,14 +1156,14 @@ namespace UtilORama4
 						lineIn = reader.ReadLine();
 						// Sanity Check #3, is it a sequence?
 						//li = lineIn.IndexOf(TABLEchMap);
-						li = lutils.FastIndexOf(lineIn, TABLEchMap);
+						li = LOR4Admin.FastIndexOf(lineIn, TABLEchMap);
 						if (li != 1)
 						{
 							errorStatus = 102;
 						}
 						else
 						{
-							int sfv = lutils.getKeyValue(lineIn, LORSeqInfo4.FIELDsaveFileVersion);
+							int sfv = LOR4Admin.getKeyValue(lineIn, LOR4SeqInfo.FIELDsaveFileVersion);
 							// Sanity Checks #4A and 4B, does it have a 'SaveFileVersion' and is it '14'
 							//   (SaveFileVersion="14" means it cane from LOR Sequence Editor ver 4.x)
 							if (sfv != 14)
@@ -1221,8 +1221,8 @@ namespace UtilORama4
 				{
 					lineNum++;
 					// Line just read should be "    <channels>"
-					//li = lineIn.IndexOf(lutils.STTBL + TABLEchannels + lutils.ENDTBL);
-					li = lutils.FastIndexOf(lineIn, (lutils.STTBL + TABLEchannels + lutils.ENDTBL));
+					//li = lineIn.IndexOf(LOR4Admin.STTBL + TABLEchannels + LOR4Admin.ENDTBL);
+					li = LOR4Admin.FastIndexOf(lineIn, (LOR4Admin.STTBL + TABLEchannels + LOR4Admin.ENDTBL));
 					if (li > 0)
 					{
 						if (!reader.EndOfStream)
@@ -1231,12 +1231,12 @@ namespace UtilORama4
 							lineIn = reader.ReadLine();
 							lineNum++;
 							//li = lineIn.IndexOf(FIELDmasterChannel);
-							li = lutils.FastIndexOf(lineIn, FIELDmasterChannel);
+							li = LOR4Admin.FastIndexOf(lineIn, FIELDmasterChannel);
 							if (li > 0)
 							{
-								masterName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
-								masterSI = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
-								masterType = LOR4SeqEnums.EnumMemberType(lutils.getKeyWord(lineIn, lutils.FIELDtype));
+								masterName = LOR4Admin.HumanizeName(LOR4Admin.getKeyWord(lineIn, LOR4Admin.FIELDname));
+								masterSI = LOR4Admin.getKeyValue(lineIn, LOR4Admin.FIELDsavedIndex);
+								masterType = LOR4SeqEnums.EnumMemberType(LOR4Admin.getKeyWord(lineIn, LOR4Admin.FIELDtype));
 								//lblMessage.Text = "Map \"" + masterName + "\" to...";
 								//pnlMessage.Refresh();
 
@@ -1247,12 +1247,12 @@ namespace UtilORama4
 									lineIn = reader.ReadLine();
 									lineNum++;
 									//li = lineIn.IndexOf(FIELDsourceChannel);
-									li = lutils.FastIndexOf(lineIn, FIELDsourceChannel);
+									li = LOR4Admin.FastIndexOf(lineIn, FIELDsourceChannel);
 									if (li > 0)
 									{
-										sourceName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
-										sourceSI = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
-										sourceType = LOR4SeqEnums.EnumMemberType(lutils.getKeyWord(lineIn, lutils.FIELDtype));
+										sourceName = LOR4Admin.HumanizeName(LOR4Admin.getKeyWord(lineIn, LOR4Admin.FIELDname));
+										sourceSI = LOR4Admin.getKeyValue(lineIn, LOR4Admin.FIELDsavedIndex);
+										sourceType = LOR4SeqEnums.EnumMemberType(LOR4Admin.getKeyWord(lineIn, LOR4Admin.FIELDtype));
 
 										// is it time to update?
 										if ((lineNum % updFreq) == 0)
@@ -1391,8 +1391,8 @@ namespace UtilORama4
 					{
 						lineNum++;
 						// Line just read should be "    <channels>"
-						//li = lineIn.IndexOf(lutils.STTBL + TABLEchannels + lutils.ENDTBL);
-						li = lutils.FastIndexOf(lineIn, lutils.STTBL + TABLEchannels + lutils.ENDTBL);
+						//li = lineIn.IndexOf(LOR4Admin.STTBL + TABLEchannels + LOR4Admin.ENDTBL);
+						li = LOR4Admin.FastIndexOf(lineIn, LOR4Admin.STTBL + TABLEchannels + LOR4Admin.ENDTBL);
 						if (li > 0)
 						{
 							if (!reader.EndOfStream)
@@ -1401,14 +1401,14 @@ namespace UtilORama4
 								lineIn = reader.ReadLine();
 								lineNum++;
 								//li = lineIn.IndexOf(FIELDmasterChannel);
-								li = lutils.FastIndexOf(lineIn, FIELDmasterChannel);
+								li = LOR4Admin.FastIndexOf(lineIn, FIELDmasterChannel);
 								if (li > 0)
 								{
-									masterName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
+									masterName = LOR4Admin.HumanizeName(LOR4Admin.getKeyWord(lineIn, LOR4Admin.FIELDname));
 									//lblMessage.Text = "Map \"" + masterName + "\" to...";
 									//pnlMessage.Refresh();
-									masterSI = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
-									masterType = LOR4SeqEnums.EnumMemberType(lutils.getKeyWord(lineIn, lutils.FIELDtype));
+									masterSI = LOR4Admin.getKeyValue(lineIn, LOR4Admin.FIELDsavedIndex);
+									masterType = LOR4SeqEnums.EnumMemberType(LOR4Admin.getKeyWord(lineIn, LOR4Admin.FIELDtype));
 									// Next line (let's assume its there) is the Source LOR4Channel
 									if (!reader.EndOfStream)
 									{
@@ -1416,10 +1416,10 @@ namespace UtilORama4
 										lineIn = reader.ReadLine();
 										lineNum++;
 										//li = lineIn.IndexOf(FIELDsourceChannel);
-										li = lutils.FastIndexOf(lineIn, FIELDsourceChannel);
+										li = LOR4Admin.FastIndexOf(lineIn, FIELDsourceChannel);
 										if (li > 0)
 										{
-											sourceName = lutils.HumanizeName(lutils.getKeyWord(lineIn, lutils.FIELDname));
+											sourceName = LOR4Admin.HumanizeName(LOR4Admin.getKeyWord(lineIn, LOR4Admin.FIELDname));
 											if (sourceOnRight)
 											{
 												lblMessage.Text = masterName + " to " + sourceName;
@@ -1430,8 +1430,8 @@ namespace UtilORama4
 											}
 											prgBarInner.CustomText = lblMessage.Text;
 											pnlMessage.Refresh();
-											sourceSI = lutils.getKeyValue(lineIn, lutils.FIELDsavedIndex);
-											sourceType = LOR4SeqEnums.EnumMemberType(lutils.getKeyWord(lineIn, lutils.FIELDtype));
+											sourceSI = LOR4Admin.getKeyValue(lineIn, LOR4Admin.FIELDsavedIndex);
+											sourceType = LOR4SeqEnums.EnumMemberType(LOR4Admin.getKeyWord(lineIn, LOR4Admin.FIELDtype));
 
 											if (!seqMaster.Members.BySavedIndex[masterSI].Selected)
 											{
@@ -1451,7 +1451,7 @@ namespace UtilORama4
 													}
 
 													// Got it yet?
-													if (masterSI > lutils.UNDEFINED)
+													if (masterSI > LOR4Admin.UNDEFINED)
 													{
 														if (sourceSI < seqSource.Members.BySavedIndex.Count)
 														{
@@ -1472,7 +1472,7 @@ namespace UtilORama4
 																} // if not Selected
 
 																// Got it yet?
-																if (sourceSI > lutils.UNDEFINED)
+																if (sourceSI > LOR4Admin.UNDEFINED)
 																{
 																	if (seqSource.Members.BySavedIndex[sourceSI].MemberType ==
 																			seqMaster.Members.BySavedIndex[masterSI].MemberType)
@@ -1544,9 +1544,9 @@ namespace UtilORama4
 			ImBusy(true);
 			string xt = Path.GetExtension(filenameSource).ToLower();
 			dlgFileSave.DefaultExt = xt;
-			dlgFileSave.Filter = lutils.FILT_SAVE_EITHER;
+			dlgFileSave.Filter = LOR4Admin.FILT_SAVE_EITHER;
 			dlgFileSave.FilterIndex = 0;
-			if (xt.CompareTo(lutils.EXT_LAS) == 0) dlgFileSave.FilterIndex = 1;
+			if (xt.CompareTo(LOR4Admin.EXT_LAS) == 0) dlgFileSave.FilterIndex = 1;
 			string initDir = SeqFolder;
 			string initFile = "";
 			if (filenameSource.Length > 4)
@@ -1650,7 +1650,7 @@ namespace UtilORama4
 					iLOR4Member member = (iLOR4Member)treeSource.SelectedNode.Tag;
 					if (member.MemberType == LOR4MemberType.Channel)
 					{
-						Bitmap img = lutils.RenderEffects(member, 0, member.Centiseconds, picPreviewSource.Width, picPreviewSource.Height, true);
+						Bitmap img = LOR4Admin.RenderEffects(member, 0, member.Centiseconds, picPreviewSource.Width, picPreviewSource.Height, true);
 						if (tabChannels.SelectedIndex == TAB_DIM)
 						{
 							img = DrawCutoff(img, Color.Black, int.Parse(txtDim.Text));
@@ -1666,7 +1666,7 @@ namespace UtilORama4
 					{
 						if (member.MemberType == LOR4MemberType.RGBChannel)
 						{
-							Bitmap img = lutils.RenderEffects(member, 0, member.Centiseconds, picPreviewSource.Width, picPreviewSource.Height, false);
+							Bitmap img = LOR4Admin.RenderEffects(member, 0, member.Centiseconds, picPreviewSource.Width, picPreviewSource.Height, false);
 							if (tabChannels.SelectedIndex == TAB_DIM)
 							{
 								img = DrawCutoff(img, Color.White, int.Parse(txtDim.Text));
@@ -1755,7 +1755,7 @@ namespace UtilORama4
 						{
 							// Check all effect startIntensity and endIntensity
 							// If *NONE* of them exceed the threshhold, then most likely this channel has already been scaled
-							LOREffect4 effect = chan.effects[e];
+							LOR4Effect effect = chan.effects[e];
 							// Looking for any with too high of an intensity
 							if ((effect.startIntensity > percent) ||
 									(effect.endIntensity > percent))
@@ -1776,7 +1776,7 @@ namespace UtilORama4
 						// Loop thru all effects
 						for (int e = 0; e < chan.effects.Count; e++)
 						{
-							LOREffect4 effect = chan.effects[e];
+							LOR4Effect effect = chan.effects[e];
 							// Scale EACH AND EVERY effect startIntensity and endIntensity
 							int si = (int)Math.Round(effect.startIntensity * pct);
 							int ei = (int)Math.Round(effect.endIntensity * pct);
@@ -1807,7 +1807,7 @@ namespace UtilORama4
 						{
 							// Check all effect startIntensity and endIntensity
 							// If *NONE* of them exceed the threshhold, then most likely this channel has already been scaled
-							LOREffect4 effect = rgb.redChannel.effects[e];
+							LOR4Effect effect = rgb.redChannel.effects[e];
 							// Looking for any with too high of an intensity
 							if ((effect.startIntensity > percent) ||
 									(effect.endIntensity > percent))
@@ -1824,7 +1824,7 @@ namespace UtilORama4
 							{
 								// Check all effect startIntensity and endIntensity
 								// If *NONE* of them exceed the threshhold, then most likely this channel has already been scaled
-								LOREffect4 effect = rgb.grnChannel.effects[e];
+								LOR4Effect effect = rgb.grnChannel.effects[e];
 								// Looking for any with too high of an intensity
 								if ((effect.startIntensity > percent) ||
 										(effect.endIntensity > percent))
@@ -1842,7 +1842,7 @@ namespace UtilORama4
 							{
 								// Check all effect startIntensity and endIntensity
 								// If *NONE* of them exceed the threshhold, then most likely this channel has already been scaled
-								LOREffect4 effect = rgb.bluChannel.effects[e];
+								LOR4Effect effect = rgb.bluChannel.effects[e];
 								// Looking for any with too high of an intensity
 								if ((effect.startIntensity > percent) ||
 										(effect.endIntensity > percent))
@@ -1894,7 +1894,7 @@ namespace UtilORama4
 				// TRACK //   (Effectively a group, so treat it like one)
 				//////////
 				case LOR4MemberType.Track:
-					LORTrack4 track = (LORTrack4)member;
+					LOR4Track track = (LOR4Track)member;
 					foreach (iLOR4Member subMember in track.Members)
 					{
 						// Recurse!
@@ -1922,7 +1922,7 @@ namespace UtilORama4
 					// Loop thru all effects
 					for (int e = 0; e < chan.effects.Count; e++)
 					{
-						LOREffect4 effect = chan.effects[e];
+						LOR4Effect effect = chan.effects[e];
 						if ((effect.startIntensity > percent) &&
 								(effect.endIntensity > percent))
 						{
@@ -2000,7 +2000,7 @@ namespace UtilORama4
 				// TRACK //   (Effectively a group, so treat it like one)
 				//////////
 				case LOR4MemberType.Track:
-					LORTrack4 track = (LORTrack4)member;
+					LOR4Track track = (LOR4Track)member;
 					foreach (iLOR4Member subMember in track.Members)
 					{
 						// Recurse!
@@ -2028,7 +2028,7 @@ namespace UtilORama4
 					// Loop thru all effects
 					for (int e = 0; e < chan.effects.Count; e++)
 					{
-						LOREffect4 effect = chan.effects[e];
+						LOR4Effect effect = chan.effects[e];
 						if ((effect.startIntensity > 50) &&
 								(effect.endIntensity > 50))
 						{
@@ -2116,7 +2116,7 @@ namespace UtilORama4
 				// TRACK //   (Effectively a group, so treat it like one)
 				//////////
 				case LOR4MemberType.Track:
-					LORTrack4 track = (LORTrack4)member;
+					LOR4Track track = (LOR4Track)member;
 					foreach (iLOR4Member subMember in track.Members)
 					{
 						// Recurse!
@@ -2143,8 +2143,8 @@ namespace UtilORama4
 				////////////
 				case LOR4MemberType.Channel:
 					LOR4Channel chan = (LOR4Channel)member;
-					LOREffect4 thiseffect = null;
-					LOREffect4 nexteffect = null;
+					LOR4Effect thiseffect = null;
+					LOR4Effect nexteffect = null;
 					// Loop thru all but last effects
 					for (int e = 0; e < (chan.effects.Count - 1); e++)
 					{
@@ -2267,7 +2267,7 @@ namespace UtilORama4
 				// TRACK //   (Effectively a group, so treat it like one)
 				//////////
 				case LOR4MemberType.Track:
-					LORTrack4 track = (LORTrack4)member;
+					LOR4Track track = (LOR4Track)member;
 					foreach (iLOR4Member subMember in track.Members)
 					{
 						// Recurse!
@@ -2393,7 +2393,7 @@ namespace UtilORama4
 					{
 						if (member.MemberType == LOR4MemberType.Track)
 						{
-							LORTrack4 track = (LORTrack4)member;
+							LOR4Track track = (LOR4Track)member;
 							ret = GroupCheckState(track.Members, theRule);
 						}
 					} // End if a group, or not
@@ -2515,7 +2515,7 @@ namespace UtilORama4
 				if (member.MemberType == LOR4MemberType.Track)
 				{
 					// Recurse!!
-					LORTrack4 track = (LORTrack4)member;
+					LOR4Track track = (LOR4Track)member;
 					for (int m = 0; m < track.Members.Count; m++)
 					{
 						iLOR4Member subMember = track.Members[m];
@@ -2645,7 +2645,7 @@ namespace UtilORama4
 						// If a track (which is basically a group) follow same logic as group above
 						if (member.MemberType == LOR4MemberType.Track)
 						{
-							LORTrack4 track = (LORTrack4)member;
+							LOR4Track track = (LOR4Track)member;
 							CheckState trkState = GroupCheckState(track.Members, theRule);
 							if ((trkState == CheckState.Indeterminate) ||
 								(trkState != ret))
@@ -2670,7 +2670,7 @@ namespace UtilORama4
 			dlgFileSave.DefaultExt = EXT_DIMMAP;
 			dlgFileSave.Filter = FILE_DIMMAP;
 			dlgFileSave.FilterIndex = 0;
-			string initDir = lutils.DefaultChannelConfigsPath;
+			string initDir = LOR4Admin.DefaultChannelConfigsPath;
 			string initFile = "";
 			if (filenameMap.Length > 4)
 			{

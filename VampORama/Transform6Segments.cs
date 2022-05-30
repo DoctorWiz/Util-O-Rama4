@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
-using LOR4Utils;
+using LOR4;
 using FileHelper;
-using xUtilities;
+using xLights22;
 
 namespace UtilORama4
 {
@@ -89,7 +89,7 @@ namespace UtilORama4
 		//public const int LABELNoteNameUnicode = 2;
 		//public const int LABELMidiNoteNumber = 3;
 
-		private static LORTrack4 vampTrack = Annotator.VampTrack;
+		private static LOR4Track vampTrack = Annotator.VampTrack;
 		private static LOR4Sequence sequence = Annotator.Sequence;
 
 
@@ -261,12 +261,12 @@ namespace UtilORama4
 			{
 				lineIn = reader.ReadLine();
 				ppos = lineIn.IndexOf('.');
-				if (ppos > xUtils.UNDEFINED)
+				if (ppos > xAdmin.UNDEFINED)
 				{
 
 					string[] parts = lineIn.Split(',');
 
-					millisecs = xUtils.ParseMilliseconds(parts[0]);
+					millisecs = xAdmin.ParseMilliseconds(parts[0]);
 					eStart = Annotator.AlignTime(millisecs); // AlignStartTo(millisecs, align);
 
 					if (eStart > lastStart)
@@ -274,7 +274,7 @@ namespace UtilORama4
 						// Get label, if available
 						if (parts.Length > 2)
 						{
-							duration = xUtils.ParseMilliseconds(parts[1]);
+							duration = xAdmin.ParseMilliseconds(parts[1]);
 							int ee = eStart + duration;
 							eEnd = Annotator.AlignTime(ee);
 							// After Aligning to Bars (or other long time) we may end up with a key of Zero length
@@ -309,10 +309,10 @@ namespace UtilORama4
 
 			if (xSegments != null)
 			{
-				if (xSegments.effects.Count > 0)
+				if (xSegments.Markers.Count > 0)
 				{
 					string gridName = "8 " + transformName;
-					LORTimings4 segmentGrid = Annotator.Sequence.FindTimingGrid(gridName, true);
+					LOR4Timings segmentGrid = Annotator.Sequence.FindTimingGrid(gridName, true);
 					SequenceFunctions.ImportTimingGrid(segmentGrid, xSegments);
 				}
 			}
@@ -357,11 +357,11 @@ namespace UtilORama4
 			// Create an effect in the appropriate segment channel
 			if (xSegments != null)
 			{
-				if (xSegments.effects.Count > 0)
+				if (xSegments.Markers.Count > 0)
 				{
-					for (int f = 0; f < xSegments.effects.Count; f++)
+					for (int f = 0; f < xSegments.Markers.Count; f++)
 					{
-						xEffect timing = xSegments.effects[f];
+						xMarker timing = xSegments.Markers[f];
 						int csStart = (int)Math.Round(timing.starttime / 10D);
 						int csEnd = (int)Math.Round(timing.endtime / 10D);
 						if (csEnd <= csStart) // Data integrity check
