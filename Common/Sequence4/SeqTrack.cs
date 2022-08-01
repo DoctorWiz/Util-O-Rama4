@@ -107,6 +107,22 @@ namespace LOR4
 			}
 		}
 
+		public override CheckState Selected
+		{
+			get
+			{
+				return Members.Selected;
+			}
+			set
+			{
+				if (value != CheckState.Indeterminate)
+				{
+					base.Selected = value;
+					Members.Selected = value;
+				}
+			}
+		}
+
 
 		public override LOR4MemberType MemberType
 		{
@@ -116,6 +132,25 @@ namespace LOR4
 			}
 		}
 
+		public override string Name
+		{
+			get
+			{
+				string s = myName;
+				// If no name has been set, make one up temporarily.
+				//   But do not alter the original blank name
+				if (s.Length < 1)
+				{
+					s = "Track " + TrackNumber.ToString();
+				}
+				return s;
+			}
+		}
+
+		public override string ToString()
+		{
+			return Name;
+		}
 
 		public override string LineOut()
 		{
@@ -161,7 +196,8 @@ namespace LOR4
 				if (tg == null)
 				{
 					string msg = "ERROR: Timing Grid with SaveID of " + tempGridSaveID.ToString() + " not found!";
-					System.Diagnostics.Debugger.Break();
+					//System.Diagnostics.Debugger.Break();
+					tg = mySeq.TimingGrids[0];
 				}
 				timingGrid = tg;
 			}
@@ -185,26 +221,21 @@ namespace LOR4
 
 		public int TrackNumber
 		{
+			// Read-Only!
 			get
 			{
 				// LOR4Track numbers are one based, the index is zero based, so just add 1 to the index for the track number
-				return myID;
+				return myID + 1;
 			}
-			// Read-Only!
-			//set
-			//{
-			//	myIndex = value;
-			//	if (myParent != null) myParent.MakeDirty(true);
-			//}
 		}
 
-		public void SetTrackNumber(int newNumber)
-		{
-			myID = newNumber;
-			myIndex = newNumber;
-		}
+		public int TrackID
+		{ get { return myID; } }
 
-		public int AltTrackNumber
+		public void SetTrackID(int newID)
+		{ myID = newID; }
+
+		public int AltTrackID
 		{ get { return myAltID; } set { myAltID = value; } }
 
 
@@ -252,7 +283,7 @@ namespace LOR4
 			// LOR4Loop thru all items in this track
 			foreach (iLOR4Member subID in Members.Items)
 			{
-				bool sel = subID.Selected;
+				bool sel = (subID.Selected == CheckState.Checked);
 				if (!selectedOnly || sel)
 				{
 					// Write out the links to the items

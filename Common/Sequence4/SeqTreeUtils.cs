@@ -104,7 +104,7 @@ namespace LOR4
 			TreeNodeAdv trackNode = new TreeNodeAdv(nodeText);
 			trackNode.Tag = track;
 			trackNode.LeftImageIndices = ICONtrack;
-			trackNode.Checked = track.Selected;
+			trackNode.CheckState = track.Selected;
 			baseNodes.Add(trackNode);
 
 			baseNodes = trackNode.Nodes;
@@ -126,8 +126,12 @@ namespace LOR4
 					if (member.MemberType == LOR4MemberType.ChannelGroup)
 					{
 						LOR4ChannelGroup memGrp = (LOR4ChannelGroup)member;
-						int inclCount = memGrp.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
-						if (inclCount > 0)
+						//int inclCount = memGrp.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
+						//if (inclCount > 0)
+						// Note the double-double negative--  Include if selectedOnly is false (thus, include everything)
+						// Or include if not-not selected (if selected, or indterminate)
+						// Reminder: Order of precedence will process the != before the ||
+						if (memGrp.Selected != CheckState.Unchecked || !selectedOnly)
 						{
 							TreeNodeAdv groupNode = TreeAddGroup(seq, baseNodes, memGrp, selectedOnly, includeRGBchildren, memberTypes);
 							//qlist = nodesBySI[si];
@@ -139,8 +143,9 @@ namespace LOR4
 					if (member.MemberType == LOR4MemberType.Cosmic)
 					{
 						LOR4Cosmic memDev = (LOR4Cosmic)member;
-						int inclCount = memDev.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
-						if (inclCount > 0)
+						//int inclCount = memDev.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
+						//if (inclCount > 0)
+						if (memDev.Selected != CheckState.Unchecked || !selectedOnly) ;
 						{
 							TreeNodeAdv cosmicNode = TreeAddCosmic(seq, baseNodes, memDev, selectedOnly, includeRGBchildren, memberTypes);
 							//qlist = nodesBySI[si];
@@ -270,7 +275,7 @@ namespace LOR4
 
 			if (group.Nodes != null)
 			{
-				nodeList = (List<TreeNodeAdv>)group.Nodes;
+				nodeList = group.Nodes;
 			}
 			else
 			{
@@ -288,7 +293,7 @@ namespace LOR4
 				groupNode.Tag = group;
 				groupNode.LeftImageIndices = ICONchannelGroup;
 				//groupNode.SelectedImageKey = ICONchannelGroup;
-				groupNode.Checked = group.Selected;
+				groupNode.CheckState = group.Selected;
 				baseNodes = groupNode.Nodes;
 				nodeList.Add(groupNode);
 			}
@@ -311,14 +316,13 @@ namespace LOR4
 					if ((memberTypes & LOR4SeqEnums.MEMBER_Channel) > 0) inclChan = true;
 					bool inclRGB = false;
 					if ((memberTypes & LOR4SeqEnums.MEMBER_RGBchannel) > 0) inclRGB = true;
-					int inclCount = memGrp.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
-					if (inclCount > 0)
+					if (memGrp.Selected != CheckState.Unchecked || !selectedOnly)
 					{
 						TreeNodeAdv subGroupNode = TreeAddGroup(seq, baseNodes, memGrp, selectedOnly, includeRGBchildren, memberTypes);
 						//qlist = nodesBySI[si];
 						//qlist.Add(subGroupNode);
 					}
-					int cosCount = memGrp.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
+					//int cosCount = memGrp.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 				}
 				if (member.MemberType == LOR4MemberType.Cosmic)
 				{
@@ -327,14 +331,13 @@ namespace LOR4
 					if ((memberTypes & LOR4SeqEnums.MEMBER_Channel) > 0) inclChan = true;
 					bool inclRGB = false;
 					if ((memberTypes & LOR4SeqEnums.MEMBER_RGBchannel) > 0) inclRGB = true;
-					int inclCount = memDev.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
-					if (inclCount > 0)
+					if (memDev.Selected != CheckState.Unchecked || !selectedOnly)
 					{
 						TreeNodeAdv subGroupNode = TreeAddCosmic(seq, baseNodes, memDev, selectedOnly, includeRGBchildren, memberTypes);
 						//qlist = nodesBySI[si];
 						//qlist.Add(subGroupNode);
 					}
-					int cosCount = memDev.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
+					//int cosCount = memDev.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 				}
 				if (member.MemberType == LOR4MemberType.Channel)
 				{
@@ -385,7 +388,7 @@ namespace LOR4
 			TreeNodeAdv deviceNode = null;
 			if (device.Nodes != null)
 			{
-				nodeList = (List<TreeNodeAdv>)device.Nodes;
+				nodeList = device.Nodes;
 			}
 			else
 			{
@@ -415,7 +418,7 @@ namespace LOR4
 				nodeList.Add(deviceNode);
 				deviceNode.LeftImageIndices = ICONcosmicDevice;
 				//deviceNode.SelectedImageKey = ICONcosmicDevice;
-				deviceNode.Checked = device.Selected;
+				deviceNode.CheckState = device.Selected;
 				baseNodes = deviceNode.Nodes;
 			}
 			//List<TreeNodeAdv> qlist;
@@ -438,14 +441,13 @@ namespace LOR4
 					if ((memberTypes & LOR4SeqEnums.MEMBER_Channel) > 0) inclChan = true;
 					bool inclRGB = false;
 					if ((memberTypes & LOR4SeqEnums.MEMBER_RGBchannel) > 0) inclRGB = true;
-					int inclCount = memGrp.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
-					if (inclCount > 0)
+					if (memGrp.Selected != CheckState.Unchecked || !selectedOnly)
 					{
 						TreeNodeAdv subGroupNode = TreeAddGroup(seq, baseNodes, memGrp, selectedOnly, includeRGBchildren, memberTypes);
 						//qlist = nodesBySI[si];
 						//qlist.Add(subGroupNode);
 					}
-					int cosCount = memGrp.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
+					//int cosCount = memGrp.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 				}
 				if (member.MemberType == LOR4MemberType.Cosmic)
 				{
@@ -454,14 +456,13 @@ namespace LOR4
 					if ((memberTypes & LOR4SeqEnums.MEMBER_Channel) > 0) inclChan = true;
 					bool inclRGB = false;
 					if ((memberTypes & LOR4SeqEnums.MEMBER_RGBchannel) > 0) inclRGB = true;
-					int inclCount = memDev.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
-					if (inclCount > 0)
+					if (memDev.Selected != CheckState.Unchecked || !selectedOnly)
 					{
 						TreeNodeAdv subGroupNode = TreeAddCosmic(seq, baseNodes, memDev, selectedOnly, includeRGBchildren, memberTypes);
 						//qlist = nodesBySI[si];
 						//qlist.Add(subGroupNode);
 					}
-					int cosCount = memDev.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
+					//int cosCount = memDev.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 				}
 				if (member.MemberType == LOR4MemberType.Channel)
 				{
@@ -535,7 +536,7 @@ namespace LOR4
 			}
 			else
 			{
-				nodeList = (List<TreeNodeAdv>)channel.Nodes;
+				nodeList = channel.Nodes;
 			}
 			channelNode.Tag = channel;
 			nodeList.Add(channelNode);
@@ -550,7 +551,7 @@ namespace LOR4
 			int[] colorIcon = new int[] { iconIndex };
 			channelNode.LeftImageIndices = colorIcon;
 			//channelNode.SelectedImageIndex = iconIndex;
-			channelNode.Checked = channel.Selected;
+			channelNode.CheckState = channel.Selected;
 
 			return channelNode;
 		}
@@ -564,7 +565,7 @@ namespace LOR4
 
 			if (rgbChannel.Nodes != null)
 			{
-				nodeList = (List<TreeNodeAdv>)rgbChannel.Nodes;
+				nodeList = rgbChannel.Nodes;
 			}
 			else
 			{
@@ -582,7 +583,7 @@ namespace LOR4
 				nodeIndex++;
 				channelNode.LeftImageIndices = ICONrgbChannel;
 				//channelNode.SelectedImageKey = ICONrgbChannel;
-				channelNode.Checked = rgbChannel.Selected;
+				channelNode.CheckState = rgbChannel.Selected;
 				if (rgbChannel.Nodes == null)
 				{
 					nodeList = new List<TreeNodeAdv>();
@@ -590,7 +591,7 @@ namespace LOR4
 				}
 				else
 				{
-					nodeList = (List<TreeNodeAdv>)rgbChannel.Nodes;
+					nodeList = rgbChannel.Nodes;
 				}
 				channelNode.Tag = rgbChannel;
 				nodeList.Add(channelNode);
@@ -601,10 +602,9 @@ namespace LOR4
 					TreeNodeAdv colorNode = null;
 					nodeText = rgbChannel.redChannel.Name;
 					colorNode = new TreeNodeAdv(nodeText);
-					channelNode.Nodes.Add(colorNode);
 					nodeIndex++;
 					colorNode.LeftImageIndices = ICONredChannel;
-					colorNode.Checked = rgbChannel.redChannel.Selected;
+					colorNode.CheckState = rgbChannel.redChannel.Selected;
 					channelNode.Nodes.Add(colorNode);
 					if (rgbChannel.redChannel.Nodes == null)
 					{
@@ -613,7 +613,7 @@ namespace LOR4
 					}
 					else
 					{
-						nodeList = (List<TreeNodeAdv>)rgbChannel.redChannel.Nodes;
+						nodeList = rgbChannel.redChannel.Nodes;
 					}
 					colorNode.Tag = rgbChannel.redChannel;
 					nodeList.Add(channelNode);
@@ -621,10 +621,10 @@ namespace LOR4
 					// * * G R E E N   S U B  C H A N N E L * *
 					nodeText = rgbChannel.grnChannel.Name;
 					colorNode = new TreeNodeAdv(nodeText);
-					channelNode.Nodes.Add(colorNode);
 					nodeIndex++;
 					colorNode.LeftImageIndices = ICONgrnChannel;
-					colorNode.Checked = rgbChannel.grnChannel.Selected;
+					colorNode.CheckState = rgbChannel.grnChannel.Selected;
+					channelNode.Nodes.Add(colorNode);
 					if (rgbChannel.grnChannel.Nodes == null)
 					{
 						nodeList = new List<TreeNodeAdv>();
@@ -632,7 +632,7 @@ namespace LOR4
 					}
 					else
 					{
-						nodeList = (List<TreeNodeAdv>)rgbChannel.grnChannel.Nodes;
+						nodeList = rgbChannel.grnChannel.Nodes;
 					}
 					colorNode.Tag = rgbChannel.grnChannel;
 					nodeList.Add(channelNode);
@@ -640,10 +640,10 @@ namespace LOR4
 					// * * B L U E   S U B  C H A N N E L * *
 					nodeText = rgbChannel.bluChannel.Name;
 					colorNode = new TreeNodeAdv(nodeText);
-					channelNode.Nodes.Add(colorNode);
 					nodeIndex++;
 					colorNode.LeftImageIndices = ICONbluChannel;
-					colorNode.Checked = rgbChannel.bluChannel.Selected;
+					colorNode.CheckState = rgbChannel.bluChannel.Selected;
+					channelNode.Nodes.Add(colorNode);
 					if (rgbChannel.bluChannel.Nodes == null)
 					{
 						nodeList = new List<TreeNodeAdv>();
@@ -651,7 +651,7 @@ namespace LOR4
 					}
 					else
 					{
-						nodeList = (List<TreeNodeAdv>)rgbChannel.bluChannel.Nodes;
+						nodeList = rgbChannel.bluChannel.Nodes;
 					}
 					colorNode.Tag = rgbChannel.bluChannel;
 					nodeList.Add(channelNode);
@@ -712,7 +712,7 @@ namespace LOR4
 
 		#endregion // Tree Stuff
 
-		public static int SelectMember(iLOR4Member member, bool select)
+		public static int SelectMember(iLOR4Member member, CheckState select)
 		{
 			int changeCount = 0;
 			// Did it even change?
@@ -724,7 +724,7 @@ namespace LOR4
 				if (member.Nodes != null)
 				{
 					// Get it.  Does it have any nodes (it should, just sanity check)
-					nodeList = (List<TreeNodeAdv>)member.Nodes;
+					nodeList = member.Nodes;
 					if (nodeList.Count > 0)
 					{
 						// And loop thru it's nodeList to select all its nodes in the tree
@@ -733,7 +733,7 @@ namespace LOR4
 							string memName = member.Name;
 							string nodName = nOde.Text;
 							if (memName != nodName) Fyle.MakeNoise(Fyle.Noises.WrongButton);
-							if (nOde.Checked != select) nOde.Checked = select;
+							if (nOde.CheckState != select) nOde.CheckState = select;
 						} // foreach nOde
 					} // nodeList.Count
 				} // member.Nodes != null
@@ -744,7 +744,7 @@ namespace LOR4
 				// What type of member is it?
 				if (member.MemberType == LOR4MemberType.Channel)
 				{
-					if (select) changeCount++; else changeCount--;
+					if (select == CheckState.Checked) changeCount++; else changeCount--;
 					// Channels need no special handling, we're done!
 				}
 				else
@@ -757,7 +757,7 @@ namespace LOR4
 						SelectMember(rgbch.redChannel, select);
 						SelectMember(rgbch.grnChannel, select);
 						SelectMember(rgbch.bluChannel, select);
-						if (select) changeCount += 3; else changeCount -= 3;
+						if (select == CheckState.Checked) changeCount += 3; else changeCount -= 3;
 					} // End if RGB Channel
 					else
 					{
@@ -818,7 +818,8 @@ namespace LOR4
 				foreach (TreeNode childNode in nOde.Nodes)
 				{
 					iLOR4Member m = (iLOR4Member)childNode.Tag;
-					ret = m.Selected;
+					// Note the double negative, returns true if Selected = Checked OR Selected = Indeterminite
+					ret = !(m.Selected != CheckState.Checked);
 					if (ret)
 					{
 						break;
@@ -834,7 +835,7 @@ namespace LOR4
 		{
 			if (member.Nodes != null)
 			{
-				List<TreeNodeAdv> nodeList = (List<TreeNodeAdv>)member.Nodes;
+				List<TreeNodeAdv> nodeList = member.Nodes;
 				foreach (TreeNodeAdv nOde in nodeList)
 				{
 					ItalisizeNode(nOde, italisize);
@@ -858,7 +859,7 @@ namespace LOR4
 		{
 			if (member.Nodes != null)
 			{
-				List<TreeNodeAdv> nodeList = (List<TreeNodeAdv>)member.Nodes;
+				List<TreeNodeAdv> nodeList = member.Nodes;
 				foreach (TreeNodeAdv nOde in nodeList)
 				{
 					EmboldenNode(nOde, embolden);
@@ -882,7 +883,7 @@ namespace LOR4
 		{
 			if (member.Nodes != null)
 			{
-				List<TreeNodeAdv> nodeList = (List<TreeNodeAdv>)member.Nodes;
+				List<TreeNodeAdv> nodeList = member.Nodes;
 				foreach (TreeNodeAdv nOde in nodeList)
 				{
 					HighlightNodeBackground(nOde, highlight);
@@ -906,7 +907,7 @@ namespace LOR4
 		{
 			if (member.Nodes != null)
 			{
-				List<TreeNodeAdv> nodeList = (List<TreeNodeAdv>)member.Nodes;
+				List<TreeNodeAdv> nodeList = member.Nodes;
 				foreach (TreeNodeAdv nOde in nodeList)
 				{
 					HighlightNodeBackground(nOde, backColor);
@@ -918,7 +919,7 @@ namespace LOR4
 		{
 			if (member.Nodes != null)
 			{
-				List<TreeNodeAdv> nodeList = (List<TreeNodeAdv>)member.Nodes;
+				List<TreeNodeAdv> nodeList = member.Nodes;
 				foreach (TreeNodeAdv node in nodeList)
 				{
 					node.TextColor = foreColor;
@@ -942,7 +943,7 @@ namespace LOR4
 		{
 			if (member.Nodes != null)
 			{
-				List<TreeNodeAdv> nodeList = (List<TreeNodeAdv>)member.Nodes;
+				List<TreeNodeAdv> nodeList = member.Nodes;
 				foreach (TreeNodeAdv nOde in nodeList)
 				{
 					ColorNodeText(nOde, colorize);
@@ -966,7 +967,7 @@ namespace LOR4
 		{
 			if (member.Nodes != null)
 			{
-				List<TreeNodeAdv> nodeList = (List<TreeNodeAdv>)member.Nodes;
+				List<TreeNodeAdv> nodeList = member.Nodes;
 				foreach (TreeNodeAdv nOde in nodeList)
 				{
 					ColorNodeText(nOde, textColor);
@@ -988,7 +989,7 @@ namespace LOR4
 			foreach (TreeNodeAdv node in nodes)
 			{
 				HighlightNode(node, Color.Black, Color.White);
-				node.Checked = false;
+				node.CheckState = CheckState.Unchecked;
 				node.ResetFont();
 				if (node.Nodes != null)
 				{
@@ -999,6 +1000,16 @@ namespace LOR4
 				}
 			}
 		}
+
+		public static void CopySelections(TreeNodeAdvCollection fromNodes, List<iLOR4Member> toMembers)
+		{
+			//TODO
+		}
+		public static void CopySelections(List<iLOR4Member> toMembers, TreeNodeAdvCollection fromNodes)
+		{
+			//TODO
+		}
+
 
 
 

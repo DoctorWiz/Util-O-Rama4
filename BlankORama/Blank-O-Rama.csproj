@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<ApplicationIcon>WhiteBulb.ico</ApplicationIcon>
+		<ApplicationIcon>Blank-O-Rama.ico</ApplicationIcon>
+		<ApplicationRevision>0</ApplicationRevision>
+		<ApplicationVersion>4.0.0.%2a</ApplicationVersion>
 		<!-- Superceded by Assembly Title? -->
 		<AssemblyName>Blank-O-Rama</AssemblyName>
 		<AssemblyTitle>Blank-O-Rama</AssemblyTitle>
 		<AssemblyVersion>4.6.0.%2a</AssemblyVersion>
-		<ApplicationRevision>0</ApplicationRevision>
-		<ApplicationVersion>4.0.0.%2a</ApplicationVersion>
 		<Authors>Doctor 🧙 Wizard</Authors>
 		<Company>W⚡zlights Software</Company>
 		<Copyright>Copyright © 2022+ by Doctor Wizard 🧙 and W⚡zlights Software</Copyright>
@@ -20,7 +20,7 @@
 		<IsPublishable>False</IsPublishable>
 		<Nullable>enable</Nullable>
 		<OutputType>WinExe</OutputType>
-		<PackageIcon>White Light Bulb.png</PackageIcon>
+		<PackageIcon>Blank-O-Rama.png</PackageIcon>
 		<PackageID>Util-O-Rama</PackageID>
 		<PackageProjectUrl>http://wizlights/utilorama/blankorama</PackageProjectUrl>
 		<PackageTags>Util-O-Rama; Light-O-Rama; xLights; Christmas; Sequences; Light Show</PackageTags>
@@ -37,7 +37,6 @@
 		<UseWindowsForms>true</UseWindowsForms>
 		<Version>4.6.0.2</Version>
 		<WebPage>http://wizlights.com/utilorama/blankorama/default.html</WebPage>
-
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -50,6 +49,7 @@
 
 	<ItemGroup>
 		<None Remove="Blank-O-Rama.csproj.zip" />
+		<None Remove="Blank-O-RamaError2022-05-27.log" />
 		<None Remove="desktop.ini" />
 	</ItemGroup>
 
@@ -67,16 +67,14 @@
 		<Compile Include="..\Common\Sequence4\SeqMembership.cs" Link="SeqMembership.cs" />
 		<Compile Include="..\Common\Sequence4\SeqRGBChannel.cs" Link="SeqRGBChannel.cs" />
 		<Compile Include="..\Common\Sequence4\SeqSubs.cs" Link="SeqSubs.cs" />
+		<Compile Include="..\Common\Sequence4\SeqTimingGrid.cs" Link="SeqTimingGrid.cs" />
 		<Compile Include="..\Common\Sequence4\SeqTrack.cs" Link="SeqTrack.cs" />
 		<Compile Include="..\Common\Sequence4\Sequence4.cs" Link="Sequence4.cs" />
 		<Compile Include="..\Common\Sequence4\VizStub.cs" Link="VizStub.cs" />
-		<Compile Include="..\Common\AboutBox\frmAbout.cs" Link="frmAbout.cs" />
-		<Compile Include="..\Common\AboutBox\frmAbout.Designer.cs" Link="frmAbout.Designer.cs" />
-		<Compile Include="..\Common\AboutBox\frmAbout.resx" Link="frmAbout.resx" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Content Include="WhiteBulb.ico" />
+	  <Content Include="Blank-O-Rama.ico" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -86,12 +84,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Update="Properties\Resources.Designer.cs">
+		<Compile Update="Resources.Designer.cs">
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>
 			<DependentUpon>Resources.resx</DependentUpon>
 		</Compile>
-		<Compile Update="Properties\Settings.Designer.cs">
+		<Compile Update="Settings.Designer.cs">
 			<DesignTimeSharedInput>True</DesignTimeSharedInput>
 			<AutoGen>True</AutoGen>
 			<DependentUpon>Settings.settings</DependentUpon>
@@ -99,18 +97,18 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<EmbeddedResource Update="Properties\Resources.resx">
+		<EmbeddedResource Update="Resources.resx">
 			<Generator>ResXFileCodeGenerator</Generator>
 			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Update="Properties\Settings.settings">
+		<None Update="Settings.settings">
 			<Generator>SettingsSingleFileGenerator</Generator>
 			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
 		</None>
-		<None Update="White Light Bulb.png">
+		<None Update="Blank-O-Rama.png">
 		  <Pack>True</Pack>
 		  <PackagePath>\</PackagePath>
 		</None>

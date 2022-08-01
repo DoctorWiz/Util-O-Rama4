@@ -119,6 +119,10 @@ namespace LOR4
 		public const string OBJtrack = "Track";
 		public const string OBJtimingGrid = "Timings";
 		public const string OBJsequence = "Sequence";
+		public const string OBJvisualizer = "Visualizer";
+		public const string OBJvizChannel = "VizChannel";
+		public const string OBJvizDrawObject = "VizDrawObject";
+		public const string OBJvizItemGroup = "VizItemGroup";
 		public const string OBJall = "All";
 		public const string OBJitems = "Items";
 
@@ -260,6 +264,22 @@ namespace LOR4
 			{
 				valueOut = LOR4MemberType.Cosmic;
 			}
+			else if (typeName == OBJvisualizer)
+			{
+				valueOut = LOR4MemberType.Visualization;
+			}
+			else if (typeName == OBJvizChannel)
+			{
+				valueOut = LOR4MemberType.VizChannel;
+			}
+			else if (typeName == OBJvizDrawObject)
+			{
+				valueOut = LOR4MemberType.VizDrawObject;
+			}
+			else if (typeName == OBJvizItemGroup)
+			{
+				valueOut = LOR4MemberType.VizItemGroup;
+			}
 			return valueOut;
 		}
 
@@ -387,7 +407,7 @@ namespace LOR4
 			return valueOut;
 		}
 
-		public static string MemberName(LOR4MemberType memberType)
+		public static string MemberTypeName(LOR4MemberType memberType)
 		{
 			// Only doing the 5 needed for Members
 			string valueOut = "";

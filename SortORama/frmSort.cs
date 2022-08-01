@@ -28,7 +28,7 @@ namespace UtilORama4
 		private void frmSort_Load(object sender, EventArgs e)
 		{
 			this.RestoreView();
-			GetUserSettings();
+			RestoreUserSettings();
 		}
 
 		private void frmSort_FormClosing(object sender, FormClosingEventArgs e)
@@ -43,7 +43,7 @@ namespace UtilORama4
 
 		}
 
-		private void GetUserSettings()
+		private void RestoreUserSettings()
 		{
 
 		}
@@ -65,18 +65,17 @@ namespace UtilORama4
 		private void pnlHelp_Click(object sender, EventArgs e)
 		{
 			System.Diagnostics.Process.Start(helpPage);
-
 		}
 
 		private void pnlAbout_Click(object sender, EventArgs e)
 		{
 			ImBusy(true);
-			Form aboutBox = new frmAbout();
-			//aboutBox.SetIcon(picAboutIcon.Image);
-			//aboutBox = picAboutIcon.Image;
+			frmAbout aboutBox = new frmAbout();
+			aboutBox.Icon = this.Icon;
+			aboutBox.Text = "About Sort-O-Rama";
+			aboutBox.AppIcon = picAboutIcon.Image;
 			aboutBox.ShowDialog(this);
 			ImBusy(false);
-
 		}
 
 	}

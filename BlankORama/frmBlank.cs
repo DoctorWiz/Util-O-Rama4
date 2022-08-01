@@ -73,10 +73,10 @@ namespace UtilORama4
 			ImBusy(true);
 			frmAbout aboutBox = new frmAbout();
 			aboutBox.Icon = this.Icon;
+			aboutBox.Text = "About Blank-O-Rama";
 			aboutBox.AppIcon = picAboutIcon.Image;
 			aboutBox.ShowDialog(this);
 			ImBusy(false);
-
 		}
 
 	}

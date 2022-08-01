@@ -78,9 +78,10 @@ namespace UtilORama4
             this.pnlHelp,
             this.pnlStatus,
             this.pnlAbout});
-			this.staStatus.Location = new System.Drawing.Point(0, 447);
+			this.staStatus.Location = new System.Drawing.Point(0, 519);
 			this.staStatus.Name = "staStatus";
-			this.staStatus.Size = new System.Drawing.Size(455, 24);
+			this.staStatus.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
+			this.staStatus.Size = new System.Drawing.Size(531, 24);
 			this.staStatus.TabIndex = 4;
 			// 
 			// pnlHelp
@@ -89,7 +90,7 @@ namespace UtilORama4
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlHelp.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenInner;
-			this.pnlHelp.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.pnlHelp.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
 			this.pnlHelp.ForeColor = System.Drawing.SystemColors.Highlight;
 			this.pnlHelp.IsLink = true;
 			this.pnlHelp.Name = "pnlHelp";
@@ -104,7 +105,7 @@ namespace UtilORama4
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlStatus.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
 			this.pnlStatus.Name = "pnlStatus";
-			this.pnlStatus.Size = new System.Drawing.Size(343, 19);
+			this.pnlStatus.Size = new System.Drawing.Size(417, 19);
 			this.pnlStatus.Spring = true;
 			// 
 			// pnlAbout
@@ -113,7 +114,7 @@ namespace UtilORama4
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlAbout.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenInner;
-			this.pnlAbout.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.pnlAbout.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
 			this.pnlAbout.ForeColor = System.Drawing.SystemColors.Highlight;
 			this.pnlAbout.Name = "pnlAbout";
 			this.pnlAbout.Size = new System.Drawing.Size(52, 19);
@@ -124,9 +125,10 @@ namespace UtilORama4
 			// 
 			this.picAboutIcon.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("picAboutIcon.BackgroundImage")));
 			this.picAboutIcon.Image = ((System.Drawing.Image)(resources.GetObject("picAboutIcon.Image")));
-			this.picAboutIcon.Location = new System.Drawing.Point(790, 207);
+			this.picAboutIcon.Location = new System.Drawing.Point(922, 239);
+			this.picAboutIcon.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.picAboutIcon.Name = "picAboutIcon";
-			this.picAboutIcon.Size = new System.Drawing.Size(128, 128);
+			this.picAboutIcon.Size = new System.Drawing.Size(149, 148);
 			this.picAboutIcon.TabIndex = 68;
 			this.picAboutIcon.TabStop = false;
 			this.picAboutIcon.Visible = false;
@@ -141,9 +143,11 @@ namespace UtilORama4
 			this.grpSeqFile.Controls.Add(this.label2);
 			this.grpSeqFile.Controls.Add(this.btnBrowseSequence);
 			this.grpSeqFile.Controls.Add(this.txtLORfile);
-			this.grpSeqFile.Location = new System.Drawing.Point(12, 111);
+			this.grpSeqFile.Location = new System.Drawing.Point(14, 128);
+			this.grpSeqFile.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.grpSeqFile.Name = "grpSeqFile";
-			this.grpSeqFile.Size = new System.Drawing.Size(433, 125);
+			this.grpSeqFile.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.grpSeqFile.Size = new System.Drawing.Size(505, 144);
 			this.grpSeqFile.TabIndex = 1;
 			this.grpSeqFile.TabStop = false;
 			this.grpSeqFile.Text = "LOR Channel Configuration";
@@ -151,9 +155,10 @@ namespace UtilORama4
 			// lblInfoViz
 			// 
 			this.lblInfoViz.AutoSize = true;
-			this.lblInfoViz.Font = new System.Drawing.Font("Cascadia Code PL", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblInfoViz.Font = new System.Drawing.Font("Cascadia Code PL", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
 			this.lblInfoViz.ForeColor = System.Drawing.Color.MediumPurple;
-			this.lblInfoViz.Location = new System.Drawing.Point(238, 74);
+			this.lblInfoViz.Location = new System.Drawing.Point(278, 85);
+			this.lblInfoViz.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblInfoViz.Name = "lblInfoViz";
 			this.lblInfoViz.Size = new System.Drawing.Size(55, 15);
 			this.lblInfoViz.TabIndex = 5;
@@ -163,9 +168,10 @@ namespace UtilORama4
 			// lblInfoSeq
 			// 
 			this.lblInfoSeq.AutoSize = true;
-			this.lblInfoSeq.Font = new System.Drawing.Font("Cascadia Code PL", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblInfoSeq.Font = new System.Drawing.Font("Cascadia Code PL", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
 			this.lblInfoSeq.ForeColor = System.Drawing.Color.MediumPurple;
-			this.lblInfoSeq.Location = new System.Drawing.Point(238, 22);
+			this.lblInfoSeq.Location = new System.Drawing.Point(278, 25);
+			this.lblInfoSeq.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblInfoSeq.Name = "lblInfoSeq";
 			this.lblInfoSeq.Size = new System.Drawing.Size(55, 15);
 			this.lblInfoSeq.TabIndex = 1;
@@ -175,18 +181,20 @@ namespace UtilORama4
 			// label5
 			// 
 			this.label5.AutoSize = true;
-			this.label5.Location = new System.Drawing.Point(6, 76);
+			this.label5.Location = new System.Drawing.Point(7, 88);
+			this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(98, 13);
+			this.label5.Size = new System.Drawing.Size(105, 15);
 			this.label5.TabIndex = 4;
 			this.label5.Text = "LOR Visualizer File:";
 			// 
 			// btnBrowseViz
 			// 
-			this.btnBrowseViz.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnBrowseViz.Location = new System.Drawing.Point(380, 95);
+			this.btnBrowseViz.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+			this.btnBrowseViz.Location = new System.Drawing.Point(443, 110);
+			this.btnBrowseViz.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnBrowseViz.Name = "btnBrowseViz";
-			this.btnBrowseViz.Size = new System.Drawing.Size(46, 21);
+			this.btnBrowseViz.Size = new System.Drawing.Size(54, 24);
 			this.btnBrowseViz.TabIndex = 7;
 			this.btnBrowseViz.Text = "...";
 			this.btnBrowseViz.UseVisualStyleBackColor = true;
@@ -194,10 +202,11 @@ namespace UtilORama4
 			// 
 			// txtFileVisual
 			// 
-			this.txtFileVisual.Location = new System.Drawing.Point(6, 95);
+			this.txtFileVisual.Location = new System.Drawing.Point(7, 110);
+			this.txtFileVisual.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.txtFileVisual.Name = "txtFileVisual";
 			this.txtFileVisual.ReadOnly = true;
-			this.txtFileVisual.Size = new System.Drawing.Size(368, 20);
+			this.txtFileVisual.Size = new System.Drawing.Size(429, 23);
 			this.txtFileVisual.TabIndex = 6;
 			this.txtFileVisual.TabStop = false;
 			this.txtFileVisual.Text = "C:\\Users\\Me\\Documents\\Light-O-Rama\\Visualizations\\MyHouse.lee";
@@ -205,19 +214,21 @@ namespace UtilORama4
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(6, 24);
+			this.label2.Location = new System.Drawing.Point(7, 28);
+			this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(103, 13);
+			this.label2.Size = new System.Drawing.Size(107, 15);
 			this.label2.TabIndex = 0;
 			this.label2.Text = "LOR Sequence File:";
 			this.label2.Click += new System.EventHandler(this.label2_Click);
 			// 
 			// btnBrowseSequence
 			// 
-			this.btnBrowseSequence.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnBrowseSequence.Location = new System.Drawing.Point(380, 43);
+			this.btnBrowseSequence.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+			this.btnBrowseSequence.Location = new System.Drawing.Point(443, 50);
+			this.btnBrowseSequence.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnBrowseSequence.Name = "btnBrowseSequence";
-			this.btnBrowseSequence.Size = new System.Drawing.Size(46, 21);
+			this.btnBrowseSequence.Size = new System.Drawing.Size(54, 24);
 			this.btnBrowseSequence.TabIndex = 3;
 			this.btnBrowseSequence.Text = "...";
 			this.btnBrowseSequence.UseVisualStyleBackColor = true;
@@ -225,10 +236,11 @@ namespace UtilORama4
 			// 
 			// txtLORfile
 			// 
-			this.txtLORfile.Location = new System.Drawing.Point(6, 43);
+			this.txtLORfile.Location = new System.Drawing.Point(7, 50);
+			this.txtLORfile.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.txtLORfile.Name = "txtLORfile";
 			this.txtLORfile.ReadOnly = true;
-			this.txtLORfile.Size = new System.Drawing.Size(368, 20);
+			this.txtLORfile.Size = new System.Drawing.Size(429, 23);
 			this.txtLORfile.TabIndex = 2;
 			this.txtLORfile.TabStop = false;
 			this.txtLORfile.Text = "C:\\Users\\Me\\Documents\\Light-O-Rama\\MySequence.lms";
@@ -240,9 +252,11 @@ namespace UtilORama4
 			this.grpxLights.Controls.Add(this.txtXFile);
 			this.grpxLights.Controls.Add(this.label1);
 			this.grpxLights.Controls.Add(this.btnBrowseX);
-			this.grpxLights.Location = new System.Drawing.Point(12, 242);
+			this.grpxLights.Location = new System.Drawing.Point(14, 279);
+			this.grpxLights.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.grpxLights.Name = "grpxLights";
-			this.grpxLights.Size = new System.Drawing.Size(433, 74);
+			this.grpxLights.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.grpxLights.Size = new System.Drawing.Size(505, 85);
 			this.grpxLights.TabIndex = 2;
 			this.grpxLights.TabStop = false;
 			this.grpxLights.Text = "xLights Configuration";
@@ -250,9 +264,10 @@ namespace UtilORama4
 			// lblInfoxL
 			// 
 			this.lblInfoxL.AutoSize = true;
-			this.lblInfoxL.Font = new System.Drawing.Font("Cascadia Code PL", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblInfoxL.Font = new System.Drawing.Font("Cascadia Code PL", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
 			this.lblInfoxL.ForeColor = System.Drawing.Color.MediumPurple;
-			this.lblInfoxL.Location = new System.Drawing.Point(238, 22);
+			this.lblInfoxL.Location = new System.Drawing.Point(278, 25);
+			this.lblInfoxL.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblInfoxL.Name = "lblInfoxL";
 			this.lblInfoxL.Size = new System.Drawing.Size(55, 15);
 			this.lblInfoxL.TabIndex = 1;
@@ -261,10 +276,11 @@ namespace UtilORama4
 			// 
 			// txtXFile
 			// 
-			this.txtXFile.Location = new System.Drawing.Point(6, 40);
+			this.txtXFile.Location = new System.Drawing.Point(7, 46);
+			this.txtXFile.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.txtXFile.Name = "txtXFile";
 			this.txtXFile.ReadOnly = true;
-			this.txtXFile.Size = new System.Drawing.Size(368, 20);
+			this.txtXFile.Size = new System.Drawing.Size(429, 23);
 			this.txtXFile.TabIndex = 2;
 			this.txtXFile.TabStop = false;
 			this.txtXFile.Text = "C:\\Users\\Me\\Documents\\xLights\\MyShow\\xlights_rgbeffects.xml";
@@ -272,18 +288,20 @@ namespace UtilORama4
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(6, 24);
+			this.label1.Location = new System.Drawing.Point(7, 28);
+			this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(120, 13);
+			this.label1.Size = new System.Drawing.Size(129, 15);
 			this.label1.TabIndex = 0;
 			this.label1.Text = "xLights RGBeffects File:";
 			// 
 			// btnBrowseX
 			// 
-			this.btnBrowseX.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnBrowseX.Location = new System.Drawing.Point(381, 40);
+			this.btnBrowseX.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+			this.btnBrowseX.Location = new System.Drawing.Point(444, 46);
+			this.btnBrowseX.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnBrowseX.Name = "btnBrowseX";
-			this.btnBrowseX.Size = new System.Drawing.Size(46, 21);
+			this.btnBrowseX.Size = new System.Drawing.Size(54, 24);
 			this.btnBrowseX.TabIndex = 3;
 			this.btnBrowseX.Text = "...";
 			this.btnBrowseX.UseVisualStyleBackColor = true;
@@ -296,9 +314,11 @@ namespace UtilORama4
 			this.grpSpreadsheet.Controls.Add(this.label3);
 			this.grpSpreadsheet.Controls.Add(this.btnBrowseSheet);
 			this.grpSpreadsheet.Enabled = false;
-			this.grpSpreadsheet.Location = new System.Drawing.Point(12, 363);
+			this.grpSpreadsheet.Location = new System.Drawing.Point(14, 419);
+			this.grpSpreadsheet.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.grpSpreadsheet.Name = "grpSpreadsheet";
-			this.grpSpreadsheet.Size = new System.Drawing.Size(433, 74);
+			this.grpSpreadsheet.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.grpSpreadsheet.Size = new System.Drawing.Size(505, 85);
 			this.grpSpreadsheet.TabIndex = 3;
 			this.grpSpreadsheet.TabStop = false;
 			this.grpSpreadsheet.Text = "Save to Spreadsheet";
@@ -306,9 +326,10 @@ namespace UtilORama4
 			// lblInfoSheet
 			// 
 			this.lblInfoSheet.AutoSize = true;
-			this.lblInfoSheet.Font = new System.Drawing.Font("Cascadia Code PL", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblInfoSheet.Font = new System.Drawing.Font("Cascadia Code PL", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
 			this.lblInfoSheet.ForeColor = System.Drawing.Color.MediumPurple;
-			this.lblInfoSheet.Location = new System.Drawing.Point(238, 22);
+			this.lblInfoSheet.Location = new System.Drawing.Point(278, 25);
+			this.lblInfoSheet.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblInfoSheet.Name = "lblInfoSheet";
 			this.lblInfoSheet.Size = new System.Drawing.Size(55, 15);
 			this.lblInfoSheet.TabIndex = 2;
@@ -317,10 +338,11 @@ namespace UtilORama4
 			// 
 			// txtSpreadsheet
 			// 
-			this.txtSpreadsheet.Location = new System.Drawing.Point(6, 40);
+			this.txtSpreadsheet.Location = new System.Drawing.Point(7, 46);
+			this.txtSpreadsheet.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.txtSpreadsheet.Name = "txtSpreadsheet";
 			this.txtSpreadsheet.ReadOnly = true;
-			this.txtSpreadsheet.Size = new System.Drawing.Size(368, 20);
+			this.txtSpreadsheet.Size = new System.Drawing.Size(429, 23);
 			this.txtSpreadsheet.TabIndex = 1;
 			this.txtSpreadsheet.TabStop = false;
 			this.txtSpreadsheet.Text = "C:\\Users\\Me\\Documents\\LOR-to-xLights_Channel_Comparison.csv";
@@ -328,18 +350,20 @@ namespace UtilORama4
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(6, 24);
+			this.label3.Location = new System.Drawing.Point(7, 28);
+			this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(89, 13);
+			this.label3.Size = new System.Drawing.Size(95, 15);
 			this.label3.TabIndex = 0;
 			this.label3.Text = "Spreadsheet File:";
 			// 
 			// btnBrowseSheet
 			// 
-			this.btnBrowseSheet.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnBrowseSheet.Location = new System.Drawing.Point(381, 40);
+			this.btnBrowseSheet.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+			this.btnBrowseSheet.Location = new System.Drawing.Point(444, 46);
+			this.btnBrowseSheet.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnBrowseSheet.Name = "btnBrowseSheet";
-			this.btnBrowseSheet.Size = new System.Drawing.Size(46, 21);
+			this.btnBrowseSheet.Size = new System.Drawing.Size(54, 24);
 			this.btnBrowseSheet.TabIndex = 3;
 			this.btnBrowseSheet.Text = "...";
 			this.btnBrowseSheet.UseVisualStyleBackColor = true;
@@ -355,9 +379,11 @@ namespace UtilORama4
 			this.groupBox1.Controls.Add(this.lblPathData);
 			this.groupBox1.Controls.Add(this.btnBrowseDatabase);
 			this.groupBox1.Controls.Add(this.txtFileDatabase);
-			this.groupBox1.Location = new System.Drawing.Point(12, 21);
+			this.groupBox1.Location = new System.Drawing.Point(14, 24);
+			this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(433, 74);
+			this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.groupBox1.Size = new System.Drawing.Size(505, 85);
 			this.groupBox1.TabIndex = 0;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Util-O-Rama Master Channel Database";
@@ -365,9 +391,10 @@ namespace UtilORama4
 			// lblInfoDat
 			// 
 			this.lblInfoDat.AutoSize = true;
-			this.lblInfoDat.Font = new System.Drawing.Font("Cascadia Code PL", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblInfoDat.Font = new System.Drawing.Font("Cascadia Code PL", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
 			this.lblInfoDat.ForeColor = System.Drawing.Color.MediumPurple;
-			this.lblInfoDat.Location = new System.Drawing.Point(238, 24);
+			this.lblInfoDat.Location = new System.Drawing.Point(278, 28);
+			this.lblInfoDat.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblInfoDat.Name = "lblInfoDat";
 			this.lblInfoDat.Size = new System.Drawing.Size(55, 15);
 			this.lblInfoDat.TabIndex = 1;
@@ -377,18 +404,20 @@ namespace UtilORama4
 			// lblPathData
 			// 
 			this.lblPathData.AutoSize = true;
-			this.lblPathData.Location = new System.Drawing.Point(6, 24);
+			this.lblPathData.Location = new System.Drawing.Point(7, 28);
+			this.lblPathData.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblPathData.Name = "lblPathData";
-			this.lblPathData.Size = new System.Drawing.Size(81, 13);
+			this.lblPathData.Size = new System.Drawing.Size(85, 15);
 			this.lblPathData.TabIndex = 0;
 			this.lblPathData.Text = "Database Path:";
 			// 
 			// btnBrowseDatabase
 			// 
-			this.btnBrowseDatabase.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnBrowseDatabase.Location = new System.Drawing.Point(380, 43);
+			this.btnBrowseDatabase.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+			this.btnBrowseDatabase.Location = new System.Drawing.Point(443, 50);
+			this.btnBrowseDatabase.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnBrowseDatabase.Name = "btnBrowseDatabase";
-			this.btnBrowseDatabase.Size = new System.Drawing.Size(46, 21);
+			this.btnBrowseDatabase.Size = new System.Drawing.Size(54, 24);
 			this.btnBrowseDatabase.TabIndex = 3;
 			this.btnBrowseDatabase.Text = "...";
 			this.btnBrowseDatabase.UseVisualStyleBackColor = true;
@@ -396,10 +425,11 @@ namespace UtilORama4
 			// 
 			// txtFileDatabase
 			// 
-			this.txtFileDatabase.Location = new System.Drawing.Point(6, 43);
+			this.txtFileDatabase.Location = new System.Drawing.Point(7, 50);
+			this.txtFileDatabase.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.txtFileDatabase.Name = "txtFileDatabase";
 			this.txtFileDatabase.ReadOnly = true;
-			this.txtFileDatabase.Size = new System.Drawing.Size(368, 20);
+			this.txtFileDatabase.Size = new System.Drawing.Size(429, 23);
 			this.txtFileDatabase.TabIndex = 2;
 			this.txtFileDatabase.TabStop = false;
 			this.txtFileDatabase.Text = "C:\\Users\\Me\\Documents\\Util-O-Rama\\ChannelDB";
@@ -407,17 +437,18 @@ namespace UtilORama4
 			// picDivider
 			// 
 			this.picDivider.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-			this.picDivider.Location = new System.Drawing.Point(12, 331);
+			this.picDivider.Location = new System.Drawing.Point(14, 382);
+			this.picDivider.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.picDivider.Name = "picDivider";
-			this.picDivider.Size = new System.Drawing.Size(433, 4);
+			this.picDivider.Size = new System.Drawing.Size(504, 4);
 			this.picDivider.TabIndex = 70;
 			this.picDivider.TabStop = false;
 			// 
 			// frmCompare
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(455, 471);
+			this.ClientSize = new System.Drawing.Size(531, 543);
 			this.Controls.Add(this.picDivider);
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.grpSpreadsheet);
@@ -427,6 +458,7 @@ namespace UtilORama4
 			this.Controls.Add(this.picAboutIcon);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.MaximizeBox = false;
 			this.Name = "frmCompare";
 			this.Text = "Compare-O-Rama";

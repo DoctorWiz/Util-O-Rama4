@@ -1,0 +1,133 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<ApplicationIcon>Select-O-Rama.ico</ApplicationIcon>
+		<!-- Superceded by Assembly Title? -->
+		<AssemblyName>Select-O-Rama</AssemblyName>
+		<AssemblyTitle>Select-O-Rama</AssemblyTitle>
+		<AssemblyVersion>4.6.0.%2a</AssemblyVersion>
+		<ApplicationRevision>0</ApplicationRevision>
+		<ApplicationVersion>4.0.0.%2a</ApplicationVersion>
+		<Authors>Doctor 🧙 Wizard</Authors>
+		<Company>W⚡zlights Software</Company>
+		<Copyright>Copyright © 2022+ by Doctor Wizard 🧙 and W⚡zlights Software</Copyright>
+		<CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+		<Description>Explorer Light-O-Rama Showtime S4 sequences, select channels, and create and view channel lists.</Description>
+		<FileVersion>4.6.0.%2a</FileVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<InformationalVersion>4.6.0.%2a</InformationalVersion>
+		<InstallUrl>http://wizlights.com/utilorama/download/</InstallUrl>
+		<IsPublishable>False</IsPublishable>
+		<Nullable>enable</Nullable>
+		<OutputType>WinExe</OutputType>
+		<PackageIcon>Select-O-Rama.png</PackageIcon>
+		<PackageID>Util-O-Rama</PackageID>
+		<PackageProjectUrl>http://wizlights/utilorama/selectorama</PackageProjectUrl>
+		<PackageTags>Util-O-Rama; Light-O-Rama; xLights; Christmas; Sequences; Light Show; Channels; Select; Explore</PackageTags>
+		<PlatformTarget>x64</PlatformTarget>
+		<ProductName>Select-O-Rama</ProductName>
+		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+		<PublisherName>W⚡zlights Software</PublisherName>
+		<PublishUrl>ftp://wizlights.com/utilorama/download/</PublishUrl>
+		<RepositoryUrl>https://github.com/DoctorWiz/Util-O-Rama4/tree/master/SelectORama</RepositoryUrl>
+		<RootNamespace>UtilORama4</RootNamespace>
+		<SuiteName>Util-O-Rama</SuiteName>
+		<SupportUrl>http://wizlights.com/utilorama/selectorama/default.html</SupportUrl>
+		<TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
+		<UseWindowsForms>true</UseWindowsForms>
+		<Version>4.6.0.2</Version>
+		<WebPage>http://wizlights.com/utilorama/selectorama/default.html</WebPage>
+		<StartupObject>UtilORama4.Program</StartupObject>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <DefineConstants>$(DefineConstants)TRACE;TREENODES</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <DefineConstants>$(DefineConstants)TRACE;TREENODES</DefineConstants>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="desktop.ini" />
+		<None Remove="*.log" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Remove="SeqMemberBaseExtenderForNodes.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="..\..\COMMON\CommaSeparatedValues\csv.cs" Link="csv.cs" />
+		<Compile Include="..\..\COMMON\FileHelper\FileHelper.cs" Link="FileHelper.cs" />
+		<Compile Include="..\..\COMMON\FormHelper\FormHelper.cs" Link="FormHelper.cs" />
+		<Compile Include="..\Common\RecentlyUsed\MRUoRama.cs" Link="MRUoRama.cs" />
+		<Compile Include="..\Common\Selections\Selections.cs" Link="Selections.cs" />
+		<Compile Include="..\Common\Sequence4\Seq4Admin.cs" Link="Seq4Admin.cs" />
+		<Compile Include="..\Common\Sequence4\SeqChannel.cs" Link="SeqChannel.cs" />
+		<Compile Include="..\Common\Sequence4\SeqChannelGroup.cs" Link="SeqChannelGroup.cs" />
+		<Compile Include="..\Common\Sequence4\SeqCosmicDevice.cs" Link="SeqCosmicDevice.cs" />
+		<Compile Include="..\Common\Sequence4\SeqEnums.cs" Link="SeqEnums.cs" />
+		<Compile Include="..\Common\Sequence4\SeqMemberBaseExtenderForNodes.cs" Link="SeqMemberBaseExtenderForNodes.cs" />
+		<Compile Include="..\Common\Sequence4\SeqMemberBase.cs" Link="SeqMemberBase.cs" />
+		<Compile Include="..\Common\Sequence4\SeqMemberInterface.cs" Link="SeqMemberInterface.cs" />
+		<Compile Include="..\Common\Sequence4\SeqMembership.cs" Link="SeqMembership.cs" />
+		<Compile Include="..\Common\Sequence4\SeqRGBChannel.cs" Link="SeqRGBChannel.cs" />
+		<Compile Include="..\Common\Sequence4\SeqSubs.cs" Link="SeqSubs.cs" />
+		<Compile Include="..\Common\Sequence4\SeqTimingGrid.cs" Link="SeqTimingGrid.cs" />
+		<Compile Include="..\Common\Sequence4\SeqTrack.cs" Link="SeqTrack.cs" />
+		<Compile Include="..\Common\Sequence4\SeqTreeUtils.cs" Link="SeqTreeUtils.cs" />
+		<Compile Include="..\Common\Sequence4\Sequence4.cs" Link="Sequence4.cs" />
+		<Compile Include="..\Common\Sequence4\Viz4.cs" Link="Viz4.cs" />
+		<Compile Include="..\Common\Sequence4\VizChannel.cs" Link="VizChannel.cs" />
+		<Compile Include="..\Common\Sequence4\VizDrawObject.cs" Link="VizDrawObject.cs" />
+		<Compile Include="..\Common\Sequence4\VizGroup.cs" Link="VizGroup.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="Select-O-Rama.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Syncfusion.SfListView.WinForms" Version="20.2.0.36" />
+		<PackageReference Include="Syncfusion.Tools.Windows" Version="20.1.0.55" />
+		<PackageReference Include="System.DirectoryServices.AccountManagement" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="FuzzORama">
+			<HintPath>..\Common\FuzzORama\bin\Release\net6.0-windows10.0.19041.0\FuzzORama.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Properties\Resources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+		<Compile Update="Settings.Designer.cs">
+		  <DesignTimeSharedInput>True</DesignTimeSharedInput>
+		  <AutoGen>True</AutoGen>
+		  <DependentUpon>Settings.settings</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Properties\Resources.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="Select-O-Rama.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Update="Settings.settings">
+		  <Generator>SettingsSingleFileGenerator</Generator>
+		  <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+		</None>
+	</ItemGroup>
+</Project>

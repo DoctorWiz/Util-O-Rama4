@@ -1,74 +1,97 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<Copyright>Copyright © 2022+ by Doctor Wizard 🧙 and W⚡zlights Software</Copyright>
-		<OutputType>WinExe</OutputType>
-		<TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
-		<RootNamespace>UtilORama4</RootNamespace>
-		<AssemblyName>Vamp-O-Rama</AssemblyName>
-		<Nullable>enable</Nullable>
-		<UseWindowsForms>true</UseWindowsForms>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<StartupObject>UtilORama4.Program</StartupObject>
-		<ApplicationIcon>Graphics\VampHeadOverPurpleBulb.ico</ApplicationIcon>
-		<IsPublishable>False</IsPublishable>
-		<PlatformTarget>x64</PlatformTarget>
-		<PackageIcon>VampHeadOverPurpleBulb.png</PackageIcon>
-		<RepositoryUrl>https://github.com/DoctorWiz/Util-O-Rama4/tree/master/VampORama</RepositoryUrl>
-		<PublishUrl>ftp://wizlights.com/utilorama/download/</PublishUrl>
-		<InstallUrl>http://wizlights.com/utilorama/download/</InstallUrl>
-		<SupportUrl>http://wizlights.com/utilorama/vamporama/default.html</SupportUrl>
-		<ProductName>Vamp-O-Rama</ProductName>
-		<PublisherName>W⚡zlights Software</PublisherName>
-		<SuiteName>Util-O-Rama</SuiteName>
-		<CreateWebPageOnPublish>true</CreateWebPageOnPublish>
-		<WebPage>http://wizlights.com/utilorama/vamporama/default.html</WebPage>
-		<ApplicationRevision>0</ApplicationRevision>
-		<ApplicationVersion>4.0.0.%2a</ApplicationVersion>
-		<PackageTags>Util-O-Rama; Light-O-Rama; xLights; Vamp; Queen Mary; Music; Christmas; Polyphonic Transcription; Light Show</PackageTags>
-		<Description>
-			Vamp your Christmas music and generate detailed timing tracks for Light-O-Rama Showtime S4 and xLights.  Uses the Queen Mary and other Vamp plugins but performs extensive post-processing on the output.
-		</Description>
-	</PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Vamp-O-Rama.ico</ApplicationIcon>
+    <!-- Superceded by Assembly Title? -->
+    <AssemblyName>Vamp-O-Rama</AssemblyName>
+    <AssemblyTitle>Vamp-O-Rama</AssemblyTitle>
+    <AssemblyVersion>4.6.0.%2a</AssemblyVersion>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>4.0.0.%2a</ApplicationVersion>
+    <Authors>Doctor 🧙 Wizard</Authors>
+    <Company>W⚡zlights Software</Company>
+    <Copyright>Copyright © 2022+ by Doctor Wizard 🧙 and W⚡zlights Software</Copyright>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+    <Description>
+      Vamp your Christmas music and generate detailed timing tracks for Light-O-Rama Showtime S4 and xLights.  Uses the Queen Mary and other Vamp plugins but performs extensive post-processing on the output.
+    </Description>
+    <FileVersion>4.6.0.%2a</FileVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <InformationalVersion>4.6.0.%2a</InformationalVersion>
+    <InstallUrl>https://wizlights.com/utilorama/download/</InstallUrl>
+    <IsPublishable>False</IsPublishable>
+    <Nullable>enable</Nullable>
+    <OutputType>WinExe</OutputType>
+    <PackageIcon>Vamp-O-Rama.png</PackageIcon>
+    <PackageID>Util-O-Rama</PackageID>
+    <PackageProjectUrl>https://wizlights/utilorama/vamporama</PackageProjectUrl>
+    <PackageTags>Util-O-Rama; Light-O-Rama; xLights; Christmas; Sequences; Light Show; Vamp; Queen Mary; Music; Polyphonic Transcription; Bars and Beats; Note Onsets</PackageTags>
+    <PlatformTarget>x64</PlatformTarget>
+    <ProductName>Vamp-O-Rama</ProductName>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+    <PublisherName>W⚡zlights Software</PublisherName>
+    <PublishUrl>ftp://wizlights.com/utilorama/download/</PublishUrl>
+    <RepositoryUrl>https://github.com/DoctorWiz/Util-O-Rama4/tree/master/VampORama</RepositoryUrl>
+    <RootNamespace>UtilORama4</RootNamespace>
+    <SuiteName>Util-O-Rama</SuiteName>
+    <SupportUrl>https://wizlights.com/utilorama/vamporama/default.html</SupportUrl>
+    <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Version>4.6.0.2</Version>
+    <WebPage>https://wizlights.com/utilorama/vamporama/default.html</WebPage>
+  </PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<WarningLevel>0</WarningLevel>
-	</PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningLevel>0</WarningLevel>
+  </PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<WarningLevel>0</WarningLevel>
-	</PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <WarningLevel>0</WarningLevel>
+  </PropertyGroup>
 
-	<ItemGroup>
-		<Compile Remove="xInhTest.cs" />
-	</ItemGroup>
+  <ItemGroup>
+    <Compile Remove="%2a%2a\**" />
+    <Compile Remove="Graphics\**" />
+    <EmbeddedResource Remove="%2a%2a\**" />
+    <EmbeddedResource Remove="Graphics\**" />
+    <None Remove="%2a%2a\**" />
+    <None Remove="Graphics\**" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<None Remove="desktop.ini" />
-		<None Remove="VampORamaError2022-05-09.log" />
-	</ItemGroup>
+  <ItemGroup>
+    <Compile Remove="%2a%2a/%2a.cs" />
+    <Compile Remove="xInhTest.cs" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<Compile Include="..\..\COMMON\FileHelper\FileHelper.cs" Link="FileHelper.cs" />
-		<Compile Include="..\..\COMMON\FormHelper\FormHelper.cs" Link="FormHelper.cs" />
-		<Compile Include="..\..\COMMON\RecentlyUsed\MRU.cs" Link="MRU.cs" />
-		<Compile Include="..\Common\About\About.cs" Link="About.cs" />
-		<Compile Include="..\Common\About\About.Designer.cs" Link="About.Designer.cs" />
-		<Compile Include="..\Common\Sequence4\Seq4Admin.cs" Link="Seq4Admin.cs" />
-		<Compile Include="..\Common\Sequence4\SeqChannel.cs" Link="SeqChannel.cs" />
-		<Compile Include="..\Common\Sequence4\SeqChannelGroup.cs" Link="SeqChannelGroup.cs" />
-		<Compile Include="..\Common\Sequence4\SeqCosmicDevice.cs" Link="SeqCosmicDevice.cs" />
-		<Compile Include="..\Common\Sequence4\SeqEnums.cs" Link="SeqEnums.cs" />
-		<Compile Include="..\Common\Sequence4\SeqMemberBase.cs" Link="SeqMemberBase.cs" />
-		<Compile Include="..\Common\Sequence4\SeqMemberInterface.cs" Link="SeqMemberInterface.cs" />
-		<Compile Include="..\Common\Sequence4\SeqMembership.cs" Link="SeqMembership.cs" />
-		<Compile Include="..\Common\Sequence4\SeqRGBChannel.cs" Link="SeqRGBChannel.cs" />
-		<Compile Include="..\Common\Sequence4\SeqSubs.cs" Link="SeqSubs.cs" />
-		<Compile Include="..\Common\Sequence4\SeqTimingGrid.cs" Link="SeqTimingGrid.cs" />
-		<Compile Include="..\Common\Sequence4\SeqTrack.cs" Link="SeqTrack.cs" />
-		<Compile Include="..\Common\Sequence4\Sequence4.cs" Link="Sequence4.cs" />
-		<Compile Include="..\Common\Sequence4\VizStub.cs" Link="VizStub.cs" />
-		<!--
+  <ItemGroup>
+    <EmbeddedResource Remove="%2a%2a/%2a.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="%2a%2a/%2a" />
+    <None Remove="desktop.ini" />
+    <None Remove="VampORamaError2022-05-09.log" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\COMMON\FileHelper\FileHelper.cs" Link="FileHelper.cs" />
+    <Compile Include="..\..\COMMON\FormHelper\FormHelper.cs" Link="FormHelper.cs" />
+    <Compile Include="..\Common\RecentlyUsed\MRUoRama.cs" Link="MRUoRama.cs" />
+    <Compile Include="..\Common\Sequence4\Seq4Admin.cs" Link="Seq4Admin.cs" />
+    <Compile Include="..\Common\Sequence4\SeqChannel.cs" Link="SeqChannel.cs" />
+    <Compile Include="..\Common\Sequence4\SeqChannelGroup.cs" Link="SeqChannelGroup.cs" />
+    <Compile Include="..\Common\Sequence4\SeqCosmicDevice.cs" Link="SeqCosmicDevice.cs" />
+    <Compile Include="..\Common\Sequence4\SeqEnums.cs" Link="SeqEnums.cs" />
+    <Compile Include="..\Common\Sequence4\SeqMemberBase.cs" Link="SeqMemberBase.cs" />
+    <Compile Include="..\Common\Sequence4\SeqMemberInterface.cs" Link="SeqMemberInterface.cs" />
+    <Compile Include="..\Common\Sequence4\SeqMembership.cs" Link="SeqMembership.cs" />
+    <Compile Include="..\Common\Sequence4\SeqRGBChannel.cs" Link="SeqRGBChannel.cs" />
+    <Compile Include="..\Common\Sequence4\SeqSubs.cs" Link="SeqSubs.cs" />
+    <Compile Include="..\Common\Sequence4\SeqTimingGrid.cs" Link="SeqTimingGrid.cs" />
+    <Compile Include="..\Common\Sequence4\SeqTrack.cs" Link="SeqTrack.cs" />
+    <Compile Include="..\Common\Sequence4\Sequence4.cs" Link="Sequence4.cs" />
+    <Compile Include="..\Common\Sequence4\VizStub.cs" Link="VizStub.cs" />
+    <!--
 			Vamp-O-Rama does NOT use the Visualizer, so include Viz4Stub INSTEAD OF
 			Visualization4, VizChannel, VizGroup, and VizDrawobject
 			<Compile Include="..\Common\Sequence4\Visualization4.cs" Link="Visualization4.cs" />
@@ -76,314 +99,344 @@
 			<Compile Include="..\Common\Sequence4\VizDrawObject.cs" Link="VizDrawObject.cs" />
 			<Compile Include="..\Common\Sequence4\VizGroup.cs" Link="VizGroup.cs" /> 
 		-->
-		<Compile Include="..\Common\xUtils\xAdmin.cs" Link="xAdmin.cs" />
-		<Compile Include="..\Common\xUtils\xEffect.cs" Link="xEffect.cs" />
-		<Compile Include="..\Common\xUtils\xObjects.cs" Link="xObjects.cs" />
-		<Compile Include="..\Common\xUtils\xRGBEffects.cs" Link="xRGBEffects.cs" />
-		<Compile Include="..\Common\xUtils\xSequence.cs" Link="xSequence.cs" />
-		<Compile Include="..\Common\xUtils\xTimings.cs" Link="xTimings.cs" />
-	</ItemGroup>
+    <Compile Include="..\Common\xUtils\xAdmin.cs" Link="xAdmin.cs" />
+    <Compile Include="..\Common\xUtils\xEffect.cs" Link="xEffect.cs" />
+    <Compile Include="..\Common\xUtils\xObjects.cs" Link="xObjects.cs" />
+    <Compile Include="..\Common\xUtils\xRGBEffects.cs" Link="xRGBEffects.cs" />
+    <Compile Include="..\Common\xUtils\xSequence.cs" Link="xSequence.cs" />
+    <Compile Include="..\Common\xUtils\xTimings.cs" Link="xTimings.cs" />
+    <Compile Include="Annotator.cs" />
+    <Compile Include="frmAbout.cs" />
+    <Compile Include="frmAbout.Designer.cs" />
+    <Compile Include="frmOutputLog.cs" />
+    <Compile Include="frmOutputLog.Designer.cs" />
+    <Compile Include="frmSettings.cs" />
+    <Compile Include="frmSettings.Designer.cs" />
+    <Compile Include="frmSplash.cs" />
+    <Compile Include="frmSplash.Designer.cs" />
+    <Compile Include="frmTweakInfo.cs" />
+    <Compile Include="frmTweakInfo.Designer.cs" />
+    <Compile Include="frmVamp.cs" />
+    <Compile Include="frmVamp.Designer.cs" />
+    <Compile Include="MusicalNotation.cs" />
+    <Compile Include="Nuvamp.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="SeqFunctions.cs" />
+    <Compile Include="Settings.Designer.cs" />
+    <Compile Include="SongFields.cs" />
+    <Compile Include="Transform0Interface.cs" />
+    <Compile Include="Transform1BarBeats.cs" />
+    <Compile Include="Transform2NoteOnsets.cs" />
+    <Compile Include="Transform3Polyphonic.cs" />
+    <Compile Include="Transform4PitchKey.cs" />
+    <Compile Include="Transform5Tempo.cs" />
+    <Compile Include="Transform6Segments.cs" />
+    <Compile Include="Transform7Chromagram.cs" />
+    <Compile Include="Transform8Chords.cs" />
+    <Compile Include="VampConstants.cs" />
+    <Compile Include="VampSeq.cs" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<Content Include="Graphics\VampHeadOverPurpleBulb.ico" />
-	</ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="frmVamp.resx" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Syncfusion.GridHelperClasses.Windows" Version="20.1.0.52" />
-		<PackageReference Include="Syncfusion.Tools.Windows" Version="20.1.0.52" />
-		<PackageReference Include="System.DirectoryServices.AccountManagement" Version="6.0.0" />
-	</ItemGroup>
+  <ItemGroup>
+    <None Include="Settings.settings" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<Reference Include="TagLibSharp">
-			<HintPath>..\..\COMMON\taglib-sharp-main\src\TaglibSharp\bin\Release\net6.0-windows10.0.19041.0\TagLibSharp.dll</HintPath>
-		</Reference>
-		<Reference Include="ToggleSwitch">
-			<HintPath>..\..\Controls\ToggleSwitch\ToggleSwitch\bin\Release\net6.0-windows10.0.19041.0\ToggleSwitch.dll</HintPath>
-		</Reference>
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Syncfusion.GridHelperClasses.Windows" Version="20.1.0.52" />
+    <PackageReference Include="Syncfusion.Tools.Windows" Version="20.1.0.52" />
+    <PackageReference Include="System.DirectoryServices.AccountManagement" Version="6.0.0" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<Compile Update="Properties\Resources.Designer.cs">
-			<DesignTime>True</DesignTime>
-			<AutoGen>True</AutoGen>
-			<DependentUpon>Resources.resx</DependentUpon>
-		</Compile>
-		<Compile Update="Properties\Settings.Designer.cs">
-			<DesignTimeSharedInput>True</DesignTimeSharedInput>
-			<AutoGen>True</AutoGen>
-			<DependentUpon>Settings.settings</DependentUpon>
-		</Compile>
-	</ItemGroup>
+  <ItemGroup>
+    <Reference Include="TagLibSharp">
+      <HintPath>..\..\COMMON\TagLib-Sharp\src\TaglibSharp\obj\Release\net6.0-windows10.0.19041.0\ref\TagLibSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="ToggleSwitch">
+      <HintPath>..\..\Controls\ToggleSwitch\ToggleSwitch\bin\Release\net6.0-windows10.0.19041.0\ToggleSwitch.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 
-	<ItemGroup>
-		<EmbeddedResource Update="Properties\Resources.resx">
-			<Generator>ResXFileCodeGenerator</Generator>
-			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
-		</EmbeddedResource>
-	</ItemGroup>
+  <ItemGroup>
+    <Compile Update="Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
 
-	<ItemGroup>
-		<None Update="Graphics\VampHeadOverPurpleBulb.png">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
-		<None Update="Include\NeedSonicAnnotator.htm">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\Activate.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\BeamUp.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\Beeow.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\Boing.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\Bonnggg.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\Brain.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\Cheering.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\Click.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\Crap.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\Crash.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\D%27oh.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\Dammit.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\Doorbell.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\DrumRoll.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\Excellent.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\Gong.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\I%27mAWizard.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\Kalimbra.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\Log.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\Medieval.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\MeepMeep.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\Noooo.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\Ominnous.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\Pinball.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\Pop.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\SamCurseC.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\SamCurseF.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\ScaleUp.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\SystemWorks.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\Ta-da.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\ThatsThat.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\WahWahWah.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\Wheee.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\WhistleDown.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\WhistleUp.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\Woo-Hoo.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\WrongButton.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\Noises\Zooweep.wav">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\bbc-speech.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\mtg-melodia.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\qm-adaptivespectrogram.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\qm-chromagram.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\qm-constantq.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\qm-keydetector.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\qm-percussivedetector.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\qm-segmenter.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\qm-tempotracker.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\queenmary-segmenter.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_bbc-vamp-plugins_bbc-rhythm_tempo.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_bbc-vamp-plugins_bbc-speechmusic-segmenter_segmentation.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_beatroot-vamp_beatroot_beats.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_cepstral-pitchtracker_cepstral-pitchtracker_f0.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_cepstral-pitchtracker_cepstral-pitchtracker_notes.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_cqvamp_cqchromavamp_chromagram.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_mtg-melodia_melodia_melody.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_mvamp-ibt_marsyas_ibt_beat_times.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_mvamp-ibt_marsys_ibt_beat_times.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_nnls-chroma_chordino_chordnotes.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_nnls-chroma_chordino_chordnotes.n3acker_cepstral-pitchtracker_notes.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_nnls-chroma_chordino_harmonicchange.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_nnls-chroma_chordino_simplechord.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_nnls-chroma_nnls-chroma_chroma.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_qm-vamp-plugins_qm-barbeattracker_beats.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_qm-vamp-plugins_qm-chromagram_chromagram.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_qm-vamp-plugins_qm-keydetector_key.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_qm-vamp-plugins_qm-onsetdetector_onsets.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_qm-vamp-plugins_qm-segmenter_segmentation.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_qm-vamp-plugins_qm-tempotracker_output_beats.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_qm-vamp-plugins_qm-tempotracker_tempo.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_qm-vamp-plugins_qm-tonalchange_tcfunction.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_qm-vamp-plugins_qm-transcription_transcription.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_segmentino_segmentino_segmentation.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_silvet_silvet_chroma.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_silvet_silvet_onsets.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_tempogram_tempogram_cyclicTempogram.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_tipic_tipic_chroma-smoothed.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_tipic_tipic_chroma.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_vamp-aubio_aubionotes_notes.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_vamp-aubio_aubioonset_onsets.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_vamp-aubio_aubiopitch_frequency.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_vamp-aubio_aubiotempo_beats.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_vamp-aubio_aubiotempo_tempo.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Include\VampConfigs\vamp_vamp-onsetsds_onsetsds_onsets.n3">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Properties\Settings.settings">
-			<Generator>SettingsSingleFileGenerator</Generator>
-			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
-		</None>
-	</ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Include\NeedSonicAnnotator.htm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\Activate.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\BeamUp.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\Beeow.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\Boing.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\Bonnggg.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\Brain.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\Cheering.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\Click.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\Crap.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\Crash.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\D%27oh.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\Dammit.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\Doorbell.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\DrumRoll.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\Excellent.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\Gong.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\I%27mAWizard.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\Kalimbra.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\Log.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\Medieval.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\MeepMeep.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\Noooo.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\Ominnous.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\Pinball.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\Pop.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\SamCurseC.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\SamCurseF.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\ScaleUp.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\SystemWorks.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\Ta-da.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\ThatsThat.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\WahWahWah.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\Wheee.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\WhistleDown.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\WhistleUp.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\Woo-Hoo.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\WrongButton.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\Noises\Zooweep.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\bbc-speech.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\mtg-melodia.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\qm-adaptivespectrogram.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\qm-chromagram.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\qm-constantq.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\qm-keydetector.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\qm-percussivedetector.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\qm-segmenter.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\qm-tempotracker.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\queenmary-segmenter.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_bbc-vamp-plugins_bbc-rhythm_tempo.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_bbc-vamp-plugins_bbc-speechmusic-segmenter_segmentation.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_beatroot-vamp_beatroot_beats.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_cepstral-pitchtracker_cepstral-pitchtracker_f0.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_cepstral-pitchtracker_cepstral-pitchtracker_notes.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_cqvamp_cqchromavamp_chromagram.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_mtg-melodia_melodia_melody.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_mvamp-ibt_marsyas_ibt_beat_times.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_mvamp-ibt_marsys_ibt_beat_times.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_nnls-chroma_chordino_chordnotes.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_nnls-chroma_chordino_chordnotes.n3acker_cepstral-pitchtracker_notes.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_nnls-chroma_chordino_harmonicchange.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_nnls-chroma_chordino_simplechord.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_nnls-chroma_nnls-chroma_chroma.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_qm-vamp-plugins_qm-barbeattracker_beats.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_qm-vamp-plugins_qm-chromagram_chromagram.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_qm-vamp-plugins_qm-keydetector_key.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_qm-vamp-plugins_qm-onsetdetector_onsets.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_qm-vamp-plugins_qm-segmenter_segmentation.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_qm-vamp-plugins_qm-tempotracker_output_beats.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_qm-vamp-plugins_qm-tempotracker_tempo.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_qm-vamp-plugins_qm-tonalchange_tcfunction.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_qm-vamp-plugins_qm-transcription_transcription.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_segmentino_segmentino_segmentation.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_silvet_silvet_chroma.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_silvet_silvet_onsets.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_tempogram_tempogram_cyclicTempogram.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_tipic_tipic_chroma-smoothed.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_tipic_tipic_chroma.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_vamp-aubio_aubionotes_notes.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_vamp-aubio_aubioonset_onsets.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_vamp-aubio_aubiopitch_frequency.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_vamp-aubio_aubiotempo_beats.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_vamp-aubio_aubiotempo_tempo.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Include\VampConfigs\vamp_vamp-onsetsds_onsetsds_onsets.n3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
 
 </Project>

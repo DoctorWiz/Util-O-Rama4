@@ -182,7 +182,7 @@ namespace LOR4
 				{
 					if (myOwner.MemberType != LOR4MemberType.Sequence)
 					{
-						string msg = "Why is a " + LOR4SeqEnums.MemberName(myOwner.MemberType);
+						string msg = "Why is a " + LOR4SeqEnums.MemberTypeName(myOwner.MemberType);
 						msg += "Trying to access members by SavedIndex?";
 						Fyle.BUG(msg);
 					}
@@ -201,7 +201,7 @@ namespace LOR4
 				{
 					if (myOwner.MemberType != LOR4MemberType.Sequence)
 					{
-						string msg = "Why is a " + LOR4SeqEnums.MemberName(myOwner.MemberType);
+						string msg = "Why is a " + LOR4SeqEnums.MemberTypeName(myOwner.MemberType);
 						msg += "Trying to access members by AltSavedIndex?";
 						Fyle.BUG(msg);
 					}
@@ -217,7 +217,7 @@ namespace LOR4
 				{
 					if (myOwner.MemberType != LOR4MemberType.Visualization)
 					{
-						string msg = "Why is a " + LOR4SeqEnums.MemberName(myOwner.MemberType);
+						string msg = "Why is a " + LOR4SeqEnums.MemberTypeName(myOwner.MemberType);
 						msg += "Trying to access members by ItemID?";
 						Fyle.BUG(msg);
 					}
@@ -233,7 +233,7 @@ namespace LOR4
 				{
 					if (myOwner.MemberType != LOR4MemberType.Visualization)
 					{
-						string msg = "Why is a " + LOR4SeqEnums.MemberName(myOwner.MemberType);
+						string msg = "Why is a " + LOR4SeqEnums.MemberTypeName(myOwner.MemberType);
 						msg += "Trying to access members by AltItemID?";
 						Fyle.BUG(msg);
 					}
@@ -249,7 +249,7 @@ namespace LOR4
 				{
 					if (myOwner.MemberType != LOR4MemberType.Sequence)
 					{
-						string msg = "Why is a " + LOR4SeqEnums.MemberName(myOwner.MemberType);
+						string msg = "Why is a " + LOR4SeqEnums.MemberTypeName(myOwner.MemberType);
 						msg += "Trying to access members by SaveID?";
 						Fyle.BUG(msg);
 					}
@@ -265,7 +265,7 @@ namespace LOR4
 				{
 					if (myOwner.MemberType != LOR4MemberType.Sequence)
 					{
-						string msg = "Why is a " + LOR4SeqEnums.MemberName(myOwner.MemberType);
+						string msg = "Why is a " + LOR4SeqEnums.MemberTypeName(myOwner.MemberType);
 						msg += "Trying to access members by AltSaveID?";
 						Fyle.BUG(msg);
 					}
@@ -281,7 +281,7 @@ namespace LOR4
 				{
 					if (myOwner.MemberType != LOR4MemberType.VizItemGroup)
 					{
-						string msg = "Why is a " + LOR4SeqEnums.MemberName(myOwner.MemberType);
+						string msg = "Why is a " + LOR4SeqEnums.MemberTypeName(myOwner.MemberType);
 						msg += "Trying to access members by ObjectID?";
 						Fyle.BUG(msg);
 					}
@@ -297,7 +297,7 @@ namespace LOR4
 				{
 					if (myOwner.MemberType != LOR4MemberType.VizItemGroup)
 					{
-						string msg = "Why is a " + LOR4SeqEnums.MemberName(myOwner.MemberType);
+						string msg = "Why is a " + LOR4SeqEnums.MemberTypeName(myOwner.MemberType);
 						msg += "Trying to access members by AltObjectID?";
 						Fyle.BUG(msg);
 					}
@@ -313,7 +313,7 @@ namespace LOR4
 				{
 					if (myOwner.MemberType != LOR4MemberType.Sequence)
 					{
-						string msg = "Why is a " + LOR4SeqEnums.MemberName(myOwner.MemberType);
+						string msg = "Why is a " + LOR4SeqEnums.MemberTypeName(myOwner.MemberType);
 						msg += "Trying to access members by TrackIndex?";
 						Fyle.BUG(msg);
 					}
@@ -329,7 +329,7 @@ namespace LOR4
 				{
 					if (myOwner.MemberType != LOR4MemberType.Sequence)
 					{
-						string msg = "Why is a " + LOR4SeqEnums.MemberName(myOwner.MemberType);
+						string msg = "Why is a " + LOR4SeqEnums.MemberTypeName(myOwner.MemberType);
 						msg += "Trying to access members by AltTrackIndex?";
 						Fyle.BUG(msg);
 					}
@@ -349,7 +349,7 @@ namespace LOR4
 				{
 					if (myOwner.MemberType != LOR4MemberType.Sequence)
 					{
-						string msg = "Why is a " + LOR4SeqEnums.MemberName(myOwner.MemberType);
+						string msg = "Why is a " + LOR4SeqEnums.MemberTypeName(myOwner.MemberType);
 						msg += "Trying to access HighestSavedIndex?";
 						Fyle.BUG(msg);
 					}
@@ -367,7 +367,7 @@ namespace LOR4
 				{
 					if (myOwner.MemberType != LOR4MemberType.Sequence)
 					{
-						string msg = "Why is a " + LOR4SeqEnums.MemberName(myOwner.MemberType);
+						string msg = "Why is a " + LOR4SeqEnums.MemberTypeName(myOwner.MemberType);
 						msg += "Trying to access HighestSavedIndex?";
 						Fyle.BUG(msg);
 					}
@@ -387,7 +387,7 @@ namespace LOR4
 				{
 					if (myOwner.MemberType != LOR4MemberType.Visualization)
 					{
-						string msg = "Why is a " + LOR4SeqEnums.MemberName(myOwner.MemberType);
+						string msg = "Why is a " + LOR4SeqEnums.MemberTypeName(myOwner.MemberType);
 						msg += "Trying to access HighestItemID?";
 						Fyle.BUG(msg);
 					}
@@ -405,7 +405,7 @@ namespace LOR4
 				{
 					if (myOwner.MemberType != LOR4MemberType.VizItemGroup)
 					{
-						string msg = "Why is a " + LOR4SeqEnums.MemberName(myOwner.MemberType);
+						string msg = "Why is a " + LOR4SeqEnums.MemberTypeName(myOwner.MemberType);
 						msg += "Trying to access HighestDrawObjectID?";
 						Fyle.BUG(msg);
 					}
@@ -472,7 +472,7 @@ namespace LOR4
 			if (itemName == "")
 			{
 				// Make up a name based on type and index
-				itemName = LOR4SeqEnums.MemberName(newMember.MemberType) + " " + newMember.Index.ToString("0000");
+				itemName = LOR4SeqEnums.MemberTypeName(newMember.MemberType) + " " + newMember.Index.ToString("0000");
 			}
 			// Check for duplicate names
 			while (myByNameDictionary.ContainsKey(itemName))
@@ -664,31 +664,12 @@ namespace LOR4
 		{
 			get
 			{
-				// Default is indeterminate
-				CheckState cs = CheckState.Indeterminate;
-				// How many SELECTED descendants are there?
-				//    first parameter is selected=true
-				int s = DescendantCount(true, true, false, true);
-				// Are NONE of them selected, and my owner unselected also?
-				if ((s == 0) && !myOwner.Selected)
-				{
-					// Then we are completely unchecked!
-					cs = CheckState.Unchecked;
-				}
-				else // at least one or more descented is selected
-				{
-					// How many TOTAL descendants are there (including unselected)
-					int d = DescendantCount(false, true, false, true);
-					// Does selected = total, and is my owner selected also?
-					if ((s == d) && myOwner.Selected)
-					{
-						// Then we are fully and completely checked!
-						cs = CheckState.Checked;
-					}
-				}
-				return cs;
+				//! !! DEPRECIATED - Use Selected Property instead!!
+				System.Diagnostics.Debugger.Break();
+				return Selected;
 			}
 		}
+
 		public int SelectedDescendantCount
 		{
 			// Besides getting the number of selected members and submembers
@@ -696,27 +677,28 @@ namespace LOR4
 
 			get
 			{
+				//! !! DEPRECIATED - Use Selected property instead
 				int count = 0;
-				if (myOwner.Selected)
+				if (myOwner.Selected == CheckState.Checked)
 				{
 					foreach (iLOR4Member m in myByDisplayOrderList)
 					{
 						if (m.MemberType == LOR4MemberType.Channel)
 						{
-							if (m.Selected) count++;
+							if (m.Selected == CheckState.Checked) count++;
 						}
 						if (m.MemberType == LOR4MemberType.RGBChannel)
 						{
-							if (m.Selected)
+							if (m.Selected == CheckState.Checked)
 							{
 								int subCount = 0;
 								LOR4RGBChannel r = (LOR4RGBChannel)m;
-								if (r.redChannel.Selected) subCount++;
-								if (r.grnChannel.Selected) subCount++;
-								if (r.bluChannel.Selected) subCount++;
+								if (r.redChannel.Selected == CheckState.Checked) subCount++;
+								if (r.grnChannel.Selected == CheckState.Checked) subCount++;
+								if (r.bluChannel.Selected == CheckState.Checked) subCount++;
 								if (subCount == 0)
 								{
-									m.Selected = false;
+									m.Selected = CheckState.Unchecked;
 								}
 								else
 								{
@@ -728,13 +710,13 @@ namespace LOR4
 						}
 						if (m.MemberType == LOR4MemberType.ChannelGroup)
 						{
-							if (m.Selected)
+							if (m.Selected == CheckState.Checked)
 							{
 								LOR4ChannelGroup g = (LOR4ChannelGroup)m;
 								int subCount = g.Members.SelectedDescendantCount;  // Recurse!
 								if (subCount == 0)
 								{
-									m.Selected = false;
+									m.Selected = CheckState.Unchecked;
 								}
 								else
 								{
@@ -745,13 +727,13 @@ namespace LOR4
 						}
 						if (m.MemberType == LOR4MemberType.Cosmic)
 						{
-							if (m.Selected)
+							if (m.Selected == CheckState.Checked)
 							{
 								LOR4Cosmic d = (LOR4Cosmic)m;
 								int subCount = d.Members.SelectedDescendantCount;  // Recurse!
 								if (subCount == 0)
 								{
-									m.Selected = false;
+									m.Selected = CheckState.Unchecked;
 								}
 								else
 								{
@@ -765,7 +747,7 @@ namespace LOR4
 					{
 						if (myOwner != null)
 						{
-							myOwner.Selected = false;
+							myOwner.Selected = CheckState.Unchecked;
 						}
 						else
 						{
@@ -819,7 +801,7 @@ namespace LOR4
 					if (itemName == "")
 					{
 						// Make up a name based on type and index
-						itemName = LOR4SeqEnums.MemberName(member.MemberType) + " " + member.Index.ToString("0000");
+						itemName = LOR4SeqEnums.MemberTypeName(member.MemberType) + " " + member.Index.ToString("0000");
 					}
 					// Check for duplicate names
 					while (myByNameDictionary.ContainsKey(itemName))
@@ -1021,6 +1003,148 @@ namespace LOR4
 			} // End if find by name returned null and CreateIfNotFound is true
 			return ret;
 		}
+
+		public CheckState Selected
+		{
+			get
+			{
+				CheckState finalState = CheckState.Unchecked;
+				CheckState groupState = CheckState.Indeterminate;
+				// Start with 'All' true, if ANY are NOT selected, set it false
+				bool all = true;
+				// Start with 'Some' false, if ANY are selected, set it true
+				bool some = false;
+
+				// Loop thru all members in the membership
+				for (int i=0; i< myByDisplayOrderList.Count; i++)
+				{
+					iLOR4Member member = myByDisplayOrderList[i];
+					LOR4MemberType type = member.MemberType;
+					// What type is this member?
+					switch(type)
+					{
+						case LOR4MemberType.Channel:	//! CHANNEL
+							// If the channel is selected, then at least Some is true
+							if (member.Selected == CheckState.Checked)
+							{ some = true; }
+							// If the channel is not selected, then All can't be true
+							if (member.Selected == CheckState.Unchecked)
+							{ all = false; }
+							break;
+
+						case LOR4MemberType.RGBChannel:		//! RGB CHANNEL
+							// Cast member so we can get subchannels
+							LOR4RGBChannel rgbChan = (LOR4RGBChannel)member;
+							bool rgbAll = true;
+							bool rgbSome = false;
+							// Are ANY of the colored subchannels selected?
+							if ((rgbChan.redChannel.Selected == CheckState.Checked) ||
+								 (rgbChan.grnChannel.Selected == CheckState.Checked) ||
+								 (rgbChan.bluChannel.Selected == CheckState.Checked))
+							// Then Some is True
+							{ rgbSome = true; some = true; }
+							// Are ANY of the colored subchannels unselected?
+							if ((rgbChan.redChannel.Selected == CheckState.Unchecked) ||
+								 (rgbChan.grnChannel.Selected == CheckState.Unchecked) ||
+								 (rgbChan.bluChannel.Selected == CheckState.Unchecked))
+							// Then All must be false
+							{ rgbAll=false; all = false; }
+							// If all 3 colors are selected, state is Checked
+							if (rgbAll) { rgbChan.Selected = CheckState.Checked; }
+							// If none of the 3 colors are selected, state is Unchecked
+							else if (!rgbSome) { rgbChan.Selected = CheckState.Unchecked; }
+							// If some, but not all of the 3 colors are selected, state is Indeterminate
+							else { rgbChan.Selected = CheckState.Indeterminate; }
+							break;
+
+						case LOR4MemberType.ChannelGroup:		//! CHANNEL GROUP
+							// Cast member to a group so we can get its membership
+							LOR4ChannelGroup group = (LOR4ChannelGroup)member;
+							//# RECURSE- Check state of this groups members
+							groupState = group.Members.Selected;
+							// If all or any of the members are selected, then Some must be true
+							if ((groupState == CheckState.Checked) || (groupState == CheckState.Indeterminate))
+							{ some = true; }
+							// If none, or some but not all, of the members are selected, then All can't be true
+							if ((groupState == CheckState.Unchecked) || (groupState == CheckState.Indeterminate))
+							{ all = false; }
+							group.Selected = groupState;
+							break;
+
+						case LOR4MemberType.Cosmic:		//! COSMIC COLOR DEVICE
+							LOR4Cosmic cosmic = (LOR4Cosmic)member;
+							groupState = cosmic.Members.Selected;
+							// If all or any of the members are selected, then Some must be true
+							if ((groupState == CheckState.Checked) || (groupState == CheckState.Indeterminate))
+							{ some = true; }
+							// If none, or some but not all, of the members are selected, then All can't be true
+							if ((groupState == CheckState.Unchecked) || (groupState == CheckState.Indeterminate))
+							{ all = false; }
+							cosmic.Selected = groupState;
+							break;
+
+						case LOR4MemberType.Track:		//! TRACK
+							// (See comments for ChannelGroup)
+							LOR4Track track = (LOR4Track)member;
+							groupState = track.Members.Selected;
+							if ((groupState == CheckState.Checked) || (groupState == CheckState.Indeterminate))
+							{ some = true; }
+							if ((groupState == CheckState.Unchecked) || (groupState == CheckState.Indeterminate))
+							{ all = false; }
+							track.Selected = groupState;
+							break;
+
+						case LOR4MemberType.VizChannel:		//! VISUALIZER CHANNEL
+							// (See comments for Channel)
+							if (member.Selected == CheckState.Checked)
+							{ some = true; }
+							if (member.Selected == CheckState.Unchecked)
+							{ all = false; }
+							break;
+
+						case LOR4MemberType.VizDrawObject:		//! VISUALIZER DRAW OBJECT
+							// (See comments for Channel)
+							if (member.Selected == CheckState.Checked)
+							{ some = true; }
+							if (member.Selected == CheckState.Unchecked)
+							{ all = false; }
+							break;
+
+						case LOR4MemberType.VizItemGroup:		//! VISUALIZER ITEM GROUP
+							// (See comments for ChannelGroup)
+							LOR4VizItemGroup items = (LOR4VizItemGroup)member;
+							groupState = items.Members.Selected;
+							if ((groupState == CheckState.Checked) || (groupState == CheckState.Indeterminate))
+							{ some = true; }
+							if ((groupState == CheckState.Unchecked) || (groupState == CheckState.Indeterminate))
+							{ all = false; }
+							items.Selected = groupState;
+							break;
+					}
+				}
+
+				// If ALL members are selected, state is Checked
+				if (all) { finalState = CheckState.Checked; }
+				// If no members (Not Some) are selected, state is Unchecked
+				else if (!some) { finalState = CheckState.Unchecked; }
+				// Otherwise (NOT ALL, but SOME) state is Indeterminate
+				else { finalState = CheckState.Indeterminate; }
+
+				return finalState;
+			}
+			set 
+			{
+				if (value != CheckState.Indeterminate)
+				{
+					// Loop thru all members in the membership
+					for (int i = 0; i < myByDisplayOrderList.Count; i++)
+					{
+						iLOR4Member member = myByDisplayOrderList[i];
+						member.Selected = value;
+					}
+				}
+			}
+		}
 		public LOR4Channel FindChannel(string channelName, bool createIfNotFound = false, bool clearEffects = false)
 		{
 			LOR4Channel ret = null;
@@ -1192,6 +1316,8 @@ namespace LOR4
 			// ChannelGroups themselves are not counted, but all their descendants are (except descendant groups).
 			// Tracks are not counted.
 
+			//! !! DEPRECIATED (Or at least untested to see if it is still accurate after changing Selected to be tri-state)
+			System.Diagnostics.Debugger.Break();
 			int c = 0;
 			for (int l = 0; l < myByDisplayOrderList.Count; l++)
 			{
@@ -1200,21 +1326,21 @@ namespace LOR4
 				{
 					if (countPlain)
 					{
-						if (myByDisplayOrderList[l].Selected || !selectedOnly) c++;
+						if (myByDisplayOrderList[l].Selected == CheckState.Checked || !selectedOnly) c++;
 					}
 				}
 				if (t == LOR4MemberType.RGBChannel)
 				{
 					if (countRGBparents)
 					{
-						if (myByDisplayOrderList[l].Selected || !selectedOnly) c++;
+						if (myByDisplayOrderList[l].Selected == CheckState.Checked || !selectedOnly) c++;
 					}
 					if (countRGBchildren)
 					{
 						LOR4RGBChannel rgbCh = (LOR4RGBChannel)myByDisplayOrderList[l];
-						if (rgbCh.redChannel.Selected || !selectedOnly) c++;
-						if (rgbCh.grnChannel.Selected || !selectedOnly) c++;
-						if (rgbCh.bluChannel.Selected || !selectedOnly) c++;
+						if (rgbCh.redChannel.Selected == CheckState.Checked || !selectedOnly) c++;
+						if (rgbCh.grnChannel.Selected == CheckState.Checked || !selectedOnly) c++;
+						if (rgbCh.bluChannel.Selected == CheckState.Checked || !selectedOnly) c++;
 					}
 				}
 				if (t == LOR4MemberType.ChannelGroup)

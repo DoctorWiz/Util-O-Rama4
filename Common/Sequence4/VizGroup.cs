@@ -182,6 +182,22 @@ namespace LOR4
 			Comment = LOR4Admin.getKeyWord(lineIn, FIELDComment);
 		}
 
+		public override CheckState Selected
+		{
+			get
+			{
+				return Members.Selected;
+			}
+			set
+			{
+				if (value != CheckState.Indeterminate)
+				{
+					base.Selected = value;
+					Members.Selected = value;
+				}
+			}
+		}
+
 
 		public void ParseAssignedObjectNumbers(StreamReader reader)
 		{
@@ -193,6 +209,7 @@ namespace LOR4
 				if (keepGoing)
 				{
 					string lineIn = reader.ReadLine();
+					//lineCount++;
 					int iEnd = lineIn.IndexOf("</Item>");
 					if (iEnd > 0) keepGoing = false;
 					if (keepGoing)

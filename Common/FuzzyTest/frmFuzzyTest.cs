@@ -47,7 +47,8 @@ namespace FuzzyTest
 		{
 			for (int l1 = 0; l1 < List1.Length; l1++)
 			{
-				string result = FuzzyMatch(List1[l1]);
+				string check = List1[l1];
+				string result = FuzzyMatch(check);
 			}
 			txtOutput.Text = logText.ToString();
 		}

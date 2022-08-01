@@ -149,6 +149,57 @@ namespace LOR4
 			set { Color ignore = value; }
 		}
 
+		public override CheckState Selected
+		{
+			get
+			{
+				// Default
+				CheckState state = CheckState.Indeterminate;
+				// Until we prove otherwise...
+				bool all = true;
+				bool some = false;
+				// Are ANY of the 3 subcolors selected?
+				if ((redChannel.Selected == CheckState.Checked) ||
+				 (redChannel.Selected == CheckState.Checked) ||
+				 (redChannel.Selected == CheckState.Checked))
+				{
+					// 'Some' must be true
+					some = true;
+				}
+				// Are ANY of them unselected?
+				if ((redChannel.Selected == CheckState.Unchecked) ||
+				 (redChannel.Selected == CheckState.Unchecked) ||
+				 (redChannel.Selected == CheckState.Unchecked))
+				{
+					// 'All' can't be true
+					all = false;
+				}
+				if (all)
+				{
+					// All 3 subcolors selected, so RGB parent is selected
+					state = CheckState.Checked;
+				}
+				else
+				{
+					if (!some)
+					{
+						// None of the subcolors selected so RGB parent is unselected
+						state = CheckState.Unchecked;
+					}
+				}
+				return state;
+			}
+			set
+			{
+				if (value != CheckState.Indeterminate)
+				{
+					base.Selected = value;
+					redChannel.Selected = value;
+					grnChannel.Selected = value;
+					bluChannel.Selected = value;
+				}
+			}
+		}
 
 		public override LOR4MemberType MemberType
 		{
@@ -160,6 +211,7 @@ namespace LOR4
 
 		public override string LineOut()
 		{
+			//! FullTrack??
 			return LineOut(false, false, LOR4MemberType.FullTrack);
 		}
 

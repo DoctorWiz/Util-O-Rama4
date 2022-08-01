@@ -67,6 +67,22 @@ namespace LOR4
 			}
 		}
 
+		public override CheckState Selected
+		{
+			get
+			{
+				return Members.Selected;
+			}
+			set
+			{
+				if (value != CheckState.Indeterminate)
+				{
+					base.Selected = value;
+					Members.Selected = value;
+				}
+			}
+		}
+
 
 		public override LOR4MemberType MemberType
 		{

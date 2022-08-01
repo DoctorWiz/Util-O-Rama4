@@ -8,6 +8,8 @@ using System.Diagnostics;
 using System.Text;
 using FileHelper;
 
+
+
 namespace LOR4
 {
 	public class LOR4Visualization : LOR4MemberBase, iLOR4Member, IComparable<iLOR4Member>
@@ -131,12 +133,12 @@ namespace LOR4
 			string lineIn; // line read in (does not get modified)
 			string xmlInfo = "";
 			int li = LOR4Admin.UNDEFINED; // positions of certain key text in the line
-																 //LOR4Track trk = new LOR4Track();
-																 // const string ERRproc = " in LOR4Visualization:ReadVisualizationFile(";
-																 // const string ERRgrp = "), on Line #";
-																 // const string ERRitem = ", at position ";
-																 // const string ERRline = ", Code Line #";
-																 //LOR4SequenceType st = LOR4SequenceType.Undefined;
+																		//LOR4Track trk = new LOR4Track();
+																		// const string ERRproc = " in LOR4Visualization:ReadVisualizationFile(";
+																		// const string ERRgrp = "), on Line #";
+																		// const string ERRitem = ", at position ";
+																		// const string ERRline = ", Code Line #";
+																		//LOR4SequenceType st = LOR4SequenceType.Undefined;
 			string creation = "";
 			DateTime modification;
 
@@ -163,6 +165,7 @@ namespace LOR4
 			if (!reader.EndOfStream)
 			{
 				lineIn = reader.ReadLine();
+				lineCount++;
 				// Sanity Check #2, is it an XML file?
 				if (lineIn.Substring(0, 6) != "<?xml ")
 				{
@@ -175,6 +178,7 @@ namespace LOR4
 					if (!reader.EndOfStream)
 					{
 						lineIn = reader.ReadLine();
+						lineCount++;
 						// Sanity Check #3, is it a visualization?
 						//li = lineIn.IndexOf(STARTvisualization);
 						li = LOR4Admin.ContainsKey(lineIn, STARTvisualization);
@@ -203,8 +207,9 @@ namespace LOR4
 							{
 								// All sanity checks passed
 								// * PARSE LINES
-								while ((lineIn = reader.ReadLine()) != null)
+								while (!reader.EndOfStream)
 								{
+									lineIn = reader.ReadLine();
 									lineCount++;
 									//try
 									//{
@@ -768,13 +773,13 @@ namespace LOR4
 						}
 						if (ob.grnChannel == null)
 						{
-							l = "!" + n + "... and has no Green Channel";
+							l = "!" + n + Fyle.CHAR_ELLIPSIS + " and has no Green Channel";
 							r(l);
 							ie++;
 						}
 						if (ob.bluChannel == null)
 						{
-							l = "!" + n + "... and has no Blue Channel";
+							l = "!" + n + Fyle.CHAR_ELLIPSIS + " and has no Blue Channel";
 							r(l);
 							ie++;
 						}
@@ -964,6 +969,20 @@ namespace LOR4
 
 			return reportBuilder.ToString();
 		}
+
+		public override CheckState Selected
+		{
+			get
+			{ return Members.Selected; }
+			set
+			{
+				base.Selected = value;
+				Members.Selected = value;
+			}
+		}
+
+		public override LOR4MemberType MemberType
+		{ get { return LOR4MemberType.Visualization; } }
 
 		private void r(string line)
 		{

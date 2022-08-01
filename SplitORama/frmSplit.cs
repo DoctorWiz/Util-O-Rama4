@@ -12,6 +12,9 @@ using System.IO;
 using System.Media;
 using LOR4;
 using FileHelper;
+using FormHelper;
+using RecentlyUsed;
+using ReadWriteCsv;
 using FuzzORama;
 using Syncfusion.Windows.Forms.Tools;
 
@@ -274,8 +277,6 @@ namespace UtilORama4
 
 			//txtSequenceFile.Text = Fyle.ShortenLongPath(fileSequenceLast, 80);
 			//txtSelectionsFile.Text = Fyle.ShortenLongPath(fileSelectionsLast, 80);
-
-			cmdNothing.Visible = isWiz;
 
 			treeChannels.OwnerDrawNodes = true; // .DrawMode = TreeViewDrawMode.OwnerDrawAll;
 
@@ -1288,44 +1289,6 @@ namespace UtilORama4
 
 		} // end btnBrowseSelections_Click
 
-		private DialogResult ShowMatchOptions()
-		{
-			frmOptions options = new frmOptions();
-			options.useFuzzy = useFuzzy;
-			options.minPrematchScore = minPrematchScore;
-			options.minFinalMatchScore = minFinalMatchScore;
-			//options.InitForm(true);
-			DialogResult dr2 = options.ShowDialog();
-			if (dr2 == DialogResult.OK)
-			{
-				useFuzzy = options.useFuzzy;
-				Properties.Settings.Default.useFuzzy = useFuzzy;
-				if (useFuzzy)
-				{
-					minPrematchScore = options.minPrematchScore;
-					minFinalMatchScore = options.minFinalMatchScore;
-					Properties.Settings.Default.preMatchScore = minPrematchScore;
-					Properties.Settings.Default.finalMatchScore = minFinalMatchScore;
-				}
-				Properties.Settings.Default.Save();
-			}
-			return dr2;
-		} // end ShowMatchOptions
-
-		private DialogResult ShowSaveOptions()
-		{
-			frmOptions options = new frmOptions();
-			//options.InitForm(false);
-			DialogResult dr2 = options.ShowDialog(this);
-			if (dr2 == DialogResult.OK)
-			{
-				LoadFuzzyOptions();
-				//saveFormat = options.saveFormat;
-				//Properties.Settings.Default.SaveFormat = saveFormat;
-			}
-
-			return dr2;
-		}
 
 		private void LoadFuzzyOptions()
 		{
@@ -1495,9 +1458,9 @@ namespace UtilORama4
 		{
 			ImBusy(true);
 			frmAbout aboutBox = new frmAbout();
-			// aboutBox.setIcon = picAboutIcon.Image;
 			aboutBox.Icon = this.Icon;
-			aboutBox.picIcon.Image = picAboutIcon.Image;
+			aboutBox.Text = "About Split-O-Rama";
+			aboutBox.AppIcon = picAboutIcon.Image;
 			aboutBox.ShowDialog(this);
 			ImBusy(false);
 		}
@@ -1607,12 +1570,12 @@ namespace UtilORama4
 
 		private void btnMatchOptions_Click(object sender, EventArgs e)
 		{
-			ShowMatchOptions();
+			//ShowMatchOptions();
 		}
 
 		private void btnSaveOptions_Click(object sender, EventArgs e)
 		{
-			ShowSaveOptions();
+			//ShowSaveOptions();
 		}
 
 		private void treChannels_MouseMove(object sender, MouseEventArgs e)
@@ -1646,12 +1609,10 @@ namespace UtilORama4
 
 		private void mnuSaveOptions_Click(object sender, EventArgs e)
 		{
-			btnSaveOptions.PerformClick();
 		}
 
 		private void mnuMatchOptions_Click(object sender, EventArgs e)
 		{
-			btnMatchOptions.PerformClick();
 		}
 
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1674,7 +1635,7 @@ namespace UtilORama4
 			{
 				if (finalAlgorithms > 0)
 				{
-					ret = FuzzyFind(theName, members, preAlgorithm, minPreMatch, finalAlgorithms, minFinalMatch, ignoreSelected);
+					ret = FuzzyFind(theName, members, ignoreSelected);
 				}
 			}
 
@@ -1700,112 +1661,96 @@ namespace UtilORama4
 		}
 
 
-		public iLOR4Member FuzzyFind(string theName, LOR4Membership members, long preAlgorithm, double minPreMatch, long finalAlgorithms, double minFinalMatch, bool ignoreSelected)
+		public iLOR4Member FuzzyFind(string theName, LOR4Membership members, bool ignoreSelected)
 		{
 			iLOR4Member ret = null;
 			double[] scores = null;
 			int[] SIs = null;
 			int count = 0;
 			double score;
+			double bestScore = 0D;
+			int bestIndex = -1;
 
 			// Go thru all objects
-			foreach (iLOR4Member child in members.Items)
+			//foreach (iLOR4Member child in members.Items)
+			for (int idx = 0; idx < members.Items.Count; idx++)
 			{
+				iLOR4Member child = members.Items[idx];
 				if ((!child.Selected) || (!ignoreSelected))
 				{
+					bestScore = 0D;
+					bestIndex = -1;
 					// get a quick prematch score
-					score = theName.RankEquality(child.Name, preAlgorithm);
+					score = theName.FuzzyScoreFast(child.Name);
 					// fi the score is above the minimum PreMatch
-					if (score > minPreMatch)
+					if (score > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
 					{
 						// Increment count and save the SavedIndex
 						// NOte: No need to save the PreMatch score
 						count++;
-						Array.Resize(ref SIs, count);
-						SIs[count - 1] = child.SavedIndex;
+						score = theName.FuzzyScoreAccurate(child.Name);
+						if (score > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
+						{
+							if (score > bestScore)
+							{
+								bestScore = score;
+								bestIndex = idx;
+							}
+						}
+						//Array.Resize(ref SIs, count);
+						//SIs[count - 1] = child.SavedIndex;
 					}
 				}
 			}
-			// Resize scores array to final size
-			if (count > 0)
+
+			if (bestIndex >=0)
 			{
-				Array.Resize(ref scores, count);
-				// LOR4Loop thru qualifying prematches
-				for (int i = 0; i < count; i++)
-				{
-					// Get the ID, perform a more thorough final fuzzy match, and save the score
-					iLOR4Member child = members.BySavedIndex[SIs[i]];
-					score = theName.RankEquality(child.Name, finalAlgorithms);
-					scores[i] = score;
-				}
-				// Now sort the final scores (and the SavedIndexes along with them)
-				Array.Sort(scores, SIs);
-				// Is the best/highest above the required minimum Final Match score?
-				if (scores[count - 1] > minFinalMatch)
-				{
-					// Return the ID with the best qualifying final match
-					ret = members.BySavedIndex[SIs[count - 1]];
-					// Get Name just for debugging
-					string msg = theName + " ~= " + ret.Name;
-				}
+				ret = members.Items[bestIndex];
 			}
 			return ret;
 		}
 
-		private int FuzzyFindName(string[] allNames, string theName, long preAlgorithm, double minPreMatch, long finalAlgorithms, double minFinalMatch, bool ignoreSelected)
+		private int FuzzyFindName(string[] allNames, string theName, bool ignoreSelected)
 		{
 			int foundIdx = LOR4Admin.UNDEFINED;
 			double[] scores = null;
 			int[] SIs = null;
 			int count = 0;
-			double score;
+			double score = 0D;
+			double bestScore= 0D;
+			int bestIndex = -1;
 
 			// Go thru all objects
 			//foreach (string aName in allNames)
 			for (int l = 0; l < allNames.Length; l++)
 			{
+				bestScore = 0D;
+				bestIndex= -1;
 				string aName = allNames[l];
 				//if ((!child.Selected) || (!ignoreSelected))
 				//{
 				// get a quick prematch score
-				score = theName.RankEquality(aName, preAlgorithm);
+				score = theName.FuzzyScoreFast(aName);
 				// fi the score is above the minimum PreMatch
-				if (score > minPreMatch)
+				if (score > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
 				{
+					score = theName.FuzzyScoreAccurate(aName);
+					if (score > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
+					{
+						if (score > bestScore)
+						{
+							bestScore = score;
+							bestIndex = l;
+						}
+					}
 					// Increment count and save the SavedIndex
 					// NOte: No need to save the PreMatch score
 					count++;
-					Array.Resize(ref SIs, count);
-					SIs[count - 1] = l;
-				}
-				//}
-			}
-			// Resize scores array to final size
-			if (count > 0)
-			{
-				Array.Resize(ref scores, count);
-				// LOR4Loop thru qualifying prematches
-				for (int i = 0; i < count; i++)
-				{
-					// Get the ID, perform a more thorough final fuzzy match, and save the score
-					iLOR4Member child = seq.AllMembers.BySavedIndex[SIs[i]];
-					score = theName.RankEquality(child.Name, finalAlgorithms);
-					scores[i] = score;
-				}
-				// Now sort the final scores (and the SavedIndexes along with them)
-				Array.Sort(scores, SIs);
-				// Is the best/highest above the required minimum Final Match score?
-				if (scores[count - 1] > minFinalMatch)
-				{
-					// Return the ID with the best qualifying final match
-					iLOR4Member ret = seq.AllMembers.BySavedIndex[SIs[count - 1]];
-					// Get Name just for debugging
-					string msg = theName + " ~= " + ret.Name;
 				}
 			}
 
-
-
+			if (bestIndex >=0)
+			{ foundIdx = bestIndex; }
 			return foundIdx;
 		}
 

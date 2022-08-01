@@ -43,6 +43,33 @@ namespace LOR4
 			}
 		}
 
+		public override string Name
+		{
+			get
+			{
+				string s = myName;
+				// If no name has been set, make one up temporarily.
+				//   But do not alter the original blank name.
+				if (s.Length < 1)
+				{
+					if (TimingGridType == LOR4TimingGridType.Freeform)
+					{
+						s = "Freeform Timing Grid " + (SaveID + 1).ToString();
+					}
+					if (TimingGridType == LOR4TimingGridType.FixedGrid)
+					{
+						// Note: Not guaranteed to be unique, if more than one fixed grid has the same spacing.
+						s = "Fixed Timing Grid " + spacing.ToString() + "cs";
+					}
+				}
+				return s;
+			}
+		}
+
+		public override string ToString()
+		{
+			return Name;
+		}
 
 		public override string LineOut()
 		{

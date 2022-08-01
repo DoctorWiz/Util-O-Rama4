@@ -25,6 +25,7 @@ namespace LOR4
 		public const string TABLEtimingGrid = "timingGrid";
 		public const string TABLEtrack = "track";
 		public const string TABLEcosmicDevice = "cosmicColorDevice";
+		public const string STARTchannels = "<channels>";
 		public const string STARTtracks = "<Tracks>";
 		public const string STARTgrids = "<TimingGrids>";
 		public const string TABLEloopLevels = "loopLevels";
@@ -40,7 +41,7 @@ namespace LOR4
 		public const string STARTrgbChannel = LOR4Admin.STFLD + TABLErgbChannel + LOR4Admin.SPC;
 		public const string STARTchannelGroup = LOR4Admin.STFLD + TABLEchannelGroupList + LOR4Admin.SPC;
 		private const string STARTtrack = LOR4Admin.STFLD + TABLEtrack + LOR4Admin.SPC;
-		private const string STARTtrackItem = LOR4Admin.STFLD + LOR4Admin.TABLEchannel + LOR4Admin.FIELDsavedIndex;
+		private const string STARTtrackItem = LOR4Admin.STFLD + LOR4Admin.TABLEchannel + LOR4Admin.FIELDsavedIndex + LOR4Admin.FIELDEQ;
 		private const string STARTtimingGrid = LOR4Admin.STFLD + TABLEtimingGrid + LOR4Admin.SPC;
 		private const string STARTtiming = LOR4Admin.STFLD + LOR4Timings.TABLEtiming + LOR4Admin.SPC;
 		private const string STARTgridItem = LOR4Timings.TABLEtiming + LOR4Admin.FIELDcentisecond;
@@ -54,13 +55,15 @@ namespace LOR4
 
 		public const int ERROR_Undefined = LOR4Admin.UNDEFINED;
 		public const int ERROR_NONE = 0;
-		public const int ERROR_CantOpen = 101;
-		public const int ERROR_NotXML = 102;
-		public const int ERROR_NotSequence = 103;
-		public const int ERROR_EncryptedDemo = 104;
-		public const int ERROR_Compressed = 105;
-		public const int ERROR_UnsupportedVersion = 114;
-		public const int ERROR_UnexpectedData = 50;
+		public const int ERROR_CantOpen = -101;
+		public const int ERROR_NotXML = -102;
+		public const int ERROR_NotSequence = -103;
+		public const int ERROR_EncryptedDemo = -104;
+		public const int ERROR_Compressed = -105;
+		public const int ERROR_NoChannels = -106;
+		public const int ERROR_PrematureEnd = -107;
+		public const int ERROR_UnsupportedVersion = -114;
+		public const int ERROR_UnexpectedData = -50;
 
 
 		// members should only contain tracks, which are the only DIRECT descendants, in
@@ -90,9 +93,11 @@ namespace LOR4
 		private bool WriteSelectedGridsOnly = false;
 
 		//private string myName = "$_UNNAMED_$";
-		private StreamWriter writer;
-		private string lineOut = ""; // line to be Written out, gets modified if necessary
-																 //private int curSavedIndex = 0;
+		protected StreamWriter writer;
+		protected StreamReader reader;
+		protected string lineOut = ""; // line to be Written out, gets modified if necessary
+
+		//private int curSavedIndex = 0;
 		private string tempFileName;
 		private static string tempWorkPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\UtilORama\\";
 		private string newFilename;
@@ -129,7 +134,9 @@ namespace LOR4
 			this.info = new LOR4SeqInfo(this);
 			this.animation = new LOR4Animation(this);
 			//Members.SetParentSequence(this);
-			string theExtension = lineIn.EndSubstring(4).ToLower();
+			//string theExtension = lineIn.EndSubstring(3).ToLower();
+			string theExtension = Fyle.Extension(lineIn).ToLower();
+
 			if ((theExtension == LOR4Admin.EXT_LAS) || (theExtension == LOR4Admin.EXT_LMS))
 			{
 				if (Fyle.Exists(lineIn))
@@ -241,6 +248,27 @@ namespace LOR4
 
 		}
 
+		public override CheckState Selected
+		{
+			// Reminder to myself-- Sequence.Members should only contain the tracks.
+			// Each Track.Members will contain its Channels, Groups, etc.
+			// Each of those Group.Members will contain more stuff, and so on, recursively
+			// Get will return .Unchecked only if absolutely NO descendants are selected.
+			//     will return .Unchecked only if absolutely EVERY descendant is selected.
+			//		 will return .Indeterminate if some but not all descendants are selected.
+			//! Does not include timing grid selections.  Will not affect orphaned members.
+			get
+			{ return Members.Selected; }
+			// If Selected is set to .Indeterminate, absolutely nothing will happen, no selection states will change from current.
+			// If Selected is set to .Checked all Tracks and all their members and submembers [everything] will be selected recusively
+			// If Selected is set to .Unchecked it will clear and all selections (on everything, recursively)
+			//! Does not include timing grid selections.  Will not affect orphaned members.
+			set
+			{
+				base.Selected = value;
+				Members.Selected = value;
+			}
+		}
 
 		public override LOR4MemberType MemberType
 		{
@@ -336,6 +364,7 @@ namespace LOR4
 			LOR4SequenceType st = LOR4SequenceType.Undefined;
 			string creation = "";
 			DateTime modification;
+			bool hasEffects = false;
 
 			LOR4Channel lastChannel = null;
 			LOR4RGBChannel lastRGBchannel = null;
@@ -347,10 +376,10 @@ namespace LOR4
 			LOR4AnimationRow lastAniRow = null;
 			//LOR4Membership lastMembership = null;
 
-			string ext = Path.GetExtension(existingFileName).ToLower();
-			if (ext == ".lms") st = LOR4SequenceType.Musical;
-			if (ext == ".las") st = LOR4SequenceType.Animated;
-			if (ext == ".lcc") st = LOR4SequenceType.ChannelConfig;
+			string ext = Fyle.Extension(existingFileName).ToLower();
+			if (ext == LOR4Admin.EXT_LMS) st = LOR4SequenceType.Musical;
+			if (ext == LOR4Admin.EXT_LAS) st = LOR4SequenceType.Animated;
+			if (ext == LOR4Admin.EXT_LEE) st = LOR4SequenceType.ChannelConfig;
 			LOR4SequenceType = st;
 
 			Clear(true);
@@ -367,54 +396,39 @@ namespace LOR4
 
 			try
 			{
-				StreamReader reader = new StreamReader(existingFileName);
-
-				// Check for items in the order from most likely item to least likely
-				// Effects, Channels,  RGBchannels, Groups, Tracks...
-
-				// Sanity Check #1A, does it have ANY lines?
+				reader = new StreamReader(existingFileName);
+				// First Sanity Check, does it have ANY lines?
 				if (!reader.EndOfStream)
 				{
 					lineIn = reader.ReadLine();
+					lineCount++;
 					xmlInfo = lineIn;
-					// Sanity Check #2, is it an XML file?
-					//li = lineIn.Substring(0, 6).CompareTo("<?xml ");
+					// Sanity Check #2, is it an XML file?  First line should say
 					if (lineIn.Substring(0, 6) != "<?xml ")
-					//if (li != 0)
 					{
 						errorStatus = ERROR_NotXML;
-						if (lineIn.Substring(0, 6) == "******")
-						{
-							if (!reader.EndOfStream) lineIn = reader.ReadLine();
-							if (!reader.EndOfStream) lineIn = reader.ReadLine();
-							li = LOR4Admin.ContainsKey(lineIn, " Demo ");
-							if (li > 0) errorStatus = ERROR_EncryptedDemo;
-						}
 					}
 					else
 					{
-						// Sanity Check #1B, does it have at least 2 lines?
-						if (!reader.EndOfStream)
+						lineIn = reader.ReadLine();
+						lineCount++;
+						// Next sanity check, is it a sequence?  Second line should say
+						if (lineIn.Substring(0, 14) != "<sequence save")
 						{
-							lineIn = reader.ReadLine();
-							// Sanity Check #3, is it a sequence?
-							if ((st == LOR4SequenceType.Musical) || (st == LOR4SequenceType.Animated))
+							errorStatus = ERROR_NotSequence;
+						}
+						else
+						{
+							// Nest Sanity Checks, does it have a 'SaveFileVersion' and is it '14' or higher
+							//   (SaveFileVersion="14" means it cane from LOR Sequence Editor ver 4.x)
+							if ((info.saveFileVersion < 1) || (info.saveFileVersion > 14))
 							{
-								//li = lineIn.IndexOf(STARTsequence);
-								li = LOR4Admin.ContainsKey(lineIn, STARTsequence);
-							}
-							if (st == LOR4SequenceType.ChannelConfig)
-							{
-								//li = lineIn.IndexOf(STARTconfig);
-								li = LOR4Admin.ContainsKey(lineIn, STARTconfig);
-							}
-							if (li != 0)
-							{
-								errorStatus = ERROR_NotSequence;
-								info.infoLine = lineIn;
+								errorStatus = ERROR_UnsupportedVersion;
 							}
 							else
 							{
+								// Save sequence information (author, artist, created...)
+								info.infoLine = lineIn;
 								info = new LOR4SeqInfo(this, lineIn);
 								creation = info.createdAt;
 
@@ -424,88 +438,77 @@ namespace LOR4
 
 								//myName = Path.GetFileName(existingFileName);
 								info.xmlInfo = xmlInfo;
-								// Sanity Checks #4A and 4B, does it have a 'SaveFileVersion' and is it '14'
-								//   (SaveFileVersion="14" means it cane from LOR Sequence Editor ver 4.x)
-								if ((info.saveFileVersion < 1) || (info.saveFileVersion > 14))
+								// Next sanity check, do we still have more lines
+								if (reader.EndOfStream)
 								{
-									errorStatus = ERROR_UnsupportedVersion;
-
+									errorStatus = ERROR_PrematureEnd;
 								}
 								else
 								{
-									// All sanity checks passed
-									// * PARSE LINES
-									while ((lineIn = reader.ReadLine()) != null)
+									lineIn = reader.ReadLine();
+									lineCount++;
+									// Next sanity check, does it have channels?  Third line should say
+									li = LOR4Admin.ContainsKey(lineIn, STARTchannels);
+									if (li < 0)
 									{
-										lineCount++;
-										try
+										errorStatus = ERROR_NoChannels;
+									}
+									else
+									{
+										// Next sanity check, do we have more lines?
+										while (!reader.EndOfStream)
 										{
-											//! Effects
-											if (noEffects)
+											lineIn = reader.ReadLine();
+											lineCount++;
+											// Sanity Check #5b, 4th line should be a channel (the first one)
+											if (lineCount == 4)
 											{
-												li = LOR4Admin.UNDEFINED;
+												li = LOR4Admin.ContainsKey(lineIn, STARTchannel);
+												if (li == 0)
+												{ errorStatus = ERROR_NoChannels; }
 											}
-											else
-											{
-												//li = lineIn.IndexOf(STARTeffect);
-												li = LOR4Admin.ContainsKey(lineIn, STARTeffect);
-											}
-											if (li > 0)
-											{
-												///////////////////
-												///   EFFECT   ///
-												/////////////////
-												#region LOR4Effect
-												while (li > 0)
-												{
-													lastChannel.AddEffect(lineIn);
 
-													lineIn = reader.ReadLine();
-													lineCount++;
-													//li = lineIn.IndexOf(STARTeffect);
-													li = LOR4Admin.ContainsKey(lineIn, STARTeffect);
-												}
-												#endregion // LOR4Effect
-											}
-											else // Not an LOR4Effect
+											if (errorStatus == ERROR_NONE)
 											{
-												//! Timings
-												//li = lineIn.IndexOf(STARTtiming);
-												li = LOR4Admin.ContainsKey(lineIn, STARTtiming);
-												if (li > 0)
+												// All sanity checks passed
+												// * PARSE LINES
+												try // 2nd Try
 												{
-													//////////////////
-													///  TIMING   ///
-													////////////////
-													#region Timing
-													int t = LOR4Admin.getKeyValue(lineIn, LOR4Admin.FIELDcentiseconds);
-													lastGrid.AddTiming(t);
-													#endregion // Timing
-												}
-												else // Not a regular channel
-												{
-													//! Regular Channels
+													//?   (If the order of these sections seems weird, its because they are in order of
+													//?     most likely, to least likley)
+													//       The largest number of lines will probably be for effects and timings,
+													//       The next largest number of lines will probably be regular channels
+													//       Next largest will likely be RGB channels, followed by groups
+													//       followed by cosmic devices, then tracks, and finally timing grids
 													//li = lineIn.IndexOf(STARTchannel);
 													li = LOR4Admin.ContainsKey(lineIn, STARTchannel);
 													if (li > 0)
 													{
-														////////////////////////////
-														///   REGULAR CHANNEL   ///
-														//////////////////////////
+														//!///////////////////////////////////////
+														//!//  * * *  REGULAR CHANNELS  * * *  //
+														//!////////////////////////////////////
 														#region Regular LOR4Channel
 														lastChannel = CreateNewChannel(lineIn);
-														#endregion // Regular LOR4Channel
-													}
+														// If line ends in "/> it has NO effects (includes slash)(empty channel)
+														//   (or if line ends in "> it does have effects (no slash)
+														if (!noEffects)
+														{
+															hasEffects = (lineIn.IndexOf("\"/>") < 0);
+															if (hasEffects)
+															{
+																ReadEffects(lastChannel);
+															}
+															#endregion // Regular LOR4Channel
+														} // end effects, or not
+													} // end is a channel
 													else // Not a regular channel
 													{
-														//! RGB Channels
-														//li = lineIn.IndexOf(STARTrgbChannel);
 														li = LOR4Admin.ContainsKey(lineIn, STARTrgbChannel);
 														if (li > 0)
 														{
-															////////////////////////
-															///   RGB CHANNEL   ///
-															//////////////////////
+															//!///////////////////////////////////
+															//!//  * * *  RGB CHANNELS  * * *  //
+															//!/////////////////////////////////
 															#region RGB LOR4Channel
 															lastRGBchannel = CreateNewRGBChannel(lineIn);
 															lineIn = reader.ReadLine();
@@ -541,43 +544,23 @@ namespace LOR4
 														}
 														else  // Not an RGB LOR4Channel
 														{
-															//! Channel Groups
+															//!/////////////////////////////////////
+															//!//  * * *  CHANNEL GROUPS  * * *  //
+															//!///////////////////////////////////
 															//li = lineIn.IndexOf(STARTchannelGroup);
 															li = LOR4Admin.ContainsKey(lineIn, STARTchannelGroup);
 															if (li > 0)
 															{
-																//////////////////////////
-																///   CHANNEL GROUP   ///
-																////////////////////////
 																#region Channel Group
 																lastGroup = CreateNewChannelGroup(lineIn);
-																//li = lineIn.IndexOf(LOR4Admin.ENDFLD);
-																li = LOR4Admin.ContainsKey(lineIn, LOR4Admin.ENDFLD);
-																if (li < 0)
-																{
-																	lineIn = reader.ReadLine();
-																	lineCount++;
-																	lineIn = reader.ReadLine();
-																	lineCount++;
-																	//li = lineIn.IndexOf(TABLEchannelGroup + LOR4Admin.FIELDsavedIndex);
-																	li = LOR4Admin.ContainsKey(lineIn, TABLEchannelGroup + LOR4Admin.FIELDsavedIndex);
-																	while (li > 0)
-																	{
-																		int isl = LOR4Admin.getKeyValue(lineIn, LOR4Admin.FIELDsavedIndex);
-																		lastGroup.Members.Add(AllMembers.BySavedIndex[isl]);
-																		//savedIndexes[isl].parents.Add(lastGroup.SavedIndex);
-
-																		lineIn = reader.ReadLine();
-																		lineCount++;
-																		//li = lineIn.IndexOf(TABLEchannelGroup + LOR4Admin.FIELDsavedIndex);
-																		li = LOR4Admin.ContainsKey(lineIn, TABLEchannelGroup + LOR4Admin.FIELDsavedIndex);
-																	}
-																}
-																#endregion // Channel Group
+																ReadGroupMembers(lastGroup);
 															}
-															else // Not a LOR4ChannelGroup
+															#endregion // Channel Group
+															else
 															{
-																//! Cosmic Color Devices
+																//!///////////////////////////////////////////
+																//!//  * * *  COSMIC COLOR DEVICES  * * *  //
+																//!/////////////////////////////////////////
 																li = LOR4Admin.ContainsKey(lineIn, STARTcosmic);
 																if (li > 0)
 																{
@@ -586,250 +569,157 @@ namespace LOR4
 																	//////////////////////////////
 																	#region Cosmic Color Device
 																	lastCosmic = CreateNewCosmicDevice(lineIn);
-																	li = LOR4Admin.ContainsKey(lineIn, LOR4Admin.ENDFLD);
-																	if (li < 0)
-																	{
-																		lineIn = reader.ReadLine();
-																		lineCount++;
-																		lineIn = reader.ReadLine();
-																		lineCount++;
-																		// Cosmic Color Devices are just like groups
-																		// inlcuding how the list of child nodes is done
-																		li = LOR4Admin.ContainsKey(lineIn, TABLEchannelGroup + LOR4Admin.FIELDsavedIndex);
-																		while (li > 0)
-																		{
-																			int isl = LOR4Admin.getKeyValue(lineIn, LOR4Admin.FIELDsavedIndex);
-																			iLOR4Member mm = AllMembers.BySavedIndex[isl]
-; lastCosmic.Members.Add(mm);
-
-																			lineIn = reader.ReadLine();
-																			lineCount++;
-																			li = LOR4Admin.ContainsKey(lineIn, TABLEchannelGroup + LOR4Admin.FIELDsavedIndex);
-																		}
-																	}
+																	ReadCosmicMembers(lastCosmic);
 																	#endregion // Cosmic Color Device
 																}
 																else // Not a Cosmic Device
 																{
-																	//! Track Items
-																	//li = lineIn.IndexOf(STARTtrackItem);
-																	//if (lineCount == 972) System.Diagnostics.Debugger.Break();
-																	//if (lineCount == 200) System.Diagnostics.Debugger.Break();
-																	li = LOR4Admin.ContainsKey(lineIn, STARTtrackItem);
+																	//!/////////////////////////////
+																	//!//  * * *  TRACKS  * * *  //
+																	//!///////////////////////////
+
+																	//BUG Tracks are [apparently] getting added twice
+
+																	//li = lineIn.IndexOf(STARTtrack);
+																	li = LOR4Admin.ContainsKey(lineIn, STARTtrack);
 																	if (li > 0)
 																	{
-																		///////////////////////
-																		///   TRACK ITEM   ///
-																		/////////////////////
-																		#region LOR4Track Item
-																		int si = LOR4Admin.getKeyValue(lineIn, LOR4Admin.FIELDsavedIndex);
-																		lastTrack.Members.Add(AllMembers.BySavedIndex[si]);
-																		#endregion // LOR4Track Item
+																		//////////////////
+																		///   TRACK   ///
+																		////////////////
+																		#region LOR4Track
+																		lastTrack = CreateNewTrack(lineIn);
+																		//! TimingGrid SaveID gets set here during Parse() [When creating new Track from LIneIn)
+																		//!  But the Track won't get it's reference to the TimingGrid object until later.
+																		//!    That's 'cuz we haven't read the Timing Grids yet from the file!
+																		//!      CORRECTION: in Showtime version 3 and earlier, the timing grids DO come before
+																		//!       the tracks, version 4 they come after, but that doesn't affect refernceing them.
+																		ReadTrackMembers(lastTrack);
+																		#endregion // LOR4Track
 																	}
-																	else // Not a regular channel
+																	else // not a track
 																	{
-																		//! Tracks
-
-																		//! Tracks are [apparently] getting added twice														
-
-
-																		//li = lineIn.IndexOf(STARTtrack);
-																		li = LOR4Admin.ContainsKey(lineIn, STARTtrack);
+																		//!///////////////////////////////////
+																		//!//  * * *  TIMING GRIDS  * * *  //
+																		//!/////////////////////////////////
+																		//li = lineIn.IndexOf(STARTtimingGrid);
+																		li = LOR4Admin.ContainsKey(lineIn, STARTtimingGrid);
 																		if (li > 0)
 																		{
-																			//////////////////
-																			///   TRACK   ///
-																			////////////////
-																			#region LOR4Track
-																			lastTrack = CreateNewTrack(lineIn);
-																			//for (int tg = 0; tg < TimingGrids.Count; tg++)
-																			//{
-																			//lastTrack.timingGrid == Members.bySaveID[TimingGrids[tg].SaveID];
-																			//TODO: Assign Timing Grid!!!!
-																			//{
-																			//	lastTrack.timingGridObjIndex = tg;
-																			//	tg = TimingGrids.Count; // break
-																			//}
-																			//}
-																			//li = lineIn.IndexOf(LOR4Admin.ENDFLD);
-																			li = LOR4Admin.ContainsKey(lineIn, LOR4Admin.ENDFLD);
-																			if (li < 0)
+																			////////////////////////
+																			///   TIMING GRID   ///
+																			//////////////////////
+																			#region Timing Grid
+																			lastGrid = CreateNewTimingGrid(lineIn);
+																			if (lastGrid.TimingGridType == LOR4TimingGridType.Freeform)
 																			{
-																				lineIn = reader.ReadLine();
-																				lineCount++;
-																				lineIn = reader.ReadLine();
-																				lineCount++;
-																				//li = lineIn.IndexOf(STARTtrackItem);
-																				li = LOR4Admin.ContainsKey(lineIn, STARTtrackItem);
-																				while (li > 0)
+																				ReadTimings(lastGrid);
+																			}
+																			#endregion
+																		}
+																		else // Not a timing grid
+																		{
+																			//!//////////////////////////////////
+																			//!//  * * *  LOOPS and    * * *  //
+																			//!//  * * *  ANIMATIONS  * * *  //
+																			//!///////////////////////////////
+																			//! Loop Levels
+																			//li = lineIn.IndexOf(STARTloopLevel);
+																			li = LOR4Admin.ContainsKey(lineIn, STARTloopLevel);
+																			if (li > 0)
+																			{
+																				lastll = lastTrack.AddLoopLevel(lineIn);
+																			}
+																			else // not a loop level
+																			{
+																				//! Loops
+																				//li = lineIn.IndexOf(STARTloop);
+																				li = LOR4Admin.ContainsKey(lineIn, STARTloop);
+																				if (li > 0)
 																				{
-																					int isi = LOR4Admin.getKeyValue(lineIn, LOR4Admin.FIELDsavedIndex);
-																					//lastTrack.itemSavedIndexes.Add(isi);
-																					if (isi == 2189) System.Diagnostics.Debugger.Break();
-																					if (isi <= AllMembers.HighestSavedIndex)
+																					lastll.AddLoop(lineIn);
+																				}
+																				else // not a loop
+																				{
+																					//! Animation Rows
+																					//li = lineIn.IndexOf(STARTaniRow);
+																					li = LOR4Admin.ContainsKey(lineIn, STARTaniRow);
+																					if (li > 0)
 																					{
-																						iLOR4Member SIMem = AllMembers.BySavedIndex[isi];
-																						if (SIMem != null)
-																						{
-																							lastTrack.Members.Add(SIMem);
-																						}
-																						else
-																						{
-																							///WTF why wasn't if found?!?!
-																							System.Diagnostics.Debugger.Break();
-																						}
+																						lastAniRow = animation.AddRow(lineIn);
 																					}
 																					else
 																					{
-																						///WTF why wasn't if found?!?!
-																						System.Diagnostics.Debugger.Break();
-																					}
-																					//savedIndexes[isi].parents.Add(-100 - Tracks.Count);
-
-																					lineIn = reader.ReadLine();
-																					lineCount++;
-																					//li = lineIn.IndexOf(STARTtrackItem);
-																					li = LOR4Admin.ContainsKey(lineIn, STARTtrackItem);
-																				}
-																			}
-																			#endregion // LOR4Track
-																		} // end if a track
-																		else // not a track
-																		{
-																			//! Timing Grids
-																			//li = lineIn.IndexOf(STARTtimingGrid);
-																			li = LOR4Admin.ContainsKey(lineIn, STARTtimingGrid);
-																			if (li > 0)
-																			{
-																				////////////////////////
-																				///   TIMING GRID   ///
-																				//////////////////////
-																				#region Timing Grid
-																				lastGrid = CreateNewTimingGrid(lineIn);
-																				if (lastGrid.TimingGridType == LOR4TimingGridType.Freeform)
-																				{
-																					lineIn = reader.ReadLine();
-																					lineCount++;
-																					//li = lineIn.IndexOf(STARTgridItem);
-																					li = LOR4Admin.ContainsKey(lineIn, STARTgridItem);
-																					while (li > 0)
-																					{
-																						int gpos = LOR4Admin.getKeyValue(lineIn, LOR4Admin.FIELDcentisecond);
-																						lastGrid.AddTiming(gpos);
-																						lineIn = reader.ReadLine();
-																						lineCount++;
-																						//li = lineIn.IndexOf(STARTgridItem);
-																						li = LOR4Admin.ContainsKey(lineIn, STARTgridItem);
-																					}
-																				}
-																				#endregion
-																			}
-																			else // Not a timing grid
-																			{
-																				//! Loop Levels
-																				//li = lineIn.IndexOf(STARTloopLevel);
-																				li = LOR4Admin.ContainsKey(lineIn, STARTloopLevel);
-																				if (li > 0)
-																				{
-																					lastll = lastTrack.AddLoopLevel(lineIn);
-																				}
-																				else // not a loop level
-																				{
-																					//! Loops
-																					//li = lineIn.IndexOf(STARTloop);
-																					li = LOR4Admin.ContainsKey(lineIn, STARTloop);
-																					if (li > 0)
-																					{
-																						lastll.AddLoop(lineIn);
-																					}
-																					else // not a loop
-																					{
-																						//! Animation Rows
-																						//li = lineIn.IndexOf(STARTaniRow);
-																						li = LOR4Admin.ContainsKey(lineIn, STARTaniRow);
-																						if (li > 0)
+																						//! Animation Columns
+																						//li = lineIn.IndexOf(STARTaniCol);
+																						li = LOR4Admin.ContainsKey(lineIn, STARTaniCol);
+																						if (li > 1)
 																						{
-																							lastAniRow = animation.AddRow(lineIn);
-																						}
+																							lastAniRow.AddColumn(lineIn);
+																						} // end animationColumn
 																						else
 																						{
-																							//! Animation Columns
-																							//li = lineIn.IndexOf(STARTaniCol);
-																							li = LOR4Admin.ContainsKey(lineIn, STARTaniCol);
-																							if (li > 1)
+																							//! Animation
+																							//li = lineIn.IndexOf(LOR4Admin.STFLD + TABLEanimation + LOR4Admin.SPC);
+																							li = LOR4Admin.ContainsKey(lineIn, LOR4Admin.STFLD + TABLEanimation + LOR4Admin.SPC);
+																							if (li > 0)
 																							{
-																								lastAniRow.AddColumn(lineIn);
-																							} // end animationColumn
-																							else
-																							{
-																								//! Animation
-																								//li = lineIn.IndexOf(LOR4Admin.STFLD + TABLEanimation + LOR4Admin.SPC);
-																								li = LOR4Admin.ContainsKey(lineIn, LOR4Admin.STFLD + TABLEanimation + LOR4Admin.SPC);
-																								if (li > 0)
-																								{
-																									animation = new LOR4Animation(this, lineIn);
-																								} // end if Animation, or not
-																							} // end if AnimationColumn4, or not
-																						} // end if Animation, or not
-																					} // end if LoopLevel, or not
-																				} // end if Loop, or not (as in a loopLevel loop, not a for loop)
-																			} // end Timings (or not)
-																		} // end Track (or not)
-																	} // end Track Items (or not)
-																} // end Cosmic Color Device (or not)
-															} // end ChannelGroup (or not)
-														} // end RGBChannel (or not)
-													} // end regular Channel (or not)
-												} // end timing (or not)
-											} // end Effect (or not)
+																								animation = new LOR4Animation(this, lineIn);
 
-										} // end 2nd Try
-										catch (Exception ex)
-										{
-											StackTrace strx = new StackTrace(ex, true);
-											StackFrame sf = strx.GetFrame(strx.FrameCount - 1);
-											string emsg = ex.Message + LOR4Admin.CRLF;
-											emsg += "at LOR4Sequence.ReadSequence()" + LOR4Admin.CRLF;
-											emsg += "File:" + existingFileName + LOR4Admin.CRLF;
-											emsg += "on line " + lineCount.ToString() + " at position " + li.ToString() + LOR4Admin.CRLF;
-											emsg += "Line Is:" + lineIn + LOR4Admin.CRLF;
-											emsg += "in code line " + sf.GetFileLineNumber() + LOR4Admin.CRLF;
-											emsg += "Last SavedIndex = " + AllMembers.HighestSavedIndex.ToString();
-											info.LastError.fileLine = lineCount;
-											info.LastError.linePos = li;
-											info.LastError.codeLine = sf.GetFileLineNumber();
-											info.LastError.errName = ex.ToString();
-											info.LastError.errMsg = emsg;
-											info.LastError.lineIn = lineIn;
+																							} // end this is an Animation Table (or not)
+																						} // end this is an Animation Column (or not)
+																					} // end this is an Animation Row (or not)
+																				} // end this is a Loop Start (or not)
+																			} // end this is a Loop Level (or not)
+																		} // end this is a Timing Grid (or not)
+																	} // end this is a Track (or not)
+																}  // end this is a Cosmic Color Device (or not)
+															} // end this is a Channel Group (or not)
+														} // end this is an RGB channel (or not)
+													} // end this is a regular Channel (or not)
+												} // end 2nd try/catch
+												catch (Exception ex)
+												{
+													StackTrace strx = new StackTrace(ex, true);
+													StackFrame sf = strx.GetFrame(strx.FrameCount - 1);
+													string emsg = ex.Message + LOR4Admin.CRLF;
+													emsg += "at LOR4Sequence.ReadSequence()" + LOR4Admin.CRLF;
+													emsg += "File:" + existingFileName + LOR4Admin.CRLF;
+													emsg += "on line " + lineCount.ToString() + " at position " + li.ToString() + LOR4Admin.CRLF;
+													emsg += "Line Is:" + lineIn + LOR4Admin.CRLF;
+													emsg += "in code line " + sf.GetFileLineNumber() + LOR4Admin.CRLF;
+													emsg += "Last SavedIndex = " + AllMembers.HighestSavedIndex.ToString();
+													info.LastError.fileLine = lineCount;
+													info.LastError.linePos = li;
+													info.LastError.codeLine = sf.GetFileLineNumber();
+													info.LastError.errName = ex.ToString();
+													info.LastError.errMsg = emsg;
+													info.LastError.lineIn = lineIn;
 
 #if DEBUG
-											System.Diagnostics.Debugger.Break();
+													System.Diagnostics.Debugger.Break();
 #endif
-											Fyle.WriteLogEntry(emsg, LOR4Admin.LOG_Error);
-											if (debugMode)
-											{
-												DialogResult dr1 = MessageBox.Show(emsg, "Error Reading Sequence File", MessageBoxButtons.OK, MessageBoxIcon.Error);
-												System.Diagnostics.Debugger.Break();
-											}
-											errorStatus = ERROR_UnexpectedData;
-										} // end catch
-
-									} // end while lines remain
-								} // end SaveFileVersion = 14
-
-								// Restore these to the values we captured when first reading the file info header
-								info.createdAt = creation;
-								info.lastModified = info.file_saved;
-								MakeDirty(false);
-								AllMembers.ReIndex();
-							} // end second line is sequence info
-						} // end has a second line
+													Fyle.WriteLogEntry(emsg, LOR4Admin.LOG_Error);
+													if (debugMode)
+													{
+														DialogResult dr1 = MessageBox.Show(emsg, "Error Reading Sequence File", MessageBoxButtons.OK, MessageBoxIcon.Error);
+														System.Diagnostics.Debugger.Break();
+													} // end if debug mode
+												} // end second catch
+													// Restore these to the values we captured when first reading the file info header
+												info.createdAt = creation;
+												info.lastModified = info.file_saved;
+												MakeDirty(false);
+												AllMembers.ReIndex();
+											} // end still no errors
+										} // still more lines (at least 4)
+									} // end third line is start of channels
+								} // end still has more lines (at least 3)
+							} // end has a valid 'saveVersion'
+						} // end second line is a sequence
 					} // end first line was xml info
 				} // end has a first line
-
-
 				reader.Close();
-
 			} // end first try
 			catch (Exception ex)
 			{
@@ -861,6 +751,147 @@ namespace LOR4
 
 			return errorStatus;
 		} // end ReadSequenceFile
+
+		//!//////////////////////////////
+		//!//  * * *  EFFECTS  * * *  //
+		//!////////////////////////////
+		private int ReadEffects(LOR4Channel channel)
+		{
+			int entryCount = 0;
+			string effIn = reader.ReadLine();
+			int li = LOR4Admin.ContainsKey(effIn, STARTeffect);
+			while (li > 0)
+			{
+				channel.AddEffect(effIn);
+				effIn = reader.ReadLine();
+				lineCount++;
+				entryCount++;
+				li = LOR4Admin.ContainsKey(effIn, STARTeffect);
+			}
+			return entryCount;
+		}
+
+		//!//////////////////////////////
+		//!//  * * *  TIMINGS  * * *  //
+		//!////////////////////////////
+		private int ReadTimings(LOR4Timings grid)
+		{
+			int entryCount = 0;
+			string timeIn = "";
+			timeIn = reader.ReadLine();
+			int li = LOR4Admin.ContainsKey(timeIn, STARTtiming);
+			while (li > 0)
+			{
+				int t = LOR4Admin.getKeyValue(timeIn, LOR4Admin.FIELDcentisecond); // Note: non-plural, no 's' at the end
+				grid.AddTiming(t);
+				timeIn = reader.ReadLine();
+				lineCount++;
+				entryCount++;
+				li = LOR4Admin.ContainsKey(timeIn, STARTtiming);
+			}
+			return entryCount;
+		}
+
+		//!////////////////////////////////////
+		//!//  * * *  TRACK MEMBERS  * * *  //
+		//!//////////////////////////////////
+		private int ReadTrackMembers(LOR4Track track)
+		{
+			int entryCount = 0;
+			int li = 0;
+			string itemIn = "";
+			itemIn = reader.ReadLine(); // "<channels>"
+			lineCount++;
+			itemIn = reader.ReadLine();
+			lineCount++;
+			li = LOR4Admin.ContainsKey(itemIn, STARTtrackItem);
+			while (li > 0)
+			{
+				int isi = LOR4Admin.getKeyValue(itemIn, LOR4Admin.FIELDsavedIndex);
+				//if (isi == 2189) System.Diagnostics.Debugger.Break();
+				if (isi <= AllMembers.HighestSavedIndex)
+				{
+					iLOR4Member SIMem = AllMembers.BySavedIndex[isi];
+					if (SIMem != null)
+					{
+						track.Members.Add(SIMem);
+						entryCount++;
+					}
+					else
+					{
+						///WTF why wasn't if found?!?!
+						System.Diagnostics.Debugger.Break();
+					}
+				}
+				else
+				{
+					///WTF why is savedIndex too high?!?!
+					System.Diagnostics.Debugger.Break();
+				}
+				itemIn = reader.ReadLine();
+				lineCount++;
+				li = LOR4Admin.ContainsKey(itemIn, STARTtrackItem);
+			}
+			return entryCount;
+		}
+
+		//!////////////////////////////////////
+		//!//  * * *  GROUP MEMBERS  * * *  //
+		//!//////////////////////////////////
+		private int ReadGroupMembers(LOR4ChannelGroup group)
+		{
+			// Wrapper of sorts
+			return ReadGroupMembers(group.Members);
+		}
+
+		private int ReadCosmicMembers(LOR4Cosmic cosmic)
+		{
+			// Cosmic Color Devices are basically the same thing as Channel Groups
+			return ReadGroupMembers(cosmic.Members);
+		}
+
+		private int ReadGroupMembers(LOR4Membership members)
+		{
+			int entryCount = 0;
+			int li = 0;
+			string itemIn = "";
+			itemIn = reader.ReadLine(); // "<channelGroups>"
+			lineCount++;
+			itemIn = reader.ReadLine();
+			lineCount++;
+
+			li = LOR4Admin.ContainsKey(itemIn, TABLEchannelGroup + LOR4Admin.FIELDsavedIndex);
+			while (li > 0)
+			{
+				int isl = LOR4Admin.getKeyValue(itemIn, LOR4Admin.FIELDsavedIndex);
+				if (isl <= AllMembers.HighestSavedIndex)
+				{
+					iLOR4Member SIMem = AllMembers.BySavedIndex[isl];
+					if (SIMem != null)
+					{
+						members.Add(AllMembers.BySavedIndex[isl]);
+						entryCount++;
+					}
+					else
+					{
+						///WTF why wasn't if found?!?!
+						System.Diagnostics.Debugger.Break();
+					}
+				}
+				else
+				{
+					///WTF why is savedIndex too high?!?!
+					System.Diagnostics.Debugger.Break();
+				}
+				itemIn = reader.ReadLine();
+				lineCount++;
+				li = LOR4Admin.ContainsKey(itemIn, TABLEchannelGroup + LOR4Admin.FIELDsavedIndex);
+			}
+			return entryCount;
+		}
+
+
+
 		#endregion
 
 		////////////////////////////////////////////////////
@@ -889,11 +920,12 @@ namespace LOR4
 			//bySavedIndex.altSaveID = LOR4Admin.UNDEFINED;
 			//altSavedIndexes = null;
 			AllMembers.ResetWritten();
+			TimingsResetWritten();
 			//Array.Resize(ref altSavedIndexes, highestSavedIndex + 3);
 			//Array.Resize(ref altSaveIDs, TimingGrids.Count + 1);
-			string ext = Path.GetExtension(newFileName).ToLower();
+			string ext = Fyle.Extension(newFileName).ToLower();
 			bool channelConfig = false;
-			if (ext == ".lcc") channelConfig = true;
+			if (ext == LOR4Admin.EXT_LCC) channelConfig = true;
 			if (channelConfig) noEffects = true;
 			//TODO: implement channelConfig flag to write just a channel config file
 
@@ -909,7 +941,8 @@ namespace LOR4
 				// Assign new altSaveIDs in the order they appear in the Tracks
 				foreach (LOR4Track theTrack in Tracks)
 				{
-					if ((!selectedOnly) || (theTrack.Selected))
+					// Note the double negative here- Include it if it is selected or indeterminate
+					if ((!selectedOnly) || (theTrack.Selected != CheckState.Unchecked))
 					{
 						if (theTrack.timingGrid == null)
 						{
@@ -935,7 +968,7 @@ namespace LOR4
 				{
 					LOR4Timings theGrid = TimingGrids[tg];
 					// Any remaining timing grids that are Selected, but not used by any Tracks
-					if ((!selectedOnly) || (theGrid.Selected))
+					if ((!selectedOnly) || (theGrid.Selected != CheckState.Unchecked))
 					{
 						if (theGrid.AltSaveID == LOR4Admin.UNDEFINED)
 						{
@@ -971,7 +1004,7 @@ namespace LOR4
 			// LOR4Loop thru Tracks and write the items (details) in the order they appear
 			foreach (LOR4Track theTrack in Tracks)
 			{
-				if ((!selectedOnly) || (theTrack.Selected))
+				if ((!selectedOnly) || (theTrack.Selected != CheckState.Unchecked))
 				{
 					WriteListItems(theTrack.Members, selectedOnly, noEffects, LOR4MemberType.Items);
 				}
@@ -986,8 +1019,9 @@ namespace LOR4
 			foreach (LOR4Timings theGrid in TimingGrids)
 			{
 				// TIMING GRIDS
-				if ((!selectedOnly) || (theGrid.Selected))
+				if ((!selectedOnly) || (theGrid.Selected != CheckState.Unchecked))
 				{
+					//! Does not seem to be numbering them correctly, or saving them with the tracks
 					WriteTimingGrid(theGrid);
 				}
 			}
@@ -1000,11 +1034,12 @@ namespace LOR4
 			// LOR4Loop thru Tracks
 			foreach (LOR4Track theTrack in Tracks)
 			{
-				if ((!selectedOnly) || (theTrack.Selected))
+				if ((!selectedOnly) || (theTrack.Selected != CheckState.Unchecked))
 				{
 					// Items in the track have already been written
 					// This writes the track info itself including its member list
 					// and loop levels
+					//! Timing Grid numbering is off, and tracks are not being associated with grids!
 					WriteTrack(theTrack, selectedOnly, LOR4MemberType.Items);
 				}
 			}
@@ -1031,7 +1066,7 @@ namespace LOR4
 			lineCount = 0;
 			newFilename = newFileName;
 			if (!Directory.Exists(tempWorkPath)) Directory.CreateDirectory(tempWorkPath);
-			tempFileName = tempWorkPath + Path.GetFileNameWithoutExtension(newFilename) + ".tmp";
+			tempFileName = tempWorkPath + Path.GetFileNameWithoutExtension(newFilename) + Fyle.EXT_TMP;
 			writer = new StreamWriter(tempFileName);
 
 			// Write the first line of the new sequence, containing the XML info
@@ -1079,7 +1114,7 @@ namespace LOR4
 		{
 			if (!theRGBchannel.Written)
 			{
-				if ((!selectedOnly) || (theRGBchannel.Selected))
+				if ((!selectedOnly) || (theRGBchannel.Selected != CheckState.Unchecked))
 				{
 					if ((itemTypes == LOR4MemberType.Items) || (itemTypes == LOR4MemberType.Channel))
 					{
@@ -1120,7 +1155,7 @@ namespace LOR4
 
 			if (!theGroup.Written)
 			{
-				if ((!selectedOnly) || (theGroup.Selected))
+				if ((!selectedOnly) || (theGroup.Selected != CheckState.Unchecked))
 				{
 					if ((itemTypes == LOR4MemberType.Items) ||
 						(itemTypes == LOR4MemberType.Channel) ||
@@ -1226,7 +1261,7 @@ namespace LOR4
 			writer.WriteLine(lineOut);
 
 
-			return theTrack.AltTrackNumber;
+			return theTrack.AltTrackID;
 		}
 
 		private List<int> WriteListItems(LOR4Membership itemIDs, bool selectedOnly, bool noEffects, LOR4MemberType itemTypes)
@@ -1249,7 +1284,7 @@ namespace LOR4
 
 				//id = Members.BySavedIndex[si];
 				itsName = item.Name;
-				if ((!selectedOnly) || (item.Selected))
+				if ((!selectedOnly) || (item.Selected != CheckState.Unchecked))
 				{
 					if (!item.Written)
 					{
@@ -1335,8 +1370,10 @@ namespace LOR4
 
 				if (subMember.Written)  // The item itself should have already been written!
 				{
-					bool sel = subMember.Selected;
-					if (!selectedOnly || sel)
+					CheckState sel = subMember.Selected;
+					// Note double negative here- will include if Checked or Interderminate
+					// Reminder: Order of precedence will evaluate != before ||
+					if (!selectedOnly || sel != CheckState.Unchecked)
 					{
 						if ((itemTypes == subMember.MemberType) || (itemTypes == LOR4MemberType.Items))
 						{
@@ -1381,7 +1418,8 @@ namespace LOR4
 			iLOR4Member member = AllMembers.BySavedIndex[SavedIndex];
 			if (!member.Written)
 			{
-				if (!selectedOnly || member.Selected)
+				// Reminder: Order of precedence will evaluate != before ||
+				if (!selectedOnly || member.Selected != CheckState.Unchecked)
 				{
 					LOR4MemberType itemType = member.MemberType;
 					if (itemType == LOR4MemberType.Channel)
@@ -1487,7 +1525,7 @@ namespace LOR4
 			}
 			foreach (LOR4Track tr in Tracks)
 			{
-				tr.AltTrackNumber = LOR4Admin.UNDEFINED;
+				tr.AltTrackID = LOR4Admin.UNDEFINED;
 			}
 			foreach (LOR4Timings tg in TimingGrids)
 			{
@@ -1819,7 +1857,7 @@ namespace LOR4
 		public int ReadClipboardFile(string existingFilename)
 		{
 			errorStatus = 0;
-			StreamReader reader = new StreamReader(existingFilename);
+			reader = new StreamReader(existingFilename);
 			string lineIn; // line read in (does not get modified)
 			int pos1 = LOR4Admin.UNDEFINED; // positions of certain key text in the line
 
@@ -1833,8 +1871,9 @@ namespace LOR4
 			int curGridItem = LOR4Admin.UNDEFINED;
 
 			// * PASS 1 - COUNT OBJECTS
-			while ((lineIn = reader.ReadLine()) != null)
+			while (!reader.EndOfStream)
 			{
+				lineIn = reader.ReadLine();
 				lineCount++;
 				// does this line mark the start of a channel?
 				//pos1 = lineIn.IndexOf("xml version=");
@@ -1904,8 +1943,9 @@ namespace LOR4
 			//////////////////////////////////
 			reader = new StreamReader(existingFilename);
 			lineCount = 0;
-			while ((lineIn = reader.ReadLine()) != null)
+			while (!reader.EndOfStream)
 			{
+				lineIn = reader.ReadLine();
 				lineCount++;
 				// have we reached the Tracks section?
 				// does this line mark the start of a regular channel?
@@ -1989,6 +2029,7 @@ namespace LOR4
 					//if (tg.type == LOR4TimingGridType.Freeform)
 					{
 						lineIn = reader.ReadLine();
+						lineCount++;
 						//pos1 = lineIn.IndexOf(LOR4Timings.TABLEtiming + LOR4Admin.FIELDcentisecond);
 						pos1 = LOR4Admin.ContainsKey(lineIn, LOR4Timings.TABLEtiming + LOR4Admin.FIELDcentisecond);
 						while (pos1 > 0)
@@ -1998,6 +2039,7 @@ namespace LOR4
 							TimingGrids[curTimingGrid].AddTiming(gpos);
 
 							lineIn = reader.ReadLine();
+							lineCount++;
 							//pos1 = lineIn.IndexOf(LOR4Timings.TABLEtiming + LOR4Admin.FIELDcentisecond);
 							pos1 = LOR4Admin.ContainsKey(lineIn, LOR4Timings.TABLEtiming + LOR4Admin.FIELDcentisecond);
 						}
@@ -2024,7 +2066,7 @@ namespace LOR4
 				if (File.Exists(finalFilename))
 				{
 					//string bakFile = newFilename.Substring(0, newFilename.Length - 3) + "bak";
-					string bakFile = finalFilename + ".bak";
+					string bakFile = finalFilename + Fyle.EXT_BAK;
 					if (File.Exists(bakFile))
 					{
 						File.Delete(bakFile);
@@ -2052,7 +2094,7 @@ namespace LOR4
 
 			//backupFile(fileName);
 
-			string tmpFile = newFilename + ".tmp";
+			string tmpFile = newFilename + Fyle.EXT_TMP;
 
 			writer = new StreamWriter(tmpFile);
 			lineOut = ""; // line to be Written out, gets modified if necessary
@@ -2978,7 +3020,7 @@ namespace LOR4
 			//if (Tracks.Count == 0) Tracks.Add(null);
 			tr.SetIndex(Tracks.Count);
 			tr.SetID(Tracks.Count);
-			tr.SetTrackNumber(Tracks.Count + 1);
+			//tr.SetTrackNumber(Tracks.Count + 1);
 			Tracks.Add(tr);
 			if ((tr.AltID >= 0) && (tr.AltID < TimingGrids.Count))
 			{
@@ -3081,7 +3123,7 @@ namespace LOR4
 			if (theTrack.TrackNumber < 1)
 			{
 				int newTN = Tracks.Count - 1;
-				theTrack.SetTrackNumber(newTN);
+				theTrack.SetID(newTN);
 				theTrack.SetIndex(newTN);
 
 			}
@@ -3093,9 +3135,9 @@ namespace LOR4
 			if (theTrack.AltID < 0)
 			{
 				int newATN = HighestAltTrackNumber + 1;
-				theTrack.AltTrackNumber = newATN;
+				theTrack.AltTrackID = newATN;
 			}
-			return theTrack.AltTrackNumber;
+			return theTrack.AltTrackID;
 		}
 
 		public int HighestSaveID
@@ -3322,7 +3364,16 @@ namespace LOR4
 			set { System.Drawing.Color ignore = value; }
 		}
 
+		public void TimingsResetWritten()
+		{
+			foreach (LOR4Timings grid in TimingGrids)
+			{
+				grid.AltID = LOR4Admin.UNDEFINED;
+				//member.Written = false;
+			}
+			HighestAltSaveID = LOR4Admin.UNDEFINED;
+		}
 
-		// END SEQUENCE CLASS
+		//! END SEQUENCE CLASS
 	} // end sequence class
 } // end namespace LOR4

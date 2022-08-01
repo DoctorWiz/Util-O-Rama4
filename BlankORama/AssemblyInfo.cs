@@ -14,12 +14,13 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM.
 
+// Blank-O-Rama = 00
 [assembly: Guid("23860f4e-7311-4888-a6ac-50904a2cb300")]
 // Version information for an assembly consists of the following four values:
 // Major Version
 // Minor Version
 // Build Number
 // Revision
-//[assembly: AssemblyVersion("4.6.0.1")]
-//[assembly: AssemblyFileVersion("4.6.0.1")]
+//[assembly: AssemblyVersion("4.6.0.2")]
+//[assembly: AssemblyFileVersion("4.6.0.2")]
 

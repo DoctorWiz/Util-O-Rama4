@@ -15,264 +15,264 @@ using System.Linq.Expressions;
 
 namespace UtilORama4
 {
-	public partial class frmVamp //: Form
-	{
-		public LOR4Sequence seq = Annotator.Sequence;
-		private bool doGroups = true;
-		private bool useRampsPoly = false;
-		private bool useRampsBeats = false;
-		private LOR4Track vampTrack = null;
-		//private int centiseconds = 0;
-		private string fileSeqName = "";
-		private MRU mruSequences = new MRU(userSettings, "sequence", 9);
+  public partial class frmVamp //: Form
+  {
+    public LOR4Sequence seq = Annotator.Sequence;
+    private bool doGroups = true;
+    private bool useRampsPoly = false;
+    private bool useRampsBeats = false;
+    private LOR4Track vampTrack = null;
+    //private int centiseconds = 0;
+    private string fileSeqName = "";
+    private MRUoRama mruSequences = new MRUoRama(MRUoRama.FileType.Sequences, "Vamp-O-Rama");
 
-		private bool SaveAsNewSequence()
-		{
-			bool success = false;
-			string filter = "Musical Sequence *.lms|*.lms";
-			string idr = LOR4Admin.DefaultSequencesPath;
+    private bool SaveAsNewSequence()
+    {
+      bool success = false;
+      string filter = "Musical Sequence *.lms|*.lms";
+      string idr = LOR4Admin.DefaultSequencesPath;
 
-			string ifile = Path.GetFileNameWithoutExtension(fileCurrent);
-			if (ifile.Length < 2)
-			{
-				//ifile = seq.info.music.Title + " by " + seq.info.music.Artist;
-				ifile = audioData.Title + " by " + audioData.Artist;
-			}
-			ifile = Fyle.FixInvalidFilenameCharacters(ifile);
-			ifile += ".lms";
+      string ifile = Path.GetFileNameWithoutExtension(fileCurrent);
+      if (ifile.Length < 2)
+      {
+        //ifile = seq.info.music.Title + " by " + seq.info.music.Artist;
+        ifile = audioData.Title + " by " + audioData.Artist;
+      }
+      ifile = Fyle.FixInvalidFilenameCharacters(ifile);
+      ifile += ".lms";
 
-			dlgFileSave.Filter = filter;
-			dlgFileSave.InitialDirectory = idr;
-			dlgFileSave.FileName = ifile;
-			dlgFileSave.FilterIndex = 1;
-			dlgFileSave.OverwritePrompt = false;
-			dlgFileSave.Title = "Save Sequence As...";
-			dlgFileSave.ValidateNames = true;
-			DialogResult result = dlgFileSave.ShowDialog(this);
-			if (result == DialogResult.OK)
-			{
-				DialogResult ow = Fyle.SafeOverwriteFile(dlgFileSave.FileName);
-				if (ow == DialogResult.Yes)
-				{
-					ImBusy(true);
-					fileSeqName = dlgFileSave.FileName;
-					txtSeqName.Text = Path.GetFileNameWithoutExtension(fileSeqName);
-					LOR4Sequence newSeq = CreateNewSequence(fileSeqName);
-					//Annotator.Init(newSeq);
-					seq.info.author = LOR4Admin.DefaultAuthor;
-					//seq.info.music.Album = audioData.Album;
-					//seq.info.music.Artist = audioData.Artist;
-					//seq.info.music.Title = audioData.Title;
-					//seq.info.music.File = fileAudioLast;
-					//int cs = (int)Math.Round(Annotator.songTimeMS / 10D);
-					//centiseconds = cs;
-					//seq.Centiseconds = cs;
-					//Annotator.TotalCentiseconds = cs;
-					//ImportVampsToSequence();
+      dlgFileSave.Filter = filter;
+      dlgFileSave.InitialDirectory = idr;
+      dlgFileSave.FileName = ifile;
+      dlgFileSave.FilterIndex = 1;
+      dlgFileSave.OverwritePrompt = false;
+      dlgFileSave.Title = "Save Sequence As...";
+      dlgFileSave.ValidateNames = true;
+      DialogResult result = dlgFileSave.ShowDialog(this);
+      if (result == DialogResult.OK)
+      {
+        DialogResult ow = Fyle.SafeOverwriteFile(dlgFileSave.FileName);
+        if (ow == DialogResult.Yes)
+        {
+          ImBusy(true);
+          fileSeqName = dlgFileSave.FileName;
+          txtSeqName.Text = Path.GetFileNameWithoutExtension(fileSeqName);
+          LOR4Sequence newSeq = CreateNewSequence(fileSeqName);
+          //Annotator.Init(newSeq);
+          seq.info.author = LOR4Admin.DefaultAuthor;
+          //seq.info.music.Album = audioData.Album;
+          //seq.info.music.Artist = audioData.Artist;
+          //seq.info.music.Title = audioData.Title;
+          //seq.info.music.File = fileAudioLast;
+          //int cs = (int)Math.Round(Annotator.songTimeMS / 10D);
+          //centiseconds = cs;
+          //seq.Centiseconds = cs;
+          //Annotator.TotalCentiseconds = cs;
+          //ImportVampsToSequence();
 
-					int tc = Annotator.Sequence.Tracks.Count;
-
-
-					ExportSelectedVampsToLOR();
-					success = SaveSequence(fileSeqName);
+          int tc = Annotator.Sequence.Tracks.Count;
 
 
-					tc = Annotator.Sequence.Tracks.Count;
-
-					//ImBusy(false);
-					if (success)
-					{
-						if (chkAutolaunch.Checked)
-						{
-							System.Diagnostics.Process.Start(fileSeqName);
-						}
-					}
+          ExportSelectedVampsToLOR();
+          success = SaveSequence(fileSeqName);
 
 
-				}
-			}
-			//btnBrowseSequence.Focus();
-			return success;
-		}
+          tc = Annotator.Sequence.Tracks.Count;
 
-		private bool SaveInExistingSequence()
-		{
-			bool success = false;
-			string filt = "Musical Sequences *.lms|*lms";
-			string idir = LOR4Admin.DefaultSequencesPath;
-			string ifl = txtSeqName.Text.Trim();
-			string theFile = "";
-			if (Fyle.ValidFilename(ifl, true, false))
-			{
-				idir = Path.GetDirectoryName(ifl);
-				if (Fyle.ValidFilename(ifl, true, true))
-				{
-					if (Path.GetExtension(ifl.ToLower()) == "lms")
-					{
-						theFile = Path.GetFileName(ifl);
-					}
-				}
-			}
-			else
-			{
-				// Keep default sequence path
-			}
+          //ImBusy(false);
+          if (success)
+          {
+            if (chkAutolaunch.Checked)
+            {
+              System.Diagnostics.Process.Start(fileSeqName);
+            }
+          }
 
 
-			dlgFileOpen.Filter = filt;
-			dlgFileOpen.FilterIndex = 2;    //! Temporary?  Set back to 1 and/or change filter string?
-			dlgFileOpen.InitialDirectory = idir;
-			//dlgFileOpen.FileName = Properties.Settings.Default.fileSeqLast;
+        }
+      }
+      //btnBrowseSequence.Focus();
+      return success;
+    }
 
-			DialogResult dr = dlgFileOpen.ShowDialog(this);
-			if (dr == DialogResult.OK)
-			{
-				fileCurrent = dlgFileOpen.FileName;
-				txtSeqName.Text = Path.GetFileName(fileCurrent);
-				string ex = Path.GetExtension(fileCurrent).ToLower();
-				// If they picked an existing musical sequence
-				if (ex == ".lms")
-				{
-					LOR4Sequence existSeq = new LOR4Sequence(fileCurrent);
-					seq = existSeq;
-					Annotator.Init(existSeq);
-					//fileAudioOriginal = seq.info.music.File;
-					//txtFileAudio.Text = Path.GetFileNameWithoutExtension(fileAudioOriginal);
-					grpAudio.Text = " Original Audio File ";
-					btnBrowseAudio.Text = "Analyze";
-					//fileSeqCur = fileCurrent;
-					//fileChanCfg = "";
-					// Add to Sequences MRU
-
-					//centiseconds = SequenceFunctions.ms2cs(audioData.Duration);
-					int cs = (int)Math.Round(Annotator.songTimeMS / 10D);
-					cs = Math.Max(cs, existSeq.Centiseconds);
-					//centiseconds = cs;
-					existSeq.Centiseconds = cs;
-
-					//! ImportVampsToSequence();
-					//ExportSelectedTimings_ToLOR
-					ExportSelectedVampsToLOR();
-					success = SaveSequence(fileCurrent);
+    private bool SaveInExistingSequence()
+    {
+      bool success = false;
+      string filt = "Musical Sequences *.lms|*lms";
+      string idir = LOR4Admin.DefaultSequencesPath;
+      string ifl = txtSeqName.Text.Trim();
+      string theFile = "";
+      if (Fyle.ValidFilename(ifl, true, false))
+      {
+        idir = Path.GetDirectoryName(ifl);
+        if (Fyle.ValidFilename(ifl, true, true))
+        {
+          if (Path.GetExtension(ifl.ToLower()) == "lms")
+          {
+            theFile = Path.GetFileName(ifl);
+          }
+        }
+      }
+      else
+      {
+        // Keep default sequence path
+      }
 
 
-				}
-				//grpGrids.Enabled = true;
-				//grpTracks.Enabled = true;
-				//grpAudio.Enabled = true;
-				//btnBrowseAudio.Focus();
+      dlgFileOpen.Filter = filt;
+      dlgFileOpen.FilterIndex = 2;    //! Temporary?  Set back to 1 and/or change filter string?
+      dlgFileOpen.InitialDirectory = idir;
+      //dlgFileOpen.FileName = Properties.Settings.Default.fileSeqLast;
 
-			}
-			return success;
-		}
+      DialogResult dr = dlgFileOpen.ShowDialog(this);
+      if (dr == DialogResult.OK)
+      {
+        fileCurrent = dlgFileOpen.FileName;
+        txtSeqName.Text = Path.GetFileName(fileCurrent);
+        string ex = Path.GetExtension(fileCurrent).ToLower();
+        // If they picked an existing musical sequence
+        if (ex == ".lms")
+        {
+          LOR4Sequence existSeq = new LOR4Sequence(fileCurrent);
+          seq = existSeq;
+          Annotator.Init(existSeq);
+          //fileAudioOriginal = seq.info.music.File;
+          //txtFileAudio.Text = Path.GetFileNameWithoutExtension(fileAudioOriginal);
+          grpAudio.Text = " Original Audio File ";
+          btnBrowseAudio.Text = "Analyze";
+          //fileSeqCur = fileCurrent;
+          //fileChanCfg = "";
+          // Add to Sequences MRU
 
-		private bool SaveSequence(string newFilename)
-		{
-			bool success = false;
-			ImBusy(true);
-			// normal default when not testing
-			if (seq.Tracks.Count < 1)
-			{
-				Fyle.BUG("Sequence needs to have at least one Track-- Where is the VampTrack?!?");
-			}
-			else
-			{
-				if (seq.Channels.Count < 1)
-				{
-					Fyle.BUG("Sequence needs to have at least one Channel!");
-				}
-				else
-				{
-					if (seq.TimingGrids.Count < 1)
-					{
-						Fyle.BUG("Sequence needs to have at least one Timing Grid!");
-					}
-					else
-					{
-						if (Annotator.VampTrack.timingGrid == null)
-						{
-							Fyle.BUG("VampTrack needs a Timing Grid!");
-						}
-						else
-						{
-							if (Annotator.VampTrack.Members.Count < 1)
-							{
-								Fyle.BUG("VampTrack needs at least one Channel!");
-							}
-							else
-							{
-								int errs = seq.WriteSequenceFile_DisplayOrder(newFilename, false, false);
-								if (errs < 1)
-								{
-									//System.Media.SystemSounds.Beep.Play();
-									Fyle.MakeNoise(Fyle.Noises.WooHoo);
-									success = true;
-									//dirtySeq = false;
-									//fileSeqSave = newFilename;
-									//Add to MRU
-								}
-							}
-						}
-					}
-				}
-			}
-			if (!success)
-			{
-				Fyle.MakeNoise(Fyle.Noises.Doh);
-			}
-			ImBusy(false);
-			return success;
+          //centiseconds = SequenceFunctions.ms2cs(audioData.Duration);
+          int cs = (int)Math.Round(Annotator.songTimeMS / 10D);
+          cs = Math.Max(cs, existSeq.Centiseconds);
+          //centiseconds = cs;
+          existSeq.Centiseconds = cs;
 
-		}
-
-		private LOR4Sequence CreateNewSequence(string theFilename)
-		{
-			LOR4Sequence newSeq = new LOR4Sequence();
-			Annotator.Init(newSeq);
-			seq = newSeq;
-			seq.info.author = LOR4Admin.DefaultAuthor;
-			SaveSongInfo();
-			// Save what we have so far...
-			//seq.WriteSequenceFile_DisplayOrder(theFilename);
-
-			return newSeq;
-		}
-
-		private void SaveSongInfo()
-		{
-			int cs = SequenceFunctions.ms2cs(audioData.Duration);
-			seq.Centiseconds = Math.Max(cs, seq.Centiseconds);
-			seq.LOR4SequenceType = LOR4SequenceType.Musical;
-			//seq.Tracks[0].Centiseconds = 0;
-			seq.info.music.Album = audioData.Album;
-			string artst = audioData.Artist;
-			if (artst.Length < 1)
-			{
-				artst = audioData.AlbumArtist;
-			}
-			seq.info.music.Artist = artst;
-			seq.info.music.File = audioData.Filename;
-			seq.info.music.Title = audioData.Title;
-			theSong = audioData.Title;
-			songTitle = audioData.Title;
-			if (audioData.Artist.Length > 1)
-			{
-				theSong += BY + audioData.Artist;
-				songArtist = audioData.Artist;
-			}
-			else
-			{
-				if (audioData.AlbumArtist.Length > 1)
-				{
-					theSong += BY + audioData.AlbumArtist;
-					songArtist = audioData.AlbumArtist;
-				}
-			}
-
-		}
+          //! ImportVampsToSequence();
+          //ExportSelectedTimings_ToLOR
+          ExportSelectedVampsToLOR();
+          success = SaveSequence(fileCurrent);
 
 
-		/*
+        }
+        //grpGrids.Enabled = true;
+        //grpTracks.Enabled = true;
+        //grpAudio.Enabled = true;
+        //btnBrowseAudio.Focus();
+
+      }
+      return success;
+    }
+
+    private bool SaveSequence(string newFilename)
+    {
+      bool success = false;
+      ImBusy(true);
+      // normal default when not testing
+      if (seq.Tracks.Count < 1)
+      {
+        Fyle.BUG("Sequence needs to have at least one Track-- Where is the VampTrack?!?");
+      }
+      else
+      {
+        if (seq.Channels.Count < 1)
+        {
+          Fyle.BUG("Sequence needs to have at least one Channel!");
+        }
+        else
+        {
+          if (seq.TimingGrids.Count < 1)
+          {
+            Fyle.BUG("Sequence needs to have at least one Timing Grid!");
+          }
+          else
+          {
+            if (Annotator.VampTrack.timingGrid == null)
+            {
+              Fyle.BUG("VampTrack needs a Timing Grid!");
+            }
+            else
+            {
+              if (Annotator.VampTrack.Members.Count < 1)
+              {
+                Fyle.BUG("VampTrack needs at least one Channel!");
+              }
+              else
+              {
+                int errs = seq.WriteSequenceFile_DisplayOrder(newFilename, false, false);
+                if (errs < 1)
+                {
+                  //System.Media.SystemSounds.Beep.Play();
+                  Fyle.MakeNoise(Fyle.Noises.WooHoo);
+                  success = true;
+                  //dirtySeq = false;
+                  //fileSeqSave = newFilename;
+                  //Add to MRU
+                }
+              }
+            }
+          }
+        }
+      }
+      if (!success)
+      {
+        Fyle.MakeNoise(Fyle.Noises.Doh);
+      }
+      ImBusy(false);
+      return success;
+
+    }
+
+    private LOR4Sequence CreateNewSequence(string theFilename)
+    {
+      LOR4Sequence newSeq = new LOR4Sequence();
+      Annotator.Init(newSeq);
+      seq = newSeq;
+      seq.info.author = LOR4Admin.DefaultAuthor;
+      SaveSongInfo();
+      // Save what we have so far...
+      //seq.WriteSequenceFile_DisplayOrder(theFilename);
+
+      return newSeq;
+    }
+
+    private void SaveSongInfo()
+    {
+      int cs = SequenceFunctions.ms2cs(audioData.Duration);
+      seq.Centiseconds = Math.Max(cs, seq.Centiseconds);
+      seq.LOR4SequenceType = LOR4SequenceType.Musical;
+      //seq.Tracks[0].Centiseconds = 0;
+      seq.info.music.Album = audioData.Album;
+      string artst = audioData.Artist;
+      if (artst.Length < 1)
+      {
+        artst = audioData.AlbumArtist;
+      }
+      seq.info.music.Artist = artst;
+      seq.info.music.File = audioData.Filename;
+      seq.info.music.Title = audioData.Title;
+      theSong = audioData.Title;
+      songTitle = audioData.Title;
+      if (audioData.Artist.Length > 1)
+      {
+        theSong += BY + audioData.Artist;
+        songArtist = audioData.Artist;
+      }
+      else
+      {
+        if (audioData.AlbumArtist.Length > 1)
+        {
+          theSong += BY + audioData.AlbumArtist;
+          songArtist = audioData.AlbumArtist;
+        }
+      }
+
+    }
+
+
+    /*
 
 		private int ImportVampsToSequence()
 		{
@@ -1095,7 +1095,7 @@ private int		ImportNoteOnsetChannels(LOR4ChannelGroup onsGrp, xTimings xBeatsFul
 		}
 		*/
 
-	}
+  }
 
 
 }

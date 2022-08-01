@@ -99,82 +99,10 @@ namespace UtilORama4
 
 		private void cboPrematch_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			long alg = 0;
-			string txt = cboPrematch.Text;
-			string start = txt.Substring(0, 3);
-
-			if (start == "Dam")
-			{
-				alg = FuzzyString.FuzzyFunctions.USE_DAMERAULEVENSHTEIN;
-			}
-			else if (start == "Yet")
-			{
-				alg = FuzzyString.FuzzyFunctions.USE_YETILEVENSHTEIN;
-			}
-			else if (start == "Sif")
-			{
-				alg = FuzzyString.FuzzyFunctions.USE_SIFT;
-			}
-			else if (start == "Sor")
-			{
-				alg = FuzzyString.FuzzyFunctions.USE_SORENSENDICE;
-			}
-			else if (txt.IndexOf("Wink") > 0)
-			{
-				alg = FuzzyString.FuzzyFunctions.USE_JAROWINKLER;
-			}
-			else if (txt.IndexOf("String") > 0)
-			{
-				alg = FuzzyString.FuzzyFunctions.USE_LONGESTCOMMONSUBSTRING;
-			}
-
-			if (alg == 0)
-			{
-				string msg = "Houston, We have no match!";
-			}
-			else
-			{
-				prematchAlgorithm = alg;
-				//Properties.Settings.Default.FuzzyPrematchAlgorithm = alg;
-				//Properties.Settings.Default.Save();
-			}
-
 		}
 
 		private void SetPreCombo(long theAlgorithm)
 		{
-			int idx = LOR4Admin.UNDEFINED;
-			switch (theAlgorithm)
-			{
-				case FuzzyFunctions.USE_JAROWINKLER:
-					idx = 7;
-					break;
-				case FuzzyFunctions.USE_DAMERAULEVENSHTEIN:
-					idx = 10;
-					break;
-				case FuzzyFunctions.USE_YETILEVENSHTEIN:
-					idx = 11;
-					break;
-				case FuzzyFunctions.USE_LONGESTCOMMONSUBSTRING:
-					idx = 14;
-					break;
-				case FuzzyFunctions.USE_SIFT:
-					idx = 21;
-					break;
-				case FuzzyFunctions.USE_SORENSENDICE:
-					idx = 22;
-					break;
-			}
-
-			if (idx < 0)
-			{
-				string msg = "Houston, we have no match!";
-			}
-			else
-			{
-				cboPrematch.SelectedIndex = idx;
-			}
-
 		}
 
 		private void frmOptions_Load(object sender, EventArgs e)
@@ -235,16 +163,6 @@ namespace UtilORama4
 		{
 			int bit = 1;
 			cboPrematch.Items.Clear();
-			for (int p = 0; p < FuzzyFunctions.ALGORITHM_COUNT; p++)
-			{
-				string n = "chk" + bit.ToString("X6");
-				string d = FuzzyFunctions.AlgorithmNames(bit);
-				cboPrematch.Items.Add(d);
-				Control c = grpFinalMatch.Controls[n];
-				c.Text = d;
-				c.Visible = true;
-				bit <<= 1;
-			}
 
 
 
@@ -263,13 +181,6 @@ namespace UtilORama4
 			caseSensitive = chkCase.Checked;
 			if (caseSensitive)
 			{
-				finalAlgorithms &= (FuzzyFunctions.USE_CASEINSENSITIVE - 1);
-				prematchAlgorithm &= (FuzzyFunctions.USE_CASEINSENSITIVE - 1);
-			}
-			else
-			{
-				finalAlgorithms |= FuzzyFunctions.USE_CASEINSENSITIVE;
-				prematchAlgorithm |= FuzzyFunctions.USE_CASEINSENSITIVE;
 			}
 
 		}

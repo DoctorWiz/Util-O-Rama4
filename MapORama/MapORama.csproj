@@ -1,52 +1,70 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<Copyright>Copyright © 2022+ by Doctor Wizard 🧙 and W⚡zlights Software</Copyright>
-		<OutputType>WinExe</OutputType>
-		<TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
-		<RootNamespace>UtilORama4</RootNamespace>
+		<ApplicationIcon>Map-O-Rama.ico</ApplicationIcon>
+		<!-- Superceded by Assembly Title? -->
 		<AssemblyName>Map-O-Rama</AssemblyName>
-		<Nullable>enable</Nullable>
-		<UseWindowsForms>true</UseWindowsForms>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<PlatformTarget>x64</PlatformTarget>
-		<RepositoryUrl>https://github.com/DoctorWiz/Util-O-Rama4/tree/master/MapORama</RepositoryUrl>
-		<PublishUrl>ftp://wizlights.com/utilorama/download/</PublishUrl>
-		<InstallUrl>http://wizlights.com/utilorama/download/</InstallUrl>
-		<SupportUrl>http://wizlights.com/utilorama/maporama/default.html</SupportUrl>
-		<ProductName>Map-O-Rama</ProductName>
-		<PublisherName>W⚡zlights Software</PublisherName>
-		<SuiteName>Util-O-Rama</SuiteName>
-		<CreateWebPageOnPublish>true</CreateWebPageOnPublish>
-		<WebPage>http://wizlights.com/utilorama/maporama/default.html</WebPage>
+		<AssemblyTitle>Map-O-Rama</AssemblyTitle>
+		<AssemblyVersion>4.6.0.%2a</AssemblyVersion>
 		<ApplicationRevision>0</ApplicationRevision>
 		<ApplicationVersion>4.0.0.%2a</ApplicationVersion>
-		<PackageTags>Util-O-Rama; Light-O-Rama; xLights; Christmas; Channels; Mapping; Light Show</PackageTags>
+		<Authors>Doctor 🧙 Wizard</Authors>
+		<Company>W⚡zlights Software</Company>
+		<Copyright>Copyright © 2022+ by Doctor Wizard 🧙 and W⚡zlights Software</Copyright>
+		<CreateWebPageOnPublish>true</CreateWebPageOnPublish>
 		<Description>
 			Map channels from one Light-O-Rama Showtime S4 sequence to another sequence with a different channel layout.
 		</Description>
-		<ApplicationIcon>Map-O-Rama.ico</ApplicationIcon>
+		<FileVersion>4.6.0.%2a</FileVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<InformationalVersion>4.6.0.%2a</InformationalVersion>
+		<InstallUrl>http://wizlights.com/utilorama/download/</InstallUrl>
 		<IsPublishable>False</IsPublishable>
+		<Nullable>enable</Nullable>
+		<OutputType>WinExe</OutputType>
+		<PackageIcon>Map-O-Rama.png</PackageIcon>
+		<PackageID>Util-O-Rama</PackageID>
 		<PackageProjectUrl>http://wizlights/utilorama/maporama</PackageProjectUrl>
-		<PackageIcon>MapORamaBulb.png</PackageIcon>
+		<PackageTags>Util-O-Rama; Light-O-Rama; xLights; Christmas; Sequences; Light Show; Channels; Mapping</PackageTags>
+		<PlatformTarget>x64</PlatformTarget>
+		<ProductName>Map-O-Rama</ProductName>
+		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+		<PublisherName>W⚡zlights Software</PublisherName>
+		<PublishUrl>ftp://wizlights.com/utilorama/download/</PublishUrl>
+		<RepositoryUrl>https://github.com/DoctorWiz/Util-O-Rama4/tree/master/BlankORama</RepositoryUrl>
+		<RootNamespace>UtilORama4</RootNamespace>
+		<SuiteName>Util-O-Rama</SuiteName>
+		<SupportUrl>http://wizlights.com/utilorama/maporama/default.html</SupportUrl>
+		<TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
+		<UseWindowsForms>true</UseWindowsForms>
+		<Version>4.6.0.2</Version>
+		<WebPage>http://wizlights.com/utilorama/maporama/default.html</WebPage>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <DefineConstants>$(DefineConstants)TRACE;TREENODES</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <DefineConstants>$(DefineConstants)TRACE;TREENODES</DefineConstants>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<None Remove="desktop.ini" />
-		<None Remove="FuzzyString.dll" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<Compile Include="..\..\COMMON\CommaSeparatedValues\csv.cs" Link="csv.cs" />
 		<Compile Include="..\..\COMMON\FileHelper\FileHelper.cs" Link="FileHelper.cs" />
 		<Compile Include="..\..\COMMON\FormHelper\FormHelper.cs" Link="FormHelper.cs" />
-		<Compile Include="..\Common\About\About.cs" Link="About.cs" />
-		<Compile Include="..\Common\About\About.Designer.cs" Link="About.Designer.cs" />
+		<Compile Include="..\Common\RecentlyUsed\MRUoRama.cs" Link="MRUoRama.cs" />
 		<Compile Include="..\Common\Sequence4\Seq4Admin.cs" Link="Seq4Admin.cs" />
 		<Compile Include="..\Common\Sequence4\SeqChannel.cs" Link="SeqChannel.cs" />
 		<Compile Include="..\Common\Sequence4\SeqChannelGroup.cs" Link="SeqChannelGroup.cs" />
 		<Compile Include="..\Common\Sequence4\SeqCosmicDevice.cs" Link="SeqCosmicDevice.cs" />
 		<Compile Include="..\Common\Sequence4\SeqEnums.cs" Link="SeqEnums.cs" />
 		<Compile Include="..\Common\Sequence4\SeqMemberBase.cs" Link="SeqMemberBase.cs" />
+		<Compile Include="..\Common\Sequence4\SeqMemberBaseExtenderForNodes.cs" Link="SeqMemberBaseExtenderForNodes.cs" />
 		<Compile Include="..\Common\Sequence4\SeqMemberInterface.cs" Link="SeqMemberInterface.cs" />
 		<Compile Include="..\Common\Sequence4\SeqMembership.cs" Link="SeqMembership.cs" />
 		<Compile Include="..\Common\Sequence4\SeqRGBChannel.cs" Link="SeqRGBChannel.cs" />
@@ -63,30 +81,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="..\Graphics\MapORamaBulb.png">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="Syncfusion.GridHelperClasses.Windows" Version="20.1.0.52" />
 		<PackageReference Include="Syncfusion.Tools.Windows" Version="20.1.0.52" />
 		<PackageReference Include="System.DirectoryServices.AccountManagement" Version="6.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Common\FuzzORama\FuzzORama.csproj" />
+	  <Reference Include="FuzzORama">
+	    <HintPath>..\Common\FuzzORama\bin\Release\net6.0-windows10.0.19041.0\FuzzORama.dll</HintPath>
+	  </Reference>
 	</ItemGroup>
 
 	<ItemGroup>
-		<Reference Include="FuzzyString">
-			<HintPath>..\Common\FuzzyString\bin\Release\net6.0-windows10.0.19041.0\FuzzyString.dll</HintPath>
-		</Reference>
-	</ItemGroup>
-
-	<ItemGroup>
-		<Compile Update="Properties\Settings.Designer.cs">
+		<Compile Update="Settings.Designer.cs">
 			<DesignTimeSharedInput>True</DesignTimeSharedInput>
 			<AutoGen>True</AutoGen>
 			<DependentUpon>Settings.settings</DependentUpon>
@@ -94,7 +101,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Update="Properties\Settings.settings">
+		<None Update="Settings.settings">
 			<Generator>SettingsSingleFileGenerator</Generator>
 			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
 		</None>

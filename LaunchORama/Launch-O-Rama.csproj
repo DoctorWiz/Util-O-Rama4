@@ -1,60 +1,49 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
-    <UseWindowsForms>true</UseWindowsForms>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>UtilORama4</RootNamespace>
-		<Copyright>Copyright © 2022+ by Doctor Wizard 🧙 and W⚡zlights Software</Copyright>
+		<ApplicationIcon>Launch-O-Rama.ico</ApplicationIcon>
+		<!-- Superceded by Assembly Title? -->
 		<AssemblyName>Launch-O-Rama</AssemblyName>
-		<PlatformTarget>x64</PlatformTarget>
-		<RepositoryUrl>https://github.com/DoctorWiz/Util-O-Rama4/tree/master/LaunchORama</RepositoryUrl>
-		<PublishUrl>ftp://wizlights.com/utilorama/download/</PublishUrl>
-		<InstallUrl>http://wizlights.com/utilorama/download/</InstallUrl>
-		<SupportUrl>http://wizlights.com/utilorama/launchorama/default.html</SupportUrl>
-		<ProductName>Launch-O-Rama</ProductName>
-		<PublisherName>W⚡zlights Software</PublisherName>
-		<SuiteName>Util-O-Rama</SuiteName>
-		<CreateWebPageOnPublish>true</CreateWebPageOnPublish>
-		<WebPage>http://wizlights.com/utilorama/launchorama/default.html</WebPage>
+		<AssemblyTitle>Launch-O-Rama</AssemblyTitle>
+		<AssemblyVersion>4.6.0.%2a</AssemblyVersion>
 		<ApplicationRevision>0</ApplicationRevision>
 		<ApplicationVersion>4.0.0.%2a</ApplicationVersion>
-		<PackageTags>Util-O-Rama; Light-O-Rama; Christmas; Sequences; Light Show; Launch</PackageTags>
+		<Authors>Doctor 🧙 Wizard</Authors>
+		<Company>W⚡zlights Software</Company>
+		<Copyright>Copyright © 2022+ by Doctor Wizard 🧙 and W⚡zlights Software</Copyright>
+		<CreateWebPageOnPublish>true</CreateWebPageOnPublish>
 		<Description>Launcher for the Util-O-Rama programs.</Description>
-		<ApplicationIcon>Launch-O-Rama.ico</ApplicationIcon>
+		<FileVersion>4.6.0.%2a</FileVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<InformationalVersion>4.6.0.%2a</InformationalVersion>
+		<InstallUrl>http://wizlights.com/utilorama/download/</InstallUrl>
 		<IsPublishable>False</IsPublishable>
-		<PackageProjectUrl>http://wizlights/utilorama/launchorama</PackageProjectUrl>
+		<Nullable>enable</Nullable>
+		<OutputType>WinExe</OutputType>
 		<PackageIcon>Launch-O-Rama.png</PackageIcon>
+		<PackageID>Util-O-Rama</PackageID>
+		<PackageProjectUrl>http://wizlights/utilorama/launchorama</PackageProjectUrl>
+		<PackageTags>Util-O-Rama; Light-O-Rama; xLights; Christmas; Sequences; Light Show; Launch; Launcher; Utilities</PackageTags>
+		<PlatformTarget>x64</PlatformTarget>
+		<ProductName>Launch-O-Rama</ProductName>
+		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+		<PublisherName>W⚡zlights Software</PublisherName>
+		<PublishUrl>ftp://wizlights.com/utilorama/download/</PublishUrl>
+		<RepositoryUrl>https://github.com/DoctorWiz/Util-O-Rama4/tree/master/LaunchORama</RepositoryUrl>
+		<RootNamespace>UtilORama4</RootNamespace>
+		<SuiteName>Util-O-Rama</SuiteName>
+		<SupportUrl>http://wizlights.com/utilorama/launchorama/default.html</SupportUrl>
+		<TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
+		<UseWindowsForms>true</UseWindowsForms>
+		<Version>4.6.0.2</Version>
+		<WebPage>http://wizlights.com/utilorama/launchorama/default.html</WebPage>
   </PropertyGroup>
 	<ItemGroup>
 		<None Remove="desktop.ini" />
 	</ItemGroup>
-
 	<ItemGroup>
-		<Compile Include="..\..\COMMON\FileHelper.cs" Link="FileHelper.cs" />
-		<Compile Include="..\..\COMMON\FormHelper.cs" Link="FormHelper.cs" />
-		<Compile Include="..\Common\About\About.cs" Link="About.cs" />
-		<Compile Include="..\Common\About\About.Designer.cs" Link="About.Designer.cs" />
-		<Compile Include="..\Common\Sequence4\LORUtils.cs" Link="LORUtils.cs" />
-		<Compile Include="..\Common\Sequence4\SeqChannel.cs" Link="SeqChannel.cs" />
-		<Compile Include="..\Common\Sequence4\SeqChannelGroup.cs" Link="SeqChannelGroup.cs" />
-		<Compile Include="..\Common\Sequence4\SeqCosmicDevice.cs" Link="SeqCosmicDevice.cs" />
-		<Compile Include="..\Common\Sequence4\SeqEnums.cs" Link="SeqEnums.cs" />
-		<Compile Include="..\Common\Sequence4\SeqMemberBase.cs" Link="SeqMemberBase.cs" />
-		<Compile Include="..\Common\Sequence4\SeqMemberInterface.cs" Link="SeqMemberInterface.cs" />
-		<Compile Include="..\Common\Sequence4\SeqMembership.cs" Link="SeqMembership.cs" />
-		<Compile Include="..\Common\Sequence4\SeqRGBChannel.cs" Link="SeqRGBChannel.cs" />
-		<Compile Include="..\Common\Sequence4\SeqSubs.cs" Link="SeqSubs.cs" />
-		<Compile Include="..\Common\Sequence4\SeqTimingGrid.cs" Link="SeqTimingGrid.cs" />
-		<Compile Include="..\Common\Sequence4\SeqTrack.cs" Link="SeqTrack.cs" />
-		<Compile Include="..\Common\Sequence4\Sequence4.cs" Link="Sequence4.cs" />
-		<Compile Include="..\Common\Sequence4\SFTreeUtils.cs" Link="SFTreeUtils.cs" />
-		<Compile Include="..\Common\Sequence4\Visualization4.cs" Link="Visualization4.cs" />
-		<Compile Include="..\Common\Sequence4\VizChannel.cs" Link="VizChannel.cs" />
-		<Compile Include="..\Common\Sequence4\VizDrawObject.cs" Link="VizDrawObject.cs" />
-		<Compile Include="..\Common\Sequence4\VizGroup.cs" Link="VizGroup.cs" />
+	  <Compile Include="..\..\COMMON\FileHelper\FileHelper.cs" Link="FileHelper.cs" />
+	  <Compile Include="..\..\COMMON\FormHelper\FormHelper.cs" Link="FormHelper.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -64,7 +53,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Update="Properties\Settings.Designer.cs">
+		<Compile Update="Settings.Designer.cs">
 			<DesignTimeSharedInput>True</DesignTimeSharedInput>
 			<AutoGen>True</AutoGen>
 			<DependentUpon>Settings.settings</DependentUpon>
@@ -72,7 +61,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Update="Properties\Settings.settings">
+		<None Update="Settings.settings">
 			<Generator>SettingsSingleFileGenerator</Generator>
 			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
 		</None>

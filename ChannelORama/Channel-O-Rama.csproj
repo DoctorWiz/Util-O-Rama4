@@ -1,108 +1,129 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<OutputType>WinExe</OutputType>
-		<TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
-		<Nullable>enable</Nullable>
-		<UseWindowsForms>true</UseWindowsForms>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<RootNamespace>UtilORama4</RootNamespace>
-		<Copyright>Copyright © 2022+ by Doctor Wizard 🧙 and W⚡zlights Software</Copyright>
-		<AssemblyName>Channel-O-Rama</AssemblyName>
-		<PlatformTarget>x64</PlatformTarget>
-		<RepositoryUrl>https://github.com/DoctorWiz/Util-O-Rama4/tree/master/ChannelORama</RepositoryUrl>
-		<PublishUrl>ftp://wizlights.com/utilorama/download/</PublishUrl>
-		<InstallUrl>http://wizlights.com/utilorama/download/</InstallUrl>
-		<SupportUrl>http://wizlights.com/utilorama/channelorama/default.html</SupportUrl>
-		<ProductName>Channel-O-Rama</ProductName>
-		<PublisherName>W⚡zlights Software</PublisherName>
-		<SuiteName>Util-O-Rama</SuiteName>
-		<CreateWebPageOnPublish>true</CreateWebPageOnPublish>
-		<WebPage>http://wizlights.com/utilorama/channelorama/default.html</WebPage>
-		<ApplicationRevision>0</ApplicationRevision>
-		<ApplicationVersion>4.0.0.%2a</ApplicationVersion>
-		<PackageTags>Util-O-Rama; Light-O-Rama; xLights; Christmas; Sequences; Light Show</PackageTags>
-		<Description>Channel Database for Light-O-Rama Showtime S4 and xLights.</Description>
-		<ApplicationIcon>Channel-O-Rama.ico</ApplicationIcon>
-		<IsPublishable>False</IsPublishable>
-		<PackageProjectUrl>http://wizlights/utilorama/channelorama</PackageProjectUrl>
-		<PackageIcon>Channel-O-Rama.png</PackageIcon>
-	</PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Channel-O-Rama.ico</ApplicationIcon>
+    <!-- Superceded by Assembly Title? -->
+    <AssemblyName>Channel-O-Rama</AssemblyName>
+    <AssemblyTitle>Channel-O-Rama</AssemblyTitle>
+    <AssemblyVersion>4.6.0.%2a</AssemblyVersion>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>4.0.0.%2a</ApplicationVersion>
+    <Authors>Doctor 🧙 Wizard</Authors>
+    <Company>W⚡zlights Software</Company>
+    <Copyright>Copyright © 2022+ by Doctor Wizard 🧙 and W⚡zlights Software</Copyright>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+    <Description>Channel Database for Light-O-Rama Showtime S4 and xLights.</Description>
+    <FileVersion>4.6.0.%2a</FileVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <InformationalVersion>4.6.0.%2a</InformationalVersion>
+    <InstallUrl>http://wizlights.com/utilorama/download/</InstallUrl>
+    <IsPublishable>False</IsPublishable>
+    <Nullable>enable</Nullable>
+    <OutputType>WinExe</OutputType>
+    <PackageIcon>Channel-O-Rama.png</PackageIcon>
+    <PackageID>Util-O-Rama</PackageID>
+    <PackageProjectUrl>http://wizlights/utilorama/channelorama</PackageProjectUrl>
+    <PackageTags>Util-O-Rama; Light-O-Rama; xLights; Christmas; Sequences; Light Show; Channels; Database; DMX</PackageTags>
+    <PlatformTarget>x64</PlatformTarget>
+    <ProductName>Channel-O-Rama</ProductName>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+    <PublisherName>W⚡zlights Software</PublisherName>
+    <PublishUrl>ftp://wizlights.com/utilorama/download/</PublishUrl>
+    <RepositoryUrl>https://github.com/DoctorWiz/Util-O-Rama4/tree/master/ChannelORama</RepositoryUrl>
+    <RootNamespace>UtilORama4</RootNamespace>
+    <SuiteName>Util-O-Rama</SuiteName>
+    <SupportUrl>http://wizlights.com/utilorama/channelorama/default.html</SupportUrl>
+    <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Version>4.6.0.2</Version>
+    <WebPage>http://wizlights.com/utilorama/channelorama/default.html</WebPage>
+  </PropertyGroup>
 
-	<ItemGroup>
-		<None Remove="desktop.ini" />
-	</ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>$(DefineConstants)TRACE;TREENODES</DefineConstants>
+  </PropertyGroup>
 
-	<ItemGroup>
-		<Compile Include="..\..\COMMON\CommaSeparatedValues\csv.cs" Link="csv.cs" />
-		<Compile Include="..\..\COMMON\FileHelper\FileHelper.cs" Link="FileHelper.cs" />
-		<Compile Include="..\..\COMMON\FormHelper\FormHelper.cs" Link="FormHelper.cs" />
-		<Compile Include="..\Common\About\About.cs" Link="About.cs" />
-		<Compile Include="..\Common\About\About.Designer.cs" Link="About.Designer.cs" />
-		<Compile Include="..\Common\Sequence4\Seq4Admin.cs" Link="Seq4Admin.cs" />
-		<Compile Include="..\Common\Sequence4\SeqChannel.cs" Link="SeqChannel.cs" />
-		<Compile Include="..\Common\Sequence4\SeqChannelGroup.cs" Link="SeqChannelGroup.cs" />
-		<Compile Include="..\Common\Sequence4\SeqCosmicDevice.cs" Link="SeqCosmicDevice.cs" />
-		<Compile Include="..\Common\Sequence4\SeqEnums.cs" Link="SeqEnums.cs" />
-		<Compile Include="..\Common\Sequence4\SeqMemberBase.cs" Link="SeqMemberBase.cs" />
-		<Compile Include="..\Common\Sequence4\SeqMemberInterface.cs" Link="SeqMemberInterface.cs" />
-		<Compile Include="..\Common\Sequence4\SeqMembership.cs" Link="SeqMembership.cs" />
-		<Compile Include="..\Common\Sequence4\SeqRGBChannel.cs" Link="SeqRGBChannel.cs" />
-		<Compile Include="..\Common\Sequence4\SeqSubs.cs" Link="SeqSubs.cs" />
-		<Compile Include="..\Common\Sequence4\SeqTimingGrid.cs" Link="SeqTimingGrid.cs" />
-		<Compile Include="..\Common\Sequence4\SeqTrack.cs" Link="SeqTrack.cs" />
-		<Compile Include="..\Common\Sequence4\Sequence4.cs" Link="Sequence4.cs" />
-		<Compile Include="..\Common\Sequence4\Viz4.cs" Link="Viz4.cs" />
-		<Compile Include="..\Common\Sequence4\VizChannel.cs" Link="VizChannel.cs" />
-		<Compile Include="..\Common\Sequence4\VizDrawObject.cs" Link="VizDrawObject.cs" />
-		<Compile Include="..\Common\Sequence4\VizGroup.cs" Link="VizGroup.cs" />
-		<Compile Include="..\Common\xUtils\xAdmin.cs" Link="xAdmin.cs" />
-		<Compile Include="..\Common\xUtils\xEffect.cs" Link="xEffect.cs" />
-		<Compile Include="..\Common\xUtils\xObjects.cs" Link="xObjects.cs" />
-		<Compile Include="..\Common\xUtils\xRGBEffects.cs" Link="xRGBEffects.cs" />
-		<Compile Include="..\Common\xUtils\xSequence.cs" Link="xSequence.cs" />
-		<Compile Include="..\Common\xUtils\xTimings.cs" Link="xTimings.cs" />
-	</ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>$(DefineConstants)TRACE;TREENODES</DefineConstants>
+  </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Syncfusion.GridHelperClasses.Windows" Version="20.1.0.52" />
-		<PackageReference Include="Syncfusion.Tools.Windows" Version="20.1.0.52" />
-		<PackageReference Include="System.DirectoryServices.AccountManagement" Version="6.0.0" />
-	</ItemGroup>
+  <ItemGroup>
+    <None Remove="desktop.ini" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<Reference Include="FuzzORama">
-			<HintPath>..\Common\FuzzORama\bin\Release\net6.0-windows10.0.19041.0\FuzzORama.dll</HintPath>
-		</Reference>
-		<Reference Include="FuzzyString">
-			<HintPath>..\Common\FuzzyString\bin\Release\net6.0-windows10.0.19041.0\FuzzyString.dll</HintPath>
-		</Reference>
-	</ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\COMMON\CommaSeparatedValues\csv.cs" Link="csv.cs" />
+    <Compile Include="..\..\COMMON\FileHelper\FileHelper.cs" Link="FileHelper.cs" />
+    <Compile Include="..\..\COMMON\FormHelper\FormHelper.cs" Link="FormHelper.cs" />
+    <Compile Include="..\Common\Selections\Selections.cs" Link="Selections.cs" />
+    <Compile Include="..\Common\Sequence4\Seq4Admin.cs" Link="Seq4Admin.cs" />
+    <Compile Include="..\Common\Sequence4\SeqChannel.cs" Link="SeqChannel.cs" />
+    <Compile Include="..\Common\Sequence4\SeqChannelGroup.cs" Link="SeqChannelGroup.cs" />
+    <Compile Include="..\Common\Sequence4\SeqCosmicDevice.cs" Link="SeqCosmicDevice.cs" />
+    <Compile Include="..\Common\Sequence4\SeqEnums.cs" Link="SeqEnums.cs" />
+    <Compile Include="..\Common\Sequence4\SeqMemberBase.cs" Link="SeqMemberBase.cs" />
+    <Compile Include="..\Common\Sequence4\SeqMemberBaseExtenderForNodes.cs" Link="SeqMemberBaseExtenderForNodes.cs" />
+    <Compile Include="..\Common\Sequence4\SeqMemberInterface.cs" Link="SeqMemberInterface.cs" />
+    <Compile Include="..\Common\Sequence4\SeqMembership.cs" Link="SeqMembership.cs" />
+    <Compile Include="..\Common\Sequence4\SeqRGBChannel.cs" Link="SeqRGBChannel.cs" />
+    <Compile Include="..\Common\Sequence4\SeqSubs.cs" Link="SeqSubs.cs" />
+    <Compile Include="..\Common\Sequence4\SeqTimingGrid.cs" Link="SeqTimingGrid.cs" />
+    <Compile Include="..\Common\Sequence4\SeqTrack.cs" Link="SeqTrack.cs" />
+    <Compile Include="..\Common\Sequence4\SeqTreeUtils.cs" Link="SeqTreeUtils.cs" />
+    <Compile Include="..\Common\Sequence4\Sequence4.cs" Link="Sequence4.cs" />
+    <Compile Include="..\Common\Sequence4\Viz4.cs" Link="Viz4.cs" />
+    <Compile Include="..\Common\Sequence4\VizChannel.cs" Link="VizChannel.cs" />
+    <Compile Include="..\Common\Sequence4\VizDrawObject.cs" Link="VizDrawObject.cs" />
+    <Compile Include="..\Common\Sequence4\VizGroup.cs" Link="VizGroup.cs" />
+    <Compile Include="..\Common\xUtils\xAdmin.cs" Link="xAdmin.cs" />
+    <Compile Include="..\Common\xUtils\xEffect.cs" Link="xEffect.cs" />
+    <Compile Include="..\Common\xUtils\xObjects.cs" Link="xObjects.cs" />
+    <Compile Include="..\Common\xUtils\xRGBEffects.cs" Link="xRGBEffects.cs" />
+    <Compile Include="..\Common\xUtils\xSequence.cs" Link="xSequence.cs" />
+    <Compile Include="..\Common\xUtils\xTimings.cs" Link="xTimings.cs" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<Compile Update="Properties\Resources.Designer.cs">
-			<DesignTime>True</DesignTime>
-			<AutoGen>True</AutoGen>
-			<DependentUpon>Resources.resx</DependentUpon>
-		</Compile>
-		<Compile Update="Properties\Settings.Designer.cs">
-			<DesignTimeSharedInput>True</DesignTimeSharedInput>
-			<AutoGen>True</AutoGen>
-			<DependentUpon>Settings.settings</DependentUpon>
-		</Compile>
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Syncfusion.GridHelperClasses.Windows" Version="20.1.0.52" />
+    <PackageReference Include="Syncfusion.Tools.Windows" Version="20.1.0.52" />
+    <PackageReference Include="System.DirectoryServices.AccountManagement" Version="6.0.0" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<EmbeddedResource Update="Properties\Resources.resx">
-			<Generator>ResXFileCodeGenerator</Generator>
-			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
-		</EmbeddedResource>
-	</ItemGroup>
+  <ItemGroup>
+    <Reference Include="FuzzORama">
+      <HintPath>..\Common\FuzzORama\bin\Release\net6.0-windows10.0.19041.0\FuzzORama.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 
-	<ItemGroup>
-		<None Update="Properties\Settings.settings">
-			<Generator>SettingsSingleFileGenerator</Generator>
-			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
-		</None>
-	</ItemGroup>
+  <ItemGroup>
+    <Compile Update="Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>settings</DependentUpon>
+    </Compile>
+    <Compile Update="Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
 </Project>

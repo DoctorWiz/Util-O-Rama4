@@ -6,6 +6,8 @@ using System.IO;
 using System.Media;
 using System.Diagnostics;
 using System.Text;
+using System.Drawing;
+
 using System.Threading;
 using System.Runtime.InteropServices;
 using Microsoft.Win32;
@@ -431,6 +433,10 @@ namespace xLights22
 			return finalName;
 		}
 
+		public static Color ColorHTMLtoNet(string HTMLColorCode)
+		{
+			return System.Drawing.ColorTranslator.FromHtml(HTMLColorCode);
+		}
 
 		public static int ContainsKey(string lineIn, string keyWord)
 		{

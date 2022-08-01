@@ -28,7 +28,8 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			Syncfusion.Windows.Forms.Tools.TreeNodeAdvStyleInfo treeNodeAdvStyleInfo2 = new Syncfusion.Windows.Forms.Tools.TreeNodeAdvStyleInfo();
+			this.components = new System.ComponentModel.Container();
+			Syncfusion.Windows.Forms.Tools.TreeNodeAdvStyleInfo treeNodeAdvStyleInfo1 = new Syncfusion.Windows.Forms.Tools.TreeNodeAdvStyleInfo();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSplit));
 			this.btnSaveSequence = new System.Windows.Forms.Button();
 			this.lblSelectionsList = new System.Windows.Forms.Label();
@@ -42,8 +43,7 @@
 			this.btnInvert = new System.Windows.Forms.Button();
 			this.btnSaveSelections = new System.Windows.Forms.Button();
 			this.lblSelectionCount = new System.Windows.Forms.Label();
-			this.cmdNothing = new System.Windows.Forms.Button();
-			this.ttip = new System.Windows.Forms.ToolTip();
+			this.ttip = new System.Windows.Forms.ToolTip(this.components);
 			this.staStatus = new System.Windows.Forms.StatusStrip();
 			this.pnlHelp = new System.Windows.Forms.ToolStripStatusLabel();
 			this.pnlProgress = new System.Windows.Forms.ToolStripProgressBar();
@@ -53,15 +53,13 @@
 			this.btnAll = new System.Windows.Forms.Button();
 			this.lblSelections = new System.Windows.Forms.Label();
 			this.lblNewSequence = new System.Windows.Forms.Label();
-			this.btnMatchOptions = new System.Windows.Forms.Button();
-			this.btnSaveOptions = new System.Windows.Forms.Button();
 			this.lblTreeClicks = new System.Windows.Forms.Label();
 			this.lblChannels = new System.Windows.Forms.Label();
 			this.lblTimingGrids = new System.Windows.Forms.Label();
 			this.lstGrids = new System.Windows.Forms.ListBox();
 			this.picPreview = new System.Windows.Forms.PictureBox();
 			this.treeChannels = new Syncfusion.Windows.Forms.Tools.TreeViewAdv();
-			this.imlTreeIcons = new System.Windows.Forms.ImageList();
+			this.imlTreeIcons = new System.Windows.Forms.ImageList(this.components);
 			this.picAboutIcon = new System.Windows.Forms.PictureBox();
 			this.txtFileNewSeq = new System.Windows.Forms.TextBox();
 			this.chkAutoLaunch = new System.Windows.Forms.CheckBox();
@@ -75,9 +73,10 @@
 			// 
 			this.btnSaveSequence.AllowDrop = true;
 			this.btnSaveSequence.Enabled = false;
-			this.btnSaveSequence.Location = new System.Drawing.Point(240, 621);
+			this.btnSaveSequence.Location = new System.Drawing.Point(280, 717);
+			this.btnSaveSequence.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnSaveSequence.Name = "btnSaveSequence";
-			this.btnSaveSequence.Size = new System.Drawing.Size(75, 23);
+			this.btnSaveSequence.Size = new System.Drawing.Size(88, 27);
 			this.btnSaveSequence.TabIndex = 0;
 			this.btnSaveSequence.Text = "Save As...";
 			this.btnSaveSequence.UseVisualStyleBackColor = true;
@@ -89,9 +88,10 @@
 			// 
 			this.lblSelectionsList.AllowDrop = true;
 			this.lblSelectionsList.AutoSize = true;
-			this.lblSelectionsList.Location = new System.Drawing.Point(12, 57);
+			this.lblSelectionsList.Location = new System.Drawing.Point(14, 66);
+			this.lblSelectionsList.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblSelectionsList.Name = "lblSelectionsList";
-			this.lblSelectionsList.Size = new System.Drawing.Size(75, 13);
+			this.lblSelectionsList.Size = new System.Drawing.Size(81, 15);
 			this.lblSelectionsList.TabIndex = 3;
 			this.lblSelectionsList.Text = "Selections List";
 			this.lblSelectionsList.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
@@ -100,9 +100,10 @@
 			// btnBrowseSequence
 			// 
 			this.btnBrowseSequence.AllowDrop = true;
-			this.btnBrowseSequence.Location = new System.Drawing.Point(240, 25);
+			this.btnBrowseSequence.Location = new System.Drawing.Point(280, 29);
+			this.btnBrowseSequence.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnBrowseSequence.Name = "btnBrowseSequence";
-			this.btnBrowseSequence.Size = new System.Drawing.Size(75, 20);
+			this.btnBrowseSequence.Size = new System.Drawing.Size(88, 23);
 			this.btnBrowseSequence.TabIndex = 2;
 			this.btnBrowseSequence.Text = "Browse...";
 			this.btnBrowseSequence.UseVisualStyleBackColor = true;
@@ -113,10 +114,11 @@
 			// txtSequenceFile
 			// 
 			this.txtSequenceFile.AllowDrop = true;
-			this.txtSequenceFile.Location = new System.Drawing.Point(15, 26);
+			this.txtSequenceFile.Location = new System.Drawing.Point(18, 30);
+			this.txtSequenceFile.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.txtSequenceFile.Name = "txtSequenceFile";
 			this.txtSequenceFile.ReadOnly = true;
-			this.txtSequenceFile.Size = new System.Drawing.Size(219, 20);
+			this.txtSequenceFile.Size = new System.Drawing.Size(255, 23);
 			this.txtSequenceFile.TabIndex = 1;
 			this.txtSequenceFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
 			this.txtSequenceFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
@@ -125,9 +127,10 @@
 			// 
 			this.lblSequenceFile.AllowDrop = true;
 			this.lblSequenceFile.AutoSize = true;
-			this.lblSequenceFile.Location = new System.Drawing.Point(12, 9);
+			this.lblSequenceFile.Location = new System.Drawing.Point(14, 10);
+			this.lblSequenceFile.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblSequenceFile.Name = "lblSequenceFile";
-			this.lblSequenceFile.Size = new System.Drawing.Size(75, 13);
+			this.lblSequenceFile.Size = new System.Drawing.Size(79, 15);
 			this.lblSequenceFile.TabIndex = 100;
 			this.lblSequenceFile.Text = "Sequence File";
 			this.lblSequenceFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
@@ -136,9 +139,10 @@
 			// btnBrowseSelections
 			// 
 			this.btnBrowseSelections.AllowDrop = true;
-			this.btnBrowseSelections.Location = new System.Drawing.Point(240, 64);
+			this.btnBrowseSelections.Location = new System.Drawing.Point(280, 74);
+			this.btnBrowseSelections.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnBrowseSelections.Name = "btnBrowseSelections";
-			this.btnBrowseSelections.Size = new System.Drawing.Size(75, 20);
+			this.btnBrowseSelections.Size = new System.Drawing.Size(88, 23);
 			this.btnBrowseSelections.TabIndex = 5;
 			this.btnBrowseSelections.Text = "Load...";
 			this.btnBrowseSelections.UseVisualStyleBackColor = true;
@@ -149,10 +153,11 @@
 			// txtSelectionsFile
 			// 
 			this.txtSelectionsFile.AllowDrop = true;
-			this.txtSelectionsFile.Location = new System.Drawing.Point(15, 73);
+			this.txtSelectionsFile.Location = new System.Drawing.Point(18, 84);
+			this.txtSelectionsFile.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.txtSelectionsFile.Name = "txtSelectionsFile";
 			this.txtSelectionsFile.ReadOnly = true;
-			this.txtSelectionsFile.Size = new System.Drawing.Size(219, 20);
+			this.txtSelectionsFile.Size = new System.Drawing.Size(255, 23);
 			this.txtSelectionsFile.TabIndex = 4;
 			this.txtSelectionsFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
 			this.txtSelectionsFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
@@ -164,9 +169,10 @@
 			// btnInvert
 			// 
 			this.btnInvert.AllowDrop = true;
-			this.btnInvert.Location = new System.Drawing.Point(96, 567);
+			this.btnInvert.Location = new System.Drawing.Point(112, 654);
+			this.btnInvert.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnInvert.Name = "btnInvert";
-			this.btnInvert.Size = new System.Drawing.Size(75, 23);
+			this.btnInvert.Size = new System.Drawing.Size(88, 27);
 			this.btnInvert.TabIndex = 12;
 			this.btnInvert.Text = "Invert";
 			this.btnInvert.UseVisualStyleBackColor = true;
@@ -178,9 +184,10 @@
 			// 
 			this.btnSaveSelections.AllowDrop = true;
 			this.btnSaveSelections.Enabled = false;
-			this.btnSaveSelections.Location = new System.Drawing.Point(240, 83);
+			this.btnSaveSelections.Location = new System.Drawing.Point(280, 96);
+			this.btnSaveSelections.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnSaveSelections.Name = "btnSaveSelections";
-			this.btnSaveSelections.Size = new System.Drawing.Size(75, 20);
+			this.btnSaveSelections.Size = new System.Drawing.Size(88, 23);
 			this.btnSaveSelections.TabIndex = 6;
 			this.btnSaveSelections.Text = "Save As...";
 			this.btnSaveSelections.UseVisualStyleBackColor = true;
@@ -193,24 +200,15 @@
 			this.lblSelectionCount.AllowDrop = true;
 			this.lblSelectionCount.AutoSize = true;
 			this.lblSelectionCount.ForeColor = System.Drawing.SystemColors.Highlight;
-			this.lblSelectionCount.Location = new System.Drawing.Point(206, 57);
+			this.lblSelectionCount.Location = new System.Drawing.Point(240, 66);
+			this.lblSelectionCount.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblSelectionCount.Name = "lblSelectionCount";
-			this.lblSelectionCount.Size = new System.Drawing.Size(13, 13);
+			this.lblSelectionCount.Size = new System.Drawing.Size(13, 15);
 			this.lblSelectionCount.TabIndex = 11;
 			this.lblSelectionCount.Text = "0";
 			this.lblSelectionCount.Click += new System.EventHandler(this.lblSelectionCount_Click);
 			this.lblSelectionCount.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
 			this.lblSelectionCount.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
-			// 
-			// cmdNothing
-			// 
-			this.cmdNothing.Location = new System.Drawing.Point(314, 534);
-			this.cmdNothing.Name = "cmdNothing";
-			this.cmdNothing.Size = new System.Drawing.Size(101, 27);
-			this.cmdNothing.TabIndex = 59;
-			this.cmdNothing.UseVisualStyleBackColor = true;
-			this.cmdNothing.Visible = false;
-			this.cmdNothing.Click += new System.EventHandler(this.cmdNothing_Click);
 			// 
 			// staStatus
 			// 
@@ -220,9 +218,10 @@
             this.pnlProgress,
             this.pnlStatus,
             this.pnlAbout});
-			this.staStatus.Location = new System.Drawing.Point(0, 655);
+			this.staStatus.Location = new System.Drawing.Point(0, 759);
 			this.staStatus.Name = "staStatus";
-			this.staStatus.Size = new System.Drawing.Size(334, 24);
+			this.staStatus.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
+			this.staStatus.Size = new System.Drawing.Size(390, 24);
 			this.staStatus.TabIndex = 61;
 			this.staStatus.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
 			this.staStatus.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
@@ -233,7 +232,7 @@
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlHelp.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenInner;
-			this.pnlHelp.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.pnlHelp.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
 			this.pnlHelp.ForeColor = System.Drawing.SystemColors.Highlight;
 			this.pnlHelp.IsLink = true;
 			this.pnlHelp.Name = "pnlHelp";
@@ -244,7 +243,7 @@
 			// pnlProgress
 			// 
 			this.pnlProgress.Name = "pnlProgress";
-			this.pnlProgress.Size = new System.Drawing.Size(100, 18);
+			this.pnlProgress.Size = new System.Drawing.Size(117, 21);
 			this.pnlProgress.Visible = false;
 			// 
 			// pnlStatus
@@ -254,7 +253,7 @@
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlStatus.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
 			this.pnlStatus.Name = "pnlStatus";
-			this.pnlStatus.Size = new System.Drawing.Size(120, 19);
+			this.pnlStatus.Size = new System.Drawing.Size(276, 19);
 			this.pnlStatus.Spring = true;
 			// 
 			// pnlAbout
@@ -263,7 +262,7 @@
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.pnlAbout.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenInner;
-			this.pnlAbout.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.pnlAbout.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
 			this.pnlAbout.ForeColor = System.Drawing.SystemColors.Highlight;
 			this.pnlAbout.Name = "pnlAbout";
 			this.pnlAbout.Size = new System.Drawing.Size(52, 19);
@@ -274,9 +273,10 @@
 			// 
 			this.btnClear.AllowDrop = true;
 			this.btnClear.Enabled = false;
-			this.btnClear.Location = new System.Drawing.Point(177, 567);
+			this.btnClear.Location = new System.Drawing.Point(206, 654);
+			this.btnClear.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnClear.Name = "btnClear";
-			this.btnClear.Size = new System.Drawing.Size(75, 23);
+			this.btnClear.Size = new System.Drawing.Size(88, 27);
 			this.btnClear.TabIndex = 13;
 			this.btnClear.Text = "Clear";
 			this.btnClear.UseVisualStyleBackColor = true;
@@ -287,9 +287,10 @@
 			// btnAll
 			// 
 			this.btnAll.AllowDrop = true;
-			this.btnAll.Location = new System.Drawing.Point(15, 567);
+			this.btnAll.Location = new System.Drawing.Point(18, 654);
+			this.btnAll.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnAll.Name = "btnAll";
-			this.btnAll.Size = new System.Drawing.Size(75, 23);
+			this.btnAll.Size = new System.Drawing.Size(88, 27);
 			this.btnAll.TabIndex = 14;
 			this.btnAll.Text = "All";
 			this.btnAll.UseVisualStyleBackColor = true;
@@ -301,9 +302,10 @@
 			// 
 			this.lblSelections.AllowDrop = true;
 			this.lblSelections.AutoSize = true;
-			this.lblSelections.Location = new System.Drawing.Point(150, 57);
+			this.lblSelections.Location = new System.Drawing.Point(175, 66);
+			this.lblSelections.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblSelections.Name = "lblSelections";
-			this.lblSelections.Size = new System.Drawing.Size(59, 13);
+			this.lblSelections.Size = new System.Drawing.Size(63, 15);
 			this.lblSelections.TabIndex = 10;
 			this.lblSelections.Text = "Selections:";
 			this.lblSelections.Click += new System.EventHandler(this.lblSelections_Click);
@@ -314,46 +316,24 @@
 			// 
 			this.lblNewSequence.AllowDrop = true;
 			this.lblNewSequence.AutoSize = true;
-			this.lblNewSequence.Location = new System.Drawing.Point(12, 607);
+			this.lblNewSequence.Location = new System.Drawing.Point(14, 700);
+			this.lblNewSequence.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblNewSequence.Name = "lblNewSequence";
-			this.lblNewSequence.Size = new System.Drawing.Size(81, 13);
+			this.lblNewSequence.Size = new System.Drawing.Size(85, 15);
 			this.lblNewSequence.TabIndex = 101;
 			this.lblNewSequence.Text = "New Sequence";
 			this.lblNewSequence.Click += new System.EventHandler(this.lblNewSequence_Click);
 			this.lblNewSequence.DragDrop += new System.Windows.Forms.DragEventHandler(this.Event_DragDrop);
 			this.lblNewSequence.DragEnter += new System.Windows.Forms.DragEventHandler(this.Event_DragEnter);
 			// 
-			// btnMatchOptions
-			// 
-			this.btnMatchOptions.AllowDrop = true;
-			this.btnMatchOptions.Location = new System.Drawing.Point(327, 50);
-			this.btnMatchOptions.Name = "btnMatchOptions";
-			this.btnMatchOptions.Size = new System.Drawing.Size(75, 20);
-			this.btnMatchOptions.TabIndex = 102;
-			this.btnMatchOptions.Text = "Options...";
-			this.btnMatchOptions.UseVisualStyleBackColor = true;
-			this.btnMatchOptions.Visible = false;
-			this.btnMatchOptions.Click += new System.EventHandler(this.btnMatchOptions_Click);
-			// 
-			// btnSaveOptions
-			// 
-			this.btnSaveOptions.AllowDrop = true;
-			this.btnSaveOptions.Location = new System.Drawing.Point(354, 502);
-			this.btnSaveOptions.Name = "btnSaveOptions";
-			this.btnSaveOptions.Size = new System.Drawing.Size(75, 23);
-			this.btnSaveOptions.TabIndex = 103;
-			this.btnSaveOptions.Text = "Options...";
-			this.btnSaveOptions.UseVisualStyleBackColor = true;
-			this.btnSaveOptions.Visible = false;
-			this.btnSaveOptions.Click += new System.EventHandler(this.btnSaveOptions_Click);
-			// 
 			// lblTreeClicks
 			// 
 			this.lblTreeClicks.AllowDrop = true;
 			this.lblTreeClicks.AutoSize = true;
-			this.lblTreeClicks.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblTreeClicks.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
 			this.lblTreeClicks.ForeColor = System.Drawing.Color.DarkRed;
-			this.lblTreeClicks.Location = new System.Drawing.Point(185, 106);
+			this.lblTreeClicks.Location = new System.Drawing.Point(216, 122);
+			this.lblTreeClicks.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblTreeClicks.Name = "lblTreeClicks";
 			this.lblTreeClicks.Size = new System.Drawing.Size(13, 13);
 			this.lblTreeClicks.TabIndex = 105;
@@ -363,9 +343,10 @@
 			// 
 			this.lblChannels.AllowDrop = true;
 			this.lblChannels.AutoSize = true;
-			this.lblChannels.Location = new System.Drawing.Point(12, 106);
+			this.lblChannels.Location = new System.Drawing.Point(14, 122);
+			this.lblChannels.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblChannels.Name = "lblChannels";
-			this.lblChannels.Size = new System.Drawing.Size(154, 13);
+			this.lblChannels.Size = new System.Drawing.Size(164, 15);
 			this.lblChannels.TabIndex = 108;
 			this.lblChannels.Text = "Tracks, Groups, and Channels:";
 			// 
@@ -373,9 +354,10 @@
 			// 
 			this.lblTimingGrids.AllowDrop = true;
 			this.lblTimingGrids.AutoSize = true;
-			this.lblTimingGrids.Location = new System.Drawing.Point(12, 463);
+			this.lblTimingGrids.Location = new System.Drawing.Point(14, 534);
+			this.lblTimingGrids.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblTimingGrids.Name = "lblTimingGrids";
-			this.lblTimingGrids.Size = new System.Drawing.Size(68, 13);
+			this.lblTimingGrids.Size = new System.Drawing.Size(77, 15);
 			this.lblTimingGrids.TabIndex = 109;
 			this.lblTimingGrids.Text = "Timing Grids:";
 			// 
@@ -383,9 +365,10 @@
 			// 
 			this.lstGrids.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
 			this.lstGrids.FormattingEnabled = true;
-			this.lstGrids.Location = new System.Drawing.Point(15, 479);
+			this.lstGrids.Location = new System.Drawing.Point(18, 553);
+			this.lstGrids.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.lstGrids.Name = "lstGrids";
-			this.lstGrids.Size = new System.Drawing.Size(300, 82);
+			this.lstGrids.Size = new System.Drawing.Size(349, 82);
 			this.lstGrids.TabIndex = 107;
 			this.lstGrids.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.lstGrids_DrawItem);
 			this.lstGrids.SelectedIndexChanged += new System.EventHandler(this.lstGrids_SelectedIndexChanged);
@@ -394,27 +377,28 @@
 			// 
 			this.picPreview.BackColor = System.Drawing.Color.Tan;
 			this.picPreview.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.picPreview.Location = new System.Drawing.Point(15, 428);
+			this.picPreview.Location = new System.Drawing.Point(18, 494);
+			this.picPreview.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.picPreview.Name = "picPreview";
-			this.picPreview.Size = new System.Drawing.Size(300, 32);
+			this.picPreview.Size = new System.Drawing.Size(350, 37);
 			this.picPreview.TabIndex = 110;
 			this.picPreview.TabStop = false;
 			// 
 			// treeChannels
 			// 
 			this.treeChannels.BackColor = System.Drawing.Color.White;
-			treeNodeAdvStyleInfo2.CheckBoxTickThickness = 1;
-			treeNodeAdvStyleInfo2.CheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-			treeNodeAdvStyleInfo2.EnsureDefaultOptionedChild = true;
-			treeNodeAdvStyleInfo2.InteractiveCheckBox = true;
-			treeNodeAdvStyleInfo2.IntermediateCheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-			treeNodeAdvStyleInfo2.OptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-			treeNodeAdvStyleInfo2.SelectedOptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
-			treeNodeAdvStyleInfo2.ShowCheckBox = true;
-			treeNodeAdvStyleInfo2.TextColor = System.Drawing.Color.Black;
+			treeNodeAdvStyleInfo1.CheckBoxTickThickness = 1;
+			treeNodeAdvStyleInfo1.CheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+			treeNodeAdvStyleInfo1.EnsureDefaultOptionedChild = true;
+			treeNodeAdvStyleInfo1.InteractiveCheckBox = true;
+			treeNodeAdvStyleInfo1.IntermediateCheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+			treeNodeAdvStyleInfo1.OptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+			treeNodeAdvStyleInfo1.SelectedOptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
+			treeNodeAdvStyleInfo1.ShowCheckBox = true;
+			treeNodeAdvStyleInfo1.TextColor = System.Drawing.Color.Black;
 			this.treeChannels.BaseStylePairs.AddRange(new Syncfusion.Windows.Forms.Tools.StyleNamePair[] {
-            new Syncfusion.Windows.Forms.Tools.StyleNamePair("Standard", treeNodeAdvStyleInfo2)});
-			this.treeChannels.BeforeTouchSize = new System.Drawing.Size(300, 300);
+            new Syncfusion.Windows.Forms.Tools.StyleNamePair("Standard", treeNodeAdvStyleInfo1)});
+			this.treeChannels.BeforeTouchSize = new System.Drawing.Size(349, 346);
 			this.treeChannels.ForeColor = System.Drawing.Color.Black;
 			// 
 			// 
@@ -428,12 +412,13 @@
 			this.treeChannels.InactiveSelectedNodeForeColor = System.Drawing.SystemColors.ControlText;
 			this.treeChannels.InteractiveCheckBoxes = true;
 			this.treeChannels.LeftImageList = this.imlTreeIcons;
-			this.treeChannels.Location = new System.Drawing.Point(15, 122);
+			this.treeChannels.Location = new System.Drawing.Point(18, 141);
+			this.treeChannels.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.treeChannels.MetroColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(165)))), ((int)(((byte)(220)))));
 			this.treeChannels.Name = "treeChannels";
 			this.treeChannels.SelectedNodeForeColor = System.Drawing.SystemColors.HighlightText;
 			this.treeChannels.ShowCheckBoxes = true;
-			this.treeChannels.Size = new System.Drawing.Size(300, 300);
+			this.treeChannels.Size = new System.Drawing.Size(349, 346);
 			this.treeChannels.TabIndex = 132;
 			this.treeChannels.ThemeStyle.TreeNodeAdvStyle.CheckBoxTickThickness = 0;
 			this.treeChannels.ThemeStyle.TreeNodeAdvStyle.EnsureDefaultOptionedChild = true;
@@ -453,6 +438,7 @@
 			// 
 			// imlTreeIcons
 			// 
+			this.imlTreeIcons.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
 			this.imlTreeIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imlTreeIcons.ImageStream")));
 			this.imlTreeIcons.TransparentColor = System.Drawing.Color.Transparent;
 			this.imlTreeIcons.Images.SetKeyName(0, "Universe");
@@ -491,7 +477,8 @@
 			// picAboutIcon
 			// 
 			this.picAboutIcon.Image = ((System.Drawing.Image)(resources.GetObject("picAboutIcon.Image")));
-			this.picAboutIcon.Location = new System.Drawing.Point(314, 247);
+			this.picAboutIcon.Location = new System.Drawing.Point(213, 450);
+			this.picAboutIcon.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.picAboutIcon.Name = "picAboutIcon";
 			this.picAboutIcon.Size = new System.Drawing.Size(128, 128);
 			this.picAboutIcon.TabIndex = 133;
@@ -501,18 +488,20 @@
 			// txtFileNewSeq
 			// 
 			this.txtFileNewSeq.AllowDrop = true;
-			this.txtFileNewSeq.Location = new System.Drawing.Point(15, 623);
+			this.txtFileNewSeq.Location = new System.Drawing.Point(18, 719);
+			this.txtFileNewSeq.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.txtFileNewSeq.Name = "txtFileNewSeq";
 			this.txtFileNewSeq.ReadOnly = true;
-			this.txtFileNewSeq.Size = new System.Drawing.Size(219, 20);
+			this.txtFileNewSeq.Size = new System.Drawing.Size(255, 23);
 			this.txtFileNewSeq.TabIndex = 134;
 			// 
 			// chkAutoLaunch
 			// 
 			this.chkAutoLaunch.AutoSize = true;
-			this.chkAutoLaunch.Location = new System.Drawing.Point(153, 606);
+			this.chkAutoLaunch.Location = new System.Drawing.Point(178, 699);
+			this.chkAutoLaunch.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.chkAutoLaunch.Name = "chkAutoLaunch";
-			this.chkAutoLaunch.Size = new System.Drawing.Size(87, 17);
+			this.chkAutoLaunch.Size = new System.Drawing.Size(96, 19);
 			this.chkAutoLaunch.TabIndex = 135;
 			this.chkAutoLaunch.Text = "Auto-Launch";
 			this.chkAutoLaunch.UseVisualStyleBackColor = true;
@@ -520,20 +509,17 @@
 			// frmSplit
 			// 
 			this.AllowDrop = true;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(334, 679);
+			this.ClientSize = new System.Drawing.Size(390, 783);
 			this.Controls.Add(this.chkAutoLaunch);
 			this.Controls.Add(this.txtFileNewSeq);
-			this.Controls.Add(this.picAboutIcon);
 			this.Controls.Add(this.treeChannels);
 			this.Controls.Add(this.picPreview);
 			this.Controls.Add(this.lblTimingGrids);
 			this.Controls.Add(this.lblChannels);
 			this.Controls.Add(this.lstGrids);
 			this.Controls.Add(this.lblTreeClicks);
-			this.Controls.Add(this.btnSaveOptions);
-			this.Controls.Add(this.btnMatchOptions);
 			this.Controls.Add(this.lblNewSequence);
 			this.Controls.Add(this.lblSelections);
 			this.Controls.Add(this.btnAll);
@@ -549,11 +535,12 @@
 			this.Controls.Add(this.lblSequenceFile);
 			this.Controls.Add(this.btnBrowseSelections);
 			this.Controls.Add(this.txtSelectionsFile);
-			this.Controls.Add(this.cmdNothing);
+			this.Controls.Add(this.picAboutIcon);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.MaximizeBox = false;
-			this.MaximumSize = new System.Drawing.Size(600, 1000);
-			this.MinimumSize = new System.Drawing.Size(350, 700);
+			this.MaximumSize = new System.Drawing.Size(697, 1148);
+			this.MinimumSize = new System.Drawing.Size(406, 802);
 			this.Name = "frmSplit";
 			this.Text = "Split-O-Rama";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmSplit_FormClosing);
@@ -587,7 +574,6 @@
 		private System.Windows.Forms.Button btnInvert;
 		private System.Windows.Forms.Button btnSaveSelections;
 		private System.Windows.Forms.Label lblSelectionCount;
-		private System.Windows.Forms.Button cmdNothing;
 		private System.Windows.Forms.ToolTip ttip;
 		private System.Windows.Forms.StatusStrip staStatus;
 		private System.Windows.Forms.ToolStripStatusLabel pnlHelp;
@@ -598,8 +584,6 @@
 		private System.Windows.Forms.Button btnAll;
 		private System.Windows.Forms.Label lblSelections;
 		private System.Windows.Forms.Label lblNewSequence;
-		private System.Windows.Forms.Button btnMatchOptions;
-		private System.Windows.Forms.Button btnSaveOptions;
 		private System.Windows.Forms.Label lblTreeClicks;
 		private System.Windows.Forms.Label lblChannels;
 		private System.Windows.Forms.Label lblTimingGrids;

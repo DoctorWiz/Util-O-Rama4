@@ -111,6 +111,24 @@ namespace LOR4
 			}
 		}
 
+		public override CheckState Selected
+		{
+			get
+			{
+				// Enumerate thru the group membership (recursively)
+				// Return if All, Some, or None of the members and submembers are selected
+				return Members.Selected;
+			}
+			set
+			{
+				if (value != CheckState.Indeterminate)
+				{
+					base.Selected = value;
+					Members.Selected = value;
+				}
+			}
+		}
+
 		public override LOR4MemberType MemberType
 		{
 			get

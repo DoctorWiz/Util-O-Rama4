@@ -21,11 +21,16 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="desktop.ini" />
+	  <None Remove="FuzzORamaError2022-05-20.log" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <Content Include="Fuzzy.ico" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\FuzzORama\FuzzORama.csproj" />
+	  <ProjectReference Include="..\FuzzORama\FuzzORama.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -10,7 +10,7 @@ using FileHelper;
 
 namespace LOR4
 {
-	public interface iLOR4Member : IComparable<iLOR4Member>
+	public partial interface iLOR4Member : IComparable<iLOR4Member>
 	{
 		string Name
 		{ get; }
@@ -42,7 +42,7 @@ namespace LOR4
 		{ get; }
 		void SetParent(iLOR4Member newParent);
 
-		bool Selected
+		CheckState Selected
 		{ get; set; }
 		bool Dirty
 		{ get; }
@@ -58,8 +58,6 @@ namespace LOR4
 		iLOR4Member Clone();
 		iLOR4Member Clone(string newName);
 		object Tag
-		{ get; set; }
-		object Nodes
 		{ get; set; }
 		iLOR4Member MapTo
 		{ get; set; }

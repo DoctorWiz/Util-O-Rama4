@@ -1,36 +1,47 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<OutputType>WinExe</OutputType>
-		<TargetFramework>net6.0-windows</TargetFramework>
-		<Nullable>enable</Nullable>
-		<UseWindowsForms>true</UseWindowsForms>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<RootNamespace>UtilORama4</RootNamespace>
-		<Copyright>Copyright © 2022+ by Doctor Wizard 🧙 and W⚡zlights Software</Copyright>
+		<ApplicationIcon>Sort-O-Rama.ico</ApplicationIcon>
+		<!-- Superceded by Assembly Title? -->
 		<AssemblyName>Sort-O-Rama</AssemblyName>
-		<PlatformTarget>x64</PlatformTarget>
-		<RepositoryUrl>https://github.com/DoctorWiz/Util-O-Rama4/tree/master/sortORama</RepositoryUrl>
-		<PublishUrl>ftp://wizlights.com/utilorama/download/</PublishUrl>
-		<InstallUrl>http://wizlights.com/utilorama/download/</InstallUrl>
-		<SupportUrl>http://wizlights.com/utilorama/sortorama/default.html</SupportUrl>
-		<ProductName>Sort-O-Rama</ProductName>
-		<PublisherName>W⚡zlights Software</PublisherName>
-		<SuiteName>Util-O-Rama</SuiteName>
-		<CreateWebPageOnPublish>true</CreateWebPageOnPublish>
-		<WebPage>http://wizlights.com/utilorama/Sortorama/default.html</WebPage>
+		<AssemblyTitle>Sort-O-Rama</AssemblyTitle>
+		<AssemblyVersion>4.6.0.%2a</AssemblyVersion>
 		<ApplicationRevision>0</ApplicationRevision>
 		<ApplicationVersion>4.0.0.%2a</ApplicationVersion>
-		<PackageTags>Util-O-Rama; Light-O-Rama; xLights; Christmas; Sequences; Light Show</PackageTags>
-		<Description>Sort stub for creating new Util-O-Rama programs.</Description>
-		<ApplicationIcon>Sort-O-Rama.ico</ApplicationIcon>
+		<Authors>Doctor 🧙 Wizard</Authors>
+		<Company>W⚡zlights Software</Company>
+		<Copyright>Copyright © 2022+ by Doctor Wizard 🧙 and W⚡zlights Software</Copyright>
+		<CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+		<Description>Sorts Channels in Light-O-Rama sequences, sorts Models in xLights RGBEffects.</Description>
+		<FileVersion>4.6.0.%2a</FileVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<InformationalVersion>4.6.0.%2a</InformationalVersion>
+		<InstallUrl>http://wizlights.com/utilorama/download/</InstallUrl>
 		<IsPublishable>False</IsPublishable>
-		<PackageProjectUrl>http://wizlights/utilorama/sortorama</PackageProjectUrl>
+		<Nullable>enable</Nullable>
+		<OutputType>WinExe</OutputType>
 		<PackageIcon>Sort-O-Rama.png</PackageIcon>
+		<PackageID>Util-O-Rama</PackageID>
+		<PackageProjectUrl>http://wizlights/utilorama/sortorama</PackageProjectUrl>
+		<PackageTags>Util-O-Rama; Light-O-Rama; xLights; Christmas; Sequences; Light Show, xLights, Channels; Models; Sort; RGBEffects</PackageTags>
+		<PlatformTarget>x64</PlatformTarget>
+		<ProductName>Sort-O-Rama</ProductName>
+		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+		<PublisherName>W⚡zlights Software</PublisherName>
+		<PublishUrl>ftp://wizlights.com/utilorama/download/</PublishUrl>
+		<RepositoryUrl>https://github.com/DoctorWiz/Util-O-Rama4/tree/master/SortORama</RepositoryUrl>
+		<RootNamespace>UtilORama4</RootNamespace>
+		<SuiteName>Util-O-Rama</SuiteName>
+		<SupportUrl>http://wizlights.com/utilorama/sortorama/default.html</SupportUrl>
+		<TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
+		<UseWindowsForms>true</UseWindowsForms>
+		<Version>4.6.0.2</Version>
+		<WebPage>http://wizlights.com/utilorama/sortorama/default.html</WebPage>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<None Remove="desktop.ini" />
+		<None Remove="Pink Light Bulb ABC for Sort-O-Rama.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -50,7 +61,16 @@
 		<Compile Include="..\Common\Sequence4\SeqTimingGrid.cs" Link="SeqTimingGrid.cs" />
 		<Compile Include="..\Common\Sequence4\SeqTrack.cs" Link="SeqTrack.cs" />
 		<Compile Include="..\Common\Sequence4\Sequence4.cs" Link="Sequence4.cs" />
-		<Compile Include="..\Common\Sequence4\VizStub.cs" Link="VizStub.cs" />
+		<Compile Include="..\Common\Sequence4\Viz4.cs" Link="Viz4.cs" />
+		<Compile Include="..\Common\Sequence4\VizChannel.cs" Link="VizChannel.cs" />
+		<Compile Include="..\Common\Sequence4\VizDrawObject.cs" Link="VizDrawObject.cs" />
+		<Compile Include="..\Common\Sequence4\VizGroup.cs" Link="VizGroup.cs" />
+		<Compile Include="..\Common\xUtils\xAdmin.cs" Link="xAdmin.cs" />
+		<Compile Include="..\Common\xUtils\xEffect.cs" Link="xEffect.cs" />
+		<Compile Include="..\Common\xUtils\xObjects.cs" Link="xObjects.cs" />
+		<Compile Include="..\Common\xUtils\xRGBEffects.cs" Link="xRGBEffects.cs" />
+		<Compile Include="..\Common\xUtils\xSequence.cs" Link="xSequence.cs" />
+		<Compile Include="..\Common\xUtils\xTimings.cs" Link="xTimings.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -60,7 +80,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Update="Properties\Settings.Designer.cs">
+		<Compile Update="Properties\Resources.Designer.cs">
+		  <DesignTime>True</DesignTime>
+		  <AutoGen>True</AutoGen>
+		  <DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+		<Compile Update="Settings.Designer.cs">
 			<DesignTimeSharedInput>True</DesignTimeSharedInput>
 			<AutoGen>True</AutoGen>
 			<DependentUpon>Settings.settings</DependentUpon>
@@ -68,7 +93,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Update="Properties\Settings.settings">
+	  <EmbeddedResource Update="Properties\Resources.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="Settings.settings">
 			<Generator>SettingsSingleFileGenerator</Generator>
 			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
 		</None>

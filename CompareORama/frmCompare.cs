@@ -9,11 +9,13 @@ using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LOR4;
 using FileHelper;
-using xAdmin;
-//using FuzzORama;
 using ReadWriteCsv;
+using FormHelper;
+using RecentlyUsed;
+using LOR4;
+using xLights22;
+using FuzzORama;
 //using DarkMode;
 
 
@@ -22,7 +24,7 @@ namespace UtilORama4
 	public partial class frmCompare : Form
 	{
 		#region Form Scope Variables
-		private static Properties.Settings heartOfTheSun = Properties.Settings.Default;
+		private static Properties.Settings userSettings = Properties.Settings.Default;
 		private const string helpPage = "http://wizlights.com/utilorama/blankorama";
 
 		private string fileSequence = "";
@@ -39,8 +41,8 @@ namespace UtilORama4
 		public List<LOR4ChannelGroup> groupList = new List<LOR4ChannelGroup>();
 
 		public List<xModel> xModelList = new List<xModel>();
-		public List<xRGBmodel> xRGBList = new List<xRGBmodel>();
-		public List<xPixels> xPixelList = new List<xPixels>();
+		public List<xRGBModel> xRGBList = new List<xRGBModel>();
+		public List<xPixelModel> xPixelList = new List<xPixelModel>();
 		public List<xModelGroup> xGroupList = new List<xModelGroup>();
 		private List<DMXUniverse> universes = new List<DMXUniverse>();
 		// Just creating a convenient reference to the static list in the DMXUniverse class
@@ -66,188 +68,38 @@ namespace UtilORama4
 
 		private void frmBlank_Load(object sender, EventArgs e)
 		{
-			RestoreFormPosition();
-			GetTheControlsFromTheHeartOfTheSun();
-			DarkMode.DarkMode.SetDarkMode(this, true);
+			//RestoreFormPosition();
+			this.RestoreView();
+			RestoreUserControlSettings();
+			//DarkMode.DarkMode.SetDarkMode(this, true);
 		}
 
 		private void frmBlank_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			SaveFormPosition();
-			SetTheControlsForTheHeartOfTheSun();
+			//SaveFormPosition();
+			this.SaveView();
+			SaveUserControlSettings();
 		}
 
-		private void SaveFormPosition()
+
+		private void SaveUserControlSettings()
 		{
-			// Get current location, size, and state
-			Point myLoc = this.Location;
-			Size mySize = this.Size;
-			FormWindowState myState = this.WindowState;
-			// if minimized or maximized
-			if (myState != FormWindowState.Normal)
-			{
-				// override with the restore location and size
-				myLoc = new Point(this.RestoreBounds.X, this.RestoreBounds.Y);
-				mySize = new Size(this.RestoreBounds.Width, this.RestoreBounds.Height);
-			}
-
-			// Save it for later!
-			int x = this.Left;
-			heartOfTheSun.Location = myLoc;
-			heartOfTheSun.Size = mySize;
-			heartOfTheSun.WindowState = (int)myState;
-			heartOfTheSun.Save();
-		} // End SaveFormPostion
-
-		private void RestoreFormPosition()
-		{
-			// Multi-Monitor aware
-			// AND NOW with overlooked support for fixed borders!
-			// with bounds checking
-			// repositions as necessary
-			// should(?) be able to handle an additional screen that is no longer there,
-			// a repositioned taskbar or gadgets bar,
-			// or a resolution change.
-
-			// Note: If the saved position spans more than one screen
-			// the form will be repositioned to fit all within the
-			// screen containing the center point of the form.
-			// Thus, when restoring the position, it will no longer
-			// span monitors.
-			// This is by design!
-			// Alternative 1: Position it entirely in the screen containing
-			// the top left corner
-
-			Point savedLoc = heartOfTheSun.Location;
-			Size savedSize = heartOfTheSun.Size;
-			if (this.FormBorderStyle != FormBorderStyle.Sizable)
-			{
-				savedSize = new Size(this.Width, this.Height);
-				this.MinimumSize = this.Size;
-				this.MaximumSize = this.Size;
-			}
-			FormWindowState savedState = (FormWindowState)heartOfTheSun.WindowState;
-			int x = savedLoc.X; // Default to saved postion and size, will override if necessary
-			int y = savedLoc.Y;
-			int w = savedSize.Width;
-			int h = savedSize.Height;
-			Point center = new Point(x + w / w, y + h / 2); // Find center point
-			int onScreen = 0; // Default to primary screen if not found on screen 2+
-			Screen screen = Screen.AllScreens[0];
-
-			// Find which screen it is on
-			for (int si = 0; si < Screen.AllScreens.Length; si++)
-			{
-				// Alternative 1: Change "Contains(center)" to "Contains(savedLoc)"
-				if (Screen.AllScreens[si].WorkingArea.Contains(center))
-				{
-					screen = Screen.AllScreens[si];
-					onScreen = si;
-				}
-			}
-			Rectangle bounds = screen.WorkingArea;
-			// Alternate 2:
-			//Rectangle bounds = Screen.GetWorkingArea(center);
-
-			// Test Horizontal Positioning, correct if necessary
-			if (this.MinimumSize.Width > bounds.Width)
-			{
-				// Houston, we have a problem, monitor is too narrow
-				System.Diagnostics.Debugger.Break();
-				w = this.MinimumSize.Width;
-				// Center it horizontally over the working area...
-				//x = (bounds.Width - w) / 2 + bounds.Left;
-				// OR position it on left edge
-				x = bounds.Left;
-			}
-			else
-			{
-				// Should fit horizontally
-				// Is it too far left?
-				if (x < bounds.Left) x = bounds.Left; // Move over
-																							// Is it too wide?
-				if (w > bounds.Width) w = bounds.Width; // Shrink it
-																								// Is it too far right?
-				if ((x + w) > bounds.Right)
-				{
-					// Keep width, move it over
-					x = (bounds.Width - w) + bounds.Left;
-				}
-			}
-
-			// Test Vertical Positioning, correct if necessary
-			if (this.MinimumSize.Height > bounds.Height)
-			{
-				// Houston, we have a problem, monitor is too short
-				System.Diagnostics.Debugger.Break();
-				h = this.MinimumSize.Height;
-				// Center it vertically over the working area...
-				//y = (bounds.Height - h) / 2 + bounds.Top;
-				// OR position at the top edge
-				y = bounds.Top;
-			}
-			else
-			{
-				// Should fit vertically
-				// Is it too high?
-				if (y < bounds.Top) y = bounds.Top; // Move it down
-																						// Is it too tall;
-				if (h > bounds.Height) h = bounds.Height; // Shorten it
-																									// Is it too low?
-				if ((y + h) > bounds.Bottom)
-				{
-					// Kepp height, raise it up
-					y = (bounds.Height - h) + bounds.Top;
-				}
-			}
-
-			// Position and Size should be safe!
-			// Move and Resize the form
-			this.SetDesktopLocation(x, y);
-			this.Size = new Size(w, h);
-
-			// Window State
-			if (savedState == FormWindowState.Maximized)
-			{
-				if (this.MaximizeBox)
-				{
-					// Optional.  Personally, I think it should always be reloaded non-maximized.
-					//this.WindowState = savedState;
-				}
-			}
-			if (savedState == FormWindowState.Minimized)
-			{
-				if (this.MinimizeBox)
-				{
-					// Don't think it's right to reload to a minimized state (confuses the user),
-					// but you can enable this if you want.
-					//this.WindowState = savedState;
-				}
-			}
+			userSettings.Save();
 		}
 
-		private void SetTheControlsForTheHeartOfTheSun()
+		private void RestoreUserControlSettings()
 		{
-			SaveFormPosition();
-			heartOfTheSun.Save();
-		}
-
-		private void GetTheControlsFromTheHeartOfTheSun()
-		{
-			pathDatabase = heartOfTheSun.FileDatabase;
+			pathDatabase = userSettings.FileDatabase;
 			if (pathDatabase.EndSubstring(1) != "\\") pathDatabase += "\\";
 			txtFileDatabase.Text = pathDatabase;
-			fileSequence = heartOfTheSun.FileSequence;
+			fileSequence = userSettings.FileSequence;
 			txtLORfile.Text = fileSequence;
-			fileVisualization = heartOfTheSun.FileVisualization;
+			fileVisualization = userSettings.FileVisualization;
 			txtFileVisual.Text = fileVisualization;
-			filergbeffects = heartOfTheSun.Filergbeffects;
+			filergbeffects = userSettings.Filergbeffects;
 			txtXFile.Text = filergbeffects;
-			fileReport = heartOfTheSun.FileReport;
+			fileReport = userSettings.FileReport;
 			txtSpreadsheet.Text = fileReport;
-
-
-
 		}
 
 		private void FirstShow()
@@ -348,11 +200,11 @@ namespace UtilORama4
 		{
 			ImBusy(true);
 			frmAbout aboutBox = new frmAbout();
-			aboutBox.picIcon.Image = picAboutIcon.Image;
 			aboutBox.Icon = this.Icon;
+			aboutBox.Text = "About Compare-O-Rama";
+			aboutBox.AppIcon = picAboutIcon.Image;
 			aboutBox.ShowDialog(this);
 			ImBusy(false);
-
 		}
 
 		private void txtLORfile_TextChanged(object sender, EventArgs e)
@@ -450,7 +302,7 @@ namespace UtilORama4
 			string lineIn = "";
 			string theName = "";
 			xMemberType mbrType = xMemberType.Model; // Default
-			xMember member;
+			xMemberBase member;
 
 
 
@@ -492,7 +344,7 @@ namespace UtilORama4
 							if (ip >= 0)
 							{
 								mbrType = xMemberType.Pixels;
-								xPixels xpx = new xPixels(theName);
+								xPixelModel xpx = new xPixelModel(theName);
 								xPixelList.Add(xpx);
 								//count++;
 								xpx.StartChannel = xAdmin.getKeyWord(lineIn, "StartChannel");
@@ -506,7 +358,7 @@ namespace UtilORama4
 								if (ip >= 0)
 								{
 									mbrType = xMemberType.RGBmodel;
-									xRGBmodel xrgb = new xRGBmodel(theName);
+									xRGBModel xrgb = new xRGBModel(theName);
 									xRGBList.Add(xrgb);
 									count++;
 									xrgb.StartChannel = xAdmin.getKeyWord(lineIn, "StartChannel");
@@ -595,8 +447,8 @@ namespace UtilORama4
 			{
 				filergbeffects = filexL;
 				txtXFile.Text = filergbeffects;
-				heartOfTheSun.Filergbeffects = filergbeffects;
-				heartOfTheSun.Save();
+				userSettings.Filergbeffects = filergbeffects;
+				userSettings.Save();
 				string txt = xModelList.Count.ToString() + "/" +
 										xGroupList.Count.ToString();
 				lblInfoxL.Text = txt;
@@ -685,8 +537,8 @@ namespace UtilORama4
 			{
 				fileSequence = fileSeqName;
 				txtLORfile.Text = fileSequence;
-				heartOfTheSun.FileSequence = fileSequence;
-				heartOfTheSun.Save();
+				userSettings.FileSequence = fileSequence;
+				userSettings.Save();
 				CompileLORlists(sequence);
 				string stat = channelList.Count.ToString() + " Channels, ";
 				stat += RGBList.Count.ToString() + " RGB Channels, and ";
@@ -785,11 +637,11 @@ namespace UtilORama4
 						if (!xModelList[x].Selected)
 						{
 							string xName = xModelList[x].Name;
-							double preScore = LORname.RankEquality(xName, FuzzyFunctions.USE_SUGGESTED_PREMATCH);
+							double preScore = LORname.FuzzyScoreFast(xName);
 							// if the score is above the minimum PreMatch
 							if (preScore > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
 							{
-								double finalScore = LORname.RankEquality(xName, FuzzyFunctions.USE_SUGGESTED_FINALMATCH);
+								double finalScore = LORname.FuzzyScoreAccurate(xName);
 								if (finalScore > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
 								{
 									if (finalScore > highScore)
@@ -808,11 +660,11 @@ namespace UtilORama4
 						if (!xGroupList[x].Selected)
 						{
 							string xName = xGroupList[x].Name;
-							double preScore = LORname.RankEquality(xName, FuzzyFunctions.USE_SUGGESTED_PREMATCH);
+							double preScore = LORname.FuzzyScoreFast(xName);
 							// if the score is above the minimum PreMatch
 							if (preScore > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
 							{
-								double finalScore = LORname.RankEquality(xName, FuzzyFunctions.USE_SUGGESTED_FINALMATCH);
+								double finalScore = LORname.FuzzyScoreAccurate(xName);
 								if (finalScore > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
 								{
 									if (finalScore > highScore)
@@ -884,11 +736,11 @@ namespace UtilORama4
 						if (!xRGBList[x].Selected)
 						{
 							string xName = xRGBList[x].Name;
-							double preScore = LORname.RankEquality(xName, FuzzyFunctions.USE_SUGGESTED_PREMATCH);
+							double preScore = LORname.FuzzyScoreFast(xName);
 							// if the score is above the minimum PreMatch
 							if (preScore > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
 							{
-								double finalScore = LORname.RankEquality(xName, FuzzyFunctions.USE_SUGGESTED_FINALMATCH);
+								double finalScore = LORname.FuzzyScoreAccurate(xName);
 								if (finalScore > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
 								{
 									if (finalScore > highScore)
@@ -948,11 +800,11 @@ namespace UtilORama4
 						if (!xGroupList[x].Selected)
 						{
 							string xName = xGroupList[x].Name;
-							double preScore = LORname.RankEquality(xName, FuzzyFunctions.USE_SUGGESTED_PREMATCH);
+							double preScore = LORname.FuzzyScoreFast(xName);
 							// if the score is above the minimum PreMatch
 							if (preScore > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
 							{
-								double finalScore = LORname.RankEquality(xName, FuzzyFunctions.USE_SUGGESTED_FINALMATCH);
+								double finalScore = LORname.FuzzyScoreAccurate(xName);
 								if (finalScore > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
 								{
 									if (finalScore > highScore)
@@ -1050,11 +902,11 @@ namespace UtilORama4
 						if (!chanLor.Selected)
 						{
 							string LORname = chanLor.Name;
-							double preScore = datName.RankEquality(LORname, FuzzyFunctions.USE_SUGGESTED_PREMATCH);
+							double preScore = datName.FuzzyScoreFast(LORname);
 							// if the score is above the minimum PreMatch
 							if (preScore > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
 							{
-								double finalScore = datName.RankEquality(LORname, FuzzyFunctions.USE_SUGGESTED_FINALMATCH);
+								double finalScore = datName.FuzzyScoreAccurate(LORname);
 								if (finalScore > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
 								{
 									if (finalScore > highScore)
@@ -1175,11 +1027,11 @@ namespace UtilORama4
 							if (!member.Selected)
 							{
 								string vName = member.Name;
-								double preScore = datName.RankEquality(vName, FuzzyFunctions.USE_SUGGESTED_PREMATCH);
+								double preScore = datName.FuzzyScoreFast(vName);
 								// if the score is above the minimum PreMatch
 								if (preScore > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
 								{
-									double finalScore = datName.RankEquality(vName, FuzzyFunctions.USE_SUGGESTED_FINALMATCH);
+									double finalScore = datName.FuzzyScoreAccurate(vName);
 									if (finalScore > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
 									{
 										if (finalScore > highScore)
@@ -1199,11 +1051,11 @@ namespace UtilORama4
 							if (!member.Selected)
 							{
 								string vName = member.Name;
-								double preScore = datName.RankEquality(vName, FuzzyFunctions.USE_SUGGESTED_PREMATCH);
+								double preScore = datName.FuzzyScoreFast(vName);
 								// if the score is above the minimum PreMatch
 								if (preScore > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
 								{
-									double finalScore = datName.RankEquality(vName, FuzzyFunctions.USE_SUGGESTED_FINALMATCH);
+									double finalScore = datName.FuzzyScoreAccurate(vName);
 									if (finalScore > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
 									{
 										if (finalScore > highScore)
@@ -1223,11 +1075,11 @@ namespace UtilORama4
 							if (!member.Selected)
 							{
 								string vName = member.Name;
-								double preScore = datName.RankEquality(vName, FuzzyFunctions.USE_SUGGESTED_PREMATCH);
+								double preScore = datName.FuzzyScoreFast(vName);
 								// if the score is above the minimum PreMatch
 								if (preScore > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
 								{
-									double finalScore = datName.RankEquality(vName, FuzzyFunctions.USE_SUGGESTED_FINALMATCH);
+									double finalScore = datName.FuzzyScoreAccurate(vName);
 									if (finalScore > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
 									{
 										if (finalScore > highScore)
@@ -1363,11 +1215,11 @@ namespace UtilORama4
 						if (!xm.Selected)
 						{
 							string xName = xm.Name;
-							double preScore = dName.RankEquality(xName, FuzzyFunctions.USE_SUGGESTED_PREMATCH);
+							double preScore = dName.FuzzyScoreFast(xName);
 							// if the score is above the minimum PreMatch
 							if (preScore > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
 							{
-								double finalScore = dName.RankEquality(xName, FuzzyFunctions.USE_SUGGESTED_FINALMATCH);
+								double finalScore = dName.FuzzyScoreAccurate(xName);
 								if (finalScore > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
 								{
 									if (finalScore > highScore)
@@ -1387,11 +1239,11 @@ namespace UtilORama4
 						if (!xg.Selected)
 						{
 							string xName = xGroupList[x].Name;
-							double preScore = dName.RankEquality(xName, FuzzyFunctions.USE_SUGGESTED_PREMATCH);
+							double preScore = dName.FuzzyScoreFast(xName);
 							// if the score is above the minimum PreMatch
 							if (preScore > FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE)
 							{
-								double finalScore = dName.RankEquality(xName, FuzzyFunctions.USE_SUGGESTED_FINALMATCH);
+								double finalScore = dName.FuzzyScoreAccurate(xName);
 								if (finalScore > FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE)
 								{
 									if (finalScore > highScore)
@@ -1409,7 +1261,7 @@ namespace UtilORama4
 					{
 						if (highScore > 95)
 						{
-							xMember member = null;
+							xMemberBase member = null;
 							if (matchType == 1)
 							{
 								member = xModelList[highMatch];
@@ -1786,7 +1638,7 @@ namespace UtilORama4
 			{
 				bool stopLooking = false;
 
-				string lastSheet = heartOfTheSun.FileReport;
+				string lastSheet = userSettings.FileReport;
 				string initDir = Path.GetDirectoryName(lastSheet);
 				// Start with last folder where a spreadsheet was saved
 				if (Directory.Exists(initDir))
@@ -1831,8 +1683,8 @@ namespace UtilORama4
 						int lineCount = 0;
 						fileReport = dlgFileSave.FileName;
 						txtSpreadsheet.Text = fileReport;
-						heartOfTheSun.FileReport = fileReport;
-						heartOfTheSun.Save();
+						userSettings.FileReport = fileReport;
+						userSettings.Save();
 						//int m = CompileSpreadsheet(f, true);
 						if (allChannels.Count > 0)
 						{
@@ -1866,7 +1718,7 @@ namespace UtilORama4
 					lineOut.Append(',');
 					if (lc.Selected)
 					{
-						xMember xc = (xMember)lc.Tag;
+						xMemberBase xc = (xMemberBase)lc.Tag;
 						if (xc.ExactMatch)
 						{
 							lineOut.Append("Exact");
@@ -1890,7 +1742,7 @@ namespace UtilORama4
 				}
 				for (int x = 0; x < xModelList.Count; x++)
 				{
-					xMember xc = xModelList[x];
+					xMemberBase xc = xModelList[x];
 					if (!xc.Selected)
 					{
 						lineOut.Clear();
@@ -1917,7 +1769,7 @@ namespace UtilORama4
 					lineOut.Append(',');
 					if (lc.Selected)
 					{
-						xMember xc = (xMember)lc.Tag;
+						xMemberBase xc = (xMemberBase)lc.Tag;
 						if (xc.ExactMatch)
 						{
 							lineOut.Append("Exact");
@@ -1938,7 +1790,7 @@ namespace UtilORama4
 				}
 				for (int x = 0; x < xRGBList.Count; x++)
 				{
-					xMember xc = xRGBList[x];
+					xMemberBase xc = xRGBList[x];
 					if (!xc.Selected)
 					{
 						lineOut.Clear();
@@ -1964,7 +1816,7 @@ namespace UtilORama4
 					lineOut.Append(',');
 					if (lc.Selected)
 					{
-						xMember xc = (xMember)lc.Tag;
+						xMemberBase xc = (xMemberBase)lc.Tag;
 						if (xc.ExactMatch)
 						{
 							lineOut.Append("Exact");
@@ -1985,7 +1837,7 @@ namespace UtilORama4
 				}
 				for (int x = 0; x < xGroupList.Count; x++)
 				{
-					xMember xc = xGroupList[x];
+					xMemberBase xc = xGroupList[x];
 					if (!xc.Selected)
 					{
 						lineOut.Clear();
@@ -2059,8 +1911,8 @@ namespace UtilORama4
 
 			pathDatabase = filePath;
 			txtFileDatabase.Text = pathDatabase;
-			heartOfTheSun.FileDatabase = pathDatabase;
-			heartOfTheSun.Save();
+			userSettings.FileDatabase = pathDatabase;
+			userSettings.Save();
 			string txt = universes.Count.ToString() + "/" +
 									DMXUniverse.AllControllers.Count.ToString() + "/" +
 									allChannels.Count.ToString();
@@ -2542,8 +2394,8 @@ namespace UtilORama4
 			{
 				fileVisualization = fileVizName;
 				txtFileVisual.Text = fileVisualization;
-				heartOfTheSun.FileVisualization = fileVisualization;
-				heartOfTheSun.Save();
+				userSettings.FileVisualization = fileVisualization;
+				userSettings.Save();
 				string txt = visualization.VizItemGroups.Count.ToString() + "/" +
 										visualization.VizDrawObjects.Count.ToString() + "/" +
 										visualization.VizChannels.Count.ToString();

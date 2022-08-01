@@ -8,7 +8,7 @@ using System.Drawing;
 
 namespace xLights22
 {
-	public enum xMemberBaseType { Unknown, Base, Model, RGBmodel, Pixels, ModelGroup }
+	public enum xMemberType { Unknown, Base, Model, RGBmodel, Pixels, ModelGroup }
 
 
 	public interface ixMember : IComparable<ixMember>
@@ -23,7 +23,7 @@ namespace xLights22
 
 		string ToString();
 
-		xMemberBaseType MemberBaseType
+		xMemberType MemberBaseType
 		{ get; }
 
 		xModelSubType MemberSubType
@@ -66,7 +66,7 @@ namespace xLights22
 		private string startChannel = "";
 		private int dmxAddress = 1;
 		private int universeNumber = 1;
-		private xMemberBaseType memberBaseType = xMemberBaseType.Base;
+		private xMemberType memberBaseType = xMemberType.Base;
 		protected xModelSubType modelSubType = xModelSubType.Unknown;
 		public static List<ixMember> AllMembers = new List<ixMember>();
 
@@ -101,9 +101,9 @@ namespace xLights22
 			return myName;
 		}
 
-		public virtual xMemberBaseType MemberBaseType
+		public virtual xMemberType MemberBaseType
 		{
-			get { return xMemberBaseType.Base; }
+			get { return xMemberType.Base; }
 		}
 
 		public virtual xModelSubType MemberSubType
@@ -172,9 +172,9 @@ namespace xLights22
 		}
 
 		// Properties, Methods, Functions...
-		public override xMemberBaseType MemberBaseType
+		public override xMemberType MemberBaseType
 		{
-			get { return xMemberBaseType.Model; }
+			get { return xMemberType.Model; }
 		}
 	}
 
@@ -195,9 +195,9 @@ namespace xLights22
 			modelSubType = subType;
 		}
 
-		public override xMemberBaseType MemberBaseType
+		public override xMemberType MemberBaseType
 		{
-			get { return xMemberBaseType.RGBmodel; }
+			get { return xMemberType.RGBmodel; }
 		}
 	}
 
@@ -218,9 +218,9 @@ namespace xLights22
 		}
 
 
-		public override xMemberBaseType MemberBaseType
+		public override xMemberType MemberBaseType
 		{
-			get { return xMemberBaseType.Pixels; }
+			get { return xMemberType.Pixels; }
 		}
 	}
 
@@ -241,9 +241,9 @@ namespace xLights22
 			modelSubType = subType;
 		}
 
-		public override xMemberBaseType MemberBaseType
+		public override xMemberType MemberBaseType
 		{
-			get { return xMemberBaseType.ModelGroup; }
+			get { return xMemberType.ModelGroup; }
 		}
 	}
 
