@@ -250,7 +250,7 @@ namespace UtilORama4
 			ImBusy(true);
 			RestoreFormPosition();
 			GetTheControlsFromTheHeartOfTheSun();
-			tempPath = Fyle.GetTempPath();
+			tempPath = Fyle.GetUserTempPath();
 			bool valid = false;
 
 			ProcessCommandLine();
@@ -887,7 +887,7 @@ namespace UtilORama4
 
 			if (m.MemberType == LOR4MemberType.Track)
 			{
-				if (m.Selected)
+				if (m.Selected != CheckState.Unchecked)
 				{
 					LOR4Track trk = (LOR4Track)m;
 					gridItem_Checked[trk.timingGrid.SaveID] = true;
@@ -900,7 +900,7 @@ namespace UtilORama4
 
 		}
 
-		void SelectNode(TreeNodeAdv nOde, bool select)
+		void SelectNode(TreeNodeAdv nOde, CheckState checkState)
 		{
 			// Note: "Select" in this case only refers to clicking on it and highlighting it.
 			// does not refer to Checking or unchecking the box, for that see:
@@ -926,7 +926,7 @@ namespace UtilORama4
 				iLOR4Member m = (iLOR4Member)nOde.Tag;
 				if (m.MemberType == LOR4MemberType.Channel)
 				{
-					SelectNode(nOde, !m.Selected);
+					SelectNode(nOde, m.Selected);
 				}
 				if (nOde.Nodes.Count > 0)
 				{
