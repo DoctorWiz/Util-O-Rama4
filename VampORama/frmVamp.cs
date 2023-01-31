@@ -361,6 +361,7 @@ namespace UtilORama4
       }
 
       FillAudioFileCombo();
+      grpAudio.Enabled = true;
 
       ImBusy(false);
 

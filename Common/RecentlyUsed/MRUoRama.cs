@@ -154,7 +154,7 @@ namespace LOR4
       {
         bool found = false; // reset
                             // Get the name, see if it exists
-        string f = appFiles[idx];
+        string f = suiteFiles[idx];
         if (Fyle.Exists(f))
         {
           // Is it already in the list? (pro'ly cuz it was used in this app)
@@ -403,7 +403,7 @@ namespace LOR4
         {
           if (i < _maxFilesStore)
           {
-            if (appFiles[i].Length > 0)
+            if (suiteFiles[i].Length > 0)
             {
               c++;
               string entryName = "File" + c.ToString("000");

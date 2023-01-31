@@ -1,0 +1,17 @@
+Effects  by Jeremy Poling XATW22
+Sideways RGB Meteors:
+
+CopyFormat1	0	1	9	0	23	PASTE_BY_CELL
+Meteors	B_CHOICE_BufferStyle=Vertical Stack,E_CHECKBOX_Meteors_UseMusic=0,E_CHOICE_Meteors_Effect=Right,E_CHOICE_Meteors_Type=Palette,E_SLIDER_Meteors_Count=10,E_SLIDER_Meteors_Length=25,E_SLIDER_Meteors_Speed=50,E_SLIDER_Meteors_Swirl_Intensity=0,T_TEXTCTRL_Fadeout=.5,X_Effect_Description=Sideways RGB Meteors	C_BUTTON_Palette1=#FFFFFF,C_BUTTON_Palette2=#FF0000,C_BUTTON_Palette3=#00FF00,C_BUTTON_Palette4=#0000FF,C_BUTTON_Palette5=#E1B651,C_BUTTON_Palette6=#EAC24D,C_BUTTON_Palette7=#0080FF,C_BUTTON_Palette8=#22BBB7,C_CHECKBOX_Palette2=1,C_CHECKBOX_Palette3=1,C_CHECKBOX_Palette4=1	11225	13150	14	-1000	23	26	0	100
+
+
+Tall RGB Sinewaves:
+
+CopyFormat1	0	1	9	0	64	PASTE_BY_CELL
+Wave	E_CHECKBOX_Mirror_Wave=0,E_CHOICE_Fill_Colors=Palette,E_CHOICE_Wave_Direction=Right to Left,E_CHOICE_Wave_Type=Sine,E_SLIDER_Number_Waves=1825,E_SLIDER_Thickness_Percentage=28,E_SLIDER_Wave_Height=81,E_SLIDER_Wave_YOffset=0,E_TEXTCTRL_Wave_Speed=13,T_CHOICE_LayerMethod=Effect 1,X_Effect_Description=Tall RGB Sine Waves	C_BUTTON_Palette1=#FFFFFF,C_BUTTON_Palette2=#FF0000,C_BUTTON_Palette3=#00FF00,C_BUTTON_Palette4=#0000FF,C_BUTTON_Palette5=#E1B651,C_BUTTON_Palette6=#EAC24D,C_BUTTON_Palette7=#0080FF,C_BUTTON_Palette8=#22BBB7,C_CHECKBOX_Palette2=1,C_CHECKBOX_Palette3=1,C_CHECKBOX_Palette4=1	31050	36950	14	-1000	64	76	5	21
+
+
+RGB Raindrops Splashing:
+
+CopyFormat1	0	1	9	0	124	PASTE_BY_CELL
+Shape	E_CHECKBOX_Shape_FadeAway=1,E_CHECKBOX_Shape_FireTiming=0,E_CHECKBOX_Shape_HoldColour=1,E_CHECKBOX_Shape_RandomInitial=0,E_CHECKBOX_Shape_RandomLocation=1,E_CHECKBOX_Shape_UseMusic=0,E_CHECKBOX_Shapes_RandomMovement=0,E_CHOICE_Shape_ObjectToDraw=Circle,E_SLIDER_Shape_Growth=10,E_SLIDER_Shape_Lifetime=47,E_SLIDER_Shape_StartSize=0,E_SLIDER_Shape_Thickness=1,E_SLIDER_Shapes_Direction=90,E_SLIDER_Shapes_Velocity=0,E_TEXTCTRL_Shape_Count=19,E_TEXTCTRL_Shapes_Direction=90,E_TEXTCTRL_Shapes_Velocity=0,X_Effect_Description=RGB Raindrops Splashing	C_BUTTON_Palette1=#FFFFFF,C_BUTTON_Palette2=#FF0000,C_BUTTON_Palette3=#00FF00,C_BUTTON_Palette4=#0000FF,C_BUTTON_Palette5=#E1B651,C_BUTTON_Palette6=#EAC24D,C_BUTTON_Palette7=#0080FF,C_BUTTON_Palette8=#000000,C_CHECKBOX_Palette2=1,C_CHECKBOX_Palette3=1,C_CHECKBOX_Palette4=1	60075	62000	16	-1000	124	127	0	100

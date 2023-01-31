@@ -185,8 +185,9 @@ namespace LOR4
 #if TREENODES
     // Use the Selected property in SeqMemberBaseExtenderForNodes
 #else
-    public virtual CheckState Selected
-    { get { return myCheckState; } set { myCheckState = value; } }
+			// Use the default/normal SelectedState property built into MemberBase and MemberInterface
+			public virtual CheckState SelectedState 
+			{ get { return myCheckState; } set { myCheckState = value; } }
 #endif
 
     public bool Dirty
@@ -361,7 +362,7 @@ namespace LOR4
       mbr.SetID(myID);
       mbr.AltID = myAltID;
       mbr.SetSavedIndex(myID);
-      mbr.Selected = myCheckState;
+      mbr.SelectedState = myCheckState;
       mbr.color = mycolor;
       mbr.Tag = myTag;
       //mbr.Nodes = myNodes;

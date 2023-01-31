@@ -51,9 +51,23 @@ namespace UtilORama4
 		{
 
 		}
+		public DMXChannel(DMXController controller, string theName = "")
+		{
+			DMXController = controller;
+			DMXController.DMXChannels.Add(this);
+			if (theName.Length > 0)
+			{ Name = theName; }
+		}
+
+		public DMXChannel(string theName)
+		{
+			Name = theName;
+		}
+
 		public DMXChannel(DMXController controller)
 		{
-
+			DMXController = controller;
+			DMXController.DMXChannels.Add(this);
 		}
 
 		public DMXChannel(DMXChannel otherChannel)
@@ -66,6 +80,7 @@ namespace UtilORama4
 			isActive = otherChannel.isActive;
 			Color = otherChannel.Color;
 			DMXController = otherChannel.DMXController;
+			//DMXController.DMXChannels.Add(this);
 			OutputNum = otherChannel.myOutput;
 			DeviceType = otherChannel.DeviceType;
 			isEditing = otherChannel.isEditing;

@@ -182,18 +182,18 @@ namespace LOR4
 			Comment = LOR4Admin.getKeyWord(lineIn, FIELDComment);
 		}
 
-		public override CheckState Selected
+		public override CheckState SelectedState
 		{
 			get
 			{
-				return Members.Selected;
+				return Members.SelectedState;
 			}
 			set
 			{
 				if (value != CheckState.Indeterminate)
 				{
-					base.Selected = value;
-					Members.Selected = value;
+					base.SelectedState = value;
+					Members.SelectedState = value;
 				}
 			}
 		}

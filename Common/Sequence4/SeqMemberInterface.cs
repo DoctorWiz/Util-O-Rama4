@@ -42,7 +42,7 @@ namespace LOR4
 		{ get; }
 		void SetParent(iLOR4Member newParent);
 
-		CheckState Selected
+		CheckState SelectedState
 		{ get; set; }
 		bool Dirty
 		{ get; }

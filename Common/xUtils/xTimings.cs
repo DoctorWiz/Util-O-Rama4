@@ -30,8 +30,8 @@ namespace xLights22
     public static string FIELD_saveID = "saveID";
     public static string FIELD_type = "type";
     public static string FIELD_label = "label";
-    public static string FIELD_start = "start";
-    public static string FIELD_end = "end";
+    public static string FIELD_start = "starttime";
+    public static string FIELD_end = "endtime";
     public static string FIELD_time = "time";
     public static string TYPE_freeform = "freeform";
     public static string PLURAL = "s";

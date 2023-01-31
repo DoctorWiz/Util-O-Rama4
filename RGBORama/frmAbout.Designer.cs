@@ -225,7 +225,7 @@
 			this.lblInfo.Size = new System.Drawing.Size(464, 45);
 			this.lblInfo.TabIndex = 42;
 			this.lblInfo.Text = "For more information, or to submit bug reports, ideas, suggestions, cool sequence" +
-    "s, or good dirty jokes, please contact Doctor Wizard at:";
+		"s, or good dirty jokes, please contact Doctor Wizard at:";
 			this.lblInfo.Click += new System.EventHandler(this.label4_Click);
 			// 
 			// lblEmail

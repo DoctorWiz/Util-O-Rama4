@@ -970,14 +970,14 @@ namespace LOR4
 			return reportBuilder.ToString();
 		}
 
-		public override CheckState Selected
+		public override CheckState SelectedState
 		{
 			get
-			{ return Members.Selected; }
+			{ return Members.SelectedState; }
 			set
 			{
-				base.Selected = value;
-				Members.Selected = value;
+				base.SelectedState = value;
+				Members.SelectedState = value;
 			}
 		}
 

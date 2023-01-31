@@ -39,6 +39,14 @@
 		<WebPage>http://wizlights.com/utilorama/compareorama/default.html</WebPage>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>$(DefineConstants)TRACE;TREENODES</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>$(DefineConstants)TRACE;TREENODES</DefineConstants>
+  </PropertyGroup>
+
 	<ItemGroup>
 		<None Remove="desktop.ini" />
 	</ItemGroup>
@@ -58,6 +66,7 @@
 		<Compile Include="..\Common\Sequence4\SeqCosmicDevice.cs" Link="SeqCosmicDevice.cs" />
 		<Compile Include="..\Common\Sequence4\SeqEnums.cs" Link="SeqEnums.cs" />
 		<Compile Include="..\Common\Sequence4\SeqMemberBase.cs" Link="SeqMemberBase.cs" />
+		<Compile Include="..\Common\Sequence4\SeqMemberBaseExtenderForNodes.cs" Link="SeqMemberBaseExtenderForNodes.cs" />
 		<Compile Include="..\Common\Sequence4\SeqMemberInterface.cs" Link="SeqMemberInterface.cs" />
 		<Compile Include="..\Common\Sequence4\SeqMembership.cs" Link="SeqMembership.cs" />
 		<Compile Include="..\Common\Sequence4\SeqRGBChannel.cs" Link="SeqRGBChannel.cs" />

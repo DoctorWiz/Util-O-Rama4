@@ -39,6 +39,14 @@
 		<WebPage>http://wizlights.com/utilorama/dimorama/default.html</WebPage>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>$(DefineConstants)TRACE;TREENODES</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>$(DefineConstants)TRACE;TREENODES</DefineConstants>
+  </PropertyGroup>
+
 	<ItemGroup>
 		<None Remove="desktop.ini" />
 	</ItemGroup>

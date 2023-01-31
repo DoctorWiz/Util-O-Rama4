@@ -27,7 +27,7 @@ namespace LOR4
 
 
 #if DEBUG
-			//string msg = "LOR4Timings.LOR4Timings(" + lineIn + ") // Constructor";
+			//string msg = "Timings.LOR4Timings(" + lineIn + ") // Constructor";
 			//Debug.WriteLine(msg);
 #endif
 		}

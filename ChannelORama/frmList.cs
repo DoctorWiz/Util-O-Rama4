@@ -33,18 +33,19 @@ namespace UtilORama4
     //public List<DMXDevice> deviceTypes = new List<DMXDevice>();
     // Just creating a convenient reference to the static list in the DMXChannel class
     public List<DMXDeviceType> deviceTypes = DMXChannel.DeviceTypes;
-    private const string myTitle = "Chan-O-Rama  Channel Manager";
+    private const string myTitle = "Channel-O-Rama  Channel Manager";
 
+    LOR4Visualization lViz = null;
     private string lastFile = "";
     private bool formShown = false;
     private string dbPath = "";
-    private int year = 2021;
+    private int year = 2022;
     private int lastID = -1;
     public bool dirty = false;
     private bool isWiz = Fyle.IsWizard || Fyle.IsAWizard;
 
     //private xRGBEffects xSeq = null;
-    private LOR4Visualization lViz = null;
+    //private LOR4Visualization lViz = null;
 
     private int[] TREEICONuniverse = { 0 };
     private int[] TREEICONcontroller = { 1 };
@@ -152,8 +153,25 @@ namespace UtilORama4
       errs += LoadControllers(filePath);
       errs += LoadDevices(filePath);
       errs += LoadChannels(filePath);
+      UpdateStatus();
+      this.Text = filePath + " - " + myTitle;
       return errs;
     }
+
+    private void UpdateStatus()
+    {
+      string stxt = universes.Count.ToString() + " Universes, ";
+      int c = 0;
+      for (int u = 0; u < universes.Count; u++)
+      {
+        c += universes[u].DMXControllers.Count;
+      }
+      stxt += c.ToString() + " Controllers, ";
+      stxt += AllChannels.Count.ToString() + " Channels";
+      pnlStatus.Text = stxt;
+
+    }
+
 
     public int LoadUniverses(string filePath)
     {
@@ -521,7 +539,25 @@ namespace UtilORama4
       errs += SaveChannels(filePath);
       MakeDirty(false);
       return errs;
+
+
     }
+
+    public void ClearData()
+    {
+      treeChannels.Nodes.Clear();
+      universes = new List<DMXUniverse>();
+      AllChannels = DMXUniverse.AllChannels;
+      lViz = null;
+      lastFile = "";
+      lastID = -1;
+      dirty = false;
+
+      //private xRGBEffects xSeq = null;
+      //private LOR4Visualization lViz = null;
+
+    }
+
 
     public int SaveUniverses(string filePath)
     {
@@ -661,8 +697,86 @@ namespace UtilORama4
       }
       return errs;
     }
-
     public int SaveChannels(string filePath)
+    {
+      int errs = 0;
+      string chnName = ""; // debugging exceptions
+      string chnFile = filePath + "Channels.csv";
+
+      try
+      {
+        CsvFileWriter writer = new CsvFileWriter(chnFile);
+        CsvRow row = new CsvRow();
+        // Create first line which is headers;
+        row.Add("Universe");    // Field 0
+        row.Add("Controller");  // Field 1
+        row.Add("LOR4Output");      // Field 2
+        row.Add("Name");        // Field 3
+        row.Add("Location");    // Field 4
+        row.Add("Comment");     // Field 5
+        row.Add("Active");      // Field 6
+        row.Add("Type");        // Field 7
+        row.Add("Color");       // Field 8
+
+        writer.WriteRow(row);
+
+        universes.Sort();
+        for (int u = 0; u < universes.Count; u++)
+        {
+          DMXUniverse universe = universes[u];
+          universe.DMXControllers.Sort();
+          for (int q = 0; q < universe.DMXControllers.Count; q++)
+          {
+            DMXController controller = universe.DMXControllers[q];
+            controller.DMXChannels.Sort();
+            for (int c = 0; c < controller.DMXChannels.Count; c++)
+            {
+              try
+              {
+                DMXChannel channel = controller.DMXChannels[c];
+                chnName = channel.Name;
+                row = new CsvRow();
+
+                row.Add(channel.DMXUniverse.UniverseNumber.ToString()); // Field 0
+                row.Add(channel.DMXController.LetterID);                // Field 1
+                row.Add(channel.OutputNum.ToString());                 // Field 2
+                row.Add(channel.Name);                                  // Field 3
+                row.Add(channel.Location);                              // Field 4
+                row.Add(channel.Comment);                               // Field 5
+                row.Add(channel.Active.ToString());                     // Field 6
+                row.Add(channel.DeviceType.ID.ToString());         // Field 7
+                row.Add(LOR4.LOR4Admin.ColorToHex(channel.Color));                // Field 8
+
+                writer.WriteRow(row);
+              } // end try for Channels
+              catch (Exception ex)
+              {
+                string msg = "Error " + ex.ToString() + " while saving Channel " + chnName;
+                if (isWiz)
+                {
+                  DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                errs++;
+              }
+            } // End Channel loop
+          } // End Controller loop
+        } // End Universe loop
+        writer.Close();
+      } // End try for StreamWriter (create file)
+      catch (Exception ex)
+      {
+        string msg = "Error " + ex.ToString() + " while saving Channels file " + chnFile;
+        if (isWiz)
+        {
+          DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        errs++;
+      }
+      return errs;
+    }
+
+
+    public int OLD_SaveChannels(string filePath)
     {
       int errs = 0;
       string chnName = ""; // debugging exceptions
@@ -1007,6 +1121,7 @@ namespace UtilORama4
             int iconIndex = LOR4.LOR4Admin.ColorIcon(icons, channel.Color);
             int[] ico = { iconIndex };
             node.LeftImageIndices = ico;
+            //TODO: Check for problem and update foreground text color (either way)
           }
         }
       }
@@ -1018,11 +1133,79 @@ namespace UtilORama4
       TreeNodeAdv node = treeChannels.SelectedNode;
       if (node != null)
       {
+        // Reset to default, for now, may get changed again below
+        btnChannel.Enabled = true;
+        btnChannel.Text = "Add\r\nChannel";
+        btnController.Text = "Add\r\nController";
+        btnUniverse.Text = "Add\r\nUniverse";
+
+
         int[] ni = node.LeftImageIndices;
+        // Did user selected a Universe node?
         bool en = (ni == TREEICONuniverse);
-        btnController.Enabled = en;
+        if (en)
+        {
+          btnUniverse.Text = "Edit\r\nUniverse";
+					DMXUniverse uni = (DMXUniverse)node.Tag;
+          string xc = ""; //  "xLights Channels: " + ctl.xLightsAddress + "-" + (ctl.xLightsAddress + ctl.OutputCount - 1).ToString();
+          lblxChannel.Text = xc;
+					xc = " @ " + uni.Location;
+					pnlStatus.Text = xc;
+					xc = uni.Comment;
+					treeChannels.HelpTextControl.Text = xc;
+				}
+				else
+        {
+          btnUniverse.Text = "Add\r\nUniverse";
+        }
+        btnChannel.Enabled = !en;
+
+
+
+
+        // Did user selected a Controller node?
         en = (ni == TREEICONcontroller);
-        btnChannel.Enabled = en;
+        if (en)
+        {
+          btnController.Text = "Edit\r\nController";
+					DMXController ctl = (DMXController)node.Tag;
+					string xc = "xLights Channels: " + ctl.xLightsAddress + "-" + (ctl.xLightsAddress + ctl.OutputCount - 1).ToString();
+					lblxChannel.Text = xc;
+					xc = ctl.ControllerBrand + " " + ctl.ControllerModel + " @ " + ctl.Location;
+					pnlStatus.Text = xc;
+					xc = ctl.Comment;
+					treeChannels.HelpTextControl.Text = xc;
+				}
+				else
+        {
+          btnController.Text = "Add\r\nController";
+        }
+
+        // If it is NOT a Universe, AND it is NOT a controller--
+        //   Then by process of elimination, it must be a channel!
+        //     (Channels have numerous and various colored icons)
+        // Did user selected a Channel node?
+        en = ((ni != TREEICONuniverse) && (ni != TREEICONcontroller));
+        if (en)
+        {
+          btnChannel.Text = "Edit\r\nChannel";
+          btnRemove.Visible = true;
+          DMXChannel ch = (DMXChannel)node.Tag;
+          string xc = "xLights Channel: " + ch.xLightsAddress.ToString();
+          lblxChannel.Text = xc;
+          xc = ch.DeviceType + " @ " + ch.Location;
+          pnlStatus.Text = xc;
+          xc = ch.Comment;
+          treeChannels.HelpTextControl.Text= xc;
+        }
+        else
+        {
+          btnChannel.Text = "Add\r\nChannel";
+          btnRemove.Visible = false;
+        }
+
+
+
       }
     }
 
@@ -1048,7 +1231,14 @@ namespace UtilORama4
             int ix = ni[0];
             if (ix > 2)
             {
-              EditChannelNode(node);
+              //! I suspect (?) that because this is cast, this is returning a copy, not a reference
+              DMXChannel chanOriginal = (DMXChannel)node.Tag;
+              EditChannel(chanOriginal);
+              //chanOriginal.Name = "This is the Original Channel, via the Node's Tag.";
+              //TreeNodeAdv parentNode = node.Parent;
+              //parentNode.Nodes.Clear();
+              //! Guess I suspected wrong.  Does appear to be reference.
+              //BuildTreeChannels(parentNode);
             }
           }
         }
@@ -1160,251 +1350,361 @@ namespace UtilORama4
 
     }
 
-    public void EditChannelNode(TreeNodeAdv node)
+    public bool EditChannel(DMXChannel chanOriginal)
     {
+      int q0 = 0;
+      int q1 = 0;
+      int q2 = 0;
+      int q3 = 0;
+      int q4 = 0;
+
+      // Return True if channel was (successfully) edited.
+      // Returns False if User Canceled the Edit dialog, or in case of an error.
+      bool success = false;
+      // Get the controller it is connnected to, in case that changes
+      DMXController ctlrOriginal = chanOriginal.DMXController;
+      q0 = ctlrOriginal.DMXChannels.Count();
+
+
+
       bool needSort = false;
-      DMXChannel channelToEdit = (DMXChannel)node.Tag;
-      DMXController oldCtlr = channelToEdit.DMXController;
-      //int oldOutput = channelToEdit.LOR4Output;
-      //int oldUnivNum = channelToEdit.UniverseNumber;
-      //int oldDMXaddr = channelToEdit.DMXAddress;
-      //DMXChannel channelClone = channelToEdit.Clone();
-      DMXChannel channelClone = new DMXChannel(channelToEdit);
-      channelClone.Editing = true;
-      frmChannel chanForm = new frmChannel(channelClone, universes);
-      //chanForm.AllChannels = AllChannels;
-      //chanForm.universes = universes;
-      //chanForm.deviceTypes = deviceTypes;
+      // Make a clone of it.  Edits will be made to the clone so in case of a 'Cancel' can revert to the original
+      DMXChannel chanModified = new DMXChannel(chanOriginal);
+      chanModified.Editing = true;
+      frmChannel chanForm = new frmChannel(chanModified, universes);
+
+      // For some strange reason I can't figure out---
+      // Closing the form sometimes triggers an exception!
       try
       {
-        // For some strange reason I can't figure out---
-        // Closing the form sometimes triggers an exception!
+        // Show the edit dialog, modal
         DialogResult dr = chanForm.ShowDialog(this);
-        if (dr == DialogResult.OK)
+        // Upon return from the edit dialog, did they Cancel, or Accept Changes
+        if (dr == DialogResult.OK)  // Clicked OK
         {
+          // Was anything even changed (on the channel)?
           if (chanForm.dirty)
           {
+            // Get the controller it is connnected to, in case that changes
+            //DMXController ctlrOriginal = chanOriginal.DMXController;
+            q1 = ctlrOriginal.DMXChannels.Count;
+            // Declare here, cuz will need later
+            TreeNodeAdv ctlrNode = (TreeNodeAdv)ctlrOriginal.Tag;
+            // Did the Controller change?
+            if (chanModified.DMXController.LetterID != ctlrOriginal.LetterID)
+            {
+              // Find old controller and remove the Original Channel
+              for (int c = 0; c < ctlrOriginal.DMXChannels.Count; c++)
+              {
+                if (chanOriginal.ID == ctlrOriginal.DMXChannels[c].ID)
+                {
+                  ctlrOriginal.DMXChannels.RemoveAt(c);
+                  c = ctlrOriginal.DMXChannels.Count; // Force loop exit
+                }
+              }
+              // Re-Sort the channels on the original controller
+              //! Probably not necessary, verify...
+              //ctlrOriginal.DMXChannels.Sort(); 
+              // Clear all the sub-nodes (channels) from the original controller node
+              //! Clear() METHOD NOT WORKING!
+              ctlrNode.Nodes.Clear();
+              //! OK, either the DMX Channel is NOT getting removed from the DMX Controller's channel list, OR--
+              //! The controller node in the tree is not clearing
+              // Rebuild the original controller node (without the moved channel)
+              BuildTreeChannels(ctlrNode);
+
+              // Fetch the new controller, that the channel was moved _TO_
+              DMXController ctlrMovedTo = chanModified.DMXController;
+              // And add the modified channel
+              ctlrMovedTo.DMXChannels.Add(chanModified);
+              // Re-Sort the controller channels (by number) to put the newly moved channel in proper position
+              ctlrMovedTo.DMXChannels.Sort();
+              // Fetch the node of the new controller
+              ctlrNode = (TreeNodeAdv)ctlrMovedTo.Tag;
+              // Clear all the sub-nodes (channels) of the new controller node
+              //# Handled below
+              //ctlrNode.Nodes.Clear();
+              // Rebuild it
+              //# Handled below
+              //BuildTreeChannels(ctlrNode);
+            } // End Controller Changed
+            else // Still on the same controller
+            { } // End Still on same controller
+            
+            //! BUG: Modifying a channel adds the new version but does NOT overwrite or delete the original
+            q2 = ctlrOriginal.DMXChannels.Count;
+            //! Both of these techniques appear to ADD the edited channel insteal of replacing it-----
+            //# Clone it back
+            chanOriginal.Clone(chanModified);
+            //# Or faster easier (?) just copy over the original--
+            //# But does not seem to work... why not?
+            //chanOriginal = chanModified;
+            q3 = ctlrOriginal.DMXChannels.Count;
+              
+            // And re-sort the controller in case the output number changed
+            ctlrOriginal.DMXChannels.Sort();
+            q4 = ctlrOriginal.DMXChannels.Count;
+
+            string foo1 = q0.ToString() + ", " + q1.ToString() + ", " + q2.ToString() + ", " + q3.ToString() + ", " + q4.ToString();
+            //DialogResult qr = MessageBox.Show(this, foo1, "Debug Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+
+            // Get the (original) controller node (Note: did not change)
+            ctlrNode = (TreeNodeAdv)ctlrOriginal.Tag;
+            // Clear the sub-nodes of the original controller node
+            ctlrNode.Nodes.Clear();
+            // And re-build it
+            BuildTreeChannels(ctlrNode);
+            // Database is now dirty, changes made
             MakeDirty(true);
-            channelToEdit.Clone(channelClone); // Copy back
-            UpdateChannelNode(node);
-            // Did output number change?
-            //if (channelToEdit.LOR4Output != channelClone.LOR4Output)
-            if ((channelToEdit.UniverseNumber != channelClone.UniverseNumber) ||
-                (channelToEdit.DMXAddress != channelClone.DMXAddress) ||
-                (channelToEdit.xLightsAddress != channelClone.xLightsAddress))
-            {
-              channelToEdit.DMXController.DMXChannels.Sort();
-              //node.Parent.Nodes.Sort(); // No Sort Function on Node Collection
-              needSort = true;
-            }
-            // Did we change controllers?
-            int newCtlrID = channelToEdit.DMXController.ID;
-            if (oldCtlr.ID != newCtlrID)
-            {
-              // Find old controller and remove this channelToEdit
-              for (int c = 0; c < oldCtlr.DMXChannels.Count; c++)
-              {
-                if (channelToEdit.ID == oldCtlr.DMXChannels[c].ID)
-                {
-                  oldCtlr.DMXChannels.RemoveAt(c);
-                  c = oldCtlr.DMXChannels.Count; // Force loop exit
-                }
-              }
-              node.Parent.Nodes.Remove(node);
-              for (int u = 0; u < universes.Count; u++)
-              //foreach(DMXUniverse universe in universes)
-              {
-                DMXUniverse universe = universes[u];
-                for (int c = 0; c < universe.DMXControllers.Count; c++)
-                //foreach(DMXController controller in universe.DMXControllers)
-                {
-                  DMXController controller = universe.DMXControllers[c];
-                  if (channelToEdit.DMXController.ID == controller.ID)
-                  {
-                    TreeNodeAdv newp = (TreeNodeAdv)controller.Tag;
-                    newp.Nodes.Add(node);
-                    // Force exit of both loops
-                    c = universe.DMXControllers.Count;
-                    u = universes.Count;
-                  }
-                }
-              }
-              channelToEdit.DMXController.DMXChannels.Add(channelToEdit);
-              channelToEdit.DMXController.DMXChannels.Sort();
-              needSort = true;
-            }
-            // So... Chan obj properly being moved, Resorting the tree is not reflecting that
-            //Try another technique....
-            if (needSort)
-            {
-              treeChannels.Nodes.Sort();
-            }
-          }
-        }
-        if (channelToEdit.BadName || channelToEdit.BadOutput)
-        {
-          node.TextColor = Color.Red;
-        }
-        else
-        {
-          node.TextColor = SystemColors.WindowText;
-        }
-      }
+            success = true;
+          } // End dirty
+        } // End DialogResult is OK
+      } // End Try
       catch (Exception ex)
       {
         // So when the effing form throws an effing excepttion for some effing reaason when it is effing closed
+        // Or some effing other thing goes wrong for some effing reason
         // Consider that a cancel
         int ln = LOR4.LOR4Admin.ExceptionLineNumber(ex);
         string msg = "Error on line " + ln.ToString() + "\r\n";
-        msg += ex.ToString() + " while exiting Channel editor " + channelToEdit.Name;
-        if (isWiz)
+        msg += ex.ToString() + " while exiting Channel editor " + chanOriginal.Name;
+        if (Fyle.isWiz || Fyle.InIDE)
         {
-          DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+          Fyle.BUG("EditChannelNode", ex);
+          //DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
       }
-      channelToEdit.Editing = false;
+      // Clear the editing flag (necessary if cloned back)
+      chanOriginal.Editing = false;
+      // Dispose of, clear, and remove Channel Editor form from memory
       chanForm.Dispose();
-
+      return success;
     }
 
     private void btnChannel_Click(object sender, EventArgs e)
     {
-      if (treeChannels.SelectedNode != null)
+      TreeNodeAdv node = treeChannels.SelectedNode;
+      if (node != null)
       {
-        if (treeChannels.SelectedNode.Tag.GetType() == typeof(DMXController))
+        //if (treeChannels.SelectedNode.Tag.GetType() == typeof(DMXController))
+        string funct = btnChannel.Text.Substring(0, 3);
+        if (funct == "Add")
         {
           TreeNodeAdv parentNode = treeChannels.SelectedNode;
           DMXController parentCtl = (DMXController)treeChannels.SelectedNode.Tag;
-
-          DMXChannel channel = new DMXChannel();
-          lastID++;
-          channel.ID = lastID;
-          channel.DMXController = parentCtl;
-          channel.Editing = true;
-          DMXController oldCtlr = channel.DMXController;
-          DMXChannel newChan = channel.Clone();
-          frmChannel chanForm = new frmChannel(newChan, universes);
-          //chanForm.AllChannels = AllChannels;
-          //chanForm.universes = universes;
-          //chanForm.deviceTypes = deviceTypes;
-          DialogResult dr = chanForm.ShowDialog(this);
-          if (dr == DialogResult.OK)
+          AddNewChannel(parentCtl);
+        } // End funct [first 3 characters of button text] was "Add";
+        if (funct == "Edi")
+        {
+          int[] ni = node.LeftImageIndices;
+          bool en = ((ni != TREEICONuniverse) && (ni != TREEICONcontroller));
+          if (en)
           {
-            if (chanForm.dirty)
-            {
-              // Replace the original with the clone
-              channel.Clone(newChan);
-              // Did we change controllers?
-              if (oldCtlr.ID != channel.DMXController.ID)
-              {
-                // Find old controller and remove this channel
-                for (int c = 0; c < oldCtlr.DMXChannels.Count; c++)
-                {
-                  if (channel.ID == oldCtlr.DMXChannels[c].ID)
-                  {
-                    oldCtlr.DMXChannels.RemoveAt(c);
-                    c = oldCtlr.DMXChannels.Count; // Force loop exit
-                  }
-                }
-                channel.DMXController.DMXChannels.Add(channel);
-                parentNode = (TreeNodeAdv)channel.DMXController.Tag;
-                channel.DMXController.DMXChannels.Sort();
-              }
-              AllChannels.Add(channel);
-              AllChannels.Sort();
-              TreeNodeAdv node = new TreeNodeAdv(channel.ToString());
-              parentNode.Nodes.Add(node);
-              node.Tag = channel;
-              int ImageIndex = LOR4.LOR4Admin.ColorIcon(imlTreeIcons, channel.Color);
-              int[] ico = { ImageIndex };
-              node.LeftImageIndices = ico;
-              channel.Tag = node;
-              MakeDirty(true);
-
-              //BuildTree();
-              treeChannels.Nodes.Sort();
-            }
-            treeChannels.SelectedNode = parentNode;
-            treeChannels.Focus();
-            channel.Editing = false;
-            chanForm.Dispose();
+            DMXChannel chanOriginal = (DMXChannel)node.Tag;
+            EditChannel(chanOriginal);
           }
+        } // End funct [first 4 characters of button text] was "Edit";
+      } // End a node was selected (treeChannels.selectedNode != null)
+    }
+
+    private void AddNewChannel(DMXController parentCtl)
+    { 
+      TreeNodeAdv parentNode = treeChannels.SelectedNode;
+
+      DMXChannel channel = new DMXChannel();
+      lastID++;
+      channel.ID = lastID;
+      channel.DMXController = parentCtl;
+      channel.Editing = true;
+      DMXController oldCtlr = channel.DMXController;
+      DMXChannel newChan = channel.Clone();
+      frmChannel chanForm = new frmChannel(newChan, universes);
+      //chanForm.AllChannels = AllChannels;
+      //chanForm.universes = universes;
+      //chanForm.deviceTypes = deviceTypes;
+      DialogResult dr = chanForm.ShowDialog(this);
+      if (dr == DialogResult.OK)
+      {
+        if (chanForm.dirty)
+        {
+          // Replace the original with the clone
+          channel.Clone(newChan);
+          // Did we change controllers?
+          if (oldCtlr.ID != channel.DMXController.ID)
+          {
+            // Find old controller and remove this channel
+            for (int c = 0; c < oldCtlr.DMXChannels.Count; c++)
+            {
+              if (channel.ID == oldCtlr.DMXChannels[c].ID)
+              {
+                oldCtlr.DMXChannels.RemoveAt(c);
+                c = oldCtlr.DMXChannels.Count; // Force loop exit
+              }
+            }
+            channel.DMXController.DMXChannels.Add(channel);
+            parentNode = (TreeNodeAdv)channel.DMXController.Tag;
+            channel.DMXController.DMXChannels.Sort();
+          }
+          AllChannels.Add(channel);
+          AllChannels.Sort();
+          TreeNodeAdv nodeNewChan = new TreeNodeAdv(channel.ToString());
+          parentNode.Nodes.Add(nodeNewChan);
+          nodeNewChan.Tag = channel;
+          int ImageIndex = LOR4.LOR4Admin.ColorIcon(imlTreeIcons, channel.Color);
+          int[] ico = { ImageIndex };
+          nodeNewChan.LeftImageIndices = ico;
+          channel.Tag = nodeNewChan;
+          MakeDirty(true);
+          UpdateStatus();
+
+          //BuildTree();
+          treeChannels.Nodes.Sort();
         }
-      }
+        treeChannels.SelectedNode = parentNode;
+        treeChannels.Focus();
+        channel.Editing = false;
+        chanForm.Dispose();
+      } // End user accepted changes on ChannelEdit form (clicked OK)
     }
 
     private void btnController_Click(object sender, EventArgs e)
     {
-      if (treeChannels.SelectedNode != null)
+      TreeNodeAdv selNode = treeChannels.SelectedNode;
+      if (selNode != null)
       {
-        if (treeChannels.SelectedNode.Tag.GetType() == typeof(DMXUniverse))
+        //if (treeChannels.SelectedNode.Tag.GetType() == typeof(DMXUniverse))
+        string funct = btnController.Text.Substring(0, 3);
+        if (funct == "Add")
         {
-          TreeNodeAdv uniNode = treeChannels.SelectedNode;
-          DMXUniverse parentUni = (DMXUniverse)uniNode.Tag;
+          //TODO: Make sure selected node is a Universe
+          //TODO: Or if not, traverse up the tree to find the parent universe
+          TreeNodeAdv parentNode = selNode;
+          DMXUniverse parentUni = (DMXUniverse)parentNode.Tag;
 
           DMXController ctlr = new DMXController();
           lastID++;
           ctlr.ID = lastID;
           ctlr.DMXUniverse = parentUni;
           ctlr.Editing = true;
-          DMXUniverse oldUniv = ctlr.DMXUniverse;
-          DMXController newCtlr = ctlr.Clone();
-          frmController ctlrForm = new frmController(newCtlr, universes);
+          //DMXUniverse oldUniv = ctlr.DMXUniverse;
+          //DMXController newCtlr = ctlr.Clone();
+          frmController ctlrForm = new frmController(ctlr, universes);
           //ctlrForm.AllChannels = AllChannels;
-          ctlrForm.universes = universes;
+          //ctlrForm.universes = universes;
           DialogResult dr = ctlrForm.ShowDialog(this);
           if (dr == DialogResult.OK)
           {
-            // Replace the original with the clone
-            ctlr = newCtlr;
-            // Did we change controllers?
-            if (oldUniv.ID != ctlr.DMXUniverse.ID)
+            // Find its universe (may have changed)
+            for (int u = 0; u < universes.Count; u++)
             {
-              // Find old controller and remove this channel
-              for (int u = 0; u < oldUniv.DMXControllers.Count; u++)
+              if (ctlr.UniverseNumber == universes[u].UniverseNumber)
               {
-                if (ctlr.ID == oldUniv.DMXControllers[u].ID)
-                {
-                  oldUniv.DMXControllers.RemoveAt(u);
-                  u = oldUniv.DMXControllers.Count; // Force loop exit
-                }
+                parentUni = universes[u];
+                u = universes.Count; // Force loop exit
               }
-              ctlr.DMXUniverse.DMXControllers.Add(ctlr);
-              ctlr.DMXUniverse.DMXControllers.Sort();
             }
+            parentUni.DMXControllers.Add(ctlr);
+            parentUni.DMXControllers.Sort();
+            parentNode = (TreeNodeAdv)parentUni.Tag;
+            // Create a bunch of channels for it
+            // 'Silver' color is a light grayish color #C0C0C0
+            //   Not the same as the 'Light Gray' color which is #D3D3D3
+            int ImageIndex = LOR4.LOR4Admin.ColorIcon(imlTreeIcons, Color.Silver);
+            int[] ico = { ImageIndex };
+            TreeNodeAdv ctlrNode = new TreeNodeAdv(ctlr.ToString());
+            ctlrNode.LeftImageIndices = TREEICONcontroller;
+            ctlrNode.Tag = ctlr;
+            ctlr.Tag = ctlrNode;
+            for (int chx = 1; chx <= ctlr.OutputCount; chx++)
+            {
+              string chName = "Spare " + ctlr.LetterID + chx.ToString("00");
+              DMXChannel dch = new DMXChannel(ctlr, chName);
+              dch.OutputNum = chx;
+              dch.Color = Color.Silver;
+              dch.DeviceType = GetTypeByName("Spare");
+              lastID++;
+              dch.ID = lastID;
+              dch.Active = true;
+              //dch.DMXController = ctlr; // Shouldn't need this, should be assigned at creation
+              dch.Dirty = true;
+              TreeNodeAdv chNode = new TreeNodeAdv(dch.Name);
+              chNode.LeftImageIndices = ico;
+              dch.Tag = chNode;
+              chNode.Tag = dch;
+              //ctlr.DMXChannels.Add(dch); // Shouldn't need this either
+              ctlrNode.Nodes.Add(chNode);
+              AllChannels.Add(dch);
+            }
+            ctlr.DMXChannels.Sort();
+            parentNode.Nodes.Add(ctlrNode);
+            //ImageIndex = TREEICONcontroller[0];
+            //ico = { ImageIndex};
+            //ico = TREEICONcontroller;
+            //node.LeftImageIndices = ico;
+            parentNode.Sort();
+
+            MakeDirty(true);
             //BuildTree();
-            treeChannels.Nodes.Sort();
           }
-          treeChannels.SelectedNode = uniNode;
           ctlr.Editing = false;
           ctlrForm.Dispose();
-        }
+        } // End funct [first 3 characters of button text] was "Add";
+        if (funct == "Edi")
+        {
+          int[] ni = selNode.LeftImageIndices;
+          bool en = (ni == TREEICONcontroller);
+          if (en)
+          {
+            EditControllerNode(selNode);
+          }
+
+        } // End funct [first 3 characters of button text] was "Edi";
       }
 
     }
 
     private void btnUniverse_Click(object sender, EventArgs e)
     {
-      DMXUniverse univ = new DMXUniverse();
-      lastID++;
-      univ.ID = lastID;
-      univ.Editing = true;
-      //DMXController oldCtlr = channel.DMXController;
-      DMXUniverse newUniv = univ.Clone();
-      frmUniverse univForm = new frmUniverse(newUniv, universes);
-      //univForm.AllChannels = AllChannels;
-      univForm.universes = universes;
-      DialogResult dr = univForm.ShowDialog(this);
-      if (dr == DialogResult.OK)
+      TreeNodeAdv node = treeChannels.SelectedNode;
+      string funct = btnUniverse.Text.Substring(0, 3);
+      if (funct == "Add")
       {
-        // Replace the original with the clone
-        univ = newUniv;
-        universes.Add(univ);
-        universes.Sort();
-        BuildTree();
-      }
-      univ.Editing = false;
-      univForm.Dispose();
+        DMXUniverse univ = new DMXUniverse();
+        lastID++;
+        univ.ID = lastID;
+        univ.Editing = true;
+        //DMXController oldCtlr = channel.DMXController;
+        DMXUniverse newUniv = univ.Clone();
+        frmUniverse univForm = new frmUniverse(newUniv, universes);
+        //univForm.AllChannels = AllChannels;
+        univForm.universes = universes;
+        DialogResult dr = univForm.ShowDialog(this);
+        if (dr == DialogResult.OK)
+        {
+          // Replace the original with the clone
+          univ = newUniv;
+          universes.Add(univ);
+          universes.Sort();
+          BuildTree();
+        }
+        univ.Editing = false;
+        univForm.Dispose();
+      } // End funct [first 3 characters of button text] was "Add";
+      if (funct == "Edi")
+      {
+        if (node != null)
+        {
+          int[] ni = node.LeftImageIndices;
+          bool en = (ni == TREEICONuniverse);
+          if (en)
+          {
+            EditUniverseNode(node);
+          }
+
+        }
+      } // End funct [first 4 characters of button text] was "Edi";
+
 
     }
 
@@ -1443,7 +1743,7 @@ namespace UtilORama4
 
       if (dirty)
       {
-        string msg = "LOR4Channel information has changed.\r\nSave?";
+        string msg = "Channel information has changed.\r\nSave?";
         DialogResult dr = MessageBox.Show(this, msg, "Save Changes?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
         if (dr == DialogResult.Cancel)
         {
@@ -1461,16 +1761,43 @@ namespace UtilORama4
       }
     }
 
-    private int ExportToSpreadsheet(string filePath)
+    private int ExportToSpreadsheet(string filePath, bool includeHeaders = false)
     {
+      int errs = 0;
+      string fooPath = filePath.Substring(0,filePath.Length - 1);
+      int q = fooPath.LastIndexOf("\\");
+      string parentPath = fooPath.Substring(0, q) + "\\";
+      string sprFile = parentPath + "ChannelSpreadsheet.csv";
+      dlgFileSave.FileName = "ChannelSpreadsheet.csv";
+      dlgFileSave.Filter = "Comma-Separated-Values *.csv|*.csv";
+      dlgFileSave.DefaultExt = "*.csv";
+      dlgFileSave.Title = "Export Channels to Spreadsheet";
+      dlgFileSave.CheckPathExists = true;
+      dlgFileSave.ValidateNames = true;
+      dlgFileSave.OverwritePrompt= true;
+      dlgFileSave.InitialDirectory = parentPath;
+      DialogResult dr = dlgFileSave.ShowDialog();
+      if (dr == DialogResult.OK)
+      {
+        errs = ExportSpreadsheet(dlgFileSave.FileName, includeHeaders);
+      }
+      else
+      {
+        errs = 999;
+      }
+      return errs;
+		}
+
+		private int ExportSpreadsheet(string fileName, bool includeHeaders = false)
+    { 
       int errs = 0;
       string uniName = "";
       string ctlName = "";
       string chnName = ""; // debugging exceptions
-      string sprFile = filePath + "ChannelSpreadsheet.csv";
+      //string sprFile = filePath + "ChannelSpreadsheet.csv";
       try
       {
-        CsvFileWriter writer = new CsvFileWriter(sprFile);
+        CsvFileWriter writer = new CsvFileWriter(fileName);
         CsvRow row = new CsvRow();
         // Create first line which is headers;
         row.Add("Universe");         // Field 0
@@ -1569,11 +1896,14 @@ namespace UtilORama4
           } // End Universe Catch
         } // End Universe LOR4Loop
         writer.Close();
-        Fyle.LaunchFile(sprFile);
+        Fyle.LaunchFile(fileName);
       } // End Writer Try
       catch (Exception ex)
       {
-
+        if (Fyle.DebugMode)
+        {
+          Fyle.BUG("ExportSpreadsheet", ex);
+        }
       } // end Writer Catch
 
       return errs;
@@ -1581,7 +1911,7 @@ namespace UtilORama4
 
     private void btnReport_Click(object sender, EventArgs e)
     {
-      ExportToSpreadsheet(dbPath);
+      ExportToSpreadsheet(dbPath, true);
     }
 
     private void treeChannels_KeyPress(object sender, KeyPressEventArgs e)
@@ -1668,7 +1998,7 @@ namespace UtilORama4
               }
               msg += chanCount.ToString() + " channels?";
               DialogResult dr = MessageBox.Show(this, msg, "Delete Universe?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
-              if ((universe.DMXControllers.Count > 3) || (chanCount > 23))
+              if ((universe.DMXControllers.Count > 2) || (chanCount > 23))
               {
                 msg = "That's a lot of controllers (" + universe.DMXControllers.Count.ToString() + ") and ";
                 msg += " a lot of channels (" + chanCount.ToString() + ").";
@@ -1716,6 +2046,21 @@ namespace UtilORama4
           }
         }
       }
+    }
+
+    public DMXDeviceType GetTypeByName(string theName)
+    {
+      string tn = theName.ToLower();
+      DMXDeviceType ret = null;
+      for (int i = 0; i < deviceTypes.Count; i++)
+      {
+        if (tn == deviceTypes[i].Name.ToLower())
+        {
+          ret = deviceTypes[i];
+          i = deviceTypes.Count; // Force exit of loop
+        }
+      }
+      return ret;
     }
 
     private int MatchUp(string seqFile, bool sortByName)
@@ -2455,6 +2800,7 @@ namespace UtilORama4
       return ret;
     }
 
+    /*
     private int FuzzyFindInList(string findName, List<iLOR4Member> members, ref double score)
     {
       int idx = -1;
@@ -2485,7 +2831,7 @@ namespace UtilORama4
 
       return idx;
     }
-
+    */
 
 
 
@@ -2505,8 +2851,51 @@ namespace UtilORama4
     private void btnSave_Click(object sender, EventArgs e)
     {
       SaveData(dbPath);
+
+      // Clear and Reload
+      //TODO: Shouldn't need this, but tree is not refreshing correctly
+      //TODO: Fix Tree Refresh after adds, deletes, edits, moves, etc.
+      ClearData();
+      LoadData(dbPath);
+
     }
 
+    private void btnRemove_Click(object sender, EventArgs e)
+    {
+      TreeNodeAdv node = treeChannels.SelectedNode;
+      if (node != null)
+      {
+        DMXChannel killChannel = (DMXChannel)node.Tag;
+        RemoveChannel(killChannel);
+      }
+    }
+
+    private bool RemoveChannel(DMXChannel channelToRemove)
+    {
+      // Returns True if channel successfully removed
+      bool success = false;
+      DMXController hostController = channelToRemove.DMXController;
+      int foundAt = -1;
+      for (int i = 0; i < hostController.DMXChannels.Count; i++)
+      {
+        if (hostController.DMXChannels[i].ID == channelToRemove.ID)
+        {
+          hostController.DMXChannels.RemoveAt(i);
+          foundAt = i;
+          i = hostController.DMXChannels.Count; // Break out of loop
+        }
+      }
+      if (foundAt >= 0)
+      {
+        TreeNodeAdv ctlrNode = (TreeNodeAdv)hostController.Tag;
+        ctlrNode.Nodes.Clear();
+        BuildTreeChannels(ctlrNode);
+        UpdateStatus();
+        success = true;
+
+      }
+      return success;
+    }
   }
 
   public class FuzzyList : IComparable<FuzzyList>

@@ -1,3 +1,5 @@
+using FileHelper;
+
 namespace UtilORama4
 {
 	internal static class Program
@@ -5,6 +7,7 @@ namespace UtilORama4
 		/// <summary>
 		///  The main entry point for the application.
 		/// </summary>
+		public static string Name = Fyle.ApplicationName;
 		[STAThread]
 		static void Main()
 		{

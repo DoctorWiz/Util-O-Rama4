@@ -24,7 +24,7 @@ namespace UtilORama4
 		public int minPrematchScore = 85;
 		public int minFinalMatchScore = 95;
 		public bool writeLog = true;
-
+		private Settings userSettings = Settings.Default;
 
 		public frmOptions()
 		{
@@ -108,20 +108,20 @@ namespace UtilORama4
 		private void frmOptions_Load(object sender, EventArgs e)
 		{
 			InitControls();
-			finalAlgorithms = Properties.Settings.Default.FuzzyFinalAlgorithms;
+			//finalAlgorithms = Properties.Settings.Default.FuzzyFinalAlgorithms;
 			SetFinalAlgorChecks(finalAlgorithms);
-			prematchAlgorithm = Properties.Settings.Default.FuzzyPrematchAlgorithm;
+			//prematchAlgorithm = Properties.Settings.Default.FuzzyPrematchAlgorithm;
 			SetPreCombo(prematchAlgorithm);
-			useFuzzy = Properties.Settings.Default.FuzzyUse;
+			useFuzzy = userSettings.FuzzyUse;
 			chkUseFuzzy.Checked = useFuzzy;
-			caseSensitive = Properties.Settings.Default.FuzzyCaseSensitive;
+			caseSensitive = userSettings.FuzzyCaseSensitive;
 			chkCase.Checked = caseSensitive;
-			writeLog = Properties.Settings.Default.FuzzyWriteLog;
+			writeLog = userSettings.FuzzyWriteLog;
 			chkLog.Checked = writeLog;
-			minPrematchScore = Properties.Settings.Default.FuzzyMinPrematch;
-			sldPrematch.Value = minPrematchScore;
+			//minPrematchScore = FuzzyFunctions.SUGGESTED_MIN_PREMATCH_SCORE; // Properties.Settings.Default.FuzzyMinPrematch;
+			//sldPrematch.Value = minPrematchScore;
 			lblPrematchValue.Text = minPrematchScore.ToString();
-			minFinalMatchScore = Properties.Settings.Default.FuzzyMinFinal;
+			//minFinalMatchScore = FuzzyFunctions.SUGGESTED_MIN_FINAL_SCORE; // Properties.Settings.Default.FuzzyMinFinal;
 			sldFinalMatch.Value = minFinalMatchScore;
 			lblFinalMatchValue.Text = minFinalMatchScore.ToString();
 		}
@@ -129,14 +129,14 @@ namespace UtilORama4
 		public void SaveOptions()
 		{
 			finalAlgorithms = ReadFinalChoices();
-			Properties.Settings.Default.FuzzyFinalAlgorithms = finalAlgorithms;
-			Properties.Settings.Default.FuzzyPrematchAlgorithm = prematchAlgorithm;
-			Properties.Settings.Default.FuzzyUse = chkUseFuzzy.Checked;
-			Properties.Settings.Default.FuzzyCaseSensitive = chkCase.Checked;
-			Properties.Settings.Default.FuzzyWriteLog = chkLog.Checked;
-			Properties.Settings.Default.FuzzyMinFinal = sldFinalMatch.Value;
-			Properties.Settings.Default.FuzzyMinPrematch = sldPrematch.Value;
-			Properties.Settings.Default.Save();
+			//Properties.Settings.Default.FuzzyFinalAlgorithms = finalAlgorithms;
+			//Properties.Settings.Default.FuzzyPrematchAlgorithm = prematchAlgorithm;
+			userSettings.FuzzyUse = chkUseFuzzy.Checked;
+			userSettings.FuzzyCaseSensitive = chkCase.Checked;
+			userSettings.FuzzyWriteLog = chkLog.Checked;
+			//Properties.Settings.Default.FuzzyMinFinal = sldFinalMatch.Value;
+			//Properties.Settings.Default.FuzzyMinPrematch = sldPrematch.Value;
+			userSettings.Save();
 		}
 
 		public long ReadFinalChoices()

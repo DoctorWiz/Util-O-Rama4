@@ -48,6 +48,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Reporter.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="desktop.ini" />
   </ItemGroup>
 
@@ -55,6 +59,32 @@
     <Compile Include="..\..\COMMON\CommaSeparatedValues\csv.cs" Link="csv.cs" />
     <Compile Include="..\..\COMMON\FileHelper\FileHelper.cs" Link="FileHelper.cs" />
     <Compile Include="..\..\COMMON\FormHelper\FormHelper.cs" Link="FormHelper.cs" />
+    <Compile Include="..\Common\Sequence4\Seq4Admin.cs" Link="Seq4Admin.cs" />
+    <Compile Include="..\Common\Sequence4\SeqChannel.cs" Link="SeqChannel.cs" />
+    <Compile Include="..\Common\Sequence4\SeqChannelGroup.cs" Link="SeqChannelGroup.cs" />
+    <Compile Include="..\Common\Sequence4\SeqCosmicDevice.cs" Link="SeqCosmicDevice.cs" />
+    <Compile Include="..\Common\Sequence4\SeqEnums.cs" Link="SeqEnums.cs" />
+    <Compile Include="..\Common\Sequence4\SeqMemberBase.cs" Link="SeqMemberBase.cs" />
+    <Compile Include="..\Common\Sequence4\SeqMemberBaseExtenderForNodes.cs" Link="SeqMemberBaseExtenderForNodes.cs" />
+    <Compile Include="..\Common\Sequence4\SeqMemberInterface.cs" Link="SeqMemberInterface.cs" />
+    <Compile Include="..\Common\Sequence4\SeqMembership.cs" Link="SeqMembership.cs" />
+    <Compile Include="..\Common\Sequence4\SeqRGBChannel.cs" Link="SeqRGBChannel.cs" />
+    <Compile Include="..\Common\Sequence4\SeqSubs.cs" Link="SeqSubs.cs" />
+    <Compile Include="..\Common\Sequence4\SeqTimingGrid.cs" Link="SeqTimingGrid.cs" />
+    <Compile Include="..\Common\Sequence4\SeqTrack.cs" Link="SeqTrack.cs" />
+    <Compile Include="..\Common\Sequence4\SeqTreeUtils.cs" Link="SeqTreeUtils.cs" />
+    <Compile Include="..\Common\Sequence4\Sequence4.cs" Link="Sequence4.cs" />
+    <Compile Include="..\Common\Sequence4\Viz4.cs" Link="Viz4.cs" />
+    <Compile Include="..\Common\Sequence4\VizChannel.cs" Link="VizChannel.cs" />
+    <Compile Include="..\Common\Sequence4\VizDrawObject.cs" Link="VizDrawObject.cs" />
+    <Compile Include="..\Common\Sequence4\VizGroup.cs" Link="VizGroup.cs" />
+    <Compile Include="..\Common\xUtils\xAdmin.cs" Link="xAdmin.cs" />
+    <Compile Include="..\Common\xUtils\xEffect.cs" Link="xEffect.cs" />
+    <Compile Include="..\Common\xUtils\xObjects.cs" Link="xObjects.cs" />
+    <Compile Include="..\Common\xUtils\xRGBEffects.cs" Link="xRGBEffects.cs" />
+    <Compile Include="..\Common\xUtils\xSequence.cs" Link="xSequence.cs" />
+    <Compile Include="..\Common\xUtils\xTimings.cs" Link="xTimings.cs" />
+		<!--
     <Compile Include="..\Common\Selections\Selections.cs" Link="Selections.cs" />
     <Compile Include="..\Common\Sequence4\Seq4Admin.cs" Link="Seq4Admin.cs" />
     <Compile Include="..\Common\Sequence4\SeqChannel.cs" Link="SeqChannel.cs" />
@@ -81,6 +111,7 @@
     <Compile Include="..\Common\xUtils\xRGBEffects.cs" Link="xRGBEffects.cs" />
     <Compile Include="..\Common\xUtils\xSequence.cs" Link="xSequence.cs" />
     <Compile Include="..\Common\xUtils\xTimings.cs" Link="xTimings.cs" />
+-->
   </ItemGroup>
 
   <ItemGroup>

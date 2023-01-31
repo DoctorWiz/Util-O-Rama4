@@ -250,7 +250,7 @@ namespace UtilORama4
 			ImBusy(true);
 			RestoreFormPosition();
 			GetTheControlsFromTheHeartOfTheSun();
-			tempPath = Fyle.GetUserTempPath();
+			tempPath = Fyle.GetUserTempPath;
 			bool valid = false;
 
 			ProcessCommandLine();
@@ -866,7 +866,7 @@ namespace UtilORama4
 			}
 			if (!ignoreRGB)
 			{
-				SelectNode(nOde, !m.Selected);
+				SelectNode(nOde, m.Selected);
 			}
 			//? Why doesn't this work?
 			//btnSaveSelections.Enabled = (selectionCount > 0);
@@ -1166,7 +1166,7 @@ namespace UtilORama4
 			//TODO: SaveSelectedChannels(writer, seq.Members);
 			foreach (LOR4Track track in seq.Tracks)
 			{
-				if (track.Selected)
+				if (track.Selected != CheckState.Unchecked)
 				{
 					SaveSelectedMember(writer, track);
 				}
@@ -1676,7 +1676,7 @@ namespace UtilORama4
 			for (int idx = 0; idx < members.Items.Count; idx++)
 			{
 				iLOR4Member child = members.Items[idx];
-				if ((!child.Selected) || (!ignoreSelected))
+				if ((child.Selected != CheckState.Unchecked) || (!ignoreSelected))
 				{
 					bestScore = 0D;
 					bestIndex = -1;
@@ -1876,9 +1876,9 @@ namespace UtilORama4
 			if (nOde.Tag != null)
 			{
 				iLOR4Member member = (iLOR4Member)nOde.Tag;
-				if (member.Selected != nOde.Checked)
+				if (member.Selected != nOde.CheckState)
 				{
-					int iC = TreeUtils.SelectMember(member, !member.Selected);
+					int iC = TreeUtils.SelectMember(member, member.Selected);
 					//selectionCount += iC;
 					IncrementSelectionCount(iC);
 				}

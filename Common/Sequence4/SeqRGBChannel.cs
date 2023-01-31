@@ -149,7 +149,7 @@ namespace LOR4
 			set { Color ignore = value; }
 		}
 
-		public override CheckState Selected
+		public override CheckState SelectedState
 		{
 			get
 			{
@@ -159,17 +159,17 @@ namespace LOR4
 				bool all = true;
 				bool some = false;
 				// Are ANY of the 3 subcolors selected?
-				if ((redChannel.Selected == CheckState.Checked) ||
-				 (redChannel.Selected == CheckState.Checked) ||
-				 (redChannel.Selected == CheckState.Checked))
+				if ((redChannel.SelectedState == CheckState.Checked) ||
+				 (redChannel.SelectedState == CheckState.Checked) ||
+				 (redChannel.SelectedState == CheckState.Checked))
 				{
 					// 'Some' must be true
 					some = true;
 				}
 				// Are ANY of them unselected?
-				if ((redChannel.Selected == CheckState.Unchecked) ||
-				 (redChannel.Selected == CheckState.Unchecked) ||
-				 (redChannel.Selected == CheckState.Unchecked))
+				if ((redChannel.SelectedState == CheckState.Unchecked) ||
+				 (redChannel.SelectedState == CheckState.Unchecked) ||
+				 (redChannel.SelectedState == CheckState.Unchecked))
 				{
 					// 'All' can't be true
 					all = false;
@@ -193,10 +193,10 @@ namespace LOR4
 			{
 				if (value != CheckState.Indeterminate)
 				{
-					base.Selected = value;
-					redChannel.Selected = value;
-					grnChannel.Selected = value;
-					bluChannel.Selected = value;
+					base.SelectedState = value;
+					redChannel.SelectedState = value;
+					grnChannel.SelectedState = value;
+					bluChannel.SelectedState = value;
 				}
 			}
 		}

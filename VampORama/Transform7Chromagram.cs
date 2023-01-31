@@ -367,17 +367,17 @@ namespace UtilORama4
         LOR4Channel ch;
         LOR4Effect ef;
 
-        Annotator.VampTrack.Selected = CheckState.Checked;
+        Annotator.VampTrack.SelectedState = CheckState.Checked;
 
         LOR4Timings tg = Annotator.GridOnsets;
         Annotator.VampTrack.timingGrid = tg;
-        tg.Selected = CheckState.Checked;
+        tg.SelectedState = CheckState.Checked;
         CreateChromaChannels(); // grp, "Chroma ", doGroups);
-        chromaGroup.Selected = CheckState.Checked;
+        chromaGroup.SelectedState = CheckState.Checked;
         if (tg == null)
         {
           Annotator.VampTrack.timingGrid = tg;
-          tg.Selected = CheckState.Checked;
+          tg.SelectedState = CheckState.Checked;
         }
         else
         {
@@ -387,7 +387,7 @@ namespace UtilORama4
             if (Annotator.Sequence.TimingGrids[tgs].SaveID == tg.SaveID)
             {
               Annotator.VampTrack.timingGrid = Annotator.Sequence.TimingGrids[tgs];
-              Annotator.Sequence.TimingGrids[tgs].Selected = CheckState.Checked;
+              Annotator.Sequence.TimingGrids[tgs].SelectedState = CheckState.Checked;
               tgs = Annotator.Sequence.TimingGrids.Count; // break loop
             }
           }

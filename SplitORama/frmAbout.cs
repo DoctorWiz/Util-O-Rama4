@@ -36,7 +36,7 @@ namespace UtilORama4
       appAbbr = appName.ToLower().Replace("-", "");
       string fooo = xLightsShowDirectory;
       if (fooo.Length > 3) xLightsInstalled = true;
-      fooo = LOR4Admin.DefaultSequencesPath;
+      //fooo = LOR4Admin.DefaultSequencesPath;
       if (fooo.Length > 3) lightORamaInstalled = true;
       if (xLightsInstalled && !lightORamaInstalled) // xLights Only
       {

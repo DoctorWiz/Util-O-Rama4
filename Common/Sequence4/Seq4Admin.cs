@@ -179,6 +179,8 @@ namespace LOR4
       return ret;
     }
 
+    // Use the EndSubstring function in Fyle - FileHelper
+    /*
     public static string EndSubstring(this string s, int length)
     {
       string r = "";
@@ -189,6 +191,7 @@ namespace LOR4
       return r;
 
     }
+    */
 
     public static int ContainsKey(string lineIn, string keyWord)
     {
@@ -396,7 +399,7 @@ namespace LOR4
         level = 0;
         LOR4Track theTrack = seq.Tracks[t];
         // Note the double negative here!  include it If it is selected or indeterminate
-        if (!selectedOnly || (theTrack.Selected != CheckState.Unchecked))
+        if (!selectedOnly || (theTrack.SelectedState != CheckState.Unchecked))
         {
           DisplayOrderBuildTrack(seq, seq.Tracks[t], level, ref count, ref savedIndexes, ref levels, selectedOnly, includeRGBchildren);
           //Array.Resize(ref savedIndexes, count + 1);
@@ -501,7 +504,7 @@ namespace LOR4
       string nodeText = theGroup.Name;
 
       // Note double negative!  Include it if selected or indeterminate
-      if (!selectedOnly || theGroup.Selected != CheckState.Unchecked)
+      if (!selectedOnly || theGroup.SelectedState != CheckState.Unchecked)
       {
         Array.Resize(ref savedIndexes, count + 1);
         Array.Resize(ref levels, count + 1);
@@ -565,7 +568,7 @@ namespace LOR4
       // const string ERRitem = ", Items #";
       // const string ERRline = ", Line #";
 
-      if (!selectedOnly || theDevice.Selected != CheckState.Unchecked)
+      if (!selectedOnly || theDevice.SelectedState != CheckState.Unchecked)
       {
         Array.Resize(ref savedIndexes, count + 1);
         Array.Resize(ref levels, count + 1);
@@ -624,7 +627,7 @@ namespace LOR4
       int c = 0;
       // Note double negative!  Include it if selected or indeterminate*
       //    *(Groups may be indeterminate, but channels never should)
-      if (!selectedOnly || theChannel.Selected != CheckState.Unchecked)
+      if (!selectedOnly || theChannel.SelectedState != CheckState.Unchecked)
       {
         Array.Resize(ref savedIndexes, count + 1);
         Array.Resize(ref levels, count + 1);
@@ -640,7 +643,7 @@ namespace LOR4
     {
       int c = 0;
 
-      if (!selectedOnly || theRGB.Selected != CheckState.Unchecked)
+      if (!selectedOnly || theRGB.SelectedState != CheckState.Unchecked)
       {
         Array.Resize(ref savedIndexes, count + 1);
         Array.Resize(ref levels, count + 1);

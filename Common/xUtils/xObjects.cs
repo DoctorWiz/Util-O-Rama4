@@ -29,7 +29,7 @@ namespace xLights22
 		xModelSubType MemberSubType
 		{ get; set; }
 
-		bool Selected
+		CheckState SelectedState
 		{ get; set; }
 
 		bool ExactMatch
@@ -59,7 +59,7 @@ namespace xLights22
 	{
 		protected string myName = "";
 		private Color myColor = Color.Black;
-		private bool isSelected = false;
+		private CheckState isSelected = CheckState.Unchecked;
 		private bool matchExact = false;
 		private object tagItem = null;
 		private int xaddress = -1;
@@ -112,7 +112,7 @@ namespace xLights22
 			set { modelSubType = value; }
 		}
 
-		public bool Selected
+		public CheckState SelectedState
 		{
 			get { return isSelected; }
 			set { isSelected = value; }

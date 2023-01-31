@@ -49,10 +49,12 @@ namespace UtilORama4
 			this.btnSave = new System.Windows.Forms.Button();
 			this.toolTips = new System.Windows.Forms.ToolTip(this.components);
 			this.btnExportSeq = new System.Windows.Forms.Button();
+			this.btnRemove = new System.Windows.Forms.Button();
 			this.imlTreeIcons = new System.Windows.Forms.ImageList(this.components);
 			this.treeChannels = new Syncfusion.Windows.Forms.Tools.TreeViewAdv();
 			this.dlgFileOpen = new System.Windows.Forms.OpenFileDialog();
 			this.dlgFileSave = new System.Windows.Forms.SaveFileDialog();
+			this.lblxChannel = new System.Windows.Forms.Label();
 			this.staStatus.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.picAboutIcon)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.treeChannels)).BeginInit();
@@ -138,7 +140,7 @@ namespace UtilORama4
 			// 
 			this.btnUniverse.Image = ((System.Drawing.Image)(resources.GetObject("btnUniverse.Image")));
 			this.btnUniverse.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.btnUniverse.Location = new System.Drawing.Point(472, 14);
+			this.btnUniverse.Location = new System.Drawing.Point(458, 14);
 			this.btnUniverse.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnUniverse.Name = "btnUniverse";
 			this.btnUniverse.Size = new System.Drawing.Size(88, 46);
@@ -151,7 +153,6 @@ namespace UtilORama4
 			// 
 			// btnController
 			// 
-			this.btnController.Enabled = false;
 			this.btnController.Image = ((System.Drawing.Image)(resources.GetObject("btnController.Image")));
 			this.btnController.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
 			this.btnController.Location = new System.Drawing.Point(458, 67);
@@ -271,7 +272,7 @@ namespace UtilORama4
 			this.btnExportSeq.Enabled = false;
 			this.btnExportSeq.Image = ((System.Drawing.Image)(resources.GetObject("btnExportSeq.Image")));
 			this.btnExportSeq.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.btnExportSeq.Location = new System.Drawing.Point(458, 357);
+			this.btnExportSeq.Location = new System.Drawing.Point(511, 358);
 			this.btnExportSeq.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.btnExportSeq.Name = "btnExportSeq";
 			this.btnExportSeq.Size = new System.Drawing.Size(88, 46);
@@ -281,6 +282,22 @@ namespace UtilORama4
 			this.toolTips.SetToolTip(this.btnExportSeq, "Export everything to a .CSV Spreadsheet");
 			this.btnExportSeq.UseVisualStyleBackColor = true;
 			this.btnExportSeq.Visible = false;
+			// 
+			// btnRemove
+			// 
+			this.btnRemove.Image = ((System.Drawing.Image)(resources.GetObject("btnRemove.Image")));
+			this.btnRemove.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.btnRemove.Location = new System.Drawing.Point(458, 331);
+			this.btnRemove.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.btnRemove.Name = "btnRemove";
+			this.btnRemove.Size = new System.Drawing.Size(88, 46);
+			this.btnRemove.TabIndex = 120;
+			this.btnRemove.Text = "Remove\r\nChannel";
+			this.btnRemove.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.toolTips.SetToolTip(this.btnRemove, "Export everything to a .CSV Spreadsheet");
+			this.btnRemove.UseVisualStyleBackColor = true;
+			this.btnRemove.Visible = false;
+			this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
 			// 
 			// imlTreeIcons
 			// 
@@ -373,12 +390,24 @@ namespace UtilORama4
 			// 
 			this.dlgFileOpen.FileName = "openFileDialog1";
 			// 
+			// lblxChannel
+			// 
+			this.lblxChannel.AutoSize = true;
+			this.lblxChannel.ForeColor = System.Drawing.SystemColors.HotTrack;
+			this.lblxChannel.Location = new System.Drawing.Point(60, 504);
+			this.lblxChannel.Name = "lblxChannel";
+			this.lblxChannel.Size = new System.Drawing.Size(16, 15);
+			this.lblxChannel.TabIndex = 121;
+			this.lblxChannel.Text = "...";
+			// 
 			// frmList
 			// 
 			this.AcceptButton = this.btnOK;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(570, 548);
+			this.Controls.Add(this.lblxChannel);
+			this.Controls.Add(this.btnRemove);
 			this.Controls.Add(this.btnExportSeq);
 			this.Controls.Add(this.treeChannels);
 			this.Controls.Add(this.btnSave);
@@ -437,6 +466,8 @@ namespace UtilORama4
 		private System.Windows.Forms.Button btnExportSeq;
 		private System.Windows.Forms.OpenFileDialog dlgFileOpen;
 		private System.Windows.Forms.SaveFileDialog dlgFileSave;
+		private Button btnRemove;
+		private Label lblxChannel;
 	}
 }
 

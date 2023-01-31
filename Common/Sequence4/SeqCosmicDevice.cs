@@ -67,18 +67,18 @@ namespace LOR4
 			}
 		}
 
-		public override CheckState Selected
+		public override CheckState SelectedState
 		{
 			get
 			{
-				return Members.Selected;
+				return Members.SelectedState;
 			}
 			set
 			{
 				if (value != CheckState.Indeterminate)
 				{
-					base.Selected = value;
-					Members.Selected = value;
+					base.SelectedState = value;
+					Members.SelectedState = value;
 				}
 			}
 		}
@@ -210,7 +210,7 @@ namespace LOR4
 				{
 					//TODO: Using saved index, look up Name of item being added
 					string sMsg = newPart.Name + " has already been added to this Channel Group '" + myName + "'.";
-					//DialogResult rs = MessageBox.Show(sMsg, "LOR4Channel Groups", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+					//DialogResult rs = MessageBox.Show(sMsg, "Channel Groups", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 					if (System.Diagnostics.Debugger.IsAttached)
 						//System.Diagnostics.Debugger.Break();
 						//TODO: Make this just a warning, put "add" code below into an else block

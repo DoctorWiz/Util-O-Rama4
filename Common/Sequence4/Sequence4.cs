@@ -248,7 +248,7 @@ namespace LOR4
 
 		}
 
-		public override CheckState Selected
+		public override CheckState SelectedState
 		{
 			// Reminder to myself-- Sequence.Members should only contain the tracks.
 			// Each Track.Members will contain its Channels, Groups, etc.
@@ -258,15 +258,15 @@ namespace LOR4
 			//		 will return .Indeterminate if some but not all descendants are selected.
 			//! Does not include timing grid selections.  Will not affect orphaned members.
 			get
-			{ return Members.Selected; }
+			{ return Members.SelectedState; }
 			// If Selected is set to .Indeterminate, absolutely nothing will happen, no selection states will change from current.
 			// If Selected is set to .Checked all Tracks and all their members and submembers [everything] will be selected recusively
 			// If Selected is set to .Unchecked it will clear and all selections (on everything, recursively)
 			//! Does not include timing grid selections.  Will not affect orphaned members.
 			set
 			{
-				base.Selected = value;
-				Members.Selected = value;
+				base.SelectedState = value;
+				Members.SelectedState = value;
 			}
 		}
 
@@ -360,7 +360,7 @@ namespace LOR4
 			string lineIn; // line read in (does not get modified)
 			string xmlInfo = "";
 			int li = LOR4Admin.UNDEFINED; // positions of certain key text in the line
-																		//LOR4Track trk = new LOR4Track();
+																		//LOR4Track trk = new Track();
 			LOR4SequenceType st = LOR4SequenceType.Undefined;
 			string creation = "";
 			DateTime modification;
@@ -388,7 +388,7 @@ namespace LOR4
 			info.file_created = File.GetCreationTime(existingFileName);
 			info.file_saved = File.GetLastWriteTime(existingFileName);
 
-			const string ERRproc = " in LOR4Sequence:ReadSequenceFile(";
+			const string ERRproc = " in Sequence:ReadSequenceFile(";
 			const string ERRgrp = "), on Line #";
 			// const string ERRitem = ", at position ";
 			const string ERRline = ", Code Line #";
@@ -487,7 +487,7 @@ namespace LOR4
 														//!///////////////////////////////////////
 														//!//  * * *  REGULAR CHANNELS  * * *  //
 														//!////////////////////////////////////
-														#region Regular LOR4Channel
+														#region Regular Channel
 														lastChannel = CreateNewChannel(lineIn);
 														// If line ends in "/> it has NO effects (includes slash)(empty channel)
 														//   (or if line ends in "> it does have effects (no slash)
@@ -498,7 +498,7 @@ namespace LOR4
 															{
 																ReadEffects(lastChannel);
 															}
-															#endregion // Regular LOR4Channel
+															#endregion // Regular Channel
 														} // end effects, or not
 													} // end is a channel
 													else // Not a regular channel
@@ -509,7 +509,7 @@ namespace LOR4
 															//!///////////////////////////////////
 															//!//  * * *  RGB CHANNELS  * * *  //
 															//!/////////////////////////////////
-															#region RGB LOR4Channel
+															#region RGB Channel
 															lastRGBchannel = CreateNewRGBChannel(lineIn);
 															lineIn = reader.ReadLine();
 															lineCount++;
@@ -540,9 +540,9 @@ namespace LOR4
 															lastRGBchannel.bluChannel = ch;
 															ch.rgbChild = LOR4RGBChild.Blue;
 															ch.rgbParent = lastRGBchannel;
-															#endregion // RGB LOR4Channel
+															#endregion // RGB Channel
 														}
-														else  // Not an RGB LOR4Channel
+														else  // Not an RGB Channel
 														{
 															//!/////////////////////////////////////
 															//!//  * * *  CHANNEL GROUPS  * * *  //
@@ -587,7 +587,7 @@ namespace LOR4
 																		//////////////////
 																		///   TRACK   ///
 																		////////////////
-																		#region LOR4Track
+																		#region Track
 																		lastTrack = CreateNewTrack(lineIn);
 																		//! TimingGrid SaveID gets set here during Parse() [When creating new Track from LIneIn)
 																		//!  But the Track won't get it's reference to the TimingGrid object until later.
@@ -595,7 +595,7 @@ namespace LOR4
 																		//!      CORRECTION: in Showtime version 3 and earlier, the timing grids DO come before
 																		//!       the tracks, version 4 they come after, but that doesn't affect refernceing them.
 																		ReadTrackMembers(lastTrack);
-																		#endregion // LOR4Track
+																		#endregion // Track
 																	}
 																	else // not a track
 																	{
@@ -683,7 +683,7 @@ namespace LOR4
 													StackTrace strx = new StackTrace(ex, true);
 													StackFrame sf = strx.GetFrame(strx.FrameCount - 1);
 													string emsg = ex.Message + LOR4Admin.CRLF;
-													emsg += "at LOR4Sequence.ReadSequence()" + LOR4Admin.CRLF;
+													emsg += "at Sequence.ReadSequence()" + LOR4Admin.CRLF;
 													emsg += "File:" + existingFileName + LOR4Admin.CRLF;
 													emsg += "on line " + lineCount.ToString() + " at position " + li.ToString() + LOR4Admin.CRLF;
 													emsg += "Line Is:" + lineIn + LOR4Admin.CRLF;
@@ -942,7 +942,7 @@ namespace LOR4
 				foreach (LOR4Track theTrack in Tracks)
 				{
 					// Note the double negative here- Include it if it is selected or indeterminate
-					if ((!selectedOnly) || (theTrack.Selected != CheckState.Unchecked))
+					if ((!selectedOnly) || (theTrack.SelectedState != CheckState.Unchecked))
 					{
 						if (theTrack.timingGrid == null)
 						{
@@ -968,7 +968,7 @@ namespace LOR4
 				{
 					LOR4Timings theGrid = TimingGrids[tg];
 					// Any remaining timing grids that are Selected, but not used by any Tracks
-					if ((!selectedOnly) || (theGrid.Selected != CheckState.Unchecked))
+					if ((!selectedOnly) || (theGrid.SelectedState != CheckState.Unchecked))
 					{
 						if (theGrid.AltSaveID == LOR4Admin.UNDEFINED)
 						{
@@ -1001,10 +1001,10 @@ namespace LOR4
 			lineOut = LOR4Admin.LEVEL1 + LOR4Admin.STFLD + LOR4Admin.TABLEchannel + LOR4Admin.PLURAL + LOR4Admin.FINFLD;
 			writer.WriteLine(lineOut);
 
-			// LOR4Loop thru Tracks and write the items (details) in the order they appear
+			// Loop thru Tracks and write the items (details) in the order they appear
 			foreach (LOR4Track theTrack in Tracks)
 			{
-				if ((!selectedOnly) || (theTrack.Selected != CheckState.Unchecked))
+				if ((!selectedOnly) || (theTrack.SelectedState != CheckState.Unchecked))
 				{
 					WriteListItems(theTrack.Members, selectedOnly, noEffects, LOR4MemberType.Items);
 				}
@@ -1019,7 +1019,7 @@ namespace LOR4
 			foreach (LOR4Timings theGrid in TimingGrids)
 			{
 				// TIMING GRIDS
-				if ((!selectedOnly) || (theGrid.Selected != CheckState.Unchecked))
+				if ((!selectedOnly) || (theGrid.SelectedState != CheckState.Unchecked))
 				{
 					//! Does not seem to be numbering them correctly, or saving them with the tracks
 					WriteTimingGrid(theGrid);
@@ -1031,10 +1031,10 @@ namespace LOR4
 			// TRACKS
 			lineOut = LOR4Admin.LEVEL1 + LOR4Admin.STFLD + TABLEtrack + LOR4Admin.PLURAL + LOR4Admin.FINFLD;
 			writer.WriteLine(lineOut);
-			// LOR4Loop thru Tracks
+			// Loop thru Tracks
 			foreach (LOR4Track theTrack in Tracks)
 			{
-				if ((!selectedOnly) || (theTrack.Selected != CheckState.Unchecked))
+				if ((!selectedOnly) || (theTrack.SelectedState != CheckState.Unchecked))
 				{
 					// Items in the track have already been written
 					// This writes the track info itself including its member list
@@ -1114,7 +1114,7 @@ namespace LOR4
 		{
 			if (!theRGBchannel.Written)
 			{
-				if ((!selectedOnly) || (theRGBchannel.Selected != CheckState.Unchecked))
+				if ((!selectedOnly) || (theRGBchannel.SelectedState != CheckState.Unchecked))
 				{
 					if ((itemTypes == LOR4MemberType.Items) || (itemTypes == LOR4MemberType.Channel))
 					{
@@ -1155,7 +1155,7 @@ namespace LOR4
 
 			if (!theGroup.Written)
 			{
-				if ((!selectedOnly) || (theGroup.Selected != CheckState.Unchecked))
+				if ((!selectedOnly) || (theGroup.SelectedState != CheckState.Unchecked))
 				{
 					if ((itemTypes == LOR4MemberType.Items) ||
 						(itemTypes == LOR4MemberType.Channel) ||
@@ -1284,7 +1284,7 @@ namespace LOR4
 
 				//id = Members.BySavedIndex[si];
 				itsName = item.Name;
-				if ((!selectedOnly) || (item.Selected != CheckState.Unchecked))
+				if ((!selectedOnly) || (item.SelectedState != CheckState.Unchecked))
 				{
 					if (!item.Written)
 					{
@@ -1327,9 +1327,9 @@ namespace LOR4
 									altSaveIndex = WriteChannelGroup((LOR4ChannelGroup)item, selectedOnly, noEffects, itemTypes);
 									altSIs.Add(altSaveIndex);
 									//}
-								} // if LOR4ChannelGroup, or not
-							} // if LOR4RGBChannel, or not
-						} // if regular LOR4Channel, or not
+								} // if ChannelGroup, or not
+							} // if RGBChannel, or not
+						} // if regular Channel, or not
 					} // if not Written
 				} // if Selected
 			} // loop thru items
@@ -1363,14 +1363,14 @@ namespace LOR4
 			}
 			lineOut += LOR4Admin.PLURAL + LOR4Admin.FINFLD + LOR4Admin.CRLF;
 
-			// LOR4Loop thru all items in membership list
+			// Loop thru all items in membership list
 			foreach (iLOR4Member subMember in subMembers.Items)
 			{
 				//if (subID.Name.IndexOf("lyphonic") > 0) System.Diagnostics.Debugger.Break();
 
 				if (subMember.Written)  // The item itself should have already been written!
 				{
-					CheckState sel = subMember.Selected;
+					CheckState sel = subMember.SelectedState;
 					// Note double negative here- will include if Checked or Interderminate
 					// Reminder: Order of precedence will evaluate != before ||
 					if (!selectedOnly || sel != CheckState.Unchecked)
@@ -1419,7 +1419,7 @@ namespace LOR4
 			if (!member.Written)
 			{
 				// Reminder: Order of precedence will evaluate != before ||
-				if (!selectedOnly || member.Selected != CheckState.Unchecked)
+				if (!selectedOnly || member.SelectedState != CheckState.Unchecked)
 				{
 					LOR4MemberType itemType = member.MemberType;
 					if (itemType == LOR4MemberType.Channel)
@@ -1429,22 +1429,22 @@ namespace LOR4
 						{
 							ret = WriteChannel(theChannel, noEffects);
 						} // end if type
-					} // end if LOR4Channel
+					} // end if Channel
 					else
 					{
 						if (itemType == LOR4MemberType.RGBChannel)
 						{
 							LOR4RGBChannel theRGB = (LOR4RGBChannel)member;
 							ret = WriteRGBchannel(theRGB, selectedOnly, noEffects, theType);
-						} // end if LOR4RGBChannel
+						} // end if RGBChannel
 						else
 						{
 							if (itemType == LOR4MemberType.ChannelGroup)
 							{
 								LOR4ChannelGroup theGroup = (LOR4ChannelGroup)member;
 								ret = WriteChannelGroup(theGroup, selectedOnly, noEffects, theType);
-							} // end if LOR4RGBChannel
-						} // LOR4RGBChannel, or not
+							} // end if RGBChannel
+						} // RGBChannel, or not
 					} // end a channel, or not
 				} // end Selected
 			} // end if not Written
@@ -1639,7 +1639,7 @@ namespace LOR4
 			// Any RGB Channels?
 			if (RGBchannels.Count > 0)
 			{
-				// LOR4Loop thru 'em and add their Name and info to the list
+				// Loop thru 'em and add their Name and info to the list
 				for (int rg = 0; rg < RGBchannels.Count; rg++)
 				{
 					Array.Resize(ref matches, q + 1);
@@ -1673,7 +1673,7 @@ namespace LOR4
 				// Sort by Name!
 				SortMatches(matches, 0, matches.Length);
 				int y = 0;
-				// LOR4Loop thru sorted list, comparing each member to the previous one
+				// Loop thru sorted list, comparing each member to the previous one
 				for (int ql = 1; ql < q; ql++)
 				{
 					if (matches[ql].Name == matches[q].Name)
@@ -1990,7 +1990,7 @@ namespace LOR4
 
 				}
 
-				// does this line mark the start of an LOR4Effect?
+				// does this line mark the start of an Effect?
 				//pos1 = lineIn.IndexOf(TABLEeffect + LOR4Admin.FIELDtype);
 				pos1 = LOR4Admin.ContainsKey(lineIn, TABLEeffect + LOR4Admin.FIELDtype);
 				if (pos1 > 0)
@@ -2184,7 +2184,7 @@ namespace LOR4
 			if (itemType == LOR4MemberType.RGBChannel)
 			{
 				LOR4RGBChannel rgbch = RGBchannels[oi];
-				// Get and write Red LOR4Channel
+				// Get and write Red Channel
 				//int ci = RGBchannels[oi].redChannelObjIndex;
 				lineOut = LOR4Admin.LEVEL2 + LOR4Admin.STFLD + LOR4Admin.TABLEchannel + LOR4Admin.ENDFLD;
 				writer.WriteLine(lineOut);
@@ -2193,7 +2193,7 @@ namespace LOR4
 				//lineOut = LOR4Admin.LEVEL2 + LOR4Admin.FINTBL + LOR4Admin.TABLEchannel + LOR4Admin.ENDFLD;
 				writer.WriteLine(lineOut);
 
-				// Get and write Green LOR4Channel
+				// Get and write Green Channel
 				//ci = RGBchannels[oi].grnChannelObjIndex;
 				lineOut = LOR4Admin.LEVEL2 + LOR4Admin.STFLD + LOR4Admin.TABLEchannel + LOR4Admin.ENDFLD;
 				writer.WriteLine(lineOut);
@@ -2201,7 +2201,7 @@ namespace LOR4
 				lineOut = LOR4Admin.LEVEL2 + LOR4Admin.FINTBL + LOR4Admin.TABLEchannel + LOR4Admin.ENDFLD;
 				writer.WriteLine(lineOut);
 
-				// Get and write Blue LOR4Channel
+				// Get and write Blue Channel
 				//ci = RGBchannels[oi].bluChannelObjIndex;
 				lineOut = LOR4Admin.LEVEL2 + LOR4Admin.STFLD + LOR4Admin.TABLEchannel + LOR4Admin.ENDFLD;
 				writer.WriteLine(lineOut);
@@ -2474,11 +2474,12 @@ namespace LOR4
 			return ret;
 		}
 
-		public LOR4Track FindTrack(string trackName, bool createIfNotFound = false)
+		/*
+		public LOR4Track OLD_FindTrack(string trackName, bool createIfNotFound = false)
 		{
 			LOR4Track ret = null;
 			// This no longer works because Tracks are no longer in AllMembers because they don't have a SavedIndex
-			//iLOR4Member member = AllMembers.FindByName(trackName, LOR4MemberType.Track, createIfNotFound);
+			//iLOR4Member member = AllMembers.FindByName(trackName, MemberType.Track, createIfNotFound);
 			iLOR4Member member = Members.FindByName(trackName, LOR4MemberType.Track, createIfNotFound);
 			if (member != null)
 			{
@@ -2486,12 +2487,13 @@ namespace LOR4
 			}
 			return ret;
 		}
+		*/
 
 		// LOR4Sequence.FindTimingGrid(name, create)
 		public LOR4Timings FindTimingGrid(string timingGridName, bool createIfNotFound = false)
 		{
 #if DEBUG
-			string msg = "LOR4Sequence.FindTimingGrid(" + timingGridName + ", " + createIfNotFound.ToString() + ")";
+			string msg = "Sequence.FindTimingGrid(" + timingGridName + ", " + createIfNotFound.ToString() + ")";
 			Debug.WriteLine(msg);
 #endif
 			LOR4Timings ret = null;
@@ -2633,7 +2635,7 @@ namespace LOR4
 			int outputCount = 0; // how many Channels (so far) are not controllerType None
 			int matches = 0; // how many matches (X2) have been found (so far)  NOTE: matches are returned in pairs
 											 //                                                                   So ret[even#] matches ret[odd#]
-											 // LOR4Loop thru all regular Channels
+											 // Loop thru all regular Channels
 			for (int ch = 0; ch < Channels.Count; ch++)
 			{
 				// if deviceType != None
@@ -2684,7 +2686,7 @@ namespace LOR4
 			if (Channels.Count > 1)
 			{
 				Array.Resize(ref names, Channels.Count);
-				// LOR4Loop thru all regular Channels
+				// Loop thru all regular Channels
 				for (int ch = 0; ch < Channels.Count; ch++)
 				{
 					names[ch] = Channels[ch].Name;
@@ -2722,7 +2724,7 @@ namespace LOR4
 			if (ChannelGroups.Count > 1)
 			{
 				Array.Resize(ref names, ChannelGroups.Count);
-				// LOR4Loop thru all regular Channels
+				// Loop thru all regular Channels
 				for (int chg = 0; chg < ChannelGroups.Count; chg++)
 				{
 					names[chg] = ChannelGroups[chg].Name;
@@ -2760,7 +2762,7 @@ namespace LOR4
 			if (RGBchannels.Count > 1)
 			{
 				Array.Resize(ref names, RGBchannels.Count);
-				// LOR4Loop thru all regular Channels
+				// Loop thru all regular Channels
 				for (int rch = 0; rch < RGBchannels.Count; rch++)
 				{
 					names[rch] = RGBchannels[rch].Name;
@@ -2799,7 +2801,7 @@ namespace LOR4
 			if (Tracks.Count > 1)
 			{
 				Array.Resize(ref names, Tracks.Count);
-				// LOR4Loop thru all regular Channels
+				// Loop thru all regular Channels
 				for (int tr = 0; tr < Tracks.Count; tr++)
 				{
 					names[tr] = Tracks[tr].Name;
@@ -2842,7 +2844,7 @@ namespace LOR4
 			if (nameCount > 1)
 			{
 				Array.Resize(ref names, nameCount);
-				// LOR4Loop thru all regular Channels
+				// Loop thru all regular Channels
 				for (int ch = 0; ch < Channels.Count; ch++)
 				{
 					names[ch] = Channels[ch].Name;
@@ -2859,7 +2861,7 @@ namespace LOR4
 				{
 					names[chg + Channels.Count + RGBchannels.Count] = ChannelGroups[chg].Name;
 					indexes[chg + Channels.Count + RGBchannels.Count] = ChannelGroups[chg].SavedIndex;
-				} // end Channel Group LOR4Loop
+				} // end Channel Group Loop
 
 				int trIdx;
 				for (int tr = 0; tr < Tracks.Count; tr++)
@@ -3036,14 +3038,38 @@ namespace LOR4
 				}
 				tr.timingGrid = TimingGrids[0];
 			}
-			// Clear the AltSavedIndex which was temporarily holding the SaveID of the LOR4Timings
+			// Clear the AltSavedIndex which was temporarily holding the SaveID of the Timings
 			tr.AltID = LOR4Admin.UNDEFINED;
 			myCentiseconds = Math.Max(myCentiseconds, tr.Centiseconds);
 			//? AllMembers.Add(tr);
 			Members.Add(tr);
 			return tr;
 		}
-
+		
+		public LOR4Track	NEWFindTrack(string trackName, bool createIfNotFound = false)
+		{
+			LOR4Track ret = null;
+			int ti = LOR4Admin.UNDEFINED;
+			string tName = trackName.ToLower();
+			for(int tr = 0; tr < Tracks.Count; tr++)
+			{
+				if (Tracks[tr].Name.ToLower() == tName)
+				{
+					ti = tr;
+					ret = Tracks[tr];
+					tr = Tracks.Count; // Force exit of loop
+				}
+			}
+			if (ret == null)
+			{
+				if (createIfNotFound)
+				{
+					ret = CreateNewTrack(trackName);
+				}
+			}
+			return ret;
+		}
+		
 		public LOR4Timings CreateNewTimingGrid(string lineIn)
 		{
 			LOR4Timings tg = new LOR4Timings(this, lineIn);
@@ -3055,10 +3081,35 @@ namespace LOR4
 			myCentiseconds = Math.Max(myCentiseconds, tg.Centiseconds);
 			//Members.Add(tg);
 			return tg;
+			MakeDirty();
 		}
 
-		// LOR4Sequence.CreateTimingGrid(name)
-		public override void MakeDirty(bool dirtyState)
+		public LOR4Timings FindGrid(string gridName, bool createIfNotFound = false)
+		{
+			LOR4Timings ret = null;
+			int gi = LOR4Admin.UNDEFINED;
+			string gName = gridName.ToLower();
+			for (int gr=0; gr< TimingGrids.Count; gr++)
+			{
+				if (TimingGrids[gr].Name.ToLower() == gName)
+				{
+					gi = gr;
+					ret = TimingGrids[gr];
+					gr = TimingGrids.Count; // Force exit of loop
+				}
+			}
+			if (ret == null)
+			{
+				if (createIfNotFound)
+				{
+					ret = CreateNewTimingGrid(gridName);
+				}
+			}
+			return ret;
+
+		}
+		// Sequence.CreateTimingGrid(name)
+		public override void MakeDirty(bool dirtyState = true)
 		{
 			if (dirtyState)
 			{
@@ -3284,7 +3335,7 @@ namespace LOR4
 								last = Channels[i].effects[e].endCentisecond;
 								if (last > LOR4Admin.MAXCentiseconds)
 								{
-									string m = "WARNING!  Last LOR4Effect on Channel " + Channels[i].Name + " is past 60 minutes!";
+									string m = "WARNING!  Last Effect on Channel " + Channels[i].Name + " is past 60 minutes!";
 									Fyle.WriteLogEntry(m, "Warning");
 									if (Debugger.IsAttached)
 									{
@@ -3306,7 +3357,7 @@ namespace LOR4
 				}
 				return last;
 			}
-		} // End Last LOR4Effect
+		} // End Last Effect
 
 		public int LastFreeformTiming
 		{

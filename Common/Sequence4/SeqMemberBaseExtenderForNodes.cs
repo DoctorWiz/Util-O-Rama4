@@ -34,7 +34,7 @@ namespace LOR4
     public virtual ListViewItem ListViewItem
     { get { return myListViewItem; } set { myListViewItem = value; } }
 
-    public virtual CheckState Selected
+    public virtual CheckState SelectedState
     {
       get { return myCheckState; }
       set

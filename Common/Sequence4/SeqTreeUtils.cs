@@ -104,7 +104,7 @@ namespace LOR4
 			TreeNodeAdv trackNode = new TreeNodeAdv(nodeText);
 			trackNode.Tag = track;
 			trackNode.LeftImageIndices = ICONtrack;
-			trackNode.CheckState = track.Selected;
+			trackNode.CheckState = track.SelectedState;
 			baseNodes.Add(trackNode);
 
 			baseNodes = trackNode.Nodes;
@@ -131,7 +131,7 @@ namespace LOR4
 						// Note the double-double negative--  Include if selectedOnly is false (thus, include everything)
 						// Or include if not-not selected (if selected, or indterminate)
 						// Reminder: Order of precedence will process the != before the ||
-						if (memGrp.Selected != CheckState.Unchecked || !selectedOnly)
+						if (memGrp.SelectedState != CheckState.Unchecked || !selectedOnly)
 						{
 							TreeNodeAdv groupNode = TreeAddGroup(seq, baseNodes, memGrp, selectedOnly, includeRGBchildren, memberTypes);
 							//qlist = nodesBySI[si];
@@ -145,7 +145,7 @@ namespace LOR4
 						LOR4Cosmic memDev = (LOR4Cosmic)member;
 						//int inclCount = memDev.Members.DescendantCount(selectedOnly, inclChan, inclRGB, includeRGBchildren);
 						//if (inclCount > 0)
-						if (memDev.Selected != CheckState.Unchecked || !selectedOnly) ;
+						if (memDev.SelectedState != CheckState.Unchecked || !selectedOnly) ;
 						{
 							TreeNodeAdv cosmicNode = TreeAddCosmic(seq, baseNodes, memDev, selectedOnly, includeRGBchildren, memberTypes);
 							//qlist = nodesBySI[si];
@@ -293,7 +293,7 @@ namespace LOR4
 				groupNode.Tag = group;
 				groupNode.LeftImageIndices = ICONchannelGroup;
 				//groupNode.SelectedImageKey = ICONchannelGroup;
-				groupNode.CheckState = group.Selected;
+				groupNode.CheckState = group.SelectedState;
 				baseNodes = groupNode.Nodes;
 				nodeList.Add(groupNode);
 			}
@@ -316,7 +316,7 @@ namespace LOR4
 					if ((memberTypes & LOR4SeqEnums.MEMBER_Channel) > 0) inclChan = true;
 					bool inclRGB = false;
 					if ((memberTypes & LOR4SeqEnums.MEMBER_RGBchannel) > 0) inclRGB = true;
-					if (memGrp.Selected != CheckState.Unchecked || !selectedOnly)
+					if (memGrp.SelectedState != CheckState.Unchecked || !selectedOnly)
 					{
 						TreeNodeAdv subGroupNode = TreeAddGroup(seq, baseNodes, memGrp, selectedOnly, includeRGBchildren, memberTypes);
 						//qlist = nodesBySI[si];
@@ -331,7 +331,7 @@ namespace LOR4
 					if ((memberTypes & LOR4SeqEnums.MEMBER_Channel) > 0) inclChan = true;
 					bool inclRGB = false;
 					if ((memberTypes & LOR4SeqEnums.MEMBER_RGBchannel) > 0) inclRGB = true;
-					if (memDev.Selected != CheckState.Unchecked || !selectedOnly)
+					if (memDev.SelectedState != CheckState.Unchecked || !selectedOnly)
 					{
 						TreeNodeAdv subGroupNode = TreeAddCosmic(seq, baseNodes, memDev, selectedOnly, includeRGBchildren, memberTypes);
 						//qlist = nodesBySI[si];
@@ -418,7 +418,7 @@ namespace LOR4
 				nodeList.Add(deviceNode);
 				deviceNode.LeftImageIndices = ICONcosmicDevice;
 				//deviceNode.SelectedImageKey = ICONcosmicDevice;
-				deviceNode.CheckState = device.Selected;
+				deviceNode.CheckState = device.SelectedState;
 				baseNodes = deviceNode.Nodes;
 			}
 			//List<TreeNodeAdv> qlist;
@@ -441,7 +441,7 @@ namespace LOR4
 					if ((memberTypes & LOR4SeqEnums.MEMBER_Channel) > 0) inclChan = true;
 					bool inclRGB = false;
 					if ((memberTypes & LOR4SeqEnums.MEMBER_RGBchannel) > 0) inclRGB = true;
-					if (memGrp.Selected != CheckState.Unchecked || !selectedOnly)
+					if (memGrp.SelectedState != CheckState.Unchecked || !selectedOnly)
 					{
 						TreeNodeAdv subGroupNode = TreeAddGroup(seq, baseNodes, memGrp, selectedOnly, includeRGBchildren, memberTypes);
 						//qlist = nodesBySI[si];
@@ -456,7 +456,7 @@ namespace LOR4
 					if ((memberTypes & LOR4SeqEnums.MEMBER_Channel) > 0) inclChan = true;
 					bool inclRGB = false;
 					if ((memberTypes & LOR4SeqEnums.MEMBER_RGBchannel) > 0) inclRGB = true;
-					if (memDev.Selected != CheckState.Unchecked || !selectedOnly)
+					if (memDev.SelectedState != CheckState.Unchecked || !selectedOnly)
 					{
 						TreeNodeAdv subGroupNode = TreeAddCosmic(seq, baseNodes, memDev, selectedOnly, includeRGBchildren, memberTypes);
 						//qlist = nodesBySI[si];
@@ -540,8 +540,8 @@ namespace LOR4
 			}
 			channelNode.Tag = channel;
 			nodeList.Add(channelNode);
-			//channelNode.ImageIndex = imlTreeIcons.Images.IndexOfKey("LOR4Channel");
-			//channelNode.SelectedImageIndex = imlTreeIcons.Images.IndexOfKey("LOR4Channel");
+			//channelNode.ImageIndex = imlTreeIcons.Images.IndexOfKey("Channel");
+			//channelNode.SelectedImageIndex = imlTreeIcons.Images.IndexOfKey("Channel");
 			//channelNode.ImageKey = ICONchannel;
 			//channelNode.SelectedImageKey = ICONchannel;
 
@@ -551,7 +551,7 @@ namespace LOR4
 			int[] colorIcon = new int[] { iconIndex };
 			channelNode.LeftImageIndices = colorIcon;
 			//channelNode.SelectedImageIndex = iconIndex;
-			channelNode.CheckState = channel.Selected;
+			channelNode.CheckState = channel.SelectedState;
 
 			return channelNode;
 		}
@@ -583,7 +583,7 @@ namespace LOR4
 				nodeIndex++;
 				channelNode.LeftImageIndices = ICONrgbChannel;
 				//channelNode.SelectedImageKey = ICONrgbChannel;
-				channelNode.CheckState = rgbChannel.Selected;
+				channelNode.CheckState = rgbChannel.SelectedState;
 				if (rgbChannel.Nodes == null)
 				{
 					nodeList = new List<TreeNodeAdv>();
@@ -604,7 +604,7 @@ namespace LOR4
 					colorNode = new TreeNodeAdv(nodeText);
 					nodeIndex++;
 					colorNode.LeftImageIndices = ICONredChannel;
-					colorNode.CheckState = rgbChannel.redChannel.Selected;
+					colorNode.CheckState = rgbChannel.redChannel.SelectedState;
 					channelNode.Nodes.Add(colorNode);
 					if (rgbChannel.redChannel.Nodes == null)
 					{
@@ -623,7 +623,7 @@ namespace LOR4
 					colorNode = new TreeNodeAdv(nodeText);
 					nodeIndex++;
 					colorNode.LeftImageIndices = ICONgrnChannel;
-					colorNode.CheckState = rgbChannel.grnChannel.Selected;
+					colorNode.CheckState = rgbChannel.grnChannel.SelectedState;
 					channelNode.Nodes.Add(colorNode);
 					if (rgbChannel.grnChannel.Nodes == null)
 					{
@@ -642,7 +642,7 @@ namespace LOR4
 					colorNode = new TreeNodeAdv(nodeText);
 					nodeIndex++;
 					colorNode.LeftImageIndices = ICONbluChannel;
-					colorNode.CheckState = rgbChannel.bluChannel.Selected;
+					colorNode.CheckState = rgbChannel.bluChannel.SelectedState;
 					channelNode.Nodes.Add(colorNode);
 					if (rgbChannel.bluChannel.Nodes == null)
 					{
@@ -716,7 +716,7 @@ namespace LOR4
 		{
 			int changeCount = 0;
 			// Did it even change?
-			if (member.Selected != select)
+			if (member.SelectedState != select)
 			{
 				// Create stub nodelist
 				List<TreeNodeAdv> nodeList = null;
@@ -804,7 +804,7 @@ namespace LOR4
 					} // End RGB, or not
 				} // End member is a channel, or not
 					// Select the member itself
-				member.Selected = select;
+				member.SelectedState = select;
 			} // End Did It Change
 
 			return changeCount;
@@ -819,7 +819,7 @@ namespace LOR4
 				{
 					iLOR4Member m = (iLOR4Member)childNode.Tag;
 					// Note the double negative, returns true if Selected = Checked OR Selected = Indeterminite
-					ret = !(m.Selected != CheckState.Checked);
+					ret = !(m.SelectedState != CheckState.Checked);
 					if (ret)
 					{
 						break;

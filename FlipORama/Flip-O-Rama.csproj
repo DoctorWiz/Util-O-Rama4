@@ -38,6 +38,14 @@
 		<Version>4.6.0.2</Version>
 		<WebPage>http://wizlights.com/utilorama/fliporama/default.html</WebPage>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>$(DefineConstants)TRACE;TREENODES</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>$(DefineConstants)TRACE;TREENODES</DefineConstants>
+  </PropertyGroup>
 	<ItemGroup>
 		<None Remove="desktop.ini" />
 	</ItemGroup>

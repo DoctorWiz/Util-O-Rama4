@@ -15,302 +15,305 @@ using System.Linq.Expressions;
 
 namespace UtilORama4
 {
-  public partial class frmVamp //: Form
-  {
-    public LOR4Sequence seq = Annotator.Sequence;
-    private bool doGroups = true;
-    private bool useRampsPoly = false;
-    private bool useRampsBeats = false;
-    private LOR4Track vampTrack = null;
-    //private int centiseconds = 0;
-    private string fileSeqName = "";
-    private MRUoRama mruSequences = new MRUoRama(MRUoRama.FileType.Sequences, "Vamp-O-Rama");
+	public partial class frmVamp //: Form
+	{
+		public LOR4Sequence seq = Annotator.Sequence;
+		private bool doGroups = true;
+		private bool useRampsPoly = false;
+		private bool useRampsBeats = false;
+		private LOR4Track vampTrack = null;
+		//private int centiseconds = 0;
+		private string fileSeqName = "";
+		private MRUoRama mruSequences = new MRUoRama(MRUoRama.FileType.Sequences, "Vamp-O-Rama");
 
-    private bool SaveAsNewSequence()
-    {
-      bool success = false;
-      string filter = "Musical Sequence *.lms|*.lms";
-      string idr = LOR4Admin.DefaultSequencesPath;
+		private bool SaveAsNewSequence()
+		{
+			bool success = false;
+			string filter = "Musical Sequence *.lms|*.lms";
+			string idr = LOR4Admin.DefaultSequencesPath;
 
-      string ifile = Path.GetFileNameWithoutExtension(fileCurrent);
-      if (ifile.Length < 2)
-      {
-        //ifile = seq.info.music.Title + " by " + seq.info.music.Artist;
-        ifile = audioData.Title + " by " + audioData.Artist;
-      }
-      ifile = Fyle.FixInvalidFilenameCharacters(ifile);
-      ifile += ".lms";
+			string ifile = Path.GetFileNameWithoutExtension(fileCurrent);
+			if (ifile.Length < 2)
+			{
+				//ifile = seq.info.music.Title + " by " + seq.info.music.Artist;
+				ifile = audioData.Title + " by " + audioData.Artist;
+			}
+			ifile = Fyle.FixInvalidFilenameCharacters(ifile);
+			ifile += ".lms";
 
-      dlgFileSave.Filter = filter;
-      dlgFileSave.InitialDirectory = idr;
-      dlgFileSave.FileName = ifile;
-      dlgFileSave.FilterIndex = 1;
-      dlgFileSave.OverwritePrompt = false;
-      dlgFileSave.Title = "Save Sequence As...";
-      dlgFileSave.ValidateNames = true;
-      DialogResult result = dlgFileSave.ShowDialog(this);
-      if (result == DialogResult.OK)
-      {
-        DialogResult ow = Fyle.SafeOverwriteFile(dlgFileSave.FileName);
-        if (ow == DialogResult.Yes)
-        {
-          ImBusy(true);
-          fileSeqName = dlgFileSave.FileName;
-          txtSeqName.Text = Path.GetFileNameWithoutExtension(fileSeqName);
-          LOR4Sequence newSeq = CreateNewSequence(fileSeqName);
-          //Annotator.Init(newSeq);
-          seq.info.author = LOR4Admin.DefaultAuthor;
-          //seq.info.music.Album = audioData.Album;
-          //seq.info.music.Artist = audioData.Artist;
-          //seq.info.music.Title = audioData.Title;
-          //seq.info.music.File = fileAudioLast;
-          //int cs = (int)Math.Round(Annotator.songTimeMS / 10D);
-          //centiseconds = cs;
-          //seq.Centiseconds = cs;
-          //Annotator.TotalCentiseconds = cs;
-          //ImportVampsToSequence();
+			dlgFileSave.Filter = filter;
+			dlgFileSave.InitialDirectory = idr;
+			dlgFileSave.FileName = ifile;
+			dlgFileSave.FilterIndex = 1;
+			dlgFileSave.OverwritePrompt = false;
+			dlgFileSave.Title = "Save Sequence As...";
+			dlgFileSave.ValidateNames = true;
+			DialogResult result = dlgFileSave.ShowDialog(this);
+			if (result == DialogResult.OK)
+			{
+				DialogResult ow = Fyle.SafeOverwriteFile(dlgFileSave.FileName);
+				if (ow == DialogResult.Yes)
+				{
+					ImBusy(true);
+					fileSeqName = dlgFileSave.FileName;
+					txtSeqName.Text = Path.GetFileNameWithoutExtension(fileSeqName);
+					LOR4Sequence newSeq = CreateNewSequence(fileSeqName);
+					//Annotator.Init(newSeq);
+					seq.info.author = LOR4Admin.DefaultAuthor;
+					//seq.info.music.Album = audioData.Album;
+					//seq.info.music.Artist = audioData.Artist;
+					//seq.info.music.Title = audioData.Title;
+					//seq.info.music.File = fileAudioLast;
+					//int cs = (int)Math.Round(Annotator.songTimeMS / 10D);
+					//centiseconds = cs;
+					//seq.Centiseconds = cs;
+					//Annotator.TotalCentiseconds = cs;
+					//ImportVampsToSequence();
 
-          int tc = Annotator.Sequence.Tracks.Count;
-
-
-          ExportSelectedVampsToLOR();
-          success = SaveSequence(fileSeqName);
+					int tc = Annotator.Sequence.Tracks.Count;
 
 
-          tc = Annotator.Sequence.Tracks.Count;
-
-          //ImBusy(false);
-          if (success)
-          {
-            if (chkAutolaunch.Checked)
-            {
-              System.Diagnostics.Process.Start(fileSeqName);
-            }
-          }
+					ExportSelectedVampsToLOR();
+					success = SaveSequence(fileSeqName);
 
 
-        }
-      }
-      //btnBrowseSequence.Focus();
-      return success;
-    }
+					tc = Annotator.Sequence.Tracks.Count;
 
-    private bool SaveInExistingSequence()
-    {
-      bool success = false;
-      string filt = "Musical Sequences *.lms|*lms";
-      string idir = LOR4Admin.DefaultSequencesPath;
-      string ifl = txtSeqName.Text.Trim();
-      string theFile = "";
-      if (Fyle.ValidFilename(ifl, true, false))
-      {
-        idir = Path.GetDirectoryName(ifl);
-        if (Fyle.ValidFilename(ifl, true, true))
-        {
-          if (Path.GetExtension(ifl.ToLower()) == "lms")
-          {
-            theFile = Path.GetFileName(ifl);
-          }
-        }
-      }
-      else
-      {
-        // Keep default sequence path
-      }
+					//ImBusy(false);
+					if (success)
+					{
+						if (chkAutolaunch.Checked)
+						{
+							System.Diagnostics.Process.Start(fileSeqName);
+						}
+					}
 
 
-      dlgFileOpen.Filter = filt;
-      dlgFileOpen.FilterIndex = 2;    //! Temporary?  Set back to 1 and/or change filter string?
-      dlgFileOpen.InitialDirectory = idir;
-      //dlgFileOpen.FileName = Properties.Settings.Default.fileSeqLast;
+				}
+			}
+			//btnBrowseSequence.Focus();
+			return success;
+		}
 
-      DialogResult dr = dlgFileOpen.ShowDialog(this);
-      if (dr == DialogResult.OK)
-      {
-        fileCurrent = dlgFileOpen.FileName;
-        txtSeqName.Text = Path.GetFileName(fileCurrent);
-        string ex = Path.GetExtension(fileCurrent).ToLower();
-        // If they picked an existing musical sequence
-        if (ex == ".lms")
-        {
-          LOR4Sequence existSeq = new LOR4Sequence(fileCurrent);
-          seq = existSeq;
-          Annotator.Init(existSeq);
-          //fileAudioOriginal = seq.info.music.File;
-          //txtFileAudio.Text = Path.GetFileNameWithoutExtension(fileAudioOriginal);
-          grpAudio.Text = " Original Audio File ";
-          btnBrowseAudio.Text = "Analyze";
-          //fileSeqCur = fileCurrent;
-          //fileChanCfg = "";
-          // Add to Sequences MRU
-
-          //centiseconds = SequenceFunctions.ms2cs(audioData.Duration);
-          int cs = (int)Math.Round(Annotator.songTimeMS / 10D);
-          cs = Math.Max(cs, existSeq.Centiseconds);
-          //centiseconds = cs;
-          existSeq.Centiseconds = cs;
-
-          //! ImportVampsToSequence();
-          //ExportSelectedTimings_ToLOR
-          ExportSelectedVampsToLOR();
-          success = SaveSequence(fileCurrent);
+		private bool SaveInExistingSequence()
+		{
+			bool success = false;
+			string filt = "Musical Sequences *.lms|*lms";
+			string idir = LOR4Admin.DefaultSequencesPath;
+			string ifl = txtSeqName.Text.Trim();
+			string theFile = "";
+			if (Fyle.ValidFilename(ifl, true, false))
+			{
+				idir = Path.GetDirectoryName(ifl);
+				if (Fyle.ValidFilename(ifl, true, true))
+				{
+					if (Path.GetExtension(ifl.ToLower()) == "lms")
+					{
+						theFile = Path.GetFileName(ifl);
+					}
+				}
+			}
+			else
+			{
+				// Keep default sequence path
+			}
 
 
-        }
-        //grpGrids.Enabled = true;
-        //grpTracks.Enabled = true;
-        //grpAudio.Enabled = true;
-        //btnBrowseAudio.Focus();
+			dlgFileOpen.Filter = filt;
+			dlgFileOpen.FilterIndex = 2;    //! Temporary?  Set back to 1 and/or change filter string?
+			dlgFileOpen.InitialDirectory = idir;
+			//dlgFileOpen.FileName = Properties.Settings.Default.fileSeqLast;
 
-      }
-      return success;
-    }
+			DialogResult dr = dlgFileOpen.ShowDialog(this);
+			if (dr == DialogResult.OK)
+			{
+				fileCurrent = dlgFileOpen.FileName;
+				txtSeqName.Text = Path.GetFileName(fileCurrent);
+				string ex = Path.GetExtension(fileCurrent).ToLower();
+				// If they picked an existing musical sequence
+				if (ex == ".lms")
+				{
+					LOR4Sequence existSeq = new LOR4Sequence(fileCurrent);
+					seq = existSeq;
+					Annotator.Init(existSeq);
+					//fileAudioOriginal = seq.info.music.File;
+					//txtFileAudio.Text = Path.GetFileNameWithoutExtension(fileAudioOriginal);
+					grpAudio.Text = " Original Audio File ";
+					btnBrowseAudio.Text = "Analyze";
+					//fileSeqCur = fileCurrent;
+					//fileChanCfg = "";
+					// Add to Sequences MRU
 
-    private bool SaveSequence(string newFilename)
-    {
-      bool success = false;
-      ImBusy(true);
-      // normal default when not testing
-      if (seq.Tracks.Count < 1)
-      {
-        Fyle.BUG("Sequence needs to have at least one Track-- Where is the VampTrack?!?");
-      }
-      else
-      {
-        if (seq.Channels.Count < 1)
-        {
-          Fyle.BUG("Sequence needs to have at least one Channel!");
-        }
-        else
-        {
-          if (seq.TimingGrids.Count < 1)
-          {
-            Fyle.BUG("Sequence needs to have at least one Timing Grid!");
-          }
-          else
-          {
-            if (Annotator.VampTrack.timingGrid == null)
-            {
-              Fyle.BUG("VampTrack needs a Timing Grid!");
-            }
-            else
-            {
-              if (Annotator.VampTrack.Members.Count < 1)
-              {
-                Fyle.BUG("VampTrack needs at least one Channel!");
-              }
-              else
-              {
-                int errs = seq.WriteSequenceFile_DisplayOrder(newFilename, false, false);
-                if (errs < 1)
-                {
-                  //System.Media.SystemSounds.Beep.Play();
-                  Fyle.MakeNoise(Fyle.Noises.WooHoo);
-                  success = true;
-                  //dirtySeq = false;
-                  //fileSeqSave = newFilename;
-                  //Add to MRU
-                }
-              }
-            }
-          }
-        }
-      }
-      if (!success)
-      {
-        Fyle.MakeNoise(Fyle.Noises.Doh);
-      }
-      ImBusy(false);
-      return success;
+					//centiseconds = SequenceFunctions.ms2cs(audioData.Duration);
+					int cs = (int)Math.Round(Annotator.songTimeMS / 10D);
+					cs = Math.Max(cs, existSeq.Centiseconds);
+					//centiseconds = cs;
+					existSeq.Centiseconds = cs;
 
-    }
-
-    private LOR4Sequence CreateNewSequence(string theFilename)
-    {
-      LOR4Sequence newSeq = new LOR4Sequence();
-      Annotator.Init(newSeq);
-      seq = newSeq;
-      seq.info.author = LOR4Admin.DefaultAuthor;
-      SaveSongInfo();
-      // Save what we have so far...
-      //seq.WriteSequenceFile_DisplayOrder(theFilename);
-
-      return newSeq;
-    }
-
-    private void SaveSongInfo()
-    {
-      int cs = SequenceFunctions.ms2cs(audioData.Duration);
-      seq.Centiseconds = Math.Max(cs, seq.Centiseconds);
-      seq.LOR4SequenceType = LOR4SequenceType.Musical;
-      //seq.Tracks[0].Centiseconds = 0;
-      seq.info.music.Album = audioData.Album;
-      string artst = audioData.Artist;
-      if (artst.Length < 1)
-      {
-        artst = audioData.AlbumArtist;
-      }
-      seq.info.music.Artist = artst;
-      seq.info.music.File = audioData.Filename;
-      seq.info.music.Title = audioData.Title;
-      theSong = audioData.Title;
-      songTitle = audioData.Title;
-      if (audioData.Artist.Length > 1)
-      {
-        theSong += BY + audioData.Artist;
-        songArtist = audioData.Artist;
-      }
-      else
-      {
-        if (audioData.AlbumArtist.Length > 1)
-        {
-          theSong += BY + audioData.AlbumArtist;
-          songArtist = audioData.AlbumArtist;
-        }
-      }
-
-    }
+					//! ImportVampsToSequence();
+					ImportVampsToSequence();
+					//ExportSelectedTimings_ToLOR
+					ExportSelectedVampsToLOR();
+					success = SaveSequence(fileCurrent);
 
 
-    /*
+				}
+				//grpGrids.Enabled = true;
+				//grpTracks.Enabled = true;
+				//grpAudio.Enabled = true;
+				//btnBrowseAudio.Focus();
+
+			}
+			return success;
+		}
+
+		private bool SaveSequence(string newFilename)
+		{
+			bool success = false;
+			ImBusy(true);
+			// normal default when not testing
+			if (seq.Tracks.Count < 1)
+			{
+				Fyle.BUG("Sequence needs to have at least one Track-- Where is the VampTrack?!?");
+			}
+			else
+			{
+				if (seq.Channels.Count < 1)
+				{
+					Fyle.BUG("Sequence needs to have at least one Channel!");
+				}
+				else
+				{
+					if (seq.TimingGrids.Count < 1)
+					{
+						Fyle.BUG("Sequence needs to have at least one Timing Grid!");
+					}
+					else
+					{
+						if (Annotator.VampTrack.timingGrid == null)
+						{
+							Fyle.BUG("VampTrack needs a Timing Grid!");
+						}
+						else
+						{
+							if (Annotator.VampTrack.Members.Count < 1)
+							{
+								Fyle.BUG("VampTrack needs at least one Channel!");
+							}
+							else
+							{
+								int errs = seq.WriteSequenceFile_DisplayOrder(newFilename, false, false);
+								if (errs < 1)
+								{
+									//System.Media.SystemSounds.Beep.Play();
+									Fyle.MakeNoise(Fyle.Noises.WooHoo);
+									success = true;
+									//dirtySeq = false;
+									//fileSeqSave = newFilename;
+									//Add to MRU
+								}
+							}
+						}
+					}
+				}
+			}
+			if (!success)
+			{
+				Fyle.MakeNoise(Fyle.Noises.Doh);
+			}
+			ImBusy(false);
+			return success;
+
+		}
+
+		private LOR4Sequence CreateNewSequence(string theFilename)
+		{
+			LOR4Sequence newSeq = new LOR4Sequence();
+			Annotator.Init(newSeq);
+			seq = newSeq;
+			seq.info.author = LOR4Admin.DefaultAuthor;
+			SaveSongInfo();
+			// Save what we have so far...
+			//seq.WriteSequenceFile_DisplayOrder(theFilename);
+
+			return newSeq;
+		}
+
+		private void SaveSongInfo()
+		{
+			int cs = SequenceFunctions.ms2cs(audioData.Duration);
+			seq.Centiseconds = Math.Max(cs, seq.Centiseconds);
+			seq.LOR4SequenceType = LOR4SequenceType.Musical;
+			//seq.Tracks[0].Centiseconds = 0;
+			seq.info.music.Album = audioData.Album;
+			string artst = audioData.Artist;
+			if (artst.Length < 1)
+			{
+				artst = audioData.AlbumArtist;
+			}
+			seq.info.music.Artist = artst;
+			seq.info.music.File = audioData.Filename;
+			seq.info.music.Title = audioData.Title;
+			theSong = audioData.Title;
+			songTitle = audioData.Title;
+			if (audioData.Artist.Length > 1)
+			{
+				theSong += BY + audioData.Artist;
+				songArtist = audioData.Artist;
+			}
+			else
+			{
+				if (audioData.AlbumArtist.Length > 1)
+				{
+					theSong += BY + audioData.AlbumArtist;
+					songArtist = audioData.AlbumArtist;
+				}
+			}
+
+		}
 
 		private int ImportVampsToSequence()
 		{
-			int errs = 0;
+			int errLevel = 0;
 
 			SaveSongInfo();
-			
-			LOR4Timings ftg = GetGrid("20 FPS", true);
+
+			if (audioData.Centiseconds > seq.Centiseconds)
+			{
+				seq.CentiFix(audioData.Centiseconds);
+			}
+
+			LOR4Timings ftg = seq.FindGrid("20 FPS", true); // GetGrid("20 FPS", true);
 			ftg.TimingGridType = LOR4TimingGridType.FixedGrid;
-			ftg.Centiseconds = centiseconds;
+			ftg.Centiseconds = audioData.Centiseconds;
 			ftg.spacing = 5;
 			
-			vampTrack = GetTrack("Vamp-O-Rama", true);
-			vampTrack.Centiseconds = centiseconds;
+			vampTrack = seq.FindTrack("Vamp-O-Rama", true);
+			//vampTrack.Centiseconds = centiseconds;
 			vampTrack.timingGrid = ftg;
 
 			string lorAuth = LOR4Admin.DefaultAuthor;
 			seq.info.modifiedBy = lorAuth + " + Vamp-O-Rama";
 
-			if (doBarsBeats && (errLevel == 0))
+			if (chkBarsBeats.Checked && (errLevel == 0))
 			{
 				errLevel = ImportBarsBeats();
 			}
-			if (doNoteOnsets && (errLevel == 0))
+			if (chkNoteOnsets.Checked && (errLevel == 0))
 			{
 				errLevel = ImportNoteOnsets();
 			}
-			if (doTranscribe && (errLevel == 0))
+			if (chkPolyphonic.Checked && (errLevel == 0))
 			{
-				errLevel = ImportTranscription();
+				errLevel = ImportPoly();
 			}
-			if (doPitchKey && (errLevel == 0))
+			if (chkPitchKey.Checked && (errLevel == 0))
 			{
 				errLevel = ImportPitchKey();
 			}
-			if (doSegments && (errLevel == 0))
+			if (chkSegments.Checked && (errLevel == 0))
 			{
-				errLevel = ImportSegments();
+				errLevel = import ImportSegments();
 			}
 
 
@@ -323,96 +326,126 @@ namespace UtilORama4
 
 
 
-			return errs;
+			return errLevel;
 		}
 
 		private int ImportBarsBeats()
 		{
 			int errs = 0;
-			LOR4ChannelGroup beatGroup = GetGroup("Bars and Beats", vampTrack);
-			if (xBars != null)
+			LOR4ChannelGroup beatGroup = vampTrack.Members.FindChannelGroup("Bars and Beats", true);
+			if (chkBars.Checked)
 			{
-				if (xBars.Markers.Count > 0)
+				if (VampBarBeats.xBars != null)
 				{
-					LOR4Timings barGrid = GetGrid("Bars",true);
-					ImportTimingGrid(barGrid, xBars);
-					if (swRamps.Checked)
+					if (VampBarBeats.xBars.Markers.Count > 0)
 					{
-						LOR4Channel barCh = GetChannel("Bars", beatGroup.Members);
-						ImportBeatChannel(barCh, xBars, 1);
+						if (Annotator.UseRamps)
+						{
+							errs += VampBarBeats.xTimingToLORChannels(xBars, LOR4Admin.Color_NettoLOR(System.Drawing.Color.Red));
+						}
+						else
+						{
+							// Actually Bars
+							errs += xTimingToLORChannels(xBeatsQuarter, LOR4Admin.Color_NettoLOR(System.Drawing.Color.Red), xBars.Name, Annotator.BeatsPerBar * 4);
+						}
+
+
+
+
+
+
+
+
+
+						//LOR4Timings barGrid = seq.FindGrid("Bars", true);
+						VampBarBeats.xTimingsToLORChannels()
+						//LOR4Channel barCh = beatGroup.Members.FindChannel("Bars", true);
+						VampBarBeats.xTimingsToLORChannels();
+						//ImportTimingGrid(barGrid, VampBarBeats.xBars);
+						if (swRamps.Checked)
+						{
+							LOR4Channel barCh = beatGroup.Members.FindChannel("Bars", true);
+							ImportBeatChannel(barCh, VampBarBeats.xBars, 1);
+						}
 					}
 				}
 			}
 			if (chkBeatsFull.Checked)
 			{
-				if (xBeatsFull != null)
+				if (VampBarBeats.xBeatsFull != null)
 				{
-					if (xBeatsFull.Markers.Count > 0)
+					if (VampBarBeats.xBeatsFull.Markers.Count > 0)
 					{
-						LOR4Timings barGrid = GetGrid("Beats-Full",true);
-						LOR4Channel beatCh = GetChannel("Beats-Full", beatGroup.Members);
-						ImportTimingGrid(barGrid, xBeatsFull);
-						ImportBeatChannel(beatCh, xBeatsFull,beatsPerBar);
+						LOR4Timings beatGrid = seq.FindGrid("Beats-Full",true);
+						LOR4Channel beatCh = beatGroup.Members.FindChannel("Beats-Full", true);
+						ImportTimingGrid(barGrid, VampBarBeats.xBeatsFull);
+						ImportBeatChannel(beatCh, VampBarBeats.xBeatsFull,beatsPerBar);
 					}
 				}
 			}
 			if (chkBeatsHalf.Checked)
 			{
-				if (xBeatsHalf != null)
+				if (VampBarBeats.xBeatsHalf != null)
 				{
-					if (xBeatsHalf.Markers.Count > 0)
+					if (VampBarBeats.xBeatsHalf.Markers.Count > 0)
 					{
-						LOR4Timings barGrid = GetGrid("Beats-Half",true);
-						LOR4Channel beatCh = GetChannel("Beats-Half", beatGroup.Members);
-						ImportTimingGrid(barGrid, xBeatsHalf);
-						ImportBeatChannel(beatCh, xBeatsHalf,beatsPerBar * 2);
+						LOR4Timings beatGrid = seq.FindGrid("Beats-Half",true);
+						LOR4Channel beatCh = beatGroup.Members.FindChannel("Beats-Half", true);
+						ImportTimingGrid(barGrid, VampBarBeats.xBeatsHalf);
+						ImportBeatChannel(beatCh, VampBarBeats.xBeatsHalf,beatsPerBar * 2);
 					}
 				}
 			}
 			if (chkBeatsThird.Checked)
 			{
-				if (xBeatsThird != null)
+				if (VampBarBeats.xBeatsThird != null)
 				{
-					if (xBeatsThird.Markers.Count > 0)
+					if (VampBarBeats.xBeatsThird.Markers.Count > 0)
 					{
-						LOR4Timings barGrid = GetGrid("Beats-Third",true);
-						LOR4Channel beatCh = GetChannel("Beats-Third", beatGroup.Members);
-						ImportTimingGrid(barGrid, xBeatsThird);
-						ImportBeatChannel(beatCh, xBeatsThird,beatsPerBar * 3);
+						LOR4Timings beatGrid = seq.FindGrid("Beats-Third",true);
+						LOR4Channel beatCh = beatGroup.Members.FindChannel("Beats-Third", true);
+						ImportTimingGrid(barGrid, VampBarBeats.xBeatsThird);
+						ImportBeatChannel(beatCh, VampBarBeats.xBeatsThird,beatsPerBar * 3);
 					}
 				}
 			}
 			if (chkBeatsQuarter.Checked)
 			{
-				if (xBeatsQuarter != null)
+				if (VampBarBeats.xBeatsQuarter != null)
 				{
-					if (xBeatsQuarter.Markers.Count > 0)
+					if (VampBarBeats.xBeatsQuarter.Markers.Count > 0)
 					{
-						LOR4Timings barGrid = GetGrid("Beats-Quarter",true);
-						LOR4Channel beatCh = GetChannel("Beats-Quarter", beatGroup.Members);
-						ImportTimingGrid(barGrid, xBeatsQuarter);
-						ImportBeatChannel(beatCh, xBeatsQuarter,beatsPerBar * 4);
+						LOR4Timings beatGrid = seq.FindGrid("Beats-Quarter",true);
+						LOR4Channel beatCh = beatGroup.Members.FindChannel("Beats-Quarter", true);
+						//! (?)
+						VampBarBeats.xTimingsToLORtimings();
+						//ImportTimingGrid(barGrid, VampBarBeats.xBeatsQuarter);
+						VampBarBeats.xTimingsToLORChannels();
+						//ImportBeatChannel(beatCh, VampBarBeats.xBeatsQuarter,beatsPerBar * 4);
 					}
 				}
 			}
+
+			// These do not belong here (?)
+			/*
 			if (chkNoteOnsets.Checked)
 			{
-				if (xOnsets != null)
+				if (VampNoteOnsets.xNoteOnsets != null)
 				{
-					if (xOnsets.Markers.Count > 0)
+					if (VampNoteOnsets.xNoteOnsets.Markers.Count > 0)
 					{
-						LOR4Timings noteGrid = GetGrid("Note Onsets",true);
+						LOR4Timings noteGrid = seq.FindGrid("Note Onsets",true);
 						//LOR4Channel noteCh = GetChannel("Note Onsets", beatGroup.Members);
-						ImportTimingGrid(noteGrid, xBeatsQuarter);
+						ImportTimingGrid(noteGrid, VampNoteOnsets.xNoteOnsets);
 						//ImportBeatChannel(noteCh, xBeatsQuarter);
 					}
 				}
 			}
-			if (chkTranscribe.Checked)
+			if (chkPolyphonic.Checked)
 			{
-				if (xTranscription != null)
+				if (VampPolyphonic.xPolyphonic != null)
 				{
-					if (xTranscription.Markers.Count > 0)
+					if (VampPolyphonic.xPolyphonic.Markers.Count > 0)
 					{
 						//LOR4ChannelGroup transGroup = GetGroup("Polyphonic Transcription");
 						//ImportTranscription(transGroup);
@@ -421,9 +454,9 @@ namespace UtilORama4
 			}
 			if (chkPitchKey.Checked)
 			{
-				if (xKey != null)
+				if (VampPitchKey.xPitchKey != null)
 				{
-					if (xKey.Markers.Count > 0)
+					if (VampPitchKey.xPitchKey.Markers.Count > 0)
 					{
 						//LOR4ChannelGroup transGroup = GetGroup("Polyphonic Transcription");
 						//ImportTranscription(transGroup);
@@ -432,16 +465,17 @@ namespace UtilORama4
 			}
 			if (chkSegments.Checked)
 			{
-				if (xSegments != null)
+				if (VampSegments.xSegments != null)
 				{
-					if (xSegments.Markers.Count > 0)
+					if (VampSegments.xSegments.Markers.Count > 0)
 					{
 						//LOR4ChannelGroup transGroup = GetGroup("Polyphonic Transcription");
 						//ImportTranscription(transGroup);
 					}
 				}
 			}
-
+			// These do not belong here (?)
+			*/ 
 
 
 
@@ -1093,9 +1127,9 @@ private int		ImportNoteOnsetChannels(LOR4ChannelGroup onsGrp, xTimings xBeatsFul
 			return ret;
 
 		}
-		*/
+		
 
-  }
+	}
 
 
 }

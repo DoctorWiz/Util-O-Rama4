@@ -106,8 +106,8 @@
     <Compile Include="..\Common\xUtils\xSequence.cs" Link="xSequence.cs" />
     <Compile Include="..\Common\xUtils\xTimings.cs" Link="xTimings.cs" />
     <Compile Include="Annotator.cs" />
-    <Compile Include="frmAbout.cs" />
-    <Compile Include="frmAbout.Designer.cs" />
+    <Compile Include="frmAboutVamp.cs" />
+    <Compile Include="frmAboutVamp.Designer.cs" />
     <Compile Include="frmOutputLog.cs" />
     <Compile Include="frmOutputLog.Designer.cs" />
     <Compile Include="frmSettings.cs" />
@@ -121,6 +121,7 @@
     <Compile Include="MusicalNotation.cs" />
     <Compile Include="Nuvamp.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Resources.Designer.cs" />
     <Compile Include="SeqFunctions.cs" />
     <Compile Include="Settings.Designer.cs" />
     <Compile Include="SongFields.cs" />
@@ -138,7 +139,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="frmAboutVamp.resx" />
+    <EmbeddedResource Include="frmOutputLog.resx" />
+    <EmbeddedResource Include="frmSplash.resx" />
     <EmbeddedResource Include="frmVamp.resx" />
+    <EmbeddedResource Include="Nuvamp.resx" />
+    <EmbeddedResource Include="Resources.resx" />
   </ItemGroup>
 
   <ItemGroup>
@@ -153,7 +159,7 @@
 
   <ItemGroup>
     <Reference Include="TagLibSharp">
-      <HintPath>..\..\COMMON\TagLib-Sharp\src\TaglibSharp\obj\Release\net6.0-windows10.0.19041.0\ref\TagLibSharp.dll</HintPath>
+      <HintPath>..\..\COMMON\TagLib-Sharp\src\TaglibSharp\bin\x64\Debug\net6.0-windows10.0.19041.0\TagLibSharp.dll</HintPath>
     </Reference>
     <Reference Include="ToggleSwitch">
       <HintPath>..\..\Controls\ToggleSwitch\ToggleSwitch\bin\Release\net6.0-windows10.0.19041.0\ToggleSwitch.dll</HintPath>

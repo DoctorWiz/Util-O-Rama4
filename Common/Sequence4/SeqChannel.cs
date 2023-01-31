@@ -74,6 +74,13 @@ namespace LOR4
 		//public int AltSavedIndex
 		//{ get { return myAltID;} set { myAltID = value; } }
 
+		public CheckState SelectedState
+		{
+			get { return base.SelectedState; }
+			set { base.SelectedState = value; }
+
+		}
+
 		public override int CompareTo(iLOR4Member other)
 		{
 			int result = 0;
@@ -101,18 +108,6 @@ namespace LOR4
 		// I'm not a big fan of case sensitivity, but I'm gonna take advantage of it here
 		// color with lower c is the LOR color, a 32 bit int in BGR order
 		// Color with capital C is the .Net Color object (aka Web Color)(In ARGB order)
-		public Color Color
-		{
-			get
-			{
-				return LOR4Admin.Color_LORtoNet(color);
-			}
-			set
-			{
-				color = LOR4Admin.Color_NettoLOR(value);
-			}
-
-		}
 
 		public override string LineOut()
 		{

@@ -583,9 +583,9 @@ namespace UtilORama4
 					if (LORname.CompareTo(xName) == 0)
 					{
 						channelList[l].Tag = xModelList[x];
-						channelList[l].Selected = true;
+						channelList[l].SelectedState = CheckState.Checked;
 						xModelList[x].Tag = channelList[l];
-						xModelList[x].Selected = true;
+						xModelList[x].SelectedState = CheckState.Checked;
 						xModelList[x].ExactMatch = true;
 						exactMatches++;
 						// Force exit of loop
@@ -608,9 +608,9 @@ namespace UtilORama4
 					if (LORname.CompareTo(xName) == 0)
 					{
 						channelList[l].Tag = xGroupList[x];
-						channelList[l].Selected = true;
+						channelList[l].SelectedState = CheckState.Checked;
 						xGroupList[x].Tag = channelList[l];
-						xGroupList[x].Selected = true;
+						xGroupList[x].SelectedState = CheckState.Checked;
 						xGroupList[x].ExactMatch = true;
 						exactMatches++;
 						// Force exit of loop
@@ -623,7 +623,7 @@ namespace UtilORama4
 			//   Channels to Models first
 			for (int l = 0; l < channelList.Count; l++)
 			{
-				if (!channelList[l].Selected)
+				if (channelList[l].SelectedState != CheckState.Checked)
 				{
 					string LORname = channelList[l].Name;
 					status = "Fuzzy Searching for " + LORname;
@@ -634,7 +634,7 @@ namespace UtilORama4
 					int highGroupMatch = -1;
 					for (int x = 0; x < xModelList.Count; x++)
 					{
-						if (!xModelList[x].Selected)
+						if (xModelList[x].SelectedState != CheckState.Checked)
 						{
 							string xName = xModelList[x].Name;
 							double preScore = LORname.FuzzyScoreFast(xName);
@@ -657,7 +657,7 @@ namespace UtilORama4
 					// Next Channels to Groups
 					for (int x = 0; x < xGroupList.Count; x++)
 					{
-						if (!xGroupList[x].Selected)
+						if (xGroupList[x].SelectedState != CheckState.Checked)
 						{
 							string xName = xGroupList[x].Name;
 							double preScore = LORname.FuzzyScoreFast(xName);
@@ -680,9 +680,9 @@ namespace UtilORama4
 					if (highGroupMatch >= 0)
 					{
 						channelList[l].Tag = xGroupList[highGroupMatch];
-						channelList[l].Selected = true;
+						channelList[l].SelectedState = CheckState.Checked;
 						xGroupList[highGroupMatch].Tag = channelList[l];
-						xGroupList[highGroupMatch].Selected = true;
+						xGroupList[highGroupMatch].SelectedState = CheckState.Checked;
 						fuzzyMatches++;
 					}
 					else
@@ -690,9 +690,9 @@ namespace UtilORama4
 						if (highModelMatch >= 0)
 						{
 							channelList[l].Tag = xModelList[highModelMatch];
-							channelList[l].Selected = true;
+							channelList[l].SelectedState = CheckState.Checked;
 							xModelList[highModelMatch].Tag = channelList[l];
-							xModelList[highModelMatch].Selected = true;
+							xModelList[highModelMatch].SelectedState = CheckState.Checked;
 							fuzzyMatches++;
 						}
 					}
@@ -709,9 +709,9 @@ namespace UtilORama4
 					if (LORname.CompareTo(xName) == 0)
 					{
 						RGBList[l].Tag = xRGBList[x];
-						RGBList[l].Selected = true;
+						RGBList[l].SelectedState = CheckState.Checked;
 						xRGBList[x].Tag = RGBList[l];
-						xRGBList[x].Selected = true;
+						xRGBList[x].SelectedState = CheckState.Checked;
 						xRGBList[x].ExactMatch = true;
 						exactMatches++;
 						// Force exit of loop
@@ -723,7 +723,7 @@ namespace UtilORama4
 			// LOR RGB Channels to xLights RGB Channels, Fuzzy Matches
 			for (int l = 0; l < RGBList.Count; l++)
 			{
-				if (!RGBList[l].Selected)
+				if (RGBList[l].SelectedState != CheckState.Checked)
 				{
 					string LORname = RGBList[l].Name;
 					status = "Fuzzy Searching for " + LORname;
@@ -733,7 +733,7 @@ namespace UtilORama4
 					int highMatch = -1;
 					for (int x = 0; x < xRGBList.Count; x++)
 					{
-						if (!xRGBList[x].Selected)
+						if (xRGBList[x].SelectedState != CheckState.Checked)
 						{
 							string xName = xRGBList[x].Name;
 							double preScore = LORname.FuzzyScoreFast(xName);
@@ -755,9 +755,9 @@ namespace UtilORama4
 					if (highMatch >= 0)
 					{
 						RGBList[l].Tag = xRGBList[highMatch];
-						RGBList[l].Selected = true;
+						RGBList[l].SelectedState = CheckState.Checked;
 						xRGBList[highMatch].Tag = RGBList[l];
-						xRGBList[highMatch].Selected = true;
+						xRGBList[highMatch].SelectedState = CheckState.Checked;
 						fuzzyMatches++;
 					}
 				}
@@ -773,9 +773,9 @@ namespace UtilORama4
 					if (LORname.CompareTo(xName) == 0)
 					{
 						groupList[l].Tag = xGroupList[x];
-						groupList[l].Selected = true;
+						groupList[l].SelectedState = CheckState.Checked;
 						xGroupList[x].Tag = groupList[l];
-						xGroupList[x].Selected = true;
+						xGroupList[x].SelectedState = CheckState.Checked;
 						xGroupList[x].ExactMatch = true;
 						exactMatches++;
 						// Force exit of loop
@@ -787,7 +787,7 @@ namespace UtilORama4
 			// LOR Groups to xLights Groups, Fuzzy Matches
 			for (int l = 0; l < groupList.Count; l++)
 			{
-				if (!groupList[l].Selected)
+				if (groupList[l].SelectedState != CheckState.Checked)
 				{
 					string LORname = groupList[l].Name;
 					status = "Fuzzy Searching for " + LORname;
@@ -797,7 +797,7 @@ namespace UtilORama4
 					int highMatch = -1;
 					for (int x = 0; x < xGroupList.Count; x++)
 					{
-						if (!xGroupList[x].Selected)
+						if (xGroupList[x].SelectedState != CheckState.Checked)
 						{
 							string xName = xGroupList[x].Name;
 							double preScore = LORname.FuzzyScoreFast(xName);
@@ -819,9 +819,9 @@ namespace UtilORama4
 					if (highMatch >= 0)
 					{
 						groupList[l].Tag = xGroupList[highMatch];
-						groupList[l].Selected = true;
+						groupList[l].SelectedState = CheckState.Checked;
 						xGroupList[highMatch].Tag = groupList[l];
-						xGroupList[highMatch].Selected = true;
+						xGroupList[highMatch].SelectedState = CheckState.Checked;
 						fuzzyMatches++;
 					}
 				}
@@ -876,7 +876,7 @@ namespace UtilORama4
 					mup.ColorLOR = LOR4Admin.Color_LORtoHTML(chanLor.color);
 					mup.ExactLOR = true;
 					chanLor.ExactMatch = true;
-					chanLor.Selected = true;
+					chanLor.SelectedState = CheckState.Checked;
 					chanLor.Tag = mup;
 					exactMatches++;
 				} // End if exact match found
@@ -899,7 +899,7 @@ namespace UtilORama4
 					for (int li = 0; li < sequence.Channels.Count; li++)
 					{
 						LOR4Channel chanLor = sequence.Channels[li];
-						if (!chanLor.Selected)
+						if (chanLor.SelectedState != CheckState.Checked)
 						{
 							string LORname = chanLor.Name;
 							double preScore = datName.FuzzyScoreFast(LORname);
@@ -931,7 +931,7 @@ namespace UtilORama4
 							mup.ColorLOR = LOR4Admin.Color_LORtoHTML(chanLor.color);
 							mup.ExactLOR = false;
 							chanLor.ExactMatch = false;
-							chanLor.Selected = true;
+							chanLor.SelectedState = CheckState.Checked;
 							chanLor.Tag = mup;
 							fuzzyMatches++;
 
@@ -963,7 +963,7 @@ namespace UtilORama4
 						mup.TypeViz = 1;
 						mup.ExactViz = true;
 						vch.ExactMatch = true;
-						vch.Selected = true;
+						vch.SelectedState = CheckState.Checked;
 						vch.Tag = mup;
 						exactMatches++;
 					}
@@ -981,7 +981,7 @@ namespace UtilORama4
 							mup.TypeViz = 3;
 							mup.ExactViz = true;
 							vdo.ExactMatch = true;
-							vdo.Selected = true;
+							vdo.SelectedState = CheckState.Checked;
 							vdo.Tag = mup;
 							exactMatches++;
 						} // end if it matched something
@@ -999,7 +999,7 @@ namespace UtilORama4
 								mup.TypeViz = 2;
 								mup.ExactViz = true;
 								vgr.ExactMatch = true;
-								vgr.Selected = true;
+								vgr.SelectedState = CheckState.Checked;
 								vgr.Tag = mup;
 								exactMatches++;
 							}
@@ -1024,7 +1024,7 @@ namespace UtilORama4
 						for (int v = 1; v < visualization.VizChannels.Count; v++)
 						{
 							LOR4VizChannel member = visualization.VizChannels[v];
-							if (!member.Selected)
+							if (member.SelectedState != CheckState.Checked)
 							{
 								string vName = member.Name;
 								double preScore = datName.FuzzyScoreFast(vName);
@@ -1048,7 +1048,7 @@ namespace UtilORama4
 						for (int v = 1; v < visualization.VizItemGroups.Count; v++)
 						{
 							LOR4VizItemGroup member = visualization.VizItemGroups[v];
-							if (!member.Selected)
+							if (member.SelectedState != CheckState.Checked)
 							{
 								string vName = member.Name;
 								double preScore = datName.FuzzyScoreFast(vName);
@@ -1072,7 +1072,7 @@ namespace UtilORama4
 						for (int v = 1; v < visualization.VizDrawObjects.Count; v++)
 						{
 							LOR4VizDrawObject member = visualization.VizDrawObjects[v];
-							if (!member.Selected)
+							if (member.SelectedState != CheckState.Checked)
 							{
 								string vName = member.Name;
 								double preScore = datName.FuzzyScoreFast(vName);
@@ -1121,7 +1121,7 @@ namespace UtilORama4
 								mup.TypeViz = matchType;
 								mup.ExactViz = false;
 								member.ExactMatch = false;
-								member.Selected = true;
+								member.SelectedState = CheckState.Checked;
 								member.Tag = mup;
 								fuzzyMatches++;
 							} // end if high enough final score
@@ -1158,7 +1158,7 @@ namespace UtilORama4
 							mup.TypexLights = 1;
 							mup.ExactxLights = true;
 							xModelList[x].ExactMatch = true;
-							xModelList[x].Selected = true;
+							xModelList[x].SelectedState = CheckState.Checked;
 							xModelList[x].Tag = mup;
 							exactMatches++;
 							// Force exit of loop
@@ -1180,7 +1180,7 @@ namespace UtilORama4
 								mup.TypexLights = 2;
 								mup.ExactxLights = true;
 								xModelList[x].ExactMatch = true;
-								xModelList[x].Selected = true;
+								xModelList[x].SelectedState = CheckState.Checked;
 								xModelList[x].Tag = mup;
 								exactMatches++;
 								// Force exit of loop
@@ -1212,7 +1212,7 @@ namespace UtilORama4
 					for (int x = 0; x < xModelList.Count; x++)
 					{
 						xModel xm = xModelList[x];
-						if (!xm.Selected)
+						if (xm.SelectedState != CheckState.Checked)
 						{
 							string xName = xm.Name;
 							double preScore = dName.FuzzyScoreFast(xName);
@@ -1236,7 +1236,7 @@ namespace UtilORama4
 					for (int x = 0; x < xGroupList.Count; x++)
 					{
 						xModelGroup xg = xGroupList[x];
-						if (!xg.Selected)
+						if (xg.SelectedState != CheckState.Checked)
 						{
 							string xName = xGroupList[x].Name;
 							double preScore = dName.FuzzyScoreFast(xName);
@@ -1278,7 +1278,7 @@ namespace UtilORama4
 							mup.ColorxLights = LOR4Admin.Color_NettoHTML(member.Color);
 							mup.ExactxLights = false;
 							member.ExactMatch = false;
-							member.Selected = true;
+							member.SelectedState = CheckState.Checked;
 							member.Tag = mup;
 							fuzzyMatches++;
 						} // end if high enough final score
@@ -1290,7 +1290,7 @@ namespace UtilORama4
 			for (int cl = 0; cl < sequence.Channels.Count; cl++)
 			{
 				LOR4Channel chan = sequence.Channels[cl];
-				if (!chan.Selected)
+				if (chan.SelectedState != CheckState.Checked)
 				{
 					Matchup mup = new Matchup();
 					mup.NameLOR = chan.Name;
@@ -1309,7 +1309,7 @@ namespace UtilORama4
 			//for (int c = 1; c < visualization.VizChannels.Count; c++)
 			{
 				LOR4VizChannel chan = visualization.VizChannels[c];
-				if (!chan.Selected)
+				if (chan.SelectedState != CheckState.Checked)
 				{
 					Matchup mup = new Matchup();
 					mup.NameViz = chan.Name;
@@ -1325,7 +1325,7 @@ namespace UtilORama4
 			//for (int c = 1; c < visualization.VizItemGroups.Count; c++)
 			{
 				LOR4VizItemGroup grp = visualization.VizItemGroups[c];
-				if (!grp.Selected)
+				if (grp.SelectedState != CheckState.Checked)
 				{
 					Matchup mup = new Matchup();
 					mup.NameViz = grp.Name;
@@ -1340,7 +1340,7 @@ namespace UtilORama4
 			//for (int c = 1; c < visualization.VizDrawObjects.Count; c++)
 			{
 				LOR4VizDrawObject vdo = visualization.VizDrawObjects[c];
-				if (!vdo.Selected)
+				if (vdo.SelectedState != CheckState.Checked)
 				{
 					Matchup mup = new Matchup();
 					mup.NameViz = vdo.Name;
@@ -1357,7 +1357,7 @@ namespace UtilORama4
 			//for (int c = 0; c < xModelList.Count; c++)
 			{
 				xModel chan = xModelList[c];
-				if (!chan.Selected)
+				if (chan.SelectedState != CheckState.Checked)
 				{
 					Matchup mup = new Matchup();
 					mup.NamexLights = chan.Name;
@@ -1372,7 +1372,7 @@ namespace UtilORama4
 			//for (int c = 0; c < xGroupList.Count; c++)
 			{
 				xModelGroup grp = xGroupList[c];
-				if (!grp.Selected)
+				if (grp.SelectedState != CheckState.Checked)
 				{
 					Matchup mup = new Matchup();
 					mup.NamexLights = grp.Name;
@@ -1716,7 +1716,7 @@ namespace UtilORama4
 					LOR4Channel lc = channelList[l];
 					lineOut.Append(CSVsafeName(lc.Name));
 					lineOut.Append(',');
-					if (lc.Selected)
+					if (lc.SelectedState = CheckState.Checked)
 					{
 						xMemberBase xc = (xMemberBase)lc.Tag;
 						if (xc.ExactMatch)
@@ -1743,7 +1743,7 @@ namespace UtilORama4
 				for (int x = 0; x < xModelList.Count; x++)
 				{
 					xMemberBase xc = xModelList[x];
-					if (!xc.Selected)
+					if (xc.SelectedState != CheckState.Checked)
 					{
 						lineOut.Clear();
 						lineOut.Append(",None,");
@@ -1767,7 +1767,7 @@ namespace UtilORama4
 					LOR4RGBChannel lc = RGBList[l];
 					lineOut.Append(CSVsafeName(lc.Name));
 					lineOut.Append(',');
-					if (lc.Selected)
+					if (lc.SelectedState = CheckState.Checked)
 					{
 						xMemberBase xc = (xMemberBase)lc.Tag;
 						if (xc.ExactMatch)
@@ -1791,7 +1791,7 @@ namespace UtilORama4
 				for (int x = 0; x < xRGBList.Count; x++)
 				{
 					xMemberBase xc = xRGBList[x];
-					if (!xc.Selected)
+					if (xc.SelectedState != CheckState.Checked)
 					{
 						lineOut.Clear();
 						lineOut.Append(",None,");
@@ -1814,7 +1814,7 @@ namespace UtilORama4
 					LOR4ChannelGroup lc = groupList[l];
 					lineOut.Append(CSVsafeName(lc.Name));
 					lineOut.Append(',');
-					if (lc.Selected)
+					if (lc.SelectedState == CheckState.Checked)
 					{
 						xMemberBase xc = (xMemberBase)lc.Tag;
 						if (xc.ExactMatch)
@@ -1838,7 +1838,7 @@ namespace UtilORama4
 				for (int x = 0; x < xGroupList.Count; x++)
 				{
 					xMemberBase xc = xGroupList[x];
-					if (!xc.Selected)
+					if (xc.SelectedState != CheckState.Checked)
 					{
 						lineOut.Clear();
 						lineOut.Append(",None,");
@@ -2362,7 +2362,7 @@ namespace UtilORama4
 			}
 
 			string initFile = "";
-			string filt = LOR4Admin.FILE_LEE;
+			string filt = LOR4Admin.EXT_LEE;
 
 			dlgFileOpen.Filter = filt;
 			dlgFileOpen.FilterIndex = 0;
