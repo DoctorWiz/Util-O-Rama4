@@ -29,298 +29,335 @@ namespace UtilORama4
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
-			this.btnOK = new System.Windows.Forms.Button();
-			this.btnCancel = new System.Windows.Forms.Button();
-			this.lblName = new System.Windows.Forms.Label();
-			this.txtName = new System.Windows.Forms.TextBox();
-			this.txtComment = new System.Windows.Forms.TextBox();
-			this.label4 = new System.Windows.Forms.Label();
-			this.chkActive = new System.Windows.Forms.CheckBox();
-			this.lblNumber = new System.Windows.Forms.Label();
-			this.numNumber = new System.Windows.Forms.NumericUpDown();
-			this.lblSize = new System.Windows.Forms.Label();
-			this.lblConnection = new System.Windows.Forms.Label();
-			this.txtLocation = new System.Windows.Forms.TextBox();
-			this.lblLocation = new System.Windows.Forms.Label();
-			this.txtConnection = new System.Windows.Forms.TextBox();
-			this.lblxStart = new System.Windows.Forms.Label();
-			this.numxStart = new System.Windows.Forms.NumericUpDown();
-			this.numSize = new System.Windows.Forms.NumericUpDown();
-			this.label1 = new System.Windows.Forms.Label();
-			this.lblControllers = new System.Windows.Forms.Label();
-			this.tipTool = new System.Windows.Forms.ToolTip(this.components);
-			((System.ComponentModel.ISupportInitialize)(this.numNumber)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numxStart)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numSize)).BeginInit();
-			this.SuspendLayout();
+			components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmUniverse));
+			btnOK = new Button();
+			btnCancel = new Button();
+			lblName = new Label();
+			txtName = new TextBox();
+			txtComment = new TextBox();
+			lblComment = new Label();
+			chkActive = new CheckBox();
+			lblNumber = new Label();
+			numNumber = new NumericUpDown();
+			lblSize = new Label();
+			lblConnection = new Label();
+			txtLocation = new TextBox();
+			lblLocation = new Label();
+			txtConnection = new TextBox();
+			lblxStart = new Label();
+			numxStart = new NumericUpDown();
+			numSize = new NumericUpDown();
+			label1 = new Label();
+			lblControllers = new Label();
+			tipTool = new ToolTip(components);
+			lblDirty = new Label();
+			label2 = new Label();
+			((System.ComponentModel.ISupportInitialize)numNumber).BeginInit();
+			((System.ComponentModel.ISupportInitialize)numxStart).BeginInit();
+			((System.ComponentModel.ISupportInitialize)numSize).BeginInit();
+			SuspendLayout();
 			// 
 			// btnOK
 			// 
-			this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.btnOK.Location = new System.Drawing.Point(214, 376);
-			this.btnOK.Name = "btnOK";
-			this.btnOK.Size = new System.Drawing.Size(75, 23);
-			this.btnOK.TabIndex = 0;
-			this.btnOK.Text = "OK";
-			this.btnOK.UseVisualStyleBackColor = true;
+			btnOK.DialogResult = DialogResult.OK;
+			btnOK.Location = new Point(464, 926);
+			btnOK.Margin = new Padding(6, 7, 6, 7);
+			btnOK.Name = "btnOK";
+			btnOK.Size = new Size(162, 57);
+			btnOK.TabIndex = 0;
+			btnOK.Text = "OK";
+			btnOK.UseVisualStyleBackColor = true;
+			btnOK.Click += btnOK_Click;
 			// 
 			// btnCancel
 			// 
-			this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.btnCancel.Location = new System.Drawing.Point(295, 376);
-			this.btnCancel.Name = "btnCancel";
-			this.btnCancel.Size = new System.Drawing.Size(75, 23);
-			this.btnCancel.TabIndex = 1;
-			this.btnCancel.Text = "Cancel";
-			this.btnCancel.UseVisualStyleBackColor = true;
+			btnCancel.DialogResult = DialogResult.Cancel;
+			btnCancel.Location = new Point(639, 926);
+			btnCancel.Margin = new Padding(6, 7, 6, 7);
+			btnCancel.Name = "btnCancel";
+			btnCancel.Size = new Size(162, 57);
+			btnCancel.TabIndex = 1;
+			btnCancel.Text = "Cancel";
+			btnCancel.UseVisualStyleBackColor = true;
+			btnCancel.Click += btnCancel_Click;
 			// 
 			// lblName
 			// 
-			this.lblName.AutoSize = true;
-			this.lblName.Location = new System.Drawing.Point(26, 19);
-			this.lblName.Name = "lblName";
-			this.lblName.Size = new System.Drawing.Size(38, 13);
-			this.lblName.TabIndex = 2;
-			this.lblName.Text = "Name:";
+			lblName.AutoSize = true;
+			lblName.Location = new Point(56, 47);
+			lblName.Margin = new Padding(6, 0, 6, 0);
+			lblName.Name = "lblName";
+			lblName.Size = new Size(83, 32);
+			lblName.TabIndex = 2;
+			lblName.Text = "Name:";
 			// 
 			// txtName
 			// 
-			this.txtName.Location = new System.Drawing.Point(70, 16);
-			this.txtName.Name = "txtName";
-			this.txtName.Size = new System.Drawing.Size(300, 20);
-			this.txtName.TabIndex = 3;
-			this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
-			this.txtName.Validating += new System.ComponentModel.CancelEventHandler(this.txtName_Validating);
+			txtName.Location = new Point(152, 39);
+			txtName.Margin = new Padding(6, 7, 6, 7);
+			txtName.Name = "txtName";
+			txtName.Size = new Size(645, 39);
+			txtName.TabIndex = 3;
+			txtName.TextChanged += txtName_TextChanged;
+			txtName.Enter += txtName_Enter;
+			txtName.KeyDown += txtName_KeyDown;
+			txtName.Leave += txtName_Leave;
+			txtName.Validating += txtName_Validating;
 			// 
 			// txtComment
 			// 
-			this.txtComment.Location = new System.Drawing.Point(70, 259);
-			this.txtComment.Multiline = true;
-			this.txtComment.Name = "txtComment";
-			this.txtComment.Size = new System.Drawing.Size(300, 97);
-			this.txtComment.TabIndex = 18;
-			this.txtComment.Validating += new System.ComponentModel.CancelEventHandler(this.txtComment_Validating);
+			txtComment.Location = new Point(152, 638);
+			txtComment.Margin = new Padding(6, 7, 6, 7);
+			txtComment.Multiline = true;
+			txtComment.Name = "txtComment";
+			txtComment.Size = new Size(645, 233);
+			txtComment.TabIndex = 18;
+			txtComment.Enter += txtComment_Enter;
+			txtComment.KeyDown += txtComment_KeyDown;
+			txtComment.Leave += txtComment_Leave;
+			txtComment.Validating += txtComment_Validating;
 			// 
-			// label4
+			// lblComment
 			// 
-			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(13, 262);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(54, 13);
-			this.label4.TabIndex = 17;
-			this.label4.Text = "Comment:";
+			lblComment.AutoSize = true;
+			lblComment.Location = new Point(28, 645);
+			lblComment.Margin = new Padding(6, 0, 6, 0);
+			lblComment.Name = "lblComment";
+			lblComment.Size = new Size(125, 32);
+			lblComment.TabIndex = 17;
+			lblComment.Text = "Comment:";
 			// 
 			// chkActive
 			// 
-			this.chkActive.AutoSize = true;
-			this.chkActive.Checked = true;
-			this.chkActive.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkActive.Location = new System.Drawing.Point(314, 82);
-			this.chkActive.Name = "chkActive";
-			this.chkActive.Size = new System.Drawing.Size(56, 17);
-			this.chkActive.TabIndex = 10;
-			this.chkActive.Text = "Active";
-			this.chkActive.UseVisualStyleBackColor = true;
+			chkActive.AutoSize = true;
+			chkActive.Checked = true;
+			chkActive.CheckState = CheckState.Checked;
+			chkActive.Location = new Point(680, 202);
+			chkActive.Margin = new Padding(6, 7, 6, 7);
+			chkActive.Name = "chkActive";
+			chkActive.Size = new Size(111, 36);
+			chkActive.TabIndex = 10;
+			chkActive.Text = "Active";
+			chkActive.UseVisualStyleBackColor = true;
+			chkActive.CheckedChanged += chkActive_CheckedChanged;
+			chkActive.Enter += chkActive_Enter;
+			chkActive.KeyDown += chkActive_KeyDown;
+			chkActive.Leave += chkActive_Leave;
 			// 
 			// lblNumber
 			// 
-			this.lblNumber.AutoSize = true;
-			this.lblNumber.Location = new System.Drawing.Point(278, 51);
-			this.lblNumber.Name = "lblNumber";
-			this.lblNumber.Size = new System.Drawing.Size(47, 13);
-			this.lblNumber.TabIndex = 6;
-			this.lblNumber.Text = "Number:";
+			lblNumber.AutoSize = true;
+			lblNumber.Location = new Point(602, 126);
+			lblNumber.Margin = new Padding(6, 0, 6, 0);
+			lblNumber.Name = "lblNumber";
+			lblNumber.Size = new Size(107, 32);
+			lblNumber.TabIndex = 6;
+			lblNumber.Text = "Number:";
 			// 
 			// numNumber
 			// 
-			this.numNumber.Location = new System.Drawing.Point(326, 49);
-			this.numNumber.Maximum = new decimal(new int[] {
-            2022,
-            0,
-            0,
-            0});
-			this.numNumber.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-			this.numNumber.Name = "numNumber";
-			this.numNumber.Size = new System.Drawing.Size(44, 20);
-			this.numNumber.TabIndex = 7;
-			this.numNumber.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-			this.numNumber.ValueChanged += new System.EventHandler(this.numNumber_ValueChanged);
-			this.numNumber.Validating += new System.ComponentModel.CancelEventHandler(this.numNumber_Validating);
+			numNumber.Location = new Point(706, 121);
+			numNumber.Margin = new Padding(6, 7, 6, 7);
+			numNumber.Maximum = new decimal(new int[] { 2022, 0, 0, 0 });
+			numNumber.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+			numNumber.Name = "numNumber";
+			numNumber.Size = new Size(95, 39);
+			numNumber.TabIndex = 7;
+			numNumber.Value = new decimal(new int[] { 1, 0, 0, 0 });
+			numNumber.ValueChanged += numNumber_ValueChanged;
+			numNumber.Enter += numNumber_Enter;
+			numNumber.KeyDown += numNumber_KeyDown;
+			numNumber.Leave += numNumber_Leave;
+			numNumber.Validating += numNumber_Validating;
 			// 
 			// lblSize
 			// 
-			this.lblSize.AutoSize = true;
-			this.lblSize.Location = new System.Drawing.Point(34, 115);
-			this.lblSize.Name = "lblSize";
-			this.lblSize.Size = new System.Drawing.Size(30, 13);
-			this.lblSize.TabIndex = 11;
-			this.lblSize.Text = "Size:";
+			lblSize.AutoSize = true;
+			lblSize.Location = new Point(74, 283);
+			lblSize.Margin = new Padding(6, 0, 6, 0);
+			lblSize.Name = "lblSize";
+			lblSize.Size = new Size(62, 32);
+			lblSize.TabIndex = 11;
+			lblSize.Text = "Size:";
 			// 
 			// lblConnection
 			// 
-			this.lblConnection.AutoSize = true;
-			this.lblConnection.Location = new System.Drawing.Point(0, 83);
-			this.lblConnection.Name = "lblConnection";
-			this.lblConnection.Size = new System.Drawing.Size(64, 13);
-			this.lblConnection.TabIndex = 8;
-			this.lblConnection.Text = "Connection:";
+			lblConnection.AutoSize = true;
+			lblConnection.Location = new Point(0, 204);
+			lblConnection.Margin = new Padding(6, 0, 6, 0);
+			lblConnection.Name = "lblConnection";
+			lblConnection.Size = new Size(142, 32);
+			lblConnection.TabIndex = 8;
+			lblConnection.Text = "Connection:";
 			// 
 			// txtLocation
 			// 
-			this.txtLocation.Location = new System.Drawing.Point(70, 48);
-			this.txtLocation.MaxLength = 40;
-			this.txtLocation.Name = "txtLocation";
-			this.txtLocation.Size = new System.Drawing.Size(200, 20);
-			this.txtLocation.TabIndex = 5;
-			this.txtLocation.Validating += new System.ComponentModel.CancelEventHandler(this.txtLocation_Validating);
+			txtLocation.Location = new Point(152, 118);
+			txtLocation.Margin = new Padding(6, 7, 6, 7);
+			txtLocation.MaxLength = 40;
+			txtLocation.Name = "txtLocation";
+			txtLocation.Size = new Size(429, 39);
+			txtLocation.TabIndex = 5;
+			txtLocation.Enter += txtLocation_Enter;
+			txtLocation.KeyDown += txtLocation_KeyDown;
+			txtLocation.Leave += txtLocation_Leave;
+			txtLocation.Validating += txtLocation_Validating;
 			// 
 			// lblLocation
 			// 
-			this.lblLocation.AutoSize = true;
-			this.lblLocation.Location = new System.Drawing.Point(13, 51);
-			this.lblLocation.Name = "lblLocation";
-			this.lblLocation.Size = new System.Drawing.Size(51, 13);
-			this.lblLocation.TabIndex = 4;
-			this.lblLocation.Text = "Location:";
+			lblLocation.AutoSize = true;
+			lblLocation.Location = new Point(28, 126);
+			lblLocation.Margin = new Padding(6, 0, 6, 0);
+			lblLocation.Name = "lblLocation";
+			lblLocation.Size = new Size(109, 32);
+			lblLocation.TabIndex = 4;
+			lblLocation.Text = "Location:";
 			// 
 			// txtConnection
 			// 
-			this.txtConnection.Location = new System.Drawing.Point(70, 80);
-			this.txtConnection.MaxLength = 40;
-			this.txtConnection.Name = "txtConnection";
-			this.txtConnection.Size = new System.Drawing.Size(200, 20);
-			this.txtConnection.TabIndex = 9;
-			this.txtConnection.Validating += new System.ComponentModel.CancelEventHandler(this.txtConnection_Validating);
+			txtConnection.Location = new Point(152, 197);
+			txtConnection.Margin = new Padding(6, 7, 6, 7);
+			txtConnection.MaxLength = 40;
+			txtConnection.Name = "txtConnection";
+			txtConnection.Size = new Size(429, 39);
+			txtConnection.TabIndex = 9;
+			txtConnection.Enter += txtConnection_Enter;
+			txtConnection.KeyDown += txtConnection_KeyDown;
+			txtConnection.Leave += txtConnection_Leave;
+			txtConnection.Validating += txtConnection_Validating;
 			// 
 			// lblxStart
 			// 
-			this.lblxStart.AutoSize = true;
-			this.lblxStart.Location = new System.Drawing.Point(146, 115);
-			this.lblxStart.Name = "lblxStart";
-			this.lblxStart.Size = new System.Drawing.Size(68, 13);
-			this.lblxStart.TabIndex = 13;
-			this.lblxStart.Text = "xLights Start:";
+			lblxStart.AutoSize = true;
+			lblxStart.Location = new Point(316, 283);
+			lblxStart.Margin = new Padding(6, 0, 6, 0);
+			lblxStart.Name = "lblxStart";
+			lblxStart.Size = new Size(148, 32);
+			lblxStart.TabIndex = 13;
+			lblxStart.Text = "xLights Start:";
 			// 
 			// numxStart
 			// 
-			this.numxStart.Increment = new decimal(new int[] {
-            16,
-            0,
-            0,
-            0});
-			this.numxStart.Location = new System.Drawing.Point(214, 113);
-			this.numxStart.Maximum = new decimal(new int[] {
-            32769,
-            0,
-            0,
-            0});
-			this.numxStart.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-			this.numxStart.Name = "numxStart";
-			this.numxStart.Size = new System.Drawing.Size(56, 20);
-			this.numxStart.TabIndex = 14;
-			this.numxStart.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-			this.numxStart.ValueChanged += new System.EventHandler(this.numxStart_ValueChanged);
+			numxStart.Increment = new decimal(new int[] { 16, 0, 0, 0 });
+			numxStart.Location = new Point(464, 278);
+			numxStart.Margin = new Padding(6, 7, 6, 7);
+			numxStart.Maximum = new decimal(new int[] { 32769, 0, 0, 0 });
+			numxStart.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+			numxStart.Name = "numxStart";
+			numxStart.Size = new Size(121, 39);
+			numxStart.TabIndex = 14;
+			numxStart.Value = new decimal(new int[] { 1, 0, 0, 0 });
+			numxStart.ValueChanged += numxStart_ValueChanged;
+			numxStart.Enter += numxStart_Enter;
+			numxStart.KeyDown += numxStart_KeyDown;
+			numxStart.Leave += numxStart_Leave;
 			// 
 			// numSize
 			// 
-			this.numSize.Increment = new decimal(new int[] {
-            16,
-            0,
-            0,
-            0});
-			this.numSize.Location = new System.Drawing.Point(70, 113);
-			this.numSize.Maximum = new decimal(new int[] {
-            512,
-            0,
-            0,
-            0});
-			this.numSize.Minimum = new decimal(new int[] {
-            16,
-            0,
-            0,
-            0});
-			this.numSize.Name = "numSize";
-			this.numSize.Size = new System.Drawing.Size(44, 20);
-			this.numSize.TabIndex = 12;
-			this.numSize.Value = new decimal(new int[] {
-            128,
-            0,
-            0,
-            0});
-			this.numSize.ValueChanged += new System.EventHandler(this.numSize_ValueChanged);
+			numSize.Increment = new decimal(new int[] { 16, 0, 0, 0 });
+			numSize.Location = new Point(152, 278);
+			numSize.Margin = new Padding(6, 7, 6, 7);
+			numSize.Maximum = new decimal(new int[] { 512, 0, 0, 0 });
+			numSize.Minimum = new decimal(new int[] { 16, 0, 0, 0 });
+			numSize.Name = "numSize";
+			numSize.Size = new Size(95, 39);
+			numSize.TabIndex = 12;
+			numSize.Value = new decimal(new int[] { 128, 0, 0, 0 });
+			numSize.ValueChanged += numSize_ValueChanged;
+			numSize.Enter += numSize_Enter;
+			numSize.KeyDown += numSize_KeyDown;
+			numSize.Leave += numSize_Leave;
 			// 
 			// label1
 			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(5, 147);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(59, 13);
-			this.label1.TabIndex = 15;
-			this.label1.Text = "Controllers:";
+			label1.AutoSize = true;
+			label1.Location = new Point(11, 362);
+			label1.Margin = new Padding(6, 0, 6, 0);
+			label1.Name = "label1";
+			label1.Size = new Size(135, 32);
+			label1.TabIndex = 15;
+			label1.Text = "Controllers:";
 			// 
 			// lblControllers
 			// 
-			this.lblControllers.Location = new System.Drawing.Point(70, 147);
-			this.lblControllers.Name = "lblControllers";
-			this.lblControllers.Size = new System.Drawing.Size(300, 101);
-			this.lblControllers.TabIndex = 16;
-			this.lblControllers.Text = "List\r\nOf\r\nControllers\r\nGoes\r\nHere\r\n";
+			lblControllers.Location = new Point(152, 362);
+			lblControllers.Margin = new Padding(6, 0, 6, 0);
+			lblControllers.Name = "lblControllers";
+			lblControllers.Size = new Size(650, 249);
+			lblControllers.TabIndex = 16;
+			lblControllers.Text = "List\r\nOf\r\nControllers\r\nGoes\r\nHere\r\n";
+			// 
+			// lblDirty
+			// 
+			lblDirty.AutoSize = true;
+			lblDirty.Font = new Font("Segoe UI", 6.75F, FontStyle.Italic);
+			lblDirty.ForeColor = SystemColors.GrayText;
+			lblDirty.Location = new Point(11, 978);
+			lblDirty.Margin = new Padding(7, 0, 7, 0);
+			lblDirty.Name = "lblDirty";
+			lblDirty.Size = new Size(51, 25);
+			lblDirty.TabIndex = 23;
+			lblDirty.Text = "Dirty";
+			lblDirty.Visible = false;
+			// 
+			// label2
+			// 
+			label2.AutoSize = true;
+			label2.Font = new Font("Segoe UI", 6.75F, FontStyle.Italic);
+			label2.ForeColor = SystemColors.GrayText;
+			label2.Location = new Point(173, 76);
+			label2.Margin = new Padding(7, 0, 7, 0);
+			label2.Name = "label2";
+			label2.Size = new Size(378, 25);
+			label2.TabIndex = 24;
+			label2.Text = "(Or what group of controllers use this universe)";
 			// 
 			// frmUniverse
 			// 
-			this.AcceptButton = this.btnOK;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.CancelButton = this.btnCancel;
-			this.ClientSize = new System.Drawing.Size(384, 411);
-			this.Controls.Add(this.lblControllers);
-			this.Controls.Add(this.label1);
-			this.Controls.Add(this.numSize);
-			this.Controls.Add(this.lblxStart);
-			this.Controls.Add(this.numxStart);
-			this.Controls.Add(this.txtConnection);
-			this.Controls.Add(this.txtComment);
-			this.Controls.Add(this.label4);
-			this.Controls.Add(this.chkActive);
-			this.Controls.Add(this.lblNumber);
-			this.Controls.Add(this.numNumber);
-			this.Controls.Add(this.lblSize);
-			this.Controls.Add(this.lblConnection);
-			this.Controls.Add(this.txtLocation);
-			this.Controls.Add(this.lblLocation);
-			this.Controls.Add(this.txtName);
-			this.Controls.Add(this.lblName);
-			this.Controls.Add(this.btnCancel);
-			this.Controls.Add(this.btnOK);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-			this.MaximizeBox = false;
-			this.Name = "frmUniverse";
-			this.ShowInTaskbar = false;
-			this.Text = "Universe";
-			this.Load += new System.EventHandler(this.frmUniverse_Load);
-			this.Shown += new System.EventHandler(this.frmUniverse_Shown);
-			((System.ComponentModel.ISupportInitialize)(this.numNumber)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numxStart)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numSize)).EndInit();
-			this.ResumeLayout(false);
-			this.PerformLayout();
+			AcceptButton = btnOK;
+			AutoScaleDimensions = new SizeF(13F, 32F);
+			AutoScaleMode = AutoScaleMode.Font;
+			CancelButton = btnCancel;
+			ClientSize = new Size(832, 1012);
+			Controls.Add(lblDirty);
+			Controls.Add(lblControllers);
+			Controls.Add(label1);
+			Controls.Add(numSize);
+			Controls.Add(lblxStart);
+			Controls.Add(numxStart);
+			Controls.Add(txtConnection);
+			Controls.Add(txtComment);
+			Controls.Add(lblComment);
+			Controls.Add(chkActive);
+			Controls.Add(numNumber);
+			Controls.Add(lblSize);
+			Controls.Add(lblConnection);
+			Controls.Add(txtLocation);
+			Controls.Add(lblLocation);
+			Controls.Add(txtName);
+			Controls.Add(lblName);
+			Controls.Add(btnCancel);
+			Controls.Add(btnOK);
+			Controls.Add(label2);
+			Controls.Add(lblNumber);
+			FormBorderStyle = FormBorderStyle.FixedDialog;
+			Icon = (Icon)resources.GetObject("$this.Icon");
+			Margin = new Padding(6, 7, 6, 7);
+			MaximizeBox = false;
+			Name = "frmUniverse";
+			ShowInTaskbar = false;
+			Text = "Universe";
+			FormClosing += frmUniverse_FormClosing;
+			Load += frmUniverse_Load;
+			Shown += frmUniverse_Shown;
+			ResizeBegin += frmUniverse_ResizeBegin;
+			ResizeEnd += frmUniverse_ResizeEnd;
+			((System.ComponentModel.ISupportInitialize)numNumber).EndInit();
+			((System.ComponentModel.ISupportInitialize)numxStart).EndInit();
+			((System.ComponentModel.ISupportInitialize)numSize).EndInit();
+			ResumeLayout(false);
+			PerformLayout();
 
 		}
 
@@ -331,7 +368,7 @@ namespace UtilORama4
 		private System.Windows.Forms.Label lblName;
 		private System.Windows.Forms.TextBox txtName;
 		private System.Windows.Forms.TextBox txtComment;
-		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.Label lblComment;
 		private System.Windows.Forms.CheckBox chkActive;
 		private System.Windows.Forms.Label lblNumber;
 		private System.Windows.Forms.NumericUpDown numNumber;
@@ -346,5 +383,7 @@ namespace UtilORama4
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label lblControllers;
 		private System.Windows.Forms.ToolTip tipTool;
+		private Label lblDirty;
+		private Label label2;
 	}
 }

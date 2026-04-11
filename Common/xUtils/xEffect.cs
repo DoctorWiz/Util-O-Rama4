@@ -15,6 +15,7 @@ namespace xLights22
 		public int StartTime = 0;
 		public int EndTime = 0; //999999999;
 		public string Parameters = "";
+		//public string Label = "";	
 
 
 		/*
@@ -69,23 +70,23 @@ namespace xLights22
 			}
 		}
 
-		/*
+		
 		public int starttime
 		{
 			get
 			{
-				return _starttime;
+				return StartTime;
 			}
 			set
 			{
-				if (value >= _endtime)
+				if (value >= EndTime)
 				{
 					System.Diagnostics.Debugger.Break();
 					// Raise Exception
 				}
 				else
 				{
-					_starttime = value;
+					StartTime = value;
 				}
 			}
 		}
@@ -95,22 +96,21 @@ namespace xLights22
 		{
 			get
 			{
-				return _endtime;
+				return EndTime;
 			}
 			set
 			{
-				if (_starttime >= value)
+				if (StartTime >= value)
 				{
 					System.Diagnostics.Debugger.Break();
 					// Raise Exception
 				}
 				else
 				{
-					_endtime = value;
+					EndTime = value;
 				}
 			}
 		}
-		*/
 
 		public int CompareTo(xEffect otherEffect)
 		{

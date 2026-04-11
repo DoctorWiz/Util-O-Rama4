@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Syncfusion.Windows.Forms.Tools;   // SyncFusion TreeView Advanced
 
 namespace UtilORama4
 {
@@ -10,7 +11,9 @@ namespace UtilORama4
 	{
 		protected int myID = -1;
 		protected string myName = "";
+		public string Description = "";
 		public int DisplayOrder;
+		public TreeNodeAdv TreeNode = null;
 
 		public DMXDeviceType()
 		{ 

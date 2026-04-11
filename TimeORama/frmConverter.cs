@@ -894,7 +894,7 @@ namespace UtilORama4
 					}
 					else // New sequence
 					{
-						LOR4Track LORtrack = seq.FindTrack("Time-O-Rama");
+						LOR4Track LORtrack = seq.NEWFindTrack("Time-O-Rama");
 						LOR4Channel LORchannel = seq.CreateNewChannel(cboLORItem.Text);
 						LORtrack.Members.Add(LORchannel);
 						ConvertxTimingsToLORchannel(txtXFile.Text, LORchannel);
@@ -959,7 +959,7 @@ namespace UtilORama4
 			if (i < timeTracks.Length)
 			{
 				xTimings timeTrack = timeTracks[i];
-				Bitmap img = xAdmin.RenderTimings(timeTrack, 0, timeTrack.EndTime, picxPreview.Width, picxPreview.Height);
+				Bitmap img = xAdmin.RenderTimings(timeTrack, 0, timeTrack.Milliseconds, picxPreview.Width, picxPreview.Height);
 				picxPreview.Image = img;
 				picxPreview.Visible = true;
 			}
@@ -1106,16 +1106,19 @@ namespace UtilORama4
 							//  will contain it's name, or the end of file and will contain </timings>
 							lineIn = reader.ReadLine(); // <timing name=... or </timings>
 							lineCount++;
-							// Have we reached the end?
-							poz1 = lineIn.IndexOf("</timings>");
-							// If we found it, poz1 will == 0
-							//						 and poz2 will == 2 (because we found </EffectLayer> above
-							// This will cause the inner while loop to exit (2 !< 0)
-							// And will also cause the first while loop to exit (0 !< 0)
-							// If we DIDN'T find it, poz1 will = -1
-							// so inner while will exit, but outer while will continue looping
-							// start of outer loop gets the name of the next section
-							int wik = 0; // Break here for testing
+							if (lineIn != null)
+							{
+								// Have we reached the end?
+								poz1 = lineIn.IndexOf("</timings>");
+								// If we found it, poz1 will == 0
+								//						 and poz2 will == 2 (because we found </EffectLayer> above
+								// This will cause the inner while loop to exit (2 !< 0)
+								// And will also cause the first while loop to exit (0 !< 0)
+								// If we DIDN'T find it, poz1 will = -1
+								// so inner while will exit, but outer while will continue looping
+								// start of outer loop gets the name of the next section
+								int wik = 0; // Break here for testing
+							}
 						}
 						else
 						{

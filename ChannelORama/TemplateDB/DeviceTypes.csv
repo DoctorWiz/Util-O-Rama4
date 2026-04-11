@@ -1,0 +1,45 @@
+ID, Name, Display Order
+# First column is the ID and *MUST* be in contiguous order from zero to ...?
+#  Failure to do so will cause program errors and crashes!
+# Second column is the name or description of the device type.
+# Third column is the order to display in.  Should be contiguous from zero to ...?
+#   but won't cause serious problems if there are duplicates or missing numbers.
+#     (But if so they may not sort into the display order you want!)
+#       You will probably want to display them in order from most used to the rarest. (but hey, that's up to you!)
+# First device type with ID of 0 is reserved for unknown/unclassified/whuteva
+# Do not (dramatically) change the name of a device for a certain ID.
+# If you do, all channels using that old device ID will get the new name.
+#   (Unless none of your channels are assigned that device type)
+0,  Unclassified, 99
+1,  LED String, 1
+2,  Outline, 2
+3,  Tree, 3
+4,  RGB Tree, 4
+5,  RGBW Tree, 5
+6,  Candy Cane, 6
+7,  Inflatable, 7
+8,  Blowmold, 8
+9,  Single Light, 9
+10, Floodlight (single color),10
+11, RGB Flood, 11
+12, Ropelight, 12
+13, LED Strip, 13
+14, RGB Strip, 14
+15, Cutout, 15
+16, Wireframe- Flat, 16
+17, Wireframe- 3D, 17
+18, Ground Cover, 18
+19, Projector, 19
+20, Laser, 20
+21, Beacon, 21
+22, Strobe(s), 22
+23, Flicker Bulb, 23
+24, Box, 24
+25, Zone Power, 25
+26, Sign, 26
+27, Neon, 27
+28, Motor, 28
+29, UFO, 29
+30, Other..., 30
+31, Spare, 31
+32, Bad Triac, 32

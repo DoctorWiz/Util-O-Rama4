@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using FileHelper; // Since the MRU may likely be holding file names
 using Microsoft.Win32;
+using System.Drawing;
 
 namespace LOR4
 {

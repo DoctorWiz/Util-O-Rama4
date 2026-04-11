@@ -1,0 +1,22 @@
+ID,Universe,Controller,Name,Location,Comment,Active,Brand,Model,Unit#,Output Count,DMX Start,Voltage
+1,1,A,$Tomato Trees Front Row Left 4 Trees,Under Giant Tree,,True,LOR,CTB-16D,1,16,1,120
+2,1,B,$Tomato Trees Front Row Right 4 Trees,Under Giant Tree,,True,LOR,CTB-16D,2,16,17,120
+3,1,C,$Tomato Trees Back Row,Behind Big Tree 2,,True,LOR,CTB16PC,3,16,33,120
+4,1,D,$Pencil Trees,Yard Left Rear,,True,LOR,CTB16PC,3,16,33,120
+5,1,E,$Canes and Other Trees,,,True,LOR,CTB16PC,4,16,49,120
+6,1,F,$Even More Trees,,,True,LOR,CTB16PC,4,16,49,120
+7,1,G,%Far Left Yard,Behind Left Bushes,,True,LOR,LOR1602WIZ,5,16,65,120
+8,1,H,%Center Left Yard,Behind Middle Bushes,,True,LOR,CTB16Wiz,6,16,81,120
+9,1,I,%Near Left Yard,Behind brick wall,,True,LOR,CTB16PC,7,16,97,120
+10,2,J,=Burst Front Left,Front of yard Left,,True,LOR,CTB-16,7,16,1,120
+11,2,K,=Burst Front Right,Front of yard Right,,True,LOR,CTB-16,7,16,1,120
+12,2,L,=Burst Rear Left,Back of yard Left,,True,LOR,CTB-16,7,16,1,120
+13,2,M,=Burst Rear Right,Back of yard Right,,True,LOR,CTB-16,7,16,1,120
+14,2,S,=Roof Burst Left,Roof Left,,True,LOR,CTB-16,7,16,1,120
+15,2,T,=Roof Burst Right,Roof Right,,True,LOR,CTB-16,7,16,1,120
+16,3,N,%Right Pine Tree,Mounted to back of Right Pine tree,,True,LOR,LOR1602W,7,16,1,120
+17,3,O,%Right Bushes,Behind Right Bushes,,True,LOR,CTB16WIZ,7,16,17,120
+18,3,P,%House Front,Garage,,True,LOR,Old LOR1602W Gen 1,4,16,49,120
+19,3,Q,%LOR 24 ch Low Voltage 5/12 Volts,Garage,,True,LOR,CTB24D,0,24,65,12
+20,3,R,%Flood Lights,Garage,,True,Chinese,Generic DC 27,0,27,89,12
+21,4,Z,Phantom- Retired Channels,Nowhere,,False,Chauvet,None,0,32,1,120

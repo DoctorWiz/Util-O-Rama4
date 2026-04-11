@@ -773,7 +773,7 @@ namespace LOR4
 	public class LOR4AnimationRow
 	{
 		public int rowIndex = LOR4Admin.UNDEFINED;
-		public List<LOR4AnimationColumn> animationColumns = new();
+		public List<LOR4AnimationColumn> animationColumns = new List<LOR4AnimationColumn>();
 		public const string FIELDrow = "row";
 		public const string FIELDindex = "index";
 

@@ -29,8 +29,10 @@ namespace xLights22
 		xModelSubType MemberSubType
 		{ get; set; }
 
-		CheckState SelectedState
-		{ get; set; }
+//#if !CONSOLEAPP
+//		CheckState SelectedState
+//		{ get; set; }
+//#endif
 
 		bool ExactMatch
 		{ get; set; }
@@ -59,7 +61,9 @@ namespace xLights22
 	{
 		protected string myName = "";
 		private Color myColor = Color.Black;
-		private CheckState isSelected = CheckState.Unchecked;
+//#if !CONSOLEAPP
+//		private CheckState isSelected = CheckState.Unchecked;
+//#endif
 		private bool matchExact = false;
 		private object tagItem = null;
 		private int xaddress = -1;
@@ -112,11 +116,13 @@ namespace xLights22
 			set { modelSubType = value; }
 		}
 
-		public CheckState SelectedState
-		{
-			get { return isSelected; }
-			set { isSelected = value; }
-		}
+//#if !CONSOLEAPP
+//		public CheckState SelectedState
+//		{
+//			get { return isSelected; }
+//			set { isSelected = value; }
+//		}
+//#endif
 
 		public bool ExactMatch
 		{

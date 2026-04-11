@@ -2228,6 +2228,31 @@ namespace LOR4
 		#region IdentityFindWrappers
 		// Wrappers for Members Find Functions
 
+		public LOR4Track FindTrack(int SavedIndex)
+		{
+			LOR4Track ret = null;
+			iLOR4Member member = AllMembers.BySavedIndex[SavedIndex];
+			if (member != null)
+			{
+				if (member.MemberType == LOR4MemberType.Track)
+				{
+					ret = (LOR4Track)member;
+				}
+			}
+			return ret;
+		} // end FindTrack
+
+		public LOR4Track FindTrack(string trackName, bool createIfNotFound = false)
+		{
+			LOR4Track ret = null;
+			iLOR4Member member = AllMembers.FindByName(trackName, LOR4MemberType.Track, createIfNotFound);
+			if (member != null)
+			{
+				ret = (LOR4Track)member;
+			}
+			return ret;
+		}
+
 		public LOR4Channel FindChannel(int SavedIndex)
 		{
 			LOR4Channel ret = null;

@@ -82,18 +82,18 @@ namespace UtilORama4
 			}
 			SetCombo(cboMethodBarsBeats, userSettings.methodBarsBeats);
 			timeSignature = userSettings.timeSignature;
-			if (timeSignature == 3) swTrackBeat.Checked = true; else swTrackBeat.Checked = false;
+			//if (timeSignature == 3) swTrackBeat.Checked = true; else swTrackBeat.Checked = false;
 			startBeat = userSettings.startBeat;
 			txtStartBeat.Text = startBeat.ToString();
 			vscStartBeat.Value = (5 - startBeat);
 			SetCombo(cboDetectBarBeats, userSettings.detectBars);
 			chkWhiten.Checked = userSettings.whiteBarsBeats;
 			chkBars.Checked = userSettings.doBars;
-			chkBeatsFull.Checked = userSettings.DoBeatsFull;
+			chkBeatsFull.Checked = userSettings.doBeatsFull;
 			chkBeatsHalf.Checked = userSettings.doBeatsHalf;
 			chkBeatsThird.Checked = userSettings.doBeatsThird;
 			chkBeatsQuarter.Checked = userSettings.doBeatsQuarter;
-			SetCombo(cboAlignBarBeats, userSettings.alignBarsBeats);
+			SetCombo(cboAlignBarBeats, userSettings.alignBarBeats);
 			SetCombo(cboLabelsBarBeats, userSettings.labelBarBeats);
 
 			///////////////////
@@ -122,7 +122,7 @@ namespace UtilORama4
 			SetCombo(cboLabelsOnsets, userSettings.labelOnsets);
 			SetCombo(cboAlignOnsets, userSettings.alignOnsets);
 			SetCombo(cboStepSize, userSettings.stepSize);
-			swRamps.Checked = userSettings.Ramps;
+			//swRamps.Checked = userSettings.Ramps;
 
 			////////////////////////////////
 			//! Polyphonic Transcription //
@@ -269,13 +269,13 @@ namespace UtilORama4
 		{
 			//! Bars and Beats
 			userSettings.doBars = chkBars.Checked;
-			userSettings.DoBeatsFull = chkBeatsFull.Checked;
+			userSettings.doBeatsFull = chkBeatsFull.Checked;
 			userSettings.doBeatsHalf = chkBeatsHalf.Checked;
 			userSettings.doBeatsThird = chkBeatsThird.Checked;
 			userSettings.doBeatsQuarter = chkBeatsQuarter.Checked;
 			userSettings.labelBarBeats = cboLabelsBarBeats.Text;
-			userSettings.alignBarsBeats = cboAlignBarBeats.Text;
-			userSettings.Ramps = swRamps.Checked;
+			userSettings.alignBarBeats = cboAlignBarBeats.Text;
+			//userSettings.Ramps = swRamps.Checked;
 
 			//! Note Onsets
 			userSettings.methodOnsets = cboMethodOnsets.Text;
@@ -344,7 +344,9 @@ namespace UtilORama4
 			Annotator.ReuseResults = chkReuse.Checked;
 			Annotator.Whiten = chkWhiten.Checked;
 			Annotator.StepSize = Int32.Parse(cboStepSize.Text);
-			if (swTrackBeat.Checked) Annotator.BeatsPerBar = 3; else Annotator.BeatsPerBar = 4;
+			//if (swTrackBeat.Checked)
+			Annotator.BeatsPerBar = 3;
+			//else Annotator.BeatsPerBar = 4;
 			//Annotator.UseRamps = swRamps.Checked;
 			Annotator.FirstBeat = Int32.Parse(txtStartBeat.Text);
 			//Annotator.WorkPath = pathWork;
@@ -1107,10 +1109,10 @@ namespace UtilORama4
 		private int ExportSelectedVampsToLOR()
 		{
 			int completed = 0;
-			bool ramps = swRamps.Checked;
+			bool ramps = false; // swRamps.Checked;
 			Annotator.UseRamps = ramps;
 
-			//Annotator.VampTrack = Annotator.Sequence.FindTrack("Vamp-O-Rama", true);
+			//Annotator.VampTrack = Annotator.Sequence.FindTrack(vamps.MASTERTRACK, true);
 
 			//! BARS AND BEATS
 			if (chkBarsBeats.Checked)

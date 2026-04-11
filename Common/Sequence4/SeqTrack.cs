@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Diagnostics;
+using System.Windows.Forms;	
 using FileHelper;
 
 namespace LOR4
@@ -476,5 +477,30 @@ namespace LOR4
 		}
 
 		//TODO: add RemoveItem procedure
+
+		public LOR4ChannelGroup FindChannelGroup(string channelGroupName, bool createIfNotFound = false)
+		{
+			LOR4ChannelGroup ret = null;
+			for (int i = 0; i < Members.Count; i++)
+			{
+				if (Members.Items[i].MemberType == LOR4MemberType.ChannelGroup)
+				{
+					if (Members.Items[i].Name == channelGroupName)
+					{
+						ret = (LOR4ChannelGroup)Members.Items[i];
+						i = Members.Count; // Break out of loop
+					}
+				}
+			}
+			if ((ret == null) && createIfNotFound)
+			{
+				ret = new LOR4ChannelGroup(this, channelGroupName);
+				Members.Add(ret);
+				if (myParent != null) myParent.MakeDirty(true);
+			}
+			return ret;
+		}
+
+
 	} // end class track
 }

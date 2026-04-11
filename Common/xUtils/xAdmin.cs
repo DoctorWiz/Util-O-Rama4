@@ -13,6 +13,7 @@ using System.Runtime.InteropServices;
 using Microsoft.Win32;
 using System.DirectoryServices;
 using FileHelper;
+using LOR4;
 
 //using FuzzORama;
 
@@ -227,6 +228,7 @@ namespace xLights22
 			return ret;
 		}
 
+#if !CONSOLEAPP
 		public static int ColorIcon(ImageList icons, Int32 colorVal)
 		{
 			int ret = -1;
@@ -303,7 +305,7 @@ namespace xLights22
 
 			return ret;
 		}
-
+#endif
 
 		public static void WriteLogEntry(string message, string logType, string applicationName)
 		{
@@ -334,7 +336,11 @@ namespace xLights22
 				errMsg += "The first error was: " + message + "\r\n";
 				errMsg += "The second error was: " + ex.ToString();
 				errMsg += "The log file is: " + file;
+#if CONSOLEAPP
+				Console.WriteLine(errMsg);
+#else
 				DialogResult dr = MessageBox.Show(errMsg, "Errors!", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Error);
+#endif
 			}
 			finally
 			{
@@ -615,7 +621,11 @@ namespace xLights22
 			{
 				Directory.CreateDirectory(tempPath);
 			}
-			mySubDir += Application.ProductName + "\\";
+#if CONSOLEAPP
+			mySubDir = Console.Title + "\\";
+#else
+			mySubDir = Application.ProductName + "\\";
+#endif
 			mySubDir = mySubDir.Replace("-", "");
 			tempPath = appDataDir + mySubDir;
 			if (!Directory.Exists(tempPath))
@@ -945,6 +955,303 @@ namespace xLights22
 			return ret;
 		}
 
+		public static Bitmap RenderTimings(xTimings times, int startMilliseconds, int endMilliseconds, int width, int height)
+		{
+			const int msPerSec = 100;
+			int minPixPerMark = 3;
+			int h13 = (int)Math.Round(height / 0.666666D);  // Start 2/3 down, One-Third length
+			int h12 = height / 2;                           // Start 1/2 down, Half Length
+			int h23 = height / 3;                           // Start 1/3 down, Two-Thirds length
+			int h34 = (int)Math.Round(height / 0.25D);      // Start 1/4 down, Three-Quarters length
+
+			// Create a temporary working bitmap
+			Bitmap bmp = new Bitmap(width, height);
+			// get the graphics handle from it
+			Graphics gr = Graphics.FromImage(bmp);
+			// Paint the entire 'background' pale yellow
+			Brush br = new SolidBrush(Color.FromArgb(240, 240, 128));
+			gr.FillRectangle(br, 0, 0, width - 1, height - 1);
+			// Start with 'DarkGray' for the seconds divisions
+			//   (Which is lighter than regular 'Gray', and lighter than
+			//    'DimGray' used for the timings (go figure!))
+			Color c = Color.DarkGray;
+			Pen p = new Pen(c, 1);
+			br = new SolidBrush(c);
+			Rectangle boxrect = new Rectangle(0, 0, width, height);
+			Font fnt = new Font("Arial", 8, FontStyle.Regular);
+			Font itfnt = new Font("Arial", 8, FontStyle.Italic);
+			StringFormat strfmt = new StringFormat();
+			string msg = "";
+			int divSec = 0;
+
+			// Is it an Empty times?  No timings, or only 1 timing at 0?
+			bool empty = false;
+			if (times.Markers.Count < 1)
+			{ empty = true; }
+			else
+			{
+				if (times.Markers.Count == 1)
+				{
+					if (times.Markers[0].starttime == 0)
+					{
+						empty = true;
+					}
+				}
+			} // end is the grid empty?
+
+			// Assuming fairly evenly spaced timings---
+			// Dunno how the heck I would handle clusters!
+			int totalMS = endMilliseconds - startMilliseconds;
+			string info = FormatTime(totalMS);
+			if (times.Markers.Count > (width / minPixPerMark))
+			{
+				// Toooo many timings to display without some magic fudging...
+				// How much of it can we show without jamming them together
+
+				// How many ticks can we show?
+				int maxTicks = width / minPixPerMark;
+				// What percentage of the song would that cover?
+				double percentage = (double)maxTicks / (double)times.Markers.Count;
+				// Round down to 2 decimal places
+				int pp = (int)(percentage * 100);
+				double pctRound = (pp / 100D);
+				// How many centiseconds is that?
+				int lengthCS = (int)(pctRound * totalMS);
+				int newcs = lengthCS;
+				// If more than 30 seconds
+				if (lengthCS > 30 * msPerSec)
+				{
+					// Round that down to the nearest 10 seconds
+					newcs = (lengthCS / (10 * msPerSec)) * 10 * msPerSec;
+				}
+				else // Less than 30 seconds
+				{
+					// Round that down to the nearest second
+					newcs = (lengthCS / msPerSec) * msPerSec;
+				}
+				// Set our new end and length
+				endMilliseconds = startMilliseconds + newcs;
+				totalMS = endMilliseconds - startMilliseconds;
+				info = FormatTime(totalMS);
+			}
+
+			// Next problem, how long is it and can we do 1 second dividers?
+			//( works up to about 5 minutes)
+			divSec = 1;
+			int maxCount = width / minPixPerMark;
+			int divCount = (totalMS / (divSec * msPerSec));
+			if (divCount > maxCount)
+			{
+				// No?, Too many?, can we do 5 second dividers?
+				divSec = 5;
+				divCount = (totalMS / (divSec * msPerSec));
+				if (divCount > maxCount)
+				{
+					// No?, Still too many?, how about 10 second dividers?
+					divSec = 10;
+					divCount = (totalMS / (divSec * msPerSec));
+					if (divCount > maxCount)
+					{
+						// Really?, How long is this thing?, can we manage 30 second dividers?
+						divSec = 30;
+						divCount = (totalMS / (divSec * msPerSec));
+						if (divCount > maxCount)
+						{
+							// Something is probably wrong...
+							Fyle.BUG("Is this sequence really too long for 30 second dividers?  cs=" + totalMS.ToString());
+							divSec = -1;
+						}
+					}
+				}
+			}
+
+			// Valid spaces for dividers
+			if (divSec > 0)
+			{
+				// Get Pixels-per-Millisecond and Milliseconds-per-Pixel Horizontal
+				double CSperPixel = ((double)totalMS / width);
+				double pixelsPerCS = ((double)width / totalMS);
+				// How many pixels is that per timing division?
+				double divSpace = divSec * pixelsPerCS * msPerSec;
+				// Sanity check for debugging, remark out once known valid
+				//if (divSpace < 2.5)
+				//{ Fyle.BUG("Spacing Problem-- Too Small!"); }
+				//if (divSpace > 30)
+				//{ Fyle.BUG("Possible Spacing Problem-- Too Big!"); }
+				// Draw the timing divisions!
+				for (int t = 1; t < divCount; t++)
+				{
+					int tx = (int)Math.Round(t * divSpace);
+					gr.DrawLine(p, tx, 0, tx, height - 1);
+				}
+
+				if (!empty)
+				{
+					// Now draw the timing marks
+					// Switch from [Whatever]Gray to Black for the timing marks
+					c = Color.Black;
+					p = new Pen(c, 1);
+					br = new SolidBrush(c);
+					for (int t = 0; t < times.Markers.Count; t++)
+					{
+						int csx = times.Markers[t].starttime;
+						if (csx > startMilliseconds)
+						{
+							if (csx <= endMilliseconds)
+							{
+								int tx = (int)Math.Round(csx * pixelsPerCS);
+								//TODO: Get Divisions working the way I want first, then get this working
+								// Start at halfway, and draw downwards
+								gr.DrawLine(p, tx, h12, tx, height - 1);
+							}
+							else
+							{
+								// Break out of loop
+								//t = times.timings.Count;
+								break;
+							}
+						}
+					}
+				}
+				else // Empty!
+				{
+					// Grid is empty!
+					msg = "[ No Timings ]";
+					br = new SolidBrush(Color.Navy);
+					strfmt.Alignment = StringAlignment.Center;
+					strfmt.LineAlignment = StringAlignment.Far; // Bottom
+					gr.DrawString(msg, itfnt, br, boxrect, strfmt);
+				} // end empty, or not
+
+
+
+
+				// Label the division marks
+				msg = divSec.ToString() + " sec per div";
+				// Switch to 'DimGray' for the text label
+				//   (Which is darker than regular 'Gray', and darker than
+				//    'DarkGray' used for the timings (go figure!))
+				br = new SolidBrush(Color.DimGray);
+				strfmt.Alignment = StringAlignment.Near; // Left
+				strfmt.LineAlignment = StringAlignment.Near; // Top
+				gr.DrawString(msg, fnt, br, boxrect, strfmt);
+
+				// Label the end time
+				msg = FormatTime(endMilliseconds) + " sec→";
+				// If we are displaying less than a minute, but the sequence is over a minute
+				if ((endMilliseconds < 60 * msPerSec) && (times.Milliseconds >= 60 * msPerSec))
+				{
+					// add leading zero
+					msg = "0:" + msg;
+				}
+				// Hmmmm, what color looks good here...
+				br = new SolidBrush(Color.Indigo);
+				strfmt.Alignment = StringAlignment.Far; // Right
+				gr.DrawString(msg, fnt, br, boxrect, strfmt);
+			}
+			else // divSec < 1
+			{
+				// Error!  Could not figure out how to do it
+				//   Possibly because the sequence is too long (?)
+				msg = "[ Cannot display timings! ]";
+				br = new SolidBrush(Color.DimGray);
+				strfmt.Alignment = StringAlignment.Center;
+				strfmt.LineAlignment = StringAlignment.Center;
+				gr.DrawString(msg, itfnt, br, boxrect, strfmt);
+			}// end Valid Divisions, or not
+
+			return bmp;
+		}
+
+		private static int RenderTimeDivisions(ref Bitmap bmp, int startMilliseconds, int endMilliseconds)
+		{
+			const int msPerSec = 1000;
+			const int minDivWidth = 7;
+			Graphics gr = Graphics.FromImage(bmp);
+			// Start with 'DarkGray' for the divisions
+			//   (Which is lighter than regular 'Gray' (go figure!))
+			//Color c = Color.DimGray;
+			Color c = Color.Magenta; // Temp, for debugging
+			Pen p = new Pen(c, 1);
+			int width = bmp.Width;
+			int height = bmp.Height;
+			int totalMS = endMilliseconds - startMilliseconds;
+			int maxDivs = width / minDivWidth;
+			// Start with 1 sec per div
+			int divSec = 1;
+			int divCount = totalMS / (divSec * msPerSec);
+			if (divCount > maxDivs)
+			{
+				// Too dense eh?, lets try 5 seconds
+				divSec = 5;
+				divCount = totalMS / (divSec * msPerSec);
+				if (divCount > maxDivs)
+				{
+					// Still too dense?, lets try 10 seconds
+					divSec = 10;
+					divCount = totalMS / (divSec * msPerSec);
+					if (divCount > maxDivs)
+					{
+						// Still too dense?, how about 15 seconds
+						divSec = 15;
+						divCount = totalMS / (divSec * msPerSec);
+						if (divCount > maxDivs)
+						{
+							// Lets try 30 seconds
+							divSec = 30;
+							divCount = totalMS / (divSec * msPerSec);
+							if (divCount > maxDivs)
+							{
+								// Still too dense?, How about a minute?
+								divSec = 60;
+								divCount = totalMS / (divSec * msPerSec);
+								if (divCount > maxDivs)
+								{
+									// Really?  Is the times actually that effing long?
+									Fyle.BUG("Is the song really that friggin' long?");
+								}
+							}
+						}
+					}
+				}
+			}
+
+			// Get Pixels-per-Millisecond and Milliseconds-per-Pixel Horizontal
+			double CSperPixel = ((double)totalMS / width);
+			double pixelsPerCS = ((double)width / totalMS);
+			// How many pixels is that per timing division?
+			double divSpace = divSec * pixelsPerCS * msPerSec;
+
+			for (int t = 1; t < divCount; t++)
+			{
+				int tx = (int)Math.Round(t * divSpace);
+				gr.DrawLine(p, tx, 0, tx, height - 1);
+			}
+			return divSec;
+		}
+
+		public static string FormatTime(int milliseconds)
+		{
+			string timeOut = "";
+
+			int totsecs = (int)(milliseconds / 1000);
+			int centis = milliseconds % 1000;
+			int min = (int)(totsecs / 60);
+			int secs = totsecs % 60;
+
+			if (min > 0)
+			{
+				timeOut = min.ToString() + Fyle.CHAR_TIMESEP;
+				timeOut += secs.ToString("00");
+			}
+			else
+			{
+				timeOut = secs.ToString();
+			}
+			timeOut += Fyle.CHAR_DECIMAL + centis.ToString("00");
+
+			return timeOut;
+		}
 
 
 	} // end class xAdmin

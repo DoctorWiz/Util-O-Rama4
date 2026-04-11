@@ -1,10 +1,12 @@
 namespace UtilORama4
 {
-	internal static class Program
+	public static class Program
 	{
 		/// <summary>
 		///  The main entry point for the application.
 		/// </summary>
+		public static string Name = "Time-O-Rama";
+
 		[STAThread]
 		static void Main()
 		{

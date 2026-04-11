@@ -9,6 +9,7 @@ using System.Media;
 using LOR4;
 using FileHelper;
 using xLights22;
+using System.Drawing;
 
 using System.Diagnostics;
 using System.Linq.Expressions;
@@ -24,7 +25,7 @@ namespace UtilORama4
 		private LOR4Track vampTrack = null;
 		//private int centiseconds = 0;
 		private string fileSeqName = "";
-		private MRUoRama mruSequences = new MRUoRama(MRUoRama.FileType.Sequences, "Vamp-O-Rama");
+		private MRUoRama mruSequences = new MRUoRama(MRUoRama.FileType.Sequences, applicationName);
 
 		private bool SaveAsNewSequence()
 		{
@@ -288,7 +289,7 @@ namespace UtilORama4
 			ftg.Centiseconds = audioData.Centiseconds;
 			ftg.spacing = 5;
 			
-			vampTrack = seq.FindTrack("Vamp-O-Rama", true);
+			vampTrack = seq.FindTrack(vamps.MASTERTRACK, true);
 			//vampTrack.Centiseconds = centiseconds;
 			vampTrack.timingGrid = ftg;
 
@@ -305,7 +306,7 @@ namespace UtilORama4
 			}
 			if (chkPolyphonic.Checked && (errLevel == 0))
 			{
-				errLevel = ImportPoly();
+				errLevel = ImportPoly(vamps.FILEqmPoly);
 			}
 			if (chkPitchKey.Checked && (errLevel == 0))
 			{
@@ -313,7 +314,7 @@ namespace UtilORama4
 			}
 			if (chkSegments.Checked && (errLevel == 0))
 			{
-				errLevel = import ImportSegments();
+				errLevel = ImportSegments();
 			}
 
 
@@ -341,12 +342,12 @@ namespace UtilORama4
 					{
 						if (Annotator.UseRamps)
 						{
-							errs += VampBarBeats.xTimingToLORChannels(xBars, LOR4Admin.Color_NettoLOR(System.Drawing.Color.Red));
+							errs += VampBarBeats.xTimingToLORChannels(VampBarBeats.xBars, LOR4Admin.Color_NettoLOR(System.Drawing.Color.Red));
 						}
 						else
 						{
 							// Actually Bars
-							errs += xTimingToLORChannels(xBeatsQuarter, LOR4Admin.Color_NettoLOR(System.Drawing.Color.Red), xBars.Name, Annotator.BeatsPerBar * 4);
+							errs += VampBarBeats.xTimingToLORChannels(VampBarBeats.xBeatsQuarter, LOR4Admin.Color_NettoLOR(System.Drawing.Color.Red), VampBarBeats.xBars.Name, Annotator.BeatsPerBar * 4);
 						}
 
 
@@ -357,16 +358,15 @@ namespace UtilORama4
 
 
 
-						//LOR4Timings barGrid = seq.FindGrid("Bars", true);
-						VampBarBeats.xTimingsToLORChannels()
+						VampBarBeats.xTimingsToLORChannels();
 						//LOR4Channel barCh = beatGroup.Members.FindChannel("Bars", true);
 						VampBarBeats.xTimingsToLORChannels();
 						//ImportTimingGrid(barGrid, VampBarBeats.xBars);
-						if (swRamps.Checked)
-						{
-							LOR4Channel barCh = beatGroup.Members.FindChannel("Bars", true);
-							ImportBeatChannel(barCh, VampBarBeats.xBars, 1);
-						}
+						//if (swRamps.Checked)
+						//{
+						//	LOR4Channel barCh = beatGroup.Members.FindChannel("Bars", true);
+						//	SequenceFunctions.ImportBeatChannel(barCh, VampBarBeats.xBars, 1);
+						//}
 					}
 				}
 			}
@@ -378,8 +378,8 @@ namespace UtilORama4
 					{
 						LOR4Timings beatGrid = seq.FindGrid("Beats-Full",true);
 						LOR4Channel beatCh = beatGroup.Members.FindChannel("Beats-Full", true);
-						ImportTimingGrid(barGrid, VampBarBeats.xBeatsFull);
-						ImportBeatChannel(beatCh, VampBarBeats.xBeatsFull,beatsPerBar);
+						SequenceFunctions.ImportTimingGrid(beatGrid, VampBarBeats.xBeatsFull);
+						SequenceFunctions.ImportBeatChannel(beatCh, VampBarBeats.xBeatsFull,Annotator.BeatsPerBar);
 					}
 				}
 			}
@@ -391,8 +391,8 @@ namespace UtilORama4
 					{
 						LOR4Timings beatGrid = seq.FindGrid("Beats-Half",true);
 						LOR4Channel beatCh = beatGroup.Members.FindChannel("Beats-Half", true);
-						ImportTimingGrid(barGrid, VampBarBeats.xBeatsHalf);
-						ImportBeatChannel(beatCh, VampBarBeats.xBeatsHalf,beatsPerBar * 2);
+						SequenceFunctions.ImportTimingGrid(beatGrid, VampBarBeats.xBeatsHalf);
+						SequenceFunctions.ImportBeatChannel(beatCh, VampBarBeats.xBeatsHalf,Annotator.BeatsPerBar * 2);
 					}
 				}
 			}
@@ -404,8 +404,8 @@ namespace UtilORama4
 					{
 						LOR4Timings beatGrid = seq.FindGrid("Beats-Third",true);
 						LOR4Channel beatCh = beatGroup.Members.FindChannel("Beats-Third", true);
-						ImportTimingGrid(barGrid, VampBarBeats.xBeatsThird);
-						ImportBeatChannel(beatCh, VampBarBeats.xBeatsThird,beatsPerBar * 3);
+						SequenceFunctions.ImportTimingGrid(beatGrid, VampBarBeats.xBeatsThird);
+						SequenceFunctions.ImportBeatChannel(beatCh, VampBarBeats.xBeatsThird,Annotator.BeatsPerBar * 3);
 					}
 				}
 			}
@@ -488,14 +488,15 @@ namespace UtilORama4
 		private int ImportNoteOnsets()
 		{
 			int errs = 0;
-			if (xOnsets != null)
+			if (Annotator.xNoteOnsets != null)
 			{
-				if (xOnsets.Markers.Count > 0)
+				if (Annotator.xNoteOnsets.Markers.Count > 0)
 				{
-					LOR4Timings onsGrid = GetGrid("Note Onsets");
-					ImportTimingGrid(onsGrid, xBars);
-					LOR4ChannelGroup onsGrp = GetGroup("Note Onsets", vampTrack);
-					ImportNoteOnsetChannels(onsGrp, xBeatsFull);
+					LOR4Track vampTrack = seq.FindTrack(vamps.MASTERTRACK);
+					LOR4Timings onsGrid = seq.FindGrid("Note Onsets");
+					SequenceFunctions.ImportTimingGrid(onsGrid, VampBarBeats.xBars);
+					LOR4ChannelGroup onsGrp = vampTrack.FindChannelGroup(vamps.GROUPONSETS);
+					ImportNoteOnsetChannels(onsGrp, VampBarBeats.xBeatsFull);
 				}
 			}
 			return errs;
@@ -504,12 +505,13 @@ namespace UtilORama4
 		private int ImportPitchKey()
 		{
 			int errs = 0;
-			if (xOnsets != null)
+			if (Annotator.xNoteOnsets != null)
 			{
-				if (xKey.Markers.Count > 0)
+				if (Annotator.xKeys.Markers.Count > 0)
 				{
-					LOR4ChannelGroup keyGrp = GetGroup("Pitch and Key", vampTrack);
-					ImportKeyChannels(keyGrp, xKey);
+					LOR4Track vampTrack = seq.FindTrack(vamps.MASTERTRACK);
+					LOR4ChannelGroup keyGrp = vampTrack.FindChannelGroup(vamps.GROUPKEY);
+					ImportKeyChannels(keyGrp, Annotator.xKeys);
 				}
 			}
 			return errs;
@@ -534,11 +536,11 @@ private int		ImportNoteOnsetChannels(LOR4ChannelGroup onsGrp, xTimings xBeatsFul
 				keyGroup.Members = new LOR4Membership(keyGroup);
 			}
 			LOR4Channel[] keyChannels = null;
-			Array.Resize(ref keyChannels, keyNames.Length);
-			for (int kc=0; kc<keyNames.Length; kc++)
+			Array.Resize(ref keyChannels, MusicalNotation.keyNamesASCII.Length);
+			for (int kc=0; kc< MusicalNotation.keyNamesASCII.Length; kc++)
 			{
-				keyChannels[kc].ChangeName(keyNames[kc]);
-				keyChannels[kc].color = NoteColor(kc);
+				keyChannels[kc].ChangeName(MusicalNotation.keyNamesASCII[kc]);
+				keyChannels[kc].color = SequenceFunctions.ChannelColor(kc);
 				keyChannels[kc].output.deviceType = LOR4DeviceType.None;
 				keyChannels[kc].output.network = 0;
 				keyChannels[kc].output.channel = 0;
@@ -546,26 +548,27 @@ private int		ImportNoteOnsetChannels(LOR4ChannelGroup onsGrp, xTimings xBeatsFul
 			//int lb = barDivs - 1;
 			for (int q = 0; q < xKeys.Markers.Count; q++)
 			{
-				xEffect xef = xKeys.Markers[q];
+				//xEffect xef = VampBarBeats.xKeys.Markers[q];
+				xMarker xef = VampBarBeats.xKeys.Markers[q];
 				LOR4Effect lef = new LOR4Effect();
 				lef.EffectType = LOR4EffectType.Intensity;
 				lef.Intensity = 100;
-				lef.startCentisecond = ms2cs(xef.starttime);
+				lef.startCentisecond = SequenceFunctions.ms2cs(xef.starttime);
 				// This should work, why doesn't it?
-				lef.endCentisecond = ms2cs(xef.endtime);
+				lef.endCentisecond = SequenceFunctions.ms2cs(xef.endtime);
 				//if (q < (xKeys.Markers.Count - 1))
 				//{
 				// Alternative
 				//	lef.endCentisecond = ms2cs(xKeys.Markers[q].starttime);
 				//}
-				int keyIdx = xef.Midi;
-				keyChannels[keyIdx].Markers.Add(lef);
+				int keyIdx = xef.Number;
+				keyChannels[keyIdx].effects.Add(lef);
 			} // end for loop
 			
 			// LOR4Loop thru all new key channels, only add ones with effects to the group
-			for (int kc = 0; kc < keyNames.Length; kc++)
+			for (int kc = 0; kc < MusicalNotation.keyNamesASCII.Length; kc++)
 			{
-				if (keyChannels[kc].Markers.Count > 0)
+				if (keyChannels[kc].effects.Count > 0)
 				{
 					keyGroup.Members.Add(keyChannels[kc]);
 				}
@@ -583,6 +586,23 @@ private int		ImportNoteOnsetChannels(LOR4ChannelGroup onsGrp, xTimings xBeatsFul
 			return errs;
 		}
 
+		private int ImportSegments()
+		{
+			int errs = 0;
+			if (Annotator.xSegments != null)
+			{
+				if (Annotator.xSegments.Markers.Count > 0)
+				{
+					LOR4Track vampTrack = seq.FindTrack(vamps.MASTERTRACK);
+					LOR4Timings segGrid = seq.FindGrid(vamps.GROUPSEGMENTS);
+					SequenceFunctions.ImportTimingGrid(segGrid, Annotator.xSegments);
+					LOR4ChannelGroup segGrp = vampTrack.FindChannelGroup(vamps.GROUPSEGMENTS);
+					//ImportSegmentChannels(segGrp, Annotator.xSegments);
+				}
+			}
+			return errs;
+		}
+
 		private int ImportPoly(string polyFile)
 		{
 			string PolyFile;
@@ -597,14 +617,14 @@ private int		ImportNoteOnsetChannels(LOR4ChannelGroup onsGrp, xTimings xBeatsFul
 			LOR4Channel ch;
 			LOR4Effect ef;
 
-			//LOR4Track trk = new LOR4Track("Polyphonic Transcription");
-			LOR4Track trk = GetTrack(MASTERTRACK);
+			//LOR4Track trk = seq.FindTrack("Polyphonic Transcription");
+			LOR4Track trk = seq.FindTrack(vamps.MASTERTRACK);
 			//trk.Centiseconds = seq.Centiseconds;
-			LOR4Timings tg = seq.FindTimingGrid(GRIDONSETS);
+			LOR4Timings tg = seq.FindTimingGrid(vamps.GRIDONSETS);
 			trk.timingGrid = tg;
 			//trk.timingGridObjIndex = tg.identity.myIndex;
-			LOR4ChannelGroup grp = GetGroup(GROUPPOLY, trk);
-			CreatePolyChannels(grp, "Poly ", doGroups);
+			LOR4ChannelGroup grp = trk.FindChannelGroup(vamps.GROUPPOLY, true);
+			SequenceFunctions.CreatePolyChannels(grp, "Poly ", doGroups);
 			if (tg == null)
 			{
 				trk.timingGrid = seq.TimingGrids[0];
@@ -636,7 +656,7 @@ private int		ImportNoteOnsetChannels(LOR4ChannelGroup onsGrp, xTimings xBeatsFul
 					note = Int16.Parse(parts[2]);
 					//ch = seq.Channels[firstCobjIdx + note];
 					//ch = GetChannel("theName");
-					ch = noteChannels[note];
+					ch = Annotator.noteChannels[note];
 					ef = new LOR4Effect();
 					ef.EffectType = LOR4EffectType.Intensity;
 					ef.startCentisecond = centisecs;
@@ -681,13 +701,13 @@ private int		ImportNoteOnsetChannels(LOR4ChannelGroup onsGrp, xTimings xBeatsFul
 			LOR4Effect ef;
 
 			//LOR4Track trk = new LOR4Track("Spectrogram");
-			LOR4Track trk = GetTrack(MASTERTRACK);
+			LOR4Track trk = seq.FindTrack(vamps.MASTERTRACK);
 			//trk.identity.Centiseconds = seq.totalCentiseconds;
-			LOR4Timings tg = seq.FindTimingGrid(GRIDONSETS);
+			LOR4Timings tg = seq.FindTimingGrid(vamps.GRIDONSETS);
 			trk.timingGrid = tg;
 			//trk.timingGridObjIndex = tg.identity.myIndex;
-			LOR4ChannelGroup grp = GetGroup(GROUPSPECTRO, trk);
-			CreatePolyChannels(grp, "Spectro ", doGroups);
+			LOR4ChannelGroup grp = trk.FindChannelGroup(vamps.GROUPSPECTRO, true);
+			SequenceFunctions.CreatePolyChannels(grp, "Spectro ", doGroups);
 			if (tg == null)
 			{
 				trk.timingGrid = seq.TimingGrids[0];
@@ -822,13 +842,13 @@ private int		ImportNoteOnsetChannels(LOR4ChannelGroup onsGrp, xTimings xBeatsFul
 			LOR4Effect ef;
 
 			//LOR4Track trk = new LOR4Track("Constant Q Spectrogram");
-			LOR4Track trk = GetTrack(MASTERTRACK);
+			LOR4Track trk = seq.FindTrack(vamps.MASTERTRACK);
 			//trk.identity.Centiseconds = seq.totalCentiseconds;
-			LOR4Timings tg = seq.FindTimingGrid(GRIDONSETS);
+			LOR4Timings tg = seq.FindTimingGrid(vamps.GRIDONSETS);
 			trk.timingGrid = tg;
 			//trk.timingGridObjIndex = tg.identity.myIndex;
-			LOR4ChannelGroup grp = GetGroup(GROUPCONSTQ, trk);
-			CreatePolyChannels(grp, "ConstQ ", doGroups);
+			LOR4ChannelGroup grp = trk.FindChannelGroup(vamps.GROUPCONSTQ, true);
+			SequenceFunctions.CreatePolyChannels(grp, "ConstQ ", doGroups);   //((grp, "ConstQ ", doGroups);
 			if (tg == null)
 			{
 				trk.timingGrid = seq.TimingGrids[0];
@@ -917,7 +937,7 @@ private int		ImportNoteOnsetChannels(LOR4ChannelGroup onsGrp, xTimings xBeatsFul
 						if (iVal != lastiVal[note])
 						{
 							//ch = seq.Channels[firstCobjIdx + note];
-							ch = noteChannels[note];
+							ch = Annotator.noteChannels[note];
 							//Identity id = seq.Members.BySavedIndex[noteChannels[note]];
 							//if (id.PartType == LOR4MemberType.Channel)
 							//{
@@ -928,7 +948,7 @@ private int		ImportNoteOnsetChannels(LOR4ChannelGroup onsGrp, xTimings xBeatsFul
 							ef.endCentisecond = centisecs;
 							ef.startIntensity = lastiVal[note];
 							ef.endIntensity = iVal;
-							ch.Markers.Add(ef);
+							ch.effects.Add(ef);
 							lastcs[note] = centisecs;
 							lastiVal[note] = iVal;
 							//}
@@ -987,7 +1007,7 @@ private int		ImportNoteOnsetChannels(LOR4ChannelGroup onsGrp, xTimings xBeatsFul
 			int centisecs = 0;
 
 			//LOR4Timings grid = new LOR4Timings("Note Onsets");
-			LOR4Timings grid = GetGrid(GRIDONSETS);
+			LOR4Timings grid = seq.FindGrid(vamps.GRIDONSETS);
 			grid.TimingGridType = LOR4TimingGridType.Freeform;
 			//grid.type = timingGridType.freeform;
 			grid.AddTiming(0); // Needs a timing of zero at the beginning

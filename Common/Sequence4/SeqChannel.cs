@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Diagnostics;
+using System.Windows.Forms;
 using FileHelper;
 
 namespace LOR4
@@ -74,12 +75,12 @@ namespace LOR4
 		//public int AltSavedIndex
 		//{ get { return myAltID;} set { myAltID = value; } }
 
-		public CheckState SelectedState
-		{
-			get { return base.SelectedState; }
-			set { base.SelectedState = value; }
+		//public CheckState SelectedState
+		//{
+		//	get { return base.SelectedState; }
+		//	set { base.SelectedState = value; }
 
-		}
+		//}
 
 		public override int CompareTo(iLOR4Member other)
 		{

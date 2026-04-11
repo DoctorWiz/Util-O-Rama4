@@ -342,7 +342,11 @@ namespace xLights22
 						msg += ex2.ToString();
 						if (isWiz)
 						{
+#if CONSOLEAPP
+							Console.WriteLine("EXCEPTION:" + msg+ "\r\n");
+#else
 							DialogResult dr = MessageBox.Show(msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+#endif	
 						}
 						errs++;
 					} // End Catch
@@ -376,7 +380,11 @@ namespace xLights22
 
 				if (isWiz)
 				{
+#if CONSOLEAPP
+					Console.WriteLine(msg);
+#else
 					DialogResult dr = MessageBox.Show(msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+#endif
 				}
 				errs++;
 			} // End Catch

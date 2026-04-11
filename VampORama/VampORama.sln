@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.1.32421.90
+VisualStudioVersion = 17.14.36429.23 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VampORama", "VampORama.csproj", "{53A9F40D-527C-47EE-87FC-019D5AD2ABB4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VampORama", "VampORama.csproj", "{4BB327EC-4E52-4CCE-AB1F-B83AF56CE6BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{53A9F40D-527C-47EE-87FC-019D5AD2ABB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{53A9F40D-527C-47EE-87FC-019D5AD2ABB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{53A9F40D-527C-47EE-87FC-019D5AD2ABB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{53A9F40D-527C-47EE-87FC-019D5AD2ABB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BB327EC-4E52-4CCE-AB1F-B83AF56CE6BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BB327EC-4E52-4CCE-AB1F-B83AF56CE6BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BB327EC-4E52-4CCE-AB1F-B83AF56CE6BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BB327EC-4E52-4CCE-AB1F-B83AF56CE6BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {12605456-CA15-448C-A9ED-BB4B450133C2}
+		SolutionGuid = {49D67065-88EC-44D7-91C4-B3AC293B5C8E}
 	EndGlobalSection
 EndGlobal

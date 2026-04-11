@@ -1,0 +1,25 @@
+﻿TODO:
+
+Outright Bugs:
+When Channel DB is missing, it prompts you to select a folder...
+  Then prompts again to find Channels.csv
+
+Changing Unit Number on Controller Edit should update the 'BadAddress' and show or hide the red box accordingly
+
+Returning from Controller Edit when unit is changed, the new address is correct in the tree, but the unit number is not updated
+
+
+
+
+Controller Form not showing Unit Number when it is a LOR Controller
+Changes to Start Address not being saved
+'Bad' box around start address not going away when (duplicate) Start address is changed (to non duplicate)
+Controller Form asking about adding channels when it shouldn't
+
+
+
+
+Improvements:
+Minimize Universe, Controller, Channel - Should minimize parent/owner frmList
+  Works, but upon restore the child form is no longer visible
+

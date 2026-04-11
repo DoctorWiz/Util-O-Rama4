@@ -1,0 +1,26 @@
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+@prefix vamp:     <http://purl.org/ontology/vamp/> .
+@prefix :         <#> .
+
+:transform a vamp:Transform ;
+    vamp:plugin <http://vamp-plugins.org/rdf/plugins/beatroot-vamp#beatroot> ;
+    vamp:step_size "441"^^xsd:int ; 
+    vamp:block_size "2048"^^xsd:int ; 
+    vamp:plugin_version """1""" ; 
+    vamp:parameter_binding [
+        vamp:parameter [ vamp:identifier "expiryTime" ] ;
+        vamp:value "10"^^xsd:float ;
+    ] ;
+    vamp:parameter_binding [
+        vamp:parameter [ vamp:identifier "maxChange" ] ;
+        vamp:value "0.2"^^xsd:float ;
+    ] ;
+    vamp:parameter_binding [
+        vamp:parameter [ vamp:identifier "postMarginFactor" ] ;
+        vamp:value "0.3"^^xsd:float ;
+    ] ;
+    vamp:parameter_binding [
+        vamp:parameter [ vamp:identifier "preMarginFactor" ] ;
+        vamp:value "0.15"^^xsd:float ;
+    ] ;
+    vamp:output <http://vamp-plugins.org/rdf/plugins/beatroot-vamp#beatroot_output_beats> .

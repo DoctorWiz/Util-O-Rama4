@@ -1,33 +1,74 @@
-﻿using System;
+﻿using FileHelper;
+using FormHelper;
+using LOR4;
+using Syncfusion.Windows.Forms.Grid;
+using Syncfusion.Windows.Forms.Tools;   // SyncFusion TreeView Advanced
+using Syncfusion.Windows.Forms.Tools.Win32API;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Windows.Graphics.Printing.Workflow;
 using LOR4;
-using FileHelper;
+
 
 
 namespace UtilORama4
 {
 	public partial class frmChannel : Form
 	{
-		public List<DMXUniverse> universes = null;
-		//public List<DMXChannel> AllChannels = null;
-		//public List<DMXDevice> DeviceTypes = null;
+		public DMXChannel chanOriginal = null;
 		public DMXChannel channel = null;
-		public bool dirty = false;
+		public bool isDirty = false;
+		public bool renumber = false;
 		public bool loading = true;
 		private bool moved = false;
+		public frmList owner = null;
 
 		private Color MultiColor = Color.FromArgb(128, 64, 64);
 		private Color RGBColor = Color.FromArgb(64, 0, 0);
 		private string duplicates = "";
 
+		public const int CHANGE_NAME = 1;
+		public const int CHANGE_LOCATION = 2;
+		public const int CHANGE_COLOR = 4;
+		public const int CHANGE_TYPE = 8;
+		public const int CHANGE_ACTIVE = 16;
+		public const int CHANGE_CONTROLLER = 32;
+		public const int CHANGE_OUTPUT = 64;
+		public const int CHANGE_COMMENT = 128;
+		public int changes = 0;
+		private const int WM_SYSCOMMAND = 0x0112;
+		private const int SC_MINIMIZE = 0xf020;
 
+		private int lastDeviceIndex = -1;
+		private int lastControllerIndex = -1;
+		public static readonly Color Color_RGB = ColorTranslator.FromHtml("#000001");
+		public static readonly Color Color_RGBW = ColorTranslator.FromHtml("#000100");
+		public static readonly Color Color_Multi = ColorTranslator.FromHtml("#010000");
+
+		protected override void WndProc(ref Message m)
+		{
+			if (m.Msg == WM_SYSCOMMAND && m.WParam.ToInt32() == SC_MINIMIZE)
+			{
+				// Minimize the owner (parent) form
+				if (this.Owner != null)
+				{
+					this.Owner.WindowState = FormWindowState.Minimized;
+				}
+
+				// Optionally: Prevent the child from minimizing independently or closing
+				// m.Result = IntPtr.Zero; 
+				// return;
+			}
+			base.WndProc(ref m);
+		}
 
 		public frmChannel()
 		{
@@ -35,113 +76,145 @@ namespace UtilORama4
 			//FillCombos();
 		}
 
-		public frmChannel(DMXChannel chan, List<DMXUniverse> universeList)
+		public frmChannel(DMXChannel chan)
 		{
+			owner = this.Owner as frmList;
 			InitializeComponent();
-			universes = universeList;
-			//devices = deviceList;
-			//AllChannels = allChannelList;
-			//FillCombos();
+			chanOriginal = chan;
+			channel = chan.Copy();
+			loading = true;
 			LoadChannel(chan);
-			loading = false;
 			MakeDirty(false);
-			//ValidateName(txtName.Text);
-			//ValidateOutput();
-			//picColor.CanFocus = true;
-
-		}
-
-		public void SetFormPosition()
-		{
-			if (!moved)
+			if (Fyle.IsAWizard)
 			{
-				int l = (this.Owner.Width - this.Width) / 2 + this.Owner.Left;
-				int t = (this.Owner.Height - this.Height) / 2 + this.Owner.Top;
-				this.Left = l;
-				this.Top = t;
-				moved = true;
+				lblDirty.Visible = true;
 			}
 		}
+
+		public frmChannel(DMXChannel chan, frmList listform)
+		{
+			owner = listform;
+			InitializeComponent();
+			chanOriginal = chan;
+			channel = chan.Copy();
+			loading = true;
+			channel.Editing = true;
+			LoadChannel(channel);
+			MakeDirty(false);
+			if (Fyle.IsAWizard)
+			{
+				lblDirty.Visible = true;
+			}
+		}
+
 		public void FillCombos()
 		{
+			// Device Types
 			cboType.Items.Clear();
-			//cboType.DataSource = Enum.GetValues(typeof(ChannelType));
-			for (int d = 0; d < DMXChannel.DeviceTypes.Count; d++)
+			for (int d = 0; d < owner.DeviceTypes.Count; d++)
 			{
-				string dn = DMXChannel.DeviceTypes[d].Name;
-				cboType.Items.Add(DMXChannel.DeviceTypes[d]);
-			}
-
-
-			cboController.Items.Clear();
-			if (universes != null)
-			{
-				if (universes.Count > 0)
+				string dn = owner.DeviceTypes[d].Name;
+				int di = owner.DeviceTypes[d].ID;
+				cboType.Items.Add(owner.DeviceTypes[d]);
+				if (di == channel.DeviceType.ID)
 				{
-					if (channel != null)
-					{
-						if (channel.DMXController != null)
-						{
-							if (channel.DMXController.DMXUniverse != null)
-							{
-								for (int u = 0; u < universes.Count; u++)
-								{
-									DMXUniverse uni = universes[u];
-									for (int c = 0; c < uni.DMXControllers.Count; c++)
-									{
-										ListItem li = new ListItem(uni.DMXControllers[c].ToString(), uni.DMXControllers[c].ID);
-										cboController.Items.Add(li);
-									}
-								}
-							}
-						}
-					}
+					cboType.SelectedIndex = d;
 				}
 			}
+
+			// Controllers
+			cboController.Items.Clear();
+			for (int c = 0; c < owner.AllControllers.Count; c++)
+			{
+				DMXController controller = owner.AllControllers[c];
+				string ctxt = "";
+				if (controller.Identifier.Length > 0)
+				{
+					ctxt = controller.Identifier + ": ";
+				}
+				ctxt += controller.Name;
+				ctxt += " @ " + controller.DMXStartAddress.ToString();
+				ListItem li = new ListItem(ctxt, controller.ID);
+				cboController.Items.Add(li);
+				if (channel.DMXController.ID == controller.ID)
+				{
+					cboController.SelectedIndex = c;
+				}
+			}
+
+			// Output Number
+			numOutput.Value = channel.OutputNum;
+			RefreshAddresses();
+			numOutput.Maximum = channel.DMXController.OutputCount;
+
+			if (Etc.xLightsVersion > 0)
+			{
+				lblxLightsAddress.Visible = false;
+			}
+			if (Etc.LORVersion > 0)
+			{
+				// Never mind, do nothing
+			}
+			loading = false;
+			MakeDirty(false);
 		}
 
 		public void LoadChannel(DMXChannel chan)
 		{
 			channel = chan;
-			FillCombos();
+			//FillCombos();
 			txtName.Text = chan.Name;
 			txtComment.Text = chan.Comment;
 			txtLocation.Text = chan.Location;
 			chkActive.Checked = chan.Active;
 			//picColor.BackColor = chan.Color;
 			SetColor(chan.Color);
-			int devID = chan.DeviceType.ID;
+		}
 
-			if (devID > 0 && devID < cboType.Items.Count)
+
+		private void RefreshAddresses()
+		{
+			string tmodel = "Controller: " + channel.DMXController.ControllerBrand + ": " + channel.DMXController.ControllerModel;
+			if (Etc.LORVersion > 0)
 			{
-				for (int d = 0; d < cboType.Items.Count; d++)
+				tmodel += ", Unit: " + channel.DMXController.UnitID.ToString();
+			}
+			lblModel.Text = tmodel;
+			lblUniverse.Text = "Universe " + channel.DMXController.DMXUniverse.ToString();
+			lblDMXAddress.Text = "DMX Address: " + channel.DMXAddress.ToString();
+			if (Etc.xLightsVersion > 0)
+			{
+				lblxLightsAddress.Text = "xLights Address: " + channel.xLightsAddress.ToString();
+			}
+			bool wasBad = channel.BadOutput;
+			DMXController newCtlr = channel.DMXController;
+			int outCount = 0;
+			for (int co = 0; co < channel.DMXController.DMXChannels.Count; co++)
+			{
+				if (channel.DMXController.DMXChannels[co].OutputNum == channel.OutputNum)
 				{
-					DMXDeviceType de = (DMXDeviceType)cboType.Items[d];
-					string dn = de.Name;
-					if (de.ID == devID)
-					{
-						cboType.SelectedIndex = d;
-						d = cboType.Items.Count;
-					}
+					outCount++;
 				}
 			}
-			numOutput.Value = chan.OutputNum;
-			if (chan.DMXController != null)
+			//channel.BadOutput = outCount > 1;
+
+			string tipText = "Select the controller this channel is connected to.";
+			tipTool.SetToolTip(cboController, tipText);
+			tipTool.SetToolTip(lblController, tipText);
+			tipText = "Select the output # on this controller that this channel is connected to.";
+			tipTool.SetToolTip(numOutput, tipText);
+			tipTool.SetToolTip(lblOutput, tipText);
+			channel.OutputNum = (int)numOutput.Value;
+			if (channel.BadOutput)
 			{
-				for (int i = 0; i < cboController.Items.Count; i++)
-				{
-					ListItem li = (ListItem)cboController.Items[i];
-					if (li.ID == chan.DMXController.ID)
-					{
-						cboController.SelectedIndex = i;
-						i = cboController.Items.Count; // Exit loop
-					}
-				}
-				lblModel.Text = chan.DMXController.ControllerBrand + ": " + chan.DMXController.ControllerModel;
-				lblUniverse.Text = "Universe " + chan.DMXController.DMXUniverse.ToString();
-				lblDMXAddress.Text = "DMX Address: " + chan.DMXAddress.ToString();
-				lblxLighsAddress.Text = "xLights Address: " + chan.xLightsAddress.ToString();
+				tipText = "Warning: This channel shares the same address as\r\n" + duplicates;
+				tipTool.SetToolTip(cboController, tipText);
+				tipTool.SetToolTip(lblController, tipText);
+				tipTool.SetToolTip(numOutput, tipText);
+				tipTool.SetToolTip(lblOutput, tipText);
 			}
+			if (wasBad != channel.BadOutput) this.Refresh();
+			//if (!loading) MakeDirty(true);
 		}
 
 		private void txtName_Validating(object sender, CancelEventArgs e)
@@ -188,26 +261,9 @@ namespace UtilORama4
 			if (!loading)
 			{
 				// Did it really even change?
-				ListItem li = (ListItem)cboController.SelectedItem;
-				int newID = li.ID;
-				if (channel.DMXController.ID != newID)
+				if (cboController.SelectedIndex != lastControllerIndex)
 				{
-					// Now we have to find it...
-					for (int u = 0; u < universes.Count; u++)
-					{
-						DMXUniverse universe = universes[u];
-						for (int c = 0; c < universe.DMXControllers.Count; c++)
-						{
-							DMXController controller = universe.DMXControllers[c];
-							if (controller.ID == newID)
-							{
-								channel.DMXController = controller;
-								c = universe.DMXControllers.Count;
-								u = universes.Count;
-							}
-						}
-					}
-					OutputChange();
+					MakeDirty(true);
 				}
 			}
 		}
@@ -269,9 +325,6 @@ namespace UtilORama4
 
 		private void txtLocation_Validating(object sender, CancelEventArgs e)
 		{
-			channel.Location = txtLocation.Text.TrimStart();
-			txtLocation.Text = channel.Location;
-			if (!loading) MakeDirty(true);
 		}
 
 		private void cboType_Validating(object sender, CancelEventArgs e)
@@ -285,15 +338,13 @@ namespace UtilORama4
 			if (!loading)
 			{
 				channel.Active = chkActive.Checked;
+				changes |= CHANGE_ACTIVE;
 				MakeDirty(true);
 			}
 		}
 
 		private void txtComment_Validating(object sender, CancelEventArgs e)
 		{
-			channel.Comment = txtComment.Text.TrimStart();
-			txtComment.Text = channel.Comment;
-			if (!loading) MakeDirty(true);
 		}
 
 		private void picColor_Click(object sender, EventArgs e)
@@ -309,33 +360,51 @@ namespace UtilORama4
 
 		public void SetColor(Color color)
 		{
-			string cname = color.Name;
-			if (color == MultiColor)
+			// If ColorName is not already set by a prior version, then look it up.
+			if (channel.ColorName.Length < 2)
 			{
-				btnColor.Image = picMulticolor.Image;
-				cname = "MultiColor";
+				channel.ColorName = LOR4Admin.NearestColorName(color);
+			}
+
+			if (color == Etc.Color_RGB)
+			{
+				tipTool.SetToolTip(picColor, "RGB");
+				tipTool.SetToolTip(lblColorLabel, "RGB");
+				picColor.BackColor = Color.Transparent;
+				picColor.Image = picRGB.Image;
+			}
+			else if (color == Etc.Color_RGBW)
+			{
+				tipTool.SetToolTip(picColor, "RGBW");
+				tipTool.SetToolTip(lblColorLabel, "RGBW");
+				picColor.BackColor = Color.Transparent;
+				picColor.Image = picRGBW.Image;
+			}
+			else if (color == Etc.Color_Multi)
+			{
+				tipTool.SetToolTip(picColor, "Multicolored");
+				tipTool.SetToolTip(lblColorLabel, "Multicolored");
+				picColor.BackColor = Color.Transparent;
+				picColor.Image = picMulti.Image;
 			}
 			else
 			{
-				if (color == RGBColor)
-				{
-					btnColor.Image = picRGB.Image;
-					cname = "RGB";
-				}
-				else
-				{
-					btnColor.BackColor = color;
-					btnColor.Image = null;
-					//cname = LOR4Admin.NearestColorName(color);
+				tipTool.SetToolTip(picColor, channel.ColorName);
+				tipTool.SetToolTip(lblColorLabel, channel.ColorName);
+				picColor.BackColor = color;
+				picColor.Image = null;
+			}
+			picColor.Refresh();
 
+			if (!loading)
+			{
+				if (channel.Color != color)
+				{
+					channel.Color = color;
+					changes |= CHANGE_COLOR;
+					MakeDirty(true);
 				}
 			}
-			channel.Color = color;
-			tipTool.SetToolTip(btnColor, cname);
-			tipTool.SetToolTip(lblColor, cname);
-			btnColor.Refresh();
-			if (!loading) MakeDirty(true);
-
 		}
 
 
@@ -344,7 +413,7 @@ namespace UtilORama4
 			/*
 			channel.badOutput = false; // Optomistic reset
 			string tipText = "Set the output number for this channel on controller ";
-			tipText += channel.DMXController.LetterID + ": " + channel.DMXController.Name;
+			tipText += channel.DMXController.ControllerID + ": " + channel.DMXController.Name;
 			tipTool.SetToolTip(numOutput, tipText);
 			tipText = "Select the controller this channel is connected to.";
 			tipTool.SetToolTip(cboController, tipText);
@@ -359,7 +428,7 @@ namespace UtilORama4
 						channel.badOutput = true;
 						tipText = "LOR4Output " + numOutput.Value.ToString() + " is already being used by channel ";
 						tipText += channel.DMXController.DMXChannels[c].Name;
-						tipText += " on controller " + channel.DMXController.LetterID + ": " + channel.DMXController.Name;
+						tipText += " on controller " + channel.DMXController.ControllerID + ": " + channel.DMXController.Name;
 						tipTool.SetToolTip(numOutput, tipText);
 						tipTool.SetToolTip(cboController, tipText);
 						c = channel.DMXController.DMXChannels.Count; // Force exit loop
@@ -375,7 +444,7 @@ namespace UtilORama4
 		{
 		}
 
-		public void MakeDirty(bool isDirty)
+		public void MakeDirty(bool dirty)
 		{
 			if (dirty != isDirty)
 			{
@@ -383,112 +452,91 @@ namespace UtilORama4
 				{
 					if (!loading)
 					{
-						this.Text = "LOR4Channel: " + channel.Name + " (Modified)";
-						dirty = isDirty;
+						this.Text = "Channel: " + channel.Name + " (Modified)";
+						isDirty = true;
+						lblDirty.ForeColor = Color.Red;
+						lblDirty.Text = "Dirty";
 					}
 				}
 				else
 				{
-					this.Text = "LOR4Channel: " + channel.Name;
-					dirty = isDirty;
+					this.Text = "Channel: " + channel.Name;
+					isDirty = false;
+					lblDirty.ForeColor = SystemColors.GrayText;
+					lblDirty.Text = "Clean";
 				}
 			}
 		}
 
 		private void frmChannel_FormClosing(object sender, FormClosingEventArgs e)
 		{
-		}
-
-		private void numOutput_ValueChanged(object sender, EventArgs e)
-		{
-			if (!loading)
+			if (Fyle.isWiz)
 			{
-				// Did it really even change?
-				// Cast from decimal type used by NumUpDown control to int
-				int newVal = (int)numOutput.Value;
-				if (channel.OutputNum != newVal)
+				//System.Diagnostics.Debugger.Break();
+			}
+			if (isDirty)
+			{
+				string dtxt = "Channel settings have changed.  Save them?";
+				DialogResult dr = MessageBox.Show(this, dtxt, "Save Changes?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+				if (dr == DialogResult.Yes)
 				{
-					channel.OutputNum = newVal;
-					OutputChange();
+					SaveAndExit();
+				}
+				else if (dr == DialogResult.Cancel)
+				{
+					e.Cancel = true;
 				}
 			}
 		}
 
-		private void OutputChange()
+		private void numOutput_ValueChanged(object sender, EventArgs e)
 		{
-			bool wasBad = channel.BadOutput;
-			string tipText = "Select the controller this channel is connected to.";
-			tipTool.SetToolTip(cboController, tipText);
-			tipTool.SetToolTip(lblController, tipText);
-			tipText = "Select the output # on this controller that this channel is connected to.";
-			tipTool.SetToolTip(numOutput, tipText);
-			tipTool.SetToolTip(lblOutput, tipText);
-			channel.OutputNum = (int)numOutput.Value;
-			if (channel.BadOutput)
-			{
-				tipText = "Warning: This channel shares the same address as\r\n" + duplicates;
-				tipTool.SetToolTip(cboController, tipText);
-				tipTool.SetToolTip(lblController, tipText);
-				tipTool.SetToolTip(numOutput, tipText);
-				tipTool.SetToolTip(lblOutput, tipText);
-			}
-			if (wasBad != channel.BadOutput) this.Refresh();
-			if (!loading) MakeDirty(true);
 		}
+
 
 		private void frmChannel_Load(object sender, EventArgs e)
 		{
-
+			if (!moved)
+			{
+				Fourm.SetFormPosition(this);
+				moved = true;
+			}
+			lblDirty.Visible = Fyle.IsAWizard;
 		}
 
 		private void frmChannel_Shown(object sender, EventArgs e)
 		{
-			if (Owner != null)
-			{
-				SetFormPosition();
-			}
-			else
-			{
-				Fyle.MakeNoise(Fyle.Noises.Dammit);
-			}
+			FillCombos();
 		}
 
 		private void txtName_TextChanged(object sender, EventArgs e)
 		{
-			bool wasBad = channel.BadName;
-			string theName = txtName.Text.TrimStart();
-			txtName.Text = theName;
-			channel.Name = theName;
-			string tipText = "The name of this channel";
-
-			if (channel.BadName)
-			{
-				tipText = "The channel MUST have a UNIQUE name!";
-			}
-			tipTool.SetToolTip(txtName, tipText);
-			tipTool.SetToolTip(lblName, tipText);
-			if (!loading) MakeDirty(true);
-			if (wasBad != channel.BadName) this.Refresh();
 		}
 
 		private void txtName_Leave(object sender, EventArgs e)
 		{
-
+			string tipText = "The name of this channel";
+			bool wasBad = channel.BadName;
+			string t = txtName.Text.Trim();
+			if (t != chanOriginal.Name)
+			{
+				channel.Name = t;
+				if (channel.BadName)
+				{
+					tipText = "The channel MUST have a UNIQUE name!";
+				}
+				if (wasBad != channel.BadName) this.Refresh();
+				if (!loading) MakeDirty(true);
+			}
 		}
 
 		private void cboType_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (!loading)
 			{
-				if (cboType.SelectedIndex >= 0)
+				if (cboType.SelectedIndex != lastDeviceIndex)
 				{
-					if (cboType.SelectedItem != null)
-					{
-						DMXDeviceType device = (DMXDeviceType)cboType.SelectedItem;
-						string dn = device.Name;
-						channel.DeviceType = device;
-						MakeDirty(true);
-					}
+					MakeDirty(true);
 				}
 			}
 		}
@@ -500,12 +548,472 @@ namespace UtilORama4
 
 		private void btnColor_Click(object sender, EventArgs e)
 		{
-			DialogResult dr = clrColors.ShowDialog(this);
-			if (dr == DialogResult.OK)
+			/*
+			using (var picker = new frmColor())
 			{
-				SetColor(clrColors.Color);
+				if (picker.ShowDialog() == DialogResult.OK)
+				{
+					// Use the selected color, for example, to set a button background
+					//this.btnPickColor.BackColor = picker.SelectedColor;
+					SetColor(picker.SelectedColor);
+				}
+			}
+			*/
+		}
+
+		private void txtName_Enter(object sender, EventArgs e)
+		{
+			string tipText = "The name of this channel";
+			tipTool.SetToolTip(txtName, tipText);
+			tipTool.SetToolTip(lblName, tipText);
+		}
+
+		private void txtName_KeyDown(object sender, KeyEventArgs e)
+		{
+			// If escape is pressed, restore to the original value
+			if (e.KeyCode == Keys.Escape)
+			{
+				txtName.Text = chanOriginal.Name;
+			}
+			else if (e.KeyCode == Keys.Enter)
+			{
+				string t = txtName.Text.Trim();
+				if (t != chanOriginal.Name)
+				{
+					channel.Name = t;
+					txtName.Text = t;
+					if (!loading) MakeDirty(true);
+				}
+			}
+		}
+
+		private void txtLocation_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Escape)
+			{
+				txtLocation.Text = chanOriginal.Location;
+			}
+			else if (e.KeyCode == Keys.Enter)
+			{
+				string trimloc = txtLocation.Text.Trim();
+				if (chanOriginal.Location != trimloc)
+				{
+					channel.Location = trimloc;
+					txtLocation.Text = trimloc;
+					changes |= CHANGE_LOCATION;
+					MakeDirty(true);
+				}
+			}
+		}
+
+		private void txtLocation_Enter(object sender, EventArgs e)
+		{
+			string tipText = "The physical location of this channel (optional)";
+			tipTool.SetToolTip(txtLocation, tipText);
+			tipTool.SetToolTip(lblLocation, tipText);
+		}
+
+		private void txtLocation_Leave(object sender, EventArgs e)
+		{
+			if (!loading)
+			{
+				string trimloc = txtLocation.Text.Trim();
+				if (chanOriginal.Location != trimloc)
+				{
+					channel.Location = trimloc;
+					txtLocation.Text = trimloc;
+					changes |= CHANGE_LOCATION;
+					MakeDirty(true);
+				}
+			}
+		}
+
+		private void cboType_Leave(object sender, EventArgs e)
+		{
+			if (!loading)
+			{
+				if (cboType.SelectedIndex >= 0)
+				{
+					if (cboType.SelectedItem != null)
+					{
+						DMXDeviceType device = (DMXDeviceType)cboType.SelectedItem;
+						if (device.Name != chanOriginal.DeviceType.Name)
+						{
+							//channel.ChannelType = (ChannelType)cboType.SelectedIndex;
+							//string dn = device.Name;
+							channel.DeviceType = device;
+							changes |= CHANGE_TYPE;
+							MakeDirty(true);
+						}
+					}
+				}
+			}
+		}
+
+		private void cboType_Enter(object sender, EventArgs e)
+		{
+			string tipText = "The type of device this channel is connected to";
+			tipTool.SetToolTip(cboType, tipText);
+			tipTool.SetToolTip(lblType, tipText);
+		}
+
+		private void cboType_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Escape)
+			{
+				if (chanOriginal.DeviceType != null)
+				{
+					for (int d = 0; d < cboType.Items.Count; d++)
+					{
+						DMXDeviceType de = (DMXDeviceType)cboType.Items[d];
+						string dn = de.Name;
+						if (de.ID == chanOriginal.DeviceType.ID)
+						{
+							cboType.SelectedIndex = d;
+							d = cboType.Items.Count; // Force exit loop
+						}
+					}
+				}
+			}
+			else if (e.KeyCode == Keys.Enter)
+			{
+				if (cboType.SelectedIndex >= 0)
+				{
+					if (cboType.SelectedItem != null)
+					{
+						DMXDeviceType device = (DMXDeviceType)cboType.SelectedItem;
+						if (device.Name != chanOriginal.DeviceType.Name)
+						{
+							//channel.ChannelType = (ChannelType)cboType.SelectedIndex;
+							//string dn = device.Name;
+							channel.DeviceType = device;
+							changes |= CHANGE_TYPE;
+							MakeDirty(true);
+						}
+					}
+				}
+			}
+		}
+
+		private void chkActive_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Space)
+			{
+				chkActive.Checked = !chkActive.Checked;
+			}
+			else if (e.KeyCode == Keys.Escape)
+			{
+				chkActive.Checked = chanOriginal.Active;
+			}
+			else if (e.KeyCode == Keys.Enter)
+			{
+				if (chkActive.Checked != chanOriginal.Active)
+				{
+					bool wasBad = channel.BadOutput;
+					channel.Active = chkActive.Checked;
+					changes |= CHANGE_ACTIVE;
+					MakeDirty(true);
+					if (wasBad != channel.BadOutput) this.Refresh();
+				}
+			}
+		}
+
+		private void chkActive_Enter(object sender, EventArgs e)
+		{
+			string tipText = "Check if this channel is active and should be included in the output";
+			tipTool.SetToolTip(chkActive, tipText);
+		}
+
+		private void chkActive_Leave(object sender, EventArgs e)
+		{
+			if (!loading)
+			{
+				if (chkActive.Checked != chanOriginal.Active)
+				{
+					bool wasBad = channel.BadOutput;
+					channel.Active = chkActive.Checked;
+					changes |= CHANGE_ACTIVE;
+					MakeDirty(true);
+					if (wasBad != channel.BadOutput) this.Refresh();
+				}
+			}
+		}
+
+		private void cboController_Enter(object sender, EventArgs e)
+		{
+			string tipText = "Select the controller this channel is connected to.";
+			tipText += "\r\nThe controller must be defined in the universe editor.";
+			tipTool.SetToolTip(cboController, tipText);
+			tipTool.SetToolTip(lblController, tipText);
+		}
+
+		private void cboController_Leave(object sender, EventArgs e)
+		{
+			if (!loading)
+			{
+				// Did it really even change?
+				ListItem li = (ListItem)cboController.SelectedItem;
+				int newID = li.ID;
+				if (channel.DMXController.ID != newID)
+				{
+					changes |= CHANGE_CONTROLLER;
+					MakeDirty(true);
+					// Now we have to find it...
+					for (int u = 0; u < owner.AllUniverses.Count; u++)
+					{
+						DMXUniverse universe = owner.AllUniverses[u];
+						for (int c = 0; c < universe.DMXControllers.Count; c++)
+						{
+							DMXController controller = universe.DMXControllers[c];
+							if (controller.ID == newID)
+							{
+								channel.DMXController = controller;
+								c = universe.DMXControllers.Count;
+								u = owner.AllUniverses.Count;
+							}
+						}
+					}
+					numOutput.Maximum = channel.DMXController.OutputCount;
+					//OutputChange();
+					RefreshAddresses();
+				}
 			}
 
 		}
-	}
-}
+
+		private void cboController_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Escape)
+			{
+				if (chanOriginal.DMXController != null)
+				{
+					for (int u = 0; u < owner.AllUniverses.Count; u++)
+					{
+						DMXUniverse uni = owner.AllUniverses[u];
+						for (int c = 0; c < uni.DMXControllers.Count; c++)
+						{
+							ListItem li = new ListItem(uni.DMXControllers[c].ToString(), uni.DMXControllers[c].ID);
+							if (li.ID == chanOriginal.DMXController.ID)
+							{
+								cboController.SelectedIndex = cboController.Items.IndexOf(li);
+								c = uni.DMXControllers.Count; // Force exit loop
+								u = owner.AllUniverses.Count;
+							}
+						}
+					}
+				}
+			}
+			else if (e.KeyCode == Keys.Enter)
+			{
+				if (cboController.SelectedIndex >= 0)
+				{
+					ListItem li = (ListItem)cboController.SelectedItem;
+					int newID = li.ID;
+					if (channel.DMXController.ID != newID)
+					{
+						changes |= CHANGE_CONTROLLER;
+						MakeDirty(true);
+						// Now we have to find it...
+						for (int u = 0; u < owner.AllUniverses.Count; u++)
+						{
+							DMXUniverse universe = owner.AllUniverses[u];
+							for (int c = 0; c < universe.DMXControllers.Count; c++)
+							{
+								DMXController controller = universe.DMXControllers[c];
+								if (controller.ID == newID)
+								{
+									channel.DMXController = controller;
+									c = universe.DMXControllers.Count;
+									u = owner.AllUniverses.Count;
+								}
+							}
+						}
+						//OutputChange();
+						RefreshAddresses();
+					}
+				}
+			}
+		}
+
+		private void txtComment_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Escape)
+			{
+				txtComment.Text = chanOriginal.Comment;
+			}
+			else if (e.KeyCode == Keys.Enter)
+			{
+				string trimcom = txtComment.Text.Trim();
+				if (chanOriginal.Comment != trimcom)
+				{
+					channel.Comment = trimcom;
+					txtComment.Text = trimcom;
+					changes |= CHANGE_COMMENT;
+					MakeDirty(true);
+				}
+			}
+		}
+
+		private void txtComment_Enter(object sender, EventArgs e)
+		{
+			string tipText = "Any comments about this channel";
+			tipTool.SetToolTip(txtComment, tipText);
+			tipTool.SetToolTip(lblComment, tipText);
+		}
+
+		private void txtComment_Leave(object sender, EventArgs e)
+		{
+			if (!loading)
+			{
+				string trimcom = txtComment.Text.Trim();
+				if (chanOriginal.Comment != trimcom)
+				{
+					channel.Comment = trimcom;
+					txtComment.Text = trimcom;
+					changes |= CHANGE_COMMENT;
+					MakeDirty(true);
+				}
+			}
+		}
+
+		private void btnOK_Click(object sender, EventArgs e)
+		{
+			SaveAndExit();
+		}
+
+		private bool SaveAndExit()
+		{
+			if (isDirty)
+			{
+				chanOriginal.ApplyChanges(channel);
+			}
+			// Do not close or unload, so that parent form can read the dirty and renumber flags and decide what to do. Just hide this form.
+			this.Hide();
+			return true;
+		}
+
+		private void btnCancel_Click(object sender, EventArgs e)
+		{
+			// Do not close or unload, so that parent form can read the dirty and renumber flags and decide what to do. Just hide this form.
+			this.Hide();
+		}
+
+		private void numOutput_Enter(object sender, EventArgs e)
+		{
+			string tipText = "Select the output # on this controller that this channel is connected to.";
+			tipTool.SetToolTip(numOutput, tipText);
+			tipTool.SetToolTip(lblOutput, tipText);
+		}
+
+		private void numOutput_Leave(object sender, EventArgs e)
+		{
+			if (!loading)
+			{
+				// Did it really even change?
+				// Cast from decimal type used by NumUpDown control to int
+				int newVal = (int)numOutput.Value;
+				if (chanOriginal.OutputNum != newVal)
+				{
+					channel.OutputNum = newVal;
+					changes |= CHANGE_OUTPUT;
+					MakeDirty(true);
+					renumber = true;
+				}
+			}
+			RefreshAddresses();
+
+		}
+
+		private void numOutput_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Escape)
+			{
+				numOutput.Value = chanOriginal.OutputNum;
+			}
+			else if (e.KeyCode == Keys.Enter)
+			{
+				if ((int)numOutput.Value != chanOriginal.OutputNum)
+				{
+					channel.OutputNum = (int)numOutput.Value;
+					changes |= CHANGE_OUTPUT;
+					MakeDirty(true);
+					renumber = true;
+				}
+			}
+		}
+
+		private void cboType_DropDown(object sender, EventArgs e)
+		{
+			if (!loading)
+			{
+				lastDeviceIndex = cboType.SelectedIndex;
+			}
+		}
+
+		private void cboController_DropDown(object sender, EventArgs e)
+		{
+			if (!loading)
+			{
+				lastControllerIndex = cboController.SelectedIndex;
+			}
+		}
+
+		private void Pick_Color_Click(object sender, EventArgs e)
+		{
+			{
+				//DialogResult dr = clrColors.ShowDialog(this);
+				frmColors picker = new frmColors();
+				picker.color = channel.Color;
+				DialogResult dr = picker.ShowDialog(this);
+				if (dr == DialogResult.OK)
+				{
+					channel.ColorName = picker.selectedName;
+					SetColor(picker.color);
+				}
+				picker.Dispose();
+			}
+		}
+
+		private void picColor_Paint(object sender, PaintEventArgs e)
+		{
+			string text = channel.ColorName;
+			Font font = new Font("Arial Narrow", 8.0f, FontStyle.Bold, GraphicsUnit.Point);
+			Brush brush = null;
+
+			if (channel.Color.GetBrightness() < 0.6f)
+			{
+				brush = Brushes.White;
+			}
+			else
+			{
+				brush = Brushes.Black;
+			}
+
+			// 1. Create a StringFormat object
+			using (StringFormat sf = new StringFormat())
+			{
+				// 2. Set horizontal and vertical alignment to Center
+				sf.Alignment = StringAlignment.Center;
+				sf.LineAlignment = StringAlignment.Center;
+
+				// 3. Draw the string using the control's ClientRectangle as the bounds
+				e.Graphics.DrawString(text, font, brush, picColor.ClientRectangle, sf);
+			}
+
+		}
+
+		private void frmChannel_ResizeBegin(object sender, EventArgs e)
+		{
+
+		}
+
+		private void frmChannel_ResizeEnd(object sender, EventArgs e)
+		{
+			if (this.WindowState == FormWindowState.Minimized)
+			{
+				owner.WindowState = FormWindowState.Minimized;
+				this.WindowState = FormWindowState.Normal;
+			}
+		}
+	} // End class frmChannel
+}  // End namespace

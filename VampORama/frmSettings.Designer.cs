@@ -286,8 +286,8 @@
 			// 
 			this.swPolyUseRamps.Location = new System.Drawing.Point(42, 0);
 			this.swPolyUseRamps.Name = "swPolyUseRamps";
-			this.swPolyUseRamps.OffFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.swPolyUseRamps.OnFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			//this.swPolyUseRamps.OffFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			//this.swPolyUseRamps.OnFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.swPolyUseRamps.Size = new System.Drawing.Size(32, 16);
 			this.swPolyUseRamps.Style = JCS.ToggleSwitch.ToggleSwitchStyle.OSX;
 			this.swPolyUseRamps.TabIndex = 129;
@@ -374,8 +374,8 @@
 			// 
 			this.swGridBeat.Location = new System.Drawing.Point(46, 1);
 			this.swGridBeat.Name = "swGridBeat";
-			this.swGridBeat.OffFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.swGridBeat.OnFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			//this.swGridBeat.OffFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			//this.swGridBeat.OnFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.swGridBeat.Size = new System.Drawing.Size(32, 16);
 			this.swGridBeat.Style = JCS.ToggleSwitch.ToggleSwitchStyle.OSX;
 			this.swGridBeat.TabIndex = 132;
@@ -589,8 +589,8 @@
 			// 
 			this.swTrackBeatsUseRamps.Location = new System.Drawing.Point(42, 0);
 			this.swTrackBeatsUseRamps.Name = "swTrackBeatsUseRamps";
-			this.swTrackBeatsUseRamps.OffFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.swTrackBeatsUseRamps.OnFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			//this.swTrackBeatsUseRamps.OffFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			//this.swTrackBeatsUseRamps.OnFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.swTrackBeatsUseRamps.Size = new System.Drawing.Size(32, 16);
 			this.swTrackBeatsUseRamps.Style = JCS.ToggleSwitch.ToggleSwitchStyle.OSX;
 			this.swTrackBeatsUseRamps.TabIndex = 129;
@@ -649,8 +649,8 @@
 			// 
 			this.swTrackBeat.Location = new System.Drawing.Point(46, 1);
 			this.swTrackBeat.Name = "swTrackBeat";
-			this.swTrackBeat.OffFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.swTrackBeat.OnFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			//this.swTrackBeat.OffFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			//this.swTrackBeat.OnFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.swTrackBeat.Size = new System.Drawing.Size(32, 16);
 			this.swTrackBeat.Style = JCS.ToggleSwitch.ToggleSwitchStyle.OSX;
 			this.swTrackBeat.TabIndex = 132;

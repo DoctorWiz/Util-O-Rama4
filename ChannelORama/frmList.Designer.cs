@@ -1,5 +1,4 @@
-﻿
-namespace UtilORama4
+﻿namespace UtilORama4
 {
 	partial class frmList
 	{
@@ -29,417 +28,501 @@ namespace UtilORama4
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
+			components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmList));
 			Syncfusion.Windows.Forms.Tools.TreeNodeAdvStyleInfo treeNodeAdvStyleInfo1 = new Syncfusion.Windows.Forms.Tools.TreeNodeAdvStyleInfo();
-			this.staStatus = new System.Windows.Forms.StatusStrip();
-			this.pnlHelp = new System.Windows.Forms.ToolStripStatusLabel();
-			this.pnlStatus = new System.Windows.Forms.ToolStripStatusLabel();
-			this.pnlAbout = new System.Windows.Forms.ToolStripStatusLabel();
-			this.btnOK = new System.Windows.Forms.Button();
-			this.picAboutIcon = new System.Windows.Forms.PictureBox();
-			this.btnUniverse = new System.Windows.Forms.Button();
-			this.btnController = new System.Windows.Forms.Button();
-			this.btnChannel = new System.Windows.Forms.Button();
-			this.btnReport = new System.Windows.Forms.Button();
-			this.btnCompareLOR = new System.Windows.Forms.Button();
-			this.btnComparex = new System.Windows.Forms.Button();
-			this.btnFind = new System.Windows.Forms.Button();
-			this.btnWiz = new System.Windows.Forms.Button();
-			this.btnSave = new System.Windows.Forms.Button();
-			this.toolTips = new System.Windows.Forms.ToolTip(this.components);
-			this.btnExportSeq = new System.Windows.Forms.Button();
-			this.btnRemove = new System.Windows.Forms.Button();
-			this.imlTreeIcons = new System.Windows.Forms.ImageList(this.components);
-			this.treeChannels = new Syncfusion.Windows.Forms.Tools.TreeViewAdv();
-			this.dlgFileOpen = new System.Windows.Forms.OpenFileDialog();
-			this.dlgFileSave = new System.Windows.Forms.SaveFileDialog();
-			this.lblxChannel = new System.Windows.Forms.Label();
-			this.staStatus.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.picAboutIcon)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.treeChannels)).BeginInit();
-			this.SuspendLayout();
+			staStatus = new StatusStrip();
+			pnlHelp = new ToolStripStatusLabel();
+			pnlStatus = new ToolStripStatusLabel();
+			pnlAbout = new ToolStripStatusLabel();
+			btnOK = new Button();
+			picAboutIcon = new PictureBox();
+			btnUniverse = new Button();
+			btnController = new Button();
+			btnChannel = new Button();
+			btnReport = new Button();
+			btnCompareLOR = new Button();
+			btnComparex = new Button();
+			btnFind = new Button();
+			btnWiz = new Button();
+			btnSave = new Button();
+			tipTool = new ToolTip(components);
+			btnExportSeq = new Button();
+			btnRemove = new Button();
+			btnMoveUp = new Button();
+			btnMoveDown = new Button();
+			btnSettings = new Button();
+			mnuSettings = new ContextMenuStrip(components);
+			changeDatabaseLocationToolStripMenuItem = new ToolStripMenuItem();
+			dropModeToolStripMenuItem = new ToolStripMenuItem();
+			preferencesToolStripMenuItem = new ToolStripMenuItem();
+			imlTreeIcons = new ImageList(components);
+			treeChannels = new Syncfusion.Windows.Forms.Tools.TreeViewAdv();
+			dlgFileOpen = new OpenFileDialog();
+			dlgFileSave = new SaveFileDialog();
+			lblxChannel = new Label();
+			lblDirty = new Label();
+			lblVersions = new Label();
+			staStatus.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)picAboutIcon).BeginInit();
+			mnuSettings.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)treeChannels).BeginInit();
+			SuspendLayout();
 			// 
 			// staStatus
 			// 
-			this.staStatus.AllowDrop = true;
-			this.staStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.pnlHelp,
-            this.pnlStatus,
-            this.pnlAbout});
-			this.staStatus.Location = new System.Drawing.Point(0, 524);
-			this.staStatus.Name = "staStatus";
-			this.staStatus.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
-			this.staStatus.Size = new System.Drawing.Size(570, 24);
-			this.staStatus.TabIndex = 8;
+			staStatus.AllowDrop = true;
+			staStatus.ImageScalingSize = new Size(32, 32);
+			staStatus.Items.AddRange(new ToolStripItem[] { pnlHelp, pnlStatus, pnlAbout });
+			staStatus.Location = new Point(0, 1123);
+			staStatus.Name = "staStatus";
+			staStatus.Padding = new Padding(2, 0, 30, 0);
+			staStatus.Size = new Size(1059, 46);
+			staStatus.TabIndex = 8;
 			// 
 			// pnlHelp
 			// 
-			this.pnlHelp.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-			this.pnlHelp.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenInner;
-			this.pnlHelp.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
-			this.pnlHelp.ForeColor = System.Drawing.SystemColors.Highlight;
-			this.pnlHelp.IsLink = true;
-			this.pnlHelp.Name = "pnlHelp";
-			this.pnlHelp.Size = new System.Drawing.Size(45, 19);
-			this.pnlHelp.Text = "Help...";
-			this.pnlHelp.ToolTipText = "Get Help using Chan-O-Rama Channel Manager";
-			this.pnlHelp.Click += new System.EventHandler(this.pnlHelp_Click);
+			pnlHelp.BorderSides = ToolStripStatusLabelBorderSides.Left | ToolStripStatusLabelBorderSides.Top | ToolStripStatusLabelBorderSides.Right | ToolStripStatusLabelBorderSides.Bottom;
+			pnlHelp.BorderStyle = Border3DStyle.SunkenInner;
+			pnlHelp.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+			pnlHelp.ForeColor = SystemColors.Highlight;
+			pnlHelp.IsLink = true;
+			pnlHelp.Name = "pnlHelp";
+			pnlHelp.Size = new Size(81, 36);
+			pnlHelp.Text = "Help...";
+			pnlHelp.ToolTipText = "Get Help using Chan-O-Rama Channel Manager";
+			pnlHelp.Click += pnlHelp_Click;
 			// 
 			// pnlStatus
 			// 
-			this.pnlStatus.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-			this.pnlStatus.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
-			this.pnlStatus.Name = "pnlStatus";
-			this.pnlStatus.Size = new System.Drawing.Size(456, 19);
-			this.pnlStatus.Spring = true;
+			pnlStatus.BorderSides = ToolStripStatusLabelBorderSides.Left | ToolStripStatusLabelBorderSides.Top | ToolStripStatusLabelBorderSides.Right | ToolStripStatusLabelBorderSides.Bottom;
+			pnlStatus.BorderStyle = Border3DStyle.SunkenOuter;
+			pnlStatus.Name = "pnlStatus";
+			pnlStatus.Size = new Size(851, 36);
+			pnlStatus.Spring = true;
 			// 
 			// pnlAbout
 			// 
-			this.pnlAbout.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-			this.pnlAbout.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenInner;
-			this.pnlAbout.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
-			this.pnlAbout.ForeColor = System.Drawing.SystemColors.Highlight;
-			this.pnlAbout.Name = "pnlAbout";
-			this.pnlAbout.Size = new System.Drawing.Size(52, 19);
-			this.pnlAbout.Text = "About...";
-			this.pnlAbout.ToolTipText = "About Chan-O-Rama Channel Manager\r\nVersion, Copyright, License, More...";
-			this.pnlAbout.Click += new System.EventHandler(this.pnlAbout_Click);
+			pnlAbout.BorderSides = ToolStripStatusLabelBorderSides.Left | ToolStripStatusLabelBorderSides.Top | ToolStripStatusLabelBorderSides.Right | ToolStripStatusLabelBorderSides.Bottom;
+			pnlAbout.BorderStyle = Border3DStyle.SunkenInner;
+			pnlAbout.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+			pnlAbout.ForeColor = SystemColors.Highlight;
+			pnlAbout.Name = "pnlAbout";
+			pnlAbout.Size = new Size(95, 36);
+			pnlAbout.Text = "About...";
+			pnlAbout.ToolTipText = "About Chan-O-Rama Channel Manager\r\nVersion, Copyright, License, More...";
+			pnlAbout.Click += pnlAbout_Click;
 			// 
 			// btnOK
 			// 
-			this.btnOK.Enabled = false;
-			this.btnOK.Location = new System.Drawing.Point(458, 489);
-			this.btnOK.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.btnOK.Name = "btnOK";
-			this.btnOK.Size = new System.Drawing.Size(88, 27);
-			this.btnOK.TabIndex = 11;
-			this.btnOK.Text = "OK";
-			this.btnOK.UseVisualStyleBackColor = true;
-			this.btnOK.Visible = false;
+			btnOK.Enabled = false;
+			btnOK.Location = new Point(851, 1043);
+			btnOK.Margin = new Padding(7, 6, 7, 6);
+			btnOK.Name = "btnOK";
+			btnOK.Size = new Size(163, 58);
+			btnOK.TabIndex = 11;
+			btnOK.Text = "OK";
+			btnOK.UseVisualStyleBackColor = true;
+			btnOK.Visible = false;
 			// 
 			// picAboutIcon
 			// 
-			this.picAboutIcon.ErrorImage = null;
-			this.picAboutIcon.Image = ((System.Drawing.Image)(resources.GetObject("picAboutIcon.Image")));
-			this.picAboutIcon.Location = new System.Drawing.Point(489, 410);
-			this.picAboutIcon.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.picAboutIcon.Name = "picAboutIcon";
-			this.picAboutIcon.Size = new System.Drawing.Size(128, 128);
-			this.picAboutIcon.TabIndex = 68;
-			this.picAboutIcon.TabStop = false;
-			this.picAboutIcon.Visible = false;
+			picAboutIcon.ErrorImage = null;
+			picAboutIcon.Image = (Image)resources.GetObject("picAboutIcon.Image");
+			picAboutIcon.Location = new Point(908, 875);
+			picAboutIcon.Margin = new Padding(7, 6, 7, 6);
+			picAboutIcon.Name = "picAboutIcon";
+			picAboutIcon.Size = new Size(238, 273);
+			picAboutIcon.TabIndex = 68;
+			picAboutIcon.TabStop = false;
+			picAboutIcon.Visible = false;
 			// 
 			// btnUniverse
 			// 
-			this.btnUniverse.Image = ((System.Drawing.Image)(resources.GetObject("btnUniverse.Image")));
-			this.btnUniverse.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.btnUniverse.Location = new System.Drawing.Point(458, 14);
-			this.btnUniverse.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.btnUniverse.Name = "btnUniverse";
-			this.btnUniverse.Size = new System.Drawing.Size(88, 46);
-			this.btnUniverse.TabIndex = 1;
-			this.btnUniverse.Text = "Add\r\nUniverse\r\n";
-			this.btnUniverse.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.toolTips.SetToolTip(this.btnUniverse, "Add a new Universe");
-			this.btnUniverse.UseVisualStyleBackColor = true;
-			this.btnUniverse.Click += new System.EventHandler(this.btnUniverse_Click);
+			btnUniverse.Image = (Image)resources.GetObject("btnUniverse.Image");
+			btnUniverse.ImageAlign = ContentAlignment.MiddleRight;
+			btnUniverse.Location = new Point(851, 30);
+			btnUniverse.Margin = new Padding(7, 6, 7, 6);
+			btnUniverse.Name = "btnUniverse";
+			btnUniverse.Size = new Size(163, 98);
+			btnUniverse.TabIndex = 1;
+			btnUniverse.Text = "Edit\r\nUniverse\r\n";
+			btnUniverse.TextAlign = ContentAlignment.MiddleLeft;
+			tipTool.SetToolTip(btnUniverse, "Edit the selected Universe");
+			btnUniverse.UseVisualStyleBackColor = true;
+			btnUniverse.Click += btnUniverse_Click;
 			// 
 			// btnController
 			// 
-			this.btnController.Image = ((System.Drawing.Image)(resources.GetObject("btnController.Image")));
-			this.btnController.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.btnController.Location = new System.Drawing.Point(458, 67);
-			this.btnController.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.btnController.Name = "btnController";
-			this.btnController.Size = new System.Drawing.Size(88, 46);
-			this.btnController.TabIndex = 2;
-			this.btnController.Text = "Add\r\nController";
-			this.btnController.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.toolTips.SetToolTip(this.btnController, "Add a new Controller to the current Universe");
-			this.btnController.UseVisualStyleBackColor = true;
-			this.btnController.Click += new System.EventHandler(this.btnController_Click);
+			btnController.Image = (Image)resources.GetObject("btnController.Image");
+			btnController.ImageAlign = ContentAlignment.MiddleRight;
+			btnController.Location = new Point(851, 143);
+			btnController.Margin = new Padding(7, 6, 7, 6);
+			btnController.Name = "btnController";
+			btnController.Size = new Size(163, 98);
+			btnController.TabIndex = 2;
+			btnController.Text = "Edit\r\nController";
+			btnController.TextAlign = ContentAlignment.MiddleLeft;
+			tipTool.SetToolTip(btnController, "Edit the selected Controller");
+			btnController.UseVisualStyleBackColor = true;
+			btnController.Click += btnController_Click;
 			// 
 			// btnChannel
 			// 
-			this.btnChannel.Enabled = false;
-			this.btnChannel.Image = ((System.Drawing.Image)(resources.GetObject("btnChannel.Image")));
-			this.btnChannel.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.btnChannel.Location = new System.Drawing.Point(458, 120);
-			this.btnChannel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.btnChannel.Name = "btnChannel";
-			this.btnChannel.Size = new System.Drawing.Size(88, 46);
-			this.btnChannel.TabIndex = 3;
-			this.btnChannel.Text = "Add\r\nChannel\r\n";
-			this.btnChannel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.toolTips.SetToolTip(this.btnChannel, "Add a new Channel to the current Controller");
-			this.btnChannel.UseVisualStyleBackColor = true;
-			this.btnChannel.Click += new System.EventHandler(this.btnChannel_Click);
+			btnChannel.Enabled = false;
+			btnChannel.Image = (Image)resources.GetObject("btnChannel.Image");
+			btnChannel.ImageAlign = ContentAlignment.MiddleRight;
+			btnChannel.Location = new Point(851, 256);
+			btnChannel.Margin = new Padding(7, 6, 7, 6);
+			btnChannel.Name = "btnChannel";
+			btnChannel.Size = new Size(163, 98);
+			btnChannel.TabIndex = 3;
+			btnChannel.Text = "Edit\r\nChannel\r\n";
+			btnChannel.TextAlign = ContentAlignment.MiddleLeft;
+			tipTool.SetToolTip(btnChannel, "Edit the selected Channel");
+			btnChannel.UseVisualStyleBackColor = true;
+			btnChannel.Click += btnChannel_Click;
 			// 
 			// btnReport
 			// 
-			this.btnReport.Enabled = false;
-			this.btnReport.Image = ((System.Drawing.Image)(resources.GetObject("btnReport.Image")));
-			this.btnReport.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.btnReport.Location = new System.Drawing.Point(458, 226);
-			this.btnReport.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.btnReport.Name = "btnReport";
-			this.btnReport.Size = new System.Drawing.Size(88, 46);
-			this.btnReport.TabIndex = 5;
-			this.btnReport.Text = "Export\r\nCSV";
-			this.btnReport.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.toolTips.SetToolTip(this.btnReport, "Export everything to a .CSV Spreadsheet");
-			this.btnReport.UseVisualStyleBackColor = true;
-			this.btnReport.Click += new System.EventHandler(this.btnReport_Click);
+			btnReport.Enabled = false;
+			btnReport.Image = (Image)resources.GetObject("btnReport.Image");
+			btnReport.ImageAlign = ContentAlignment.MiddleRight;
+			btnReport.Location = new Point(851, 482);
+			btnReport.Margin = new Padding(7, 6, 7, 6);
+			btnReport.Name = "btnReport";
+			btnReport.Size = new Size(163, 98);
+			btnReport.TabIndex = 5;
+			btnReport.Text = "Export\r\nCSV";
+			btnReport.TextAlign = ContentAlignment.MiddleLeft;
+			tipTool.SetToolTip(btnReport, "Export everything to a .CSV Spreadsheet");
+			btnReport.UseVisualStyleBackColor = true;
+			btnReport.Click += btnReport_Click;
 			// 
 			// btnCompareLOR
 			// 
-			this.btnCompareLOR.Enabled = false;
-			this.btnCompareLOR.Location = new System.Drawing.Point(511, 305);
-			this.btnCompareLOR.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.btnCompareLOR.Name = "btnCompareLOR";
-			this.btnCompareLOR.Size = new System.Drawing.Size(88, 46);
-			this.btnCompareLOR.TabIndex = 9;
-			this.btnCompareLOR.Text = "Compare\r\nLOR Seq\r\n";
-			this.btnCompareLOR.UseVisualStyleBackColor = true;
-			this.btnCompareLOR.Visible = false;
+			btnCompareLOR.Enabled = false;
+			btnCompareLOR.Location = new Point(949, 651);
+			btnCompareLOR.Margin = new Padding(7, 6, 7, 6);
+			btnCompareLOR.Name = "btnCompareLOR";
+			btnCompareLOR.Size = new Size(163, 98);
+			btnCompareLOR.TabIndex = 9;
+			btnCompareLOR.Text = "Compare\r\nLOR Seq\r\n";
+			btnCompareLOR.UseVisualStyleBackColor = true;
+			btnCompareLOR.Visible = false;
 			// 
 			// btnComparex
 			// 
-			this.btnComparex.Enabled = false;
-			this.btnComparex.Location = new System.Drawing.Point(511, 332);
-			this.btnComparex.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.btnComparex.Name = "btnComparex";
-			this.btnComparex.Size = new System.Drawing.Size(88, 46);
-			this.btnComparex.TabIndex = 10;
-			this.btnComparex.Text = "Compare\r\nxLights\r\n";
-			this.btnComparex.UseVisualStyleBackColor = true;
-			this.btnComparex.Visible = false;
+			btnComparex.Enabled = false;
+			btnComparex.Location = new Point(949, 708);
+			btnComparex.Margin = new Padding(7, 6, 7, 6);
+			btnComparex.Name = "btnComparex";
+			btnComparex.Size = new Size(163, 98);
+			btnComparex.TabIndex = 10;
+			btnComparex.Text = "Compare\r\nxLights\r\n";
+			btnComparex.UseVisualStyleBackColor = true;
+			btnComparex.Visible = false;
 			// 
 			// btnFind
 			// 
-			this.btnFind.Enabled = false;
-			this.btnFind.Image = ((System.Drawing.Image)(resources.GetObject("btnFind.Image")));
-			this.btnFind.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.btnFind.Location = new System.Drawing.Point(458, 173);
-			this.btnFind.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.btnFind.Name = "btnFind";
-			this.btnFind.Size = new System.Drawing.Size(88, 46);
-			this.btnFind.TabIndex = 4;
-			this.btnFind.Text = "Find...";
-			this.btnFind.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.toolTips.SetToolTip(this.btnFind, "Find a Channel...");
-			this.btnFind.UseVisualStyleBackColor = true;
+			btnFind.Enabled = false;
+			btnFind.Image = (Image)resources.GetObject("btnFind.Image");
+			btnFind.ImageAlign = ContentAlignment.MiddleRight;
+			btnFind.Location = new Point(851, 369);
+			btnFind.Margin = new Padding(7, 6, 7, 6);
+			btnFind.Name = "btnFind";
+			btnFind.Size = new Size(163, 98);
+			btnFind.TabIndex = 4;
+			btnFind.Text = "Find...";
+			btnFind.TextAlign = ContentAlignment.MiddleLeft;
+			tipTool.SetToolTip(btnFind, "Find a Channel...");
+			btnFind.UseVisualStyleBackColor = true;
 			// 
 			// btnWiz
 			// 
-			this.btnWiz.Image = ((System.Drawing.Image)(resources.GetObject("btnWiz.Image")));
-			this.btnWiz.Location = new System.Drawing.Point(458, 279);
-			this.btnWiz.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.btnWiz.Name = "btnWiz";
-			this.btnWiz.Size = new System.Drawing.Size(88, 46);
-			this.btnWiz.TabIndex = 6;
-			this.toolTips.SetToolTip(this.btnWiz, "Channel Comparison Wizard\r\n\r\nCompare Managed Channels to:\r\n    Light-O-Rama Showt" +
-        "ime S4 Channels\r\n    Light-O-Rama Visualizer Channels & Groups\r\n    xLights Mode" +
-        "ls and Groups");
-			this.btnWiz.UseVisualStyleBackColor = true;
-			this.btnWiz.Visible = false;
-			this.btnWiz.Click += new System.EventHandler(this.btnWiz_Click);
+			btnWiz.Image = (Image)resources.GetObject("btnWiz.Image");
+			btnWiz.Location = new Point(851, 595);
+			btnWiz.Margin = new Padding(7, 6, 7, 6);
+			btnWiz.Name = "btnWiz";
+			btnWiz.Size = new Size(163, 98);
+			btnWiz.TabIndex = 6;
+			tipTool.SetToolTip(btnWiz, "Channel Comparison Wizard\r\n\r\nCompare Managed Channels to:\r\n    Light-O-Rama Showtime S4 Channels\r\n    Light-O-Rama Visualizer Channels & Groups\r\n    xLights Models and Groups");
+			btnWiz.UseVisualStyleBackColor = true;
+			btnWiz.Visible = false;
+			btnWiz.Click += btnWiz_Click;
 			// 
 			// btnSave
 			// 
-			this.btnSave.Image = ((System.Drawing.Image)(resources.GetObject("btnSave.Image")));
-			this.btnSave.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.btnSave.Location = new System.Drawing.Point(458, 436);
-			this.btnSave.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.btnSave.Name = "btnSave";
-			this.btnSave.Size = new System.Drawing.Size(88, 46);
-			this.btnSave.TabIndex = 7;
-			this.btnSave.Text = "Save";
-			this.btnSave.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.toolTips.SetToolTip(this.btnSave, "Save Everything!");
-			this.btnSave.UseVisualStyleBackColor = true;
-			this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+			btnSave.Image = (Image)resources.GetObject("btnSave.Image");
+			btnSave.ImageAlign = ContentAlignment.MiddleRight;
+			btnSave.Location = new Point(851, 930);
+			btnSave.Margin = new Padding(7, 6, 7, 6);
+			btnSave.Name = "btnSave";
+			btnSave.Size = new Size(163, 98);
+			btnSave.TabIndex = 7;
+			btnSave.Text = "Save";
+			btnSave.TextAlign = ContentAlignment.MiddleLeft;
+			tipTool.SetToolTip(btnSave, "Save Everything!");
+			btnSave.UseVisualStyleBackColor = true;
+			btnSave.Click += btnSave_Click;
 			// 
 			// btnExportSeq
 			// 
-			this.btnExportSeq.Enabled = false;
-			this.btnExportSeq.Image = ((System.Drawing.Image)(resources.GetObject("btnExportSeq.Image")));
-			this.btnExportSeq.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.btnExportSeq.Location = new System.Drawing.Point(511, 358);
-			this.btnExportSeq.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.btnExportSeq.Name = "btnExportSeq";
-			this.btnExportSeq.Size = new System.Drawing.Size(88, 46);
-			this.btnExportSeq.TabIndex = 119;
-			this.btnExportSeq.Text = "Export\r\nSequence";
-			this.btnExportSeq.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.toolTips.SetToolTip(this.btnExportSeq, "Export everything to a .CSV Spreadsheet");
-			this.btnExportSeq.UseVisualStyleBackColor = true;
-			this.btnExportSeq.Visible = false;
+			btnExportSeq.Enabled = false;
+			btnExportSeq.Image = (Image)resources.GetObject("btnExportSeq.Image");
+			btnExportSeq.ImageAlign = ContentAlignment.MiddleRight;
+			btnExportSeq.Location = new Point(949, 764);
+			btnExportSeq.Margin = new Padding(7, 6, 7, 6);
+			btnExportSeq.Name = "btnExportSeq";
+			btnExportSeq.Size = new Size(163, 98);
+			btnExportSeq.TabIndex = 119;
+			btnExportSeq.Text = "Export\r\nSequence";
+			btnExportSeq.TextAlign = ContentAlignment.MiddleLeft;
+			tipTool.SetToolTip(btnExportSeq, "Export everything to a .CSV Spreadsheet");
+			btnExportSeq.UseVisualStyleBackColor = true;
+			btnExportSeq.Visible = false;
 			// 
 			// btnRemove
 			// 
-			this.btnRemove.Image = ((System.Drawing.Image)(resources.GetObject("btnRemove.Image")));
-			this.btnRemove.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.btnRemove.Location = new System.Drawing.Point(458, 331);
-			this.btnRemove.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.btnRemove.Name = "btnRemove";
-			this.btnRemove.Size = new System.Drawing.Size(88, 46);
-			this.btnRemove.TabIndex = 120;
-			this.btnRemove.Text = "Remove\r\nChannel";
-			this.btnRemove.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.toolTips.SetToolTip(this.btnRemove, "Export everything to a .CSV Spreadsheet");
-			this.btnRemove.UseVisualStyleBackColor = true;
-			this.btnRemove.Visible = false;
-			this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
+			btnRemove.Image = (Image)resources.GetObject("btnRemove.Image");
+			btnRemove.ImageAlign = ContentAlignment.MiddleRight;
+			btnRemove.Location = new Point(851, 706);
+			btnRemove.Margin = new Padding(7, 6, 7, 6);
+			btnRemove.Name = "btnRemove";
+			btnRemove.Size = new Size(163, 98);
+			btnRemove.TabIndex = 120;
+			btnRemove.Text = "Remove\r\nChannel";
+			btnRemove.TextAlign = ContentAlignment.MiddleLeft;
+			tipTool.SetToolTip(btnRemove, "Export everything to a .CSV Spreadsheet");
+			btnRemove.UseVisualStyleBackColor = true;
+			btnRemove.Visible = false;
+			btnRemove.Click += btnRemove_Click;
+			// 
+			// btnMoveUp
+			// 
+			btnMoveUp.Enabled = false;
+			btnMoveUp.ImageAlign = ContentAlignment.MiddleRight;
+			btnMoveUp.Location = new Point(372, 1076);
+			btnMoveUp.Margin = new Padding(7, 6, 7, 6);
+			btnMoveUp.Name = "btnMoveUp";
+			btnMoveUp.Size = new Size(89, 45);
+			btnMoveUp.TabIndex = 123;
+			btnMoveUp.Text = "^";
+			tipTool.SetToolTip(btnMoveUp, "Move Up");
+			btnMoveUp.UseVisualStyleBackColor = true;
+			// 
+			// btnMoveDown
+			// 
+			btnMoveDown.Enabled = false;
+			btnMoveDown.ImageAlign = ContentAlignment.MiddleRight;
+			btnMoveDown.Location = new Point(475, 1075);
+			btnMoveDown.Margin = new Padding(7, 6, 7, 6);
+			btnMoveDown.Name = "btnMoveDown";
+			btnMoveDown.Size = new Size(89, 45);
+			btnMoveDown.TabIndex = 124;
+			btnMoveDown.Text = "v";
+			tipTool.SetToolTip(btnMoveDown, "Move Down");
+			btnMoveDown.UseVisualStyleBackColor = true;
+			// 
+			// btnSettings
+			// 
+			btnSettings.ContextMenuStrip = mnuSettings;
+			btnSettings.Font = new Font("Segoe UI Black", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			btnSettings.Image = (Image)resources.GetObject("btnSettings.Image");
+			btnSettings.ImageAlign = ContentAlignment.MiddleRight;
+			btnSettings.Location = new Point(626, 1071);
+			btnSettings.Margin = new Padding(7, 6, 7, 6);
+			btnSettings.Name = "btnSettings";
+			btnSettings.Size = new Size(69, 46);
+			btnSettings.TabIndex = 125;
+			btnSettings.Text = "*";
+			tipTool.SetToolTip(btnSettings, "Settings");
+			btnSettings.UseVisualStyleBackColor = true;
+			btnSettings.Click += btnSettings_Click;
+			// 
+			// mnuSettings
+			// 
+			mnuSettings.ImageScalingSize = new Size(32, 32);
+			mnuSettings.Items.AddRange(new ToolStripItem[] { changeDatabaseLocationToolStripMenuItem, dropModeToolStripMenuItem, preferencesToolStripMenuItem });
+			mnuSettings.Name = "mnuSettings";
+			mnuSettings.Size = new Size(373, 118);
+			// 
+			// changeDatabaseLocationToolStripMenuItem
+			// 
+			changeDatabaseLocationToolStripMenuItem.Name = "changeDatabaseLocationToolStripMenuItem";
+			changeDatabaseLocationToolStripMenuItem.Size = new Size(372, 38);
+			changeDatabaseLocationToolStripMenuItem.Text = "Change Database Location";
+			changeDatabaseLocationToolStripMenuItem.Click += changeDatabaseLocationToolStripMenuItem_Click;
+			// 
+			// dropModeToolStripMenuItem
+			// 
+			dropModeToolStripMenuItem.Name = "dropModeToolStripMenuItem";
+			dropModeToolStripMenuItem.Size = new Size(372, 38);
+			dropModeToolStripMenuItem.Text = "Drop Mode";
+			dropModeToolStripMenuItem.Click += dropModeToolStripMenuItem_Click;
+			// 
+			// preferencesToolStripMenuItem
+			// 
+			preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem";
+			preferencesToolStripMenuItem.Size = new Size(372, 38);
+			preferencesToolStripMenuItem.Text = "Preferences";
+			preferencesToolStripMenuItem.Click += preferencesToolStripMenuItem_Click;
 			// 
 			// imlTreeIcons
 			// 
-			this.imlTreeIcons.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-			this.imlTreeIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imlTreeIcons.ImageStream")));
-			this.imlTreeIcons.TransparentColor = System.Drawing.Color.Transparent;
-			this.imlTreeIcons.Images.SetKeyName(0, "Universe");
-			this.imlTreeIcons.Images.SetKeyName(1, "Controller");
-			this.imlTreeIcons.Images.SetKeyName(2, "Track");
-			this.imlTreeIcons.Images.SetKeyName(3, "Channel");
-			this.imlTreeIcons.Images.SetKeyName(4, "RGBChannel");
-			this.imlTreeIcons.Images.SetKeyName(5, "ChannelGroup");
-			this.imlTreeIcons.Images.SetKeyName(6, "CosmicDevice");
-			this.imlTreeIcons.Images.SetKeyName(7, "#400000");
-			this.imlTreeIcons.Images.SetKeyName(8, "#804040");
-			this.imlTreeIcons.Images.SetKeyName(9, "#FF0000");
-			this.imlTreeIcons.Images.SetKeyName(10, "#00FF00");
-			this.imlTreeIcons.Images.SetKeyName(11, "#0000FF");
-			this.imlTreeIcons.Images.SetKeyName(12, "#FFFFFF");
-			this.imlTreeIcons.Images.SetKeyName(13, "#000000");
-			this.imlTreeIcons.Images.SetKeyName(14, "#8000FF");
-			this.imlTreeIcons.Images.SetKeyName(15, "#FF8000");
-			this.imlTreeIcons.Images.SetKeyName(16, "#FFFF00");
-			this.imlTreeIcons.Images.SetKeyName(17, "#FF80FF");
-			this.imlTreeIcons.Images.SetKeyName(18, "#00FFFF");
-			this.imlTreeIcons.Images.SetKeyName(19, "#000080");
-			this.imlTreeIcons.Images.SetKeyName(20, "#008000");
-			this.imlTreeIcons.Images.SetKeyName(21, "#008080");
-			this.imlTreeIcons.Images.SetKeyName(22, "#8080FF");
-			this.imlTreeIcons.Images.SetKeyName(23, "#400080");
-			this.imlTreeIcons.Images.SetKeyName(24, "#404040");
-			this.imlTreeIcons.Images.SetKeyName(25, "#408080");
-			this.imlTreeIcons.Images.SetKeyName(26, "#800000");
-			this.imlTreeIcons.Images.SetKeyName(27, "#800080");
-			this.imlTreeIcons.Images.SetKeyName(28, "#808000");
-			this.imlTreeIcons.Images.SetKeyName(29, "#808080");
-			this.imlTreeIcons.Images.SetKeyName(30, "#C0C0C0");
-			this.imlTreeIcons.Images.SetKeyName(31, "#FF00FF");
+			imlTreeIcons.ColorDepth = ColorDepth.Depth32Bit;
+			imlTreeIcons.ImageStream = (ImageListStreamer)resources.GetObject("imlTreeIcons.ImageStream");
+			imlTreeIcons.TransparentColor = Color.Transparent;
+			imlTreeIcons.Images.SetKeyName(0, "Universe");
+			imlTreeIcons.Images.SetKeyName(1, "Controller");
+			imlTreeIcons.Images.SetKeyName(2, "RGBChannel");
+			imlTreeIcons.Images.SetKeyName(3, "RGBWChannel");
+			imlTreeIcons.Images.SetKeyName(4, "MulticolorChannel");
+			imlTreeIcons.Images.SetKeyName(5, "#000000");
+			imlTreeIcons.Images.SetKeyName(6, "#D0FFFF");
+			imlTreeIcons.Images.SetKeyName(7, "#FFE0D0");
+			imlTreeIcons.Images.SetKeyName(8, "#FF0000");
+			imlTreeIcons.Images.SetKeyName(9, "#FF8000");
+			imlTreeIcons.Images.SetKeyName(10, "#FFFF00");
+			imlTreeIcons.Images.SetKeyName(11, "#00FF00");
+			imlTreeIcons.Images.SetKeyName(12, "#0000FF");
+			imlTreeIcons.Images.SetKeyName(13, "#8000FF");
+			imlTreeIcons.Images.SetKeyName(14, "#FF80FF");
+			imlTreeIcons.Images.SetKeyName(15, "#000001");
+			imlTreeIcons.Images.SetKeyName(16, "#000100");
+			imlTreeIcons.Images.SetKeyName(17, "#010000");
 			// 
 			// treeChannels
 			// 
-			this.treeChannels.BackColor = System.Drawing.Color.White;
+			treeChannels.BackColor = Color.White;
 			treeNodeAdvStyleInfo1.CheckBoxTickThickness = 1;
-			treeNodeAdvStyleInfo1.CheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+			treeNodeAdvStyleInfo1.CheckColor = Color.FromArgb(109, 109, 109);
 			treeNodeAdvStyleInfo1.EnsureDefaultOptionedChild = true;
-			treeNodeAdvStyleInfo1.IntermediateCheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-			treeNodeAdvStyleInfo1.OptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
-			treeNodeAdvStyleInfo1.SelectedOptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
-			treeNodeAdvStyleInfo1.TextColor = System.Drawing.Color.Black;
-			this.treeChannels.BaseStylePairs.AddRange(new Syncfusion.Windows.Forms.Tools.StyleNamePair[] {
-            new Syncfusion.Windows.Forms.Tools.StyleNamePair("Standard", treeNodeAdvStyleInfo1)});
-			this.treeChannels.BeforeTouchSize = new System.Drawing.Size(419, 487);
-			this.treeChannels.ForeColor = System.Drawing.Color.Black;
+			treeNodeAdvStyleInfo1.IntermediateCheckColor = Color.FromArgb(109, 109, 109);
+			treeNodeAdvStyleInfo1.OptionButtonColor = Color.FromArgb(109, 109, 109);
+			treeNodeAdvStyleInfo1.SelectedOptionButtonColor = Color.FromArgb(210, 210, 210);
+			treeNodeAdvStyleInfo1.TextColor = Color.Black;
+			treeChannels.BaseStylePairs.AddRange(new Syncfusion.Windows.Forms.Tools.StyleNamePair[] { new Syncfusion.Windows.Forms.Tools.StyleNamePair("Standard", treeNodeAdvStyleInfo1) });
+			treeChannels.BeforeTouchSize = new Size(775, 1034);
+			treeChannels.ForeColor = Color.Black;
 			// 
 			// 
 			// 
-			this.treeChannels.HelpTextControl.BaseThemeName = null;
-			this.treeChannels.HelpTextControl.Location = new System.Drawing.Point(0, 0);
-			this.treeChannels.HelpTextControl.Name = "";
-			this.treeChannels.HelpTextControl.Size = new System.Drawing.Size(392, 112);
-			this.treeChannels.HelpTextControl.TabIndex = 0;
-			this.treeChannels.HelpTextControl.Visible = true;
-			this.treeChannels.InactiveSelectedNodeForeColor = System.Drawing.SystemColors.ControlText;
-			this.treeChannels.LeftImageList = this.imlTreeIcons;
-			this.treeChannels.Location = new System.Drawing.Point(14, 14);
-			this.treeChannels.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.treeChannels.MetroColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(165)))), ((int)(((byte)(220)))));
-			this.treeChannels.Name = "treeChannels";
-			this.treeChannels.SelectedNodeForeColor = System.Drawing.SystemColors.HighlightText;
-			this.treeChannels.Size = new System.Drawing.Size(419, 487);
-			this.treeChannels.TabIndex = 118;
-			this.treeChannels.Text = "Source Channels";
-			this.treeChannels.ThemeStyle.TreeNodeAdvStyle.CheckBoxTickThickness = 0;
-			this.treeChannels.ThemeStyle.TreeNodeAdvStyle.EnsureDefaultOptionedChild = true;
+			treeChannels.HelpTextControl.BaseThemeName = null;
+			treeChannels.HelpTextControl.Location = new Point(0, 0);
+			treeChannels.HelpTextControl.Name = "";
+			treeChannels.HelpTextControl.Size = new Size(392, 112);
+			treeChannels.HelpTextControl.TabIndex = 0;
+			treeChannels.HelpTextControl.Visible = true;
+			treeChannels.InactiveSelectedNodeForeColor = SystemColors.ControlText;
+			treeChannels.LeftImageList = imlTreeIcons;
+			treeChannels.Location = new Point(26, 30);
+			treeChannels.Margin = new Padding(7, 6, 7, 6);
+			treeChannels.MetroColor = Color.FromArgb(22, 165, 220);
+			treeChannels.Name = "treeChannels";
+			treeChannels.SelectedNodeForeColor = SystemColors.HighlightText;
+			treeChannels.Size = new Size(775, 1034);
+			treeChannels.TabIndex = 118;
+			treeChannels.Text = "Source Channels";
+			treeChannels.ThemeStyle.TreeNodeAdvStyle.CheckBoxTickThickness = 0;
+			treeChannels.ThemeStyle.TreeNodeAdvStyle.EnsureDefaultOptionedChild = true;
 			// 
 			// 
 			// 
-			this.treeChannels.ToolTipControl.BaseThemeName = null;
-			this.treeChannels.ToolTipControl.Location = new System.Drawing.Point(0, 0);
-			this.treeChannels.ToolTipControl.Name = "";
-			this.treeChannels.ToolTipControl.Size = new System.Drawing.Size(392, 112);
-			this.treeChannels.ToolTipControl.TabIndex = 0;
-			this.treeChannels.ToolTipControl.Visible = true;
-			this.treeChannels.AfterSelect += new System.EventHandler(this.treeChannels_AfterSelect);
-			this.treeChannels.DoubleClick += new System.EventHandler(this.treeChannelList_DoubleClick);
-			this.treeChannels.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.treeChannels_KeyPress);
-			this.treeChannels.KeyUp += new System.Windows.Forms.KeyEventHandler(this.treeChannels_KeyUp);
+			treeChannels.ToolTipControl.BaseThemeName = null;
+			treeChannels.ToolTipControl.Location = new Point(0, 0);
+			treeChannels.ToolTipControl.Name = "";
+			treeChannels.ToolTipControl.Size = new Size(392, 112);
+			treeChannels.ToolTipControl.TabIndex = 0;
+			treeChannels.ToolTipControl.Visible = true;
+			treeChannels.AfterSelect += treeChannels_AfterSelect;
+			treeChannels.DoubleClick += treeChannelList_DoubleClick;
+			treeChannels.KeyPress += treeChannels_KeyPress;
+			treeChannels.KeyUp += treeChannels_KeyUp;
 			// 
 			// dlgFileOpen
 			// 
-			this.dlgFileOpen.FileName = "openFileDialog1";
+			dlgFileOpen.FileName = "openFileDialog1";
 			// 
 			// lblxChannel
 			// 
-			this.lblxChannel.AutoSize = true;
-			this.lblxChannel.ForeColor = System.Drawing.SystemColors.HotTrack;
-			this.lblxChannel.Location = new System.Drawing.Point(60, 504);
-			this.lblxChannel.Name = "lblxChannel";
-			this.lblxChannel.Size = new System.Drawing.Size(16, 15);
-			this.lblxChannel.TabIndex = 121;
-			this.lblxChannel.Text = "...";
+			lblxChannel.AutoSize = true;
+			lblxChannel.ForeColor = SystemColors.HotTrack;
+			lblxChannel.Location = new Point(111, 1075);
+			lblxChannel.Margin = new Padding(6, 0, 6, 0);
+			lblxChannel.Name = "lblxChannel";
+			lblxChannel.Size = new Size(29, 32);
+			lblxChannel.TabIndex = 121;
+			lblxChannel.Text = "...";
+			// 
+			// lblDirty
+			// 
+			lblDirty.AutoSize = true;
+			lblDirty.ForeColor = SystemColors.HotTrack;
+			lblDirty.Location = new Point(219, 1075);
+			lblDirty.Margin = new Padding(6, 0, 6, 0);
+			lblDirty.Name = "lblDirty";
+			lblDirty.Size = new Size(29, 32);
+			lblDirty.TabIndex = 122;
+			lblDirty.Text = "...";
+			// 
+			// lblVersions
+			// 
+			lblVersions.AutoSize = true;
+			lblVersions.ForeColor = Color.DarkGreen;
+			lblVersions.Location = new Point(729, 1070);
+			lblVersions.Margin = new Padding(6, 0, 6, 0);
+			lblVersions.Name = "lblVersions";
+			lblVersions.Size = new Size(29, 32);
+			lblVersions.TabIndex = 126;
+			lblVersions.Text = "...";
 			// 
 			// frmList
 			// 
-			this.AcceptButton = this.btnOK;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(570, 548);
-			this.Controls.Add(this.lblxChannel);
-			this.Controls.Add(this.btnRemove);
-			this.Controls.Add(this.btnExportSeq);
-			this.Controls.Add(this.treeChannels);
-			this.Controls.Add(this.btnSave);
-			this.Controls.Add(this.btnWiz);
-			this.Controls.Add(this.btnFind);
-			this.Controls.Add(this.btnComparex);
-			this.Controls.Add(this.btnCompareLOR);
-			this.Controls.Add(this.btnReport);
-			this.Controls.Add(this.btnChannel);
-			this.Controls.Add(this.btnController);
-			this.Controls.Add(this.btnUniverse);
-			this.Controls.Add(this.btnOK);
-			this.Controls.Add(this.staStatus);
-			this.Controls.Add(this.picAboutIcon);
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.MaximizeBox = false;
-			this.MaximumSize = new System.Drawing.Size(931, 1090);
-			this.MinimumSize = new System.Drawing.Size(406, 456);
-			this.Name = "frmList";
-			this.Text = "Chan-O-Rama  Channel Manager";
-			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmList_FormClosing);
-			this.Load += new System.EventHandler(this.frmList_Load);
-			this.Shown += new System.EventHandler(this.frmList_Shown);
-			this.Click += new System.EventHandler(this.frmList_Click);
-			this.Resize += new System.EventHandler(this.frmList_Resize);
-			this.staStatus.ResumeLayout(false);
-			this.staStatus.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.picAboutIcon)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.treeChannels)).EndInit();
-			this.ResumeLayout(false);
-			this.PerformLayout();
+			AcceptButton = btnOK;
+			AutoScaleDimensions = new SizeF(13F, 32F);
+			AutoScaleMode = AutoScaleMode.Font;
+			ClientSize = new Size(1059, 1169);
+			Controls.Add(lblVersions);
+			Controls.Add(btnSettings);
+			Controls.Add(btnMoveDown);
+			Controls.Add(btnMoveUp);
+			Controls.Add(lblDirty);
+			Controls.Add(lblxChannel);
+			Controls.Add(btnRemove);
+			Controls.Add(btnExportSeq);
+			Controls.Add(treeChannels);
+			Controls.Add(btnSave);
+			Controls.Add(btnWiz);
+			Controls.Add(btnFind);
+			Controls.Add(btnComparex);
+			Controls.Add(btnCompareLOR);
+			Controls.Add(btnReport);
+			Controls.Add(btnChannel);
+			Controls.Add(btnController);
+			Controls.Add(btnUniverse);
+			Controls.Add(btnOK);
+			Controls.Add(staStatus);
+			Controls.Add(picAboutIcon);
+			Icon = (Icon)resources.GetObject("$this.Icon");
+			Margin = new Padding(7, 6, 7, 6);
+			MaximizeBox = false;
+			MaximumSize = new Size(1707, 2245);
+			MinimumSize = new Size(732, 892);
+			Name = "frmList";
+			Text = "Chan-O-Rama  Channel Manager";
+			FormClosing += frmList_FormClosing;
+			Load += frmList_Load;
+			Shown += frmList_Shown;
+			Click += frmList_Click;
+			Resize += frmList_Resize;
+			staStatus.ResumeLayout(false);
+			staStatus.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)picAboutIcon).EndInit();
+			mnuSettings.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)treeChannels).EndInit();
+			ResumeLayout(false);
+			PerformLayout();
 
 		}
 
@@ -460,7 +543,7 @@ namespace UtilORama4
 		private System.Windows.Forms.Button btnFind;
 		private System.Windows.Forms.Button btnWiz;
 		private System.Windows.Forms.Button btnSave;
-		private System.Windows.Forms.ToolTip toolTips;
+		private System.Windows.Forms.ToolTip tipTool;
 		private System.Windows.Forms.ImageList imlTreeIcons;
 		private Syncfusion.Windows.Forms.Tools.TreeViewAdv treeChannels;
 		private System.Windows.Forms.Button btnExportSeq;
@@ -468,6 +551,15 @@ namespace UtilORama4
 		private System.Windows.Forms.SaveFileDialog dlgFileSave;
 		private Button btnRemove;
 		private Label lblxChannel;
+		private Label lblDirty;
+		private Button btnMoveUp;
+		private Button btnMoveDown;
+		private Button btnSettings;
+		private ContextMenuStrip mnuSettings;
+		private ToolStripMenuItem changeDatabaseLocationToolStripMenuItem;
+		private ToolStripMenuItem dropModeToolStripMenuItem;
+		private ToolStripMenuItem preferencesToolStripMenuItem;
+		private Label lblVersions;
 	}
 }
 

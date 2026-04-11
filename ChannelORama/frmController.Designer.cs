@@ -29,346 +29,457 @@ namespace UtilORama4
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
-			this.btnOK = new System.Windows.Forms.Button();
-			this.btnCancel = new System.Windows.Forms.Button();
-			this.lblName = new System.Windows.Forms.Label();
-			this.txtName = new System.Windows.Forms.TextBox();
-			this.txtComment = new System.Windows.Forms.TextBox();
-			this.label4 = new System.Windows.Forms.Label();
-			this.chkActive = new System.Windows.Forms.CheckBox();
-			this.lblxAddresses = new System.Windows.Forms.Label();
-			this.lblLastDMX = new System.Windows.Forms.Label();
-			this.lblStart = new System.Windows.Forms.Label();
-			this.numStart = new System.Windows.Forms.NumericUpDown();
-			this.cboBrand = new System.Windows.Forms.ComboBox();
-			this.lblBrand = new System.Windows.Forms.Label();
-			this.cboUniverse = new System.Windows.Forms.ComboBox();
-			this.lblUniverse = new System.Windows.Forms.Label();
-			this.txtLocation = new System.Windows.Forms.TextBox();
-			this.lblLocation = new System.Windows.Forms.Label();
-			this.txtModel = new System.Windows.Forms.TextBox();
-			this.lblModel = new System.Windows.Forms.Label();
-			this.txtLetter = new System.Windows.Forms.TextBox();
-			this.lblLetter = new System.Windows.Forms.Label();
-			this.lblCount = new System.Windows.Forms.Label();
-			this.numCount = new System.Windows.Forms.NumericUpDown();
-			this.btnChannels = new System.Windows.Forms.Button();
-			this.tipTool = new System.Windows.Forms.ToolTip(this.components);
-			((System.ComponentModel.ISupportInitialize)(this.numStart)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numCount)).BeginInit();
-			this.SuspendLayout();
+			components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmController));
+			btnOK = new Button();
+			btnCancel = new Button();
+			lblName = new Label();
+			txtName = new TextBox();
+			txtComment = new TextBox();
+			lblComment = new Label();
+			chkActive = new CheckBox();
+			lblxAddresses = new Label();
+			lblLastDMX = new Label();
+			lblStart = new Label();
+			numStart = new NumericUpDown();
+			cboBrand = new ComboBox();
+			lblBrand = new Label();
+			cboUniverse = new ComboBox();
+			lblUniverse = new Label();
+			txtLocation = new TextBox();
+			lblLocation = new Label();
+			txtModel = new TextBox();
+			lblModel = new Label();
+			txtIdentifier = new TextBox();
+			lblIdentifier = new Label();
+			lblCount = new Label();
+			numCount = new NumericUpDown();
+			btnChannels = new Button();
+			tipTool = new ToolTip(components);
+			cboLORModels = new ComboBox();
+			lblUnit = new Label();
+			numUnit = new NumericUpDown();
+			lblDirty = new Label();
+			label1 = new Label();
+			((System.ComponentModel.ISupportInitialize)numStart).BeginInit();
+			((System.ComponentModel.ISupportInitialize)numCount).BeginInit();
+			((System.ComponentModel.ISupportInitialize)numUnit).BeginInit();
+			SuspendLayout();
 			// 
 			// btnOK
 			// 
-			this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.btnOK.Location = new System.Drawing.Point(216, 376);
-			this.btnOK.Name = "btnOK";
-			this.btnOK.Size = new System.Drawing.Size(75, 23);
-			this.btnOK.TabIndex = 0;
-			this.btnOK.Text = "OK";
-			this.btnOK.UseVisualStyleBackColor = true;
+			btnOK.DialogResult = DialogResult.OK;
+			btnOK.Location = new Point(468, 926);
+			btnOK.Margin = new Padding(6, 7, 6, 7);
+			btnOK.Name = "btnOK";
+			btnOK.Size = new Size(162, 57);
+			btnOK.TabIndex = 0;
+			btnOK.Text = "OK";
+			btnOK.UseVisualStyleBackColor = true;
+			btnOK.Click += btnOK_Click;
 			// 
 			// btnCancel
 			// 
-			this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.btnCancel.Location = new System.Drawing.Point(297, 376);
-			this.btnCancel.Name = "btnCancel";
-			this.btnCancel.Size = new System.Drawing.Size(75, 23);
-			this.btnCancel.TabIndex = 1;
-			this.btnCancel.Text = "Cancel";
-			this.btnCancel.UseVisualStyleBackColor = true;
+			btnCancel.DialogResult = DialogResult.Cancel;
+			btnCancel.Location = new Point(644, 926);
+			btnCancel.Margin = new Padding(6, 7, 6, 7);
+			btnCancel.Name = "btnCancel";
+			btnCancel.Size = new Size(162, 57);
+			btnCancel.TabIndex = 1;
+			btnCancel.Text = "Cancel";
+			btnCancel.UseVisualStyleBackColor = true;
+			btnCancel.Click += btnCancel_Click;
 			// 
 			// lblName
 			// 
-			this.lblName.AutoSize = true;
-			this.lblName.Location = new System.Drawing.Point(26, 19);
-			this.lblName.Name = "lblName";
-			this.lblName.Size = new System.Drawing.Size(38, 13);
-			this.lblName.TabIndex = 2;
-			this.lblName.Text = "Name:";
+			lblName.AutoSize = true;
+			lblName.Location = new Point(56, 47);
+			lblName.Margin = new Padding(6, 0, 6, 0);
+			lblName.Name = "lblName";
+			lblName.Size = new Size(83, 32);
+			lblName.TabIndex = 2;
+			lblName.Text = "Name:";
 			// 
 			// txtName
 			// 
-			this.txtName.Location = new System.Drawing.Point(70, 16);
-			this.txtName.Name = "txtName";
-			this.txtName.Size = new System.Drawing.Size(300, 20);
-			this.txtName.TabIndex = 3;
-			this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
-			this.txtName.Validating += new System.ComponentModel.CancelEventHandler(this.txtName_Validating);
+			txtName.Location = new Point(152, 39);
+			txtName.Margin = new Padding(6, 7, 6, 7);
+			txtName.Name = "txtName";
+			txtName.Size = new Size(645, 39);
+			txtName.TabIndex = 3;
+			txtName.TextChanged += txtName_TextChanged;
+			txtName.Enter += txtName_Enter;
+			txtName.KeyDown += txtName_KeyDown;
+			txtName.Leave += txtName_Leave;
+			txtName.Validating += txtName_Validating;
 			// 
 			// txtComment
 			// 
-			this.txtComment.Location = new System.Drawing.Point(70, 259);
-			this.txtComment.Multiline = true;
-			this.txtComment.Name = "txtComment";
-			this.txtComment.Size = new System.Drawing.Size(300, 97);
-			this.txtComment.TabIndex = 23;
-			this.txtComment.Validating += new System.ComponentModel.CancelEventHandler(this.txtComment_Validating);
+			txtComment.Location = new Point(152, 638);
+			txtComment.Margin = new Padding(6, 7, 6, 7);
+			txtComment.Multiline = true;
+			txtComment.Name = "txtComment";
+			txtComment.Size = new Size(645, 233);
+			txtComment.TabIndex = 23;
+			txtComment.Enter += txtComment_Enter;
+			txtComment.KeyDown += txtComment_KeyDown;
+			txtComment.Leave += txtComment_Leave;
+			txtComment.Validating += txtComment_Validating;
 			// 
-			// label4
+			// lblComment
 			// 
-			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(13, 262);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(54, 13);
-			this.label4.TabIndex = 22;
-			this.label4.Text = "Comment:";
+			lblComment.AutoSize = true;
+			lblComment.Location = new Point(28, 645);
+			lblComment.Margin = new Padding(6, 0, 6, 0);
+			lblComment.Name = "lblComment";
+			lblComment.Size = new Size(125, 32);
+			lblComment.TabIndex = 22;
+			lblComment.Text = "Comment:";
 			// 
 			// chkActive
 			// 
-			this.chkActive.AutoSize = true;
-			this.chkActive.Checked = true;
-			this.chkActive.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkActive.Location = new System.Drawing.Point(314, 82);
-			this.chkActive.Name = "chkActive";
-			this.chkActive.Size = new System.Drawing.Size(56, 17);
-			this.chkActive.TabIndex = 10;
-			this.chkActive.Text = "Active";
-			this.chkActive.UseVisualStyleBackColor = true;
-			this.chkActive.Validating += new System.ComponentModel.CancelEventHandler(this.chkActive_Validating);
+			chkActive.AutoSize = true;
+			chkActive.Checked = true;
+			chkActive.CheckState = CheckState.Checked;
+			chkActive.Location = new Point(680, 202);
+			chkActive.Margin = new Padding(6, 7, 6, 7);
+			chkActive.Name = "chkActive";
+			chkActive.Size = new Size(111, 36);
+			chkActive.TabIndex = 10;
+			chkActive.Text = "Active";
+			chkActive.UseVisualStyleBackColor = true;
+			chkActive.CheckedChanged += chkActive_CheckedChanged;
+			chkActive.Enter += chkActive_Enter;
+			chkActive.KeyDown += chkActive_KeyDown;
+			chkActive.Leave += chkActive_Leave;
+			chkActive.Validating += chkActive_Validating;
 			// 
 			// lblxAddresses
 			// 
-			this.lblxAddresses.AutoSize = true;
-			this.lblxAddresses.Location = new System.Drawing.Point(67, 202);
-			this.lblxAddresses.Name = "lblxAddresses";
-			this.lblxAddresses.Size = new System.Drawing.Size(114, 13);
-			this.lblxAddresses.TabIndex = 20;
-			this.lblxAddresses.Text = "xLights Channels: 1-16";
+			lblxAddresses.AutoSize = true;
+			lblxAddresses.Location = new Point(145, 497);
+			lblxAddresses.Margin = new Padding(6, 0, 6, 0);
+			lblxAddresses.Name = "lblxAddresses";
+			lblxAddresses.Size = new Size(254, 32);
+			lblxAddresses.TabIndex = 20;
+			lblxAddresses.Text = "xLights Channels: 1-16";
 			// 
 			// lblLastDMX
 			// 
-			this.lblLastDMX.AutoSize = true;
-			this.lblLastDMX.Location = new System.Drawing.Point(67, 179);
-			this.lblLastDMX.Name = "lblLastDMX";
-			this.lblLastDMX.Size = new System.Drawing.Size(114, 13);
-			this.lblLastDMX.TabIndex = 19;
-			this.lblLastDMX.Text = "Last DMX LOR4Channel: 16";
+			lblLastDMX.AutoSize = true;
+			lblLastDMX.Location = new Point(145, 441);
+			lblLastDMX.Margin = new Padding(6, 0, 6, 0);
+			lblLastDMX.Name = "lblLastDMX";
+			lblLastDMX.Size = new Size(303, 32);
+			lblLastDMX.TabIndex = 19;
+			lblLastDMX.Text = "Last DMX LOR4Channel: 16";
 			// 
 			// lblStart
 			// 
-			this.lblStart.AutoSize = true;
-			this.lblStart.Location = new System.Drawing.Point(281, 115);
-			this.lblStart.Name = "lblStart";
-			this.lblStart.Size = new System.Drawing.Size(32, 13);
-			this.lblStart.TabIndex = 13;
-			this.lblStart.Text = "Start:";
+			lblStart.AutoSize = true;
+			lblStart.Location = new Point(609, 283);
+			lblStart.Margin = new Padding(6, 0, 6, 0);
+			lblStart.Name = "lblStart";
+			lblStart.Size = new Size(67, 32);
+			lblStart.TabIndex = 13;
+			lblStart.Text = "Start:";
 			// 
 			// numStart
 			// 
-			this.numStart.Location = new System.Drawing.Point(326, 113);
-			this.numStart.Maximum = new decimal(new int[] {
-						510,
-						0,
-						0,
-						0});
-			this.numStart.Minimum = new decimal(new int[] {
-						1,
-						0,
-						0,
-						0});
-			this.numStart.Name = "numStart";
-			this.numStart.Size = new System.Drawing.Size(44, 20);
-			this.numStart.TabIndex = 14;
-			this.numStart.Value = new decimal(new int[] {
-						1,
-						0,
-						0,
-						0});
-			this.numStart.ValueChanged += new System.EventHandler(this.numStart_ValueChanged);
-			this.numStart.Validating += new System.ComponentModel.CancelEventHandler(this.numStart_Validating);
+			numStart.Location = new Point(706, 278);
+			numStart.Margin = new Padding(6, 7, 6, 7);
+			numStart.Maximum = new decimal(new int[] { 494, 0, 0, 0 });
+			numStart.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+			numStart.Name = "numStart";
+			numStart.Size = new Size(95, 39);
+			numStart.TabIndex = 14;
+			numStart.Value = new decimal(new int[] { 1, 0, 0, 0 });
+			numStart.ValueChanged += numStart_ValueChanged;
+			numStart.Enter += numStart_Enter;
+			numStart.KeyDown += numStart_KeyDown;
+			numStart.Leave += numStart_Leave;
+			numStart.Validating += numStart_Validating;
 			// 
 			// cboBrand
 			// 
-			this.cboBrand.AutoCompleteCustomSource.AddRange(new string[] {
-						"LOR",
-						"Renard",
-						"Chinese"});
-			this.cboBrand.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cboBrand.FormattingEnabled = true;
-			this.cboBrand.Items.AddRange(new object[] {
-						"LOR",
-						"Renard",
-						"Chinese",
-						"Chauvet",
-						"American DJ"});
-			this.cboBrand.Location = new System.Drawing.Point(70, 112);
-			this.cboBrand.Name = "cboBrand";
-			this.cboBrand.Size = new System.Drawing.Size(200, 21);
-			this.cboBrand.TabIndex = 12;
-			this.cboBrand.SelectedIndexChanged += new System.EventHandler(this.cboBrand_SelectedIndexChanged);
+			cboBrand.AutoCompleteCustomSource.AddRange(new string[] { "LOR", "Renard", "Chinese" });
+			cboBrand.DropDownStyle = ComboBoxStyle.DropDownList;
+			cboBrand.FormattingEnabled = true;
+			cboBrand.Items.AddRange(new object[] { "LOR", "Renard", "Chinese", "Chauvet", "American DJ", "Genius" });
+			cboBrand.Location = new Point(152, 276);
+			cboBrand.Margin = new Padding(6, 7, 6, 7);
+			cboBrand.Name = "cboBrand";
+			cboBrand.Size = new Size(429, 40);
+			cboBrand.TabIndex = 12;
+			cboBrand.SelectedIndexChanged += cboBrand_SelectedIndexChanged;
+			cboBrand.Enter += cboBrand_Enter;
+			cboBrand.KeyDown += cboBrand_KeyDown;
+			cboBrand.Leave += cboBrand_Leave;
 			// 
 			// lblBrand
 			// 
-			this.lblBrand.AutoSize = true;
-			this.lblBrand.Location = new System.Drawing.Point(26, 115);
-			this.lblBrand.Name = "lblBrand";
-			this.lblBrand.Size = new System.Drawing.Size(38, 13);
-			this.lblBrand.TabIndex = 11;
-			this.lblBrand.Text = "Brand:";
+			lblBrand.AutoSize = true;
+			lblBrand.Location = new Point(56, 283);
+			lblBrand.Margin = new Padding(6, 0, 6, 0);
+			lblBrand.Name = "lblBrand";
+			lblBrand.Size = new Size(81, 32);
+			lblBrand.TabIndex = 11;
+			lblBrand.Text = "Brand:";
 			// 
 			// cboUniverse
 			// 
-			this.cboUniverse.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cboUniverse.FormattingEnabled = true;
-			this.cboUniverse.Location = new System.Drawing.Point(70, 80);
-			this.cboUniverse.Name = "cboUniverse";
-			this.cboUniverse.Size = new System.Drawing.Size(200, 21);
-			this.cboUniverse.TabIndex = 9;
-			this.cboUniverse.SelectedIndexChanged += new System.EventHandler(this.cboUniverse_SelectedIndexChanged);
-			this.cboUniverse.Validating += new System.ComponentModel.CancelEventHandler(this.cboUniverse_Validating);
+			cboUniverse.DropDownStyle = ComboBoxStyle.DropDownList;
+			cboUniverse.FormattingEnabled = true;
+			cboUniverse.Location = new Point(152, 197);
+			cboUniverse.Margin = new Padding(6, 7, 6, 7);
+			cboUniverse.Name = "cboUniverse";
+			cboUniverse.Size = new Size(429, 40);
+			cboUniverse.TabIndex = 9;
+			cboUniverse.SelectedIndexChanged += cboUniverse_SelectedIndexChanged;
+			cboUniverse.Enter += cboUniverse_Enter;
+			cboUniverse.KeyDown += cboUniverse_KeyDown;
+			cboUniverse.Leave += cboUniverse_Leave;
+			cboUniverse.Validating += cboUniverse_Validating;
 			// 
 			// lblUniverse
 			// 
-			this.lblUniverse.AutoSize = true;
-			this.lblUniverse.Location = new System.Drawing.Point(12, 83);
-			this.lblUniverse.Name = "lblUniverse";
-			this.lblUniverse.Size = new System.Drawing.Size(52, 13);
-			this.lblUniverse.TabIndex = 8;
-			this.lblUniverse.Text = "Universe:";
+			lblUniverse.AutoSize = true;
+			lblUniverse.Location = new Point(26, 204);
+			lblUniverse.Margin = new Padding(6, 0, 6, 0);
+			lblUniverse.Name = "lblUniverse";
+			lblUniverse.Size = new Size(111, 32);
+			lblUniverse.TabIndex = 8;
+			lblUniverse.Text = "Universe:";
 			// 
 			// txtLocation
 			// 
-			this.txtLocation.Location = new System.Drawing.Point(70, 48);
-			this.txtLocation.MaxLength = 40;
-			this.txtLocation.Name = "txtLocation";
-			this.txtLocation.Size = new System.Drawing.Size(200, 20);
-			this.txtLocation.TabIndex = 5;
-			this.txtLocation.Validating += new System.ComponentModel.CancelEventHandler(this.txtLocation_Validating);
+			txtLocation.Location = new Point(152, 118);
+			txtLocation.Margin = new Padding(6, 7, 6, 7);
+			txtLocation.MaxLength = 40;
+			txtLocation.Name = "txtLocation";
+			txtLocation.Size = new Size(429, 39);
+			txtLocation.TabIndex = 5;
+			txtLocation.Enter += txtLocation_Enter;
+			txtLocation.KeyDown += txtLocation_KeyDown;
+			txtLocation.Leave += txtLocation_Leave;
+			txtLocation.Validating += txtLocation_Validating;
 			// 
 			// lblLocation
 			// 
-			this.lblLocation.AutoSize = true;
-			this.lblLocation.Location = new System.Drawing.Point(13, 51);
-			this.lblLocation.Name = "lblLocation";
-			this.lblLocation.Size = new System.Drawing.Size(51, 13);
-			this.lblLocation.TabIndex = 4;
-			this.lblLocation.Text = "Location:";
+			lblLocation.AutoSize = true;
+			lblLocation.Location = new Point(28, 126);
+			lblLocation.Margin = new Padding(6, 0, 6, 0);
+			lblLocation.Name = "lblLocation";
+			lblLocation.Size = new Size(109, 32);
+			lblLocation.TabIndex = 4;
+			lblLocation.Text = "Location:";
 			// 
 			// txtModel
 			// 
-			this.txtModel.Location = new System.Drawing.Point(70, 144);
-			this.txtModel.MaxLength = 40;
-			this.txtModel.Name = "txtModel";
-			this.txtModel.Size = new System.Drawing.Size(200, 20);
-			this.txtModel.TabIndex = 16;
-			this.txtModel.Validating += new System.ComponentModel.CancelEventHandler(this.txtModel_Validating);
+			txtModel.Location = new Point(152, 354);
+			txtModel.Margin = new Padding(6, 7, 6, 7);
+			txtModel.MaxLength = 40;
+			txtModel.Name = "txtModel";
+			txtModel.Size = new Size(292, 39);
+			txtModel.TabIndex = 16;
+			txtModel.Enter += txtModel_Enter;
+			txtModel.KeyDown += txtModel_KeyDown;
+			txtModel.Leave += txtModel_Leave;
+			txtModel.Validating += txtModel_Validating;
 			// 
 			// lblModel
 			// 
-			this.lblModel.AutoSize = true;
-			this.lblModel.Location = new System.Drawing.Point(25, 147);
-			this.lblModel.Name = "lblModel";
-			this.lblModel.Size = new System.Drawing.Size(39, 13);
-			this.lblModel.TabIndex = 15;
-			this.lblModel.Text = "Model:";
+			lblModel.AutoSize = true;
+			lblModel.Location = new Point(54, 362);
+			lblModel.Margin = new Padding(6, 0, 6, 0);
+			lblModel.Name = "lblModel";
+			lblModel.Size = new Size(88, 32);
+			lblModel.TabIndex = 15;
+			lblModel.Text = "Model:";
 			// 
-			// txtLetter
+			// txtIdentifier
 			// 
-			this.txtLetter.Location = new System.Drawing.Point(355, 48);
-			this.txtLetter.MaxLength = 1;
-			this.txtLetter.Name = "txtLetter";
-			this.txtLetter.Size = new System.Drawing.Size(15, 20);
-			this.txtLetter.TabIndex = 7;
-			this.txtLetter.Text = "A";
-			this.txtLetter.TextChanged += new System.EventHandler(this.txtLetter_TextChanged);
-			this.txtLetter.Validating += new System.ComponentModel.CancelEventHandler(this.txtLetter_Validating);
+			txtIdentifier.Location = new Point(663, 118);
+			txtIdentifier.Margin = new Padding(6, 7, 6, 7);
+			txtIdentifier.MaxLength = 8;
+			txtIdentifier.Name = "txtIdentifier";
+			txtIdentifier.Size = new Size(138, 39);
+			txtIdentifier.TabIndex = 7;
+			txtIdentifier.TextAlign = HorizontalAlignment.Right;
+			txtIdentifier.Enter += txtIdentifier_Enter;
+			txtIdentifier.KeyDown += txtIdentifier_KeyDown;
+			txtIdentifier.Leave += txtIdentifier_Leave;
+			txtIdentifier.Validating += txtIdentifier_Validating;
 			// 
-			// lblLetter
+			// lblIdentifier
 			// 
-			this.lblLetter.AutoSize = true;
-			this.lblLetter.Location = new System.Drawing.Point(312, 51);
-			this.lblLetter.Name = "lblLetter";
-			this.lblLetter.Size = new System.Drawing.Size(37, 13);
-			this.lblLetter.TabIndex = 6;
-			this.lblLetter.Text = "Letter:";
+			lblIdentifier.AutoSize = true;
+			lblIdentifier.Location = new Point(609, 126);
+			lblIdentifier.Margin = new Padding(6, 0, 6, 0);
+			lblIdentifier.Name = "lblIdentifier";
+			lblIdentifier.Size = new Size(42, 32);
+			lblIdentifier.TabIndex = 6;
+			lblIdentifier.Text = "ID:";
 			// 
 			// lblCount
 			// 
-			this.lblCount.AutoSize = true;
-			this.lblCount.Location = new System.Drawing.Point(281, 147);
-			this.lblCount.Name = "lblCount";
-			this.lblCount.Size = new System.Drawing.Size(38, 13);
-			this.lblCount.TabIndex = 17;
-			this.lblCount.Text = "Count:";
+			lblCount.AutoSize = true;
+			lblCount.Location = new Point(609, 362);
+			lblCount.Margin = new Padding(6, 0, 6, 0);
+			lblCount.Name = "lblCount";
+			lblCount.Size = new Size(84, 32);
+			lblCount.TabIndex = 17;
+			lblCount.Text = "Count:";
 			// 
 			// numCount
 			// 
-			this.numCount.Location = new System.Drawing.Point(326, 145);
-			this.numCount.Maximum = new decimal(new int[] {
-						32,
-						0,
-						0,
-						0});
-			this.numCount.Minimum = new decimal(new int[] {
-						1,
-						0,
-						0,
-						0});
-			this.numCount.Name = "numCount";
-			this.numCount.Size = new System.Drawing.Size(44, 20);
-			this.numCount.TabIndex = 18;
-			this.numCount.Value = new decimal(new int[] {
-						16,
-						0,
-						0,
-						0});
-			this.numCount.ValueChanged += new System.EventHandler(this.numCount_ValueChanged);
-			this.numCount.Validating += new System.ComponentModel.CancelEventHandler(this.numCount_Validating);
+			numCount.Location = new Point(706, 357);
+			numCount.Margin = new Padding(6, 7, 6, 7);
+			numCount.Maximum = new decimal(new int[] { 48, 0, 0, 0 });
+			numCount.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+			numCount.Name = "numCount";
+			numCount.Size = new Size(95, 39);
+			numCount.TabIndex = 18;
+			numCount.Value = new decimal(new int[] { 16, 0, 0, 0 });
+			numCount.ValueChanged += numCount_ValueChanged;
+			numCount.Enter += numCount_Enter;
+			numCount.KeyDown += numCount_KeyDown;
+			numCount.Leave += numCount_Leave;
+			numCount.Validating += numCount_Validating;
 			// 
 			// btnChannels
 			// 
-			this.btnChannels.Location = new System.Drawing.Point(297, 179);
-			this.btnChannels.Name = "btnChannels";
-			this.btnChannels.Size = new System.Drawing.Size(75, 23);
-			this.btnChannels.TabIndex = 21;
-			this.btnChannels.Text = "Channels...";
-			this.btnChannels.UseVisualStyleBackColor = true;
-			this.btnChannels.Click += new System.EventHandler(this.btnChannels_Click);
+			btnChannels.Location = new Point(644, 441);
+			btnChannels.Margin = new Padding(6, 7, 6, 7);
+			btnChannels.Name = "btnChannels";
+			btnChannels.Size = new Size(162, 57);
+			btnChannels.TabIndex = 21;
+			btnChannels.Text = "Channels...";
+			btnChannels.UseVisualStyleBackColor = true;
+			btnChannels.Click += btnChannels_Click;
+			// 
+			// cboLORModels
+			// 
+			cboLORModels.AutoCompleteCustomSource.AddRange(new string[] { "CTB16PC Gen 1", "CTB16PC Gen 2", "CTB16PC Gen 3", "LOR1602W Gen 1", "LOR1602W Gen 2", "LOR1602Wg3", "CMB24D Gen 3" });
+			cboLORModels.DropDownStyle = ComboBoxStyle.DropDownList;
+			cboLORModels.FormattingEnabled = true;
+			cboLORModels.Items.AddRange(new object[] { "CTB04PC", "CTB16PC gen 1", "CTB16PC gen 3", "CTB24D", "LOR1600 gen 1", "LOR1600Wg3", "LOR1602 gen 1", "LOR1602Wg3" });
+			cboLORModels.Location = new Point(368, 560);
+			cboLORModels.Margin = new Padding(6, 7, 6, 7);
+			cboLORModels.Name = "cboLORModels";
+			cboLORModels.Size = new Size(292, 40);
+			cboLORModels.TabIndex = 24;
+			cboLORModels.Visible = false;
+			cboLORModels.SelectedIndexChanged += cboLORModels_SelectedIndexChanged;
+			cboLORModels.Enter += cboLORModels_Enter;
+			cboLORModels.KeyDown += cboLORModels_KeyDown;
+			cboLORModels.Leave += cboLORModels_Leave;
+			// 
+			// lblUnit
+			// 
+			lblUnit.AutoSize = true;
+			lblUnit.Location = new Point(454, 359);
+			lblUnit.Margin = new Padding(6, 0, 6, 0);
+			lblUnit.Name = "lblUnit";
+			lblUnit.Size = new Size(63, 32);
+			lblUnit.TabIndex = 25;
+			lblUnit.Text = "Unit:";
+			lblUnit.Visible = false;
+			// 
+			// numUnit
+			// 
+			numUnit.Location = new Point(529, 357);
+			numUnit.Margin = new Padding(6, 7, 6, 7);
+			numUnit.Maximum = new decimal(new int[] { 32, 0, 0, 0 });
+			numUnit.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+			numUnit.Name = "numUnit";
+			numUnit.Size = new Size(69, 39);
+			numUnit.TabIndex = 26;
+			numUnit.Value = new decimal(new int[] { 1, 0, 0, 0 });
+			numUnit.Visible = false;
+			numUnit.ValueChanged += numUnit_ValueChanged;
+			numUnit.Enter += numUnit_Enter;
+			numUnit.KeyDown += numUnit_KeyDown;
+			numUnit.Leave += numUnit_Leave;
+			// 
+			// lblDirty
+			// 
+			lblDirty.AutoSize = true;
+			lblDirty.Font = new Font("Segoe UI", 6.75F, FontStyle.Italic);
+			lblDirty.ForeColor = SystemColors.GrayText;
+			lblDirty.Location = new Point(16, 978);
+			lblDirty.Margin = new Padding(7, 0, 7, 0);
+			lblDirty.Name = "lblDirty";
+			lblDirty.Size = new Size(51, 25);
+			lblDirty.TabIndex = 27;
+			lblDirty.Text = "Dirty";
+			// 
+			// label1
+			// 
+			label1.AutoSize = true;
+			label1.Font = new Font("Segoe UI", 6.75F, FontStyle.Italic);
+			label1.ForeColor = SystemColors.GrayText;
+			label1.Location = new Point(169, 76);
+			label1.Margin = new Padding(7, 0, 7, 0);
+			label1.Name = "label1";
+			label1.Size = new Size(348, 25);
+			label1.TabIndex = 28;
+			label1.Text = "(Or what group of channels does it control)";
 			// 
 			// frmController
 			// 
-			this.AcceptButton = this.btnOK;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.CancelButton = this.btnCancel;
-			this.ClientSize = new System.Drawing.Size(384, 411);
-			this.Controls.Add(this.btnChannels);
-			this.Controls.Add(this.lblCount);
-			this.Controls.Add(this.numCount);
-			this.Controls.Add(this.txtLetter);
-			this.Controls.Add(this.lblLetter);
-			this.Controls.Add(this.txtModel);
-			this.Controls.Add(this.lblModel);
-			this.Controls.Add(this.txtComment);
-			this.Controls.Add(this.label4);
-			this.Controls.Add(this.chkActive);
-			this.Controls.Add(this.lblxAddresses);
-			this.Controls.Add(this.lblLastDMX);
-			this.Controls.Add(this.lblStart);
-			this.Controls.Add(this.numStart);
-			this.Controls.Add(this.cboBrand);
-			this.Controls.Add(this.lblBrand);
-			this.Controls.Add(this.cboUniverse);
-			this.Controls.Add(this.lblUniverse);
-			this.Controls.Add(this.txtLocation);
-			this.Controls.Add(this.lblLocation);
-			this.Controls.Add(this.txtName);
-			this.Controls.Add(this.lblName);
-			this.Controls.Add(this.btnCancel);
-			this.Controls.Add(this.btnOK);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-			this.MaximizeBox = false;
-			this.Name = "frmController";
-			this.ShowInTaskbar = false;
-			this.Text = "Controller";
-			this.Shown += new System.EventHandler(this.frmController_Shown);
-			this.Paint += new System.Windows.Forms.PaintEventHandler(this.frmController_Paint);
-			((System.ComponentModel.ISupportInitialize)(this.numStart)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numCount)).EndInit();
-			this.ResumeLayout(false);
-			this.PerformLayout();
+			AcceptButton = btnOK;
+			AutoScaleDimensions = new SizeF(13F, 32F);
+			AutoScaleMode = AutoScaleMode.Font;
+			CancelButton = btnCancel;
+			ClientSize = new Size(832, 1012);
+			Controls.Add(lblDirty);
+			Controls.Add(lblUnit);
+			Controls.Add(numUnit);
+			Controls.Add(cboLORModels);
+			Controls.Add(btnChannels);
+			Controls.Add(lblCount);
+			Controls.Add(numCount);
+			Controls.Add(txtIdentifier);
+			Controls.Add(lblIdentifier);
+			Controls.Add(txtModel);
+			Controls.Add(lblModel);
+			Controls.Add(txtComment);
+			Controls.Add(lblComment);
+			Controls.Add(chkActive);
+			Controls.Add(lblxAddresses);
+			Controls.Add(lblLastDMX);
+			Controls.Add(lblStart);
+			Controls.Add(numStart);
+			Controls.Add(cboBrand);
+			Controls.Add(lblBrand);
+			Controls.Add(cboUniverse);
+			Controls.Add(lblUniverse);
+			Controls.Add(txtLocation);
+			Controls.Add(lblLocation);
+			Controls.Add(txtName);
+			Controls.Add(lblName);
+			Controls.Add(btnCancel);
+			Controls.Add(btnOK);
+			Controls.Add(label1);
+			FormBorderStyle = FormBorderStyle.FixedDialog;
+			Icon = (Icon)resources.GetObject("$this.Icon");
+			Margin = new Padding(6, 7, 6, 7);
+			MaximizeBox = false;
+			Name = "frmController";
+			ShowInTaskbar = false;
+			Text = "Controller";
+			FormClosing += frmController_FormClosing;
+			Load += frmController_Load;
+			Shown += frmController_Shown;
+			ResizeBegin += frmController_ResizeBegin;
+			ResizeEnd += frmController_ResizeEnd;
+			Paint += frmController_Paint;
+			((System.ComponentModel.ISupportInitialize)numStart).EndInit();
+			((System.ComponentModel.ISupportInitialize)numCount).EndInit();
+			((System.ComponentModel.ISupportInitialize)numUnit).EndInit();
+			ResumeLayout(false);
+			PerformLayout();
 
 		}
 
@@ -379,7 +490,7 @@ namespace UtilORama4
 		private System.Windows.Forms.Label lblName;
 		private System.Windows.Forms.TextBox txtName;
 		private System.Windows.Forms.TextBox txtComment;
-		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.Label lblComment;
 		private System.Windows.Forms.CheckBox chkActive;
 		private System.Windows.Forms.Label lblxAddresses;
 		private System.Windows.Forms.Label lblLastDMX;
@@ -393,11 +504,20 @@ namespace UtilORama4
 		private System.Windows.Forms.Label lblLocation;
 		private System.Windows.Forms.TextBox txtModel;
 		private System.Windows.Forms.Label lblModel;
-		private System.Windows.Forms.TextBox txtLetter;
-		private System.Windows.Forms.Label lblLetter;
+		//private System.Windows.Forms.TextBox txtControllerID;
+		//private System.Windows.Forms.TextBox txtIdentifier;
+		//private System.Windows.Forms.Label lblControllerID;
+		//private System.Windows.Forms.Label lblIdentifier;
 		private System.Windows.Forms.Label lblCount;
 		private System.Windows.Forms.NumericUpDown numCount;
 		private System.Windows.Forms.Button btnChannels;
 		private System.Windows.Forms.ToolTip tipTool;
+		private ComboBox cboLORModels;
+		private Label lblUnit;
+		private NumericUpDown numUnit;
+		private Label lblDirty;
+		private Label label1;
+		private TextBox txtIdentifier;
+		private Label lblIdentifier;
 	}
 }

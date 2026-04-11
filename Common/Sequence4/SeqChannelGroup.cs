@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Diagnostics;
+using System.Windows.Forms;
 using FileHelper;
 
 namespace LOR4

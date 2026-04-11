@@ -29,379 +29,409 @@ namespace UtilORama4
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
+			components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmChannel));
-			this.btnOK = new System.Windows.Forms.Button();
-			this.btnCancel = new System.Windows.Forms.Button();
-			this.lblName = new System.Windows.Forms.Label();
-			this.txtName = new System.Windows.Forms.TextBox();
-			this.txtLocation = new System.Windows.Forms.TextBox();
-			this.lblLocation = new System.Windows.Forms.Label();
-			this.label1 = new System.Windows.Forms.Label();
-			this.cboType = new System.Windows.Forms.ComboBox();
-			this.picColor2 = new System.Windows.Forms.PictureBox();
-			this.lblColor = new System.Windows.Forms.Label();
-			this.cboController = new System.Windows.Forms.ComboBox();
-			this.lblController = new System.Windows.Forms.Label();
-			this.numOutput = new System.Windows.Forms.NumericUpDown();
-			this.lblOutput = new System.Windows.Forms.Label();
-			this.lblUniverse = new System.Windows.Forms.Label();
-			this.lblDMXAddress = new System.Windows.Forms.Label();
-			this.lblxLighsAddress = new System.Windows.Forms.Label();
-			this.chkActive = new System.Windows.Forms.CheckBox();
-			this.lblModel = new System.Windows.Forms.Label();
-			this.txtComment = new System.Windows.Forms.TextBox();
-			this.label4 = new System.Windows.Forms.Label();
-			this.clrColors = new System.Windows.Forms.ColorDialog();
-			this.tipTool = new System.Windows.Forms.ToolTip(this.components);
-			this.picMulticolor = new System.Windows.Forms.PictureBox();
-			this.picRGB = new System.Windows.Forms.PictureBox();
-			this.btnColor = new System.Windows.Forms.Button();
-			((System.ComponentModel.ISupportInitialize)(this.picColor2)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numOutput)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.picMulticolor)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.picRGB)).BeginInit();
-			this.SuspendLayout();
+			btnOK = new Button();
+			btnCancel = new Button();
+			lblName = new Label();
+			txtName = new TextBox();
+			txtLocation = new TextBox();
+			lblLocation = new Label();
+			lblType = new Label();
+			cboType = new ComboBox();
+			lblColorLabel = new Label();
+			cboController = new ComboBox();
+			lblController = new Label();
+			numOutput = new NumericUpDown();
+			lblOutput = new Label();
+			lblUniverse = new Label();
+			lblDMXAddress = new Label();
+			lblxLightsAddress = new Label();
+			chkActive = new CheckBox();
+			lblModel = new Label();
+			txtComment = new TextBox();
+			lblComment = new Label();
+			clrColors = new ColorDialog();
+			tipTool = new ToolTip(components);
+			lblDirty = new Label();
+			picRGB = new PictureBox();
+			picRGBW = new PictureBox();
+			picMulti = new PictureBox();
+			picColor = new PictureBox();
+			((System.ComponentModel.ISupportInitialize)numOutput).BeginInit();
+			((System.ComponentModel.ISupportInitialize)picRGB).BeginInit();
+			((System.ComponentModel.ISupportInitialize)picRGBW).BeginInit();
+			((System.ComponentModel.ISupportInitialize)picMulti).BeginInit();
+			((System.ComponentModel.ISupportInitialize)picColor).BeginInit();
+			SuspendLayout();
 			// 
 			// btnOK
 			// 
-			this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.btnOK.Location = new System.Drawing.Point(248, 434);
-			this.btnOK.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.btnOK.Name = "btnOK";
-			this.btnOK.Size = new System.Drawing.Size(88, 27);
-			this.btnOK.TabIndex = 19;
-			this.btnOK.Text = "OK";
-			this.btnOK.UseVisualStyleBackColor = true;
+			btnOK.DialogResult = DialogResult.OK;
+			btnOK.Location = new Point(461, 926);
+			btnOK.Margin = new Padding(7, 6, 7, 6);
+			btnOK.Name = "btnOK";
+			btnOK.Size = new Size(163, 58);
+			btnOK.TabIndex = 19;
+			btnOK.Text = "OK";
+			btnOK.UseVisualStyleBackColor = true;
+			btnOK.Click += btnOK_Click;
 			// 
 			// btnCancel
 			// 
-			this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.btnCancel.Location = new System.Drawing.Point(343, 434);
-			this.btnCancel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.btnCancel.Name = "btnCancel";
-			this.btnCancel.Size = new System.Drawing.Size(88, 27);
-			this.btnCancel.TabIndex = 20;
-			this.btnCancel.Text = "Cancel";
-			this.btnCancel.UseVisualStyleBackColor = true;
+			btnCancel.DialogResult = DialogResult.Cancel;
+			btnCancel.Location = new Point(637, 926);
+			btnCancel.Margin = new Padding(7, 6, 7, 6);
+			btnCancel.Name = "btnCancel";
+			btnCancel.Size = new Size(163, 58);
+			btnCancel.TabIndex = 20;
+			btnCancel.Text = "Cancel";
+			btnCancel.UseVisualStyleBackColor = true;
+			btnCancel.Click += btnCancel_Click;
 			// 
 			// lblName
 			// 
-			this.lblName.AutoSize = true;
-			this.lblName.Location = new System.Drawing.Point(30, 22);
-			this.lblName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.lblName.Name = "lblName";
-			this.lblName.Size = new System.Drawing.Size(42, 15);
-			this.lblName.TabIndex = 0;
-			this.lblName.Text = "Name:";
+			lblName.AutoSize = true;
+			lblName.Location = new Point(56, 47);
+			lblName.Margin = new Padding(7, 0, 7, 0);
+			lblName.Name = "lblName";
+			lblName.Size = new Size(83, 32);
+			lblName.TabIndex = 0;
+			lblName.Text = "Name:";
 			// 
 			// txtName
 			// 
-			this.txtName.Location = new System.Drawing.Point(82, 18);
-			this.txtName.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.txtName.MaxLength = 100;
-			this.txtName.Name = "txtName";
-			this.txtName.Size = new System.Drawing.Size(349, 23);
-			this.txtName.TabIndex = 1;
-			this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
-			this.txtName.Leave += new System.EventHandler(this.txtName_Leave);
-			this.txtName.Validating += new System.ComponentModel.CancelEventHandler(this.txtName_Validating);
+			txtName.Location = new Point(152, 38);
+			txtName.Margin = new Padding(7, 6, 7, 6);
+			txtName.MaxLength = 100;
+			txtName.Name = "txtName";
+			txtName.Size = new Size(645, 39);
+			txtName.TabIndex = 1;
+			txtName.TextChanged += txtName_TextChanged;
+			txtName.Enter += txtName_Enter;
+			txtName.KeyDown += txtName_KeyDown;
+			txtName.Leave += txtName_Leave;
+			txtName.Validating += txtName_Validating;
 			// 
 			// txtLocation
 			// 
-			this.txtLocation.Location = new System.Drawing.Point(82, 55);
-			this.txtLocation.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.txtLocation.MaxLength = 40;
-			this.txtLocation.Name = "txtLocation";
-			this.txtLocation.Size = new System.Drawing.Size(233, 23);
-			this.txtLocation.TabIndex = 3;
-			this.tipTool.SetToolTip(this.txtLocation, "Where is the item(s) on this channel located?");
-			this.txtLocation.Validating += new System.ComponentModel.CancelEventHandler(this.txtLocation_Validating);
+			txtLocation.Location = new Point(152, 117);
+			txtLocation.Margin = new Padding(7, 6, 7, 6);
+			txtLocation.MaxLength = 40;
+			txtLocation.Name = "txtLocation";
+			txtLocation.Size = new Size(429, 39);
+			txtLocation.TabIndex = 3;
+			tipTool.SetToolTip(txtLocation, "Where is the item(s) on this channel located?");
+			txtLocation.Enter += txtLocation_Enter;
+			txtLocation.KeyDown += txtLocation_KeyDown;
+			txtLocation.Leave += txtLocation_Leave;
+			txtLocation.Validating += txtLocation_Validating;
 			// 
 			// lblLocation
 			// 
-			this.lblLocation.AutoSize = true;
-			this.lblLocation.Location = new System.Drawing.Point(15, 59);
-			this.lblLocation.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.lblLocation.Name = "lblLocation";
-			this.lblLocation.Size = new System.Drawing.Size(56, 15);
-			this.lblLocation.TabIndex = 2;
-			this.lblLocation.Text = "Location:";
+			lblLocation.AutoSize = true;
+			lblLocation.Location = new Point(28, 126);
+			lblLocation.Margin = new Padding(7, 0, 7, 0);
+			lblLocation.Name = "lblLocation";
+			lblLocation.Size = new Size(109, 32);
+			lblLocation.TabIndex = 2;
+			lblLocation.Text = "Location:";
 			// 
-			// label1
+			// lblType
 			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(35, 96);
-			this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(34, 15);
-			this.label1.TabIndex = 6;
-			this.label1.Text = "Type:";
+			lblType.AutoSize = true;
+			lblType.Location = new Point(65, 205);
+			lblType.Margin = new Padding(7, 0, 7, 0);
+			lblType.Name = "lblType";
+			lblType.Size = new Size(70, 32);
+			lblType.TabIndex = 6;
+			lblType.Text = "Type:";
 			// 
 			// cboType
 			// 
-			this.cboType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cboType.FormattingEnabled = true;
-			this.cboType.Location = new System.Drawing.Point(82, 92);
-			this.cboType.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.cboType.Name = "cboType";
-			this.cboType.Size = new System.Drawing.Size(233, 23);
-			this.cboType.TabIndex = 7;
-			this.tipTool.SetToolTip(this.cboType, "What type of device(s) or prop(s) are connected to this channel?");
-			this.cboType.SelectedIndexChanged += new System.EventHandler(this.cboType_SelectedIndexChanged);
-			this.cboType.Validating += new System.ComponentModel.CancelEventHandler(this.cboType_Validating);
+			cboType.DropDownStyle = ComboBoxStyle.DropDownList;
+			cboType.FormattingEnabled = true;
+			cboType.Location = new Point(152, 196);
+			cboType.Margin = new Padding(7, 6, 7, 6);
+			cboType.Name = "cboType";
+			cboType.Size = new Size(429, 40);
+			cboType.TabIndex = 7;
+			tipTool.SetToolTip(cboType, "What type of device(s) or prop(s) are connected to this channel?");
+			cboType.DropDown += cboType_DropDown;
+			cboType.SelectedIndexChanged += cboType_SelectedIndexChanged;
+			cboType.Enter += cboType_Enter;
+			cboType.KeyDown += cboType_KeyDown;
+			cboType.Leave += cboType_Leave;
+			cboType.Validating += cboType_Validating;
 			// 
-			// picColor2
+			// lblColorLabel
 			// 
-			this.picColor2.BackColor = System.Drawing.Color.White;
-			this.picColor2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.picColor2.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.picColor2.Location = new System.Drawing.Point(163, 433);
-			this.picColor2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.picColor2.Name = "picColor2";
-			this.picColor2.Size = new System.Drawing.Size(20, 20);
-			this.picColor2.TabIndex = 8;
-			this.picColor2.TabStop = false;
-			this.tipTool.SetToolTip(this.picColor2, "White");
-			this.picColor2.Visible = false;
-			this.picColor2.Click += new System.EventHandler(this.picColor_Click);
-			// 
-			// lblColor
-			// 
-			this.lblColor.AutoSize = true;
-			this.lblColor.Location = new System.Drawing.Point(356, 59);
-			this.lblColor.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.lblColor.Name = "lblColor";
-			this.lblColor.Size = new System.Drawing.Size(39, 15);
-			this.lblColor.TabIndex = 4;
-			this.lblColor.Text = "Color:";
-			this.lblColor.Click += new System.EventHandler(this.lblColor_Click);
+			lblColorLabel.AutoSize = true;
+			lblColorLabel.Location = new Point(637, 126);
+			lblColorLabel.Margin = new Padding(7, 0, 7, 0);
+			lblColorLabel.Name = "lblColorLabel";
+			lblColorLabel.Size = new Size(76, 32);
+			lblColorLabel.TabIndex = 4;
+			lblColorLabel.Text = "Color:";
+			lblColorLabel.Click += Pick_Color_Click;
 			// 
 			// cboController
 			// 
-			this.cboController.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cboController.FormattingEnabled = true;
-			this.cboController.Location = new System.Drawing.Point(82, 129);
-			this.cboController.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.cboController.Name = "cboController";
-			this.cboController.Size = new System.Drawing.Size(233, 23);
-			this.cboController.TabIndex = 10;
-			this.tipTool.SetToolTip(this.cboController, "Select the controller this channel is connected to.");
-			this.cboController.SelectedIndexChanged += new System.EventHandler(this.cboController_SelectedIndexChanged);
-			this.cboController.Validating += new System.ComponentModel.CancelEventHandler(this.cboController_Validating);
+			cboController.DropDownStyle = ComboBoxStyle.DropDownList;
+			cboController.FormattingEnabled = true;
+			cboController.Location = new Point(152, 275);
+			cboController.Margin = new Padding(7, 6, 7, 6);
+			cboController.Name = "cboController";
+			cboController.Size = new Size(429, 40);
+			cboController.TabIndex = 10;
+			tipTool.SetToolTip(cboController, "Select the controller this channel is connected to.");
+			cboController.DropDown += cboController_DropDown;
+			cboController.SelectedIndexChanged += cboController_SelectedIndexChanged;
+			cboController.Enter += cboController_Enter;
+			cboController.KeyDown += cboController_KeyDown;
+			cboController.Leave += cboController_Leave;
+			cboController.Validating += cboController_Validating;
 			// 
 			// lblController
 			// 
-			this.lblController.AutoSize = true;
-			this.lblController.Location = new System.Drawing.Point(12, 133);
-			this.lblController.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.lblController.Name = "lblController";
-			this.lblController.Size = new System.Drawing.Size(63, 15);
-			this.lblController.TabIndex = 9;
-			this.lblController.Text = "Controller:";
+			lblController.AutoSize = true;
+			lblController.Location = new Point(22, 284);
+			lblController.Margin = new Padding(7, 0, 7, 0);
+			lblController.Name = "lblController";
+			lblController.Size = new Size(125, 32);
+			lblController.TabIndex = 9;
+			lblController.Text = "Controller:";
 			// 
 			// numOutput
 			// 
-			this.numOutput.Location = new System.Drawing.Point(380, 130);
-			this.numOutput.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.numOutput.Maximum = new decimal(new int[] {
-						32,
-						0,
-						0,
-						0});
-			this.numOutput.Minimum = new decimal(new int[] {
-						1,
-						0,
-						0,
-						0});
-			this.numOutput.Name = "numOutput";
-			this.numOutput.Size = new System.Drawing.Size(51, 23);
-			this.numOutput.TabIndex = 12;
-			this.tipTool.SetToolTip(this.numOutput, "Select the output # on this controller that this channel is connected to.");
-			this.numOutput.Value = new decimal(new int[] {
-						1,
-						0,
-						0,
-						0});
-			this.numOutput.ValueChanged += new System.EventHandler(this.numOutput_ValueChanged);
-			this.numOutput.Validating += new System.ComponentModel.CancelEventHandler(this.numOutput_Validating);
+			numOutput.Location = new Point(706, 277);
+			numOutput.Margin = new Padding(7, 6, 7, 6);
+			numOutput.Maximum = new decimal(new int[] { 32, 0, 0, 0 });
+			numOutput.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+			numOutput.Name = "numOutput";
+			numOutput.Size = new Size(95, 39);
+			numOutput.TabIndex = 12;
+			tipTool.SetToolTip(numOutput, "Select the output # on this controller that this channel is connected to.");
+			numOutput.Value = new decimal(new int[] { 1, 0, 0, 0 });
+			numOutput.ValueChanged += numOutput_ValueChanged;
+			numOutput.Enter += numOutput_Enter;
+			numOutput.KeyDown += numOutput_KeyDown;
+			numOutput.Leave += numOutput_Leave;
+			numOutput.Validating += numOutput_Validating;
 			// 
 			// lblOutput
 			// 
-			this.lblOutput.AutoSize = true;
-			this.lblOutput.Location = new System.Drawing.Point(328, 133);
-			this.lblOutput.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.lblOutput.Name = "lblOutput";
-			this.lblOutput.Size = new System.Drawing.Size(48, 15);
-			this.lblOutput.TabIndex = 11;
-			this.lblOutput.Text = "Output:";
+			lblOutput.AutoSize = true;
+			lblOutput.Location = new Point(597, 279);
+			lblOutput.Margin = new Padding(7, 0, 7, 0);
+			lblOutput.Name = "lblOutput";
+			lblOutput.Size = new Size(95, 32);
+			lblOutput.TabIndex = 11;
+			lblOutput.Text = "Output:";
 			// 
 			// lblUniverse
 			// 
-			this.lblUniverse.AutoSize = true;
-			this.lblUniverse.Location = new System.Drawing.Point(88, 175);
-			this.lblUniverse.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.lblUniverse.Name = "lblUniverse";
-			this.lblUniverse.Size = new System.Drawing.Size(64, 15);
-			this.lblUniverse.TabIndex = 14;
-			this.lblUniverse.Text = "Universe: 1";
-			this.tipTool.SetToolTip(this.lblUniverse, "The DMX Universe this controller and this channel are connected to.");
+			lblUniverse.AutoSize = true;
+			lblUniverse.Location = new Point(163, 373);
+			lblUniverse.Margin = new Padding(7, 0, 7, 0);
+			lblUniverse.Name = "lblUniverse";
+			lblUniverse.Size = new Size(131, 32);
+			lblUniverse.TabIndex = 14;
+			lblUniverse.Text = "Universe: 1";
+			tipTool.SetToolTip(lblUniverse, "The DMX Universe this controller and this channel are connected to.");
 			// 
 			// lblDMXAddress
 			// 
-			this.lblDMXAddress.AutoSize = true;
-			this.lblDMXAddress.Location = new System.Drawing.Point(93, 194);
-			this.lblDMXAddress.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.lblDMXAddress.Name = "lblDMXAddress";
-			this.lblDMXAddress.Size = new System.Drawing.Size(90, 15);
-			this.lblDMXAddress.TabIndex = 15;
-			this.lblDMXAddress.Text = "DMX Address: 1";
-			this.tipTool.SetToolTip(this.lblDMXAddress, "The DMX address of this channel in this DMX Universe.");
+			lblDMXAddress.AutoSize = true;
+			lblDMXAddress.Location = new Point(173, 414);
+			lblDMXAddress.Margin = new Padding(7, 0, 7, 0);
+			lblDMXAddress.Name = "lblDMXAddress";
+			lblDMXAddress.Size = new Size(183, 32);
+			lblDMXAddress.TabIndex = 15;
+			lblDMXAddress.Text = "DMX Address: 1";
+			tipTool.SetToolTip(lblDMXAddress, "The DMX address of this channel in this DMX Universe.");
 			// 
-			// lblxLighsAddress
+			// lblxLightsAddress
 			// 
-			this.lblxLighsAddress.AutoSize = true;
-			this.lblxLighsAddress.Location = new System.Drawing.Point(93, 212);
-			this.lblxLighsAddress.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.lblxLighsAddress.Name = "lblxLighsAddress";
-			this.lblxLighsAddress.Size = new System.Drawing.Size(102, 15);
-			this.lblxLighsAddress.TabIndex = 16;
-			this.lblxLighsAddress.Text = "xLights Address: 1";
-			this.tipTool.SetToolTip(this.lblxLighsAddress, "The xLights address of this channel.");
+			lblxLightsAddress.AutoSize = true;
+			lblxLightsAddress.Location = new Point(173, 452);
+			lblxLightsAddress.Margin = new Padding(7, 0, 7, 0);
+			lblxLightsAddress.Name = "lblxLightsAddress";
+			lblxLightsAddress.Size = new Size(204, 32);
+			lblxLightsAddress.TabIndex = 16;
+			lblxLightsAddress.Text = "xLights Address: 1";
+			tipTool.SetToolTip(lblxLightsAddress, "The xLights address of this channel.");
 			// 
 			// chkActive
 			// 
-			this.chkActive.AutoSize = true;
-			this.chkActive.Checked = true;
-			this.chkActive.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkActive.Location = new System.Drawing.Point(366, 95);
-			this.chkActive.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.chkActive.Name = "chkActive";
-			this.chkActive.Size = new System.Drawing.Size(59, 19);
-			this.chkActive.TabIndex = 8;
-			this.chkActive.Text = "Active";
-			this.tipTool.SetToolTip(this.chkActive, "Is this channel in active use?");
-			this.chkActive.UseVisualStyleBackColor = true;
-			this.chkActive.CheckedChanged += new System.EventHandler(this.chkActive_CheckedChanged);
-			this.chkActive.Validating += new System.ComponentModel.CancelEventHandler(this.chkActive_Validating);
+			chkActive.AutoSize = true;
+			chkActive.Checked = true;
+			chkActive.CheckState = CheckState.Checked;
+			chkActive.Location = new Point(680, 203);
+			chkActive.Margin = new Padding(7, 6, 7, 6);
+			chkActive.Name = "chkActive";
+			chkActive.Size = new Size(111, 36);
+			chkActive.TabIndex = 8;
+			chkActive.Text = "Active";
+			tipTool.SetToolTip(chkActive, "Is this channel in active use?");
+			chkActive.UseVisualStyleBackColor = true;
+			chkActive.CheckedChanged += chkActive_CheckedChanged;
+			chkActive.Enter += chkActive_Enter;
+			chkActive.KeyDown += chkActive_KeyDown;
+			chkActive.Leave += chkActive_Leave;
+			chkActive.Validating += chkActive_Validating;
 			// 
 			// lblModel
 			// 
-			this.lblModel.AutoSize = true;
-			this.lblModel.Location = new System.Drawing.Point(82, 157);
-			this.lblModel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.lblModel.Name = "lblModel";
-			this.lblModel.Size = new System.Drawing.Size(119, 15);
-			this.lblModel.TabIndex = 13;
-			this.lblModel.Text = "LOR LOR1602W Gen3";
-			this.tipTool.SetToolTip(this.lblModel, "The brand and model of this controller.");
+			lblModel.AutoSize = true;
+			lblModel.Location = new Point(152, 335);
+			lblModel.Margin = new Padding(7, 0, 7, 0);
+			lblModel.Name = "lblModel";
+			lblModel.Size = new Size(242, 32);
+			lblModel.TabIndex = 13;
+			lblModel.Text = "LOR LOR1602W Gen3";
+			tipTool.SetToolTip(lblModel, "The brand and model of this controller.");
 			// 
 			// txtComment
 			// 
-			this.txtComment.Location = new System.Drawing.Point(82, 299);
-			this.txtComment.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.txtComment.Multiline = true;
-			this.txtComment.Name = "txtComment";
-			this.txtComment.Size = new System.Drawing.Size(349, 111);
-			this.txtComment.TabIndex = 18;
-			this.tipTool.SetToolTip(this.txtComment, "Comments, notes, and other important information about this channel.");
-			this.txtComment.Validating += new System.ComponentModel.CancelEventHandler(this.txtComment_Validating);
+			txtComment.Location = new Point(152, 638);
+			txtComment.Margin = new Padding(7, 6, 7, 6);
+			txtComment.Multiline = true;
+			txtComment.Name = "txtComment";
+			txtComment.Size = new Size(645, 232);
+			txtComment.TabIndex = 18;
+			tipTool.SetToolTip(txtComment, "Comments, notes, and other important information about this channel.");
+			txtComment.Enter += txtComment_Enter;
+			txtComment.KeyDown += txtComment_KeyDown;
+			txtComment.Leave += txtComment_Leave;
+			txtComment.Validating += txtComment_Validating;
 			// 
-			// label4
+			// lblComment
 			// 
-			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(15, 302);
-			this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(64, 15);
-			this.label4.TabIndex = 17;
-			this.label4.Text = "Comment:";
+			lblComment.AutoSize = true;
+			lblComment.Location = new Point(28, 644);
+			lblComment.Margin = new Padding(7, 0, 7, 0);
+			lblComment.Name = "lblComment";
+			lblComment.Size = new Size(125, 32);
+			lblComment.TabIndex = 17;
+			lblComment.Text = "Comment:";
 			// 
-			// picMulticolor
+			// lblDirty
 			// 
-			this.picMulticolor.BackColor = System.Drawing.Color.White;
-			this.picMulticolor.Image = ((System.Drawing.Image)(resources.GetObject("picMulticolor.Image")));
-			this.picMulticolor.Location = new System.Drawing.Point(38, 433);
-			this.picMulticolor.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.picMulticolor.Name = "picMulticolor";
-			this.picMulticolor.Size = new System.Drawing.Size(20, 20);
-			this.picMulticolor.TabIndex = 20;
-			this.picMulticolor.TabStop = false;
-			this.tipTool.SetToolTip(this.picMulticolor, "White");
-			this.picMulticolor.Visible = false;
+			lblDirty.AutoSize = true;
+			lblDirty.Font = new Font("Segoe UI", 6.75F, FontStyle.Italic);
+			lblDirty.ForeColor = SystemColors.GrayText;
+			lblDirty.Location = new Point(28, 540);
+			lblDirty.Margin = new Padding(7, 0, 7, 0);
+			lblDirty.Name = "lblDirty";
+			lblDirty.Size = new Size(58, 25);
+			lblDirty.TabIndex = 22;
+			lblDirty.Text = "Clean";
 			// 
 			// picRGB
 			// 
-			this.picRGB.BackColor = System.Drawing.Color.White;
-			this.picRGB.Image = ((System.Drawing.Image)(resources.GetObject("picRGB.Image")));
-			this.picRGB.Location = new System.Drawing.Point(97, 434);
-			this.picRGB.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.picRGB.Name = "picRGB";
-			this.picRGB.Size = new System.Drawing.Size(20, 20);
-			this.picRGB.TabIndex = 21;
-			this.picRGB.TabStop = false;
-			this.tipTool.SetToolTip(this.picRGB, "White");
-			this.picRGB.Visible = false;
+			picRGB.BackColor = Color.FromArgb(0, 0, 1);
+			picRGB.BorderStyle = BorderStyle.Fixed3D;
+			picRGB.Image = (Image)resources.GetObject("picRGB.Image");
+			picRGB.Location = new Point(12, 927);
+			picRGB.Name = "picRGB";
+			picRGB.Size = new Size(80, 72);
+			picRGB.SizeMode = PictureBoxSizeMode.StretchImage;
+			picRGB.TabIndex = 87;
+			picRGB.TabStop = false;
+			picRGB.Visible = false;
 			// 
-			// btnColor
+			// picRGBW
 			// 
-			this.btnColor.BackColor = System.Drawing.Color.White;
-			this.btnColor.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.btnColor.Location = new System.Drawing.Point(400, 53);
-			this.btnColor.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.btnColor.Name = "btnColor";
-			this.btnColor.Size = new System.Drawing.Size(33, 32);
-			this.btnColor.TabIndex = 5;
-			this.btnColor.UseVisualStyleBackColor = false;
-			this.btnColor.Click += new System.EventHandler(this.btnColor_Click);
+			picRGBW.BackColor = Color.FromArgb(0, 1, 0);
+			picRGBW.BorderStyle = BorderStyle.Fixed3D;
+			picRGBW.Image = (Image)resources.GetObject("picRGBW.Image");
+			picRGBW.Location = new Point(98, 927);
+			picRGBW.Name = "picRGBW";
+			picRGBW.Size = new Size(80, 72);
+			picRGBW.SizeMode = PictureBoxSizeMode.StretchImage;
+			picRGBW.TabIndex = 88;
+			picRGBW.TabStop = false;
+			picRGBW.Visible = false;
+			// 
+			// picMulti
+			// 
+			picMulti.BackColor = Color.FromArgb(1, 0, 0);
+			picMulti.BorderStyle = BorderStyle.Fixed3D;
+			picMulti.Image = (Image)resources.GetObject("picMulti.Image");
+			picMulti.Location = new Point(184, 927);
+			picMulti.Name = "picMulti";
+			picMulti.Size = new Size(80, 72);
+			picMulti.SizeMode = PictureBoxSizeMode.StretchImage;
+			picMulti.TabIndex = 89;
+			picMulti.TabStop = false;
+			picMulti.Visible = false;
+			// 
+			// picColor
+			// 
+			picColor.BackColor = SystemColors.ButtonFace;
+			picColor.BorderStyle = BorderStyle.Fixed3D;
+			picColor.Location = new Point(717, 107);
+			picColor.Name = "picColor";
+			picColor.Size = new Size(80, 64);
+			picColor.SizeMode = PictureBoxSizeMode.StretchImage;
+			picColor.TabIndex = 90;
+			picColor.TabStop = false;
+			picColor.Click += Pick_Color_Click;
+			picColor.Paint += picColor_Paint;
 			// 
 			// frmChannel
 			// 
-			this.AcceptButton = this.btnOK;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.CancelButton = this.btnCancel;
-			this.ClientSize = new System.Drawing.Size(448, 474);
-			this.Controls.Add(this.btnColor);
-			this.Controls.Add(this.picRGB);
-			this.Controls.Add(this.picMulticolor);
-			this.Controls.Add(this.txtComment);
-			this.Controls.Add(this.label4);
-			this.Controls.Add(this.lblModel);
-			this.Controls.Add(this.chkActive);
-			this.Controls.Add(this.lblxLighsAddress);
-			this.Controls.Add(this.lblDMXAddress);
-			this.Controls.Add(this.lblUniverse);
-			this.Controls.Add(this.lblOutput);
-			this.Controls.Add(this.numOutput);
-			this.Controls.Add(this.cboController);
-			this.Controls.Add(this.lblController);
-			this.Controls.Add(this.lblColor);
-			this.Controls.Add(this.picColor2);
-			this.Controls.Add(this.cboType);
-			this.Controls.Add(this.label1);
-			this.Controls.Add(this.txtLocation);
-			this.Controls.Add(this.lblLocation);
-			this.Controls.Add(this.txtName);
-			this.Controls.Add(this.lblName);
-			this.Controls.Add(this.btnCancel);
-			this.Controls.Add(this.btnOK);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-			this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.MinimizeBox = false;
-			this.Name = "frmChannel";
-			this.ShowInTaskbar = false;
-			this.Text = "Channel";
-			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmChannel_FormClosing);
-			this.Load += new System.EventHandler(this.frmChannel_Load);
-			this.Shown += new System.EventHandler(this.frmChannel_Shown);
-			this.Paint += new System.Windows.Forms.PaintEventHandler(this.frmChannel_Paint);
-			((System.ComponentModel.ISupportInitialize)(this.picColor2)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numOutput)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.picMulticolor)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.picRGB)).EndInit();
-			this.ResumeLayout(false);
-			this.PerformLayout();
+			AcceptButton = btnOK;
+			AutoScaleDimensions = new SizeF(13F, 32F);
+			AutoScaleMode = AutoScaleMode.Font;
+			CancelButton = btnCancel;
+			ClientSize = new Size(832, 1011);
+			Controls.Add(picMulti);
+			Controls.Add(picRGBW);
+			Controls.Add(picRGB);
+			Controls.Add(lblDirty);
+			Controls.Add(txtComment);
+			Controls.Add(lblComment);
+			Controls.Add(lblModel);
+			Controls.Add(chkActive);
+			Controls.Add(lblxLightsAddress);
+			Controls.Add(lblDMXAddress);
+			Controls.Add(lblUniverse);
+			Controls.Add(lblOutput);
+			Controls.Add(numOutput);
+			Controls.Add(cboController);
+			Controls.Add(lblController);
+			Controls.Add(lblColorLabel);
+			Controls.Add(cboType);
+			Controls.Add(lblType);
+			Controls.Add(txtLocation);
+			Controls.Add(lblLocation);
+			Controls.Add(txtName);
+			Controls.Add(lblName);
+			Controls.Add(btnCancel);
+			Controls.Add(btnOK);
+			Controls.Add(picColor);
+			FormBorderStyle = FormBorderStyle.FixedDialog;
+			Icon = (Icon)resources.GetObject("$this.Icon");
+			Margin = new Padding(7, 6, 7, 6);
+			MinimizeBox = false;
+			Name = "frmChannel";
+			ShowInTaskbar = false;
+			Text = "Channel";
+			FormClosing += frmChannel_FormClosing;
+			Load += frmChannel_Load;
+			Shown += frmChannel_Shown;
+			ResizeBegin += frmChannel_ResizeBegin;
+			ResizeEnd += frmChannel_ResizeEnd;
+			Paint += frmChannel_Paint;
+			((System.ComponentModel.ISupportInitialize)numOutput).EndInit();
+			((System.ComponentModel.ISupportInitialize)picRGB).EndInit();
+			((System.ComponentModel.ISupportInitialize)picRGBW).EndInit();
+			((System.ComponentModel.ISupportInitialize)picMulti).EndInit();
+			((System.ComponentModel.ISupportInitialize)picColor).EndInit();
+			ResumeLayout(false);
+			PerformLayout();
 
 		}
 
@@ -413,25 +443,26 @@ namespace UtilORama4
 		private System.Windows.Forms.TextBox txtName;
 		private System.Windows.Forms.TextBox txtLocation;
 		private System.Windows.Forms.Label lblLocation;
-		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Label lblType;
 		private System.Windows.Forms.ComboBox cboType;
-		private System.Windows.Forms.PictureBox picColor2;
-		private System.Windows.Forms.Label lblColor;
+		private System.Windows.Forms.Label lblColorLabel;
 		private System.Windows.Forms.ComboBox cboController;
 		private System.Windows.Forms.Label lblController;
 		private System.Windows.Forms.NumericUpDown numOutput;
 		private System.Windows.Forms.Label lblOutput;
 		private System.Windows.Forms.Label lblUniverse;
 		private System.Windows.Forms.Label lblDMXAddress;
-		private System.Windows.Forms.Label lblxLighsAddress;
+		private System.Windows.Forms.Label lblxLightsAddress;
 		private System.Windows.Forms.CheckBox chkActive;
 		private System.Windows.Forms.ToolTip tipTool;
 		private System.Windows.Forms.Label lblModel;
 		private System.Windows.Forms.TextBox txtComment;
-		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.Label lblComment;
 		private System.Windows.Forms.ColorDialog clrColors;
-		private System.Windows.Forms.PictureBox picMulticolor;
-		private System.Windows.Forms.PictureBox picRGB;
-		private System.Windows.Forms.Button btnColor;
+		private Label lblDirty;
+		private PictureBox picRGB;
+		private PictureBox picRGBW;
+		private PictureBox picMulti;
+		private PictureBox picColor;
 	}
 }
