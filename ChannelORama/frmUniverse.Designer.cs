@@ -53,6 +53,9 @@ namespace UtilORama4
 			tipTool = new ToolTip(components);
 			lblDirty = new Label();
 			label2 = new Label();
+			lblChannelsUsed = new Label();
+			lblLastUniNum = new Label();
+			lblxlEnd = new Label();
 			((System.ComponentModel.ISupportInitialize)numNumber).BeginInit();
 			((System.ComponentModel.ISupportInitialize)numxStart).BeginInit();
 			((System.ComponentModel.ISupportInitialize)numSize).BeginInit();
@@ -174,7 +177,7 @@ namespace UtilORama4
 			// lblSize
 			// 
 			lblSize.AutoSize = true;
-			lblSize.Location = new Point(74, 283);
+			lblSize.Location = new Point(312, 282);
 			lblSize.Margin = new Padding(6, 0, 6, 0);
 			lblSize.Name = "lblSize";
 			lblSize.Size = new Size(62, 32);
@@ -230,7 +233,7 @@ namespace UtilORama4
 			// lblxStart
 			// 
 			lblxStart.AutoSize = true;
-			lblxStart.Location = new Point(316, 283);
+			lblxStart.Location = new Point(4, 282);
 			lblxStart.Margin = new Padding(6, 0, 6, 0);
 			lblxStart.Name = "lblxStart";
 			lblxStart.Size = new Size(148, 32);
@@ -240,7 +243,7 @@ namespace UtilORama4
 			// numxStart
 			// 
 			numxStart.Increment = new decimal(new int[] { 16, 0, 0, 0 });
-			numxStart.Location = new Point(464, 278);
+			numxStart.Location = new Point(152, 277);
 			numxStart.Margin = new Padding(6, 7, 6, 7);
 			numxStart.Maximum = new decimal(new int[] { 32769, 0, 0, 0 });
 			numxStart.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
@@ -256,7 +259,7 @@ namespace UtilORama4
 			// numSize
 			// 
 			numSize.Increment = new decimal(new int[] { 16, 0, 0, 0 });
-			numSize.Location = new Point(152, 278);
+			numSize.Location = new Point(390, 277);
 			numSize.Margin = new Padding(6, 7, 6, 7);
 			numSize.Maximum = new decimal(new int[] { 512, 0, 0, 0 });
 			numSize.Minimum = new decimal(new int[] { 16, 0, 0, 0 });
@@ -313,6 +316,43 @@ namespace UtilORama4
 			label2.TabIndex = 24;
 			label2.Text = "(Or what group of controllers use this universe)";
 			// 
+			// lblChannelsUsed
+			// 
+			lblChannelsUsed.AutoSize = true;
+			lblChannelsUsed.Font = new Font("Segoe UI", 7.125F, FontStyle.Regular, GraphicsUnit.Point, 0);
+			lblChannelsUsed.ForeColor = Color.Firebrick;
+			lblChannelsUsed.Location = new Point(387, 323);
+			lblChannelsUsed.Margin = new Padding(6, 0, 6, 0);
+			lblChannelsUsed.Name = "lblChannelsUsed";
+			lblChannelsUsed.Size = new Size(172, 25);
+			lblChannelsUsed.TabIndex = 25;
+			lblChannelsUsed.Text = "128 Channels Used";
+			lblChannelsUsed.Click += lblChannelsUsed_Click;
+			lblChannelsUsed.DoubleClick += lblChannelsUsed_DoubleClick;
+			// 
+			// lblLastUniNum
+			// 
+			lblLastUniNum.AutoSize = true;
+			lblLastUniNum.Font = new Font("Segoe UI", 7.125F, FontStyle.Regular, GraphicsUnit.Point, 0);
+			lblLastUniNum.ForeColor = Color.Green;
+			lblLastUniNum.Location = new Point(9, 323);
+			lblLastUniNum.Margin = new Padding(6, 0, 6, 0);
+			lblLastUniNum.Name = "lblLastUniNum";
+			lblLastUniNum.Size = new Size(348, 25);
+			lblLastUniNum.TabIndex = 26;
+			lblLastUniNum.Text = "128 Channels used by 2 lower Universes";
+			lblLastUniNum.Click += lblLastUniNum_Click;
+			// 
+			// lblxlEnd
+			// 
+			lblxlEnd.AutoSize = true;
+			lblxlEnd.Location = new Point(525, 282);
+			lblxlEnd.Margin = new Padding(6, 0, 6, 0);
+			lblxlEnd.Name = "lblxlEnd";
+			lblxlEnd.Size = new Size(186, 32);
+			lblxlEnd.TabIndex = 27;
+			lblxlEnd.Text = "xLights End: 128";
+			// 
 			// frmUniverse
 			// 
 			AcceptButton = btnOK;
@@ -320,6 +360,9 @@ namespace UtilORama4
 			AutoScaleMode = AutoScaleMode.Font;
 			CancelButton = btnCancel;
 			ClientSize = new Size(832, 1012);
+			Controls.Add(lblxlEnd);
+			Controls.Add(lblLastUniNum);
+			Controls.Add(lblChannelsUsed);
 			Controls.Add(lblDirty);
 			Controls.Add(lblControllers);
 			Controls.Add(label1);
@@ -345,6 +388,7 @@ namespace UtilORama4
 			Icon = (Icon)resources.GetObject("$this.Icon");
 			Margin = new Padding(6, 7, 6, 7);
 			MaximizeBox = false;
+			MinimizeBox = false;
 			Name = "frmUniverse";
 			ShowInTaskbar = false;
 			Text = "Universe";
@@ -385,5 +429,8 @@ namespace UtilORama4
 		private System.Windows.Forms.ToolTip tipTool;
 		private Label lblDirty;
 		private Label label2;
+		private Label lblChannelsUsed;
+		private Label lblLastUniNum;
+		private Label lblxlEnd;
 	}
 }

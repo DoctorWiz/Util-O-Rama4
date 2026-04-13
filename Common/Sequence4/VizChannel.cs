@@ -253,7 +253,7 @@ namespace LOR4
 
 		public override int UniverseNumber
 		{ get { return output.UniverseNumber; } }
-		public override int DMXAddress
+		public override int Address
 		{ get { return output.channel; } }
 
 		public void CloneTo(LOR4VizChannel destination)

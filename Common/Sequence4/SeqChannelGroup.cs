@@ -313,13 +313,13 @@ namespace LOR4
 				}
 			}
 		}
-		public override int DMXAddress
+		public override int Address
 		{
 			get
 			{
 				if (Members.Count > 0)
 				{
-					return Members[0].DMXAddress;
+					return Members[0].Address;
 				}
 				else
 				{

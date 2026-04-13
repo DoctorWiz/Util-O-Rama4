@@ -31,7 +31,7 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmColors));
 			btnOK = new Button();
 			btnCancel = new Button();
-			groupBox1 = new GroupBox();
+			grpCommon = new GroupBox();
 			lblCoolWhite = new Label();
 			lblWarmWhite = new Label();
 			lblRed = new Label();
@@ -45,7 +45,7 @@
 			picMulti = new PictureBox();
 			picRGBW = new PictureBox();
 			picRGB = new PictureBox();
-			groupBox3 = new GroupBox();
+			grpAdditional = new GroupBox();
 			pic11 = new Label();
 			pic12 = new Label();
 			pic13 = new Label();
@@ -86,7 +86,7 @@
 			pic56 = new Label();
 			pic57 = new Label();
 			pic58 = new Label();
-			groupBox4 = new GroupBox();
+			grpCustom = new GroupBox();
 			pic61 = new Label();
 			pic62 = new Label();
 			pic63 = new Label();
@@ -106,13 +106,13 @@
 			picSelection = new PictureBox();
 			lblDirty = new Label();
 			label1 = new Label();
-			groupBox1.SuspendLayout();
+			grpCommon.SuspendLayout();
 			groupBox2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)picMulti).BeginInit();
 			((System.ComponentModel.ISupportInitialize)picRGBW).BeginInit();
 			((System.ComponentModel.ISupportInitialize)picRGB).BeginInit();
-			groupBox3.SuspendLayout();
-			groupBox4.SuspendLayout();
+			grpAdditional.SuspendLayout();
+			grpCustom.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)picSelection).BeginInit();
 			SuspendLayout();
 			// 
@@ -126,6 +126,7 @@
 			btnOK.TabIndex = 2;
 			btnOK.Text = "OK";
 			btnOK.UseVisualStyleBackColor = true;
+			btnOK.Click += btnOK_Click;
 			// 
 			// btnCancel
 			// 
@@ -138,23 +139,23 @@
 			btnCancel.UseVisualStyleBackColor = true;
 			btnCancel.Click += btnCancel_Click;
 			// 
-			// groupBox1
+			// grpCommon
 			// 
-			groupBox1.Controls.Add(lblCoolWhite);
-			groupBox1.Controls.Add(lblWarmWhite);
-			groupBox1.Controls.Add(lblRed);
-			groupBox1.Controls.Add(lblOrange);
-			groupBox1.Controls.Add(lblYellow);
-			groupBox1.Controls.Add(lblGreen);
-			groupBox1.Controls.Add(lblBlue);
-			groupBox1.Controls.Add(lblPurple);
-			groupBox1.Controls.Add(lblPink);
-			groupBox1.Location = new Point(12, 12);
-			groupBox1.Name = "groupBox1";
-			groupBox1.Size = new Size(806, 127);
-			groupBox1.TabIndex = 85;
-			groupBox1.TabStop = false;
-			groupBox1.Text = "Common LED Colors";
+			grpCommon.Controls.Add(lblCoolWhite);
+			grpCommon.Controls.Add(lblWarmWhite);
+			grpCommon.Controls.Add(lblRed);
+			grpCommon.Controls.Add(lblOrange);
+			grpCommon.Controls.Add(lblYellow);
+			grpCommon.Controls.Add(lblGreen);
+			grpCommon.Controls.Add(lblBlue);
+			grpCommon.Controls.Add(lblPurple);
+			grpCommon.Controls.Add(lblPink);
+			grpCommon.Location = new Point(12, 12);
+			grpCommon.Name = "grpCommon";
+			grpCommon.Size = new Size(806, 127);
+			grpCommon.TabIndex = 85;
+			grpCommon.TabStop = false;
+			grpCommon.Text = "Common LED Colors";
 			// 
 			// lblCoolWhite
 			// 
@@ -345,54 +346,54 @@
 			picRGB.Click += color_Special_Click;
 			picRGB.Paint += picRGB_Paint;
 			// 
-			// groupBox3
+			// grpAdditional
 			// 
-			groupBox3.Controls.Add(pic11);
-			groupBox3.Controls.Add(pic12);
-			groupBox3.Controls.Add(pic13);
-			groupBox3.Controls.Add(pic14);
-			groupBox3.Controls.Add(pic15);
-			groupBox3.Controls.Add(pic16);
-			groupBox3.Controls.Add(pic17);
-			groupBox3.Controls.Add(pic18);
-			groupBox3.Controls.Add(pic21);
-			groupBox3.Controls.Add(pic22);
-			groupBox3.Controls.Add(pic23);
-			groupBox3.Controls.Add(pic24);
-			groupBox3.Controls.Add(pic25);
-			groupBox3.Controls.Add(pic26);
-			groupBox3.Controls.Add(pic27);
-			groupBox3.Controls.Add(pic28);
-			groupBox3.Controls.Add(pic31);
-			groupBox3.Controls.Add(pic32);
-			groupBox3.Controls.Add(pic33);
-			groupBox3.Controls.Add(pic34);
-			groupBox3.Controls.Add(pic35);
-			groupBox3.Controls.Add(pic36);
-			groupBox3.Controls.Add(pic37);
-			groupBox3.Controls.Add(pic38);
-			groupBox3.Controls.Add(pic41);
-			groupBox3.Controls.Add(pic42);
-			groupBox3.Controls.Add(pic43);
-			groupBox3.Controls.Add(pic44);
-			groupBox3.Controls.Add(pic45);
-			groupBox3.Controls.Add(pic46);
-			groupBox3.Controls.Add(pic47);
-			groupBox3.Controls.Add(pic48);
-			groupBox3.Controls.Add(pic51);
-			groupBox3.Controls.Add(pic52);
-			groupBox3.Controls.Add(pic53);
-			groupBox3.Controls.Add(pic54);
-			groupBox3.Controls.Add(pic55);
-			groupBox3.Controls.Add(pic56);
-			groupBox3.Controls.Add(pic57);
-			groupBox3.Controls.Add(pic58);
-			groupBox3.Location = new Point(12, 275);
-			groupBox3.Name = "groupBox3";
-			groupBox3.Size = new Size(806, 410);
-			groupBox3.TabIndex = 87;
-			groupBox3.TabStop = false;
-			groupBox3.Text = "Additional Colors";
+			grpAdditional.Controls.Add(pic11);
+			grpAdditional.Controls.Add(pic12);
+			grpAdditional.Controls.Add(pic13);
+			grpAdditional.Controls.Add(pic14);
+			grpAdditional.Controls.Add(pic15);
+			grpAdditional.Controls.Add(pic16);
+			grpAdditional.Controls.Add(pic17);
+			grpAdditional.Controls.Add(pic18);
+			grpAdditional.Controls.Add(pic21);
+			grpAdditional.Controls.Add(pic22);
+			grpAdditional.Controls.Add(pic23);
+			grpAdditional.Controls.Add(pic24);
+			grpAdditional.Controls.Add(pic25);
+			grpAdditional.Controls.Add(pic26);
+			grpAdditional.Controls.Add(pic27);
+			grpAdditional.Controls.Add(pic28);
+			grpAdditional.Controls.Add(pic31);
+			grpAdditional.Controls.Add(pic32);
+			grpAdditional.Controls.Add(pic33);
+			grpAdditional.Controls.Add(pic34);
+			grpAdditional.Controls.Add(pic35);
+			grpAdditional.Controls.Add(pic36);
+			grpAdditional.Controls.Add(pic37);
+			grpAdditional.Controls.Add(pic38);
+			grpAdditional.Controls.Add(pic41);
+			grpAdditional.Controls.Add(pic42);
+			grpAdditional.Controls.Add(pic43);
+			grpAdditional.Controls.Add(pic44);
+			grpAdditional.Controls.Add(pic45);
+			grpAdditional.Controls.Add(pic46);
+			grpAdditional.Controls.Add(pic47);
+			grpAdditional.Controls.Add(pic48);
+			grpAdditional.Controls.Add(pic51);
+			grpAdditional.Controls.Add(pic52);
+			grpAdditional.Controls.Add(pic53);
+			grpAdditional.Controls.Add(pic54);
+			grpAdditional.Controls.Add(pic55);
+			grpAdditional.Controls.Add(pic56);
+			grpAdditional.Controls.Add(pic57);
+			grpAdditional.Controls.Add(pic58);
+			grpAdditional.Location = new Point(12, 275);
+			grpAdditional.Name = "grpAdditional";
+			grpAdditional.Size = new Size(806, 410);
+			grpAdditional.TabIndex = 87;
+			grpAdditional.TabStop = false;
+			grpAdditional.Text = "Additional Colors";
 			// 
 			// pic11
 			// 
@@ -804,30 +805,30 @@
 			pic58.TabIndex = 91;
 			pic58.Click += color_Additional_Click;
 			// 
-			// groupBox4
+			// grpCustom
 			// 
-			groupBox4.Controls.Add(pic61);
-			groupBox4.Controls.Add(pic62);
-			groupBox4.Controls.Add(pic63);
-			groupBox4.Controls.Add(pic64);
-			groupBox4.Controls.Add(pic65);
-			groupBox4.Controls.Add(pic66);
-			groupBox4.Controls.Add(pic67);
-			groupBox4.Controls.Add(pic68);
-			groupBox4.Controls.Add(pic71);
-			groupBox4.Controls.Add(pic72);
-			groupBox4.Controls.Add(pic73);
-			groupBox4.Controls.Add(pic74);
-			groupBox4.Controls.Add(pic75);
-			groupBox4.Controls.Add(pic76);
-			groupBox4.Controls.Add(pic77);
-			groupBox4.Controls.Add(pic78);
-			groupBox4.Location = new Point(12, 691);
-			groupBox4.Name = "groupBox4";
-			groupBox4.Size = new Size(806, 200);
-			groupBox4.TabIndex = 88;
-			groupBox4.TabStop = false;
-			groupBox4.Text = "Custom Colors";
+			grpCustom.Controls.Add(pic61);
+			grpCustom.Controls.Add(pic62);
+			grpCustom.Controls.Add(pic63);
+			grpCustom.Controls.Add(pic64);
+			grpCustom.Controls.Add(pic65);
+			grpCustom.Controls.Add(pic66);
+			grpCustom.Controls.Add(pic67);
+			grpCustom.Controls.Add(pic68);
+			grpCustom.Controls.Add(pic71);
+			grpCustom.Controls.Add(pic72);
+			grpCustom.Controls.Add(pic73);
+			grpCustom.Controls.Add(pic74);
+			grpCustom.Controls.Add(pic75);
+			grpCustom.Controls.Add(pic76);
+			grpCustom.Controls.Add(pic77);
+			grpCustom.Controls.Add(pic78);
+			grpCustom.Location = new Point(12, 691);
+			grpCustom.Name = "grpCustom";
+			grpCustom.Size = new Size(806, 200);
+			grpCustom.TabIndex = 88;
+			grpCustom.TabStop = false;
+			grpCustom.Text = "Custom Colors";
 			// 
 			// pic61
 			// 
@@ -1043,16 +1044,18 @@
 			// 
 			// frmColors
 			// 
+			AcceptButton = btnOK;
 			AutoScaleDimensions = new SizeF(13F, 32F);
 			AutoScaleMode = AutoScaleMode.Font;
+			CancelButton = btnCancel;
 			ClientSize = new Size(830, 1014);
 			Controls.Add(label1);
 			Controls.Add(lblDirty);
 			Controls.Add(picSelection);
-			Controls.Add(groupBox1);
+			Controls.Add(grpCommon);
 			Controls.Add(groupBox2);
-			Controls.Add(groupBox3);
-			Controls.Add(groupBox4);
+			Controls.Add(grpAdditional);
+			Controls.Add(grpCustom);
 			Controls.Add(btnCancel);
 			Controls.Add(btnOK);
 			FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -1060,15 +1063,21 @@
 			MaximizeBox = false;
 			MinimizeBox = false;
 			Name = "frmColors";
+			ShowInTaskbar = false;
+			StartPosition = FormStartPosition.CenterParent;
 			Text = "Choose a color";
+			FormClosing += frmColors_FormClosing;
 			Load += frmColors_Load;
-			groupBox1.ResumeLayout(false);
+			Shown += frmColors_Shown;
+			ResizeBegin += frmColors_ResizeBegin;
+			ResizeEnd += frmColors_ResizeEnd;
+			grpCommon.ResumeLayout(false);
 			groupBox2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)picMulti).EndInit();
 			((System.ComponentModel.ISupportInitialize)picRGBW).EndInit();
 			((System.ComponentModel.ISupportInitialize)picRGB).EndInit();
-			groupBox3.ResumeLayout(false);
-			groupBox4.ResumeLayout(false);
+			grpAdditional.ResumeLayout(false);
+			grpCustom.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)picSelection).EndInit();
 			ResumeLayout(false);
 			PerformLayout();
@@ -1077,10 +1086,10 @@
 		#endregion
 		private Button btnOK;
 		private Button btnCancel;
-		private GroupBox groupBox1;
+		private GroupBox grpCommon;
 		private GroupBox groupBox2;
-		private GroupBox groupBox3;
-		private GroupBox groupBox4;
+		private GroupBox grpAdditional;
+		private GroupBox grpCustom;
 		private Label lblCoolWhite;
 		private Label lblWarmWhite;
 		private Label lblRed;

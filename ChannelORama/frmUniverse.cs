@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.Metrics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -16,17 +17,20 @@ namespace UtilORama4
 {
 	public partial class frmUniverse : Form
 	{
-		private List<DMXUniverse> universes = null;
-		public DMXUniverse uniOriginal = null;
-		public DMXUniverse universe = null;
+		private List<Universe> universes = null;
+		public Universe uniOriginal = null;
+		public Universe universe = null;
 		public bool isDirty = false;
 		public bool renumber = false;
 		public bool loading = true;
 		private bool moved = false;
+		public bool userClose = false;
 		public int changes = 0;
 		private const int WM_SYSCOMMAND = 0x0112;
 		private const int SC_MINIMIZE = 0xf020;
 		public frmList owner = null;
+		private static string uniName = "Universe";
+		private FormWindowState prevWindowState = FormWindowState.Normal;
 
 		protected override void WndProc(ref Message m)
 		{
@@ -50,15 +54,16 @@ namespace UtilORama4
 			InitializeComponent();
 		}
 
-		public frmUniverse(DMXUniverse univs)
+		public frmUniverse(Universe univs)
 		{
 			owner = this.Owner as frmList;
+			uniName = frmList.uniName;
 			InitializeComponent();
 			uniOriginal = univs;
 			universe = univs.Copy();
 			universe.Editing = true;
 			loading = true;
-			if (Etc.xLightsVersion > 0)
+			if (frmList.hasxLights)
 			{
 				lblxStart.Visible = false;
 				numxStart.Visible = false;
@@ -74,15 +79,16 @@ namespace UtilORama4
 			}
 		}
 
-		public frmUniverse(DMXUniverse univs, frmList listform)
+		public frmUniverse(Universe univs, frmList listform)
 		{
 			owner = listform;
+			uniName = frmList.uniName;
 			InitializeComponent();
 			uniOriginal = univs;
 			universe = univs.Copy();
 			universe.Editing = true;
 			loading = true;
-			if (Etc.xLightsVersion > 0)
+			if (frmList.hasxLights)
 			{
 				lblxStart.Visible = false;
 				numxStart.Visible = false;
@@ -112,7 +118,7 @@ namespace UtilORama4
 			}
 		}
 
-		public void LoadUniverse(DMXUniverse univs)
+		public void LoadUniverse(Universe univs)
 		{
 			loading = true;
 			uniOriginal = univs;
@@ -123,21 +129,81 @@ namespace UtilORama4
 			txtConnection.Text = universe.Connection;
 			numNumber.Value = universe.UniverseNumber;
 			chkActive.Checked = universe.Active;
-			numSize.Value = universe.MaxChannelsAllowed;
-			numxStart.Value = universe.xLightsAddress;
+
+
+			int nsv = universe.MaxChannelsAllowed;
+			numSize.Value = nsv;
+			numxStart.Value = universe.xLightsAddress; 
 			StringBuilder sb = new StringBuilder();
-			for (int c = 0; c < universe.DMXControllers.Count; c++)
+			for (int c = 0; c < universe.Controllers.Count; c++)
 			{
-				if (universe.DMXControllers[c].Identifier.Length > 0)
+				if (universe.Controllers[c].Identifier.Length > 0)
 				{
-					sb.Append(universe.DMXControllers[c].Identifier);
+					sb.Append(universe.Controllers[c].Identifier);
 					sb.Append(": ");
 				}
-				sb.Append(universe.DMXControllers[c].Name);
+				sb.Append(universe.Controllers[c].Name);
 				sb.Append("\r\n");
 			}
 			lblControllers.Text = sb.ToString();
 			numSize.Minimum = universe.HighestChannel;
+
+			int hc = universe.HighestChannel;
+			string txt = hc.ToString() + " Channels used";
+			lblChannelsUsed.Text = txt;
+			if (hc < universe.MaxChannelsAllowed)
+			{
+				lblChannelsUsed.ForeColor = Color.Olive;
+			}
+			else if (hc > universe.MaxChannelsAllowed)
+			{
+				lblChannelsUsed.ForeColor = Color.Firebrick;
+			}
+			else
+			{
+				lblChannelsUsed.ForeColor = Color.Green;
+			}
+
+			int used = 0;
+			int ucount = 0;
+			owner.AllUniverses.Sort();
+			foreach (Universe u in owner.AllUniverses)
+			{
+				string foo = u.FullName;
+				if (u.UniverseNumber < universe.UniverseNumber)
+				{
+					used += u.MaxChannelsAllowed;
+					ucount++;
+				}
+			}
+			if (ucount == 0)
+			{
+				lblLastUniNum.Visible = false;
+			}
+			else
+			{
+				if (universe.xLightsAddress > used)
+				{
+					lblLastUniNum.ForeColor = Color.Olive;
+				}
+				else if (universe.xLightsAddress < used)
+				{
+					lblLastUniNum.ForeColor = Color.Firebrick;
+				}
+				else
+				{
+					lblLastUniNum.ForeColor = Color.Green;
+				}
+				txt = used.ToString() + " Channels used by " + ucount.ToString() + " lower " + uniName;
+				if (ucount > 1)
+				{ txt += "s"; }
+				lblLastUniNum.Text = txt;
+			}
+
+			int v = universe.MaxChannelsAllowed;
+			v += universe.xLightsAddress;
+			lblxlEnd.Text = "xLights End: " + v.ToString();
+
 			MakeDirty(false);
 			loading = false;
 		}
@@ -160,7 +226,7 @@ namespace UtilORama4
 				{
 					if (!loading)
 					{
-						this.Text = "Universe: " + universe.UniverseNumber.ToString() + ": " + universe.Name + " (Modified)";
+						this.Text = uniName + ": " + universe.UniverseNumber.ToString() + ": " + universe.Name + " (Modified)";
 						isDirty = true;
 						lblDirty.ForeColor = Color.Red;
 						lblDirty.Text = "Dirty";
@@ -168,7 +234,7 @@ namespace UtilORama4
 				}
 				else
 				{
-					this.Text = "Universe: " + universe.UniverseNumber.ToString() + ": " + universe.Name;
+					this.Text = uniName + ": " + universe.UniverseNumber.ToString() + ": " + universe.Name;
 					isDirty = false;
 					lblDirty.ForeColor = SystemColors.GrayText;
 					lblDirty.Text = "Clean";
@@ -281,6 +347,14 @@ namespace UtilORama4
 		{
 			//universe.SizeLimit = (int)numSize.Value;
 			//if (!loading) MakeDirty(true);
+			decimal vf = numSize.Value;
+			decimal vn = Math.Ceiling(vf / 16) * 16;
+			if (vn != vf)
+				numSize.Value = vn;
+
+			int vi = (int)vn;
+			vi += universe.xLightsAddress;
+			lblxlEnd.Text = "xLights End: " + vi.ToString();
 		}
 
 		private void numxStart_ValueChanged(object sender, EventArgs e)
@@ -290,6 +364,15 @@ namespace UtilORama4
 			//	universe.xLightsAddress = (int)numxStart.Value;
 			//	MakeDirty(true);
 			//}
+			decimal vf = numxStart.Value;
+			decimal vn = Math.Ceiling((vf - 1) / 16) * 16 + 1;
+			if (vn != vf)
+				numxStart.Value = vn;
+
+			int vi = (int)vn;
+			vi += universe.MaxChannelsAllowed;
+			lblxlEnd.Text = "xLights End: " + vi.ToString();
+
 		}
 
 		private void frmUniverse_Shown(object sender, EventArgs e)
@@ -309,18 +392,18 @@ namespace UtilORama4
 
 		private void txtName_Enter(object sender, EventArgs e)
 		{
-			string tipText = "The name of this universe";
+			string tipText = "The name of this " + uniName;
 			tipTool.SetToolTip(txtName, tipText);
 			tipTool.SetToolTip(lblName, tipText);
 		}
 
 		private void txtName_Leave(object sender, EventArgs e)
 		{
-			string tipText = "The name of this universe";
+			string tipText = "The name of this " + uniName;
 			string t = txtName.Text.Trim();
 			if (t.Length == 0)
 			{
-				tipText = "The universe MUST have a UNIQUE name!";
+				tipText = "The " + uniName + " MUST have a UNIQUE name!";
 			}
 			else
 			{
@@ -328,7 +411,7 @@ namespace UtilORama4
 				universe.Name = t;
 				if (universe.BadName)
 				{
-					tipText = "The universe MUST have a UNIQUE name!";
+					tipText = "The " + uniName + " MUST have a UNIQUE name!";
 				}
 			}
 			tipTool.SetToolTip(txtName, tipText);
@@ -343,11 +426,11 @@ namespace UtilORama4
 			}
 			else if (e.KeyCode == Keys.Enter)
 			{
-				string tipText = "The name of this universe";
+				string tipText = "The name of this " + uniName;
 				string t = txtName.Text.Trim();
 				if (t.Length == 0)
 				{
-					tipText = "The universe MUST have a UNIQUE name!";
+					tipText = "The " + uniName + " MUST have a UNIQUE name!";
 				}
 				else
 				{
@@ -355,7 +438,7 @@ namespace UtilORama4
 					universe.Name = t;
 					if (universe.BadName)
 					{
-						tipText = "The universe MUST have a UNIQUE name!";
+						tipText = "The " + uniName + " MUST have a UNIQUE name!";
 					}
 				}
 				tipTool.SetToolTip(txtName, tipText);
@@ -391,7 +474,7 @@ namespace UtilORama4
 
 		private void txtLocation_Enter(object sender, EventArgs e)
 		{
-			string tipText = "The location of this universe";
+			string tipText = "The location of this " + uniName;
 			tipTool.SetToolTip(txtLocation, tipText);
 			tipTool.SetToolTip(lblLocation, tipText);
 		}
@@ -409,7 +492,7 @@ namespace UtilORama4
 
 		private void numNumber_Enter(object sender, EventArgs e)
 		{
-			string tipText = "The number for this universe";
+			string tipText = "The number for this " + uniName;
 			tipTool.SetToolTip(numNumber, tipText);
 			tipTool.SetToolTip(lblNumber, tipText);
 		}
@@ -468,7 +551,7 @@ namespace UtilORama4
 
 		private void txtConnection_Enter(object sender, EventArgs e)
 		{
-			string tipText = "The connection for this universe";
+			string tipText = "The connection for this " + uniName;
 			tipTool.SetToolTip(txtConnection, tipText);
 			tipTool.SetToolTip(lblConnection, tipText);
 		}
@@ -508,7 +591,7 @@ namespace UtilORama4
 
 		private void chkActive_Enter(object sender, EventArgs e)
 		{
-			string tiptext = "Is this universe active?";
+			string tiptext = "Is this " + uniName + " active?";
 			tipTool.SetToolTip(chkActive, tiptext);
 		}
 
@@ -523,7 +606,7 @@ namespace UtilORama4
 
 		private void numSize_Enter(object sender, EventArgs e)
 		{
-			String tipText = "The size limit for this universe";
+			String tipText = "The size limit for this " + uniName;
 			tipTool.SetToolTip(numSize, tipText);
 			tipTool.SetToolTip(lblSize, tipText);
 		}
@@ -559,7 +642,7 @@ namespace UtilORama4
 
 		private void numxStart_Enter(object sender, EventArgs e)
 		{
-			string tipText = "The xLights DMX address for this universe";
+			string tipText = "The address for this " + uniName;
 			tipTool.SetToolTip(numxStart, tipText);
 			tipTool.SetToolTip(lblxStart, tipText);
 		}
@@ -616,7 +699,7 @@ namespace UtilORama4
 
 		private void txtComment_Enter(object sender, EventArgs e)
 		{
-			string tipText = "Any comments about this universe";
+			string tipText = "Any comments about this " + uniName;
 			tipTool.SetToolTip(txtComment, tipText);
 			tipTool.SetToolTip(lblComment, tipText);
 		}
@@ -634,7 +717,16 @@ namespace UtilORama4
 
 		private void btnOK_Click(object sender, EventArgs e)
 		{
-			SaveAndExit();
+			DialogResult = DialogResult.OK;
+			userClose = true;
+			if (isDirty)
+			{
+				SaveAndExit();
+			}
+			else
+			{
+				this.Hide();
+			}
 		}
 
 		private bool SaveAndExit()
@@ -648,21 +740,34 @@ namespace UtilORama4
 
 		private void btnCancel_Click(object sender, EventArgs e)
 		{
+			DialogResult = DialogResult.Cancel;
+			userClose = true;
+			MakeDirty(false);
 			this.Hide();
 		}
 
 		private void frmUniverse_ResizeBegin(object sender, EventArgs e)
 		{
-
+			prevWindowState = this.WindowState;
 		}
 
 		private void frmUniverse_ResizeEnd(object sender, EventArgs e)
 		{
-			if (this.WindowState == FormWindowState.Minimized)
+			/*
+			// Did the window state change?
+			if (prevWindowState == FormWindowState.Normal)
 			{
-				owner.WindowState = FormWindowState.Minimized;
-				this.WindowState = FormWindowState.Normal;
+				// Is it now minimized?
+				if (this.WindowState == FormWindowState.Minimized)
+				{
+					// Minimize my owner/parent
+					owner.WindowState = FormWindowState.Minimized;
+					// And set my own window state back to normal,
+					// so that when the owner/parent is restored, I'll be normal and showing.
+					this.WindowState = FormWindowState.Normal;
+				}
 			}
+			*/
 		}
 
 		private void frmUniverse_FormClosing(object sender, FormClosingEventArgs e)
@@ -671,20 +776,64 @@ namespace UtilORama4
 			{
 				//System.Diagnostics.Debugger.Break();
 			}
-			if (isDirty)
+			if (e.CloseReason == CloseReason.UserClosing)
 			{
-				string dtxt = "Universe settings have changed.  Save them?";
-				DialogResult dr = MessageBox.Show(this, dtxt, "Save Changes?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-				if (dr == DialogResult.Yes)
+				if (!userClose)
 				{
-					SaveAndExit();
-				}
-				else if (dr == DialogResult.Cancel)
-				{
-					e.Cancel = true;
-				}
-			}
+					if (isDirty)
+					{
+						string dtxt = uniName + " settings have changed.  Save them?";
+						DialogResult dr = MessageBox.Show(this, dtxt, "Save Changes?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+						if (dr == DialogResult.Yes)
+						{
+							DialogResult = DialogResult.OK;
+							userClose = true;
+							// Don't actually close/unload it, just hide it
+							e.Cancel = true;
+							SaveAndExit();
+						}
+						else if (dr == DialogResult.No)
+						{
+							DialogResult = DialogResult.Cancel;
+							userClose = true;
+							MakeDirty(false);
+							// Don't actually close/unload it, just hide it
+							e.Cancel = true;
+							this.Hide();
+						}
+						else if (dr == DialogResult.Cancel)
+						{
+							e.Cancel = true;
+						}
+					} // End if dirty
+				} // End if not userClose flag
+			} // End if reason for closing is by user
+		} // End Form Closing event
+
+		private void lblChannelsUsed_Click(object sender, EventArgs e)
+		{
 
 		}
-	}
-}
+
+		private void lblChannelsUsed_DoubleClick(object sender, EventArgs e)
+		{
+			// Secret renumbering function
+			numSize.Value = universe.LastUsedAddress;
+		}
+
+		private void lblLastUniNum_Click(object sender, EventArgs e)
+		{
+			// Secret renumbering function
+			owner.AllUniverses.Sort();
+			int st = 0;
+			foreach (Universe uni in owner.AllUniverses)
+			{
+				uni.MaxChannelsAllowed = uni.LastUsedAddress;
+				uni.xLightsAddress = st;
+				st += uni.MaxChannelsAllowed;
+			}
+			numSize.Value = universe.LastUsedAddress;
+			numxStart.Value = universe.xLightsAddress;
+		}
+	} // End Form class frmUniverse
+} // End namespace

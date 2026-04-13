@@ -14,6 +14,8 @@
  */
 
 
+using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.InkML;
 using FileHelper;   // Extended file functions (example: SafeRename)
 using FormHelper;   // Extended WinForms functions such as SaveView and RestoreView
 using FuzzORama;    // Fuzzy String Matching-- Util-O-Rama version (optimized for channel names)
@@ -32,6 +34,7 @@ using System.Diagnostics;
 using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Drawing;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Media;
@@ -41,7 +44,10 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using UtilORama4;
 using xLights22;    // xLights RGBEffects and Sequences
+
+
 
 namespace UtilORama4
 {
@@ -49,11 +55,12 @@ namespace UtilORama4
 	{
 		private static Settings userSettings = Settings.Default;
 		private const string helpPage = "http://wizlights.com/utilorama/channelorama";
-		public List<DMXUniverse> AllUniverses = new List<DMXUniverse>();
-		public List<DMXController> AllControllers = DMXUniverse.AllControllers;
-		public List<DMXChannel> AllChannels = DMXUniverse.AllChannels;
-		public List<DMXDeviceType> DeviceTypes = new List<DMXDeviceType>();
-		private const string myTitle = "Channel-O-Rama  Channel Manager";
+		public List<Universe> AllUniverses = new List<Universe>();
+		public List<Controller> AllControllers = Universe.AllControllers;
+		public List<Channel> AllChannels = Universe.AllChannels;
+		public List<DeviceTypes> DeviceTypes = new List<DeviceTypes>();
+		private string myTitle = "Channel-O-Rama  Channel Manager";
+
 
 		LOR4Visualization lViz = null;
 		private string lastFile = "";
@@ -68,20 +75,37 @@ namespace UtilORama4
 		public float mdpi = 96; // Monitor DPI (for scaling icons)
 														//private xRGBEffects xSeq = null;
 														//private LOR4Visualization lViz = null;
+		public static bool hasxLights = false;
+		public static bool hasLOR = false;
+		public static string uniName = "Universe";
 
-		private int[] TREEICONuniverse     = { 0 };
-		private int[] TREEICONcontroller   = { 1 };
+		public static readonly Color Color_RGB = ColorTranslator.FromHtml("#000001");
+		public static readonly Color Color_RGBW = ColorTranslator.FromHtml("#000100");
+		public static readonly Color Color_Multi = ColorTranslator.FromHtml("#010000"); 
+		private static int[] TREEICONuniverse     = { 0 };
+		private static readonly int[] TREEICONcontroller   = { 1 };
 		//private int[] TREEICONtrack        = { 3 };
-		private int[] TREEICONchannel      = { 4 }; // Multicolored
-		private int[] TREEICONrgbChannel   = { 2 }; // #7 below looks better
+		private static readonly int[] TREEICONchannel      = { 4 }; // Multicolored
+		private static readonly int[] TREEICONrgbChannel   = { 2 }; // #7 below looks better
 		//private int[] TREEICONchannelGroup = { 6 };
 		//private int[] TREEICONcosmic       = { 7 };
-		private int[] TREEICONrgbColor     = { 2 };
-		private int[] TREEICONrgbwColor    = { 3 };
-		private int[] TREEICONmulticolor   = { 4 };
-		private int[] TREEICONred          = { 8 };
-		private int[] TREEICONgreen        = { 11 };
-		private int[] TREEICONblue         = { 12 };
+		private static readonly int[] TREEICONrgbColor     = { 2 };
+		private static readonly int[] TREEICONrgbwColor    = { 3 };
+		private static readonly int[] TREEICONmulticolor   = { 4 };
+		private static readonly int[] TREEICONred          = { 8 };
+		private static readonly int[] TREEICONgreen        = { 11 };
+		private static readonly int[] TREEICONblue         = { 12 };
+
+		private static string fileUniverses   = "Universes.csv";
+//		private static string fileNetworks = "Networks.csv";
+		private static readonly string fileControllers = "Controllers.csv";
+		private static readonly string fileChannels    = "Channels.csv";
+		private static readonly string fileDeviceTypes = "DeviceTypes.csv";
+
+		private frmUniverse uniForm = null;
+		private frmController ctlForm = null;
+		private frmChannel chanForm = null;
+		private FormWindowState prevWindowState = FormWindowState.Normal;
 
 		public frmList()
 		{
@@ -95,12 +119,12 @@ namespace UtilORama4
 			//!/  DO SOMETHING COOL!  ///
 			///////////////////////////
 
-			string seqFile = "W:\\Documents\\Christmas\\2021\\Light-O-Rama\\Wizlights\\Sequences\\Wizlights 2021 !Master Channel List (cf21a).las";
-			string vizFile = "W:\\Documents\\Christmas\\2021\\Light-O-Rama\\Wizlights\\Visualizations\\Wizlights 2021.lee";
+			//string seqFile = "W:\\Documents\\Christmas\\2021\\Light-O-Rama\\Wizlights\\Sequences\\Wizlights 2021 !Master Channel List (cf21a).las";
+			//string vizFile = "W:\\Documents\\Christmas\\2021\\Light-O-Rama\\Wizlights\\Visualizations\\Wizlights 2021.lee";
 
 
 			//xSeq = new xRGBEffects();
-			lViz = new LOR4Visualization(null, vizFile);
+			//lViz = new LOR4Visualization(null, vizFile);
 
 			//int ccc = lViz.VizChannels.Count;
 			//int ddd = lViz.VizDrawObjects.Count;
@@ -108,7 +132,10 @@ namespace UtilORama4
 
 
 			//MatchUp(seqFile);
-			MatchUp(seqFile, true);
+			//MatchUp(seqFile, true);
+
+			frmDeviceTypes dtForm = new frmDeviceTypes(this);
+			DialogResult dr = dtForm.ShowDialog(this);	
 
 		}
 
@@ -118,8 +145,45 @@ namespace UtilORama4
 			this.dpi = this.DeviceDpi;
 			this.RestoreView(); // Use default parameters
 			RestoreUserSettings();
-			lblVersions.Text = Etc.LORVersion.ToString() + " + " + Etc.xLightsVersion.ToString();
+			lblVersions.Text = LOR4Admin.LORVersion.ToString() + " + " + LOR4Admin.xLightsVersion.ToString();
 			lblVersions.Visible = true;
+
+			if (LOR4Admin.LORVersion > 0)
+				hasLOR = true;
+			if (LOR4Admin.xLightsVersion > 0)
+				hasxLights = true;
+
+			// command line overrides
+			string[] args=Environment.GetCommandLineArgs();
+			foreach (string arg in args)
+			{
+				string argx = arg.Trim().ToLower();
+				if (argx.IndexOf("forcexlights") >=0)
+					hasxLights = true;
+				else if (argx.IndexOf("force xlights") >= 0)
+					hasxLights = true;
+				else if (argx.IndexOf("noxlights") >= 0)
+					hasxLights = false;
+				else if (argx.IndexOf("no xlights") >= 0)
+					hasxLights = false;
+				else if (argx.IndexOf("forcelor") >= 0)
+					hasLOR = true;
+				else if (argx.IndexOf("force lor") >= 0)
+					hasLOR = true;
+				else if (argx.IndexOf("nolor") >= 0)
+					hasLOR = false;
+				else if (argx.IndexOf("no lor") >= 0)
+					hasLOR = false;
+			}
+
+
+
+			if (hasLOR && !hasxLights)
+			{
+				fileUniverses = "Networks.csv";
+				uniName = "Network";
+				btnUniverse.Text = "Edit\r\nNetwork";
+			}
 		}
 
 		private void SaveUserSettings()
@@ -187,19 +251,19 @@ namespace UtilORama4
 				}
 			}
 
-			string dtfile = ret + "\\DeviceTypes.csv";
+			string dtfile = ret + fileDeviceTypes;
 			bool datExists = Fyle.Exists(dtfile);
 			if (datExists)
 			{
-				dtfile = ret + "\\Universes.csv";
+				dtfile = ret + fileUniverses;
 				datExists = Fyle.Exists(dtfile);
 				if (datExists)
 				{
-					dtfile = ret + "\\Controllers.csv";
+					dtfile = ret + fileControllers;
 					datExists = Fyle.Exists(dtfile);
 					if (datExists)
 					{
-						dtfile = ret + "\\Channels.csv";
+						dtfile = ret + fileChannels;
 						datExists = Fyle.Exists(dtfile);
 					}
 				}
@@ -256,21 +320,21 @@ namespace UtilORama4
 			// Already have a path, but check that it exists
 			if (!Fyle.PathExists(ret))
 			{
-				ret = SelectDBPath(true);
+				ret = SelectDBPath(true) + "\\";
 
-				string dtfile = ret + "\\DeviceTypes.csv";
+				string dtfile = ret + fileDeviceTypes;
 				bool datExists = Fyle.Exists(dtfile);
 				if (datExists)
 				{
-					dtfile = ret + "\\Universes.csv";
+					dtfile = ret + fileUniverses;
 					datExists = Fyle.Exists(dtfile);
 					if (datExists)
 					{
-						dtfile = ret + "\\Controllers.csv";
+						dtfile = ret + fileControllers;
 						datExists = Fyle.Exists(dtfile);
 						if (datExists)
 						{
-							dtfile = ret + "\\Channels.csv";
+							dtfile = ret + fileChannels;
 							datExists = Fyle.Exists(dtfile);
 						}
 					}
@@ -304,31 +368,45 @@ namespace UtilORama4
 		{
 			Fyle.SafeCopy(Application.StartupPath + "\\TemplateDB\\desktop.ini", folder + "\\desktop.ini");
 			Fyle.SafeCopy(Application.StartupPath + "\\TemplateDB\\folder.ico", folder + "\\folder.ico");
-			Fyle.SafeCopy(Application.StartupPath + "\\TemplateDB\\DeviceTypes.csv", folder + "\\DeviceTypes.csv");
-			Fyle.SafeCopy(Application.StartupPath + "\\TemplateDB\\Universes.csv", folder + "\\Universes.csv");
-			Fyle.SafeCopy(Application.StartupPath + "\\TemplateDB\\Controllers.csv", folder + "\\Controllers.csv");
-			Fyle.SafeCopy(Application.StartupPath + "\\TemplateDB\\Channels.csv", folder + "\\Channels.csv");
+			Fyle.SafeCopy(Application.StartupPath + "\\TemplateDB\\" + fileDeviceTypes, folder + fileDeviceTypes);
+			Fyle.SafeCopy(Application.StartupPath + "\\TemplateDB\\" + fileUniverses, folder + fileUniverses);
+			Fyle.SafeCopy(Application.StartupPath + "\\TemplateDB\\" + fileControllers, folder + fileControllers);
+			Fyle.SafeCopy(Application.StartupPath + "\\TemplateDB\\" + fileChannels, folder + fileChannels);
 			Settings.Default.DBPath = folder;
 			Settings.Default.Save();
 		}
 		public int LoadData(string filePath)
 		{
+			this.Enabled = false;
+			this.Cursor = Cursors.WaitCursor;
+			lblLoading.Text = "Loading...";
+			lblLoading.Visible = true;
+			lblLoading.BringToFront();
+			treeChannels.Select();
+
 			int errs = LoadDevices(filePath);
 			errs = LoadUniverses(filePath);
 			errs += LoadControllers(filePath);
 			errs += LoadChannels(filePath);
 			UpdateStatus();
 			this.Text = filePath + " - " + myTitle;
+
+			this.Enabled = true;
+			this.Cursor = Cursors.Default;
+			lblLoading.Visible = false;
+			lblLoading.SendToBack();
+			treeChannels.Select();
+
 			return errs;
 		}
 
 		private void UpdateStatus()
 		{
-			string stxt = AllUniverses.Count.ToString() + " Universes, ";
+			string stxt = AllUniverses.Count.ToString() + " " + uniName + "s, ";
 			int c = 0;
 			for (int u = 0; u < AllUniverses.Count; u++)
 			{
-				c += AllUniverses[u].DMXControllers.Count;
+				c += AllUniverses[u].Controllers.Count;
 			}
 			stxt += c.ToString() + " Controllers, ";
 			stxt += AllChannels.Count.ToString() + " Channels";
@@ -340,7 +418,7 @@ namespace UtilORama4
 		{
 			int errs = 0;
 			string uniName = ""; // for debugging exceptions
-			string uniFile = filePath + "Universes.csv";
+			string uniFile = filePath + fileUniverses;
 			try
 			{
 				CsvFileReader reader = new CsvFileReader(uniFile);
@@ -351,7 +429,7 @@ namespace UtilORama4
 				{
 					try
 					{
-						DMXUniverse universe = new DMXUniverse();
+						Universe universe = new Universe();
 
 						int uid = 1;
 						int.TryParse(row[0], out uid);   // Field 0 Universe ID
@@ -385,7 +463,7 @@ namespace UtilORama4
 					}
 					catch (Exception ex)
 					{
-						string msg = "Error " + ex.ToString() + " while reading Universe " + uniName;
+						string msg = "Error " + ex.ToString() + " while reading " + uniName; // + " " + uniName;
 						if (isWiz)
 						{
 							DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -395,11 +473,11 @@ namespace UtilORama4
 				}
 				reader.Close();
 				AllUniverses.Sort();
-				DMXUniverse.AllUniverses = AllUniverses; // Set the static list in DMXUniverse class to the list we just loaded and sorted, so that it can be accessed from the DMXController and DMXChannel classes when they are loading and need to find their parent universe.
+				Universe.AllUniverses = AllUniverses; // Set the static list in Universe class to the list we just loaded and sorted, so that it can be accessed from the Controller and Channel classes when they are loading and need to find their parent universe.
 			}
 			catch (Exception ex)
 			{
-				string msg = "Error " + ex.ToString() + " while reading Universes file " + uniFile;
+				string msg = "Error " + ex.ToString() + " while reading " + uniName + "s file " + uniFile;
 				if (isWiz)
 				{
 					DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -429,7 +507,7 @@ namespace UtilORama4
 			string ctlName = ""; // For debugging exceptions
 			if (AllUniverses.Count > 0)
 			{
-				string ctlFile = filePath + "Controllers.csv";
+				string ctlFile = filePath + fileControllers;
 				try
 				{
 					CsvFileReader reader = new CsvFileReader(ctlFile);
@@ -440,7 +518,7 @@ namespace UtilORama4
 					{
 						try
 						{
-							DMXController controller = new DMXController();
+							Controller controller = new Controller();
 							int ctlid = 1;
 							int.TryParse(row[0], out ctlid);   // Field 1 Controller ID (number)
 							controller.ID = ctlid;
@@ -455,13 +533,13 @@ namespace UtilORama4
 								if (Fyle.isWiz)
 								{
 									string mtxt = "Controller with ID:" + uniID.ToString() + " not found for controller:" + row[3];
-									MessageBox.Show(this, mtxt, "Universe Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+									MessageBox.Show(this, mtxt, uniName + " Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 									int xx = 0;
 								}
 							}
 							else
 							{
-								controller.Universe.DMXControllers.Add(controller);
+								controller.Universe.Controllers.Add(controller);
 							}	
 
 							controller.Identifier = row[2];  // Field 1 Letter ID
@@ -486,7 +564,7 @@ namespace UtilORama4
 
 							int adr = 1;
 							int.TryParse(row[11], out adr);   // Field 9 DMX Start LOR4Channel
-							controller.DMXStartAddress = adr;
+							controller.StartAddress = adr;
 
 							int volts = 120;
 							int.TryParse(row[12], out volts);   // Field 10 voltage
@@ -498,8 +576,8 @@ namespace UtilORama4
 							{
 								if (universe == AllUniverses[u].UniverseNumber)
 								{
-									AllUniverses[u].DMXControllers.Add(controller);
-									controller.DMXUniverse = AllUniverses[u];
+									AllUniverses[u].Controllers.Add(controller);
+									controller.Universe = AllUniverses[u];
 									uniFound = true;
 									u = AllUniverses.Count; // Exit loop
 								}
@@ -538,7 +616,7 @@ namespace UtilORama4
 							}
 							string foo = ctlName;
 							controller.UnitID = un;
-							controller.DMXStartAddress = adr;
+							controller.StartAddress = adr;
 							controller.OutputCount = cnt;
 
 
@@ -562,7 +640,7 @@ namespace UtilORama4
 					reader.Close();
 					for (int u = 0; u < AllUniverses.Count; u++)
 					{
-						AllUniverses[u].DMXControllers.Sort();
+						AllUniverses[u].Controllers.Sort();
 					}
 				}
 				catch (Exception ex)
@@ -575,7 +653,7 @@ namespace UtilORama4
 					errs++;
 
 				}
-				DMXUniverse.AllControllers = AllControllers; // Set the static list in DMXUniverse class to the list we just loaded and sorted, so that it can be accessed from the DMXChannel class when it is loading and needs to find its parent controller.
+				Universe.AllControllers = AllControllers; // Set the static list in Universe class to the list we just loaded and sorted, so that it can be accessed from the Channel class when it is loading and needs to find its parent controller.
 			}
 			return errs;
 		}
@@ -587,7 +665,7 @@ namespace UtilORama4
 			string chanName = ""; // for debugging exceptions
 			if (AllUniverses.Count > 0)
 			{
-				string chnFile = filePath + "Channels.csv";
+				string chnFile = filePath + fileChannels;
 				try
 				{
 					CsvFileReader reader = new CsvFileReader(chnFile);
@@ -598,7 +676,7 @@ namespace UtilORama4
 					{
 						try
 						{
-							DMXChannel channel = new DMXChannel();
+							Channel channel = new Channel();
 							int ix = 1;
 							int.TryParse(row[0], out ix); // Field 0 = Channel ID
 																						// Ignore it.  We are going to renumber them as we read them in
@@ -611,17 +689,17 @@ namespace UtilORama4
 
 							int ctlid = 1;
 							int.TryParse(row[2], out ctlid);
-							//channel.DMXController = AllControllers[ctlid-1]; // Field 2 = Controller ID
+							//channel.Controller = AllControllers[ctlid-1]; // Field 2 = Controller ID
 							// Safert way to get controller by ID instead of assuming they are in order and contigous in memory
-							channel.DMXController = GetControllerByID(ctlid); // Field 2 = Controller ID
-							if (channel.DMXController == null)
+							channel.Controller = GetControllerByID(ctlid); // Field 2 = Controller ID
+							if (channel.Controller == null)
 							{
 								string mtxt = "Controller with ID:" + ctlid.ToString() + " not found for channel:" + row[5];
 								MessageBox.Show(this, mtxt, "Controller Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 							}
 							else
 							{
-								channel.DMXController.DMXChannels.Add(channel); // Add the channel to the controller's list of channels
+								channel.Controller.Channels.Add(channel); // Add the channel to the controller's list of channels
 							}
 
 							//string ctlIdentifier = row[3]; // Field 2 = Controller Letter or ID
@@ -662,7 +740,12 @@ namespace UtilORama4
 							}
 
 							string colhex = row[9];           // Field 9 = Color (hex)
-							//Color color = System.Drawing.ColorTranslator.FromHtml(colhex);
+	
+							// TEMPORARY!  Convert all my plain white to cool white
+							if (colhex == "#FFFFFF")
+								colhex = "#D0FFFF";
+							// END Temporary conversion
+
 							Color color = LOR4.LOR4Admin.HexToColor(colhex);
 							channel.Color = color;
 
@@ -682,15 +765,15 @@ namespace UtilORama4
 							bool ctlFound = false;
 							for (int u = 0; u < AllUniverses.Count; u++)
 							{
-								DMXUniverse universe = AllUniverses[u];
-								for (int c = 0; c < universe.DMXControllers.Count; c++)
+								Universe universe = AllUniverses[u];
+								for (int c = 0; c < universe.Controllers.Count; c++)
 								{
-									if (ctlid == universe.DMXControllers[c].ID)
+									if (ctlid == universe.Controllers[c].ID)
 									{
-										channel.DMXController = universe.DMXControllers[c];
-										universe.DMXControllers[c].DMXChannels.Add(channel);
+										channel.Controller = universe.Controllers[c];
+										universe.Controllers[c].Channels.Add(channel);
 										ctlFound = true;
-										c = universe.DMXControllers.Count;
+										c = universe.Controllers.Count;
 										u = AllUniverses.Count; // Exit loop
 									}
 								}
@@ -719,10 +802,10 @@ namespace UtilORama4
 					reader.Close();
 					for (int u = 0; u < AllUniverses.Count; u++)
 					{
-						DMXUniverse universe = AllUniverses[u];
-						for (int c = 0; c < universe.DMXControllers.Count; c++)
+						Universe universe = AllUniverses[u];
+						for (int c = 0; c < universe.Controllers.Count; c++)
 						{
-							universe.DMXControllers[c].DMXChannels.Sort();
+							universe.Controllers[c].Channels.Sort();
 						}
 					}
 					// *NOW* we can sort the deviceTypes by display order
@@ -739,14 +822,14 @@ namespace UtilORama4
 					errs++;
 
 				}
-				DMXUniverse.AllChannels = AllChannels; // Set the static list in DMXUniverse class to the list we just loaded and sorted, so that it can be accessed from anywhere if needed.
+				Universe.AllChannels = AllChannels; // Set the static list in Universe class to the list we just loaded and sorted, so that it can be accessed from anywhere if needed.
 			}
 			return errs;
 		}
 
-		private DMXUniverse GetUniverseByID(int ID)
+		private Universe GetUniverseByID(int ID)
 		{
-			DMXUniverse ret = null;
+			Universe ret = null;
 			for (int c = 0; c < AllUniverses.Count; c++)
 			{
 				if (AllUniverses[c].ID == ID)
@@ -758,9 +841,9 @@ namespace UtilORama4
 			return ret;
 		}
 
-		private DMXUniverse GetUniverseByNumber(int unum)
+		private Universe GetUniverseByNumber(int unum)
 		{
-			DMXUniverse ret = null;
+			Universe ret = null;
 			for (int c = 0; c < AllUniverses.Count; c++)
 			{
 				int uid = AllUniverses[c].ID;
@@ -776,9 +859,9 @@ namespace UtilORama4
 
 
 
-		private DMXController GetControllerByID(int ID)
+		private Controller GetControllerByID(int ID)
 		{
-			DMXController ret = null;
+			Controller ret = null;
 			for (int c = 0; c < AllControllers.Count; c++)
 			{
 				int cid = AllControllers[c].ID;
@@ -792,9 +875,9 @@ namespace UtilORama4
 			return ret;
 		}
 
-		private DMXChannel GetChannelByID(int ID)
+		private Channel GetChannelByID(int ID)
 		{
-			DMXChannel ret = null;
+			Channel ret = null;
 			for (int c = 0; c < AllChannels.Count; c++)
 			{
 				if (AllChannels[c].ID == ID)
@@ -806,9 +889,9 @@ namespace UtilORama4
 			return ret;
 		}
 
-		private DMXDeviceType GetDeviceTypeByID(int ID)
+		private DeviceTypes GetDeviceTypeByID(int ID)
 		{
-			DMXDeviceType ret = null;
+			DeviceTypes ret = null;
 			for (int c = 0; c < DeviceTypes.Count; c++)
 			{
 				if (DeviceTypes[c].ID == ID)
@@ -826,7 +909,7 @@ namespace UtilORama4
 			string devName = ""; // for debugging exceptions
 			//if (AllUniverses.Count > 0)
 			{
-				string chnFile = filePath + "DeviceTypes.csv";
+				string chnFile = filePath + fileDeviceTypes;
 				try
 				{
 					CsvFileReader reader = new CsvFileReader(chnFile);
@@ -837,20 +920,33 @@ namespace UtilORama4
 					{
 						try
 						{
-							if (row.Count > 1)
-							{
-								int devID = -1;
-								int.TryParse(row[0], out devID); // Field 0 = Device ID
-								devName = row[1];   // Field 1 = Name
-								int ord = 0;
-								if (row.Count > 2)
-								{
-									int.TryParse(row[2], out ord); // Field 2 = LOR4Output Number
-								}
-								DMXDeviceType deviceType = new DMXDeviceType(devName, devID, ord);
-								DeviceTypes.Add(deviceType);
+							string col1 = row[0].Trim();
+							if (col1.Length == 0) // Skip blank lines in the devices file
+							{  // Ignore completely, do not even try to parse them 
 							}
-						}
+							else
+							{
+								if (col1.Trim().StartsWith("#")) // Skip comment lines that start with # in the devices file
+								{  // Ignore completely, do not even try to parse them 
+								}
+								else
+								{
+									if (row.Count < 3)
+									{
+										int devID = -1;
+										int.TryParse(row[0], out devID); // Field 0 = Device ID
+										devName = row[1];   // Field 1 = Name
+										int ord = 0;
+										if (row.Count > 2)
+										{
+											int.TryParse(row[2], out ord); // Field 2 = LOR4Output Number
+										}
+										DeviceTypes deviceType = new DeviceTypes(devName, devID, ord);
+										DeviceTypes.Add(deviceType);
+									} // End if less than three 'rows' (columns actually)
+								} // End if line isn't a comment
+							} // End if line isn't blank
+						}  // End try
 						catch (Exception ex)
 						{
 							int ln = LOR4.LOR4Admin.ExceptionLineNumber(ex);
@@ -885,18 +981,71 @@ namespace UtilORama4
 
 		public int SaveData(string filePath)
 		{
-			int errs = SaveUniverses(filePath);
-			errs += SaveControllers(filePath);
-			errs += SaveChannels(filePath);
+			string tp = Fyle.GetUserTempPath;
+			string f = "";
+			string g = "";
+
+			this.Enabled = false;
+			this.Cursor = Cursors.WaitCursor;
+			lblLoading.Text = "Saving...";
+			lblLoading.Visible = true;
+			lblLoading.BringToFront();
+
+			int errs = SaveUniverses(tp);
+			string tf = tp + fileUniverses;
+			if (Fyle.Exists(tf))
+			{
+				f = filePath + "Backup." + fileUniverses;
+				if (Fyle.Exists(f))
+					Fyle.SafeDelete(f);
+				g = filePath + fileUniverses;
+				Fyle.SafeCopy(g, f);
+			}
+
+			errs += SaveControllers(tp);
+			tf = tp + fileControllers;
+			if (Fyle.Exists(tf))
+			{
+				f = filePath + "Backup." + fileControllers;
+				if (Fyle.Exists(f))
+					Fyle.SafeDelete(f);
+				g = filePath + fileControllers;
+				Fyle.SafeCopy(g, f);
+			}
+
+			errs += SaveChannels(tp);
+			tf = tp + fileChannels;
+			if (Fyle.Exists(tf))
+			{
+				f = filePath + "Backup." + fileChannels;
+				if (Fyle.Exists(f))
+					Fyle.SafeDelete(f);
+				g = filePath + fileChannels;
+				Fyle.SafeCopy(g, f);
+			}
+
+			f = filePath + "Backup." + fileDeviceTypes;
+			if (Fyle.Exists(f))
+				Fyle.SafeDelete(f);
+			g = filePath + fileDeviceTypes;
+			Fyle.SafeCopy(g, f);
+
 			MakeDirty(false);
+
+			this.Enabled = true;
+			this.Cursor = Cursors.Default;
+			lblLoading.Visible = false;
+			lblLoading.SendToBack();
+			treeChannels.Select();
+
 			return errs;
 		}
 
 		public void ClearData()
 		{
 			treeChannels.Nodes.Clear();
-			AllUniverses = new List<DMXUniverse>();
-			AllChannels = DMXUniverse.AllChannels;
+			AllUniverses = new List<Universe>();
+			AllChannels = Universe.AllChannels;
 			lViz = null;
 			lastFile = "";
 			lastID = -1;
@@ -915,14 +1064,14 @@ namespace UtilORama4
 			writeID = 1; 
 			int errs = 0;
 			string uniName = "";
-			string uniFile = filePath + "Universes.csv";
+			string uniFile = filePath + fileUniverses;
 			try
 			{
 				CsvFileWriter writer = new CsvFileWriter(uniFile);
 				CsvRow row = new CsvRow();
 				// Create first line which is headers;
 				row.Add("ID"); // Field 0
-				row.Add("Universe#");      // Field 1
+				row.Add(uniName + "#");      // Field 1
 				row.Add("Name");           // Field 2
 				row.Add("Location");       // Field 3
 				row.Add("Comment");        // Field 4
@@ -938,7 +1087,7 @@ namespace UtilORama4
 				{
 					try
 					{
-						DMXUniverse universe = AllUniverses[u];
+						Universe universe = AllUniverses[u];
 						uniName = universe.Name;
 						row = new CsvRow();
 
@@ -960,7 +1109,7 @@ namespace UtilORama4
 					}
 					catch (Exception ex)
 					{
-						string msg = "Error " + ex.ToString() + " while saving Universe " + uniName;
+						string msg = "Error " + ex.ToString() + " while saving " + uniName; // + " " + uniName;
 						if (isWiz)
 						{
 							DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -972,7 +1121,7 @@ namespace UtilORama4
 			}
 			catch (Exception ex)
 			{
-				string msg = "Error " + ex.ToString() + " while saving Universes file " + uniFile;
+				string msg = "Error " + ex.ToString() + " while saving " + uniName + "s file " + uniFile;
 				if (isWiz)
 				{
 					DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -989,14 +1138,14 @@ namespace UtilORama4
 			writeID = 1;
 			int errs = 0;
 			string ctlName = ""; // For debugging exceptions
-			string ctlFile = filePath + "Controllers.csv";
+			string ctlFile = filePath + fileControllers;
 			try
 			{
 				CsvFileWriter writer = new CsvFileWriter(ctlFile);
 				CsvRow row = new CsvRow();
 				// Create first line which is headers;
 				row.Add("ID");           // Field 0
-				row.Add("Universe");     // Field 1
+				row.Add(uniName);     // Field 1
 				row.Add("Controller");   // Field 2
 				row.Add("Name");         // Field 3
 				row.Add("Location");     // Field 4
@@ -1013,22 +1162,22 @@ namespace UtilORama4
 
 				for (int u = 0; u < AllUniverses.Count; u++)
 				{
-					DMXUniverse universe = AllUniverses[u];
-					universe.DMXControllers.Sort();
-					for (int c = 0; c < universe.DMXControllers.Count; c++)
+					Universe universe = AllUniverses[u];
+					universe.Controllers.Sort();
+					for (int c = 0; c < universe.Controllers.Count; c++)
 					{
 						try
 						{
-							DMXController controller = universe.DMXControllers[c];
+							Controller controller = universe.Controllers[c];
 							ctlName = controller.Name;
 							row = new CsvRow();
 
-							//row.Add(controller.DMXUniverse.ID.ToString());             // Field 0
+							//row.Add(controller.Universe.ID.ToString());             // Field 0
 							// Lets renumber all the IDs while we'ere at it.
 							row.Add(writeID.ToString());                     // Field 0
 							controller.ID = writeID;
 							writeID++;
-							row.Add(controller.DMXUniverse.ID.ToString()); // Field 1
+							row.Add(controller.Universe.ID.ToString()); // Field 1
 							row.Add(controller.Identifier);                            // Field 2
 							row.Add(controller.Name);                                  // Field 3
 							row.Add(controller.Location);                              // Field 4
@@ -1038,7 +1187,7 @@ namespace UtilORama4
 							row.Add(controller.ControllerModel);                       // Field 8
 							row.Add(controller.UnitID.ToString());							  		 // Filed 9									
 							row.Add(controller.OutputCount.ToString());                // Field 10
-							row.Add(controller.DMXStartAddress.ToString());            // Field 11
+							row.Add(controller.StartAddress.ToString());            // Field 11
 							row.Add(controller.Voltage.ToString());                    // Field 12
 
 							writer.WriteRow(row);
@@ -1076,7 +1225,7 @@ namespace UtilORama4
 			writeID = 1;
 			int errs = 0;
 			string chnName = ""; // debugging exceptions
-			string chnFile = filePath + "Channels.csv";
+			string chnFile = filePath + fileChannels;
 
 			try
 			{
@@ -1084,7 +1233,7 @@ namespace UtilORama4
 				CsvRow row = new CsvRow();
 				// Create first line which is headers;
 				row.Add("ID");           // Field 0
-				row.Add("Universe#");    // Field 1
+				row.Add(uniName + "#");    // Field 1
 				row.Add("ControllerID"); // Field 2
 				row.Add("Output#");      // Field 3
 				row.Add("Name");         // Field 4
@@ -1100,28 +1249,28 @@ namespace UtilORama4
 				AllUniverses.Sort();
 				for (int u = 0; u < AllUniverses.Count; u++)
 				{
-					DMXUniverse universe = AllUniverses[u];
-					universe.DMXControllers.Sort();
-					for (int q = 0; q < universe.DMXControllers.Count; q++)
+					Universe universe = AllUniverses[u];
+					universe.Controllers.Sort();
+					for (int q = 0; q < universe.Controllers.Count; q++)
 					{
-						DMXController controller = universe.DMXControllers[q];
-						controller.DMXChannels.Sort();
-						for (int c = 0; c < controller.DMXChannels.Count; c++)
+						Controller controller = universe.Controllers[q];
+						controller.Channels.Sort();
+						for (int c = 0; c < controller.Channels.Count; c++)
 						{
 							try
 							{
-								DMXChannel channel = controller.DMXChannels[c];
+								Channel channel = controller.Channels[c];
 								chnName = channel.Name;
 								row = new CsvRow();
 
-								//row.Add(channel.DMXUniverse.ID.ToString());           // Field 0
+								//row.Add(channel.Universe.ID.ToString());           // Field 0
 								// Lets renumber all the IDs while we'ere at it.
 								row.Add(writeID.ToString());                            // Field 0
 								channel.ID = writeID;
 								writeID++;
-								row.Add(channel.DMXUniverse.UniverseNumber.ToString()); // Field 1
-								row.Add(channel.DMXController.ID.ToString());           // Field 2
-								//row.Add(channel.DMXController.Identifier);            // Field 2
+								row.Add(channel.Universe.UniverseNumber.ToString()); // Field 1
+								row.Add(channel.Controller.ID.ToString());           // Field 2
+								//row.Add(channel.Controller.Identifier);            // Field 2
 								row.Add(channel.OutputNum.ToString());                  // Field 3
 								row.Add(channel.Name);                                  // Field 4
 								row.Add(channel.Location);                              // Field 5
@@ -1176,12 +1325,12 @@ namespace UtilORama4
 				CsvFileWriter writer = new CsvFileWriter(chnFile);
 				CsvRow row = new CsvRow();
 				// Create first line which is headers;
-				row.Add("Universe#");      // Field 0
-				row.Add("UniverseName");   // Field 1
+				row.Add(uniName + "#");      // Field 0
+				row.Add(uniName + "Name");   // Field 1
 				row.Add("ControllerID");   // Field 2
 				row.Add("ControllerName"); // Field 3
 				row.Add("Output#");        // Field 4
-				row.Add("DMXAddress");     // Field 5
+				row.Add("Address");     // Field 5
 				row.Add("Name");           // Field 6
 				row.Add("Location");       // Field 7
 				row.Add("Comment");        // Field 8
@@ -1195,25 +1344,25 @@ namespace UtilORama4
 				AllUniverses.Sort();
 				for (int u = 0; u < AllUniverses.Count; u++)
 				{
-					DMXUniverse universe = AllUniverses[u];
-					universe.DMXControllers.Sort();
-					for (int q = 0; q < universe.DMXControllers.Count; q++)
+					Universe universe = AllUniverses[u];
+					universe.Controllers.Sort();
+					for (int q = 0; q < universe.Controllers.Count; q++)
 					{
-						DMXController controller = universe.DMXControllers[q];
-						controller.DMXChannels.Sort();
-						for (int c = 0; c < controller.DMXChannels.Count; c++)
+						Controller controller = universe.Controllers[q];
+						controller.Channels.Sort();
+						for (int c = 0; c < controller.Channels.Count; c++)
 						{
 							try
 							{
-								DMXChannel channel = controller.DMXChannels[c];
+								Channel channel = controller.Channels[c];
 								chnName = channel.Name;
 								row = new CsvRow();
 								row.Add(channel.UniverseNumber.ToString());        // Field 0
-								row.Add(channel.DMXUniverse.Name);								 // Field 1
-								row.Add(channel.DMXController.Identifier);         // Field 2
-								row.Add(channel.DMXController.Name);							 // Field 3
+								row.Add(channel.Universe.Name);								 // Field 1
+								row.Add(channel.Controller.Identifier);         // Field 2
+								row.Add(channel.Controller.Name);							 // Field 3
 								row.Add(channel.OutputNum.ToString());             // Field 4
-								row.Add(channel.DMXAddress.ToString());            // Field 5
+								row.Add(channel.Address.ToString());            // Field 5
 								row.Add(channel.Name);                             // Field 6
 								row.Add(channel.Location);                         // Field 7
 								row.Add(channel.Comment);                          // Field 8
@@ -1259,7 +1408,7 @@ namespace UtilORama4
 				CsvFileWriter writer = new CsvFileWriter(chnFile);
 				CsvRow row = new CsvRow();
 				// Create first line which is headers;
-				row.Add("Universe");    // Field 0
+				row.Add(uniName);    // Field 0
 				row.Add("Controller");  // Field 1
 				row.Add("LOR4Output");      // Field 2
 				row.Add("Name");        // Field 3
@@ -1276,12 +1425,12 @@ namespace UtilORama4
 				{
 					try
 					{
-						DMXChannel channel = AllChannels[c];
+						Channel channel = AllChannels[c];
 						chnName = channel.Name;
 						row = new CsvRow();
 
-						row.Add(channel.DMXUniverse.UniverseNumber.ToString()); // Field 0
-						row.Add(channel.DMXController.Identifier);                // Field 1
+						row.Add(channel.Universe.UniverseNumber.ToString()); // Field 0
+						row.Add(channel.Controller.Identifier);                // Field 1
 						row.Add(channel.OutputNum.ToString());                 // Field 2
 						row.Add(channel.Name);                                  // Field 3
 						row.Add(channel.Location);                              // Field 4
@@ -1353,7 +1502,7 @@ namespace UtilORama4
 					{
 						if (Fyle.Exists(dlgFileOpen.FileName))
 						{
-							dbPath = Path.GetDirectoryName(dlgFileOpen.FileName) + "\\";
+							dbPath = System.IO.Path.GetDirectoryName(dlgFileOpen.FileName) + "\\";
 							userSettings.DBPath = dbPath;
 							userSettings.Save();
 							gotData = true;
@@ -1383,8 +1532,15 @@ namespace UtilORama4
 				{
 					//TODO: Handle still not having data, perhaps prompt to create new database?
 				}
+				this.Enabled = true;
+				this.Cursor = Cursors.Default;
+				lblLoading.Visible = false;
+				lblLoading.SendToBack();
+				treeChannels.Select();
 				formShown = true;
-			}
+				// End of things to do when the form first loads
+
+			} // End if form has not been shown yet
 		}
 
 		private void frmList_Shown_Old(object sender, EventArgs e)
@@ -1394,7 +1550,7 @@ namespace UtilORama4
 				year = DateTime.Now.Year;  // Get it and store it so don't have to keep looking it back up
 				dbPath = PathToDB();  // Get and save this too
 
-				string uniFile = dbPath + "Universes.csv";
+				string uniFile = dbPath + fileUniverses;
 				if (File.Exists(uniFile))
 				{
 					int errs = LoadData(dbPath);
@@ -1402,12 +1558,12 @@ namespace UtilORama4
 				else
 				{
 					string msg = "Data files not found in folder " + dbPath;
-					msg += ".  If you have never used Channel-O-Rama, create some Universes, Controllers, and Channels.  ";
+					msg += ".  If you have never used Channel-O-Rama, create some " + uniName + "s, Controllers, and Channels.  ";
 					msg += "If you have used Channel-O-Rama in previous years, create a folder for this year's data and ";
 					msg += "copy last year's data to it as a starting point.  If you have already used it this year and ";
-					msg += "think you should have data with Universe, Controllers, and Channels, please check the path ";
+					msg += "think you should have data with " + uniName + ", Controllers, and Channels, please check the path ";
 					msg += dbPath + " and make sure it exists, has not been deleted or moved, and that it contains 3 ";
-					msg += "csv datafiles for Universes, Controllers, and Channels.";
+					msg += "csv datafiles for " + uniName + "s, Controllers, and Channels.";
 
 					DialogResult dr = MessageBox.Show(this, msg, "No Data", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
@@ -1427,34 +1583,66 @@ namespace UtilORama4
 
 		private void frmList_Resize(object sender, EventArgs e)
 		{
-			int treeHt = this.ClientSize.Height - staStatus.Height - 16;
-			int treeWd = this.ClientSize.Width - btnUniverse.Width - 24;
-			int btnLeft = ClientSize.Width - btnUniverse.Width - 8;
-			int okTop = treeChannels.Top + treeHt - btnOK.Height;
-			treeChannels.Height = treeHt;
-			treeChannels.Width = treeWd;
-			btnOK.Top = okTop;
-			btnUniverse.Left = btnLeft;
-			btnController.Left = btnLeft;
-			btnChannel.Left = btnLeft;
-			btnReport.Left = btnLeft;
-			btnFind.Left = btnLeft;
-			btnSave.Left = btnLeft;
-			btnCompareLOR.Left = btnLeft;
-			btnComparex.Left = btnLeft;
-			btnWiz.Left = btnLeft;
-			btnOK.Left = btnLeft;
-			int y = treeChannels.Top + treeChannels.Height - btnSave.Height;
-			btnSave.Top = y;
+			/*
+			if (this.WindowState == FormWindowState.Normal)
+			{
+				if (prevWindowState == FormWindowState.Minimized)
+				{
+					if (chanForm != null)
+					{
+						chanForm.WindowState = FormWindowState.Normal;
+						//chanForm.Visible = true;
+						chanForm.Show(this);
+					}
+					if (ctlForm != null)
+					{
+						ctlForm.WindowState = FormWindowState.Normal;
+					}
+					if (uniForm != null)
+					{ 
+						uniForm.WindowState = FormWindowState.Normal;
+					}
+					prevWindowState = FormWindowState.Normal;
+				}
+			*/
+				int treeHt = this.ClientSize.Height - staStatus.Height - 16;
+				int treeWd = this.ClientSize.Width - btnUniverse.Width - 24;
+				int btnLeft = ClientSize.Width - btnUniverse.Width - 8;
+				int okTop = treeChannels.Top + treeHt - btnOK.Height;
+				treeChannels.Height = treeHt;
+				treeChannels.Width = treeWd;
+				btnOK.Top = okTop;
+				btnUniverse.Left = btnLeft;
+				btnController.Left = btnLeft;
+				btnChannel.Left = btnLeft;
+				btnReport.Left = btnLeft;
+				btnFind.Left = btnLeft;
+				btnSave.Left = btnLeft;
+				btnCompareLOR.Left = btnLeft;
+				btnComparex.Left = btnLeft;
+				btnWiz.Left = btnLeft;
+				btnOK.Left = btnLeft;
+				int y = treeChannels.Top + treeChannels.Height - btnSave.Height;
+				btnSave.Top = y;
+		/*	
+		}
+			else if (this.WindowState == FormWindowState.Minimized)
+			{
+				// Do I need to do anything
+				//  (other than update this variable)
+				prevWindowState = FormWindowState.Minimized;
+			}
+		*/
 		}
 
 		private void BuildTree()
 		{
 			// Erases and rebuilds the entire tree from the Universes list.
 			BuildUniverseTree(AllUniverses);
+			treeChannels.SelectedNode = treeChannels.Nodes[0];
 		}
 
-		public void BuildUniverseTree(List<DMXUniverse> uniList)
+		public void BuildUniverseTree(List<Universe> uniList)
 		{
 			// Erases and rebuilds the entire tree from the Universes list.
 			// Note: Clears the universes list.
@@ -1463,10 +1651,10 @@ namespace UtilORama4
 			for (int u = 0; u < uniList.Count; u++)
 			{
 				// Grab a convenient reference to this universe.
-				DMXUniverse universe = uniList[u];
+				Universe universe = uniList[u];
 				// Create new node for this universe and add to tree.
-				TreeNodeAdv uniNode = new TreeNodeAdv("(New Universe)");
-				// Use the node's tag to hold a reference to the DMXUniverse object, and the universe's tag to hold a reference to the node so we can easily find the node later when we need to update it
+				TreeNodeAdv uniNode = new TreeNodeAdv("(New " + uniName + ")");
+				// Use the node's tag to hold a reference to the Universe object, and the universe's tag to hold a reference to the node so we can easily find the node later when we need to update it
 				uniNode.Tag = uniList[u];
 				uniList[u].Tag = uniNode;
 				// Add the universe to the tree as a top level node.
@@ -1480,14 +1668,14 @@ namespace UtilORama4
 
 		private void BuildUniverseNode(TreeNodeAdv uniNode)
 		{
-			// Updates the text and icon for a universe node based on the current properties of the DMXUniverse object in the tag for this node.
+			// Updates the text and icon for a universe node based on the current properties of the Universe object in the tag for this node.
 			if (uniNode != null)
 			{
 				if (uniNode.Tag != null)
 				{
-					if (uniNode.Tag.GetType() == typeof(DMXUniverse))
+					if (uniNode.Tag.GetType() == typeof(Universe))
 					{
-						DMXUniverse universe = (DMXUniverse)uniNode.Tag;
+						Universe universe = (Universe)uniNode.Tag;
 						//string nodeText = universe.UniverseNumber.ToString() + ": " + universe.Name;
 						string nodeText = universe.FullName;
 						int ImageIndex = TREEICONuniverse[0];
@@ -1505,7 +1693,7 @@ namespace UtilORama4
 					}
 					else
 					{
-						string msg = "ERROR: BuildUniverseNode called for a node that does not have a DMXUniverse in its tag.";
+						string msg = "ERROR: BuildUniverseNode called for a node that does not have a Universe in its tag.";
 						if (isWiz)
 						{
 							DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1519,18 +1707,18 @@ namespace UtilORama4
 		{
 			// Builds the subtree for the controllers under a universe node, then calls BuildChannelTree for each controller node to build the channels under each controller.
 			// Note: Does not clear existing controller nodes before building, so if rebuilding, be sure to clear them first.
-			if (uniNode.Tag.GetType() == typeof(DMXUniverse))
+			if (uniNode.Tag.GetType() == typeof(Universe))
 			{
-				// Get the DMXUniverse object for this node from the tag.
-				DMXUniverse universe = (DMXUniverse)uniNode.Tag;
+				// Get the Universe object for this node from the tag.
+				Universe universe = (Universe)uniNode.Tag;
 				// Loop thru all it's child controllers.
-				for (int ct = 0; ct < universe.DMXControllers.Count; ct++)
+				for (int ct = 0; ct < universe.Controllers.Count; ct++)
 				{
 					// Grab a convenient reference to this controller.
-					DMXController controller = universe.DMXControllers[ct];
+					Controller controller = universe.Controllers[ct];
 					// Make a new node for this controller and add it to the tree as a child of the universe node.	
 					TreeNodeAdv ctlNode = new TreeNodeAdv("(New Controller)");
-					// Add a reference to the DMXController object in the tag for this node,
+					// Add a reference to the Controller object in the tag for this node,
 					ctlNode.Tag = controller;
 					controller.Tag = ctlNode;
 					// Add the node to the tree as a child of the universe node.
@@ -1543,7 +1731,7 @@ namespace UtilORama4
 			}
 			else
 			{
-				string msg = "ERROR: BuildControllerTree called for a node that does not have a DMXUniverse in its tag.";
+				string msg = "ERROR: BuildControllerTree called for a node that does not have a Universe in its tag.";
 				if (isWiz)
 				{
 					DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1553,24 +1741,24 @@ namespace UtilORama4
 
 		private void BuildControllerNode(TreeNodeAdv ctlNode)
 		{
-			// Updates the text and icon for a controller node based on the current properties of the DMXController object in the tag for this node.
+			// Updates the text and icon for a controller node based on the current properties of the Controller object in the tag for this node.
 			if (ctlNode != null)
 			{
 				if (ctlNode.Tag != null)
 				{
-					if (ctlNode.Tag.GetType() == typeof(DMXController))
+					if (ctlNode.Tag.GetType() == typeof(Controller))
 					{
-						DMXController controller = (DMXController)ctlNode.Tag;
+						Controller controller = (Controller)ctlNode.Tag;
 						string nodeText = controller.FullName;
 						int foo = controller.UnitID;
-						foo = controller.DMXStartAddress;
+						foo = controller.StartAddress;
 						foo = controller.OutputCount;
 						/*
-						if (Etc.LORVersion > 0)
+						if (hasLOR > 0)
 						{
 							 nodeText = "Unit:" + controller.UnitID.ToString("00") + ": ";
 						}
-						nodeText += controller.DMXStartAddress.ToString("000") + "-";
+						nodeText += controller.StartAddress.ToString("000") + "-";
 						nodeText += l.ToString("000") + ": ";
 						if (controller.Identifier.Length > 0)
 						{
@@ -1579,7 +1767,7 @@ namespace UtilORama4
 						nodeText += controller.Name;
 						*/
 						ctlNode.Text = nodeText;
-						int l = controller.DMXStartAddress + controller.OutputCount - 1;
+						int l = controller.StartAddress + controller.OutputCount - 1;
 						int ImageIndex = TREEICONcontroller[0];
 						int[] ico = { ImageIndex };
 						ctlNode.LeftImageIndices = ico;
@@ -1594,7 +1782,7 @@ namespace UtilORama4
 					}
 					else
 					{
-						string msg = "ERROR: BuildControllerNode called for a node that does not have a DMXController in its tag.";
+						string msg = "ERROR: BuildControllerNode called for a node that does not have a Controller in its tag.";
 						if (isWiz)
 						{
 							DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1607,18 +1795,18 @@ namespace UtilORama4
 		{
 			// Builds the subtree for the channels under a controller node.
 			// Note: Does not clear existing channel nodes before building, so if rebuilding, be sure to clear them first.
-			// Grab a handy-dandy reference to the DMXController object for this node from the tag.
-			if (ctlNode.Tag.GetType() == typeof(DMXController))
+			// Grab a handy-dandy reference to the Controller object for this node from the tag.
+			if (ctlNode.Tag.GetType() == typeof(Controller))
 			{
-				DMXController controller = (DMXController)ctlNode.Tag;
+				Controller controller = (Controller)ctlNode.Tag;
 				// Loop thru all channels for this controller and add them as child nodes of this controller node.
-				for (int ch = 0; ch < controller.DMXChannels.Count; ch++)
+				for (int ch = 0; ch < controller.Channels.Count; ch++)
 				{
 					// Make a new channel node
-					DMXChannel channel = controller.DMXChannels[ch];
+					Channel channel = controller.Channels[ch];
 					// Make a new node for this channel and add it to the tree as a child of the controller node.
 					TreeNodeAdv chanNode = new TreeNodeAdv("(New Channel)");
-					// Add a reference to the DMXChannel object in the tag for this node, and a reference to this node in the channel's tag so we can easily find it later when we need to update it.
+					// Add a reference to the Channel object in the tag for this node, and a reference to this node in the channel's tag so we can easily find it later when we need to update it.
 					chanNode.Tag = channel;
 					channel.Tag = chanNode;
 					ctlNode.Nodes.Add(chanNode);
@@ -1630,7 +1818,7 @@ namespace UtilORama4
 			} // End if node's tag IS a controller
 		  else
 			{
-				string msg = "ERROR: BuildChannelTree called for a node that does not have a DMXController in its tag.";
+				string msg = "ERROR: BuildChannelTree called for a node that does not have a Controller in its tag.";
 				if (isWiz)
 				{
 					DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1641,7 +1829,7 @@ namespace UtilORama4
 
 		private void BuildChannelNode(TreeNodeAdv chanNode)
 		{
-			// Updates the text and icon for a channel node based on the current properties of the DMXChannel object in the tag for this node.
+			// Updates the text and icon for a channel node based on the current properties of the Channel object in the tag for this node.
 			if (chanNode != null)
 			{
 				if (chanNode.Tag != null)
@@ -1649,9 +1837,9 @@ namespace UtilORama4
 					IDMXThingy thing=(IDMXThingy)chanNode.Tag;
 					string sinfo = "Edit Node for " + thing.ObjectType.ToString() + thing.FullName;
 					Debug.WriteLine(sinfo);
-					if (chanNode.Tag.GetType() == typeof(DMXChannel))
+					if (chanNode.Tag.GetType() == typeof(Channel))
 					{
-						DMXChannel channel = (DMXChannel)chanNode.Tag;
+						Channel channel = (Channel)chanNode.Tag;
 						//string nodeText = channel.OutputNum.ToString() + ": " + channel.Name;
 						string nodeText = channel.FullName;
 						chanNode.Text = nodeText;
@@ -1670,7 +1858,7 @@ namespace UtilORama4
 					}
 					else
 					{
-						string msg = "ERROR: BuildChannelNode called for a node that does not have a DMXChannel in its tag.";
+						string msg = "ERROR: BuildChannelNode called for a node that does not have a Channel in its tag.";
 						if (isWiz)
 						{
 							DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1695,9 +1883,9 @@ namespace UtilORama4
 			{
 				if (node.Tag != null)
 				{
-					if (node.Tag.GetType() == typeof(DMXUniverse))
+					if (node.Tag.GetType() == typeof(Universe))
 					{
-						DMXUniverse univ = (DMXUniverse)node.Tag;
+						Universe univ = (Universe)node.Tag;
 						//string nodeText = univ.UniverseNumber.ToString() + ": " + univ.Name;
 						string nodeText = univ.ToString();
 						node.Text = nodeText;
@@ -1712,11 +1900,11 @@ namespace UtilORama4
 			{
 				if (node.Tag != null)
 				{
-					if (node.Tag.GetType() == typeof(DMXController))
+					if (node.Tag.GetType() == typeof(Controller))
 					{
-						DMXController ctlr = (DMXController)node.Tag;
-						//string nodeText = ctlr.DMXStartAddress.ToString("000") + "-";
-						//int l = ctlr.DMXStartAddress + ctlr.OutputCount - 1;
+						Controller ctlr = (Controller)node.Tag;
+						//string nodeText = ctlr.StartAddress.ToString("000") + "-";
+						//int l = ctlr.StartAddress + ctlr.OutputCount - 1;
 						//nodeText += l.ToString("000") + ": ";
 						//nodeText += ctlr.ControllerID + ": " + ctlr.Name;
 						string nodeText = ctlr.ToString();
@@ -1732,9 +1920,9 @@ namespace UtilORama4
 			{
 				if (node.Tag != null)
 				{
-					if (node.Tag.GetType() == typeof(DMXChannel))
+					if (node.Tag.GetType() == typeof(Channel))
 					{
-						DMXChannel channel = (DMXChannel)node.Tag;
+						Channel channel = (Channel)node.Tag;
 						//string nodeText = channel.LOR4Output.ToString() + ": " + channel.Name;
 						string nodeText = channel.ToString();
 						node.Text = nodeText;
@@ -1765,56 +1953,80 @@ namespace UtilORama4
 				tipTool.SetToolTip(btnChannel, "Edit the selected Channel.");
 				btnController.Text = "Edit\r\nController";
 				tipTool.SetToolTip(btnController, "Edit the selected Controller.");
-				btnUniverse.Text = "Edit\r\nUniverse";
-				tipTool.SetToolTip(btnUniverse, "Edit the selected Universe.");
+				btnUniverse.Text = "Edit\r\n" + uniName;
+				tipTool.SetToolTip(btnUniverse, "Edit the selected " + uniName + ".");
 
 				//int[] ni = node.LeftImageIndices;
 				// Did user selected a Universe node?
 				//bool en = (ni == TREEICONuniverse);
 				//if (en)
-				if (node.Tag.GetType() == typeof(DMXUniverse))
+				if (node.Tag.GetType() == typeof(Universe))
 				{
-					DMXUniverse uni = (DMXUniverse)node.Tag;
-					btnUniverse.Text = "Edit\r\nUniverse";
-					ttxt = "Edit the selected Universe.\r\n";
+					Universe uni = (Universe)node.Tag;
+					btnUniverse.Text = "Edit\r\n" + uniName;
+					ttxt = "Edit the selected " + uniName + ".\r\n";
 					ttxt += uni.FullName;
 					tipTool.SetToolTip(btnUniverse, ttxt);
-					string xc = ""; //  "xLights Channels: " + ctl.xLightsAddress + "-" + (ctl.xLightsAddress + ctl.OutputCount - 1).ToString();
-					lblxChannel.Text = xc;
-					xc = " @ " + uni.Location;
-					pnlStatus.Text = xc;
-					xc = uni.Comment;
-					treeChannels.HelpTextControl.Text = xc;
+					if (hasxLights)
+					{
+						string xc = ""; //  "xLights Channels: " + ctl.xLightsAddress + "-" + (ctl.xLightsAddress + ctl.OutputCount - 1).ToString();
+						lblxChannel.Text = xc;
+					}
+					string nn = uni.Name; // Or FullName?
+					nn += " @ " + uni.Location;
+					pnlStatus.Text = nn;
+					nn += uni.Comment;
+					treeChannels.HelpTextControl.Text = nn;
 					btnChannel.Enabled = false;
 				}
 				else
 				{
-					btnUniverse.Text = "Add\r\nUniverse";
-					tipTool.SetToolTip(btnUniverse, "Add a new Universe.");
+					btnUniverse.Text = "Add\r\n" + uniName;
+					tipTool.SetToolTip(btnUniverse, "Add a new " + uniName + ".");
 				}
 				//btnChannel.Enabled = !en;
 
 				// Did user selected a Controller node?
 				//en = (ni == TREEICONcontroller);
 				//if (en)
-				if (node.Tag.GetType() == typeof(DMXController))
+				if (node.Tag.GetType() == typeof(Controller))
 				{
-					DMXController ctl = (DMXController)node.Tag;
+					Controller ctl = (Controller)node.Tag;
 					btnController.Text = "Edit\r\nController";
 					ttxt = "Edit the selected Controller.\r\n";
 					ttxt += ctl.FullName;
 					tipTool.SetToolTip(btnController, ttxt);
-					string xc = "xLights Channels: " + ctl.xLightsAddress + "-" + (ctl.xLightsAddress + ctl.OutputCount - 1).ToString();
-					lblxChannel.Text = xc;
-					xc = ctl.ControllerBrand + " " + ctl.ControllerModel + " @ " + ctl.Location;
-					pnlStatus.Text = xc;
-					xc = ctl.Comment;
-					treeChannels.HelpTextControl.Text = xc;
+					if (hasxLights)
+					{
+						string xc = "xLights Channels: " + ctl.xLightsAddress + "-" + (ctl.xLightsAddress + ctl.OutputCount - 1).ToString();
+						lblxChannel.Text = xc;
+					}
+					string nn = "";
+					// Replace most of this with FullName
+					if (ctl.ControllerBrand == "LOR")
+					{
+						if (ctl.UnitID > 0)
+						{
+							nn += "Unit:" + ctl.UnitID + " ";
+						}
+					}
+					nn += ctl.ControllerBrand + " " + ctl.ControllerModel + " "; ;
+					if (ctl.Identifier.Length > 0)
+					{
+						nn += "\"" + ctl.Identifier + "\" ";
+					}
+					//int ea = ctl.StartAddress + ctl.OutputCount - 1;
+					//nn += ctl.StartAddress.ToString("000") + "-" + ea.ToString("000") + " ";
+					// Replace most of that with FullName?
+					nn +=	"@ " + ctl.Location;
+					pnlStatus.Text = nn;
+					nn += ctl.Comment;
+					treeChannels.HelpTextControl.Text = nn;
 				}
 				else
 				{
 					btnController.Text = "Add\r\nController";
-					ttxt= "Add a new Controller to the selected Universe.";
+					ttxt= "Add a new Controller to the selected " + uniName + ".";
 					tipTool.SetToolTip(btnController, ttxt);
 
 				}
@@ -1825,17 +2037,17 @@ namespace UtilORama4
 				// Did user selected a Channel node?
 				//en = ((ni != TREEICONuniverse) && (ni != TREEICONcontroller));
 				//if (en)
-				if (node.Tag.GetType() == typeof(DMXChannel))
+				if (node.Tag.GetType() == typeof(Channel))
 				{
-					DMXChannel ch = (DMXChannel)node.Tag;
+					Channel ch = (Channel)node.Tag;
 					btnChannel.Text = "Edit\r\nChannel";
 					ttxt= "Edit the selected Channel.\r\n";
 					ttxt += ch.FullName;
 					tipTool.SetToolTip(btnChannel, ttxt);
 					btnRemove.Visible = true;
-					if (node.Tag.GetType() != typeof(DMXChannel))
+					if (node.Tag.GetType() != typeof(Channel))
 					{
-						string msg = "ERROR: Selected node has an icon that indicates it is a channel, but its tag does not contain a DMXChannel object.";
+						string msg = "ERROR: Selected node has an icon that indicates it is a channel, but its tag does not contain a Channel object.";
 						if (isWiz)
 						{
 							DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1896,11 +2108,11 @@ namespace UtilORama4
 		private bool EditUniverseNode(TreeNodeAdv node)
 		{
 			//bool needSort = false;
-			DMXUniverse universe = (DMXUniverse)node.Tag;
+			Universe universe = (Universe)node.Tag;
 			bool success = EditUniverse(universe);
 			/*
 			universe.Editing = true;
-			DMXUniverse newUni = universe.Clone();
+			Universe newUni = universe.Clone();
 			int oldUniNum = universe.UniverseNumber;
 			frmUniverse uniForm = new frmUniverse(newUni);
 			//uniForm.universes = Universes;
@@ -1940,7 +2152,7 @@ namespace UtilORama4
 
 		public bool EditControllerNode(TreeNodeAdv node)
 		{
-			DMXController controller = (DMXController)node.Tag;
+			Controller controller = (Controller)node.Tag;
 			bool success = EditController(controller);
 			return success;
 		}
@@ -1948,21 +2160,21 @@ namespace UtilORama4
 		public bool EditChannelNode(TreeNodeAdv node)
 		{
 			//bool needSort = false;
-			DMXChannel channel = (DMXChannel)node.Tag;
+			Channel channel = (Channel)node.Tag;
 			bool success = EditChannel(channel);
 			return success;
 		}
 
-		public bool EditChannel(DMXChannel channel)
+		public bool EditChannel(Channel channel)
 		{
 			// Return True if channel was (successfully) edited.
 			// Returns False if User Canceled the Edit dialog, or in case of an error.
 			bool success = false;
 			// Get the controller it is connnected to, in case that changes
-			DMXController controller = channel.DMXController;
+			Controller controller = channel.Controller;
 			channel.Editing = true;
 			// Create a new instance of the channel edit form, passing the channel to edit and a reference to this form (for callbacks and such)
-			frmChannel chanForm = new frmChannel(channel, this);
+			chanForm = new frmChannel(channel, this);
 			// Show the channel edit dialog, modal
 			DialogResult dr = chanForm.ShowDialog(this);
 			try
@@ -1981,24 +2193,24 @@ namespace UtilORama4
 							TreeNodeAdv ctlNode = (TreeNodeAdv)controller.Tag;
 							TreeNodeAdv chNode = (TreeNodeAdv)channel.Tag;
 							// Did the Controller change?
-							if (channel.DMXController.ID != controller.ID)
+							if (channel.Controller.ID != controller.ID)
 							{
 								// Find old controller and remove the Original Channel
-								for (int c = 0; c < controller.DMXChannels.Count; c++)
+								for (int c = 0; c < controller.Channels.Count; c++)
 								{
-									if (channel.ID == controller.DMXChannels[c].ID)
+									if (channel.ID == controller.Channels[c].ID)
 									{
-										controller.DMXChannels.RemoveAt(c);
+										controller.Channels.RemoveAt(c);
 										chNode.Remove();
-										c = controller.DMXChannels.Count; // Force loop exit
+										c = controller.Channels.Count; // Force loop exit
 									}
 								}
 								// Fetch the new controller, that the channel was moved _TO_
-								controller = channel.DMXController;
+								controller = channel.Controller;
 								// And add the modified channel
-								controller.DMXChannels.Add(channel);
+								controller.Channels.Add(channel);
 								// Re-Sort the controller channels (by number) to put the newly moved channel in proper position
-								controller.DMXChannels.Sort();
+								controller.Channels.Sort();
 								// Fetch the node of the new controller
 								ctlNode = (TreeNodeAdv)controller.Tag;
 								// Rebuild it
@@ -2008,7 +2220,7 @@ namespace UtilORama4
 							else // Still on the same controller
 							{
 								// Update the same node, which should be the same controller node, since still on same controller
-								controller.DMXChannels.Sort(); // In case the output number changed, need to re-sort the channels on this controller
+								controller.Channels.Sort(); // In case the output number changed, need to re-sort the channels on this controller
 																							 // Get the (original) controller node (Note: did not change)
 																							 // And re-build it
 								BuildChannelNode(chNode); // Just update this one node, since still on same controller, so no need to re-build the entire tree for this controller
@@ -2055,13 +2267,13 @@ namespace UtilORama4
 			TreeNodeAdv node = treeChannels.SelectedNode;
 			if (node != null)
 			{
-				//if (treeChannels.SelectedNode.Tag.GetType() == typeof(DMXController))
+				//if (treeChannels.SelectedNode.Tag.GetType() == typeof(Controller))
 				string funct = btnChannel.Text.Substring(0, 3);
 				// ** ADD MODE **
 				if (funct == "Add")
 				{
 					TreeNodeAdv parentNode = treeChannels.SelectedNode;
-					DMXController parentCtl = (DMXController)treeChannels.SelectedNode.Tag;
+					Controller parentCtl = (Controller)treeChannels.SelectedNode.Tag;
 					AddNewChannel(parentCtl);
 				} // End funct [first 3 characters of button text] was "Add";
 					// ** EDIT MODE **
@@ -2071,32 +2283,34 @@ namespace UtilORama4
 					bool en = ((ni != TREEICONuniverse) && (ni != TREEICONcontroller));
 					if (en)
 					{
-						DMXChannel chanOriginal = (DMXChannel)node.Tag;
+						Channel chanOriginal = (Channel)node.Tag;
 						EditChannel(chanOriginal);
 					}
 				} // End funct [first 4 characters of button text] was "Edit";
 			} // End a node was selected (treeChannels.selectedNode != null)
+			treeChannels.Select();
+
 		}
 
-		private bool AddNewChannel(DMXController parentCtl)
+		private bool AddNewChannel(Controller parentCtl)
 		{
 			// Create and prepare the new channel to be added to the parent controller
 			TreeNodeAdv parentNode = treeChannels.SelectedNode;
-			DMXChannel channel = new DMXChannel();
+			Channel channel = new Channel();
 			bool success = false;
 			lastID++;
 			channel.ID = lastID;
-			channel.DMXController = parentCtl;
+			channel.Controller = parentCtl;
 			channel.Editing = true;
-			DMXController oldCtlr = channel.DMXController;
-			frmChannel chanForm = new frmChannel(channel,this);
+			Controller oldCtlr = channel.Controller;
+			chanForm = new frmChannel(channel,this);
 
 			// Try to find an unused output
 			int o = 1;
 			// Loop thru all channels/outputs already on this controller
-			for (int ci = 0; ci < oldCtlr.DMXChannels.Count; ci++)
+			for (int ci = 0; ci < oldCtlr.Channels.Count; ci++)
 			{
-				if (oldCtlr.DMXChannels[ci].OutputNum == o)
+				if (oldCtlr.Channels[ci].OutputNum == o)
 				{
 					// If this output number is already used, try the next one
 					o++;
@@ -2105,7 +2319,7 @@ namespace UtilORama4
 				{
 					// output number 'o' is not used, so start with it
 					// Break from loop
-					ci = oldCtlr.DMXChannels.Count;
+					ci = oldCtlr.Channels.Count;
 				}
 			}
 			channel.OutputNum = o;
@@ -2117,9 +2331,9 @@ namespace UtilORama4
 				// User accepted changes on the ChannelEdit form (clicked OK)
 				if (chanForm.isDirty)
 				{
-					channel.DMXController.DMXChannels.Add(channel);
-					channel.DMXController.DMXChannels.Sort();
-					parentNode = (TreeNodeAdv)channel.DMXController.Tag;
+					channel.Controller.Channels.Add(channel);
+					channel.Controller.Channels.Sort();
+					parentNode = (TreeNodeAdv)channel.Controller.Tag;
 					BuildChannelTree(parentNode);
 					AllChannels.Add(channel);
 					AllChannels.Sort();
@@ -2152,13 +2366,13 @@ namespace UtilORama4
 			{
 				// User canceled out of the ChannelEdit form
 				// Remove the new temporary channel from the parent controller's channel list
-				for (int c = 0; c < oldCtlr.DMXChannels.Count; c++)
+				for (int c = 0; c < oldCtlr.Channels.Count; c++)
 				{
-					if (channel.ID == oldCtlr.DMXChannels[c].ID)
+					if (channel.ID == oldCtlr.Channels[c].ID)
 					{
-						oldCtlr.DMXChannels.RemoveAt(c);
+						oldCtlr.Channels.RemoveAt(c);
 						//BuildChannelTree(parentNode);
-						c = oldCtlr.DMXChannels.Count; // Force loop exit
+						c = oldCtlr.Channels.Count; // Force loop exit
 					}
 				}
 			}
@@ -2168,27 +2382,27 @@ namespace UtilORama4
 			return success;
 		}
 
-		private bool AddNewController(DMXUniverse parentUni)
+		private bool AddNewController(Universe parentUni)
 		{
 			bool success = false;
 			TreeNodeAdv parentNode = treeChannels.SelectedNode;
-			DMXController controller = new DMXController();
+			Controller controller = new Controller();
 			lastID++;
 			controller.ID = lastID;
-			controller.DMXUniverse = parentUni;
+			controller.Universe = parentUni;
 			controller.Editing = true;
-			DMXUniverse universe = controller.DMXUniverse;
-			frmController ctlForm = new frmController(controller, this);
+			Universe universe = controller.Universe;
+			ctlForm = new frmController(controller, this);
 			//ctlForm.universes = universes;
 
 			// Try to find an unused start address
 			int unit = 1;
 			int addr = 1;
 			int size = 16;
-			for (int ui = 0; ui < universe.DMXControllers.Count; ui++)
+			for (int ui = 0; ui < universe.Controllers.Count; ui++)
 			{
-				DMXController ctl = universe.DMXControllers[ui];
-				if (Etc.LORVersion > 0)
+				Controller ctl = universe.Controllers[ui];
+				if (hasLOR)
 				{
 					if (ctl.UnitID == unit)
 					{
@@ -2200,12 +2414,12 @@ namespace UtilORama4
 						// This start address is not used, so start with it
 						// Break from loop
 						controller.UnitID = unit;
-						ui= universe.DMXControllers.Count; // Force exit of loop
+						ui= universe.Controllers.Count; // Force exit of loop
 					}
 				}
 				else
 				{
-					if (ctl.DMXStartAddress <= addr)
+					if (ctl.StartAddress <= addr)
 					{
 						// This start address is already used, so try the next one
 						addr += ctl.OutputCount;
@@ -2214,8 +2428,8 @@ namespace UtilORama4
 					{
 						// This start address is not used, so start with it
 						// Break from loop
-						controller.DMXStartAddress = addr;
-						ui= universe.DMXControllers.Count; // Force exit of loop
+						controller.StartAddress = addr;
+						ui= universe.Controllers.Count; // Force exit of loop
 					}
 				}
 			}
@@ -2226,9 +2440,9 @@ namespace UtilORama4
 				// User accepted changes on the ChannelEdit form (clicked OK)
 				if (ctlForm.isDirty)
 				{
-					controller.DMXUniverse.DMXControllers.Add(controller);
-					controller.DMXUniverse.DMXControllers.Sort();
-					parentNode = (TreeNodeAdv)controller.DMXUniverse.Tag;
+					controller.Universe.Controllers.Add(controller);
+					controller.Universe.Controllers.Sort();
+					parentNode = (TreeNodeAdv)controller.Universe.Tag;
 					BuildChannelTree(parentNode);
 					//AllControllers.Add(controller);
 					//AllControllers.Sort();
@@ -2257,20 +2471,20 @@ namespace UtilORama4
 		{
 			bool success = false;
 			//TreeNodeAdv parentNode = treeChannels.SelectedNode;
-			DMXUniverse universe = new DMXUniverse();
+			Universe universe = new Universe();
 			lastID++;
 			universe.ID = lastID;
-			//universe.DMXUniverse = parentUni;
+			//universe.Universe = parentUni;
 			universe.Editing = true;
-			//DMXUniverse universe = universe.DMXUniverse;
-			frmUniverse ctlForm = new frmUniverse(universe, this);
+			//Universe universe = universe.Universe;
+			uniForm = new frmUniverse(universe, this);
 			//ctlForm.universes = universes;
 
 			// Try to find an unused start address
 			int uni = 1;
 			for (int ui = 0; ui < AllUniverses.Count; ui++)
 			{
-				DMXUniverse verse = AllUniverses[ui];
+				Universe verse = AllUniverses[ui];
 				if (verse.UniverseNumber <= uni)
 				{
 					// This unit number is already used, so try the next one
@@ -2293,7 +2507,7 @@ namespace UtilORama4
 				{
 					AllUniverses.Add(universe);
 					AllUniverses.Sort();
-					//parentNode = (TreeNodeAdv)universe.DMXUniverse.Tag;
+					//parentNode = (TreeNodeAdv)universe.Universe.Tag;
 					//BuildChannelTree(parentNode);
 					BuildTree();
 					//Alluniverses.Add(universe);
@@ -2315,21 +2529,21 @@ namespace UtilORama4
 				parentNode.TextColor = Color.Black;
 			}
 			universe.Editing = false;
-			ctlForm.Dispose();
+			uniForm.Dispose();
 			treeChannels.Focus();
 			return success;
 		}
 
-		private bool EditController(DMXController controller)
+		private bool EditController(Controller controller)
 		{
 			// Return True if channel was (successfully) edited.
 			// Returns False if User Canceled the Edit dialog, or in case of an error.
 			bool success = false;
 			// Get the universe it is connnected to, in case that changes
-			DMXUniverse universe = controller.DMXUniverse;
+			Universe universe = controller.Universe;
 			controller.Editing = true;
 			// Create a new instance of the controller edit form, passing the controller to edit and a reference to this form (for callbacks and such)
-			frmController ctlForm = new frmController(controller, this);
+			ctlForm = new frmController(controller, this);
 			// Show the controller edit dialog, modal
 			DialogResult dr = ctlForm.ShowDialog(this);
 			try
@@ -2348,24 +2562,24 @@ namespace UtilORama4
 							TreeNodeAdv uniNode = (TreeNodeAdv)universe.Tag;
 							TreeNodeAdv ctlNode = (TreeNodeAdv)controller.Tag;
 							// Did the Universe change?
-							if (controller.DMXUniverse.ID != universe.ID)
+							if (controller.Universe.ID != universe.ID)
 							{
 								// Find old Universe and remove the Original Controller
-								for (int c = 0; c < universe.DMXControllers.Count; c++)
+								for (int c = 0; c < universe.Controllers.Count; c++)
 								{
-									if (controller.ID == universe.DMXControllers[c].ID)
+									if (controller.ID == universe.Controllers[c].ID)
 									{
-										universe.DMXControllers.RemoveAt(c);
+										universe.Controllers.RemoveAt(c);
 										ctlNode.Remove();
-										c = universe.DMXControllers.Count; // Force loop exit
+										c = universe.Controllers.Count; // Force loop exit
 									}
 								}
 								// Fetch the new universe, that the controller was moved _TO_
-								universe = controller.DMXUniverse;
+								universe = controller.Universe;
 								// And add the modified controller
-								universe.DMXControllers.Add(controller);
+								universe.Controllers.Add(controller);
 								// Re-Sort the universe controllers (by number) to put the newly moved controller in proper position
-								universe.DMXControllers.Sort();
+								universe.Controllers.Sort();
 								// Fetch the node of the new universe
 								uniNode = (TreeNodeAdv)controller.Tag;
 								// Rebuild it
@@ -2375,7 +2589,7 @@ namespace UtilORama4
 							else // Still on the same universe
 							{
 								// Update the same node, which should be the same universe node, since still on same universe
-								universe.DMXControllers.Sort(); // In case the start address changed, need to re-sort the controllers on this universe
+								universe.Controllers.Sort(); // In case the start address changed, need to re-sort the controllers on this universe
 																								// Get the (original) universe node (Note: did not change)
 								uniNode.Nodes.Clear();                                // And re-build it
 								BuildUniverseNode(uniNode);
@@ -2388,7 +2602,7 @@ namespace UtilORama4
 					} // End universe's tag is a TreeNodeAdv
 					else
 					{
-						string msg = "ERROR: Controller's universe does not have a TreeNodeAdv in its tag.";
+						string msg = "ERROR: Controller's " + uniName + " does not have a TreeNodeAdv in its tag.";
 						if (isWiz)
 						{
 							DialogResult dr2 = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -2427,7 +2641,7 @@ namespace UtilORama4
 			return success;
 		}
 
-		private bool EditUniverse(DMXUniverse	universe)
+		private bool EditUniverse(Universe	universe)
 		{
 			// Return True if universe was (successfully) edited.
 			// Returns False if User Canceled the Edit dialog, or in case of an error.
@@ -2436,7 +2650,7 @@ namespace UtilORama4
 			int oldUni = universe.UniverseNumber;
 			universe.Editing = true;
 			// Create a new instance of the universe edit form, passing the universe to edit and a reference to this form (for callbacks and such)
-			frmUniverse ctlForm = new frmUniverse(universe, this);
+			uniForm = new frmUniverse(universe, this);
 			// Show the universe edit dialog, modal
 			DialogResult dr = ctlForm.ShowDialog(this);
 			try
@@ -2452,21 +2666,21 @@ namespace UtilORama4
 						if (universe.UniverseNumber != oldUni)
 						{
 							// Find old Universe and remove the Original universe
-							//for (int c = 0; c < universe.DMXuniverses.Count; c++)
+							//for (int c = 0; c < universe.Universes.Count; c++)
 							//{
-							//	if (universe.ID == universe.DMXuniverses[c].ID)
+							//	if (universe.ID == universe.Universes[c].ID)
 							//	{
-							//		universe.DMXuniverses.RemoveAt(c);
+							//		universe.Universes.RemoveAt(c);
 							//		BuildChannelTree(uniNode);
-							//		c = universe.DMXChannels.Count; // Force loop exit
+							//		c = universe.Channels.Count; // Force loop exit
 							//	}
 							//}
 							// Fetch the new universe, that the channel was moved _TO_
-							//universe = universe.DMXUniverse;
+							//universe = universe.Universe;
 							// And add the modified channel
-							//universe.DMXuniverses.Add(universe);
+							//universe.Universes.Add(universe);
 							// Re-Sort the universe channels (by number) to put the newly moved channel in proper position
-							//universe.DMXuniverses.Sort();
+							//universe.Universes.Sort();
 							treeChannels.Nodes.Sort();
 							// Fetch the node of the new universe
 							//uniNode = (TreeNodeAdv)universe.Tag;
@@ -2476,7 +2690,7 @@ namespace UtilORama4
 						else
 						{
 							// Update the same node, which should be the same universe node, since still on same universe
-							//universe.DMXuniverses.Sort(); // In case the start address changed, need to re-sort the universes on this universe
+							//universe.Universes.Sort(); // In case the start address changed, need to re-sort the universes on this universe
 							//uniNode = (TreeNodeAdv)universe.Tag;
 							//BuildChannelTree(uniNode);
 						}
@@ -2492,7 +2706,7 @@ namespace UtilORama4
 				// Consider that a cancel
 				int ln = LOR4.LOR4Admin.ExceptionLineNumber(ex);
 				string msg = "Error on line " + ln.ToString() + "\r\n";
-				msg += ex.ToString() + " while exiting universe editor " + universe.Name;
+				msg += ex.ToString() + " while exiting " + uniName + " editor " + universe.Name;
 
 				if (Fyle.isWiz || Fyle.InIDE)
 				{
@@ -2512,7 +2726,7 @@ namespace UtilORama4
 				node.TextColor = Color.Black;
 			}
 			universe.Editing = false;
-			ctlForm.Dispose();
+			uniForm.Dispose();
 			return success;
 		}
 
@@ -2523,14 +2737,14 @@ namespace UtilORama4
 			TreeNodeAdv node = treeChannels.SelectedNode;
 			if (node != null)
 			{
-				//if (treeChannels.SelectedNode.Tag.GetType() == typeof(DMXUniverse))
+				//if (treeChannels.SelectedNode.Tag.GetType() == typeof(Universe))
 				string funct = btnController.Text.Substring(0, 3);
 				if (funct == "Add")
 				{
 					//TODO: Make sure selected node is a Universe
 					//TODO: Or if not, traverse up the tree to find the parent universe
 					TreeNodeAdv parentNode = treeChannels.SelectedNode;
-					DMXUniverse parentUni = (DMXUniverse)treeChannels.SelectedNode.Tag;
+					Universe parentUni = (Universe)treeChannels.SelectedNode.Tag;
 					AddNewController(parentUni);
 
 				} // End funct [first 3 characters of button text] was "Add";
@@ -2540,26 +2754,27 @@ namespace UtilORama4
 					bool en = (ni[0] == TREEICONcontroller[0]);
 					if (en)
 					{
-						DMXController ctlrOriginal = (DMXController)node.Tag;
+						Controller ctlrOriginal = (Controller)node.Tag;
 						EditController(ctlrOriginal);
 						//EditController(controller);
 					}
 
 				} // End funct [first 3 characters of button text] was "Edi";
 			}
+			treeChannels.Select();
 
 		}
 
 		private void btnControllerOldCode()
 		{
 			/*
-//DMXController ctlr = new DMXController();
+//Controller ctlr = new Controller();
 //lastID++;
 //ctlr.ID = lastID;
-//ctlr.DMXUniverse = parentUni;
+//ctlr.Universe = parentUni;
 //ctlr.Editing = true;
-//DMXUniverse oldUniv = ctlr.DMXUniverse;
-//DMXController newCtlr = ctlr.Clone();
+//Universe oldUniv = ctlr.Universe;
+//Controller newCtlr = ctlr.Clone();
 frmController ctlrForm = new frmController(ctlr, universes);
 //ctlrForm.AllChannels = AllChannels;
 //ctlrForm.universes = universes;
@@ -2591,8 +2806,8 @@ using (ctlrForm modalChild = new ctlrForm())
 			u = AllUniverses.Count; // Force loop exit
 		}
 	}
-	parentUni.DMXControllers.Add(ctlr);
-	parentUni.DMXControllers.Sort();
+	parentUni.Controllers.Add(ctlr);
+	parentUni.Controllers.Sort();
 	parentNode = (TreeNodeAdv)parentUni.Tag;
 	// Create a bunch of channels for it
 	// 'Silver' color is a light grayish color #C0C0C0
@@ -2606,24 +2821,24 @@ using (ctlrForm modalChild = new ctlrForm())
 	for (int chx = 1; chx <= ctlr.OutputCount; chx++)
 	{
 		string chName = "Spare " + ctlr.ControllerID + chx.ToString("00");
-		DMXChannel dch = new DMXChannel(ctlr, chName);
+		Channel dch = new Channel(ctlr, chName);
 		dch.OutputNum = chx;
 		dch.Color = Color.Silver;
 		dch.DeviceType = GetTypeByName("Spare");
 		lastID++;
 		dch.ID = lastID;
 		dch.Active = true;
-		//dch.DMXController = ctlr; // Shouldn't need this, should be assigned at creation
+		//dch.Controller = ctlr; // Shouldn't need this, should be assigned at creation
 		dch.Dirty = true;
 		TreeNodeAdv chNode = new TreeNodeAdv(dch.Name);
 		chNode.LeftImageIndices = ico;
 		dch.Tag = chNode;
 		chNode.Tag = dch;
-		//ctlr.DMXChannels.Add(dch); // Shouldn't need this either
+		//ctlr.Channels.Add(dch); // Shouldn't need this either
 		ctlrNode.Nodes.Add(chNode);
 		AllChannels.Add(dch);
 	}
-	ctlr.DMXChannels.Sort();
+	ctlr.Channels.Sort();
 	parentNode.Nodes.Add(ctlrNode);
 	//ImageIndex = TREEICONcontroller[0];
 	//ico = { ImageIndex};
@@ -2663,11 +2878,12 @@ using (ctlrForm modalChild = new ctlrForm())
 					bool en = (ni[0] == TREEICONuniverse[0]);
 					if (en)
 					{
-						DMXUniverse uniOriginal = (DMXUniverse)node.Tag;
+						Universe uniOriginal = (Universe)node.Tag;
 						EditUniverse(uniOriginal);
 					}
 				} // End funct [first 4 characters of button text] was "Edi";
 			}
+			treeChannels.Select();
 		}
 
 		public void MakeDirty(bool isDirty)
@@ -2762,11 +2978,18 @@ using (ctlrForm modalChild = new ctlrForm())
 				CsvFileWriter writer = new CsvFileWriter(fileName);
 				CsvRow row = new CsvRow();
 				// Create first line which is headers;
-				row.Add("Universe");         // Field 0
+				row.Add(uniName);         // Field 0
 				row.Add("Controller");       // Field 1
-				row.Add("LOR4Output");           // Field 2
-				row.Add("DMX Address");      // Field 3
-				row.Add("xLights Address");  // Field 4
+				row.Add("Output");           // Field 2
+				if (hasxLights)
+				{
+					row.Add("DMX Address");      // Field 3
+					row.Add("xLights Address");  // Field 4
+				}
+				else
+				{
+					row.Add("Address");      // Field 3
+				}
 
 				// Is this really the column I wanna put this in?
 				row.Add("Active");           // Field 5
@@ -2782,7 +3005,7 @@ using (ctlrForm modalChild = new ctlrForm())
 				AllUniverses.Sort();
 				for (int u = 0; u < AllUniverses.Count; u++)
 				{
-					DMXUniverse universe = AllUniverses[u];
+					Universe universe = AllUniverses[u];
 					uniName = universe.Name;
 					try
 					{
@@ -2800,9 +3023,9 @@ using (ctlrForm modalChild = new ctlrForm())
 						row.Add(universe.Comment);                         // Field 10 - Comment
 						writer.WriteRow(row);
 
-						for (int ct = 0; ct < universe.DMXControllers.Count; ct++)
+						for (int ct = 0; ct < universe.Controllers.Count; ct++)
 						{
-							DMXController controller = universe.DMXControllers[ct];
+							Controller controller = universe.Controllers[ct];
 							ctlName = controller.Name;
 							try
 							{
@@ -2810,7 +3033,7 @@ using (ctlrForm modalChild = new ctlrForm())
 								row.Add(universe.UniverseNumber.ToString());       // Field 0 - Universe
 								row.Add(controller.Identifier);                        // Field 1 - Controller
 								row.Add("");                                  // Field 2 - LOR4Output
-								row.Add(controller.DMXStartAddress.ToString());      // Field 3 - DMX Address
+								row.Add(controller.StartAddress.ToString());      // Field 3 - DMX Address
 								row.Add(controller.xLightsAddress.ToString());  // Field 4 - xLights Address
 								row.Add(controller.Active.ToString());               // Field 5 - Active
 								row.Add(controller.Name);                            // Field 6 - Name
@@ -2820,17 +3043,17 @@ using (ctlrForm modalChild = new ctlrForm())
 								row.Add(controller.Comment);                         // Field 10 - Comment
 								writer.WriteRow(row);
 
-								for (int cl = 0; cl < controller.DMXChannels.Count; cl++)
+								for (int cl = 0; cl < controller.Channels.Count; cl++)
 								{
-									DMXChannel channel = controller.DMXChannels[cl];
+									Channel channel = controller.Channels[cl];
 									chnName = channel.Name;
 									try
 									{
 										row = new CsvRow();
 										row.Add(channel.UniverseNumber.ToString());  // Field 0 - Universe
-										row.Add(channel.DMXController.Identifier);     // Field 1 - Controller
+										row.Add(channel.Controller.Identifier);     // Field 1 - Controller
 										row.Add(channel.OutputNum.ToString());       // Field 2 - LOR4Output
-										row.Add(channel.DMXAddress.ToString());      // Field 3 - DMX Address
+										row.Add(channel.Address.ToString());      // Field 3 - DMX Address
 										row.Add(channel.xLightsAddress.ToString());  // Field 4 - xLights Address
 										row.Add(channel.Active.ToString());          // Field 5 - Active
 										row.Add(channel.Name);                       // Field 6 - Name
@@ -2873,7 +3096,13 @@ using (ctlrForm modalChild = new ctlrForm())
 
 		private void btnReport_Click(object sender, EventArgs e)
 		{
-			ExportToSpreadsheet(dbPath, true);
+			//ExportToSpreadsheet(dbPath, true);
+			string sfile = "X:\\2026\\Documents_2026\\!Channels\\My Channel Spreadsheet.xlsx";
+			BuildSpreadsheet(sfile);
+			if (Fyle.Exists(sfile))
+			{
+				Fyle.LaunchFile(sfile);
+			}
 		}
 
 		private void treeChannels_KeyPress(object sender, KeyPressEventArgs e)
@@ -2897,6 +3126,8 @@ using (ctlrForm modalChild = new ctlrForm())
 					Fyle.MakeNoise(Fyle.Noises.Pop);
 				}
 			}
+			treeChannels.Select();
+
 		}
 
 		private bool DeleteNode(TreeNodeAdv node)
@@ -2907,9 +3138,9 @@ using (ctlrForm modalChild = new ctlrForm())
 
 			if (node.Tag != null)
 			{
-				if (node.Tag.GetType() == typeof(DMXChannel))
+				if (node.Tag.GetType() == typeof(Channel))
 				{
-					DMXChannel channel = (DMXChannel)node.Tag;
+					Channel channel = (Channel)node.Tag;
 					msg = "Are you sure you want to delete channel ";
 					msg += channel.OutputNum + ": " + channel.Name + "?";
 					DialogResult dr = MessageBox.Show(this, msg, "Delete LOR4Channel?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
@@ -2917,69 +3148,69 @@ using (ctlrForm modalChild = new ctlrForm())
 					{
 						node.Parent.Nodes.Remove(node);
 						AllChannels.Remove(channel);
-						channel.DMXController.DMXChannels.Remove(channel);
+						channel.Controller.Channels.Remove(channel);
 						MakeDirty(true);
 						success = true;
 					}
 				}
 				else
 				{
-					if (node.Tag.GetType() == typeof(DMXController))
+					if (node.Tag.GetType() == typeof(Controller))
 					{
-						DMXController controller = (DMXController)node.Tag;
+						Controller controller = (Controller)node.Tag;
 						msg = "Are you sure you want to delete controller ";
 						if (controller.Identifier.Length > 0)
 						{
 							msg += controller.Identifier + ": ";
 						}
 						msg += controller.Name + " which has ";
-						msg += controller.DMXChannels.Count.ToString() + " channels?";
+						msg += controller.Channels.Count.ToString() + " channels?";
 						DialogResult dr = MessageBox.Show(this, msg, "Delete Controller?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 						if (dr == DialogResult.Yes)
 						{
-							for (int c = 0; c < controller.DMXChannels.Count; c++)
+							for (int c = 0; c < controller.Channels.Count; c++)
 							{
-								DMXChannel channel = controller.DMXChannels[c];
+								Channel channel = controller.Channels[c];
 								AllChannels.Remove(channel);
 							}
 							node.Parent.Nodes.Remove(node);
 							AllControllers.Remove(controller);
-							controller.DMXUniverse.DMXControllers.Remove(controller);
+							controller.Universe.Controllers.Remove(controller);
 							MakeDirty(true);
 							success = true;
 						}
 					}
 					else
 					{
-						if (node.Tag.GetType() == typeof(DMXUniverse))
+						if (node.Tag.GetType() == typeof(Universe))
 						{
-							DMXUniverse universe = (DMXUniverse)node.Tag;
-							msg = "Are you really sure you want to delete universe ";
+							Universe universe = (Universe)node.Tag;
+							msg = "Are you really sure you want to delete " + uniName + " ";
 							msg += universe.UniverseNumber + ": " + universe.Name + " which has ";
-							msg += universe.DMXControllers.Count.ToString() + " controllers and ";
+							msg += universe.Controllers.Count.ToString() + " controllers and ";
 							int chanCount = 0;
-							for (int c1 = 0; c1 < universe.DMXControllers.Count; c1++)
+							for (int c1 = 0; c1 < universe.Controllers.Count; c1++)
 							{
-								DMXController controller = universe.DMXControllers[c1];
-								chanCount += controller.DMXChannels.Count;
+								Controller controller = universe.Controllers[c1];
+								chanCount += controller.Channels.Count;
 							}
 							msg += chanCount.ToString() + " channels?";
-							DialogResult dr = MessageBox.Show(this, msg, "Delete Universe?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
-							if ((universe.DMXControllers.Count > 2) || (chanCount > 23))
+							DialogResult dr = MessageBox.Show(this, msg, "Delete " + uniName + "?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+							if ((universe.Controllers.Count > 2) || (chanCount > 23))
 							{
-								msg = "That's a lot of controllers (" + universe.DMXControllers.Count.ToString() + ") and ";
+								msg = "That's a lot of controllers (" + universe.Controllers.Count.ToString() + ") and ";
 								msg += " a lot of channels (" + chanCount.ToString() + ").";
 								msg += "\r\n\r\nAre you really really sure?";
-								dr = MessageBox.Show(this, msg, "Delete Universe?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+								dr = MessageBox.Show(this, msg, "Delete " + uniName + "?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
 							}
 							if (dr == DialogResult.Yes)
 							{
-								for (int c1 = 0; c1 < universe.DMXControllers.Count; c1++)
+								for (int c1 = 0; c1 < universe.Controllers.Count; c1++)
 								{
-									DMXController controller = universe.DMXControllers[c1];
-									for (int c2 = 0; c2 < controller.DMXChannels.Count; c2++)
+									Controller controller = universe.Controllers[c1];
+									for (int c2 = 0; c2 < controller.Channels.Count; c2++)
 									{
-										DMXChannel channel = controller.DMXChannels[c2];
+										Channel channel = controller.Channels[c2];
 										AllChannels.Remove(channel);
 									} // End loop thru controller's channels
 								} // End loop thru universe's controllers
@@ -3015,10 +3246,10 @@ using (ctlrForm modalChild = new ctlrForm())
 			}
 		}
 
-		public DMXDeviceType GetTypeByName(string theName)
+		public DeviceTypes GetTypeByName(string theName)
 		{
 			string tn = theName.ToLower();
-			DMXDeviceType ret = null;
+			DeviceTypes ret = null;
 			for (int i = 0; i < DeviceTypes.Count; i++)
 			{
 				if (tn == DeviceTypes[i].Name.ToLower())
@@ -3050,8 +3281,8 @@ using (ctlrForm modalChild = new ctlrForm())
 			///////////////////////////
 
 			// Resort by name
-			//DMXChannel.SortByName = true;
-			DMXChannel.SortByName = sortByName;
+			//Channel.SortByName = true;
+			Channel.SortByName = sortByName;
 			AllChannels.Sort();
 			int oldLORsort = LOR4Membership.sortMode;
 			if (sortByName)
@@ -3083,7 +3314,7 @@ using (ctlrForm modalChild = new ctlrForm())
 			/////////////////////////////////////////////////////
 			for (int m = 0; m < AllChannels.Count; m++)
 			{
-				DMXChannel chanMgr = AllChannels[m];
+				Channel chanMgr = AllChannels[m];
 				string mgrName = chanMgr.Name.ToLower();
 
 				for (int l = lorCN; l < lseq.Channels.Count; l++)
@@ -3199,7 +3430,7 @@ using (ctlrForm modalChild = new ctlrForm())
 			// Now, let's do it again looking for fuzzy matches
 			for (int m = 0; m < AllChannels.Count; m++)
 			{
-				DMXChannel chanMgr = AllChannels[m];
+				Channel chanMgr = AllChannels[m];
 				string mgrName = chanMgr.Name.ToLower();
 
 				if (chanMgr.TagLOR == null)
@@ -3395,7 +3626,7 @@ using (ctlrForm modalChild = new ctlrForm())
 					}
 
 				} // current chanMgr has no tag and thus no exact match
-			} // End second loop[ thru Channel Manager DMXChannels looking for fuzzy matches
+			} // End second loop[ thru Channel Manager Channels looking for fuzzy matches
 
 
 			matchWriter.Close();
@@ -3422,7 +3653,7 @@ using (ctlrForm modalChild = new ctlrForm())
 
 			for (int m = 0; m < AllChannels.Count; m++)
 			{
-				DMXChannel chanMgr = AllChannels[m];
+				Channel chanMgr = AllChannels[m];
 				if (chanMgr.TagLOR != null)
 				{
 					Type t = chanMgr.TagLOR.GetType();
@@ -3439,17 +3670,17 @@ using (ctlrForm modalChild = new ctlrForm())
 						lineOut.Append(" to ");
 						lineOut.Append(chanLor.Name);
 						writer.WriteLine(lineOut);
-						if (chanMgr.UniverseNumber != chanLor.UniverseNumber || chanMgr.DMXAddress != chanLor.DMXAddress)
+						if (chanMgr.UniverseNumber != chanLor.UniverseNumber || chanMgr.Address != chanLor.Address)
 						{
 							lineOut.Clear();
 							lineOut.Append("    But the DMX Address does not match! ");
 							lineOut.Append(chanMgr.UniverseNumber.ToString());
 							lineOut.Append("/");
-							lineOut.Append(chanMgr.DMXAddress.ToString());
+							lineOut.Append(chanMgr.Address.ToString());
 							lineOut.Append(" != ");
 							lineOut.Append(chanLor.UniverseNumber.ToString());
 							lineOut.Append("/");
-							lineOut.Append(chanLor.DMXAddress.ToString());
+							lineOut.Append(chanLor.Address.ToString());
 							writer.WriteLine(lineOut);
 						}
 					}
@@ -3460,7 +3691,7 @@ using (ctlrForm modalChild = new ctlrForm())
 			writer.WriteLine("[Fuzzy Matches to LOR Channels]");
 			for (int m = 0; m < AllChannels.Count; m++)
 			{
-				DMXChannel chanMgr = AllChannels[m];
+				Channel chanMgr = AllChannels[m];
 				if (chanMgr.TagLOR != null)
 				{
 					LOR4Channel chanLor = (LOR4Channel)chanMgr.TagLOR;
@@ -3471,17 +3702,17 @@ using (ctlrForm modalChild = new ctlrForm())
 						lineOut.Append(" to ");
 						lineOut.Append(chanLor.Name);
 						writer.WriteLine(lineOut);
-						if (chanMgr.UniverseNumber != chanLor.UniverseNumber || chanMgr.DMXAddress != chanLor.DMXAddress)
+						if (chanMgr.UniverseNumber != chanLor.UniverseNumber || chanMgr.Address != chanLor.Address)
 						{
 							lineOut.Clear();
 							lineOut.Append("    But the DMX Address does not match! ");
 							lineOut.Append(chanMgr.UniverseNumber.ToString());
 							lineOut.Append("/");
-							lineOut.Append(chanMgr.DMXAddress.ToString());
+							lineOut.Append(chanMgr.Address.ToString());
 							lineOut.Append(" != ");
 							lineOut.Append(chanLor.UniverseNumber.ToString());
 							lineOut.Append("/");
-							lineOut.Append(chanLor.DMXAddress.ToString());
+							lineOut.Append(chanLor.Address.ToString());
 							writer.WriteLine(lineOut);
 						}
 					}
@@ -3492,7 +3723,7 @@ using (ctlrForm modalChild = new ctlrForm())
 			writer.WriteLine("[Managed Channels with NO LOR Match]");
 			for (int m = 0; m < AllChannels.Count; m++)
 			{
-				DMXChannel chanMgr = AllChannels[m];
+				Channel chanMgr = AllChannels[m];
 				if (chanMgr.TagLOR == null)
 				{
 					StringBuilder lineOut = new StringBuilder("  NoMatch: ");
@@ -3523,7 +3754,7 @@ using (ctlrForm modalChild = new ctlrForm())
 
 			for (int m = 0; m < AllChannels.Count; m++)
 			{
-				DMXChannel chanMgr = AllChannels[m];
+				Channel chanMgr = AllChannels[m];
 				if (chanMgr.TagViz != null)
 				{
 					iLOR4Member chanViz = (iLOR4Member)chanMgr.TagViz;
@@ -3534,19 +3765,19 @@ using (ctlrForm modalChild = new ctlrForm())
 						lineOut.Append(" to ");
 						lineOut.Append(chanViz.Name);
 						writer.WriteLine(lineOut);
-						if (chanViz.DMXAddress > 0)
+						if (chanViz.Address > 0)
 						{
-							if ((chanMgr.DMXAddress != chanViz.DMXAddress) || (chanMgr.UniverseNumber != chanViz.UniverseNumber))
+							if ((chanMgr.Address != chanViz.Address) || (chanMgr.UniverseNumber != chanViz.UniverseNumber))
 							{
 								lineOut.Clear();
 								lineOut.Append("    But the Viz Channel Address does not match! ");
 								lineOut.Append(chanMgr.UniverseNumber.ToString());
 								lineOut.Append("/");
-								lineOut.Append(chanMgr.DMXAddress.ToString());
+								lineOut.Append(chanMgr.Address.ToString());
 								lineOut.Append(" != ");
 								lineOut.Append(chanViz.UniverseNumber.ToString());
 								lineOut.Append("/");
-								lineOut.Append(chanViz.DMXAddress.ToString());
+								lineOut.Append(chanViz.Address.ToString());
 								writer.WriteLine(lineOut);
 							}
 						}
@@ -3558,7 +3789,7 @@ using (ctlrForm modalChild = new ctlrForm())
 			writer.WriteLine("[Fuzzy Matches to Viz Channels or Groups]");
 			for (int m = 0; m < AllChannels.Count; m++)
 			{
-				DMXChannel chanMgr = AllChannels[m];
+				Channel chanMgr = AllChannels[m];
 				if (chanMgr.TagViz != null)
 				{
 					iLOR4Member chanViz = (iLOR4Member)chanMgr.TagViz;
@@ -3569,19 +3800,19 @@ using (ctlrForm modalChild = new ctlrForm())
 						lineOut.Append(" to ");
 						lineOut.Append(chanViz.Name);
 						writer.WriteLine(lineOut);
-						if (chanViz.DMXAddress > 0)
+						if (chanViz.Address > 0)
 						{
-							if ((chanMgr.DMXAddress != chanViz.DMXAddress) || (chanMgr.UniverseNumber != chanViz.UniverseNumber))
+							if ((chanMgr.Address != chanViz.Address) || (chanMgr.UniverseNumber != chanViz.UniverseNumber))
 							{
 								lineOut.Clear();
 								lineOut.Append("    But the Viz Channel Address does not match! ");
 								lineOut.Append(chanMgr.UniverseNumber.ToString());
 								lineOut.Append("/");
-								lineOut.Append(chanMgr.DMXAddress.ToString());
+								lineOut.Append(chanMgr.Address.ToString());
 								lineOut.Append(" != ");
 								lineOut.Append(chanViz.UniverseNumber.ToString());
 								lineOut.Append("/");
-								lineOut.Append(chanViz.DMXAddress.ToString());
+								lineOut.Append(chanViz.Address.ToString());
 								writer.WriteLine(lineOut);
 							}
 						}
@@ -3593,7 +3824,7 @@ using (ctlrForm modalChild = new ctlrForm())
 			writer.WriteLine("[Managed Channels with NO Viz Channel or Group Match]");
 			for (int m = 0; m < AllChannels.Count; m++)
 			{
-				DMXChannel chanMgr = AllChannels[m];
+				Channel chanMgr = AllChannels[m];
 				if (chanMgr.TagViz == null)
 				{
 					StringBuilder lineOut = new StringBuilder("  NoMatch: ");
@@ -3652,7 +3883,7 @@ using (ctlrForm modalChild = new ctlrForm())
 
 			for (int m = 0; m < AllChannels.Count; m++)
 			{
-				DMXChannel chanMgr = AllChannels[m];
+				Channel chanMgr = AllChannels[m];
 				if (chanMgr.TagX != null)
 				{
 					ixMember chanx = (ixMember)chanMgr.TagX;
@@ -3683,7 +3914,7 @@ using (ctlrForm modalChild = new ctlrForm())
 			writer.WriteLine("[Fuzzy Matches to xLights Models or Groups]");
 			for (int m = 0; m < AllChannels.Count; m++)
 			{
-				DMXChannel chanMgr = AllChannels[m];
+				Channel chanMgr = AllChannels[m];
 				if (chanMgr.TagX != null)
 				{
 					ixMember chanx = (ixMember)chanMgr.TagX;
@@ -3714,7 +3945,7 @@ using (ctlrForm modalChild = new ctlrForm())
 			writer.WriteLine("[Managed Channels with NO xLights Match]");
 			for (int m = 0; m < AllChannels.Count; m++)
 			{
-				DMXChannel chanMgr = AllChannels[m];
+				Channel chanMgr = AllChannels[m];
 				if (chanMgr.TagX == null)
 				{
 					StringBuilder lineOut = new StringBuilder("  NoMatch Channel: ");
@@ -3753,7 +3984,7 @@ using (ctlrForm modalChild = new ctlrForm())
 
 
 			// Resort back to default by channel number
-			DMXChannel.SortByName = false;
+			Channel.SortByName = false;
 			AllChannels.Sort();
 			LOR4Membership.sortMode = oldLORsort;
 			lseq.Channels.Sort();
@@ -3817,7 +4048,10 @@ using (ctlrForm modalChild = new ctlrForm())
 
 		private void btnSave_Click(object sender, EventArgs e)
 		{
+			pnlStatus.Text = "Saving...";
 			SaveData(dbPath);
+			pnlStatus.Text = "Files saved!";
+			Fyle.MakeNoise(Fyle.Noises.TaDa);
 			//Application.DoEvents();
 			// Clear and Reload
 			//TODO: Shouldn't need this, but tree is not refreshing correctly
@@ -3826,6 +4060,7 @@ using (ctlrForm modalChild = new ctlrForm())
 			//Application.DoEvents();
 			//LoadData(dbPath);
 			//Application.DoEvents();
+			treeChannels.Select();
 		}
 
 		private void btnRemove_Click(object sender, EventArgs e)
@@ -3833,24 +4068,24 @@ using (ctlrForm modalChild = new ctlrForm())
 			TreeNodeAdv node = treeChannels.SelectedNode;
 			if (node != null)
 			{
-				DMXChannel killChannel = (DMXChannel)node.Tag;
+				Channel killChannel = (Channel)node.Tag;
 				RemoveChannel(killChannel);
 			}
 		}
 
-		private bool RemoveChannel(DMXChannel channel)
+		private bool RemoveChannel(Channel channel)
 		{
 			// Returns True if channel successfully removed
 			bool success = false;
-			DMXController controller = channel.DMXController;
+			Controller controller = channel.Controller;
 			int foundAt = -1;
-			for (int i = 0; i < controller.DMXChannels.Count; i++)
+			for (int i = 0; i < controller.Channels.Count; i++)
 			{
-				if (controller.DMXChannels[i].ID == channel.ID)
+				if (controller.Channels[i].ID == channel.ID)
 				{
-					controller.DMXChannels.RemoveAt(i);
+					controller.Channels.RemoveAt(i);
 					foundAt = i;
-					i = controller.DMXChannels.Count; // Break out of loop
+					i = controller.Channels.Count; // Break out of loop
 				}
 			}
 			if (foundAt >= 0)
@@ -3867,20 +4102,20 @@ using (ctlrForm modalChild = new ctlrForm())
 			return success;
 		}
 
-		private bool RemoveController(DMXController controller)
+		private bool RemoveController(Controller controller)
 		{
 			// Returns True if controller successfully removed
 			// Important: Does NOT ask the user for confirmation, so be sure to call this from a method that does (like DeleteNode)
 			bool success = false;
-			DMXUniverse universe = controller.DMXUniverse;
+			Universe universe = controller.Universe;
 			int foundAt = -1;
-			for (int i = 0; i < universe.DMXControllers.Count; i++)
+			for (int i = 0; i < universe.Controllers.Count; i++)
 			{
-				if (universe.DMXControllers[i].ID == controller.ID)
+				if (universe.Controllers[i].ID == controller.ID)
 				{
-					universe.DMXControllers.RemoveAt(i);
+					universe.Controllers.RemoveAt(i);
 					foundAt = i;
-					i = universe.DMXControllers.Count; // Break out of loop
+					i = universe.Controllers.Count; // Break out of loop
 				}
 			}
 			if (foundAt >= 0)
@@ -3897,7 +4132,7 @@ using (ctlrForm modalChild = new ctlrForm())
 			return success;
 		}
 
-		private bool RemoveUniverse(DMXUniverse universe)
+		private bool RemoveUniverse(Universe universe)
 		{
 			// Returns True if universe successfully removed
 			// Important: Does NOT ask the user for confirmation, so be sure to call this from a method that does (like DeleteNode)
@@ -3942,7 +4177,7 @@ using (ctlrForm modalChild = new ctlrForm())
 
 		private void btnSettings_Click(object sender, EventArgs e)
 		{
-			mnuSettings.Show(btnSettings, new Point(0, btnSettings.Height));
+			mnuSettings.Show(btnSettings, new System.Drawing.Point(0, btnSettings.Height));
 		}
 	}
 

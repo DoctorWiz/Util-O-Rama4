@@ -18,28 +18,36 @@ namespace UtilORama4
 {
 	public partial class frmController : Form
 	{
-		//private List<DMXUniverse> universes = null;
-		public DMXController ctlrOriginal = null;
-		private DMXController controller = null;
+		//private List<Universe> universes = null;
+		public Controller ctlrOriginal = null;
+		private Controller controller = null;
 		private bool loading = true;
 		public bool isDirty = false;
 		public bool renumber = false;
 		private int oldUnivID = -1;
 		public int changes = 0;
 		private bool moved = false;
+		public bool userClose = false;
 		public frmList owner = null;
+		private string uniName = "";
 
 		private const int WM_SYSCOMMAND = 0x0112;
 		private const int SC_MINIMIZE = 0xf020;
-
+		private FormWindowState prevWindowState = FormWindowState.Normal;
 		public frmController()
 		{
 			InitializeComponent();
 		}
 
-		public frmController(DMXController ctlr)
+		public frmController(Controller ctlr)
 		{
 			owner = this.Owner as frmList;
+			uniName = frmList.uniName;
+			if (uniName != "Universe")
+			{
+				lblUniverse.Text = uniName;
+
+			}
 			InitializeComponent();
 			ctlrOriginal = ctlr;
 			controller = ctlr.Copy();
@@ -57,9 +65,10 @@ namespace UtilORama4
 			loading = false;
 		}
 
-		public frmController(DMXController ctlr, frmList listform)
+		public frmController(Controller ctlr, frmList listform)
 		{
 			owner = listform;
+			uniName = frmList.uniName;
 			InitializeComponent();
 			ctlrOriginal = ctlr;
 			controller = ctlr.Copy();
@@ -95,14 +104,14 @@ namespace UtilORama4
 					{
 						ListItem li = new ListItem(owner.AllUniverses[u].ToString(), owner.AllUniverses[u].ID);
 						cboUniverse.Items.Add(li);
-						if (owner.AllUniverses[u].ID == controller.DMXUniverse.ID)
+						if (owner.AllUniverses[u].ID == controller.Universe.ID)
 						{
 							cboUniverse.SelectedIndex = u;
 						}
 					}
 				}
 			}
-			if (Etc.xLightsVersion > 0)
+			if (frmList.hasxLights)
 			{
 				lblxAddresses.Visible = false;
 			}
@@ -129,7 +138,7 @@ namespace UtilORama4
 			}
 		}
 
-		public void LoadController(DMXController ctlr)
+		public void LoadController(Controller ctlr)
 		{
 			//controller = ctlr;
 			txtName.Text = ctlr.Name;
@@ -138,20 +147,20 @@ namespace UtilORama4
 			txtIdentifier.Text = ctlr.Identifier;
 			txtModel.Text = ctlr.ControllerModel;
 			numCount.Value = ctlr.OutputCount;
-			numStart.Value = ctlr.DMXStartAddress;
+			numStart.Value = ctlr.StartAddress;
 			chkActive.Checked = ctlr.Active;
 			numUnit.Value=ctlr.UnitID;
-			oldUnivID = ctlr.DMXUniverse.ID;
-			int e = ctlr.DMXStartAddress + ctlr.OutputCount - 1;
+			oldUnivID = ctlr.Universe.ID;
+			int e = ctlr.StartAddress + ctlr.OutputCount - 1;
 			lblLastDMX.Text = "Last DMX address: " + e.ToString();
-			int s = ctlr.DMXUniverse.xLightsAddress + ctlr.DMXStartAddress - 1;
+			int s = ctlr.Universe.xLightsAddress + ctlr.StartAddress - 1;
 			e = s + ctlr.OutputCount - 1;
 			RefreshAddresses();
 
 			for (int u = 0; u < cboUniverse.Items.Count; u++)
 			{
 				ListItem li = (ListItem)cboUniverse.Items[u];
-				if (li.ID == ctlr.DMXUniverse.ID)
+				if (li.ID == ctlr.Universe.ID)
 				{
 					cboUniverse.SelectedIndex = u;
 					u = cboUniverse.Items.Count; // Force exit of loop
@@ -199,10 +208,10 @@ namespace UtilORama4
 
 		private void cboUniverse_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			//controller.DMXUniverse = universes[cboUniverse.SelectedIndex];
-			//int ed = controller.DMXStartAddress + controller.OutputCount - 1;
+			//controller.Universe = universes[cboUniverse.SelectedIndex];
+			//int ed = controller.StartAddress + controller.OutputCount - 1;
 			//lblLastDMX.Text = "Last DMX address: " + ed.ToString();
-			//int st = controller.DMXUniverse.xLightsAddress + controller.DMXStartAddress - 1;
+			//int st = controller.Universe.xLightsAddress + controller.StartAddress - 1;
 			//ed = st + controller.OutputCount - 1;
 			//lblxAddresses.Text = "xLights addresses " + st.ToString() + "-" + ed.ToString();
 			//if (!loading) MakeDirty(true);
@@ -211,10 +220,10 @@ namespace UtilORama4
 
 		private void cboUniverse_Validating(object sender, CancelEventArgs e)
 		{
-			//controller.DMXUniverse = universes[cboUniverse.SelectedIndex];
-			//int ed = controller.DMXStartAddress + controller.OutputCount - 1;
+			//controller.Universe = universes[cboUniverse.SelectedIndex];
+			//int ed = controller.StartAddress + controller.OutputCount - 1;
 			//lblLastDMX.Text = "Last DMX address: " + ed.ToString();
-			//int st = controller.DMXUniverse.xLightsAddress + controller.DMXStartAddress - 1;
+			//int st = controller.Universe.xLightsAddress + controller.StartAddress - 1;
 			//ed = st + controller.OutputCount - 1;
 			//lblxAddresses.Text = "xLights addresses " + st.ToString() + "-" + ed.ToString();
 			//if (!loading) MakeDirty(true);
@@ -223,21 +232,21 @@ namespace UtilORama4
 
 		private void numStart_Validating(object sender, CancelEventArgs e)
 		{
-			//int ed = controller.DMXStartAddress + controller.OutputCount - 1;
+			//int ed = controller.StartAddress + controller.OutputCount - 1;
 			//lblLastDMX.Text = "Last DMX address: " + ed.ToString();
-			//int st = controller.DMXUniverse.xLightsAddress + controller.DMXStartAddress - 1;
+			//int st = controller.Universe.xLightsAddress + controller.StartAddress - 1;
 			//ed = st + controller.OutputCount - 1;
 			//lblxAddresses.Text = "xLights addresses " + st.ToString() + "-" + ed.ToString();
-			//controller.DMXStartAddress = (int)numStart.Value;
+			//controller.StartAddress = (int)numStart.Value;
 			//if (!loading) MakeDirty(true);
 
 		}
 
 		private void numCount_Validating(object sender, CancelEventArgs e)
 		{
-			//int ed = controller.DMXStartAddress + controller.OutputCount - 1;
+			//int ed = controller.StartAddress + controller.OutputCount - 1;
 			//lblLastDMX.Text = "Last DMX address: " + ed.ToString();
-			//int st = controller.DMXUniverse.xLightsAddress + controller.DMXStartAddress - 1;
+			//int st = controller.Universe.xLightsAddress + controller.StartAddress - 1;
 			//ed = st + controller.OutputCount - 1;
 			//lblxAddresses.Text = "xLights addresses " + st.ToString() + "-" + ed.ToString();
 			//controller.OutputCount = (int)numCount.Value;
@@ -259,7 +268,7 @@ namespace UtilORama4
 		{
 			if (!loading)
 			{
-				controller.DMXStartAddress = (int)numStart.Value;
+				controller.StartAddress = (int)numStart.Value;
 				RefreshAddresses();
 				MakeDirty(true);
 			}
@@ -336,17 +345,17 @@ namespace UtilORama4
 				txtLetter.Text = t;
 				for (int u = 0; u < universes.Count; u++)
 				{
-					DMXUniverse univ = universes[u];
-					for (int c = 0; c < univ.DMXControllers.Count; c++)
+					Universe univ = universes[u];
+					for (int c = 0; c < univ.Controllers.Count; c++)
 					{
-						if (!univ.DMXControllers[c].Editing)
+						if (!univ.Controllers[c].Editing)
 						{
-							if (t == univ.DMXControllers[c].ControllerID)
+							if (t == univ.Controllers[c].ControllerID)
 							{
 								controller.badLetter = true;
 								tipText = "You MUST assign a UNIQUE letter to this controller as an Identifier.";
 								tipTool.SetToolTip(txtLetter, tipText);
-								c = univ.DMXControllers.Count;
+								c = univ.Controllers.Count;
 								u = universes.Count; // Exit loops
 							}
 						}
@@ -430,7 +439,7 @@ namespace UtilORama4
 					numCount.Enabled = false;
 					int st = (controller.UnitID - 1) * 16 + 1;
 					numStart.Value = st;
-					controller.DMXStartAddress = st;
+					controller.StartAddress = st;
 					if (!loading)
 						ValidateOutputCount(16);
 				}
@@ -441,7 +450,7 @@ namespace UtilORama4
 					numCount.Enabled = false;
 					int st = (controller.UnitID - 1) * 16 + 1;
 					numStart.Value = st;
-					controller.DMXStartAddress = st;
+					controller.StartAddress = st;
 					if (!loading)
 						ValidateOutputCount(8);
 				}
@@ -452,7 +461,7 @@ namespace UtilORama4
 					numCount.Enabled = false;
 					int st = (controller.UnitID - 1) * 16 + 1;
 					numStart.Value = st;
-					controller.DMXStartAddress = st;
+					controller.StartAddress = st;
 					if (!loading)
 						ValidateOutputCount(4);
 				}
@@ -472,11 +481,11 @@ namespace UtilORama4
 		private void btnChannels_Click(object sender, EventArgs e)
 		{
 			StringBuilder txt = new StringBuilder();
-			for (int c = 0; c < controller.DMXChannels.Count; c++)
+			for (int c = 0; c < controller.Channels.Count; c++)
 			{
-				txt.Append(controller.DMXChannels[c].OutputNum.ToString());
+				txt.Append(controller.Channels[c].OutputNum.ToString());
 				txt.Append(": ");
-				txt.Append(controller.DMXChannels[c].Name);
+				txt.Append(controller.Channels[c].Name);
 				txt.Append("\r\n");
 			}
 			string cap = "Channels on ";
@@ -693,7 +702,11 @@ namespace UtilORama4
 
 		private void cboUniverse_Enter(object sender, EventArgs e)
 		{
-			string tipText = "The DMX universe this controller is on.";
+			string tipText = "The DMX Universe this controller is on.";
+			if (uniName != "Universe")
+			{
+				tipText = "The " + uniName + " this controller is on.";
+			}
 			tipTool.SetToolTip(cboUniverse, tipText);
 			tipTool.SetToolTip(lblUniverse, tipText);
 		}
@@ -703,9 +716,9 @@ namespace UtilORama4
 			if (cboUniverse.SelectedIndex >= 0)
 			{
 				string t = cboUniverse.Text.Trim();
-				if (t != controller.DMXUniverse.Name)
+				if (t != controller.Universe.Name)
 				{
-					controller.DMXUniverse = owner.AllUniverses[cboUniverse.SelectedIndex];
+					controller.Universe = owner.AllUniverses[cboUniverse.SelectedIndex];
 					RefreshAddresses();
 					if (!loading)
 					{
@@ -723,20 +736,20 @@ namespace UtilORama4
 				for (int u = 0; u < cboUniverse.Items.Count; u++)
 				{
 					ListItem li = (ListItem)cboUniverse.Items[u];
-					if (li.Name == ctlrOriginal.DMXUniverse.Name)
+					if (li.Name == ctlrOriginal.Universe.Name)
 					{
 						cboUniverse.SelectedIndex = u;
 						u = cboUniverse.Items.Count; // Force exit of loop
 					}
 				}
-				controller.DMXUniverse = ctlrOriginal.DMXUniverse;
+				controller.Universe = ctlrOriginal.Universe;
 			}
 			else if (e.KeyCode == Keys.Enter)
 			{
 				string t = cboUniverse.Text.Trim();
-				if (t != controller.DMXUniverse.Name)
+				if (t != controller.Universe.Name)
 				{
-					controller.DMXUniverse = owner.AllUniverses[cboUniverse.SelectedIndex];
+					controller.Universe = owner.AllUniverses[cboUniverse.SelectedIndex];
 					RefreshAddresses();
 					if (!loading)
 					{
@@ -749,11 +762,11 @@ namespace UtilORama4
 
 		private void RefreshAddresses()
 		{
-			int ed = controller.DMXStartAddress + controller.OutputCount - 1;
+			int ed = controller.StartAddress + controller.OutputCount - 1;
 			lblLastDMX.Text = "Last DMX address: " + ed.ToString();
-			int st = controller.DMXUniverse.xLightsAddress + controller.DMXStartAddress - 1;
+			int st = controller.Universe.xLightsAddress + controller.StartAddress - 1;
 			ed = st + controller.OutputCount - 1;
-			if (Etc.xLightsVersion > 0)
+			if (frmList.hasxLights)
 			{
 				lblxAddresses.Text = "xLights addresses " + st.ToString() + "-" + ed.ToString();
 			}
@@ -862,7 +875,7 @@ namespace UtilORama4
 
 		private void numStart_Leave(object sender, EventArgs e)
 		{
-			if (numStart.Value != controller.DMXStartAddress)
+			if (numStart.Value != controller.StartAddress)
 			{
 				int v = (int)numStart.Value;
 				int vminus = v = 1;
@@ -901,7 +914,7 @@ namespace UtilORama4
 							DialogResult = MessageBox.Show(this, dtxt, "DMX Start Address", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 							if (DialogResult == DialogResult.Yes)
 							{
-								controller.DMXStartAddress = start;
+								controller.StartAddress = start;
 								controller.UnitID = uni;
 							}
 						}  // End if new count is not 16
@@ -913,7 +926,7 @@ namespace UtilORama4
 
 
 
-				controller.DMXStartAddress = (int)numStart.Value;
+				controller.StartAddress = (int)numStart.Value;
 				RefreshAddresses();
 				if (!loading)
 				{
@@ -933,14 +946,14 @@ namespace UtilORama4
 		{
 			if (e.KeyCode == Keys.Escape)
 			{
-				numStart.Value = ctlrOriginal.DMXStartAddress;
+				numStart.Value = ctlrOriginal.StartAddress;
 			}
 			else if (e.KeyCode == Keys.Enter)
 			{
 				int num = (int)numStart.Value;
-				if (num != ctlrOriginal.DMXStartAddress)
+				if (num != ctlrOriginal.StartAddress)
 				{
-					controller.DMXStartAddress = num;
+					controller.StartAddress = num;
 					if (!loading) MakeDirty(true);
 				}
 			}
@@ -1130,15 +1143,26 @@ namespace UtilORama4
 			{
 				//System.Diagnostics.Debugger.Break();
 			}
+			prevWindowState = this.WindowState;
 		}
 
 		private void frmController_ResizeEnd(object sender, EventArgs e)
 		{
-			if (this.WindowState == FormWindowState.Minimized)
+			/*
+			// Did the window state change?
+			if (prevWindowState == FormWindowState.Normal)
 			{
-				owner.WindowState = FormWindowState.Minimized;
-				this.WindowState = FormWindowState.Normal;
+				// Is it now minimized?
+				if (this.WindowState == FormWindowState.Minimized)
+				{
+					// Minimize my owner/parent
+					owner.WindowState = FormWindowState.Minimized;
+					// And set my own window state back to normal,
+					// so that when the owner/parent is restored, I'll be normal and showing.
+					this.WindowState = FormWindowState.Normal;
+				}
 			}
+			*/
 
 		}
 
@@ -1185,9 +1209,9 @@ namespace UtilORama4
 						int s = u * 16 + 1;
 						numStart.Value = s;
 						RefreshAddresses();
-						if (s != controller.DMXStartAddress)
+						if (s != controller.StartAddress)
 						{
-							controller.DMXStartAddress = s;
+							controller.StartAddress = s;
 							numStart.Value = s;
 							string dtxt = "The Unit Number on this model also determines the DMX start address.  The DMX start address has been changed to " + s.ToString() + ".";
 							DialogResult dr = MessageBox.Show(this, dtxt, "DMX Start Address", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1219,8 +1243,9 @@ namespace UtilORama4
 
 		private void btnOK_Click(object sender, EventArgs e)
 		{
-			DialogResult dr = DialogResult.OK;
+			DialogResult = DialogResult.OK;
 			//if (dr != DialogResult.Cancel)
+			userClose = true;
 			if (isDirty)
 			{
 				SaveAndExit();
@@ -1232,13 +1257,13 @@ namespace UtilORama4
 			string dtxt = "";
 			int ndd = 0;
 			// Is this a new controller, with no channels yet?
-			if (controller.DMXChannels.Count < controller.OutputCount)
+			if (controller.Channels.Count < controller.OutputCount)
 			{
-				if (controller.DMXChannels.Count > 0)
+				if (controller.Channels.Count > 0)
 				{
 					// Existing controller with some channels, but not enough for the new output count.  Prompt user to add the additional channels needed.
-					ndd = controller.OutputCount - controller.DMXChannels.Count;
-					dtxt = "This controller has " + controller.OutputCount.ToString() + " channels, but only " + controller.DMXChannels.Count.ToString() + " are currently defined.";
+					ndd = controller.OutputCount - controller.Channels.Count;
+					dtxt = "This controller has " + controller.OutputCount.ToString() + " channels, but only " + controller.Channels.Count.ToString() + " are currently defined.";
 					dtxt += "\r\nWould you like to add the " + ndd + " missing channels to this controller now?";
 				}
 				else
@@ -1248,21 +1273,21 @@ namespace UtilORama4
 				DialogResult dr = MessageBox.Show(this, dtxt, "Add Channels", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 				if (dr == DialogResult.Yes)
 				{
-					controller.DMXChannels.Sort();
+					controller.Channels.Sort();
 					for (int co = 1; co <= controller.OutputCount; co++)
 					{
 						bool found = false;
-						for (int ci = 1; ci <= controller.DMXChannels.Count; ci++)
+						for (int ci = 1; ci <= controller.Channels.Count; ci++)
 						{
-							if (controller.DMXChannels[ci].OutputNum == co)
+							if (controller.Channels[ci].OutputNum == co)
 							{
 								found = true;
-								ci = controller.DMXChannels.Count + 1; // Force exit of loop
+								ci = controller.Channels.Count + 1; // Force exit of loop
 							}
 						} // End inner loop to assigned channels count
 						if (!found)
 						{
-							DMXChannel ch = new DMXChannel();
+							Channel ch = new Channel();
 							owner.lastID++;
 							ch.ID = owner.lastID;
 							ch.Name = "Channel " + (co).ToString();
@@ -1270,7 +1295,7 @@ namespace UtilORama4
 							ch.Active = false;
 							ch.DeviceType = owner.DeviceTypes[0]; // Default to unclassified/undefined device type
 							ch.Color = Color.White;  // Most likely color
-							controller.DMXChannels.Add(ch);
+							controller.Channels.Add(ch);
 						} // End if not found
 					} // end outer loop to output count
 				} // Dialog answer 'Yes' to add channels
@@ -1283,8 +1308,11 @@ namespace UtilORama4
 
 		private void btnCancel_Click(object sender, EventArgs e)
 		{
+			DialogResult = DialogResult.Cancel;
 			// Abandon changes by not applying them to the original controller object.
 			// Do not close or unload, just hide.  This allows the parent to check it's dirty status and prompt the user to save changes if needed.
+			userClose = true;
+			MakeDirty(false);
 			this.Hide();
 		}
 
@@ -1294,19 +1322,38 @@ namespace UtilORama4
 			{
 				//System.Diagnostics.Debugger.Break();
 			}
-			if (isDirty)
+			if (e.CloseReason == CloseReason.UserClosing)
 			{
-				string dtxt = "Controller settings have changed.  Save them?";
-				DialogResult dr = MessageBox.Show(this, dtxt, "Save Changes?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-				if (dr == DialogResult.Yes)
+				if (!userClose)
 				{
-					SaveAndExit();
-				}
-				else if (dr == DialogResult.Cancel)
-				{
-					e.Cancel = true;
-				}
-			}
+					if (isDirty)
+					{
+						string dtxt = "Controller settings have changed.  Save them?";
+						DialogResult dr = MessageBox.Show(this, dtxt, "Save Changes?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+						if (dr == DialogResult.Yes)
+						{
+							DialogResult = DialogResult.OK;
+							userClose = true;
+							// Don't actually close/unload it, just hide it
+							e.Cancel = true;
+							SaveAndExit();
+						}
+						else if (dr == DialogResult.No)
+						{
+							DialogResult = DialogResult.Cancel;
+							userClose = true;
+							MakeDirty(false);
+							// Don't actually close/unload it, just hide it
+							e.Cancel = true;
+							this.Hide();
+						}
+						else if (dr == DialogResult.Cancel)
+						{
+							e.Cancel = true;
+						}
+					} // End if dirty
+				} // End if not userClose flag
+			} // End if reason for closing is by user
 		}
 
 		private void txtIdentifier_Enter(object sender, EventArgs e)
@@ -1360,7 +1407,7 @@ namespace UtilORama4
 			int un = (int)numUnit.Value;
 			int st = (un - 1) * 16 + 1;
 			numStart.Value = st;
-			controller.DMXStartAddress = st;
+			controller.StartAddress = st;
 		}
 	} // End form class
 } // End namespace

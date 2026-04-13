@@ -1,9 +1,11 @@
 ﻿using FileHelper;
 using FormHelper;
 using LOR4;
+using LOR4;
 using Syncfusion.Windows.Forms.Grid;
 using Syncfusion.Windows.Forms.Tools;   // SyncFusion TreeView Advanced
 using Syncfusion.Windows.Forms.Tools.Win32API;
+using Syncfusion.XlsIO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,8 +16,9 @@ using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Windows.ApplicationModel.Preview.InkWorkspace;
 using Windows.Graphics.Printing.Workflow;
-using LOR4;
+using Windows.Management.Update;
 
 
 
@@ -23,13 +26,15 @@ namespace UtilORama4
 {
 	public partial class frmChannel : Form
 	{
-		public DMXChannel chanOriginal = null;
-		public DMXChannel channel = null;
+		public Channel chanOriginal = null;
+		public Channel channel = null;
 		public bool isDirty = false;
 		public bool renumber = false;
 		public bool loading = true;
 		private bool moved = false;
+		public bool userClose = false;
 		public frmList owner = null;
+		private string uniName = "Universe";
 
 		private Color MultiColor = Color.FromArgb(128, 64, 64);
 		private Color RGBColor = Color.FromArgb(64, 0, 0);
@@ -53,22 +58,8 @@ namespace UtilORama4
 		public static readonly Color Color_RGBW = ColorTranslator.FromHtml("#000100");
 		public static readonly Color Color_Multi = ColorTranslator.FromHtml("#010000");
 
-		protected override void WndProc(ref Message m)
-		{
-			if (m.Msg == WM_SYSCOMMAND && m.WParam.ToInt32() == SC_MINIMIZE)
-			{
-				// Minimize the owner (parent) form
-				if (this.Owner != null)
-				{
-					this.Owner.WindowState = FormWindowState.Minimized;
-				}
-
-				// Optionally: Prevent the child from minimizing independently or closing
-				// m.Result = IntPtr.Zero; 
-				// return;
-			}
-			base.WndProc(ref m);
-		}
+		private frmColors picker = null;
+		private FormWindowState prevWindowState = FormWindowState.Normal;
 
 		public frmChannel()
 		{
@@ -76,9 +67,10 @@ namespace UtilORama4
 			//FillCombos();
 		}
 
-		public frmChannel(DMXChannel chan)
+		public frmChannel(Channel chan)
 		{
 			owner = this.Owner as frmList;
+			uniName = frmList.uniName;
 			InitializeComponent();
 			chanOriginal = chan;
 			channel = chan.Copy();
@@ -91,9 +83,10 @@ namespace UtilORama4
 			}
 		}
 
-		public frmChannel(DMXChannel chan, frmList listform)
+		public frmChannel(Channel chan, frmList listform)
 		{
 			owner = listform;
+			uniName = frmList.uniName;
 			InitializeComponent();
 			chanOriginal = chan;
 			channel = chan.Copy();
@@ -126,17 +119,17 @@ namespace UtilORama4
 			cboController.Items.Clear();
 			for (int c = 0; c < owner.AllControllers.Count; c++)
 			{
-				DMXController controller = owner.AllControllers[c];
+				Controller controller = owner.AllControllers[c];
 				string ctxt = "";
 				if (controller.Identifier.Length > 0)
 				{
 					ctxt = controller.Identifier + ": ";
 				}
 				ctxt += controller.Name;
-				ctxt += " @ " + controller.DMXStartAddress.ToString();
+				ctxt += " @ " + controller.StartAddress.ToString();
 				ListItem li = new ListItem(ctxt, controller.ID);
 				cboController.Items.Add(li);
-				if (channel.DMXController.ID == controller.ID)
+				if (channel.Controller.ID == controller.ID)
 				{
 					cboController.SelectedIndex = c;
 				}
@@ -145,13 +138,13 @@ namespace UtilORama4
 			// Output Number
 			numOutput.Value = channel.OutputNum;
 			RefreshAddresses();
-			numOutput.Maximum = channel.DMXController.OutputCount;
+			numOutput.Maximum = channel.Controller.OutputCount;
 
-			if (Etc.xLightsVersion > 0)
+			if (frmList.hasxLights)
 			{
 				lblxLightsAddress.Visible = false;
 			}
-			if (Etc.LORVersion > 0)
+			if (frmList.hasLOR)
 			{
 				// Never mind, do nothing
 			}
@@ -159,7 +152,7 @@ namespace UtilORama4
 			MakeDirty(false);
 		}
 
-		public void LoadChannel(DMXChannel chan)
+		public void LoadChannel(Channel chan)
 		{
 			channel = chan;
 			//FillCombos();
@@ -174,24 +167,24 @@ namespace UtilORama4
 
 		private void RefreshAddresses()
 		{
-			string tmodel = "Controller: " + channel.DMXController.ControllerBrand + ": " + channel.DMXController.ControllerModel;
-			if (Etc.LORVersion > 0)
+			string tmodel = "Controller: " + channel.Controller.ControllerBrand + ": " + channel.Controller.ControllerModel;
+			if (frmList.hasLOR)
 			{
-				tmodel += ", Unit: " + channel.DMXController.UnitID.ToString();
+				tmodel += ", Unit: " + channel.Controller.UnitID.ToString();
 			}
 			lblModel.Text = tmodel;
-			lblUniverse.Text = "Universe " + channel.DMXController.DMXUniverse.ToString();
-			lblDMXAddress.Text = "DMX Address: " + channel.DMXAddress.ToString();
-			if (Etc.xLightsVersion > 0)
+			lblUniverse.Text = uniName + " " + channel.Controller.Universe.ToString();
+			lblAddress.Text = "Address: " + channel.Address.ToString();
+			if (frmList.hasxLights)
 			{
 				lblxLightsAddress.Text = "xLights Address: " + channel.xLightsAddress.ToString();
 			}
 			bool wasBad = channel.BadOutput;
-			DMXController newCtlr = channel.DMXController;
+			Controller newCtlr = channel.Controller;
 			int outCount = 0;
-			for (int co = 0; co < channel.DMXController.DMXChannels.Count; co++)
+			for (int co = 0; co < channel.Controller.Channels.Count; co++)
 			{
-				if (channel.DMXController.DMXChannels[co].OutputNum == channel.OutputNum)
+				if (channel.Controller.Channels[co].OutputNum == channel.OutputNum)
 				{
 					outCount++;
 				}
@@ -279,13 +272,13 @@ namespace UtilORama4
 				{
 					if (!AllChannels[c].Editing)
 					{
-						if (AllChannels[c].DMXAddress == channel.DMXAddress)
+						if (AllChannels[c].Address == channel.Address)
 						{
-							if (AllChannels[c].DMXUniverse.UniverseNumber == channel.DMXUniverse.UniverseNumber)
+							if (AllChannels[c].Universe.UniverseNumber == channel.Universe.UniverseNumber)
 							{
 								valid = false;
-								string msg = channel.Name + " ID:" + channel.ID + " DMX:" + channel.DMXAddress + " = ";
-								msg += AllChannels[c].Name + " ID: " + AllChannels[c].ID + " DMX:" + AllChannels[c].DMXAddress;
+								string msg = channel.Name + " ID:" + channel.ID + " DMX:" + channel.Address + " = ";
+								msg += AllChannels[c].Name + " ID: " + AllChannels[c].ID + " DMX:" + AllChannels[c].Address;
 								duplicates += AllChannels[c].ToString() + "\r\n";
 								//c = AllChannels.Count;
 							}
@@ -347,17 +340,6 @@ namespace UtilORama4
 		{
 		}
 
-		private void picColor_Click(object sender, EventArgs e)
-		{
-			/*
-			 * DialogResult dr = clrColors.ShowDialog(this);
-					if (dr == DialogResult.OK)
-					{
-						SetColor(clrColors.Color);
-					}
-		*/
-		}
-
 		public void SetColor(Color color)
 		{
 			// If ColorName is not already set by a prior version, then look it up.
@@ -366,21 +348,21 @@ namespace UtilORama4
 				channel.ColorName = LOR4Admin.NearestColorName(color);
 			}
 
-			if (color == Etc.Color_RGB)
+			if (color == frmList.Color_RGB)
 			{
 				tipTool.SetToolTip(picColor, "RGB");
 				tipTool.SetToolTip(lblColorLabel, "RGB");
 				picColor.BackColor = Color.Transparent;
 				picColor.Image = picRGB.Image;
 			}
-			else if (color == Etc.Color_RGBW)
+			else if (color == frmList.Color_RGBW)
 			{
 				tipTool.SetToolTip(picColor, "RGBW");
 				tipTool.SetToolTip(lblColorLabel, "RGBW");
 				picColor.BackColor = Color.Transparent;
 				picColor.Image = picRGBW.Image;
 			}
-			else if (color == Etc.Color_Multi)
+			else if (color == frmList.Color_Multi)
 			{
 				tipTool.SetToolTip(picColor, "Multicolored");
 				tipTool.SetToolTip(lblColorLabel, "Multicolored");
@@ -413,25 +395,25 @@ namespace UtilORama4
 			/*
 			channel.badOutput = false; // Optomistic reset
 			string tipText = "Set the output number for this channel on controller ";
-			tipText += channel.DMXController.ControllerID + ": " + channel.DMXController.Name;
+			tipText += channel.Controller.ControllerID + ": " + channel.Controller.Name;
 			tipTool.SetToolTip(numOutput, tipText);
 			tipText = "Select the controller this channel is connected to.";
 			tipTool.SetToolTip(cboController, tipText);
-			DMXUniverse uni = channel.DMXUniverse;
-			channel.DMXController = uni.DMXControllers[cboController.SelectedIndex];
-			for (int c = 0; c < channel.DMXController.DMXChannels.Count; c++)
+			Universe uni = channel.Universe;
+			channel.Controller = uni.Controllers[cboController.SelectedIndex];
+			for (int c = 0; c < channel.Controller.Channels.Count; c++)
 			{
-				if (!channel.DMXController.DMXChannels[c].Editing)
+				if (!channel.Controller.Channels[c].Editing)
 				{
-					if (numOutput.Value == channel.DMXController.DMXChannels[c].LOR4Output) ;
+					if (numOutput.Value == channel.Controller.Channels[c].LOR4Output) ;
 					{
 						channel.badOutput = true;
 						tipText = "LOR4Output " + numOutput.Value.ToString() + " is already being used by channel ";
-						tipText += channel.DMXController.DMXChannels[c].Name;
-						tipText += " on controller " + channel.DMXController.ControllerID + ": " + channel.DMXController.Name;
+						tipText += channel.Controller.Channels[c].Name;
+						tipText += " on controller " + channel.Controller.ControllerID + ": " + channel.Controller.Name;
 						tipTool.SetToolTip(numOutput, tipText);
 						tipTool.SetToolTip(cboController, tipText);
-						c = channel.DMXController.DMXChannels.Count; // Force exit loop
+						c = channel.Controller.Channels.Count; // Force exit loop
 					}
 				}
 			}
@@ -474,20 +456,48 @@ namespace UtilORama4
 			{
 				//System.Diagnostics.Debugger.Break();
 			}
-			if (isDirty)
+			string txtinfo = e.CloseReason.ToString();
+			if (e.CloseReason == CloseReason.None)
 			{
-				string dtxt = "Channel settings have changed.  Save them?";
-				DialogResult dr = MessageBox.Show(this, dtxt, "Save Changes?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-				if (dr == DialogResult.Yes)
-				{
-					SaveAndExit();
-				}
-				else if (dr == DialogResult.Cancel)
-				{
-					e.Cancel = true;
-				}
+				// NONE?!?!
+				//e.Cancel = true;
+				//this.Hide();
 			}
-		}
+
+
+			if (e.CloseReason == CloseReason.UserClosing)
+			{
+				if (!userClose)
+				{
+					if (isDirty)
+					{
+						string dtxt = "Channel settings have changed.  Save them?";
+						DialogResult dr = MessageBox.Show(this, dtxt, "Save Changes?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+						if (dr == DialogResult.Yes)
+						{
+							DialogResult = DialogResult.OK;
+							userClose = true;
+							// Don't actually close/unload it, just hide it
+							e.Cancel = true;
+							SaveAndExit();
+						}
+						else if (dr == DialogResult.No)
+						{
+							DialogResult = DialogResult.Cancel;
+							userClose = true;
+							MakeDirty(false);
+							// Don't actually close/unload it, just hide it
+							e.Cancel = true;
+							this.Hide();
+						}
+						else if (dr == DialogResult.Cancel)
+						{
+							e.Cancel = true;
+						}
+					} // End if dirty
+				} // End if not userClose flag
+			} // End if reason for closing is by user
+		} // End Form Closing event
 
 		private void numOutput_ValueChanged(object sender, EventArgs e)
 		{
@@ -543,22 +553,8 @@ namespace UtilORama4
 
 		private void lblColor_Click(object sender, EventArgs e)
 		{
+			//picColor_Click(sender, e);
 			picColor_Click(sender, e);
-		}
-
-		private void btnColor_Click(object sender, EventArgs e)
-		{
-			/*
-			using (var picker = new frmColor())
-			{
-				if (picker.ShowDialog() == DialogResult.OK)
-				{
-					// Use the selected color, for example, to set a button background
-					//this.btnPickColor.BackColor = picker.SelectedColor;
-					SetColor(picker.SelectedColor);
-				}
-			}
-			*/
 		}
 
 		private void txtName_Enter(object sender, EventArgs e)
@@ -636,7 +632,7 @@ namespace UtilORama4
 				{
 					if (cboType.SelectedItem != null)
 					{
-						DMXDeviceType device = (DMXDeviceType)cboType.SelectedItem;
+						DeviceTypes device = (DeviceTypes)cboType.SelectedItem;
 						if (device.Name != chanOriginal.DeviceType.Name)
 						{
 							//channel.ChannelType = (ChannelType)cboType.SelectedIndex;
@@ -665,7 +661,7 @@ namespace UtilORama4
 				{
 					for (int d = 0; d < cboType.Items.Count; d++)
 					{
-						DMXDeviceType de = (DMXDeviceType)cboType.Items[d];
+						DeviceTypes de = (DeviceTypes)cboType.Items[d];
 						string dn = de.Name;
 						if (de.ID == chanOriginal.DeviceType.ID)
 						{
@@ -681,7 +677,7 @@ namespace UtilORama4
 				{
 					if (cboType.SelectedItem != null)
 					{
-						DMXDeviceType device = (DMXDeviceType)cboType.SelectedItem;
+						DeviceTypes device = (DeviceTypes)cboType.SelectedItem;
 						if (device.Name != chanOriginal.DeviceType.Name)
 						{
 							//channel.ChannelType = (ChannelType)cboType.SelectedIndex;
@@ -742,7 +738,7 @@ namespace UtilORama4
 		private void cboController_Enter(object sender, EventArgs e)
 		{
 			string tipText = "Select the controller this channel is connected to.";
-			tipText += "\r\nThe controller must be defined in the universe editor.";
+			tipText += "\r\nThe controller must be defined in the " + uniName + " editor.";
 			tipTool.SetToolTip(cboController, tipText);
 			tipTool.SetToolTip(lblController, tipText);
 		}
@@ -754,26 +750,26 @@ namespace UtilORama4
 				// Did it really even change?
 				ListItem li = (ListItem)cboController.SelectedItem;
 				int newID = li.ID;
-				if (channel.DMXController.ID != newID)
+				if (channel.Controller.ID != newID)
 				{
 					changes |= CHANGE_CONTROLLER;
 					MakeDirty(true);
 					// Now we have to find it...
 					for (int u = 0; u < owner.AllUniverses.Count; u++)
 					{
-						DMXUniverse universe = owner.AllUniverses[u];
-						for (int c = 0; c < universe.DMXControllers.Count; c++)
+						Universe universe = owner.AllUniverses[u];
+						for (int c = 0; c < universe.Controllers.Count; c++)
 						{
-							DMXController controller = universe.DMXControllers[c];
+							Controller controller = universe.Controllers[c];
 							if (controller.ID == newID)
 							{
-								channel.DMXController = controller;
-								c = universe.DMXControllers.Count;
+								channel.Controller = controller;
+								c = universe.Controllers.Count;
 								u = owner.AllUniverses.Count;
 							}
 						}
 					}
-					numOutput.Maximum = channel.DMXController.OutputCount;
+					numOutput.Maximum = channel.Controller.OutputCount;
 					//OutputChange();
 					RefreshAddresses();
 				}
@@ -785,18 +781,18 @@ namespace UtilORama4
 		{
 			if (e.KeyCode == Keys.Escape)
 			{
-				if (chanOriginal.DMXController != null)
+				if (chanOriginal.Controller != null)
 				{
 					for (int u = 0; u < owner.AllUniverses.Count; u++)
 					{
-						DMXUniverse uni = owner.AllUniverses[u];
-						for (int c = 0; c < uni.DMXControllers.Count; c++)
+						Universe uni = owner.AllUniverses[u];
+						for (int c = 0; c < uni.Controllers.Count; c++)
 						{
-							ListItem li = new ListItem(uni.DMXControllers[c].ToString(), uni.DMXControllers[c].ID);
-							if (li.ID == chanOriginal.DMXController.ID)
+							ListItem li = new ListItem(uni.Controllers[c].ToString(), uni.Controllers[c].ID);
+							if (li.ID == chanOriginal.Controller.ID)
 							{
 								cboController.SelectedIndex = cboController.Items.IndexOf(li);
-								c = uni.DMXControllers.Count; // Force exit loop
+								c = uni.Controllers.Count; // Force exit loop
 								u = owner.AllUniverses.Count;
 							}
 						}
@@ -809,21 +805,21 @@ namespace UtilORama4
 				{
 					ListItem li = (ListItem)cboController.SelectedItem;
 					int newID = li.ID;
-					if (channel.DMXController.ID != newID)
+					if (channel.Controller.ID != newID)
 					{
 						changes |= CHANGE_CONTROLLER;
 						MakeDirty(true);
 						// Now we have to find it...
 						for (int u = 0; u < owner.AllUniverses.Count; u++)
 						{
-							DMXUniverse universe = owner.AllUniverses[u];
-							for (int c = 0; c < universe.DMXControllers.Count; c++)
+							Universe universe = owner.AllUniverses[u];
+							for (int c = 0; c < universe.Controllers.Count; c++)
 							{
-								DMXController controller = universe.DMXControllers[c];
+								Controller controller = universe.Controllers[c];
 								if (controller.ID == newID)
 								{
-									channel.DMXController = controller;
-									c = universe.DMXControllers.Count;
+									channel.Controller = controller;
+									c = universe.Controllers.Count;
 									u = owner.AllUniverses.Count;
 								}
 							}
@@ -878,11 +874,20 @@ namespace UtilORama4
 
 		private void btnOK_Click(object sender, EventArgs e)
 		{
-			SaveAndExit();
+			DialogResult = DialogResult.OK;
+			if (isDirty)
+			{
+				SaveAndExit();
+			}
+			else
+			{
+				this.Hide(); ;
+			}
 		}
 
 		private bool SaveAndExit()
 		{
+			userClose = true;
 			if (isDirty)
 			{
 				chanOriginal.ApplyChanges(channel);
@@ -895,6 +900,9 @@ namespace UtilORama4
 		private void btnCancel_Click(object sender, EventArgs e)
 		{
 			// Do not close or unload, so that parent form can read the dirty and renumber flags and decide what to do. Just hide this form.
+			DialogResult = DialogResult.Cancel;
+			userClose = true;
+			MakeDirty(false);
 			this.Hide();
 		}
 
@@ -962,15 +970,6 @@ namespace UtilORama4
 		{
 			{
 				//DialogResult dr = clrColors.ShowDialog(this);
-				frmColors picker = new frmColors();
-				picker.color = channel.Color;
-				DialogResult dr = picker.ShowDialog(this);
-				if (dr == DialogResult.OK)
-				{
-					channel.ColorName = picker.selectedName;
-					SetColor(picker.color);
-				}
-				picker.Dispose();
 			}
 		}
 
@@ -1004,16 +1003,57 @@ namespace UtilORama4
 
 		private void frmChannel_ResizeBegin(object sender, EventArgs e)
 		{
-
+			prevWindowState = this.WindowState;
 		}
 
 		private void frmChannel_ResizeEnd(object sender, EventArgs e)
 		{
-			if (this.WindowState == FormWindowState.Minimized)
+		}
+
+		private void frmChannel_Resize(object sender, EventArgs e)
+		{
+
+			/*// Did the window state change?
+			if (prevWindowState == FormWindowState.Normal)
 			{
-				owner.WindowState = FormWindowState.Minimized;
-				this.WindowState = FormWindowState.Normal;
+				// Is it now minimized?
+				if (this.WindowState == FormWindowState.Minimized)
+				{
+					// Minimize my owner/parent
+					owner.WindowState = FormWindowState.Minimized;
+					// It should (?) minimize this form when the parent/owner is minimized
+					// So set prevWindowState to minimized
+					prevWindowState = FormWindowState.Minimized;
+					// And set my own window state back to normal,
+					// so that when the owner/parent is restored, I'll be normal and showing.
+
+					this.WindowState = FormWindowState.Normal;
+				}
 			}
+			if (picker != null)
+			{
+				if (picker.WindowState == FormWindowState.Minimized)
+				{
+					picker.WindowState = FormWindowState.Normal;
+				}
+			}
+			*/
+		}
+
+		private void picColor_Click(object sender, EventArgs e)
+		{
+			picker = new frmColors();
+			picker.color = channel.Color;
+			DialogResult dr = picker.ShowDialog(this);
+			if (dr == DialogResult.OK)
+			{
+				if (picker.isDirty)
+				{
+					channel.ColorName = picker.selectedName;
+					SetColor(picker.selectedColor);
+				}
+			}
+			picker.Dispose();
 		}
 	} // End class frmChannel
 }  // End namespace

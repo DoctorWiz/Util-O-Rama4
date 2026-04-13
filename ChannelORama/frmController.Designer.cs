@@ -466,6 +466,7 @@ namespace UtilORama4
 			Icon = (Icon)resources.GetObject("$this.Icon");
 			Margin = new Padding(6, 7, 6, 7);
 			MaximizeBox = false;
+			MinimizeBox = false;
 			Name = "frmController";
 			ShowInTaskbar = false;
 			Text = "Controller";

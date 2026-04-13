@@ -65,8 +65,8 @@ namespace LOR4
 		{ get { return LOR4MemberType.Channel; } }
 		public override int UniverseNumber
 		{ get { return output.UniverseNumber; } }
-		public override int DMXAddress
-		{ get { return output.DMXAddress; } }
+		public override int Address
+		{ get { return output.Address; } }
 
 		//public int SavedIndex
 		//{ get { return myID; } }

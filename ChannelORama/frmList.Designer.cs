@@ -63,6 +63,7 @@
 			lblxChannel = new Label();
 			lblDirty = new Label();
 			lblVersions = new Label();
+			lblLoading = new Label();
 			staStatus.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)picAboutIcon).BeginInit();
 			mnuSettings.SuspendLayout();
@@ -477,12 +478,26 @@
 			lblVersions.TabIndex = 126;
 			lblVersions.Text = "...";
 			// 
+			// lblLoading
+			// 
+			lblLoading.AutoSize = true;
+			lblLoading.BackColor = Color.White;
+			lblLoading.Font = new Font("Segoe UI", 13.875F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+			lblLoading.ForeColor = Color.OrangeRed;
+			lblLoading.Location = new Point(321, 228);
+			lblLoading.Margin = new Padding(6, 0, 6, 0);
+			lblLoading.Name = "lblLoading";
+			lblLoading.Size = new Size(192, 50);
+			lblLoading.TabIndex = 127;
+			lblLoading.Text = "Loading...";
+			// 
 			// frmList
 			// 
 			AcceptButton = btnOK;
 			AutoScaleDimensions = new SizeF(13F, 32F);
 			AutoScaleMode = AutoScaleMode.Font;
 			ClientSize = new Size(1059, 1169);
+			Controls.Add(lblLoading);
 			Controls.Add(lblVersions);
 			Controls.Add(btnSettings);
 			Controls.Add(btnMoveDown);
@@ -504,6 +519,8 @@
 			Controls.Add(btnOK);
 			Controls.Add(staStatus);
 			Controls.Add(picAboutIcon);
+			Cursor = Cursors.WaitCursor;
+			Enabled = false;
 			Icon = (Icon)resources.GetObject("$this.Icon");
 			Margin = new Padding(7, 6, 7, 6);
 			MaximizeBox = false;
@@ -560,6 +577,7 @@
 		private ToolStripMenuItem dropModeToolStripMenuItem;
 		private ToolStripMenuItem preferencesToolStripMenuItem;
 		private Label lblVersions;
+		private Label lblLoading;
 	}
 }
 

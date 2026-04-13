@@ -39,7 +39,7 @@ namespace LOR4
 		// SyncFusion's TreeViewAdv in projects that don't use it.
 		// protected object myNodes = null;
 		protected int myUniverseNumber = LOR4Admin.UNDEFINED;
-		protected int myDMXAddress = LOR4Admin.UNDEFINED;
+		protected int myAddress = LOR4Admin.UNDEFINED;
 		protected string myComment = ""; // Not really a comment somuch as a general purpose temporary string.
 		protected int miscNumber = 0; // General purpose temporary integer.  Use varies according to utility and function.
 		protected string _testInfo = "";
@@ -256,7 +256,7 @@ namespace LOR4
 								result = UniverseNumber.CompareTo(other.UniverseNumber);
 								if (result == 0)
 								{
-									result = DMXAddress.CompareTo(other.DMXAddress);
+									result = Address.CompareTo(other.Address);
 								}
 							}
 						}
@@ -371,7 +371,7 @@ namespace LOR4
 			mbr.MakeDirty(isDirty);
 			mbr.SetParent(myParent);
 			mbr.ExactMatch = isExactMatch;
-			mbr.SetAddress(myUniverseNumber, myDMXAddress);
+			mbr.SetAddress(myUniverseNumber, myAddress);
 			mbr.Comment = myComment;
 			mbr.ZCount = miscNumber;
 
@@ -420,12 +420,12 @@ namespace LOR4
 		// locations.  Included in base class only as a placeholder.  (No way to set them in base class)
 		public virtual int UniverseNumber
 		{ get { return myUniverseNumber; } }
-		public virtual int DMXAddress
-		{ get { return myDMXAddress; } }
-		public virtual void SetAddress(int universe, int dmxAddress)
+		public virtual int Address
+		{ get { return myAddress; } }
+		public virtual void SetAddress(int universe, int Address)
 		{
 			myUniverseNumber = universe;
-			myDMXAddress = dmxAddress;
+			myAddress = Address;
 		}
 
 		// Not supported by ShowTime, and not saved along with the sequence file.  Included only for temporary use in Util-O-Rama

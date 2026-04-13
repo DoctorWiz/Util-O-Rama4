@@ -18,10 +18,11 @@ namespace UtilORama4
 	{
 
 		public bool isDirty = false;
-		private Color selectedColor = Color.Black;
+		public Color selectedColor = Color.Black;
 		public string selectedName = "";
 		private bool moved = false;
 		public frmChannel owner = null;
+		private FormWindowState prevWindowState = FormWindowState.Normal;
 
 		public frmColors()
 		{
@@ -32,7 +33,12 @@ namespace UtilORama4
 		{
 			InitializeComponent();
 			picSelection.BackColor = color;
-			owner=theOwner;
+			owner = theOwner;
+			// Sneaky trick: 'No' is not valid for a form's DialogResult
+			// So this is used in the Form_Closing event to determine if the form
+			// was properly closed by the user (by clicking OK or Cancel)
+			// vs. closing it with the 'X'
+			DialogResult = DialogResult.No;
 		}
 
 		public Color color
@@ -55,7 +61,7 @@ namespace UtilORama4
 			if (!moved)
 			{
 				Fourm.SetFormPosition(this);
-				moved=true;
+				moved = true;
 			}
 		}
 
@@ -96,21 +102,21 @@ namespace UtilORama4
 				Label lbl = (Label)sender;
 				if (lbl.Text == "RGB")
 				{
-					picSelection.BackColor = Etc.Color_RGB;
+					picSelection.BackColor = frmList.Color_RGB;
 					picSelection.Image = picRGB.Image;
-					SetColor(Etc.Color_RGB);
+					SetColor(frmList.Color_RGB);
 				}
 				else if (lbl.Text == "RGBW")
 				{
-					picSelection.BackColor = Etc.Color_RGBW;
+					picSelection.BackColor = frmList.Color_RGBW;
 					picSelection.Image = picRGBW.Image;
-					SetColor(Etc.Color_RGBW);
+					SetColor(frmList.Color_RGBW);
 				}
 				else if (lbl.Text == "Multi")
 				{
-					picSelection.BackColor = Etc.Color_Multi;
+					picSelection.BackColor = frmList.Color_Multi;
 					picSelection.Image = picMulti.Image;
-					SetColor(Etc.Color_Multi);
+					SetColor(frmList.Color_Multi);
 				}
 				selectedName = lbl.Text;
 			}
@@ -120,24 +126,24 @@ namespace UtilORama4
 				PictureBox pic = (PictureBox)sender;
 				if (pic.Name == "picRGB")
 				{
-					picSelection.BackColor = Etc.Color_RGB;
+					picSelection.BackColor = frmList.Color_RGB;
 					picSelection.Image = picRGB.Image;
 					selectedName = "RGB";
-					SetColor(Etc.Color_RGB);
+					SetColor(frmList.Color_RGB);
 				}
 				else if (pic.Name == "picRGBW")
 				{
-					picSelection.BackColor = Etc.Color_RGBW;
+					picSelection.BackColor = frmList.Color_RGBW;
 					picSelection.Image = picRGBW.Image;
 					selectedName = "RGBW";
-					SetColor(Etc.Color_RGBW);
+					SetColor(frmList.Color_RGBW);
 				}
 				else if (pic.Name == "picMulti")
 				{
-					picSelection.BackColor = Etc.Color_Multi;
+					picSelection.BackColor = frmList.Color_Multi;
 					picSelection.Image = picMulti.Image;
 					selectedName = "Multi";
-					SetColor(Etc.Color_Multi);
+					SetColor(frmList.Color_Multi);
 				}
 			}
 		}
@@ -196,6 +202,7 @@ namespace UtilORama4
 		private void btnCancel_Click(object sender, EventArgs e)
 		{
 			MakeDirty(false);
+			this.DialogResult = DialogResult.Cancel;
 			this.Hide();
 		}
 
@@ -280,5 +287,75 @@ namespace UtilORama4
 				e.Graphics.DrawString(text, font, brush, picSelection.ClientRectangle, sf);
 			}
 		} // End event handlers for painting the text on the special color boxes and the selection box.
+
+		private void frmColors_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			if (isDirty)
+			{
+				// Sneaky trick: 'No' is not valid for a form's DialogResult
+				// So this is used in the Form_Closing event to determine if the form
+				// was properly closed by the user (by clicking OK or Cancel)
+				// vs. closing it with the 'X'
+				if (DialogResult == DialogResult.No)
+				{
+					string dtxt = "The Color selction has changed.  Save it to the Channel?";
+					DialogResult dr = MessageBox.Show(this, dtxt, "Save Changes?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+					if (dr == DialogResult.Yes)
+					{
+						//SaveAndExit();
+						this.DialogResult = DialogResult.OK;
+						this.Hide();
+					}
+					else if (dr == DialogResult.Cancel)
+					{
+						e.Cancel = true;
+					}
+					else if (dr == DialogResult.No)
+					{
+						MakeDirty(false);
+						this.DialogResult = DialogResult.Cancel;
+						this.Hide();
+					}
+				}
+			}
+		}
+
+		private void frmColors_ResizeEnd(object sender, EventArgs e)
+		{
+			/*
+			// Did the window state change?
+			if (prevWindowState == FormWindowState.Normal)
+			{
+				// Is it now minimized?
+				if (this.WindowState == FormWindowState.Minimized)
+				{
+					// Minimize my owner/parent
+					owner.WindowState = FormWindowState.Minimized;
+					// And set my own window state back to normal,
+					// so that when the owner/parent is restored, I'll be normal and showing.
+					this.WindowState = FormWindowState.Normal;
+				}
+			}
+			*/
+		}
+
+		private void btnOK_Click(object sender, EventArgs e)
+		{
+			if (isDirty)
+			{
+			}
+			this.DialogResult = DialogResult.OK;
+			this.Hide();
+		}
+
+		private void frmColors_ResizeBegin(object sender, EventArgs e)
+		{
+			prevWindowState = this.WindowState;
+		}
+
+		private void frmColors_Shown(object sender, EventArgs e)
+		{
+
+		}
 	} // End form class
 } // End namespace

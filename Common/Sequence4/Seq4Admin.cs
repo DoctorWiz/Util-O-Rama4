@@ -22,15 +22,17 @@ namespace LOR4
 	{
 		#region Constants
 		public const string COPYRIGHT = "Copyright © 2021+ by Doctor 🧙 Wizard and W⚡zlights Software";
-		public const int UNDEFINED = -1;
+		public const Int32 UNDEFINED = -1;
 		// Note: LOR colors not in the same order as .Net or Web colors, Red and Blue are reversed (In BGR order)
 		public const Int32 LORCOLOR_RED = 0x0000FF; // 255;      // 0x0000FF
 		public const Int32 LORCOLOR_GRN = 0x00FF00; // 65280;    // 0x00FF00
 		public const Int32 LORCOLOR_BLU = 0xFF0000; // 16711680; // 0xFF0000
 		public const Int32 LORCOLOR_BLK = 0;
 		public const Int32 LORCOLOR_WHT = 0xFFFFFF;
-		public const int LORCOLOR_RGB = 0x000040;
-		public const int LORCOLOR_MULTI = 0x404080;
+		public const Int32 LORCOLOR_RGB = 0x000040;
+		public const Int32 LORCOLOR_MULTI = 0x404080;
+		public const Int32 LORCOLOR_WARMWT = 0xD0E0FF;
+		public const Int32 LORCOLOR_COOLWT = 0xFFFFD0;
 
 		public const int ADDshimmer = 0x200;
 		public const int ADDtwinkle = 0x400;
@@ -137,6 +139,10 @@ namespace LOR4
 		//private static string noisePath = Path.GetDirectoryName(Application.ExecutablePath) + "\\Noises\\";
 		//private static bool gotWiz = false;
 		//private static bool isWiz = false;
+		// -1 means we haven't even checked yet.  0 means we checked, and it ain't there.  4 or higher will be the major version.
+		private static int lorVer = -1; // Cache it after looking up for the first time.
+		// -1 means we haven't even checked yet.  0 means we checked, and it ain't there.  20xx or higher will be the release year / major version.
+		private static int xlVer = -1; // Cache this one too
 
 		private static Dictionary<int, String> colorMap = new Dictionary<int, string>	();
 		#endregion // Constants
@@ -791,6 +797,8 @@ namespace LOR4
 					name = "Cool White";
 				else if (cargb == 0xFFE0D0)
 					name = "Warm White";
+				else if (cargb == 0xFFFFFF)
+					name = "White";  // cuz plain white gets incorrectly labeled as "Transparent"
 				else if (cargb == 0xFF000)
 					name = "Red";
 				else if (cargb == 0x00FF00)
@@ -2021,6 +2029,105 @@ namespace LOR4
 		#endregion // FastIndexOf
 
 		#region LOR Specific File & Directory Functions
+		public static int LORVersion
+		{
+			get
+			{
+				int ret = -1;
+				// Already figured out?  Return the cached version.
+				if (lorVer >= 0)
+				{
+					ret = lorVer;
+				}
+				else
+				{
+					// use lorVer to cache the determined version number.
+					string pgms32 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
+					string xlor = pgms32 + "\\Light-O-Rama\\Showtime\\S4\\LOR4Showtime.exe";
+					if (Fyle.Exists(xlor))
+					{
+						lorVer = 4;
+					}
+					else
+					{
+						xlor = pgms32 + "\\Light-O-Rama\\Showtime\\S5\\LOR5Showtime.exe";
+						if (Fyle.Exists(xlor))
+						{
+							lorVer = 5;
+						}
+						else
+						{
+							xlor = pgms32 + "\\Light-O-Rama\\LORSequencer.exe";
+							if (Fyle.Exists(xlor))
+							{
+								FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(xlor);
+								// Typical version string (e.g., "1.2.3.4")
+								//string fileVersion = versionInfo.FileVersion;
+								// Alternatively, get specific parts
+								int major = versionInfo.FileMajorPart;
+								//int minor = versionInfo.FileMinorPart;
+								if (major > 3)
+								{
+									lorVer = major;
+								}
+								//Console.WriteLine($"Version: {fileVersion}");
+							}
+							else
+							{
+								// -1 means we haven't even checked yet.  0 means we checked, and it ain't there.  4 or higher will be the major version.
+								lorVer = 0;
+							}
+						}
+					}
+					ret = lorVer;
+				}
+				return ret;
+			}
+		}
+
+		public static int xLightsVersion
+		{
+			get
+			{
+				int ret = -1;
+				// Already figured out?  Use the cached number
+				if (xlVer >= 0)
+				{
+					ret = xlVer;
+				}
+				else
+				{
+					string pgms64 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+					// Returns: C:\Program Files
+					// Note: Folder [should] always be "Program Files" even on non-English versions of Windows, but just in case, we look it up instead of hard coding it.
+					// But it might not be on the C: Drive, so we look it up instead of hard coding it.
+					// Also, we look for xLights in Program Files, not Program Files (x86), because xLights is a 64 bit application and should be installed in Program Files, even on 64 bit Windows.
+					string xlexe = pgms64 + "\\xLights\\xLights\\xLights.exe";
+					if (Fyle.Exists(xlexe))
+					{
+						//FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(xlexe);
+						//int major = versionInfo.FileMajorPart;
+						// Keep the found version in a cache name xlVer
+						//xlVer = major;
+						//int minor = versionInfo.FileMinorPart;
+						//if (minor > 0)
+						//{
+						//	xlVer += (minor / 100);
+						//}
+						DateTime xdt = Fyle.FileCreatedDateTime(xlexe);
+						// The "Major" version will be the year it was released.
+						xlVer = xdt.Year;
+						ret = xlVer;
+					}
+					else
+					{
+						// -1 means we haven't even checked yet.  0 means we checked, and it ain't there.  20xx will be the release year / major version.
+						xlVer = 0;
+					}
+				}
+				return ret;
+			}
+		}
 
 		public static string SequenceEditor
 		{

@@ -45,7 +45,7 @@ namespace UtilORama4
 			numOutput = new NumericUpDown();
 			lblOutput = new Label();
 			lblUniverse = new Label();
-			lblDMXAddress = new Label();
+			lblAddress = new Label();
 			lblxLightsAddress = new Label();
 			chkActive = new CheckBox();
 			lblModel = new Label();
@@ -240,16 +240,16 @@ namespace UtilORama4
 			lblUniverse.Text = "Universe: 1";
 			tipTool.SetToolTip(lblUniverse, "The DMX Universe this controller and this channel are connected to.");
 			// 
-			// lblDMXAddress
+			// lblAddress
 			// 
-			lblDMXAddress.AutoSize = true;
-			lblDMXAddress.Location = new Point(173, 414);
-			lblDMXAddress.Margin = new Padding(7, 0, 7, 0);
-			lblDMXAddress.Name = "lblDMXAddress";
-			lblDMXAddress.Size = new Size(183, 32);
-			lblDMXAddress.TabIndex = 15;
-			lblDMXAddress.Text = "DMX Address: 1";
-			tipTool.SetToolTip(lblDMXAddress, "The DMX address of this channel in this DMX Universe.");
+			lblAddress.AutoSize = true;
+			lblAddress.Location = new Point(173, 414);
+			lblAddress.Margin = new Padding(7, 0, 7, 0);
+			lblAddress.Name = "lblAddress";
+			lblAddress.Size = new Size(183, 32);
+			lblAddress.TabIndex = 15;
+			lblAddress.Text = "DMX Address: 1";
+			tipTool.SetToolTip(lblAddress, "The DMX address of this channel in this DMX Universe.");
 			// 
 			// lblxLightsAddress
 			// 
@@ -377,7 +377,7 @@ namespace UtilORama4
 			picColor.SizeMode = PictureBoxSizeMode.StretchImage;
 			picColor.TabIndex = 90;
 			picColor.TabStop = false;
-			picColor.Click += Pick_Color_Click;
+			picColor.Click += picColor_Click;
 			picColor.Paint += picColor_Paint;
 			// 
 			// frmChannel
@@ -396,7 +396,7 @@ namespace UtilORama4
 			Controls.Add(lblModel);
 			Controls.Add(chkActive);
 			Controls.Add(lblxLightsAddress);
-			Controls.Add(lblDMXAddress);
+			Controls.Add(lblAddress);
 			Controls.Add(lblUniverse);
 			Controls.Add(lblOutput);
 			Controls.Add(numOutput);
@@ -415,6 +415,7 @@ namespace UtilORama4
 			FormBorderStyle = FormBorderStyle.FixedDialog;
 			Icon = (Icon)resources.GetObject("$this.Icon");
 			Margin = new Padding(7, 6, 7, 6);
+			MaximizeBox = false;
 			MinimizeBox = false;
 			Name = "frmChannel";
 			ShowInTaskbar = false;
@@ -425,6 +426,7 @@ namespace UtilORama4
 			ResizeBegin += frmChannel_ResizeBegin;
 			ResizeEnd += frmChannel_ResizeEnd;
 			Paint += frmChannel_Paint;
+			Resize += frmChannel_Resize;
 			((System.ComponentModel.ISupportInitialize)numOutput).EndInit();
 			((System.ComponentModel.ISupportInitialize)picRGB).EndInit();
 			((System.ComponentModel.ISupportInitialize)picRGBW).EndInit();
@@ -451,7 +453,7 @@ namespace UtilORama4
 		private System.Windows.Forms.NumericUpDown numOutput;
 		private System.Windows.Forms.Label lblOutput;
 		private System.Windows.Forms.Label lblUniverse;
-		private System.Windows.Forms.Label lblDMXAddress;
+		private System.Windows.Forms.Label lblAddress;
 		private System.Windows.Forms.Label lblxLightsAddress;
 		private System.Windows.Forms.CheckBox chkActive;
 		private System.Windows.Forms.ToolTip tipTool;

@@ -228,7 +228,7 @@ namespace LOR4
 				deviceType = LOR4SeqEnums.EnumDevice(dev);
 				// for LOR, this is the network, for DMX it is the UniverseNumber
 				network = LOR4Admin.getKeyValue(lineIn, FIELDnetwork);
-				// for LOR, this is the channel, for DMX this is the DMXAddress
+				// for LOR, this is the channel, for DMX this is the Address
 				circuit = LOR4Admin.getKeyValue(lineIn, FIELDcircuit);
 				// for LOR, this is the unit, for DMX it's not used
 				unit = LOR4Admin.getKeyValue(lineIn, FIELDunit);
@@ -349,7 +349,7 @@ namespace LOR4
 			}
 		}
 
-		public int DMXAddress
+		public int Address
 		{ get { return circuit; } set { circuit = value; } }
 
 		public string networkName

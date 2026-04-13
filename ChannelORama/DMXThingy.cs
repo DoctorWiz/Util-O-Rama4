@@ -8,9 +8,9 @@ namespace UtilORama4
 {
 	public enum DMXObjectType
 	{
-		DMXUniverse,
-		DMXController,
-		DMXChannel
+		Universe,
+		Controller,
+		Channel
 	}
 
 	public class ListItem

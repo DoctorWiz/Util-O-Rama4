@@ -43,7 +43,7 @@ namespace xLights22
 		int UniverseNumber
 		{ get; set; }
 
-		int DMXAddress
+		int Address
 		{ get; set; }
 
 		int xLightsAddress
@@ -68,7 +68,7 @@ namespace xLights22
 		private object tagItem = null;
 		private int xaddress = -1;
 		private string startChannel = "";
-		private int dmxAddress = 1;
+		protected int myAddress = 1;
 		private int universeNumber = 1;
 		private xMemberType memberBaseType = xMemberType.Base;
 		protected xModelSubType modelSubType = xModelSubType.Unknown;
@@ -142,10 +142,10 @@ namespace xLights22
 			set { universeNumber = value; }
 		}
 
-		public int DMXAddress
+		public int Address
 		{
-			get { return dmxAddress; }
-			set { dmxAddress = value; }
+			get { return myAddress; }
+			set { myAddress = value; }
 		}
 
 		public int xLightsAddress

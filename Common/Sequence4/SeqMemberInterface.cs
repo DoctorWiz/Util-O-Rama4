@@ -66,9 +66,9 @@ namespace LOR4
 		{ get; set; }
 		int UniverseNumber
 		{ get; }
-		int DMXAddress
+		int Address
 		{ get; }
-		void SetAddress(int universe, int dmxAddress);
+		void SetAddress(int universe, int Address);
 		string Comment
 		{ get; set; }
 		int ZCount

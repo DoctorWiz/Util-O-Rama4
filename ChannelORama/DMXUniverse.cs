@@ -9,7 +9,7 @@ using Windows.ApplicationModel.Calls.Background;   // SyncFusion TreeView Advanc
 namespace UtilORama4
 {
 
-	public class DMXUniverse : IDMXThingy, IComparable<DMXUniverse>, IEquatable<DMXUniverse>
+	public class Universe : IDMXThingy, IComparable<Universe>, IEquatable<Universe>
 	{
 		// Note: ID is not permenant, it is assigned and used only at run time
 		protected int myID = -1;
@@ -33,44 +33,44 @@ namespace UtilORama4
 																						//public TreeNodeAdv TreeNode = null;
 		public bool SortByName = false;
 		// Controllers under this universe
-		public List<DMXController> DMXControllers = new List<DMXController>();
+		public List<Controller> Controllers = new List<Controller>();
 		// ALL Universes
-		public static List<DMXUniverse> AllUniverses = new List<DMXUniverse>();
+		public static List<Universe> AllUniverses = new List<Universe>();
 		// All Controllers under ALL Universes
-		public static List<DMXController> AllControllers = new List<DMXController>();
+		public static List<Controller> AllControllers = new List<Controller>();
 		// All DMX Channels across all Universes and all Controllers
-		public static List<DMXChannel> AllChannels = new List<DMXChannel>();
+		public static List<Channel> AllChannels = new List<Channel>();
 
-		public DMXChannel DMXChannelAt(int DMXAddress)
+		public Channel ChannelAt(int Address)
 		{
-			DMXChannel ret = null;
-			for (int ctl = 0; ctl < DMXControllers.Count; ctl++)
+			Channel ret = null;
+			for (int ctl = 0; ctl < Controllers.Count; ctl++)
 			{
-				for (int chn = 0; chn < DMXControllers[ctl].DMXChannels.Count; chn++)
+				for (int chn = 0; chn < Controllers[ctl].Channels.Count; chn++)
 				{
-					if (DMXAddress == DMXControllers[ctl].DMXChannels[chn].DMXAddress)
+					if (Address == Controllers[ctl].Channels[chn].Address)
 					{
-						ret = DMXControllers[ctl].DMXChannels[chn];
-						chn = DMXControllers[ctl].DMXChannels.Count;
-						ctl = DMXControllers.Count; // Exit loops
+						ret = Controllers[ctl].Channels[chn];
+						chn = Controllers[ctl].Channels.Count;
+						ctl = Controllers.Count; // Exit loops
 					}
 				}
 			}
 			return ret;
 		}
 
-		public DMXChannel xLightsChannelAt(int xLightsChannelID)
+		public Channel xLightsChannelAt(int xLightsChannelID)
 		{
-			DMXChannel ret = null;
-			for (int ctl = 0; ctl < DMXControllers.Count; ctl++)
+			Channel ret = null;
+			for (int ctl = 0; ctl < Controllers.Count; ctl++)
 			{
-				for (int chn = 0; chn < DMXControllers[ctl].DMXChannels.Count; chn++)
+				for (int chn = 0; chn < Controllers[ctl].Channels.Count; chn++)
 				{
-					if (xLightsChannelID == DMXControllers[ctl].DMXChannels[chn].xLightsAddress)
+					if (xLightsChannelID == Controllers[ctl].Channels[chn].xLightsAddress)
 					{
-						ret = DMXControllers[ctl].DMXChannels[chn];
-						chn = DMXControllers[ctl].DMXChannels.Count;
-						ctl = DMXControllers.Count; // Exit loops
+						ret = Controllers[ctl].Channels[chn];
+						chn = Controllers[ctl].Channels.Count;
+						ctl = Controllers.Count; // Exit loops
 					}
 				}
 			}
@@ -94,7 +94,7 @@ namespace UtilORama4
 		{
 			get
 			{
-				string ret = UniverseNumber.ToString(myName) + ": " + myName;
+				string ret = UniverseNumber.ToString() + ": " + myName;
 				return ret;
 			}
 		}
@@ -113,9 +113,9 @@ namespace UtilORama4
 				string lowname = myName.ToLower();
 				int myOriginalID = Math.Abs(myID);
 				string dbg = "This universe " + this.ID.ToString() + "-" + this.Name + " Name conflicts with";
-				for (int ch = 0; ch < DMXUniverse.AllUniverses.Count; ch++)
+				for (int ch = 0; ch < Universe.AllUniverses.Count; ch++)
 				{
-					DMXUniverse uni = DMXUniverse.AllUniverses[ch];
+					Universe uni = Universe.AllUniverses[ch];
 					if (uni.myID != myOriginalID)
 					{
 						if (uni.Name.CompareTo(myName) == 0)
@@ -123,7 +123,7 @@ namespace UtilORama4
 							ret = true;
 							dbg += "\r\n  " + uni.ID.ToString() + "-" + uni.Name;
 							//nameIsBad = true;
-							//DMXUniverse.AllControllers[ch].nameIsBad = true;
+							//Universe.AllControllers[ch].nameIsBad = true;
 						}
 					}
 				}
@@ -145,7 +145,7 @@ namespace UtilORama4
 				string dbg = "This universe " + this.ID.ToString() + "-" + this.Name + " Number " + this.UniverseNumber + " conflicts with";
 				for (int ch = 0; ch < AllUniverses.Count; ch++)
 				{
-					DMXUniverse uni = AllUniverses[ch];
+					Universe uni = AllUniverses[ch];
 					if (uni.myID != myOriginalID)
 					{
 						if (myUniverseNumber == uni.myUniverseNumber)
@@ -153,7 +153,7 @@ namespace UtilORama4
 							ret = true;
 							dbg += "\r\n  " + uni.ID.ToString() + "-" + uni.Name + " Number " + uni.UniverseNumber;
 							//addressIsBad = true;
-							//DMXUniverse.AllControllers[ch].addressIsBad = true;
+							//Universe.AllControllers[ch].addressIsBad = true;
 						}
 					}
 				}
@@ -166,15 +166,54 @@ namespace UtilORama4
 			}
 		}
 
+		public int LastUsedAddress
+		{
+			get
+			{
+				int ret = 0;
+				if (Controllers.Count > 0)
+				{
+					Controllers.Sort();
+					Controller ctl = Controllers[Controllers.Count - 1];
+					ret = ctl.StartAddress + ctl.OutputCount - 1;
+					// OR
+					if (ctl.Channels.Count > 0)
+					{
+						ctl.Channels.Sort();
+						ret = ctl.Channels[ctl.Channels.Count - 1].Address;
+					}
+				}
+				return ret;
+			}
+		}
 
-
-
+		public int xLightsAddress 
+		{
+			get
+			{
+				//int adr = 1;
+				//foreach (Universe u in AllUniverses)
+				//{
+				//	if (u.UniverseNumber < myUniverseNumber)
+				//	{
+				//		adr += u.LastUsedAddress;
+				//	}
+				//}
+				//myxLightsAddress = adr;
+				return myxLightsAddress;
+			}
+			set
+			{
+				int v = Math.Abs(value);
+				myxLightsAddress = v;
+			}
+		}
 
 		public object Tag { get { return myTag; } set { myTag = value; } }
-		public int xLightsAddress { get { return myxLightsAddress; } set { myxLightsAddress = value; } }
+
 		public bool ExactMatch { get { return matchesExactly; } set { matchesExactly = value; } }
 
-		public DMXObjectType ObjectType	{	get	{	return DMXObjectType.DMXUniverse;	}	}
+		public DMXObjectType ObjectType	{	get	{	return DMXObjectType.Universe;	}	}
 
 		public int UniverseNumber
 		{
@@ -227,7 +266,7 @@ namespace UtilORama4
 			return ret;
 		}
 
-		public int CompareTo(DMXUniverse otherUniverse)
+		public int CompareTo(Universe otherUniverse)
 		{
 			int ret = 0;
 			if (SortByName)
@@ -237,12 +276,20 @@ namespace UtilORama4
 				{
 					ret = UniverseNumber.CompareTo(otherUniverse.UniverseNumber);
 				}
+			}
+			else
+			{
+				ret = UniverseNumber.CompareTo(otherUniverse.UniverseNumber);
+				if ( ret == 0 )
+				{
+					ret = UniverseNumber.CompareTo(otherUniverse.UniverseNumber);
 				}
-			return ret;
+			}
+				return ret;
 		}
-		public DMXUniverse Copy()
+		public Universe Copy()
 		{
-			DMXUniverse newUni = new DMXUniverse();
+			Universe newUni = new Universe();
 			//newUni.myID = myID;
 			newUni.Name = myName;
 			newUni.myLocation = myLocation;
@@ -252,7 +299,7 @@ namespace UtilORama4
 			newUni.myxLightsAddress = myxLightsAddress;
 			newUni.Connection = Connection;
 			newUni.MaxChannelsAllowed = MaxChannelsAllowed;
-			newUni.DMXControllers = DMXControllers;
+			newUni.Controllers = Controllers;
 			newUni.isEditing = isEditing;
 			//newUni.nameIsBad							= nameIsBad;
 			//newUni.isDirty = isDirty;
@@ -262,14 +309,14 @@ namespace UtilORama4
 			return newUni;
 		}
 
-		public DMXUniverse Clone()
+		public Universe Clone()
 		{
-			DMXUniverse newUni = Copy();
+			Universe newUni = Copy();
 			newUni.myID = myID;
 			return newUni;
 		}
 
-		public void ApplyChanges(DMXUniverse otherUniverse)
+		public void ApplyChanges(Universe otherUniverse)
 		{
 			//myID = otherUniverse.myID;
 			Name = otherUniverse.myName;
@@ -280,7 +327,7 @@ namespace UtilORama4
 			myxLightsAddress = otherUniverse.myxLightsAddress;
 			Connection = otherUniverse.Connection;
 			MaxChannelsAllowed = otherUniverse.MaxChannelsAllowed;
-			DMXControllers = otherUniverse.DMXControllers;
+			Controllers = otherUniverse.Controllers;
 			isEditing = otherUniverse.isEditing;
 			//nameIsBad							= otherUniverse.nameIsBad;
 			//isDirty = otherUniverse.isDirty;
@@ -288,13 +335,13 @@ namespace UtilORama4
 			matchesExactly = otherUniverse.matchesExactly;
 		}
 
-		public void Clone(DMXUniverse otherUniverse)
+		public void Clone(Universe otherUniverse)
 		{
 			myID = otherUniverse.myID;
 			ApplyChanges(otherUniverse);
 		}
 
-		public bool Equals(DMXUniverse otherUniverse)
+		public bool Equals(Universe otherUniverse)
 		{
 			bool eq = true;
 			//if (myID != otherUniverse.myID) eq = false;
@@ -306,7 +353,7 @@ namespace UtilORama4
 			else if (myxLightsAddress != otherUniverse.myxLightsAddress) eq = false;
 			else if (Connection.CompareTo(otherUniverse.Connection) != 0) eq = false;
 			else if (MaxChannels != otherUniverse.MaxChannels) eq = false;
-			//else if (DMXControllers != otherUniverse.DMXControllers) eq = false;
+			//else if (Controllers != otherUniverse.Controllers) eq = false;
 			else if (isEditing != otherUniverse.isEditing) eq = false;
 			//else if (nameIsBad							!= otherUniverse.nameIsBad)							eq = false;
 			//else if (BadNumber != otherUniverse.BadNumber) eq = false;
@@ -322,13 +369,13 @@ namespace UtilORama4
 				// What is the highest DMX Channel number used in this universe?
 				int ret = 0;
 				// Look through all controllers and channels to find the highest DMX Address used
-				for (int ctl = 0; ctl < DMXControllers.Count; ctl++)
+				for (int ctl = 0; ctl < Controllers.Count; ctl++)
 				{
-					for (int chn = 0; chn < DMXControllers[ctl].DMXChannels.Count; chn++)
+					for (int chn = 0; chn < Controllers[ctl].Channels.Count; chn++)
 					{
-						if (DMXControllers[ctl].DMXChannels[chn].DMXAddress > ret)
+						if (Controllers[ctl].Channels[chn].Address > ret)
 						{
-							ret = DMXControllers[ctl].DMXChannels[chn].DMXAddress;
+							ret = Controllers[ctl].Channels[chn].Address;
 						}
 					}
 				}

@@ -271,7 +271,7 @@ namespace LOR4
 				return LOR4Admin.UNDEFINED;
 			}
 		}
-		public override int DMXAddress
+		public override int Address
 		{
 			get
 			{

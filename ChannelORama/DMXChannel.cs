@@ -16,7 +16,7 @@ namespace UtilORama4
 	//													RGBFlood, LEDstrip, Ropelight, FlickerBulb, UFO, Inflatable, Blowmold};
 
 
-	public class DMXChannel : IDMXThingy, IComparable<DMXChannel>, IEquatable<DMXChannel>
+	public class Channel : IDMXThingy, IComparable<Channel>, IEquatable<Channel>
 	{
 		//NOTE: myID is not permanant, it is assigned and used at runtime
 		protected int myID = -1;
@@ -30,12 +30,12 @@ namespace UtilORama4
 
 
 		//public long ColorLOR = 0x00FFFFFF;
-		public DMXController DMXController = null;
+		public Controller Controller = null;
 		//private int myOutput = 1;
 		protected int myOutput = 1;
 		//public ChannelType ChannelType = ChannelType.SingleLight;
-		//public static List<DMXDeviceType> DeviceTypes = new List<DMXDeviceType>();
-		public DMXDeviceType DeviceType = new DMXDeviceType("Unclassified", 0, 999);
+		//public static List<DeviceTypes> DeviceTypes = new List<DeviceTypes>();
+		public DeviceTypes DeviceType = new DeviceTypes("Unclassified", 0, 999);
 		protected bool isEditing = false;
 		protected bool isDirty = false;
 		protected bool nameIsBad = true;
@@ -53,30 +53,30 @@ namespace UtilORama4
 		public string ColorName = "";
 
 
-		public DMXChannel()
+		public Channel()
 		{
 
 		}
-		public DMXChannel(DMXController controller, string theName = "")
+		public Channel(Controller controller, string theName = "")
 		{
-			DMXController = controller;
-			DMXController.DMXChannels.Add(this);
+			Controller = controller;
+			Controller.Channels.Add(this);
 			if (theName.Length > 0)
 			{ Name = theName; }
 		}
 
-		public DMXChannel(string theName)
+		public Channel(string theName)
 		{
 			Name = theName;
 		}
 
-		public DMXChannel(DMXController controller)
+		public Channel(Controller controller)
 		{
-			DMXController = controller;
-			DMXController.DMXChannels.Add(this);
+			Controller = controller;
+			Controller.Channels.Add(this);
 		}
 
-		public DMXChannel(DMXChannel otherChannel)
+		public Channel(Channel otherChannel)
 		{
 			// Clone Constructor
 			myID = otherChannel.myID;
@@ -85,8 +85,8 @@ namespace UtilORama4
 			myComment = otherChannel.myComment;
 			isActive = otherChannel.isActive;
 			Color = otherChannel.Color;
-			DMXController = otherChannel.DMXController;
-			//DMXController.DMXChannels.Add(this);
+			Controller = otherChannel.Controller;
+			//Controller.Channels.Add(this);
 			OutputNum = otherChannel.myOutput;
 			DeviceType = otherChannel.DeviceType;
 			isEditing = otherChannel.isEditing;
@@ -146,14 +146,14 @@ namespace UtilORama4
 			}
 		}
 
-		public DMXUniverse DMXUniverse
+		public Universe Universe
 		{
 			get
 			{
-				DMXUniverse univ = null;
-				if (DMXController != null)
+				Universe univ = null;
+				if (Controller != null)
 				{
-					univ = DMXController.DMXUniverse;
+					univ = Controller.Universe;
 				}
 				return univ;
 			}
@@ -184,9 +184,9 @@ namespace UtilORama4
 				string lowname = myName.ToLower();
 				int myOriginalID = Math.Abs(myID);
 				string dbg = "This channel " + this.ID.ToString() + "-" + this.Name + " Name conflicts with";
-				for (int c = 0; c < DMXUniverse.AllChannels.Count; c++)
+				for (int c = 0; c < Universe.AllChannels.Count; c++)
 				{
-					DMXChannel chn = DMXUniverse.AllChannels[c];
+					Channel chn = Universe.AllChannels[c];
 					if (chn.ID != myOriginalID)
 					{
 						if (chn.Name.ToLower().CompareTo(lowname) == 0)
@@ -220,19 +220,19 @@ namespace UtilORama4
 					{
 						ret = true;
 					}
-					else if (this.OutputNum > this.DMXController.OutputCount)
+					else if (this.OutputNum > this.Controller.OutputCount)
 					{
 						ret = true;
 					}
 					else
 					{
-						//for (int c = 0; c < DMXUniverse.AllChannels.Count; c++)
-						for (int c = 0; c < this.DMXController.DMXChannels.Count; c++)
+						//for (int c = 0; c < Universe.AllChannels.Count; c++)
+						for (int c = 0; c < this.Controller.Channels.Count; c++)
 						{
-							//DMXChannel chn = DMXUniverse.AllChannels[c];
-							DMXChannel chn = this.DMXController.DMXChannels[c];
+							//Channel chn = Universe.AllChannels[c];
+							Channel chn = this.Controller.Channels[c];
 							//if (chn.myOutput == myOutput)
-							if (chn.DMXAddress == DMXAddress)
+							if (chn.Address == Address)
 							{
 								//if (chn.UniverseNumber == UniverseNumber)
 								{
@@ -272,16 +272,16 @@ namespace UtilORama4
 		public object Tag { get { return myTag; } set { myTag = value; } }
 		public bool ExactMatch { get { return matchesExactly; } set { matchesExactly = value; } }
 
-		public DMXObjectType ObjectType { get { return DMXObjectType.DMXChannel; } }
+		public DMXObjectType ObjectType { get { return DMXObjectType.Channel; } }
 
 		public int UniverseNumber
 		{
 			get
 			{
 				int ret = 0;
-				if (DMXController != null)
+				if (Controller != null)
 				{
-					ret = DMXController.DMXUniverse.UniverseNumber;
+					ret = Controller.Universe.UniverseNumber;
 				}
 				return ret;
 			}
@@ -321,14 +321,15 @@ namespace UtilORama4
 			}
 		}
 
-		public int DMXAddress
+		public int Address
 		{
 			get
 			{
-				int ret = 0;
-				if (DMXController != null)
+				// Default to the output number if and only if the controller is not set.
+				int ret = myOutput;
+				if (Controller != null)
 				{
-					ret = DMXController.DMXStartAddress + myOutput - 1;
+					ret = Controller.StartAddress + myOutput - 1;
 				}
 				return ret;
 
@@ -340,9 +341,9 @@ namespace UtilORama4
 			get
 			{
 				int ret = 0;
-				if (DMXController != null)
+				if (Controller != null)
 				{
-					ret = DMXController.xLightsAddress + OutputNum - 1;
+					ret = Controller.xLightsAddress + OutputNum - 1;
 				}
 				return ret;
 
@@ -370,7 +371,7 @@ namespace UtilORama4
 			return ret;
 		}
 
-		public int CompareTo(DMXChannel otherChannel)
+		public int CompareTo(Channel otherChannel)
 		{
 			int ret = 0;
 			if (SortByName)
@@ -383,22 +384,22 @@ namespace UtilORama4
 				if (ret == 0)
 				{
 					{
-						ret = DMXAddress.CompareTo(otherChannel.DMXAddress);
+						ret = Address.CompareTo(otherChannel.Address);
 					}
 				}
 			}
 			return ret;
 		}
 
-		public DMXChannel Copy()
+		public Channel Copy()
 		{
-			DMXChannel newChan = new DMXChannel();
+			Channel newChan = new Channel();
 			newChan.Name = myName;
 			newChan.myLocation = myLocation;
 			newChan.myComment = myComment;
 			newChan.isActive = isActive;
 			newChan.Color = Color;
-			newChan.DMXController = DMXController;
+			newChan.Controller = Controller;
 			newChan.OutputNum = myOutput;
 			newChan.DeviceType = DeviceType;
 			newChan.isEditing = isEditing;
@@ -414,15 +415,15 @@ namespace UtilORama4
 			return newChan;
 		}
 
-		public DMXChannel Clone()
+		public Channel Clone()
 		{
 			// Clones everything, including ID
-			DMXChannel newChan = Copy();
+			Channel newChan = Copy();
 			newChan.myID = myID;
 			return newChan;
 		}
 
-		public void ApplyChanges(DMXChannel otherChannel)
+		public void ApplyChanges(Channel otherChannel)
 		{
 			//myID = otherChannel.myID;
 			Name = otherChannel.myName;
@@ -430,7 +431,7 @@ namespace UtilORama4
 			myComment = otherChannel.myComment;
 			isActive = otherChannel.isActive;
 			Color = otherChannel.Color;
-			DMXController = otherChannel.DMXController;
+			Controller = otherChannel.Controller;
 			OutputNum = otherChannel.myOutput;
 			DeviceType = otherChannel.DeviceType;
 			isEditing = otherChannel.isEditing;
@@ -441,13 +442,13 @@ namespace UtilORama4
 			matchesExactly = otherChannel.matchesExactly;
 		}
 
-		public void Clone(DMXChannel otherChannel)
+		public void Clone(Channel otherChannel)
 		{
 			myID = otherChannel.myID;
 			ApplyChanges(otherChannel);
 		}
 
-		public bool Equals(DMXChannel otherChannel)
+		public bool Equals(Channel otherChannel)
 		{
 			bool eq = true;
 			//if (myID != otherChannel.myID) eq = false;
@@ -456,7 +457,7 @@ namespace UtilORama4
 			else if (myComment.CompareTo(otherChannel.myComment) != 0) eq = false;
 			else if (isActive != otherChannel.isActive) eq = false;
 			else if (Color.ToArgb() != otherChannel.Color.ToArgb()) eq = false;
-			//DMXController = otherChannel.DMXController;
+			//Controller = otherChannel.Controller;
 			else if (myOutput != otherChannel.myOutput) eq = false;
 			else if (DeviceType.ID != otherChannel.DeviceType.ID) eq = false;
 			else if (isEditing != otherChannel.isEditing) eq = false;

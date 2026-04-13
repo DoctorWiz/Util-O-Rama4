@@ -365,7 +365,7 @@ namespace LOR4
 				return ret;
 			}
 		}
-		public override int DMXAddress
+		public override int Address
 		{
 			get
 			{

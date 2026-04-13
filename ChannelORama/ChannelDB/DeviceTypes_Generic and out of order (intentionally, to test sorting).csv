@@ -14,34 +14,34 @@ ID, Name, Display Order
 1,LED String, 1
 2,Outline, 2
 3,Tree, 3
-4,RGBW Tree, 5
-5,RGB Tree, 4
-6,Spiral Tree,7
-7,Candy Cane, 8
-8,Inflatable, 10
-9,Blowmold, 11
-10,Single Light,17
-11,Floodlight,16
-12,RGB Flood, 18
-13,Ropelight, 19
-14,LED Strip, 20
-15,RGB Strip, 21
-16,Cutout, 14
-17,Present(s),19
-18,Wireframe, 13
-19,Ground Cover, 22
-20,Projector, 23
-21,Laser, 24
-22,Beacon, 25
-23,Strobe, 26
-24,Flicker Bulb, 27
-25,Box, 28
-26,Zone Power, 35
-27,Sign, 32
-28,Neon, 33
-29,Motor, 34
-30,Ornament,15
-31,Wreath,12
-32,Other..., 36
-33,Spare, 37
-34,Bad Triac, 38
+5,RGBW Tree, 5
+4,RGB Tree, 4
+7,Spiral Tree,7
+8,Candy Cane, 8
+10,Inflatable, 10
+11,Blowmold, 11
+12,Single Light,17
+13,Floodlight,16
+14,RGB Flood, 18
+14,Ropelight, 19
+16,LED Strip, 20
+17,RGB Strip, 21
+18,Cutout, 14
+19,Present(s),19
+20,Wireframe, 13
+22,Ground Cover, 22
+23,Projector, 23
+24,Laser, 24
+25,Beacon, 25
+26,Strobe, 26
+27,Flicker Bulb, 27
+28,Box, 28
+29,Zone Power, 35
+30,Sign, 32
+31,Neon, 33
+32,Motor, 34
+34,Ornament,15
+35,Wreath,12
+36,Other..., 36
+37,Spare, 37
+38,Bad Triac, 38

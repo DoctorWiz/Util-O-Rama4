@@ -1,0 +1,5 @@
+ID,Universe#,Name,Location,Comment,Active,Size Limit,xLights Start#,Connection
+1,1,Left Universe 1,Left Yard,,True,112,1,Falcon F16v3 Port 2
+2,3,Top Universe 3,The Roof,,True,16,1,E1.31 to DMX Bridge
+3,2,Right Universe 2,Garage and Right Yard,,True,56,129,Falcon F16v3 Port 3
+4,999,Universe 999 - Retired or Offline,Retired or Offline,,True,0,9901,None

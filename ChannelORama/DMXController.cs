@@ -1,4 +1,5 @@
-﻿using FileHelper;
+﻿using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using FileHelper;
 using Syncfusion.Windows.Forms.Tools;   // SyncFusion TreeView Advanced
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace UtilORama4
 {
-	public class DMXController : IDMXThingy, IComparable<DMXController>,  IEquatable<DMXController>
+	public class Controller : IDMXThingy, IComparable<Controller>,  IEquatable<Controller>
 	{
 		//NOTE: myID is not permenant, it is assigned and used only at runtime
 		protected int myID = -1;
@@ -30,7 +31,7 @@ namespace UtilORama4
 		public int Voltage = 120;
 		protected bool isEditing = false;
 		protected bool isDirty = false;
-		// These are not stored values, they are calculated on the fly by checking for duplicates in the DMXUniverse.AllControllers list, and other rules, so they are not stored values, but calculated values, so they are properties, not fields
+		// These are not stored values, they are calculated on the fly by checking for duplicates in the Universe.AllControllers list, and other rules, so they are not stored values, but calculated values, so they are properties, not fields
 		//protected bool nameIsBad = false;
 		//public bool BadIdentity = false;
 		//public bool BadAddress = false;
@@ -41,8 +42,8 @@ namespace UtilORama4
 		public bool SortByName = false;
 		public bool SortByIdentifier = false;
 
-		public List<DMXChannel> DMXChannels = new List<DMXChannel>();
-		public DMXUniverse DMXUniverse = new DMXUniverse();
+		public List<Channel> Channels = new List<Channel>();
+		private Universe myUniverse = new Universe();
 		public TreeNodeAdv TreeNode = null;
 
 		public int xLightsAddress
@@ -50,89 +51,46 @@ namespace UtilORama4
 			get
 			{
 				int ret = 0;
-				if (DMXUniverse != null)
+				if (Universe != null)
 				{
-					ret = DMXUniverse.xLightsAddress + myStartAddress - 1;
+					ret = Universe.xLightsAddress + myStartAddress - 1;
 				}
 				return ret;
 			}
 		}
 		
-		
-		public DMXChannel DMXChannelAt(int DMXAddress)
+		public Channel ChannelAt(int Address)
 		{
-			DMXChannel ret = null;
-
-
-
+			Channel ret = null;
+			foreach (Channel c in Channels)
+			{
+				if (c.Address == Address)
+					ret = c;
+			}
 			return ret;
 		}
 
-		public DMXChannel xLightsChannelAt(int xLightsChannelID)
+		public Channel xLightsChannelAt(int xLightsAddress)
 		{
-			DMXChannel ret = null;
-
-
-
+			Channel ret = null;
+			foreach (Channel c in Channels)
+			{
+				if (c.Address == xLightsAddress)
+					ret = c;
+			}
 			return ret;
 		}
 
 		public string Name
 		{
+			// Note: Bad Name checking is now done real-time when queried
 			get
 			{
-				/*
-				nameIsBad = false;  // reset, optomistic, for now
-				if (myName.Length < 4)
-				{
-					nameIsBad = true;
-				}
-				else
-				{
-					string lowName = myName.ToLower();
-					for (int c = 0; c < DMXUniverse.DMXControllers.Count; c++)
-					{
-						if (DMXUniverse.DMXControllers[c].myID != myID)
-						{
-							//if (DMXUniverse.DMXControllers[c].Name.ToLower().CompareTo(lowName) == 0)
-							if (DMXUniverse.DMXControllers[c].myName.ToLower().CompareTo(lowName) == 0)
-							{
-								nameIsBad = true;
-								DMXUniverse.DMXControllers[c].nameIsBad = true;
-							}
-						}
-					}
-				}
-				*/
 				return myName;
 			}
 			set
 			{
 				string newName = value.Trim();
-				/*
-				nameIsBad = false;  // reset, optomistic, for now
-				if (newName.Length < 4)
-				{
-					nameIsBad = true;
-				}
-				else
-				{
-					string lowName = newName.ToLower();
-					for (int c = 0; c < DMXUniverse.DMXControllers.Count; c++)
-					{
-						if (DMXUniverse.DMXControllers[c].myID != myID)
-						{
-							//if (DMXUniverse.DMXControllers[c].Name.ToLower().CompareTo(lowName) == 0)
-							if (DMXUniverse.DMXControllers[c].myName.ToLower().CompareTo(lowName) == 0)
-							{
-								nameIsBad = true;
-								DMXUniverse.DMXControllers[c].nameIsBad = true;
-							}
-						}
-					}
-				}
-				// accept it, even if bad
-				*/
 				myName = newName;
 			}
 		}
@@ -165,13 +123,23 @@ namespace UtilORama4
 		public bool Editing { get { return isEditing; } set { isEditing = value; } }
 		public bool Dirty { get { return isDirty; } set { isDirty = value; } }
 		public object Tag { get { return myTag; } set { myTag = value; } }
-		public DMXObjectType ObjectType { get { return DMXObjectType.DMXController; } }
+		public DMXObjectType ObjectType { get { return DMXObjectType.Controller; } }
 
 		public bool ExactMatch { get { return matchesExactly; } set { matchesExactly = value; } }
 		// Wrapper
-		public DMXUniverse Universe { get { return DMXUniverse; } set { DMXUniverse = value; } }
+		public Universe Universe 
+		{
+			get 
+			{
+				return myUniverse;
+			}
+			set
+			{
+				myUniverse = value;
+			}
+		}
 
-		public int DMXStartAddress
+		public int StartAddress
 		{
 			get
 			{ 
@@ -186,7 +154,7 @@ namespace UtilORama4
 		}
 
 		public int Number
-		// Wrapper for DMXStartAddress, to allow for compatibility with DMXThingy interface, which requires a Number property, but we want to call it DMXStartAddress in DMXController for clarity, but we also want to be able to use Number as a wrapper for DMXStartAddress for compatibility with DMXThingy interface and other code that uses DMXThingy interface and expects a Number property.
+		// Wrapper for StartAddress, to allow for compatibility with DMXThingy interface, which requires a Number property, but we want to call it StartAddress in Controller for clarity, but we also want to be able to use Number as a wrapper for StartAddress for compatibility with DMXThingy interface and other code that uses DMXThingy interface and expects a Number property.
 		{
 			get
 			{
@@ -209,9 +177,9 @@ namespace UtilORama4
 				string lowname = myName.ToLower();
 				int myOriginalID = Math.Abs(myID);
 				string dbg = "This controller " + this.ID.ToString() + "-" + this.Name + " Name conflicts with";
-				for (int ch = 0; ch < DMXUniverse.AllControllers.Count; ch++)
+				for (int ch = 0; ch < Universe.AllControllers.Count; ch++)
 					{
-					DMXController ctl = DMXUniverse.AllControllers[ch];
+					Controller ctl = Universe.AllControllers[ch];
 					if (ctl.myID != myOriginalID)
 					{
 						if (ctl.Name.CompareTo(myName) == 0)
@@ -219,7 +187,7 @@ namespace UtilORama4
 							ret = true;
 							dbg += "\r\n  " + ctl.ID.ToString() + "-" + ctl.Name;
 							//nameIsBad = true;
-							//DMXUniverse.AllControllers[ch].nameIsBad = true;
+							//Universe.AllControllers[ch].nameIsBad = true;
 						}
 					}
 				}
@@ -241,9 +209,9 @@ namespace UtilORama4
 				string dbg = "This controller " + this.ID.ToString() + "-" + this.Name + " Identifier " + this.Identifier + " conflicts with";
 				if (myIdentifier.Length > 0)
 				{
-					for (int ch=0; ch < DMXUniverse.AllControllers.Count; ch++)
+					for (int ch=0; ch < Universe.AllControllers.Count; ch++)
 					{
-						DMXController ctl = DMXUniverse.AllControllers[ch];
+						Controller ctl = Universe.AllControllers[ch];
 						if (ctl.myID != myOriginalID)
 						{
 							if (ctl.Identifier.CompareTo(myIdentifier) == 0)
@@ -251,7 +219,7 @@ namespace UtilORama4
 								ret = true;
 								dbg += "\r\n  " + ctl.ID.ToString() + "-" + ctl.Name + " Identifier " + ctl.Identifier;
 								//identityIsBad = true;
-								//DMXUniverse.AllControllers[ch].identityIsBad = true;
+								//Universe.AllControllers[ch].identityIsBad = true;
 							}
 						}
 					}
@@ -272,9 +240,9 @@ namespace UtilORama4
 				bool ret = false;
 				int myOriginalID = Math.Abs(myID);
 				string dbg = "This controller " + this.ID.ToString() + "-" + this.Name + " Address " + this.myStartAddress + " conflicts with";
-				for (int ch = 0; ch < DMXUniverse.DMXControllers.Count; ch++)
+				for (int ch = 0; ch < Universe.Controllers.Count; ch++)
 				{
-					DMXController ctl = DMXUniverse.DMXControllers[ch];
+					Controller ctl = Universe.Controllers[ch];
 					if (ctl.myID != myOriginalID)
 					{
 						int start= (ctl.myStartAddress);
@@ -284,7 +252,7 @@ namespace UtilORama4
 							ret = true;
 							dbg += "\r\n  " + ctl.ID.ToString() + "-" + ctl.Name + " Address " + ctl.myStartAddress;
 							//addressIsBad = true;
-							//DMXUniverse.AllControllers[ch].addressIsBad = true;
+							//Universe.AllControllers[ch].addressIsBad = true;
 						}
 					}
 				}
@@ -329,7 +297,7 @@ namespace UtilORama4
 		{
 			get
 			{
-				return DMXUniverse.UniverseNumber;
+				return Universe.UniverseNumber;
 			}
 		}
 
@@ -421,7 +389,7 @@ namespace UtilORama4
 			return ret;
 		}
 
-		public int CompareTo(DMXController otherController)
+		public int CompareTo(Controller otherController)
 		{
 			int ret = 0;
 			if (SortByName)
@@ -443,11 +411,11 @@ namespace UtilORama4
 			return ret;
 		}
 
-		public DMXController Copy()
-		// Returns a new DMXController with all the same values as this DMXController
-		// EXCEPT for ID, which is not copied, so this DMXController gets a new ID, and is not quite an exact clone
+		public Controller Copy()
+		// Returns a new Controller with all the same values as this Controller
+		// EXCEPT for ID, which is not copied, so this Controller gets a new ID, and is not quite an exact clone
 		{
-			DMXController newCtl = new DMXController();
+			Controller newCtl = new Controller();
 			newCtl.Name = myName;
 			newCtl.myLocation = myLocation;
 			newCtl.myComment = myComment;
@@ -459,8 +427,8 @@ namespace UtilORama4
 			newCtl.ControllerBrand = ControllerBrand;
 			newCtl.ControllerModel = ControllerModel;
 			newCtl.Voltage = Voltage;
-			newCtl.DMXChannels = DMXChannels;
-			newCtl.DMXUniverse = DMXUniverse;
+			newCtl.Channels = Channels;
+			newCtl.Universe = Universe;
 			newCtl.isEditing = isEditing;
 			//newCtl.BadIdentity				= BadIdentity;
 			//newCtl.nameIsBad					= nameIsBad;
@@ -474,18 +442,18 @@ namespace UtilORama4
 			return newCtl;
 		}
 
-		public DMXController Clone()
-		// Returns a new DMXController with all the same values as this DMXController
-		// INCLUDING ID, so it is an exact clone, not a new DMXController with a new ID
+		public Controller Clone()
+		// Returns a new Controller with all the same values as this Controller
+		// INCLUDING ID, so it is an exact clone, not a new Controller with a new ID
 		{
-			DMXController newCtl = Copy();
+			Controller newCtl = Copy();
 			newCtl.myID								= myID;
 			return newCtl;
 		}
 
-		public void ApplyChanges(DMXController otherController)
-		// Copies all the values from otherController into this DMXController
-		// Except for ID, which is not copied, so this DMXController keeps its original ID
+		public void ApplyChanges(Controller otherController)
+		// Copies all the values from otherController into this Controller
+		// Except for ID, which is not copied, so this Controller keeps its original ID
 		{
 			//myID = otherController.myID;
 			Name = otherController.myName;
@@ -499,8 +467,8 @@ namespace UtilORama4
 			ControllerBrand = otherController.ControllerBrand;
 			ControllerModel = otherController.ControllerModel;
 			Voltage = otherController.Voltage;
-			DMXChannels = otherController.DMXChannels;
-			DMXUniverse = otherController.DMXUniverse;
+			Channels = otherController.Channels;
+			Universe = otherController.Universe;
 			isEditing = otherController.isEditing;
 			//BadIdentity				= otherController.BadIdentity;
 			//nameIsBad					= otherController.nameIsBad;
@@ -509,14 +477,14 @@ namespace UtilORama4
 			matchesExactly = otherController.matchesExactly;
 		}
 
-		public void Clone(DMXController otherController)
-		// Copies all the values from otherController into this DMXController
+		public void Clone(Controller otherController)
+		// Copies all the values from otherController into this Controller
 		{
 			myID							= otherController.myID;
 			ApplyChanges(otherController);
 		}
 
-		public bool Equals(DMXController otherController)
+		public bool Equals(Controller otherController)
 		{
 			bool eq = true;
 			//if (myID != otherController.myID) eq = false;
@@ -531,8 +499,8 @@ namespace UtilORama4
 			else if (ControllerBrand.CompareTo(otherController.ControllerBrand) != 0) eq = false;
 			else if (ControllerModel.CompareTo(otherController.ControllerModel) != 0) eq = false;
 			else if (Voltage != otherController.Voltage) eq = false;
-			//DMXChannels = otherController.DMXChannels;
-			//DMXUniverse = otherController.DMXUniverse;
+			//Channels = otherController.Channels;
+			//Universe = otherController.Universe;
 			else if (isEditing != otherController.isEditing) eq = false;
 			//else if (BadIdentity				!= otherController.BadIdentity)										eq = false;
 			//else if (nameIsBad					!= otherController.nameIsBad)											eq = false;

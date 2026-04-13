@@ -104,14 +104,14 @@ namespace LOR4
 				return un;
 			}
 		}
-		public override int DMXAddress
+		public override int Address
 		{
 			get
 			{
 				int da = LOR4Admin.UNDEFINED;
 				if (Members.Count > 1)
 				{
-					da = Members.Items[1].DMXAddress;
+					da = Members.Items[1].Address;
 				}
 				return da;
 			}
@@ -136,7 +136,7 @@ namespace LOR4
 					result = Members.Items[0].UniverseNumber.CompareTo(other.UniverseNumber);
 					if (result == 0)
 					{
-						result = Members.Items[0].DMXAddress.CompareTo(other.DMXAddress);
+						result = Members.Items[0].Address.CompareTo(other.Address);
 					}
 				}
 			}

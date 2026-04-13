@@ -93,7 +93,7 @@ namespace LOR4
 			}
 		}
 
-		public override int DMXAddress
+		public override int Address
 		{
 			get
 			{
@@ -113,7 +113,7 @@ namespace LOR4
 					}
 					else
 					{
-						ret = redChannel.output.DMXAddress;
+						ret = redChannel.output.Address;
 					}
 				}
 				return ret;

@@ -11,13 +11,11 @@ namespace UtilORama4
 {
 	internal class Etc
 	{
-		public static readonly Color Color_RGB = ColorTranslator.FromHtml("#000001");
-		public static readonly Color Color_RGBW = ColorTranslator.FromHtml("#000100");
-		public static readonly Color Color_Multi = ColorTranslator.FromHtml("#010000");
+		
 
 		private static int lorVer = 0;
 		private static int xlVer = 0;
-		
+
 		/*
 		 * DEPRECIATED - Use LOR4Admin.NearestColorName() instead
 		public static string ColorName(Color color)
@@ -76,6 +74,8 @@ namespace UtilORama4
 		} // End function ColorName
 		*/
 
+		/*
+		 * DEPRECIATED!  Use property xLightsVersion in LOR4Admin instead
 		public static int LORVersion
 		{
 			get
@@ -126,7 +126,10 @@ namespace UtilORama4
 				return ret;
 			}
 		}
+		*/
 
+		/*
+		 * DEPRECIATED!  Use property xLightsVersion in LOR4Admin instead
 		public static int xLightsVersion
 		{
 			get
@@ -164,7 +167,7 @@ namespace UtilORama4
 				return ret;
 			}
 		}
-
+		*/
 
 	} // End form class
 } // End name space

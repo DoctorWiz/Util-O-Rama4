@@ -8,7 +8,27 @@ Changing Unit Number on Controller Edit should update the 'BadAddress' and show 
 
 Returning from Controller Edit when unit is changed, the new address is correct in the tree, but the unit number is not updated
 
+At startup, either
+   disable all buttons, or select first universe, set universe button to 'Edit', and controller button to 'Add', channel disabled.
 
+Universe button should always be enabled.  Say edit only if a universe is selected, otherwise add
+
+? File-Save should say "File Saved!" in status bard
+
+? When choosing a controller, add the unit number when displaying in the status bar
+    But not address
+
+? Universes are showing their full name TWICE in the tree
+
+? When selecting universe, display name and location (currently does only location)
+
+Delete key to delete universes, controllers, channels, after confirmation of course
+
+? Don't show 'Settings have changed' msgbox when using OK or Cancel (on chan, ctl, uni)
+
+Controllers: When switching brand FROM lor, re-eanble the output count numOutputs
+
+Controllers: Move 'Last DMX channel' label up/over by start and output count
 
 
 Controller Form not showing Unit Number when it is a LOR Controller
@@ -16,10 +36,23 @@ Changes to Start Address not being saved
 'Bad' box around start address not going away when (duplicate) Start address is changed (to non duplicate)
 Controller Form asking about adding channels when it shouldn't
 
-
+ Close dirty frmList should say "Items" (or something) instead of just "Channels"
 
 
 Improvements:
 Minimize Universe, Controller, Channel - Should minimize parent/owner frmList
   Works, but upon restore the child form is no longer visible
 
+  Need DeviceTypes viewer/editor
+
+  Channels button on ctlr form should open an EDITABLE list of controllers
+
+  Delete Backup
+    copy old data to backup
+    write new data to temp file
+    safecopy new data to data folder
+
+  Make "File Saved!" msg on status panel blink a few times after saving
+  
+  File Management Dialog
+    Change data folder location

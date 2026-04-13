@@ -49,6 +49,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Compile Remove="Etc.cs" />
 		<Compile Remove="Reporter.cs" />
 	</ItemGroup>
 
@@ -85,6 +86,7 @@
 		<Compile Include="..\Common\xUtils\xRGBEffects.cs" Link="xRGBEffects.cs" />
 		<Compile Include="..\Common\xUtils\xSequence.cs" Link="xSequence.cs" />
 		<Compile Include="..\Common\xUtils\xTimings.cs" Link="xTimings.cs" />
+		
 		<!--
 		<Compile Include="..\Common\Selections\Selections.cs" Link="Selections.cs" />
 		<Compile Include="..\Common\Sequence4\Seq4Admin.cs" Link="Seq4Admin.cs" />
@@ -116,6 +118,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="ClosedXML" Version="0.105.0" />
 		<PackageReference Include="Syncfusion.GridHelperClasses.Windows" Version="20.1.0.52" />
 		<PackageReference Include="Syncfusion.Tools.Windows" Version="20.1.0.52" />
 		<PackageReference Include="System.DirectoryServices.AccountManagement" Version="6.0.0" />

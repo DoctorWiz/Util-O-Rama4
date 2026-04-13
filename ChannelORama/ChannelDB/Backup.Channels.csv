@@ -1,0 +1,332 @@
+ID,Universe#,ControllerID,Output#,Name,Location,Comment,Active,Type,Color,ColorName
+1,1,1,1,$Tree- Tomato A1.1 (L} (R),Front row leftmost,,True,5,#FF8000,Orange
+2,1,1,2,$Tree- Tomato A1.2 (L} (G),Front row leftmost,,True,14,#00FF00,Green
+3,1,1,3,$Tree- Tomato A1.3 (L} (B),Front row leftmost,,True,14,#0000FF,Blue
+4,1,1,4,$Tree- Tomato A1.4 {L} (W),Front row leftmost,,True,14,#FFFFFF,Transparent
+5,1,1,5,$Tree- Tomato A2.1 (R),Front row near left,,True,14,#FF0000,Red
+6,1,1,6,$Tree- Tomato A2.2 (G),Front row near left,,True,14,#00FF00,Green
+7,1,1,7,$Tree- Tomato A2.3 (B),Front row near leaft,,True,14,#0000FF,Blue
+8,1,1,8,$Tree- Tomato A2.4 (W),Front row near left,,True,14,#FFFFFF,Transparent
+9,1,1,9,$Tree- Tomato A3.1 (R),Front row 3rd from left,,True,14,#FF0000,Red
+10,1,1,10,$Tree- Tomato A3.2 (G),Front row 3rd from left,,True,14,#00FF00,Green
+11,1,1,11,$Tree- Tomato A3.3 (B),Front row 3rd from left,,True,14,#0000FF,Blue
+12,1,1,12,$Tree- Tomato A3.4 (W),Front row 3rd from left,,True,14,#FFFFFF,Transparent
+13,1,1,13,$Tree- Tomato A4.1 {CL} (R),Front row left of center,,True,14,#FF0000,Red
+14,1,1,14,$Tree- Tomato A4.2 {CL} (G),Front row left of center,,True,14,#00FF00,Green
+15,1,1,15,$Tree- Tomato A4.3 {CL} (B),Front row left of center,,True,14,#0000FF,Blue
+16,1,1,16,$Tree- Tomato A4.4 {CL} (W),Front row left of center,,True,14,#FFFFFF,Transparent
+17,1,2,1,$Tree- Tomato A5.1 {CR} (R),Front row right of center,,True,14,#FF0000,Red
+18,1,2,2,$Tree- Tomato A5.2 {CR} (G),Front row right of center,,True,14,#00FF00,Green
+19,1,2,3,$Tree- Tomato A5.3 {CR} (B),Front row right of center,,True,14,#0000FF,Blue
+20,1,2,4,Tree- Tomato A5.4 {CR} (W),Front row right of center,,True,14,#FFFFFF,Transparent
+21,1,2,5,$Tree- Tomato A6.1 (R),Front row third from right,,True,14,#FF0000,Red
+22,1,2,6,$Tree- Tomato A6.2 (G),Front row third from right,,True,14,#00FF00,Green
+23,1,2,7,$Tree- Tomato A6.3 (B),Front row third from right,,True,14,#0000FF,Blue
+24,1,2,8,$Tree- Tomato A6.4 (W),Front row third from right,,True,14,#FFFFFF,Transparent
+25,1,2,9,$Tree- Tomato A7.1 (R),Front row near right,,True,14,#FF0000,Red
+26,1,2,10,$Tree- Tomato A7.2 (G),Front row near right,,True,14,#00FF00,Green
+27,1,2,11,$Tree- Tomato A7.3 (B),Front row near right,,True,14,#0000FF,Blue
+28,1,2,12,$Tree- Tomato A7.4 (W),Front row near right,,True,14,#FFFFFF,Transparent
+29,1,2,13,$Tree- Tomato A8.1 {R} (R),Front row rightmost,,True,14,#FF0000,Red
+30,1,2,14,$Tree- Tomato A8.2 {R} (G),Front row rightmost,,True,14,#00FF00,Green
+31,1,2,15,$Tree- Tomato A8.3 {R} (B),Front row rightmost,,True,14,#0000FF,Blue
+32,1,2,16,$Tree- Tomato A8.4 {R} (W),Front row rightmost,,True,14,#FFFFFF,Transparent
+33,1,3,1,$Tree- Tomato B1.1 {L} (V),"Back row, leftmost",,True,14,#8000FF,DarkViolet
+34,1,3,2,$Tree- Tomato B1.2 {L} (W),"Back row, leftmost",,True,14,#FFFFFF,Transparent
+35,1,3,3,$Tree- Tomato B2.1 (V),Back row 2nd from Left,,True,14,#8000FF,DarkViolet
+36,1,3,4,$Tree- Tomato B2.2 (W),Back row 2nd from left,,True,14,#FFFFFF,Transparent
+37,1,3,5,$Tree- Tomato B3.1 (V),,,True,14,#8000FF,DarkViolet
+38,1,3,6,$Tree- Tomato B3.2 (W),,,True,14,#FFFFFF,Transparent
+39,1,3,7,$Tree- Tomato B4.1 {CL} (V),Back row left of Center,,True,14,#8000FF,DarkViolet
+40,1,3,8,$Tree- Tomato B4.2 {CL} (W),Back row left of Center,,True,14,#FFFFFF,Transparent
+41,1,3,9,$Tree- Tomato B5.1 {CR} (V),Back row right of center,,True,14,#8000FF,DarkViolet
+42,1,3,10,$Tree- Tomato B5.2 {CR} (W),Back row right of center,,True,14,#FFFFFF,Transparent
+43,1,3,11,$Tree- Tomato B6.1 (V),,,True,14,#8000FF,DarkViolet
+44,1,3,12,$Tree- Tomato B6.2 (W),,,True,14,#FFFFFF,Transparent
+45,1,3,13,$Tree- Tomato B7.1 (V),Back row 2nd from the right,,True,14,#8000FF,DarkViolet
+46,1,3,14,$Tree- Tomato B7.2 (W),Back row 2nd from the right,,True,14,#FFFFFF,Transparent
+47,1,3,15,$Tree- Tomato B8.1 {R} (V),Back row rightmost,,True,14,#8000FF,DarkViolet
+48,1,3,16,$Tree- Tomato B8.2 {R} (W),Back row rightmost,,True,14,#FFFFFF,Transparent
+49,1,4,1,(Future Tree) O01,Controller D Output 1,,False,18,#C0C0C0,Silver
+50,1,4,2,(Future Tree) O02,Controller D Output 2,,False,18,#C0C0C0,Silver
+51,1,4,3,(Future Tree) O03,Controller D Output 3,,False,18,#C0C0C0,Silver
+52,1,4,4,(Future Tree) O04,Controller D Output 4,,False,18,#C0C0C0,Silver
+53,1,4,5,(Future Tree) O05,Controller D Output 5,,False,18,#C0C0C0,Silver
+54,1,4,6,(Future Tree) O06,Controller D Output 6,,False,18,#C0C0C0,Silver
+55,1,4,7,(Future Tree) O07,Controller D Output 7,,False,18,#C0C0C0,Silver
+56,1,4,8,(Future Tree) O08,Controller D Output 8,,False,18,#C0C0C0,Silver
+57,1,4,9,(Future Tree) O09,Controller D Output 9,,False,18,#C0C0C0,Silver
+58,1,4,10,(Future Tree) O10,Controller D Output 10,,False,18,#C0C0C0,Silver
+59,1,4,11,(Future Tree) O11,Controller D Output 11,,False,18,#C0C0C0,Silver
+60,1,4,12,(Future Tree) O12,Controller D Output 12,,False,18,#C0C0C0,Silver
+61,1,4,13,(Future Tree) O13,Controller D Output 13,,False,18,#C0C0C0,Silver
+62,1,4,14,(Future Tree) O14,Controller D Output 14,,False,18,#C0C0C0,Silver
+63,1,4,15,(Future Tree) O15,Controller D Output 15,,False,18,#C0C0C0,Silver
+64,1,4,16,(Future Tree) O16,Controller D Output 16,,False,18,#C0C0C0,Silver
+65,1,5,1,Bushes 1 {S} Rainbow (ROGBV),Left side of house,,False,22,#804040,SaddleBrown
+66,1,5,2,Bushes 2.1 {L} (M),Left front of house,,True,22,#804040,SaddleBrown
+67,1,5,3,Bushes 2.2 {L} (W),Left front of house,,True,22,#FFFFFF,Transparent
+68,1,5,4,Bushes 2.3 {L} Low (O),Left front of house,,True,22,#FF8000,Orange
+69,1,5,5,Strobes- 5mm- Bushes {BLC} (W),In the front bushes,,True,5,#FFFFFF,Transparent
+70,1,5,6,Strobes- C9- Bushes {BLC} (W),In the bushes and on the house,,True,5,#FFFFFF,Transparent
+71,1,5,7,Coexist Flag (MRGB),Left middle yard,,True,2,#400000,Black
+72,1,5,8,Lamp Post Directions (O),Far front left corner of yard,,True,7,#FF8000,Orange
+73,1,5,9,Laser- Streetlight (R),On top of Lamp Post Directions,,False,3,#FF0000,Red
+74,1,5,10,Menorah (B),Left Yard,,True,7,#0000FF,Blue
+75,1,5,11,Peace Sign (RGB),RV Roof,,True,21,#400000,Black
+76,1,5,12,BAD TRIAC D12,Controller D Output 12,Bad Triac!,False,28,#000000,Black
+77,1,5,13,Snowman (W),,,True,17,#FFFFFF,Transparent
+78,1,5,14,UFOs 1 {L} (RGB),Left front wall of house,,True,15,#400000,Black
+79,1,5,16,Inflatable Arch Lights,In front of RV,,True,16,#FFFFFF,Transparent
+80,1,6,2,Tree- Spiral 2 {F} (WG),Yard center near house,,False,14,#00FF00,Green
+81,1,6,3,Tree- Spiral 3 {R} (WB),Yard center near house,,False,14,#0000FF,Blue
+82,1,6,4,Tree- Spiral 4 {B} (WV),Yard center near house,,True,14,#8000FF,DarkViolet
+83,1,6,5,Tree- Big AC 1 (M),Back row center,,True,14,#804040,SaddleBrown
+84,1,6,6,Tree- Small {L} (B),,,False,14,#0000FF,Blue
+85,1,6,7,Tree- Tinsel 1 {L} (R),Behind back row on left,,True,14,#FF0000,Red
+86,1,6,8,Tree- Tinsel 2 {R} (R),Behind back row on right,,True,14,#FF0000,Red
+87,1,6,9,Trees- Rainbow (ROYGBV),Left yard,,True,14,#804040,SaddleBrown
+88,1,6,10,Trees- Willow and Palm (GW),Left yard,,True,14,#A4FFA4,PaleGreen
+89,1,6,11,Strobes- C9- Trees {FC} (W),Front Trees,,True,5,#FFFFFF,Transparent
+90,1,6,12,Presents (M),Under the front Pixel tree,,True,9,#804040,SaddleBrown
+91,1,6,13,New Tree #1,New Tree #1,,True,14,#FF0000,Red
+92,1,6,14,New Tree #2,,,True,14,#FF8000,Orange
+93,1,6,15,New Tree #3,,,True,14,#00FF00,Green
+94,1,6,16,New Tree #4,Yard,,True,14,#80FFFF,Aquamarine
+95,1,7,1,Bushes 3.1 {C} (R),Front Center bushes,,True,22,#FF0000,Red
+96,1,7,2,Bushes 3.2 {C} (G),Front Center bushes,,True,22,#00FF00,Green
+97,1,7,3,Bushes 3.3 {C} (B),Front Center bushes,,True,22,#0000FF,Blue
+98,1,7,4,Bushes 3.4 {C} (W),Front Center bushes,,True,22,#FFFFFF,Transparent
+99,1,7,5,Spare E05,,,True,18,#C0C0C0,Silver
+100,1,7,6,Spare F06,,,True,18,#C0C0C0,Silver
+101,1,7,7,Lamp Posts (Y),,,True,1,#FFFF00,Yellow
+102,1,7,8,Lasers- House Front (RGB),Projecting onto front center wall- Chimn,,True,3,#400000,Black
+103,1,7,9,Mailboxes (O),,,True,22,#FF8000,Orange
+104,1,7,10,Spare F10,,,False,18,#C0C0C0,Silver
+105,1,7,11,Snowfall Projectors (WB),In middle bushes projecting on house wal,,True,2,#B0FFFF,PaleTurquoise
+106,1,7,12,Swirlies- Snowflakes (WB),Front of the House,,True,2,#6AB5FF,CornflowerBlue
+107,1,7,13,Spare E13,Middle Bushes,,False,18,#C0C0C0,Silver
+108,1,7,14,Spare F14,,,True,18,#C0C0C0,Silver
+109,1,7,15,Spare F15,,,True,18,#C0C0C0,Silver
+110,1,7,16,Penguins,,,True,17,#FFFFFF,Transparent
+111,1,8,1,Candy Canes 1 (R),Perimeter of yard,,True,8,#FF0000,Red
+112,1,8,2,Candy Canes 2 (G),Perimeter of yard,,True,8,#00FF00,Green
+113,1,8,3,Candy Canes 3 (R),Perimeter of yard,,True,8,#FF0000,Red
+114,1,8,4,Candy Canes 4 (G),Perimeter of yard,,True,8,#00FF00,Green
+115,1,8,5,Countdown Timer (B),Right of main yard,,True,2,#0000FF,Blue
+116,1,8,6,Flying Spaghetti Monster (W),,,True,13,#FFFFFF,Transparent
+117,1,8,7,Snowman Lamp Inflatable,Front Yard,,True,16,#FFFFFF,Transparent
+118,1,8,8,Spare F08,,,True,18,#C0C0C0,Silver
+119,1,8,9,Yule Log (O),,,True,7,#FF8000,Orange
+120,1,8,10,Snow Lake (W),,,True,22,#FFFFFF,Transparent
+121,1,8,11,Spare F11,,,True,18,#C0C0C0,Silver
+122,1,8,12,!Bad Triac!,Bad Triac #12,,True,28,#C0C0C0,Silver
+123,1,8,13,Work Together 1 (R),Controller E Output 14,,False,20,#FF0000,Red
+124,1,8,14,Work Together 2 (W),"Controller E, Output 15",,False,20,#FFFFFF,Transparent
+125,1,8,15,Work Together 3 (B),Controller E Output 16,Power to controllers in Universe 2 in the Garage and on the Right side of the display.,True,20,#0000FF,Blue
+126,1,8,16,Work Together 4 Swirly Stars (RWB),Front Yard,"Actually RWB, not RGB",True,2,#804040,SaddleBrown
+127,3,10,1,=Burst- Ground- Front- Left- L01,Ground Front Left,,True,22,#00FF40,SpringGreen
+128,3,10,1,$Tree- Pencil 01- Red (R) {L},Yard Rear Left,,True,22,#00FF40,SpringGreen
+129,3,10,2,=Burst- Ground- Front- Left- L02,Ground Front Left,,True,22,#FF0000,Red
+130,3,10,2,$Tree- Pencil 02- Green (G),Yard Rear Left,,True,22,#FF0000,Red
+131,3,10,3,=Burst- Ground- Front- Left- L03,Ground Front Left,,True,22,#0000FF,Blue
+132,3,10,3,$Tree- Pencil 03- Blue (B),Yard Rear Left,,True,22,#0000FF,Blue
+133,3,10,4,=Burst- Ground- Front- Left- L04,Ground Front Left,,True,22,#FF8000,Orange
+134,3,10,4,$Tree- Pencil 04- Pink (P) {F},Yard Rear Left,,True,22,#FF8000,Orange
+135,3,10,5,=Burst- Ground- Front- Left- L05,Ground Front Left,,True,18,#8000FF,DarkViolet
+136,3,10,5,$Tree- Pencil 05- Silver (W),Yard Rear Left,,True,18,#8000FF,DarkViolet
+137,3,10,6,=Burst- Ground- Front- Left- L06,Ground Front Left,,True,18,#FF0000,Red
+138,3,10,6,$Tree- Pencil 06- Rainbow (M) {CL},Yard Rear Left,,True,18,#FF0000,Red
+139,3,10,7,=Burst- Ground- Front- Left- L07,Ground Front Left,,True,22,#FFFF00,Yellow
+140,3,10,7,$Tree- Pencil 07- Italian (RWG) {CF},Yard Rear Left,,True,22,#FFFF00,Yellow
+141,3,10,8,=Burst- Ground- Front- Left- L08,Ground Front Left,,True,18,#0000FF,Blue
+142,3,10,8,$Tree- Pencil 08- Gold (O),Yard Rear Left,,True,18,#0000FF,Blue
+143,3,10,9,=Burst- Ground- Front- Left- L09,Ground Front Left,,True,22,#00FF00,Green
+144,3,10,9,$Tree- Pencil 09- Gold (O),Yard Rear Left,,True,22,#00FF00,Green
+145,3,10,10,=Burst- Ground- Front- Left- L10,Ground Front Left,,True,22,#8000FF,DarkViolet
+146,3,10,10,$Tree- Pencil 10- Italian (RWG) {CB},Yard Rear Left,,True,22,#8000FF,DarkViolet
+147,3,10,11,=Burst- Ground- Front- Left- L11,Ground Front Left,,True,22,#FF8000,Orange
+148,3,10,11,$Tree- Pencil 11- Rainbow (M) {CR},Yard Rear Left,,True,22,#FF8000,Orange
+149,3,10,12,=Burst- Ground- Front- Left- L12,Ground Front Left,,True,22,#FF0000,Red
+150,3,10,12,$Tree- Pencil 12- Silver (W),Yard Rear Left,,True,22,#FF0000,Red
+151,3,10,13,=Burst- Ground- Front- Left- L13,Ground Front Left,,True,18,#FFFF00,Yellow
+152,3,10,13,$Tree- Pencil 13- Pink (P) [B},Yard Rear Left,,True,18,#FFFF00,Yellow
+153,3,10,14,=Burst- Ground- Front- Left- L14,Ground Front Left,,True,22,#FF00FF,Fuchsia
+154,3,10,14,$Tree- Pencil 14- Blue (B),Yard Rear Left,,True,22,#FF00FF,Fuchsia
+155,3,10,15,=Burst- Ground- Front- Left- L15,Ground Front Left,,True,22,#00FF00,Green
+156,3,10,15,$Tree- Pencil 15- Green (G),Yard Rear Left,,True,22,#00FF00,Green
+157,3,10,16,=Burst- Ground- Front- Left- L16,Ground Front Left,,True,18,#0000FF,Blue
+158,3,10,16,$Tree- Pencil 16- Red (R) {R},Yard Rear Left,,True,18,#000FF1,Blue
+159,3,11,1,=Burst- Ground- Front- Right- R01,Ground Front Right,,True,22,#00FF40,SpringGreen
+160,3,11,2,=Burst- Ground- Front- Right- R02,Ground Front Right,,True,22,#FF0000,Red
+161,3,11,3,=Burst- Ground- Front- Right- R03,Ground Front Right,,True,22,#0000FF,Blue
+162,3,11,4,=Burst- Ground- Front- Right- R04,Ground Front Right,,True,22,#FF8000,Orange
+163,3,11,5,=Burst- Ground- Front- Right- R05,Ground Front Right,,True,18,#8000FF,DarkViolet
+164,3,11,6,=Burst- Ground- Front- Right- R06,Ground Front Right,,True,18,#FF0000,Red
+165,3,11,7,=Burst- Ground- Front- Right- R07,Ground Front Right,,True,22,#FFFF00,Yellow
+166,3,11,8,=Burst- Ground- Front- Right- R08,Ground Front Right,,True,18,#0000FF,Blue
+167,3,11,9,=Burst- Ground- Front- Right- R09,Ground Front Right,,True,22,#00FF00,Green
+168,3,11,10,=Burst- Ground- Front- Right- R10,Ground Front Right,,True,22,#8000FF,DarkViolet
+169,3,11,11,=Burst- Ground- Front- Right- R11,Ground Front Right,,True,22,#FF8000,Orange
+170,3,11,12,=Burst- Ground- Front- Right- R12,Ground Front Right,,True,22,#FF0000,Red
+171,3,11,13,=Burst- Ground- Front- Right- R13,Ground Front Right,,True,18,#FFFF00,Yellow
+172,3,11,14,=Burst- Ground- Front- Right- R14,Ground Front Right,,True,22,#FF00FF,Fuchsia
+173,3,11,15,=Burst- Ground- Front- Right- R15,Ground Front Right,,True,22,#00FF00,Green
+174,3,11,16,=Burst- Ground- Front- Right- R16,Ground Front Right,,True,18,#0000FF,Blue
+175,3,12,1,=Burst- Ground- Rear- Left- L01,Ground Rear Left,,True,22,#00FF40,SpringGreen
+176,3,12,2,=Burst- Ground- Rear- Left- L02,Ground Rear Left,,True,22,#FF0000,Red
+177,3,12,3,=Burst- Ground- Rear- Left- L03,Ground Rear Left,,True,22,#0000FF,Blue
+178,3,12,4,=Burst- Ground- Rear- Left- L04,Ground Rear Left,,True,22,#FF8000,Orange
+179,3,12,5,=Burst- Ground- Rear- Left- L05,Ground Rear Left,,True,18,#8000FF,DarkViolet
+180,3,12,6,=Burst- Ground- Rear- Left- L06,Ground Rear Left,,True,18,#FF0000,Red
+181,3,12,7,=Burst- Ground- Rear- Left- L07,Ground Rear Left,,True,22,#FFFF00,Yellow
+182,3,12,8,=Burst- Ground- Rear- Left- L08,Ground Rear Left,,True,18,#0000FF,Blue
+183,3,12,9,=Burst- Ground- Rear- Left- L09,Ground Rear Left,,True,22,#00FF00,Green
+184,3,12,10,=Burst- Ground- Rear- Left- L10,Ground Rear Left,,True,22,#8000FF,DarkViolet
+185,3,12,11,=Burst- Ground- Rear- Left- L11,Ground Rear Left,,True,22,#FF8000,Orange
+186,3,12,12,=Burst- Ground- Rear- Left- L12,Ground Rear Left,,True,22,#FF0000,Red
+187,3,12,13,=Burst- Ground- Rear- Left- L13,Ground Rear Left,,True,18,#FFFF00,Yellow
+188,3,12,14,=Burst- Ground- Rear- Left- L14,Ground Rear Left,,True,22,#FF00FF,Fuchsia
+189,3,12,15,=Burst- Ground- Rear- Left- L15,Ground Rear Left,,True,22,#00FF00,Green
+190,3,12,16,=Burst- Ground- Rear- Left- L16,Ground Rear Left,,True,18,#0000FF,Blue
+191,3,13,1,=Burst- Ground- Rear- Right- L01,Ground Rear Right,,True,22,#00FF40,SpringGreen
+192,3,13,2,=Burst- Ground- Rear- Right- L02,Ground Rear Right,,True,22,#FF0000,Red
+193,3,13,3,=Burst- Ground- Rear- Right- L03,Ground Rear Right,,True,22,#0000FF,Blue
+194,3,13,4,=Burst- Ground- Rear- Right- L04,Ground Rear Right,,True,22,#FF8000,Orange
+195,3,13,5,=Burst- Ground- Rear- Right- L05,Ground Rear Right,,True,18,#8000FF,DarkViolet
+196,3,13,6,=Burst- Ground- Rear- Right- L06,Ground Rear Right,,True,18,#FF0000,Red
+197,3,13,7,=Burst- Ground- Rear- Right- L07,Ground Rear Right,,True,22,#FFFF00,Yellow
+198,3,13,8,=Burst- Ground- Rear- Right- L08,Ground Rear Right,,True,18,#0000FF,Blue
+199,3,13,9,=Burst- Ground- Rear- Right- L09,Ground Rear Right,,True,22,#00FF00,Green
+200,3,13,10,=Burst- Ground- Rear- Right- L10,Ground Rear Right,,True,22,#8000FF,DarkViolet
+201,3,13,11,=Burst- Ground- Rear- Right- L11,Ground Rear Right,,True,22,#FF8000,Orange
+202,3,13,12,=Burst- Ground- Rear- Right- L12,Ground Rear Right,,True,22,#FF0000,Red
+203,3,13,13,=Burst- Ground- Rear- Right- L13,Ground Rear Right,,True,18,#FFFF00,Yellow
+204,3,13,14,=Burst- Ground- Rear- Right- L14,Ground Rear Right,,True,22,#FF00FF,Fuchsia
+205,3,13,15,=Burst- Ground- Rear- Right- L15,Ground Rear Right,,True,22,#00FF00,Green
+206,3,13,16,=Burst- Ground- Rear- Right- L16,Ground Rear Right,,True,18,#0000FF,Blue
+207,3,14,1,=Burst- Roof- Left- L01,Roof Left,,True,22,#00FF40,SpringGreen
+208,3,14,2,=Burst- Roof- Left- L02,Roof Left,,True,22,#FF0000,Red
+209,3,14,3,=Burst- Roof- Left- L03,Roof Left,,True,22,#0000FF,Blue
+210,3,14,4,=Burst- Roof- Left- L04,Roof Left,,True,22,#FF8000,Orange
+211,3,14,5,=Burst- Roof- Left- L05,Roof Left,,True,18,#8000FF,DarkViolet
+212,3,14,6,=Burst- Roof- Left- L06,Roof Left,,True,18,#FF0000,Red
+213,3,14,7,=Burst- Roof- Left- L07,Roof Left,,True,22,#FFFF00,Yellow
+214,3,14,8,=Burst- Roof- Left- L08,Roof Left,,True,18,#0000FF,Blue
+215,3,14,9,=Burst- Roof- Left- L09,Roof Left,,True,22,#00FF00,Green
+216,3,14,10,=Burst- Roof- Left- L10,Roof Left,,True,22,#8000FF,DarkViolet
+217,3,14,11,=Burst- Roof- Left- L11,Roof Left,,True,22,#FF8000,Orange
+218,3,14,12,=Burst- Roof- Left- L12,Roof Left,,True,22,#FF0000,Red
+219,3,14,13,=Burst- Roof- Left- L13,Roof Left,,True,18,#FFFF00,Yellow
+220,3,14,14,=Burst- Roof- Left- L14,Roof Left,,True,22,#FF00FF,Fuchsia
+221,3,14,15,=Burst- Roof- Left- L15,Roof Left,,True,22,#00FF00,Green
+222,3,14,16,=Burst- Roof- Left- L16,Roof Left,,True,18,#0000FF,Blue
+223,3,15,1,=Burst- Roof- Right- L01,Roof Right,,True,22,#00FF40,SpringGreen
+224,3,15,2,=Burst- Roof- Right- L02,Roof Right,,True,22,#FF0000,Red
+225,3,15,3,=Burst- Roof- Right- L03,Roof Right,,True,22,#0000FF,Blue
+226,3,15,4,=Burst- Roof- Right- L04,Roof Right,,True,22,#FF8000,Orange
+227,3,15,5,=Burst- Roof- Right- L05,Roof Right,,True,18,#8000FF,DarkViolet
+228,3,15,6,=Burst- Roof- Right- L06,Roof Right,,True,18,#FF0000,Red
+229,3,15,7,=Burst- Roof- Right- L07,Roof Right,,True,22,#FFFF00,Yellow
+230,3,15,8,=Burst- Roof- Right- L08,Roof Right,,True,18,#0000FF,Blue
+231,3,15,9,=Burst- Roof- Right- L09,Roof Right,,True,22,#00FF00,Green
+232,3,15,10,=Burst- Roof- Right- L10,Roof Right,,True,22,#8000FF,DarkViolet
+233,3,15,11,=Burst- Roof- Right- L11,Roof Right,,True,22,#FF8000,Orange
+234,3,15,12,=Burst- Roof- Right- L12,Roof Right,,True,22,#FF0000,Red
+235,3,15,13,=Burst- Roof- Right- L13,Roof Right,,True,18,#FFFF00,Yellow
+236,3,15,14,=Burst- Roof- Right- L14,Roof Right,,True,22,#FF00FF,Fuchsia
+237,3,15,15,=Burst- Roof- Right- L15,Roof Right,,True,22,#00FF00,Green
+238,3,15,16,=Burst- Roof- Right- L16,Roof Right,,True,18,#0000FF,Blue
+239,2,16,1,%Nativity Jesus Mary Joseph,In the manger,,True,17,#0080C0,DarkCyan
+240,2,16,8,%Lasers- Driveway (RG),,,True,3,#800000,Maroon
+241,2,16,9,%Lasers- Street (RG),,,True,3,#800000,Maroon
+242,2,16,11,%Swirlies- Driveway (RGB),,,True,2,#400000,Black
+243,2,16,12,%Swirlies- Manger Stars (RWB),Shining on the manger scene,,True,2,#0080C0,DarkCyan
+244,2,16,13,%Swirlies- Oak (RGB),Oak tree right yard,,True,2,#400000,Black
+245,2,16,14,%Swirlies- Pine (GO),,,True,2,#008000,Green
+246,2,16,15,%Swirlies- Street (M),Shining on the street,,True,2,#804040,SaddleBrown
+247,2,17,1,BAD TRIAC! Controller N Output 1,Output 1 of Controller N,Damaged by ants and not repairable,False,23,#000000,Black
+248,2,17,2,Bushes 5.1 {R} (R),,,True,22,#FF0000,Red
+249,2,17,3,Bushes 5.2 {R} (G),,,True,22,#00FF00,Green
+250,2,17,4,Bushes 5.3 {R} (B),,,True,22,#0000FF,Blue
+251,2,17,5,Bushes 5.4 {R} (W),,,True,22,#FFFFFF,Transparent
+252,2,17,6,Bushes 5.5 {R} (V),,,True,22,#8000FF,DarkViolet
+253,2,17,7,Bushes 5.6 {R} (M),,,True,22,#804040,SaddleBrown
+254,2,17,8,Strobes- C9 Bushes {R} (W),Right Bushes,,True,5,#FFFFFF,Transparent
+255,2,17,9,Spare N9,Controller N Output 9,,False,18,#C0C0C0,Silver
+256,2,17,10,Spare N10,Controller N Output 10,,False,18,#C0C0C0,Silver
+257,2,17,11,Spare N11,Controller N Output 11,,False,18,#C0C0C0,Silver
+258,2,17,12,Spare N12,Controller N Output 9,,False,18,#C0C0C0,Silver
+259,2,17,13,Eaves Chase (R),Under the Eaves,,True,22,#FF0000,Red
+260,2,17,14,Eaves Chase (G),Under the Eaves,,True,22,#00FF00,Green
+261,2,17,15,Eaves Chase (B),Under the Eaves,,True,22,#0000FF,Blue
+262,2,17,16,Eaves Chase (W),Under the Eaves,,True,22,#FFFFFF,Transparent
+263,2,18,1,Big Nick Inside (W),On top of the chimney,,True,16,#FFFFFF,Transparent
+264,2,18,2,Swirlies- Big Nick Fire (RO),On Big Nick on top of the Chimney,,True,2,#FF3900,OrangeRed
+265,2,18,3,Swiriles- Candy Canes (RG),From the chimney onto the roof,,True,2,#800000,Maroon
+266,2,18,4,Big Nick Strobes,Over Big Nick's Head,,True,5,#FFFFFF,Transparent
+267,2,18,6,UFOs 2 {CT} (RGB),Top of chimney,,True,15,#400000,Black
+268,2,18,7,UFOs 3 {R} (RGB),Garage Door,,True,15,#400000,Black
+269,2,18,8,Disco Balls (M),Roof,,True,23,#804040,SaddleBrown
+270,2,18,9,Wreath Berries (R),Big Festive Wreath on the chimney,,True,22,#FF0000,Red
+271,2,18,10,Wreath Leaves (G),Big Festive Wreath on the Chimney,,True,22,#00FF00,Green
+272,2,18,16,On The Air,Controller I (Garage) Output 16,,True,1,#FF0000,Red
+273,2,19,1,Garage Window 1 Dasher {L} (W),Garage Window leftmost,,True,1,#FFFFFF,Transparent
+274,2,19,2,Garage Window 2 Dancer (W),Garage window 2nd from left,,True,1,#FFFFFF,Transparent
+275,2,19,3,Garage Window 3 Prancer (W),Garage Window 3rd from left,,True,1,#FFFFFF,Transparent
+276,2,19,4,Garage Window 4 Vixen (W),,,True,1,#FFFFFF,Transparent
+277,2,19,5,Garage Window 5 Comet (W),,,True,1,#FFFFFF,Transparent
+278,2,19,6,Garage Window 6 Cupid (W),,,True,1,#FFFFFF,Transparent
+279,2,19,7,Garage Window 7 Donner (W),Garage window 2nd from right,,True,1,#FFFFFF,Transparent
+280,2,19,8,Garage Window 8 Blitzen {R} (W),Garage Window rightmost,,True,1,#FFFFFF,Transparent
+281,2,19,9,Meteors 1 (W),,,True,23,#FFFFFF,Transparent
+282,2,19,10,Meteors 2 (W),,,True,23,#FFFFFF,Transparent
+283,2,19,11,Meteors 3 (B),,,True,23,#0000FF,Blue
+284,2,19,12,Meteors 4 (M),,,True,23,#804040,SaddleBrown
+285,2,19,13,Rotating Beacons 1 {F} (RGBO),Front of Left Yard,,True,4,#804040,SaddleBrown
+286,2,19,14,Rotating Beacons 2 {B} (RGBO),Back of Left Yard,,True,4,#804040,SaddleBrown
+287,2,19,15,Rotating Beacons 3 {R} (RGBO),"Controller G, Output 24",,True,23,#804040,SaddleBrown
+288,2,19,16,Spare 12V Q16,,,True,18,#C0C0C0,Silver
+289,2,19,17,Spare 12V Q17,,,True,18,#C0C0C0,Silver
+290,2,19,18,Spare 12 Volt O18,"Controller O Output 18, 12 Volts",,True,18,#C0C0C0,Silver
+291,2,19,19,Spare 12 Volt O19,"Controller O Output 19, 12 Volts",,True,18,#C0C0C0,Silver
+292,2,19,20,Spare 12 Volt H20,Controller H Output 20,,True,18,#C0C0C0,Silver
+293,2,19,21,Spare 12 Volt H21,Controller H Output 21,,True,18,#C0C0C0,Silver
+294,2,19,22,Spare 12 Volt H22,Controller H Output 22,,True,18,#C0C0C0,Silver
+295,2,19,23,Transmitter 12V,Garage,Turns on during musical sequences off during animated,True,19,#CD0158,Crimson
+296,2,19,24,Amplifier 12V,Garage,"On for musical sequences, off for animated",True,19,#008080,Teal
+297,2,20,1,Manger Flood 1 {L} (R),Shining on the manger scene,,True,11,#FF0000,Red
+298,2,20,2,Manger Flood 1 {L} (G),Shining on the manger scene,,True,11,#00FF00,Green
+299,2,20,3,Manger Flood 1 {L} (B),Shining on the manger scene,,True,11,#0000FF,Blue
+300,2,20,4,Manger Flood 2 {R} (R),Shining on the manger scene,,True,11,#FF0000,Red
+301,2,20,5,Manger Flood 2 {R} (G),Shining on the manger scene,,True,11,#00FF00,Green
+302,2,20,6,Manger Flood 2 {R} (B),Shining on the manger scene,,True,11,#0000FF,Blue
+303,2,20,7,Festivus Pole Flood (R),Base of the Festivus Pole,,True,11,#FF0000,Red
+304,2,20,8,Festivus Pole Flood (G),Base of the Festivus Pole,,True,11,#00FF00,Green
+305,2,20,9,Festivus Pole Flood (B),Base of the Festivus Pole,,True,11,#0000FF,Blue
+306,2,20,10,Spare 12 Volt RGB Device (R),"Controller G, Output 19",,False,18,#FF0000,Red
+307,2,20,11,Spare 12 Volt RGB Device (G),"Controller G, Output 20",,False,18,#00FF00,Green
+308,2,20,12,Spare 12 Volt RGB Device (B),"Controller G, Output 21",,False,18,#0000FF,Blue
+309,2,20,13,Tree- Rainbow Inflatible (R),Yard Left Edge,,True,11,#FF0000,Red
+310,2,20,14,Tree- Rainbow Inflatible (G),Leftmost Yard,,True,11,#00FF00,Green
+311,2,20,15,Tree- Rainbow Inflatible (B),Leftmost Yard,,True,11,#0000FF,Blue
+312,2,20,16,Spare 12 Volt RGB Device (R),,,True,18,#C0C0C0,Silver
+313,2,20,17,Spare 12 Volt RGB Device (G),,,True,18,#C0C0C0,Silver
+314,2,20,18,Spare 12 Volt RGB Device (B),,,True,18,#C0C0C0,Silver
+315,2,20,19,Roof Ridgeline 1 {L} (R),Left Roof Top Ridgeline,,True,10,#FF0000,Red
+316,2,20,20,Roof Ridgeline 1 {L} (G),Left Roof Top Ridgeline,,True,10,#00FF00,Green
+317,2,20,21,Roof Ridgeline 1 {L} (B),Left Roof Top Ridgeline,,True,10,#0000FF,Blue
+318,2,20,22,Roof Ridgeline 2 {R} (R),Right Roof Top Ridgeline,,True,10,#FF0000,Red
+319,2,20,23,Roof Ridgeline 2 {R} (G),Right Roof Top Ridgeline,,True,10,#00FF00,Green
+320,2,20,24,Roof Ridgeline 2 {R} (B),Right Roof Top Ridgeline,,True,10,#0000FF,Blue
+321,2,20,25,Spare 12 Volt RGB Device (R),,,True,18,#C0C0C0,Silver
+322,2,20,26,Spare 12 Volt RGB Device (G),,,True,18,#C0C0C0,Silver
+323,2,20,27,Spare 12 Volt RGB Device (B),Controller H Output 18,,True,18,#C0C0C0,Silver
+324,999,21,1,zRainbow Rope Arch 1 (R),,,False,13,#FF0000,Red
+325,999,21,2,zRainbow Rope Arch 2 (O),,,False,13,#FF8000,Orange
+326,999,21,3,zRainbow Rope Arch 3 (Y),,,False,13,#FFFF00,Yellow
+327,999,21,4,zRainbow Rope Arch 4 (G),,,False,13,#00FF00,Green
+328,999,21,5,zRainbow Rope Arch 5 (B),,,False,13,#0000FF,Blue
+329,999,21,6,zRainbow Rope Arch 6 (V),,,False,13,#8000FF,DarkViolet
+330,999,21,7,zTree- Big 2 (M),,,False,14,#804040,SaddleBrown
+331,999,21,8,zYellow Snow (Y),,,False,22,#FFFF00,Yellow

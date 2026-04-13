@@ -658,9 +658,9 @@ namespace LOR4
 						r(l);
 						ie++;
 					}
-					if ((ch.UniverseNumber < 1) || (ch.DMXAddress < 1))
+					if ((ch.UniverseNumber < 1) || (ch.Address < 1))
 					{
-						l = "!" + n + "Has invalid address of " + ch.UniverseNumber.ToString() + "/" + ch.DMXAddress.ToString();
+						l = "!" + n + "Has invalid address of " + ch.UniverseNumber.ToString() + "/" + ch.Address.ToString();
 						r(l);
 						ie++;
 					}
@@ -727,9 +727,9 @@ namespace LOR4
 						r(l);
 						ie++;
 					}
-					if ((ob.UniverseNumber < 1) || (ob.DMXAddress < 1))
+					if ((ob.UniverseNumber < 1) || (ob.Address < 1))
 					{
-						l = "!" + n + "Has invalid address of " + ob.UniverseNumber.ToString() + "/" + ob.DMXAddress.ToString();
+						l = "!" + n + "Has invalid address of " + ob.UniverseNumber.ToString() + "/" + ob.Address.ToString();
 						r(l);
 						ie++;
 					}
@@ -763,7 +763,7 @@ namespace LOR4
 							}
 							else
 							{
-								if (ob.redChannel.output.DMXAddress < 1)
+								if (ob.redChannel.output.Address < 1)
 								{
 									l = "!" + n + "Is RGB and Red Channel has DMX Address.";
 									r(l);
@@ -814,7 +814,7 @@ namespace LOR4
 							}
 							else
 							{
-								if (ob.redChannel.output.DMXAddress < 1)
+								if (ob.redChannel.output.Address < 1)
 								{
 									l = "!" + n + "Is not RGB and Sub-Channel has DMX Address.";
 									r(l);
@@ -882,9 +882,9 @@ namespace LOR4
 						r(l);
 						ie++;
 					}
-					if ((ig.UniverseNumber < 1) || (ig.DMXAddress < 1))
+					if ((ig.UniverseNumber < 1) || (ig.Address < 1))
 					{
-						l = "!" + n + "Has invalid address of " + ig.UniverseNumber.ToString() + "/" + ig.DMXAddress.ToString();
+						l = "!" + n + "Has invalid address of " + ig.UniverseNumber.ToString() + "/" + ig.Address.ToString();
 						r(l);
 						ie++;
 					}
