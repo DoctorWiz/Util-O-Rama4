@@ -98,13 +98,13 @@ namespace UtilORama4
 
 			if (owner != null)
 			{
-				if (owner.AllUniverses != null)
+				if (frmList.AllUniverses != null)
 				{
-					for (int u = 0; u < owner.AllUniverses.Count; u++)
+					for (int u = 0; u < frmList.AllUniverses.Count; u++)
 					{
-						ListItem li = new ListItem(owner.AllUniverses[u].ToString(), owner.AllUniverses[u].ID);
+						ListItem li = new ListItem(frmList.AllUniverses[u].ToString(), frmList.AllUniverses[u].ID);
 						cboUniverse.Items.Add(li);
-						if (owner.AllUniverses[u].ID == controller.Universe.ID)
+						if (frmList.AllUniverses[u].ID == controller.Universe.ID)
 						{
 							cboUniverse.SelectedIndex = u;
 						}
@@ -718,7 +718,7 @@ namespace UtilORama4
 				string t = cboUniverse.Text.Trim();
 				if (t != controller.Universe.Name)
 				{
-					controller.Universe = owner.AllUniverses[cboUniverse.SelectedIndex];
+					controller.Universe = frmList.AllUniverses[cboUniverse.SelectedIndex];
 					RefreshAddresses();
 					if (!loading)
 					{
@@ -749,7 +749,7 @@ namespace UtilORama4
 				string t = cboUniverse.Text.Trim();
 				if (t != controller.Universe.Name)
 				{
-					controller.Universe = owner.AllUniverses[cboUniverse.SelectedIndex];
+					controller.Universe = frmList.AllUniverses[cboUniverse.SelectedIndex];
 					RefreshAddresses();
 					if (!loading)
 					{
@@ -1293,7 +1293,7 @@ namespace UtilORama4
 							ch.Name = "Channel " + (co).ToString();
 							ch.OutputNum = co;
 							ch.Active = false;
-							ch.DeviceType = owner.DeviceTypes[0]; // Default to unclassified/undefined device type
+							ch.DeviceType = frmList.DeviceTypes[0]; // Default to unclassified/undefined device type
 							ch.Color = Color.White;  // Most likely color
 							controller.Channels.Add(ch);
 						} // End if not found

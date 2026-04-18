@@ -166,8 +166,8 @@ namespace UtilORama4
 
 			int used = 0;
 			int ucount = 0;
-			owner.AllUniverses.Sort();
-			foreach (Universe u in owner.AllUniverses)
+			frmList.AllUniverses.Sort();
+			foreach (Universe u in frmList.AllUniverses)
 			{
 				string foo = u.FullName;
 				if (u.UniverseNumber < universe.UniverseNumber)
@@ -824,9 +824,9 @@ namespace UtilORama4
 		private void lblLastUniNum_Click(object sender, EventArgs e)
 		{
 			// Secret renumbering function
-			owner.AllUniverses.Sort();
+			frmList.AllUniverses.Sort();
 			int st = 0;
-			foreach (Universe uni in owner.AllUniverses)
+			foreach (Universe uni in frmList.AllUniverses)
 			{
 				uni.MaxChannelsAllowed = uni.LastUsedAddress;
 				uni.xLightsAddress = st;

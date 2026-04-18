@@ -35,7 +35,7 @@ namespace UtilORama4
 		protected int myOutput = 1;
 		//public ChannelType ChannelType = ChannelType.SingleLight;
 		//public static List<DeviceTypes> DeviceTypes = new List<DeviceTypes>();
-		public DeviceTypes DeviceType = new DeviceTypes("Unclassified", 0, 999);
+		public DeviceType DeviceType = new DeviceType("Unclassified", 0, 999);
 		protected bool isEditing = false;
 		protected bool isDirty = false;
 		protected bool nameIsBad = true;

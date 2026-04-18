@@ -55,10 +55,10 @@ namespace UtilORama4
 	{
 		private static Settings userSettings = Settings.Default;
 		private const string helpPage = "http://wizlights.com/utilorama/channelorama";
-		public List<Universe> AllUniverses = new List<Universe>();
-		public List<Controller> AllControllers = Universe.AllControllers;
-		public List<Channel> AllChannels = Universe.AllChannels;
-		public List<DeviceTypes> DeviceTypes = new List<DeviceTypes>();
+		public static List<Universe> AllUniverses = new List<Universe>();
+		public static List<Controller> AllControllers = Universe.AllControllers;
+		public static List<Channel> AllChannels = Universe.AllChannels;
+		public static List<DeviceType> DeviceTypes = new List<DeviceType>();
 		private string myTitle = "Channel-O-Rama  Channel Manager";
 
 
@@ -78,28 +78,29 @@ namespace UtilORama4
 		public static bool hasxLights = false;
 		public static bool hasLOR = false;
 		public static string uniName = "Universe";
+		public static float magnification = 1.0F;
 
 		public static readonly Color Color_RGB = ColorTranslator.FromHtml("#000001");
 		public static readonly Color Color_RGBW = ColorTranslator.FromHtml("#000100");
-		public static readonly Color Color_Multi = ColorTranslator.FromHtml("#010000"); 
-		private static int[] TREEICONuniverse     = { 0 };
-		private static readonly int[] TREEICONcontroller   = { 1 };
+		public static readonly Color Color_Multi = ColorTranslator.FromHtml("#010000");
+		private static int[] TREEICONuniverse = { 0 };
+		private static readonly int[] TREEICONcontroller = { 1 };
 		//private int[] TREEICONtrack        = { 3 };
-		private static readonly int[] TREEICONchannel      = { 4 }; // Multicolored
-		private static readonly int[] TREEICONrgbChannel   = { 2 }; // #7 below looks better
-		//private int[] TREEICONchannelGroup = { 6 };
-		//private int[] TREEICONcosmic       = { 7 };
-		private static readonly int[] TREEICONrgbColor     = { 2 };
-		private static readonly int[] TREEICONrgbwColor    = { 3 };
-		private static readonly int[] TREEICONmulticolor   = { 4 };
-		private static readonly int[] TREEICONred          = { 8 };
-		private static readonly int[] TREEICONgreen        = { 11 };
-		private static readonly int[] TREEICONblue         = { 12 };
+		private static readonly int[] TREEICONchannel = { 4 }; // Multicolored
+		private static readonly int[] TREEICONrgbChannel = { 2 }; // #7 below looks better
+																															//private int[] TREEICONchannelGroup = { 6 };
+																															//private int[] TREEICONcosmic       = { 7 };
+		private static readonly int[] TREEICONrgbColor = { 2 };
+		private static readonly int[] TREEICONrgbwColor = { 3 };
+		private static readonly int[] TREEICONmulticolor = { 4 };
+		private static readonly int[] TREEICONred = { 8 };
+		private static readonly int[] TREEICONgreen = { 11 };
+		private static readonly int[] TREEICONblue = { 12 };
 
-		private static string fileUniverses   = "Universes.csv";
-//		private static string fileNetworks = "Networks.csv";
+		private static string fileUniverses = "Universes.csv";
+		//		private static string fileNetworks = "Networks.csv";
 		private static readonly string fileControllers = "Controllers.csv";
-		private static readonly string fileChannels    = "Channels.csv";
+		private static readonly string fileChannels = "Channels.csv";
 		private static readonly string fileDeviceTypes = "DeviceTypes.csv";
 
 		private frmUniverse uniForm = null;
@@ -135,7 +136,7 @@ namespace UtilORama4
 			//MatchUp(seqFile, true);
 
 			frmDeviceTypes dtForm = new frmDeviceTypes(this);
-			DialogResult dr = dtForm.ShowDialog(this);	
+			DialogResult dr = dtForm.ShowDialog(this);
 
 		}
 
@@ -154,11 +155,11 @@ namespace UtilORama4
 				hasxLights = true;
 
 			// command line overrides
-			string[] args=Environment.GetCommandLineArgs();
+			string[] args = Environment.GetCommandLineArgs();
 			foreach (string arg in args)
 			{
 				string argx = arg.Trim().ToLower();
-				if (argx.IndexOf("forcexlights") >=0)
+				if (argx.IndexOf("forcexlights") >= 0)
 					hasxLights = true;
 				else if (argx.IndexOf("force xlights") >= 0)
 					hasxLights = true;
@@ -184,7 +185,14 @@ namespace UtilORama4
 				uniName = "Network";
 				btnUniverse.Text = "Edit\r\nNetwork";
 			}
+
+			using (Graphics graphics = Graphics.FromHwnd(IntPtr.Zero))
+			{
+				float dpiX = graphics.DpiX; // Usually 96 for 100%
+				magnification = dpiX / 96.0f;
+			}
 		}
+
 
 		private void SaveUserSettings()
 		{
@@ -540,7 +548,7 @@ namespace UtilORama4
 							else
 							{
 								controller.Universe.Controllers.Add(controller);
-							}	
+							}
 
 							controller.Identifier = row[2];  // Field 1 Letter ID
 							controller.Name = row[3];  // Field 2 Name
@@ -622,7 +630,7 @@ namespace UtilORama4
 
 
 
-							lastID=Math.Max(lastID, controller.ID);
+							lastID = Math.Max(lastID, controller.ID);
 							//controller.ID = lastID;
 							AllControllers.Add(controller);
 						}
@@ -685,7 +693,7 @@ namespace UtilORama4
 
 							int uniNum = 1;
 							int.TryParse(row[1], out uniNum); // Field 1 = Universe Number
-							// Ignore the universe number, get it from the controller's universe number instead
+																								// Ignore the universe number, get it from the controller's universe number instead
 
 							int ctlid = 1;
 							int.TryParse(row[2], out ctlid);
@@ -703,7 +711,7 @@ namespace UtilORama4
 							}
 
 							//string ctlIdentifier = row[3]; // Field 2 = Controller Letter or ID
-																						 // Ignore it, we have the controller already, and can get the identifier from the controller
+							// Ignore it, we have the controller already, and can get the identifier from the controller
 
 							int nout = 1;
 							int.TryParse(row[3], out nout);
@@ -740,7 +748,7 @@ namespace UtilORama4
 							}
 
 							string colhex = row[9];           // Field 9 = Color (hex)
-	
+
 							// TEMPORARY!  Convert all my plain white to cool white
 							if (colhex == "#FFFFFF")
 								colhex = "#D0FFFF";
@@ -760,7 +768,7 @@ namespace UtilORama4
 							}
 
 
-								AllChannels.Add(channel);
+							AllChannels.Add(channel);
 							/*
 							bool ctlFound = false;
 							for (int u = 0; u < AllUniverses.Count; u++)
@@ -889,9 +897,9 @@ namespace UtilORama4
 			return ret;
 		}
 
-		private DeviceTypes GetDeviceTypeByID(int ID)
+		private DeviceType GetDeviceTypeByID(int ID)
 		{
-			DeviceTypes ret = null;
+			DeviceType ret = null;
 			for (int c = 0; c < DeviceTypes.Count; c++)
 			{
 				if (DeviceTypes[c].ID == ID)
@@ -907,7 +915,7 @@ namespace UtilORama4
 		{
 			int errs = 0;
 			string devName = ""; // for debugging exceptions
-			//if (AllUniverses.Count > 0)
+													 //if (AllUniverses.Count > 0)
 			{
 				string chnFile = filePath + fileDeviceTypes;
 				try
@@ -935,14 +943,16 @@ namespace UtilORama4
 									{
 										int devID = -1;
 										int.TryParse(row[0], out devID); // Field 0 = Device ID
-										devName = row[1];   // Field 1 = Name
+										devName = row[2].Trim();   // Field 2 = Name
 										int ord = 0;
 										if (row.Count > 2)
 										{
-											int.TryParse(row[2], out ord); // Field 2 = LOR4Output Number
-										}
-										DeviceTypes deviceType = new DeviceTypes(devName, devID, ord);
-										DeviceTypes.Add(deviceType);
+											int.TryParse(row[1], out ord); // Field 1 = Display Order
+										} 
+										string descr = row[30].Trim();	
+										DeviceType device = new DeviceType(devName, devID, ord);
+										device.Comment = descr;	
+										DeviceTypes.Add(device);
 									} // End if less than three 'rows' (columns actually)
 								} // End if line isn't a comment
 							} // End if line isn't blank
@@ -1061,7 +1071,7 @@ namespace UtilORama4
 		{
 			// Start ID numering at ONE instead of zero for user friendliness when editing raw CSV files.
 			// Note that they may be out of order or non-contigous in memory, but when we save them, we renumber them starting at 1 and make them contigous for user friendliness when editing raw CSV files.
-			writeID = 1; 
+			writeID = 1;
 			int errs = 0;
 			string uniName = "";
 			string uniFile = filePath + fileUniverses;
@@ -1153,7 +1163,7 @@ namespace UtilORama4
 				row.Add("Active");       // Field 6
 				row.Add("Brand");        // Field 7
 				row.Add("Model");        // Field 8
-				row.Add("Unit#");				 // Field 9
+				row.Add("Unit#");        // Field 9
 				row.Add("Output Count"); // Field 10
 				row.Add("DMX Start");    // Field 11
 				row.Add("Voltage");      // Field 12
@@ -1185,7 +1195,7 @@ namespace UtilORama4
 							row.Add(controller.Active.ToString());                     // Field 6
 							row.Add(controller.ControllerBrand);                       // field 7
 							row.Add(controller.ControllerModel);                       // Field 8
-							row.Add(controller.UnitID.ToString());							  		 // Filed 9									
+							row.Add(controller.UnitID.ToString());                     // Filed 9									
 							row.Add(controller.OutputCount.ToString());                // Field 10
 							row.Add(controller.StartAddress.ToString());            // Field 11
 							row.Add(controller.Voltage.ToString());                    // Field 12
@@ -1270,7 +1280,7 @@ namespace UtilORama4
 								writeID++;
 								row.Add(channel.Universe.UniverseNumber.ToString()); // Field 1
 								row.Add(channel.Controller.ID.ToString());           // Field 2
-								//row.Add(channel.Controller.Identifier);            // Field 2
+																																		 //row.Add(channel.Controller.Identifier);            // Field 2
 								row.Add(channel.OutputNum.ToString());                  // Field 3
 								row.Add(channel.Name);                                  // Field 4
 								row.Add(channel.Location);                              // Field 5
@@ -1279,7 +1289,7 @@ namespace UtilORama4
 								row.Add(channel.DeviceType.ID.ToString());              // Field 8
 								row.Add(LOR4.LOR4Admin.ColorToHex(channel.Color));      // Field 9
 								row.Add(LOR4.LOR4Admin.NearestColorName(channel.Color));       // Field 10
-								//row.Add(Etc.ColorName(channel.Color));       // Field 10
+																																							 //row.Add(Etc.ColorName(channel.Color));       // Field 10
 
 								writer.WriteRow(row);
 							} // end try for Channels
@@ -1309,6 +1319,72 @@ namespace UtilORama4
 			return errs;
 		}
 
+		public int SaveDevices(string filePath)
+		{
+			// Start ID numering at zero, but ID=0 is the undefined/undeclared one
+			// Note that they are in display order in memory, but when we save them, we renumber the ID starting at 0 and make them contigous for user friendliness when editing raw CSV files.
+			writeID = 0;
+			int errs = 0;
+			string devName = "";
+			string devFile = filePath + fileUniverses;
+			try
+			{
+				CsvFileWriter writer = new CsvFileWriter(devFile);
+				CsvRow row = new CsvRow();
+				// Create first line which is headers;
+				row.Add("ID");          // Field 0
+				row.Add("Order");       // Field 1
+				row.Add("Name");        // Field 2
+				row.Add("Comment"); // Field 3
+				writer.WriteRow(row);
+
+				// Make sure they are sorted before we write them out, so that they will be in order when we read them back in, and also so that they will be in order for the user when they open the CSV file to edit it.
+				DeviceTypes.Sort();
+				for (int d = 0; d < DeviceTypes.Count; d++)
+				{
+					try
+					{
+						DeviceType device = DeviceTypes[d];
+						devName = device.Name;
+						row = new CsvRow();
+
+						//row.Add(universe.ID.ToString());                 // Field 0
+						// Lets renumber all the IDs while we'ere at it.
+						row.Add(writeID.ToString());              // Field 0
+						device.ID = writeID;
+						writeID++;
+						//row.Add(device.DisplayOrder.ToString()); // Field 1
+						// And lets renumber the display order too while we're at it
+						row.Add(writeID.ToString());              // Field 1
+						device.DisplayOrder = writeID;
+						row.Add(device.Name);                    // Field 2
+						row.Add(device.Comment);                      // Field 3
+
+						writer.WriteRow(row);
+					}
+					catch (Exception ex)
+					{
+						string msg = "Error " + ex.ToString() + " while saving " + uniName; // + " " + uniName;
+						if (isWiz)
+						{
+							DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						}
+						errs++;
+					}
+				}
+				writer.Close();
+			}
+			catch (Exception ex)
+			{
+				string msg = "Error " + ex.ToString() + " while saving " + uniName + "s file " + devFile;
+				if (isWiz)
+				{
+					DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+				errs++;
+			}
+			return errs;
+		}
 		public int ExportChannels(string filePath)
 		{
 			// Note: Channels are saved in order of universe, then controller, then output number.
@@ -1358,9 +1434,9 @@ namespace UtilORama4
 								chnName = channel.Name;
 								row = new CsvRow();
 								row.Add(channel.UniverseNumber.ToString());        // Field 0
-								row.Add(channel.Universe.Name);								 // Field 1
+								row.Add(channel.Universe.Name);                // Field 1
 								row.Add(channel.Controller.Identifier);         // Field 2
-								row.Add(channel.Controller.Name);							 // Field 3
+								row.Add(channel.Controller.Name);              // Field 3
 								row.Add(channel.OutputNum.ToString());             // Field 4
 								row.Add(channel.Address.ToString());            // Field 5
 								row.Add(channel.Name);                             // Field 6
@@ -1605,34 +1681,35 @@ namespace UtilORama4
 					prevWindowState = FormWindowState.Normal;
 				}
 			*/
-				int treeHt = this.ClientSize.Height - staStatus.Height - 16;
-				int treeWd = this.ClientSize.Width - btnUniverse.Width - 24;
-				int btnLeft = ClientSize.Width - btnUniverse.Width - 8;
-				int okTop = treeChannels.Top + treeHt - btnOK.Height;
-				treeChannels.Height = treeHt;
-				treeChannels.Width = treeWd;
-				btnOK.Top = okTop;
-				btnUniverse.Left = btnLeft;
-				btnController.Left = btnLeft;
-				btnChannel.Left = btnLeft;
-				btnReport.Left = btnLeft;
-				btnFind.Left = btnLeft;
-				btnSave.Left = btnLeft;
-				btnCompareLOR.Left = btnLeft;
-				btnComparex.Left = btnLeft;
-				btnWiz.Left = btnLeft;
-				btnOK.Left = btnLeft;
-				int y = treeChannels.Top + treeChannels.Height - btnSave.Height;
-				btnSave.Top = y;
-		/*	
-		}
-			else if (this.WindowState == FormWindowState.Minimized)
-			{
-				// Do I need to do anything
-				//  (other than update this variable)
-				prevWindowState = FormWindowState.Minimized;
+			int treeHt = this.ClientSize.Height - staStatus.Height - 16;
+			int treeWd = this.ClientSize.Width - btnUniverse.Width - 24;
+			int btnLeft = ClientSize.Width - btnUniverse.Width - 8;
+			int okTop = treeChannels.Top + treeHt - btnOK.Height;
+			treeChannels.Height = treeHt;
+			treeChannels.Width = treeWd;
+			btnOK.Top = okTop;
+			btnUniverse.Left = btnLeft;
+			btnController.Left = btnLeft;
+			btnChannel.Left = btnLeft;
+			btnDevices.Left = btnLeft;
+			btnReport.Left = btnLeft;
+			btnFind.Left = btnLeft;
+			btnSave.Left = btnLeft;
+			btnCompareLOR.Left = btnLeft;
+			btnComparex.Left = btnLeft;
+			btnWiz.Left = btnLeft;
+			btnOK.Left = btnLeft;
+			int y = treeChannels.Top + treeChannels.Height - btnSave.Height;
+			btnSave.Top = y;
+			/*	
 			}
-		*/
+				else if (this.WindowState == FormWindowState.Minimized)
+				{
+					// Do I need to do anything
+					//  (other than update this variable)
+					prevWindowState = FormWindowState.Minimized;
+				}
+			*/
 		}
 
 		private void BuildTree()
@@ -1816,7 +1893,7 @@ namespace UtilORama4
 
 				} // End loop for channels
 			} // End if node's tag IS a controller
-		  else
+			else
 			{
 				string msg = "ERROR: BuildChannelTree called for a node that does not have a Controller in its tag.";
 				if (isWiz)
@@ -1834,7 +1911,7 @@ namespace UtilORama4
 			{
 				if (chanNode.Tag != null)
 				{
-					IDMXThingy thing=(IDMXThingy)chanNode.Tag;
+					IDMXThingy thing = (IDMXThingy)chanNode.Tag;
 					string sinfo = "Edit Node for " + thing.ObjectType.ToString() + thing.FullName;
 					Debug.WriteLine(sinfo);
 					if (chanNode.Tag.GetType() == typeof(Channel))
@@ -1844,7 +1921,7 @@ namespace UtilORama4
 						string nodeText = channel.FullName;
 						chanNode.Text = nodeText;
 						ImageList icons = treeChannels.LeftImageList;
-						int iconIndex = LOR4.LOR4Admin.ColorIcon(icons, channel.Color,24);
+						int iconIndex = LOR4.LOR4Admin.ColorIcon(icons, channel.Color, 24);
 						int[] ico = { iconIndex };
 						chanNode.LeftImageIndices = ico;
 						if (channel.BadName || channel.BadOutput)
@@ -1872,7 +1949,7 @@ namespace UtilORama4
 				Debug.WriteLine(sinfo);
 				if (isWiz)
 				{
-					Debugger.Break();	
+					Debugger.Break();
 				}
 			}
 		}
@@ -2018,7 +2095,7 @@ namespace UtilORama4
 					//int ea = ctl.StartAddress + ctl.OutputCount - 1;
 					//nn += ctl.StartAddress.ToString("000") + "-" + ea.ToString("000") + " ";
 					// Replace most of that with FullName?
-					nn +=	"@ " + ctl.Location;
+					nn += "@ " + ctl.Location;
 					pnlStatus.Text = nn;
 					nn += ctl.Comment;
 					treeChannels.HelpTextControl.Text = nn;
@@ -2026,7 +2103,7 @@ namespace UtilORama4
 				else
 				{
 					btnController.Text = "Add\r\nController";
-					ttxt= "Add a new Controller to the selected " + uniName + ".";
+					ttxt = "Add a new Controller to the selected " + uniName + ".";
 					tipTool.SetToolTip(btnController, ttxt);
 
 				}
@@ -2041,7 +2118,7 @@ namespace UtilORama4
 				{
 					Channel ch = (Channel)node.Tag;
 					btnChannel.Text = "Edit\r\nChannel";
-					ttxt= "Edit the selected Channel.\r\n";
+					ttxt = "Edit the selected Channel.\r\n";
 					ttxt += ch.FullName;
 					tipTool.SetToolTip(btnChannel, ttxt);
 					btnRemove.Visible = true;
@@ -2054,7 +2131,7 @@ namespace UtilORama4
 						}
 						return;
 					}
-					else 
+					else
 					{
 						string xc = "xLights Channel: " + ch.xLightsAddress.ToString();
 						lblxChannel.Text = xc;
@@ -2221,11 +2298,11 @@ namespace UtilORama4
 							{
 								// Update the same node, which should be the same controller node, since still on same controller
 								controller.Channels.Sort(); // In case the output number changed, need to re-sort the channels on this controller
-																							 // Get the (original) controller node (Note: did not change)
-																							 // And re-build it
+																						// Get the (original) controller node (Note: did not change)
+																						// And re-build it
 								BuildChannelNode(chNode); // Just update this one node, since still on same controller, so no need to re-build the entire tree for this controller
-																				//BuildChannelTree(ctlrNode);
-																				//}
+																					//BuildChannelTree(ctlrNode);
+																					//}
 							} // End Still on same controller
 							MakeDirty(true);
 							success = true;
@@ -2303,7 +2380,7 @@ namespace UtilORama4
 			channel.Controller = parentCtl;
 			channel.Editing = true;
 			Controller oldCtlr = channel.Controller;
-			chanForm = new frmChannel(channel,this);
+			chanForm = new frmChannel(channel, this);
 
 			// Try to find an unused output
 			int o = 1;
@@ -2414,7 +2491,7 @@ namespace UtilORama4
 						// This start address is not used, so start with it
 						// Break from loop
 						controller.UnitID = unit;
-						ui= universe.Controllers.Count; // Force exit of loop
+						ui = universe.Controllers.Count; // Force exit of loop
 					}
 				}
 				else
@@ -2429,7 +2506,7 @@ namespace UtilORama4
 						// This start address is not used, so start with it
 						// Break from loop
 						controller.StartAddress = addr;
-						ui= universe.Controllers.Count; // Force exit of loop
+						ui = universe.Controllers.Count; // Force exit of loop
 					}
 				}
 			}
@@ -2590,7 +2667,7 @@ namespace UtilORama4
 							{
 								// Update the same node, which should be the same universe node, since still on same universe
 								universe.Controllers.Sort(); // In case the start address changed, need to re-sort the controllers on this universe
-																								// Get the (original) universe node (Note: did not change)
+																						 // Get the (original) universe node (Note: did not change)
 								uniNode.Nodes.Clear();                                // And re-build it
 								BuildUniverseNode(uniNode);
 								BuildControllerNode(ctlNode); // Just update this one node, since still on same universe, so no need to re-build the entire tree for this universe
@@ -2618,7 +2695,7 @@ namespace UtilORama4
 				int ln = LOR4.LOR4Admin.ExceptionLineNumber(ex);
 				string msg = "Error on line " + ln.ToString() + "\r\n";
 				msg += ex.ToString() + " while exiting Controller editor " + controller.Name;
-					
+
 				if (Fyle.isWiz || Fyle.InIDE)
 				{
 					Fyle.BUG("EditController", ex);
@@ -2641,7 +2718,7 @@ namespace UtilORama4
 			return success;
 		}
 
-		private bool EditUniverse(Universe	universe)
+		private bool EditUniverse(Universe universe)
 		{
 			// Return True if universe was (successfully) edited.
 			// Returns False if User Canceled the Edit dialog, or in case of an error.
@@ -3246,10 +3323,10 @@ using (ctlrForm modalChild = new ctlrForm())
 			}
 		}
 
-		public DeviceTypes GetTypeByName(string theName)
+		public DeviceType GetTypeByName(string theName)
 		{
 			string tn = theName.ToLower();
-			DeviceTypes ret = null;
+			DeviceType ret = null;
 			for (int i = 0; i < DeviceTypes.Count; i++)
 			{
 				if (tn == DeviceTypes[i].Name.ToLower())
@@ -4178,6 +4255,20 @@ using (ctlrForm modalChild = new ctlrForm())
 		private void btnSettings_Click(object sender, EventArgs e)
 		{
 			mnuSettings.Show(btnSettings, new System.Drawing.Point(0, btnSettings.Height));
+		}
+
+		private void btnDevices_Click(object sender, EventArgs e)
+		{
+			frmDeviceTypes devform = new frmDeviceTypes();
+			devform.LoadDevices(DeviceTypes);
+			DialogResult dr = devform.ShowDialog(this);
+			if (dr == DialogResult.OK) 
+			{
+				// This form's DeviceType list has been updated by the btnOK event on the devices form
+				// BUT we now need to save it to the data file
+
+			
+			}
 		}
 	}
 

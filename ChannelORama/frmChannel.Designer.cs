@@ -38,7 +38,6 @@ namespace UtilORama4
 			txtLocation = new TextBox();
 			lblLocation = new Label();
 			lblType = new Label();
-			cboType = new ComboBox();
 			lblColorLabel = new Label();
 			cboController = new ComboBox();
 			lblController = new Label();
@@ -53,11 +52,13 @@ namespace UtilORama4
 			lblComment = new Label();
 			clrColors = new ColorDialog();
 			tipTool = new ToolTip(components);
+			lblDevice = new Label();
 			lblDirty = new Label();
 			picRGB = new PictureBox();
 			picRGBW = new PictureBox();
 			picMulti = new PictureBox();
 			picColor = new PictureBox();
+			hcboDevic3 = new ComboBox();
 			((System.ComponentModel.ISupportInitialize)numOutput).BeginInit();
 			((System.ComponentModel.ISupportInitialize)picRGB).BeginInit();
 			((System.ComponentModel.ISupportInitialize)picRGBW).BeginInit();
@@ -68,7 +69,7 @@ namespace UtilORama4
 			// btnOK
 			// 
 			btnOK.DialogResult = DialogResult.OK;
-			btnOK.Location = new Point(461, 926);
+			btnOK.Location = new Point(468, 926);
 			btnOK.Margin = new Padding(7, 6, 7, 6);
 			btnOK.Name = "btnOK";
 			btnOK.Size = new Size(163, 58);
@@ -80,7 +81,7 @@ namespace UtilORama4
 			// btnCancel
 			// 
 			btnCancel.DialogResult = DialogResult.Cancel;
-			btnCancel.Location = new Point(637, 926);
+			btnCancel.Location = new Point(644, 926);
 			btnCancel.Margin = new Padding(7, 6, 7, 6);
 			btnCancel.Name = "btnCancel";
 			btnCancel.Size = new Size(163, 58);
@@ -92,16 +93,17 @@ namespace UtilORama4
 			// lblName
 			// 
 			lblName.AutoSize = true;
-			lblName.Location = new Point(56, 47);
+			lblName.Location = new Point(56, 42);
 			lblName.Margin = new Padding(7, 0, 7, 0);
 			lblName.Name = "lblName";
 			lblName.Size = new Size(83, 32);
 			lblName.TabIndex = 0;
 			lblName.Text = "Name:";
+			lblName.Click += lblName_Click;
 			// 
 			// txtName
 			// 
-			txtName.Location = new Point(152, 38);
+			txtName.Location = new Point(152, 118);
 			txtName.Margin = new Padding(7, 6, 7, 6);
 			txtName.MaxLength = 100;
 			txtName.Name = "txtName";
@@ -115,7 +117,7 @@ namespace UtilORama4
 			// 
 			// txtLocation
 			// 
-			txtLocation.Location = new Point(152, 117);
+			txtLocation.Location = new Point(152, 39);
 			txtLocation.Margin = new Padding(7, 6, 7, 6);
 			txtLocation.MaxLength = 40;
 			txtLocation.Name = "txtLocation";
@@ -130,7 +132,7 @@ namespace UtilORama4
 			// lblLocation
 			// 
 			lblLocation.AutoSize = true;
-			lblLocation.Location = new Point(28, 126);
+			lblLocation.Location = new Point(28, 121);
 			lblLocation.Margin = new Padding(7, 0, 7, 0);
 			lblLocation.Name = "lblLocation";
 			lblLocation.Size = new Size(109, 32);
@@ -140,34 +142,17 @@ namespace UtilORama4
 			// lblType
 			// 
 			lblType.AutoSize = true;
-			lblType.Location = new Point(65, 205);
+			lblType.Location = new Point(67, 279);
 			lblType.Margin = new Padding(7, 0, 7, 0);
 			lblType.Name = "lblType";
 			lblType.Size = new Size(70, 32);
 			lblType.TabIndex = 6;
 			lblType.Text = "Type:";
 			// 
-			// cboType
-			// 
-			cboType.DropDownStyle = ComboBoxStyle.DropDownList;
-			cboType.FormattingEnabled = true;
-			cboType.Location = new Point(152, 196);
-			cboType.Margin = new Padding(7, 6, 7, 6);
-			cboType.Name = "cboType";
-			cboType.Size = new Size(429, 40);
-			cboType.TabIndex = 7;
-			tipTool.SetToolTip(cboType, "What type of device(s) or prop(s) are connected to this channel?");
-			cboType.DropDown += cboType_DropDown;
-			cboType.SelectedIndexChanged += cboType_SelectedIndexChanged;
-			cboType.Enter += cboType_Enter;
-			cboType.KeyDown += cboType_KeyDown;
-			cboType.Leave += cboType_Leave;
-			cboType.Validating += cboType_Validating;
-			// 
 			// lblColorLabel
 			// 
 			lblColorLabel.AutoSize = true;
-			lblColorLabel.Location = new Point(637, 126);
+			lblColorLabel.Location = new Point(641, 42);
 			lblColorLabel.Margin = new Padding(7, 0, 7, 0);
 			lblColorLabel.Name = "lblColorLabel";
 			lblColorLabel.Size = new Size(76, 32);
@@ -179,7 +164,7 @@ namespace UtilORama4
 			// 
 			cboController.DropDownStyle = ComboBoxStyle.DropDownList;
 			cboController.FormattingEnabled = true;
-			cboController.Location = new Point(152, 275);
+			cboController.Location = new Point(152, 197);
 			cboController.Margin = new Padding(7, 6, 7, 6);
 			cboController.Name = "cboController";
 			cboController.Size = new Size(429, 40);
@@ -195,7 +180,7 @@ namespace UtilORama4
 			// lblController
 			// 
 			lblController.AutoSize = true;
-			lblController.Location = new Point(22, 284);
+			lblController.Location = new Point(14, 200);
 			lblController.Margin = new Padding(7, 0, 7, 0);
 			lblController.Name = "lblController";
 			lblController.Size = new Size(125, 32);
@@ -204,7 +189,7 @@ namespace UtilORama4
 			// 
 			// numOutput
 			// 
-			numOutput.Location = new Point(706, 277);
+			numOutput.Location = new Point(702, 200);
 			numOutput.Margin = new Padding(7, 6, 7, 6);
 			numOutput.Maximum = new decimal(new int[] { 32, 0, 0, 0 });
 			numOutput.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
@@ -222,7 +207,7 @@ namespace UtilORama4
 			// lblOutput
 			// 
 			lblOutput.AutoSize = true;
-			lblOutput.Location = new Point(597, 279);
+			lblOutput.Location = new Point(595, 202);
 			lblOutput.Margin = new Padding(7, 0, 7, 0);
 			lblOutput.Name = "lblOutput";
 			lblOutput.Size = new Size(95, 32);
@@ -232,7 +217,7 @@ namespace UtilORama4
 			// lblUniverse
 			// 
 			lblUniverse.AutoSize = true;
-			lblUniverse.Location = new Point(163, 373);
+			lblUniverse.Location = new Point(152, 372);
 			lblUniverse.Margin = new Padding(7, 0, 7, 0);
 			lblUniverse.Name = "lblUniverse";
 			lblUniverse.Size = new Size(131, 32);
@@ -243,7 +228,7 @@ namespace UtilORama4
 			// lblAddress
 			// 
 			lblAddress.AutoSize = true;
-			lblAddress.Location = new Point(173, 414);
+			lblAddress.Location = new Point(152, 436);
 			lblAddress.Margin = new Padding(7, 0, 7, 0);
 			lblAddress.Name = "lblAddress";
 			lblAddress.Size = new Size(183, 32);
@@ -254,7 +239,7 @@ namespace UtilORama4
 			// lblxLightsAddress
 			// 
 			lblxLightsAddress.AutoSize = true;
-			lblxLightsAddress.Location = new Point(173, 452);
+			lblxLightsAddress.Location = new Point(152, 468);
 			lblxLightsAddress.Margin = new Padding(7, 0, 7, 0);
 			lblxLightsAddress.Name = "lblxLightsAddress";
 			lblxLightsAddress.Size = new Size(204, 32);
@@ -267,7 +252,7 @@ namespace UtilORama4
 			chkActive.AutoSize = true;
 			chkActive.Checked = true;
 			chkActive.CheckState = CheckState.Checked;
-			chkActive.Location = new Point(680, 203);
+			chkActive.Location = new Point(686, 278);
 			chkActive.Margin = new Padding(7, 6, 7, 6);
 			chkActive.Name = "chkActive";
 			chkActive.Size = new Size(111, 36);
@@ -284,7 +269,7 @@ namespace UtilORama4
 			// lblModel
 			// 
 			lblModel.AutoSize = true;
-			lblModel.Location = new Point(152, 335);
+			lblModel.Location = new Point(152, 404);
 			lblModel.Margin = new Padding(7, 0, 7, 0);
 			lblModel.Name = "lblModel";
 			lblModel.Size = new Size(242, 32);
@@ -309,19 +294,32 @@ namespace UtilORama4
 			// lblComment
 			// 
 			lblComment.AutoSize = true;
-			lblComment.Location = new Point(28, 644);
+			lblComment.Location = new Point(28, 645);
 			lblComment.Margin = new Padding(7, 0, 7, 0);
 			lblComment.Name = "lblComment";
 			lblComment.Size = new Size(125, 32);
 			lblComment.TabIndex = 17;
 			lblComment.Text = "Comment:";
 			// 
+			// lblDevice
+			// 
+			lblDevice.AutoSize = true;
+			lblDevice.Font = new Font("Segoe UI", 6.75F, FontStyle.Italic);
+			lblDevice.ForeColor = SystemColors.GrayText;
+			lblDevice.Location = new Point(152, 319);
+			lblDevice.Margin = new Padding(7, 0, 7, 0);
+			lblDevice.Name = "lblDevice";
+			lblDevice.Size = new Size(102, 25);
+			lblDevice.TabIndex = 6;
+			lblDevice.Text = "Unassigned";
+			tipTool.SetToolTip(lblDevice, "No device assigned.");
+			// 
 			// lblDirty
 			// 
 			lblDirty.AutoSize = true;
 			lblDirty.Font = new Font("Segoe UI", 6.75F, FontStyle.Italic);
 			lblDirty.ForeColor = SystemColors.GrayText;
-			lblDirty.Location = new Point(28, 540);
+			lblDirty.Location = new Point(37, 952);
 			lblDirty.Margin = new Padding(7, 0, 7, 0);
 			lblDirty.Name = "lblDirty";
 			lblDirty.Size = new Size(58, 25);
@@ -333,7 +331,7 @@ namespace UtilORama4
 			picRGB.BackColor = Color.FromArgb(0, 0, 1);
 			picRGB.BorderStyle = BorderStyle.Fixed3D;
 			picRGB.Image = (Image)resources.GetObject("picRGB.Image");
-			picRGB.Location = new Point(12, 927);
+			picRGB.Location = new Point(123, 877);
 			picRGB.Name = "picRGB";
 			picRGB.Size = new Size(80, 72);
 			picRGB.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -346,20 +344,21 @@ namespace UtilORama4
 			picRGBW.BackColor = Color.FromArgb(0, 1, 0);
 			picRGBW.BorderStyle = BorderStyle.Fixed3D;
 			picRGBW.Image = (Image)resources.GetObject("picRGBW.Image");
-			picRGBW.Location = new Point(98, 927);
+			picRGBW.Location = new Point(37, 877);
 			picRGBW.Name = "picRGBW";
 			picRGBW.Size = new Size(80, 72);
 			picRGBW.SizeMode = PictureBoxSizeMode.StretchImage;
 			picRGBW.TabIndex = 88;
 			picRGBW.TabStop = false;
 			picRGBW.Visible = false;
+			picRGBW.Click += picRGBW_Click;
 			// 
 			// picMulti
 			// 
 			picMulti.BackColor = Color.FromArgb(1, 0, 0);
 			picMulti.BorderStyle = BorderStyle.Fixed3D;
 			picMulti.Image = (Image)resources.GetObject("picMulti.Image");
-			picMulti.Location = new Point(184, 927);
+			picMulti.Location = new Point(209, 877);
 			picMulti.Name = "picMulti";
 			picMulti.Size = new Size(80, 72);
 			picMulti.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -371,7 +370,8 @@ namespace UtilORama4
 			// 
 			picColor.BackColor = SystemColors.ButtonFace;
 			picColor.BorderStyle = BorderStyle.Fixed3D;
-			picColor.Location = new Point(717, 107);
+			picColor.Image = (Image)resources.GetObject("picColor.Image");
+			picColor.Location = new Point(727, 25);
 			picColor.Name = "picColor";
 			picColor.Size = new Size(80, 64);
 			picColor.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -380,6 +380,14 @@ namespace UtilORama4
 			picColor.Click += picColor_Click;
 			picColor.Paint += picColor_Paint;
 			// 
+			// hcboDevic3
+			// 
+			hcboDevic3.FormattingEnabled = true;
+			hcboDevic3.Location = new Point(152, 276);
+			hcboDevic3.Name = "hcboDevic3";
+			hcboDevic3.Size = new Size(429, 40);
+			hcboDevic3.TabIndex = 91;
+			// 
 			// frmChannel
 			// 
 			AcceptButton = btnOK;
@@ -387,6 +395,7 @@ namespace UtilORama4
 			AutoScaleMode = AutoScaleMode.Font;
 			CancelButton = btnCancel;
 			ClientSize = new Size(832, 1011);
+			Controls.Add(hcboDevic3);
 			Controls.Add(picMulti);
 			Controls.Add(picRGBW);
 			Controls.Add(picRGB);
@@ -403,7 +412,6 @@ namespace UtilORama4
 			Controls.Add(cboController);
 			Controls.Add(lblController);
 			Controls.Add(lblColorLabel);
-			Controls.Add(cboType);
 			Controls.Add(lblType);
 			Controls.Add(txtLocation);
 			Controls.Add(lblLocation);
@@ -412,8 +420,8 @@ namespace UtilORama4
 			Controls.Add(btnCancel);
 			Controls.Add(btnOK);
 			Controls.Add(picColor);
+			Controls.Add(lblDevice);
 			FormBorderStyle = FormBorderStyle.FixedDialog;
-			Icon = (Icon)resources.GetObject("$this.Icon");
 			Margin = new Padding(7, 6, 7, 6);
 			MaximizeBox = false;
 			MinimizeBox = false;
@@ -446,7 +454,6 @@ namespace UtilORama4
 		private System.Windows.Forms.TextBox txtLocation;
 		private System.Windows.Forms.Label lblLocation;
 		private System.Windows.Forms.Label lblType;
-		private System.Windows.Forms.ComboBox cboType;
 		private System.Windows.Forms.Label lblColorLabel;
 		private System.Windows.Forms.ComboBox cboController;
 		private System.Windows.Forms.Label lblController;
@@ -458,13 +465,15 @@ namespace UtilORama4
 		private System.Windows.Forms.CheckBox chkActive;
 		private System.Windows.Forms.ToolTip tipTool;
 		private System.Windows.Forms.Label lblModel;
+		private System.Windows.Forms.Label lblDevice;
 		private System.Windows.Forms.TextBox txtComment;
 		private System.Windows.Forms.Label lblComment;
 		private System.Windows.Forms.ColorDialog clrColors;
-		private Label lblDirty;
-		private PictureBox picRGB;
-		private PictureBox picRGBW;
-		private PictureBox picMulti;
-		private PictureBox picColor;
+		private System.Windows.Forms.Label lblDirty;
+		private System.Windows.Forms.PictureBox picRGB;
+		private System.Windows.Forms.PictureBox picRGBW;
+		private System.Windows.Forms.PictureBox picMulti;
+		private System.Windows.Forms.PictureBox picColor;
+		private System.Windows.Forms.ComboBox hcboDevic3;
 	}
 }

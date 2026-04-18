@@ -1,0 +1,52 @@
+    <model StartSide="B" Dir="L" Antialias="1" PixelSize="2" parm3="1" TreeRotation="0.000000" parm1="1" DisplayAs="Tree 360" StringType="Single Color Red" parm2="100" TreeSpiralRotations="8.000000" Active="1" BlackTransparency="98" Transparency="1" name="$Tree- Tomato A1.1 (L} (R)" LayoutGroup="$Trees AC" TagColour="lime" WorldPosX="-439.4400" WorldPosY="18.5000" WorldPosZ="476.7600" ScaleX="0.0960" ScaleY="0.1830" ScaleZ="0.0960" RotateX="-0.00000000" RotateY="-0.00000000" RotateZ="0.00000000" Locked="1" versionNumber="7" StartChannel="@$Tree- Tomato A1.0 {L} (RGBW}:1">
+      <ControllerConnection Protocol="dmx" channel="1"/>
+      <Aliases>
+        <alias name="oldname:tree- tomato a1.1 (l} (r)"/>
+      </Aliases>
+    </model>
+    <model StartSide="B" Dir="L" Antialias="1" PixelSize="2" parm3="1" TreeRotation="0.000000" parm1="1" DisplayAs="Tree 360" StringType="Single Color Red" parm2="100" TreeSpiralRotations="8.000000" Active="1" BlackTransparency="98" Transparency="1" name="$Tree- Tomato A2.1 (R)" LayoutGroup="$Trees AC" TagColour="lime" WorldPosX="-402.8400" WorldPosY="19.5000" WorldPosZ="429.1200" ScaleX="0.0960" ScaleY="0.1830" ScaleZ="0.0960" RotateX="-0.00000000" RotateY="-0.00000000" RotateZ="0.00000000" Locked="1" versionNumber="7" StartChannel="@$Tree- Tomato A2.0 (RGBW}:1">
+      <ControllerConnection Protocol="dmx" channel="5"/>
+      <Aliases>
+        <alias name="oldname:tree- tomato a2.1 (r)"/>
+      </Aliases>
+    </model>
+    <model StartSide="B" Dir="L" Antialias="1" PixelSize="2" parm3="1" TreeRotation="90.000000" parm1="1" DisplayAs="Tree 360" StringType="Single Color Green" parm2="100" TreeSpiralRotations="8.000000" Active="1" BlackTransparency="98" Transparency="1" name="$Tree- Tomato A2.2 (G)" LayoutGroup="$Trees AC" TagColour="lime" WorldPosX="-402.8400" WorldPosY="19.1400" WorldPosZ="429.1200" ScaleX="0.0960" ScaleY="0.1830" ScaleZ="0.0960" RotateX="-0.00000000" RotateY="-0.00000000" RotateZ="0.00000000" Locked="1" versionNumber="7" StartChannel="&gt;$Tree- Tomato A2.1 (R):1">
+      <ControllerConnection Protocol="dmx" channel="6"/>
+      <Aliases>
+        <alias name="oldname:tree- tomato a2.2 (g)"/>
+      </Aliases>
+    </model>
+    <model StartSide="B" Dir="L" Antialias="1" PixelSize="2" parm3="1" TreeRotation="180.000000" parm1="1" DisplayAs="Tree 360" StringType="Single Color Blue" parm2="100" TreeSpiralRotations="8.000000" Active="1" BlackTransparency="98" Transparency="1" name="$Tree- Tomato A2.3 (B)" LayoutGroup="$Trees AC" TagColour="lime" WorldPosX="-402.8400" WorldPosY="19.5000" WorldPosZ="429.1200" ScaleX="0.0960" ScaleY="0.1830" ScaleZ="0.0960" RotateX="-0.00000000" RotateY="-0.00000000" RotateZ="1.00000000" Locked="1" versionNumber="7" StartChannel="&gt;$Tree- Tomato A2.2 (G):1">
+      <ControllerConnection Protocol="dmx" channel="7"/>
+      <Aliases>
+        <alias name="oldname:tree- tomato a2.3 (b)"/>
+      </Aliases>
+    </model>
+    <model StartSide="B" Dir="L" Antialias="1" PixelSize="2" parm3="1" TreeRotation="270.000000" parm1="1" DisplayAs="Tree 360" CustomColor="#f7dbdb" StringType="Single Color Custom" parm2="100" TreeSpiralRotations="8.000000" Active="1" BlackTransparency="98" Transparency="1" name="$Tree- Tomato A2.4 (W)" LayoutGroup="$Trees AC" TagColour="lime" WorldPosX="-402.8400" WorldPosY="19.5000" WorldPosZ="429.1200" ScaleX="0.0960" ScaleY="0.1830" ScaleZ="0.0960" RotateX="-0.00000000" RotateY="-0.00000000" RotateZ="2.00000000" Locked="1" versionNumber="7" StartChannel="&gt;$Tree- Tomato A2.3 (B):1">
+      <ControllerConnection Protocol="dmx" channel="8"/>
+      <Aliases>
+        <alias name="oldname:tree- tomato a2.4 (w)"/>
+      </Aliases>
+    </model>
+    <model StartSide="B" Dir="L" Antialias="1" PixelSize="2" parm3="1" TreeRotation="270.000000" parm1="1" DisplayAs="Tree 360" CustomColor="#f7dbdb" StringType="Single Color Custom" parm2="100" TreeSpiralRotations="8.000000" Active="1" BlackTransparency="98" Transparency="1" name="$Tree- Tomato A1.4 {L} (W)" LayoutGroup="$Trees AC" TagColour="lime" WorldPosX="-439.4400" WorldPosY="18.5000" WorldPosZ="476.7600" ScaleX="0.0960" ScaleY="0.1830" ScaleZ="0.0960" RotateX="-0.00000000" RotateY="-0.00000000" RotateZ="2.00000000" Locked="1" versionNumber="7" StartChannel="&gt;$Tree- Tomato A1.3 (L} (B):1">
+      <ControllerConnection channel="4" Protocol="dmx"/>
+      <Aliases>
+        <alias name="oldname:tree- tomato a1.4 {l} (w)"/>
+      </Aliases>
+    </model>
+
+
+    <model StartSide="B" Dir="L" Antialias="1" PixelSize="2" parm3="1" TreeRotation="180.000000" parm1="1"
+**	DisplayAs="Tree 360"
+**  StringType="Single Color Blue"
+**  Description="Color Blue on the first tree"
+ parm2="100" TreeSpiralRotations="8.000000"
+**  Active="1"
+ BlackTransparency="98" Transparency="1"
+** name="$Tree- Tomato A1.3 (L} (B)"
+ LayoutGroup="$Trees AC" TagColour="lime" WorldPosX="-439.4400" WorldPosY="18.5000" WorldPosZ="476.7600" ScaleX="0.0960" ScaleY="0.1830" ScaleZ="0.0960" RotateX="-0.00000000" RotateY="-0.00000000" RotateZ="1.00000000" Locked="1" versionNumber="7" StartChannel="&gt;$Tree- Tomato A1.2 (L} (G):1">
+      **<ControllerConnection Protocol="dmx" channel="3"/>
+      <Aliases>
+        <alias name="oldname:tree- tomato a1.3 (l} (b)"/>
+      </Aliases>
+    </model>

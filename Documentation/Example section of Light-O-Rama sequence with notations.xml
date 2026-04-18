@@ -1,0 +1,50 @@
+Trees">
+    <PropClass id="91de9315-54b3-4b3e-bb8e-2a1a2456800c" BulbShape="Hexagon" ChannelGrid="Regular,1,49,49,0,Red" Comment="" CustomBulbColor="FFFFFF80" DeviceType="DMX" DimmingCurveName="None" IndividualChannels="True" LegacySequenceMethod="" MaxChannels="512" Opacity="191" MasterDimmable="True" PreviewBulbSize="4" RgbOrder="RGB order" MasterPropId="" SeparateIds="False" StartLocation="Bottom Back CCW" StringType="Traditional" TraditionalColors="Red" TraditionalType="Channel_per_color" EffectBulbSize="1" Tag="" Name="Tree- Pencil Tinsel 01- Red 1 (R)" Parm1="1" Parm2="100" Parm3="200" Parm4="0" Parm5="0">
+      <shape ShapeName="Tree 360 spiral" OffsetX="-0.9382259" OffsetY="-0.089713514" ScaleX="0.13765155" ScaleY="0.67011803" Radians="0" />
+    </PropClass>
+
+    <PropClass id="4541d473-c3eb-4caa-92ae-7f5a67bef28f" BulbShape="Hexagon" ChannelGrid="Regular,1,50,50,0,Green" Comment="" CustomBulbColor="FFFFFF80" DeviceType="DMX" DimmingCurveName="None" IndividualChannels="True" LegacySequenceMethod="" MaxChannels="512" Opacity="191" MasterDimmable="True" PreviewBulbSize="4" RgbOrder="RGB order" MasterPropId="" SeparateIds="False" StartLocation="Bottom Back CCW" StringType="Traditional" TraditionalColors="Green" TraditionalType="Channel_per_color" EffectBulbSize="1" Tag="" Name="Tree- Pencil Tinsel 02- Green 1 (G)" Parm1="1" Parm2="100" Parm3="200" Parm4="0" Parm5="0">
+      <shape ShapeName="Tree 360 spiral" OffsetX="-0.8053248" OffsetY="-0.2635276" ScaleX="0.1376515" ScaleY="0.67011803" Radians="0" />
+
+    </PropClass>
+**    <PropClass id="b27db969-4bde-497d-81e2-bf270c7d3b51"  (GUID (Duh!)) (Save the ID?)
+	BulbShape="Hexagon"
+**	ChannelGrid="Regular,1,51,51,0,Blue"
+	(Universe 1, Start Channel 51, End Channel 51, Color Blue)
+**	Comment=""
+**	CustomBulbColor="FFFFFF80" !! Only if ChannelGrid color (at end) is set to 'custom'.
+	DeviceType="DMX"
+	DimmingCurveName="None"
+	IndividualChannels="True"
+	LegacySequenceMethod=""
+**	MaxChannels="512"  Size limit for universe (or controller max channels)
+	Opacity="191"
+	MasterDimmable="True"
+	PreviewBulbSize="4"
+	RgbOrder="RGB order"
+	MasterPropId=""
+	SeparateIds="False"
+	StartLocation="Bottom Back CCW"
+	StringType="Traditional"
+**	TraditionalColors="Blue"
+**	TraditionalType="Channel_per_color"  (Important??)
+	EffectBulbSize="1"
+	Tag=""
+**	Name="Tree- Pencil Tinsel 03- Blue 1 (B)"
+	Parm1="1"
+	Parm2="100"
+	Parm3="200"
+	Parm4="0"
+	Parm5="0">
+**      <shape ShapeName="Tree 360 spiral"
+	  OffsetX="-0.66269916"
+	  OffsetY="-0.46934584"
+	  ScaleX="0.13765146"
+	  ScaleY="0.67011803"
+	  Radians="0" />
+    </PropClass>
+Above taken from a sequence file
+(May not (?) have all channels?)
+
+Also see X:/2026/Light-O-Rama/Wizlights/CommonData/LORPreviews.xml
+Which probably has all channels

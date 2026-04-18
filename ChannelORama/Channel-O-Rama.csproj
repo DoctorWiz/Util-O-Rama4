@@ -20,6 +20,7 @@
 		<IsPublishable>False</IsPublishable>
 		<Nullable>enable</Nullable>
 		<OutputType>WinExe</OutputType>
+		<ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
 		<PackageIcon>Channel-O-Rama.png</PackageIcon>
 		<PackageID>Util-O-Rama</PackageID>
 		<PackageProjectUrl>http://wizlights/utilorama/channelorama</PackageProjectUrl>

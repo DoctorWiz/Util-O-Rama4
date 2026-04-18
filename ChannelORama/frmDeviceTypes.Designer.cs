@@ -28,12 +28,18 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmDeviceTypes));
 			btnCancel = new Button();
 			btnOK = new Button();
 			lstDevices = new ListBox();
 			btnUp = new Button();
 			btnDown = new Button();
+			btnEdit = new Button();
+			btnAdd = new Button();
+			btnDelete = new Button();
+			tipTool = new ToolTip(components);
+			lblUsedBy = new Label();
 			SuspendLayout();
 			// 
 			// btnCancel
@@ -46,6 +52,7 @@
 			btnCancel.TabIndex = 22;
 			btnCancel.Text = "Cancel";
 			btnCancel.UseVisualStyleBackColor = true;
+			btnCancel.Click += btnCancel_Click;
 			// 
 			// btnOK
 			// 
@@ -67,6 +74,8 @@
 			lstDevices.Name = "lstDevices";
 			lstDevices.Size = new Size(474, 676);
 			lstDevices.TabIndex = 23;
+			lstDevices.SelectedIndexChanged += lstDevices_SelectedIndexChanged;
+			lstDevices.MouseMove += lstDevices_MouseMove;
 			// 
 			// btnUp
 			// 
@@ -77,7 +86,9 @@
 			btnUp.Name = "btnUp";
 			btnUp.Size = new Size(58, 58);
 			btnUp.TabIndex = 24;
+			tipTool.SetToolTip(btnUp, "Move this device up");
 			btnUp.UseVisualStyleBackColor = true;
+			btnUp.Click += btnUp_Click;
 			// 
 			// btnDown
 			// 
@@ -88,7 +99,58 @@
 			btnDown.Name = "btnDown";
 			btnDown.Size = new Size(58, 58);
 			btnDown.TabIndex = 25;
+			tipTool.SetToolTip(btnDown, "Move this device down");
 			btnDown.UseVisualStyleBackColor = true;
+			btnDown.Click += btnDown_Click;
+			// 
+			// btnEdit
+			// 
+			btnEdit.Enabled = false;
+			btnEdit.Image = (Image)resources.GetObject("btnEdit.Image");
+			btnEdit.Location = new Point(16, 289);
+			btnEdit.Margin = new Padding(7, 6, 7, 6);
+			btnEdit.Name = "btnEdit";
+			btnEdit.Size = new Size(58, 58);
+			btnEdit.TabIndex = 26;
+			tipTool.SetToolTip(btnEdit, "Edit this device's name");
+			btnEdit.UseVisualStyleBackColor = true;
+			btnEdit.Click += btnEdit_Click;
+			// 
+			// btnAdd
+			// 
+			btnAdd.Enabled = false;
+			btnAdd.Image = (Image)resources.GetObject("btnAdd.Image");
+			btnAdd.Location = new Point(16, 79);
+			btnAdd.Margin = new Padding(7, 6, 7, 6);
+			btnAdd.Name = "btnAdd";
+			btnAdd.Size = new Size(58, 58);
+			btnAdd.TabIndex = 27;
+			tipTool.SetToolTip(btnAdd, "Add a new device type");
+			btnAdd.UseVisualStyleBackColor = true;
+			btnAdd.Click += btnAdd_Click;
+			// 
+			// btnDelete
+			// 
+			btnDelete.Enabled = false;
+			btnDelete.Image = (Image)resources.GetObject("btnDelete.Image");
+			btnDelete.Location = new Point(16, 359);
+			btnDelete.Margin = new Padding(7, 6, 7, 6);
+			btnDelete.Name = "btnDelete";
+			btnDelete.Size = new Size(58, 58);
+			btnDelete.TabIndex = 28;
+			tipTool.SetToolTip(btnDelete, "Delete this device");
+			btnDelete.UseVisualStyleBackColor = true;
+			btnDelete.Click += btnDelete_Click;
+			// 
+			// lblUsedBy
+			// 
+			lblUsedBy.ForeColor = SystemColors.HotTrack;
+			lblUsedBy.Location = new Point(15, 717);
+			lblUsedBy.Margin = new Padding(6, 0, 6, 0);
+			lblUsedBy.Name = "lblUsedBy";
+			lblUsedBy.Size = new Size(150, 64);
+			lblUsedBy.TabIndex = 123;
+			lblUsedBy.Text = "Used by 3 Channels";
 			// 
 			// frmDeviceTypes
 			// 
@@ -97,15 +159,24 @@
 			AutoScaleMode = AutoScaleMode.Font;
 			CancelButton = btnCancel;
 			ClientSize = new Size(582, 796);
+			Controls.Add(lblUsedBy);
+			Controls.Add(btnDelete);
+			Controls.Add(btnAdd);
+			Controls.Add(btnEdit);
 			Controls.Add(btnDown);
 			Controls.Add(btnUp);
 			Controls.Add(lstDevices);
 			Controls.Add(btnCancel);
 			Controls.Add(btnOK);
-			FormBorderStyle = FormBorderStyle.FixedDialog;
 			Icon = (Icon)resources.GetObject("$this.Icon");
+			MaximizeBox = false;
+			MaximumSize = new Size(1000, 1500);
+			MinimizeBox = false;
+			MinimumSize = new Size(600, 800);
 			Name = "frmDeviceTypes";
 			Text = "Device Types";
+			FormClosing += frmDeviceTypes_FormClosing;
+			Load += frmDeviceTypes_Load;
 			ResumeLayout(false);
 		}
 
@@ -116,5 +187,10 @@
 		private ListBox lstDevices;
 		private Button btnUp;
 		private Button btnDown;
+		private Button btnEdit;
+		private Button btnAdd;
+		private Button btnDelete;
+		private ToolTip tipTool;
+		private Label lblUsedBy;
 	}
 }

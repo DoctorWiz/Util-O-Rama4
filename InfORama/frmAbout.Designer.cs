@@ -27,521 +27,595 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAbout));
-			this.labelVersion = new System.Windows.Forms.Label();
-			this.labelCopyright = new System.Windows.Forms.Label();
-			this.okButton = new System.Windows.Forms.Button();
-			this.picIcon = new System.Windows.Forms.PictureBox();
-			this.labelProductName = new System.Windows.Forms.Label();
-			this.textBoxDescription = new System.Windows.Forms.TextBox();
-			this.labelCompanyName = new System.Windows.Forms.LinkLabel();
-			this.labelAuthorName = new System.Windows.Forms.LinkLabel();
-			this.labelAnd = new System.Windows.Forms.Label();
-			this.lblFreeware = new System.Windows.Forms.Label();
-			this.lblSourceCode = new System.Windows.Forms.Label();
-			this.labelGPL = new System.Windows.Forms.LinkLabel();
-			this.lblInfo = new System.Windows.Forms.Label();
-			this.lblEmail = new System.Windows.Forms.LinkLabel();
-			this.picGPL = new System.Windows.Forms.PictureBox();
-			this.picxLights = new System.Windows.Forms.PictureBox();
-			this.labelSuite = new System.Windows.Forms.Label();
-			this.labelUtils = new System.Windows.Forms.LinkLabel();
-			this.lblSuite = new System.Windows.Forms.Label();
-			this.lblCommunity = new System.Windows.Forms.Label();
-			this.lblDisclaimer = new System.Windows.Forms.Label();
-			this.picLOR = new System.Windows.Forms.PictureBox();
-			this.lblAlpha = new System.Windows.Forms.Label();
-			this.lblBeta = new System.Windows.Forms.Label();
-			this.picDrWiz = new System.Windows.Forms.PictureBox();
-			this.lblThanks = new System.Windows.Forms.Label();
-			this.lblGitHub = new System.Windows.Forms.Label();
-			this.lblGitIssues = new System.Windows.Forms.LinkLabel();
-			this.linkCharity = new System.Windows.Forms.LinkLabel();
-			this.lblProgram = new System.Windows.Forms.Label();
-			this.lblCompiled = new System.Windows.Forms.Label();
-			this.lblEXEfile = new System.Windows.Forms.Label();
-			((System.ComponentModel.ISupportInitialize)(this.picIcon)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.picGPL)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.picxLights)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.picLOR)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.picDrWiz)).BeginInit();
-			this.SuspendLayout();
+			lblVersion = new Label();
+			lblCopyright = new Label();
+			btnOK = new Button();
+			picIcon = new PictureBox();
+			lblProductName = new Label();
+			textBoxDescription = new TextBox();
+			linkCompanyName = new LinkLabel();
+			linkAuthorName = new LinkLabel();
+			lblAnd1 = new Label();
+			lblFreeware = new Label();
+			lblSourceCode = new Label();
+			linkGPL = new LinkLabel();
+			lblInfo = new Label();
+			linkEmail = new LinkLabel();
+			picGPL = new PictureBox();
+			picxLights = new PictureBox();
+			lblMember = new Label();
+			labelUtils = new LinkLabel();
+			lblSuite = new Label();
+			lblBenefit = new Label();
+			lblDisclaimer = new Label();
+			picLOR = new PictureBox();
+			lblAlpha = new Label();
+			lblBeta = new Label();
+			picDrWiz = new PictureBox();
+			lblThanks = new Label();
+			lblGitHub = new Label();
+			lblGitIssues = new LinkLabel();
+			linkCharity = new LinkLabel();
+			lblProgram = new Label();
+			lblCompiled = new Label();
+			lblEXEfile = new Label();
+			lblFor = new Label();
+			lblReleased = new Label();
+			tipTool = new ToolTip(components);
+			lblAnd2 = new Label();
+			lblCommunity = new Label();
+			((System.ComponentModel.ISupportInitialize)picIcon).BeginInit();
+			((System.ComponentModel.ISupportInitialize)picGPL).BeginInit();
+			((System.ComponentModel.ISupportInitialize)picxLights).BeginInit();
+			((System.ComponentModel.ISupportInitialize)picLOR).BeginInit();
+			((System.ComponentModel.ISupportInitialize)picDrWiz).BeginInit();
+			SuspendLayout();
 			// 
-			// labelVersion
+			// lblVersion
 			// 
-			this.labelVersion.AutoSize = true;
-			this.labelVersion.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.labelVersion.Location = new System.Drawing.Point(175, 54);
-			this.labelVersion.Margin = new System.Windows.Forms.Padding(7, 0, 4, 0);
-			this.labelVersion.MaximumSize = new System.Drawing.Size(0, 20);
-			this.labelVersion.Name = "labelVersion";
-			this.labelVersion.Size = new System.Drawing.Size(57, 19);
-			this.labelVersion.TabIndex = 25;
-			this.labelVersion.Text = "Version";
-			this.labelVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			lblVersion.AutoSize = true;
+			lblVersion.Font = new Font("Calibri", 12F);
+			lblVersion.Location = new Point(325, 115);
+			lblVersion.Margin = new Padding(13, 0, 7, 0);
+			lblVersion.MaximumSize = new Size(0, 43);
+			lblVersion.Name = "lblVersion";
+			lblVersion.Size = new Size(113, 39);
+			lblVersion.TabIndex = 25;
+			lblVersion.Text = "Version";
+			lblVersion.TextAlign = ContentAlignment.MiddleLeft;
 			// 
-			// labelCopyright
+			// lblCopyright
 			// 
-			this.labelCopyright.AutoSize = true;
-			this.labelCopyright.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.labelCopyright.Location = new System.Drawing.Point(175, 98);
-			this.labelCopyright.Margin = new System.Windows.Forms.Padding(7, 0, 4, 0);
-			this.labelCopyright.Name = "labelCopyright";
-			this.labelCopyright.Size = new System.Drawing.Size(151, 19);
-			this.labelCopyright.TabIndex = 28;
-			this.labelCopyright.Text = "Copyright © 2022+ by";
+			lblCopyright.AutoSize = true;
+			lblCopyright.Font = new Font("Calibri", 12F);
+			lblCopyright.Location = new Point(325, 209);
+			lblCopyright.Margin = new Padding(13, 0, 7, 0);
+			lblCopyright.Name = "lblCopyright";
+			lblCopyright.Size = new Size(302, 39);
+			lblCopyright.TabIndex = 28;
+			lblCopyright.Text = "Copyright © 2026+ by";
+			tipTool.SetToolTip(lblCopyright, "For eternity...");
 			// 
-			// okButton
+			// btnOK
 			// 
-			this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.okButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.okButton.Location = new System.Drawing.Point(391, 368);
-			this.okButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.okButton.Name = "okButton";
-			this.okButton.Size = new System.Drawing.Size(88, 27);
-			this.okButton.TabIndex = 31;
-			this.okButton.Text = "&OK";
-			this.okButton.Click += new System.EventHandler(this.okButton_Click_1);
+			btnOK.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+			btnOK.DialogResult = DialogResult.Cancel;
+			btnOK.Location = new Point(726, 785);
+			btnOK.Margin = new Padding(7, 6, 7, 6);
+			btnOK.Name = "btnOK";
+			btnOK.Size = new Size(163, 58);
+			btnOK.TabIndex = 31;
+			btnOK.Text = "&OK";
+			tipTool.SetToolTip(btnOK, "I Understand.\r\nGot it.");
+			btnOK.Click += okButton_Click_1;
 			// 
 			// picIcon
 			// 
-			this.picIcon.ErrorImage = null;
-			this.picIcon.Image = ((System.Drawing.Image)(resources.GetObject("picIcon.Image")));
-			this.picIcon.InitialImage = null;
-			this.picIcon.Location = new System.Drawing.Point(14, 14);
-			this.picIcon.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.picIcon.Name = "picIcon";
-			this.picIcon.Size = new System.Drawing.Size(128, 128);
-			this.picIcon.TabIndex = 32;
-			this.picIcon.TabStop = false;
-			this.picIcon.Click += new System.EventHandler(this.picIcon_Click);
-			this.picIcon.MouseEnter += new System.EventHandler(this.picIcon_MouseEnter);
-			this.picIcon.MouseLeave += new System.EventHandler(this.picIcon_MouseLeave);
+			picIcon.ErrorImage = null;
+			picIcon.Image = (Image)resources.GetObject("picIcon.Image");
+			picIcon.InitialImage = null;
+			picIcon.Location = new Point(26, 30);
+			picIcon.Margin = new Padding(7, 6, 7, 6);
+			picIcon.Name = "picIcon";
+			picIcon.Size = new Size(256, 256);
+			picIcon.SizeMode = PictureBoxSizeMode.StretchImage;
+			picIcon.TabIndex = 32;
+			picIcon.TabStop = false;
+			tipTool.SetToolTip(picIcon, "How about this cool icon I made?");
+			picIcon.Click += picIcon_Click;
+			picIcon.MouseEnter += picIcon_MouseEnter;
+			picIcon.MouseLeave += picIcon_MouseLeave;
 			// 
-			// labelProductName
+			// lblProductName
 			// 
-			this.labelProductName.AutoSize = true;
-			this.labelProductName.Font = new System.Drawing.Font("Calibri", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point);
-			this.labelProductName.Location = new System.Drawing.Point(174, 14);
-			this.labelProductName.Margin = new System.Windows.Forms.Padding(7, 0, 4, 0);
-			this.labelProductName.Name = "labelProductName";
-			this.labelProductName.Size = new System.Drawing.Size(144, 26);
-			this.labelProductName.TabIndex = 27;
-			this.labelProductName.Text = "Program Name";
-			this.labelProductName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			lblProductName.AutoSize = true;
+			lblProductName.Font = new Font("Calibri", 15.75F, FontStyle.Bold | FontStyle.Italic);
+			lblProductName.Location = new Point(323, 30);
+			lblProductName.Margin = new Padding(13, 0, 7, 0);
+			lblProductName.Name = "lblProductName";
+			lblProductName.Size = new Size(289, 51);
+			lblProductName.TabIndex = 27;
+			lblProductName.Text = "Program Name";
+			lblProductName.TextAlign = ContentAlignment.MiddleLeft;
+			tipTool.SetToolTip(lblProductName, "That's what this is called.");
 			// 
 			// textBoxDescription
 			// 
-			this.textBoxDescription.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.textBoxDescription.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.textBoxDescription.Location = new System.Drawing.Point(177, 102);
-			this.textBoxDescription.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.textBoxDescription.Multiline = true;
-			this.textBoxDescription.Name = "textBoxDescription";
-			this.textBoxDescription.ReadOnly = true;
-			this.textBoxDescription.Size = new System.Drawing.Size(241, 66);
-			this.textBoxDescription.TabIndex = 33;
-			this.textBoxDescription.Visible = false;
+			textBoxDescription.BorderStyle = BorderStyle.None;
+			textBoxDescription.Font = new Font("Calibri", 11.25F);
+			textBoxDescription.Location = new Point(329, 218);
+			textBoxDescription.Margin = new Padding(7, 6, 7, 6);
+			textBoxDescription.Multiline = true;
+			textBoxDescription.Name = "textBoxDescription";
+			textBoxDescription.ReadOnly = true;
+			textBoxDescription.Size = new Size(448, 141);
+			textBoxDescription.TabIndex = 33;
+			textBoxDescription.Visible = false;
 			// 
-			// labelCompanyName
+			// linkCompanyName
 			// 
-			this.labelCompanyName.AutoSize = true;
-			this.labelCompanyName.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.labelCompanyName.Location = new System.Drawing.Point(300, 118);
-			this.labelCompanyName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.labelCompanyName.Name = "labelCompanyName";
-			this.labelCompanyName.Size = new System.Drawing.Size(142, 19);
-			this.labelCompanyName.TabIndex = 34;
-			this.labelCompanyName.TabStop = true;
-			this.labelCompanyName.Text = "W⚡zlights Software";
-			this.labelCompanyName.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.labelCompanyName_LinkClicked);
+			linkCompanyName.AutoSize = true;
+			linkCompanyName.Font = new Font("Calibri", 12F);
+			linkCompanyName.Location = new Point(557, 252);
+			linkCompanyName.Margin = new Padding(7, 0, 7, 0);
+			linkCompanyName.Name = "linkCompanyName";
+			linkCompanyName.Size = new Size(288, 39);
+			linkCompanyName.TabIndex = 34;
+			linkCompanyName.TabStop = true;
+			linkCompanyName.Text = "W⚡zlights Software";
+			tipTool.SetToolTip(linkCompanyName, "https://wizlights.org/\r\nA division of Wizster Software\r\nhttps://wizster.com\r\nA division of Wizmotronics\r\nhttps://wizmotronics.com\r\nFrom the brain of Doctor Wizard\r\nhttps://drwiz.net");
+			linkCompanyName.LinkClicked += labelCompanyName_LinkClicked;
 			// 
-			// labelAuthorName
+			// linkAuthorName
 			// 
-			this.labelAuthorName.AutoEllipsis = true;
-			this.labelAuthorName.AutoSize = true;
-			this.labelAuthorName.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.labelAuthorName.Location = new System.Drawing.Point(175, 118);
-			this.labelAuthorName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.labelAuthorName.Name = "labelAuthorName";
-			this.labelAuthorName.Size = new System.Drawing.Size(101, 19);
-			this.labelAuthorName.TabIndex = 35;
-			this.labelAuthorName.TabStop = true;
-			this.labelAuthorName.Text = "Doctor Wizard";
-			this.labelAuthorName.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.labelAuthorName_LinkClicked);
+			linkAuthorName.AutoEllipsis = true;
+			linkAuthorName.AutoSize = true;
+			linkAuthorName.Font = new Font("Calibri", 12F);
+			linkAuthorName.Location = new Point(325, 252);
+			linkAuthorName.Margin = new Padding(7, 0, 7, 0);
+			linkAuthorName.Name = "linkAuthorName";
+			linkAuthorName.Size = new Size(204, 39);
+			linkAuthorName.TabIndex = 35;
+			linkAuthorName.TabStop = true;
+			linkAuthorName.Text = "Doctor Wizard";
+			tipTool.SetToolTip(linkAuthorName, "https://drwiz.net");
+			linkAuthorName.LinkClicked += labelAuthorName_LinkClicked;
 			// 
-			// labelAnd
+			// lblAnd1
 			// 
-			this.labelAnd.AutoSize = true;
-			this.labelAnd.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.labelAnd.Location = new System.Drawing.Point(272, 118);
-			this.labelAnd.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.labelAnd.Name = "labelAnd";
-			this.labelAnd.Size = new System.Drawing.Size(33, 19);
-			this.labelAnd.TabIndex = 36;
-			this.labelAnd.Text = "and";
+			lblAnd1.AutoSize = true;
+			lblAnd1.Font = new Font("Calibri", 12F);
+			lblAnd1.Location = new Point(505, 252);
+			lblAnd1.Margin = new Padding(7, 0, 7, 0);
+			lblAnd1.Name = "lblAnd1";
+			lblAnd1.Size = new Size(66, 39);
+			lblAnd1.TabIndex = 36;
+			lblAnd1.Text = "and";
 			// 
 			// lblFreeware
 			// 
-			this.lblFreeware.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.lblFreeware.Location = new System.Drawing.Point(135, 189);
-			this.lblFreeware.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.lblFreeware.Name = "lblFreeware";
-			this.lblFreeware.Size = new System.Drawing.Size(484, 20);
-			this.lblFreeware.TabIndex = 37;
-			this.lblFreeware.Text = "is released as Freeware / Charityware for the";
+			lblFreeware.Font = new Font("Calibri", 12F);
+			lblFreeware.Location = new Point(251, 403);
+			lblFreeware.Margin = new Padding(7, 0, 7, 0);
+			lblFreeware.Name = "lblFreeware";
+			lblFreeware.Size = new Size(899, 43);
+			lblFreeware.TabIndex = 37;
+			lblFreeware.Text = "Freeware ";
 			// 
 			// lblSourceCode
 			// 
-			this.lblSourceCode.AutoSize = true;
-			this.lblSourceCode.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.lblSourceCode.Location = new System.Drawing.Point(14, 242);
-			this.lblSourceCode.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.lblSourceCode.Name = "lblSourceCode";
-			this.lblSourceCode.Size = new System.Drawing.Size(314, 15);
-			this.lblSourceCode.TabIndex = 40;
-			this.lblSourceCode.Text = "Source Code is available under a General Public License";
+			lblSourceCode.AutoSize = true;
+			lblSourceCode.Font = new Font("Calibri", 9.75F);
+			lblSourceCode.Location = new Point(26, 516);
+			lblSourceCode.Margin = new Padding(7, 0, 7, 0);
+			lblSourceCode.Name = "lblSourceCode";
+			lblSourceCode.Size = new Size(599, 32);
+			lblSourceCode.TabIndex = 40;
+			lblSourceCode.Text = "Source Code is available under a General Public License";
 			// 
-			// labelGPL
+			// linkGPL
 			// 
-			this.labelGPL.AutoSize = true;
-			this.labelGPL.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.labelGPL.Location = new System.Drawing.Point(375, 242);
-			this.labelGPL.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.labelGPL.Name = "labelGPL";
-			this.labelGPL.Size = new System.Drawing.Size(35, 15);
-			this.labelGPL.TabIndex = 41;
-			this.labelGPL.TabStop = true;
-			this.labelGPL.Text = "(GPL)";
-			this.labelGPL.Visible = false;
-			this.labelGPL.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.labelGPL_LinkClicked);
+			linkGPL.AutoSize = true;
+			linkGPL.Font = new Font("Calibri", 9.75F);
+			linkGPL.Location = new Point(696, 516);
+			linkGPL.Margin = new Padding(7, 0, 7, 0);
+			linkGPL.Name = "linkGPL";
+			linkGPL.Size = new Size(70, 32);
+			linkGPL.TabIndex = 41;
+			linkGPL.TabStop = true;
+			linkGPL.Text = "(GPL)";
+			linkGPL.Visible = false;
+			linkGPL.LinkClicked += labelGPL_LinkClicked;
 			// 
 			// lblInfo
 			// 
-			this.lblInfo.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.lblInfo.Location = new System.Drawing.Point(14, 269);
-			this.lblInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.lblInfo.Name = "lblInfo";
-			this.lblInfo.Size = new System.Drawing.Size(464, 45);
-			this.lblInfo.TabIndex = 42;
-			this.lblInfo.Text = "For more information, or to submit bug reports, ideas, suggestions, cool sequence" +
-		"s, or good dirty jokes, please contact Doctor Wizard at:";
-			this.lblInfo.Click += new System.EventHandler(this.label4_Click);
+			lblInfo.Font = new Font("Calibri", 9F);
+			lblInfo.Location = new Point(26, 574);
+			lblInfo.Margin = new Padding(7, 0, 7, 0);
+			lblInfo.Name = "lblInfo";
+			lblInfo.Size = new Size(862, 96);
+			lblInfo.TabIndex = 42;
+			lblInfo.Text = "For more information, or to submit bug reports, ideas, suggestions, cool sequences, or good dirty jokes, please contact Doctor Wizard at:";
+			tipTool.SetToolTip(lblInfo, "Especially the good dirty jokes!");
+			lblInfo.Click += label4_Click;
 			// 
-			// lblEmail
+			// linkEmail
 			// 
-			this.lblEmail.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point);
-			this.lblEmail.Location = new System.Drawing.Point(27, 298);
-			this.lblEmail.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.lblEmail.Name = "lblEmail";
-			this.lblEmail.Size = new System.Drawing.Size(215, 18);
-			this.lblEmail.TabIndex = 43;
-			this.lblEmail.TabStop = true;
-			this.lblEmail.Text = "dev.utilorama@wizlights.com";
-			this.lblEmail.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblEmail_LinkClicked);
+			linkEmail.Font = new Font("Courier New", 9F, FontStyle.Underline);
+			linkEmail.Location = new Point(50, 636);
+			linkEmail.Margin = new Padding(7, 0, 7, 0);
+			linkEmail.Name = "linkEmail";
+			linkEmail.Size = new Size(399, 38);
+			linkEmail.TabIndex = 43;
+			linkEmail.TabStop = true;
+			linkEmail.Text = "dev.utilorama@wizlights.com";
+			linkEmail.LinkClicked += lblEmail_LinkClicked;
 			// 
 			// picGPL
 			// 
-			this.picGPL.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("picGPL.BackgroundImage")));
-			this.picGPL.Location = new System.Drawing.Point(347, 235);
-			this.picGPL.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.picGPL.Name = "picGPL";
-			this.picGPL.Size = new System.Drawing.Size(64, 26);
-			this.picGPL.TabIndex = 44;
-			this.picGPL.TabStop = false;
-			this.picGPL.Click += new System.EventHandler(this.picGPL_Click);
-			this.picGPL.MouseEnter += new System.EventHandler(this.picGPL_MouseEnter);
-			this.picGPL.MouseLeave += new System.EventHandler(this.picGPL_MouseLeave);
+			picGPL.BackgroundImage = (Image)resources.GetObject("picGPL.BackgroundImage");
+			picGPL.Location = new Point(644, 501);
+			picGPL.Margin = new Padding(7, 6, 7, 6);
+			picGPL.Name = "picGPL";
+			picGPL.Size = new Size(119, 55);
+			picGPL.SizeMode = PictureBoxSizeMode.Zoom;
+			picGPL.TabIndex = 44;
+			picGPL.TabStop = false;
+			tipTool.SetToolTip(picGPL, "General Public License version 3\r\nhttps://www.gnu.org/licenses/gpl-3.0.en.html");
+			picGPL.Click += picGPL_Click;
+			picGPL.MouseEnter += picGPL_MouseEnter;
+			picGPL.MouseLeave += picGPL_MouseLeave;
 			// 
 			// picxLights
 			// 
-			this.picxLights.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("picxLights.BackgroundImage")));
-			this.picxLights.InitialImage = ((System.Drawing.Image)(resources.GetObject("picxLights.InitialImage")));
-			this.picxLights.Location = new System.Drawing.Point(238, 209);
-			this.picxLights.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.picxLights.Name = "picxLights";
-			this.picxLights.Size = new System.Drawing.Size(85, 26);
-			this.picxLights.TabIndex = 45;
-			this.picxLights.TabStop = false;
-			this.picxLights.Click += new System.EventHandler(this.picxLights_Click);
-			this.picxLights.MouseEnter += new System.EventHandler(this.picLOR_MouseEnter);
-			this.picxLights.MouseLeave += new System.EventHandler(this.picLOR_MouseLeave);
+			picxLights.BackgroundImage = (Image)resources.GetObject("picxLights.BackgroundImage");
+			picxLights.InitialImage = (Image)resources.GetObject("picxLights.InitialImage");
+			picxLights.Location = new Point(442, 446);
+			picxLights.Margin = new Padding(7, 6, 7, 6);
+			picxLights.Name = "picxLights";
+			picxLights.Size = new Size(158, 55);
+			picxLights.SizeMode = PictureBoxSizeMode.Zoom;
+			picxLights.TabIndex = 45;
+			picxLights.TabStop = false;
+			tipTool.SetToolTip(picxLights, "xLights");
+			picxLights.Click += picxLights_Click;
+			picxLights.MouseEnter += picLOR_MouseEnter;
+			picxLights.MouseLeave += picLOR_MouseLeave;
 			// 
-			// labelSuite
+			// lblMember
 			// 
-			this.labelSuite.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
-			this.labelSuite.Location = new System.Drawing.Point(362, 14);
-			this.labelSuite.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.labelSuite.Name = "labelSuite";
-			this.labelSuite.Size = new System.Drawing.Size(132, 40);
-			this.labelSuite.TabIndex = 46;
-			this.labelSuite.Text = " is a member of the";
+			lblMember.Font = new Font("Calibri", 9F, FontStyle.Italic);
+			lblMember.Location = new Point(672, 30);
+			lblMember.Margin = new Padding(7, 0, 7, 0);
+			lblMember.Name = "lblMember";
+			lblMember.Size = new Size(245, 85);
+			lblMember.TabIndex = 46;
+			lblMember.Text = " is a member of the";
 			// 
 			// labelUtils
 			// 
-			this.labelUtils.AutoEllipsis = true;
-			this.labelUtils.AutoSize = true;
-			this.labelUtils.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
-			this.labelUtils.Location = new System.Drawing.Point(362, 43);
-			this.labelUtils.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.labelUtils.Name = "labelUtils";
-			this.labelUtils.Size = new System.Drawing.Size(70, 14);
-			this.labelUtils.TabIndex = 47;
-			this.labelUtils.TabStop = true;
-			this.labelUtils.Text = "Util-O-Rama";
-			this.labelUtils.TextAlign = System.Drawing.ContentAlignment.TopRight;
-			this.labelUtils.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.labelUtils_LinkClicked);
+			labelUtils.AutoEllipsis = true;
+			labelUtils.AutoSize = true;
+			labelUtils.Font = new Font("Calibri", 9F, FontStyle.Italic);
+			labelUtils.Location = new Point(672, 92);
+			labelUtils.Margin = new Padding(7, 0, 7, 0);
+			labelUtils.Name = "labelUtils";
+			labelUtils.Size = new Size(133, 29);
+			labelUtils.TabIndex = 47;
+			labelUtils.TabStop = true;
+			labelUtils.Text = "Util-O-Rama";
+			labelUtils.TextAlign = ContentAlignment.TopRight;
+			tipTool.SetToolTip(labelUtils, "https://wizster.org/utilorama");
+			labelUtils.LinkClicked += labelUtils_LinkClicked;
 			// 
 			// lblSuite
 			// 
-			this.lblSuite.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
-			this.lblSuite.Location = new System.Drawing.Point(430, 43);
-			this.lblSuite.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.lblSuite.Name = "lblSuite";
-			this.lblSuite.Size = new System.Drawing.Size(41, 16);
-			this.lblSuite.TabIndex = 48;
-			this.lblSuite.Text = "Suite";
-			this.lblSuite.Click += new System.EventHandler(this.label5_Click);
+			lblSuite.Font = new Font("Calibri", 9F, FontStyle.Italic);
+			lblSuite.Location = new Point(799, 92);
+			lblSuite.Margin = new Padding(7, 0, 7, 0);
+			lblSuite.Name = "lblSuite";
+			lblSuite.Size = new Size(76, 34);
+			lblSuite.TabIndex = 48;
+			lblSuite.Text = "Suite";
+			lblSuite.Click += label5_Click;
 			// 
-			// lblCommunity
+			// lblBenefit
 			// 
-			this.lblCommunity.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.lblCommunity.Location = new System.Drawing.Point(14, 209);
-			this.lblCommunity.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.lblCommunity.Name = "lblCommunity";
-			this.lblCommunity.Size = new System.Drawing.Size(443, 20);
-			this.lblCommunity.TabIndex = 49;
-			this.lblCommunity.Text = "benefit of the                         and                         community.";
+			lblBenefit.Font = new Font("Calibri", 12F);
+			lblBenefit.Location = new Point(19, 446);
+			lblBenefit.Margin = new Padding(7, 0, 7, 0);
+			lblBenefit.Name = "lblBenefit";
+			lblBenefit.Size = new Size(203, 43);
+			lblBenefit.TabIndex = 49;
+			lblBenefit.Text = "benefit of the";
 			// 
 			// lblDisclaimer
 			// 
-			this.lblDisclaimer.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
-			this.lblDisclaimer.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-			this.lblDisclaimer.Location = new System.Drawing.Point(10, 337);
-			this.lblDisclaimer.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.lblDisclaimer.Name = "lblDisclaimer";
-			this.lblDisclaimer.Size = new System.Drawing.Size(388, 66);
-			this.lblDisclaimer.TabIndex = 50;
-			this.lblDisclaimer.Text = resources.GetString("lblDisclaimer.Text");
+			lblDisclaimer.Font = new Font("Calibri", 8.25F, FontStyle.Italic);
+			lblDisclaimer.ForeColor = SystemColors.ControlDarkDark;
+			lblDisclaimer.Location = new Point(19, 719);
+			lblDisclaimer.Margin = new Padding(7, 0, 7, 0);
+			lblDisclaimer.Name = "lblDisclaimer";
+			lblDisclaimer.Size = new Size(721, 141);
+			lblDisclaimer.TabIndex = 50;
+			lblDisclaimer.Text = resources.GetString("lblDisclaimer.Text");
+			tipTool.SetToolTip(lblDisclaimer, "Seriously!  Back your stuff up, dude!\r\n  Remember: Jesus Saves -- Often!");
 			// 
 			// picLOR
 			// 
-			this.picLOR.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("picLOR.BackgroundImage")));
-			this.picLOR.Location = new System.Drawing.Point(110, 210);
-			this.picLOR.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.picLOR.Name = "picLOR";
-			this.picLOR.Size = new System.Drawing.Size(90, 19);
-			this.picLOR.TabIndex = 51;
-			this.picLOR.TabStop = false;
+			picLOR.BackgroundImage = (Image)resources.GetObject("picLOR.BackgroundImage");
+			picLOR.Location = new Point(204, 448);
+			picLOR.Margin = new Padding(7, 6, 7, 6);
+			picLOR.Name = "picLOR";
+			picLOR.Size = new Size(167, 41);
+			picLOR.SizeMode = PictureBoxSizeMode.Zoom;
+			picLOR.TabIndex = 51;
+			picLOR.TabStop = false;
+			tipTool.SetToolTip(picLOR, "Light-O-Rama");
 			// 
 			// lblAlpha
 			// 
-			this.lblAlpha.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
-			this.lblAlpha.ForeColor = System.Drawing.Color.OrangeRed;
-			this.lblAlpha.Location = new System.Drawing.Point(655, 141);
-			this.lblAlpha.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.lblAlpha.Name = "lblAlpha";
-			this.lblAlpha.Size = new System.Drawing.Size(388, 66);
-			this.lblAlpha.TabIndex = 52;
-			this.lblAlpha.Text = resources.GetString("lblAlpha.Text");
+			lblAlpha.Font = new Font("Calibri", 8.25F, FontStyle.Italic);
+			lblAlpha.ForeColor = Color.OrangeRed;
+			lblAlpha.Location = new Point(1216, 301);
+			lblAlpha.Margin = new Padding(7, 0, 7, 0);
+			lblAlpha.Name = "lblAlpha";
+			lblAlpha.Size = new Size(721, 141);
+			lblAlpha.TabIndex = 52;
+			lblAlpha.Text = resources.GetString("lblAlpha.Text");
+			tipTool.SetToolTip(lblAlpha, "You're a glutton for punishment, aren't you?");
 			// 
 			// lblBeta
 			// 
-			this.lblBeta.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
-			this.lblBeta.ForeColor = System.Drawing.Color.OrangeRed;
-			this.lblBeta.Location = new System.Drawing.Point(655, 242);
-			this.lblBeta.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.lblBeta.Name = "lblBeta";
-			this.lblBeta.Size = new System.Drawing.Size(388, 66);
-			this.lblBeta.TabIndex = 53;
-			this.lblBeta.Text = resources.GetString("lblBeta.Text");
+			lblBeta.Font = new Font("Calibri", 8.25F, FontStyle.Italic);
+			lblBeta.ForeColor = Color.OrangeRed;
+			lblBeta.Location = new Point(1216, 516);
+			lblBeta.Margin = new Padding(7, 0, 7, 0);
+			lblBeta.Name = "lblBeta";
+			lblBeta.Size = new Size(721, 141);
+			lblBeta.TabIndex = 53;
+			lblBeta.Text = resources.GetString("lblBeta.Text");
+			tipTool.SetToolTip(lblBeta, "Seriously!  Back your stuff up.  Remember: Jesus saves, often.");
 			// 
 			// picDrWiz
 			// 
-			this.picDrWiz.Image = ((System.Drawing.Image)(resources.GetObject("picDrWiz.Image")));
-			this.picDrWiz.Location = new System.Drawing.Point(208, 132);
-			this.picDrWiz.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.picDrWiz.Name = "picDrWiz";
-			this.picDrWiz.Size = new System.Drawing.Size(48, 48);
-			this.picDrWiz.TabIndex = 54;
-			this.picDrWiz.TabStop = false;
-			this.picDrWiz.Click += new System.EventHandler(this.picDrWiz_Click);
+			picDrWiz.Image = (Image)resources.GetObject("picDrWiz.Image");
+			picDrWiz.Location = new Point(386, 282);
+			picDrWiz.Margin = new Padding(7, 6, 7, 6);
+			picDrWiz.Name = "picDrWiz";
+			picDrWiz.Size = new Size(89, 102);
+			picDrWiz.SizeMode = PictureBoxSizeMode.StretchImage;
+			picDrWiz.TabIndex = 54;
+			picDrWiz.TabStop = false;
+			tipTool.SetToolTip(picDrWiz, "Doctor Wizard was bored.");
+			picDrWiz.Click += picDrWiz_Click;
 			// 
 			// lblThanks
 			// 
-			this.lblThanks.AutoSize = true;
-			this.lblThanks.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
-			this.lblThanks.ForeColor = System.Drawing.Color.DarkGreen;
-			this.lblThanks.Location = new System.Drawing.Point(391, 301);
-			this.lblThanks.Margin = new System.Windows.Forms.Padding(7, 0, 4, 0);
-			this.lblThanks.MaximumSize = new System.Drawing.Size(0, 20);
-			this.lblThanks.Name = "lblThanks";
-			this.lblThanks.Size = new System.Drawing.Size(66, 19);
-			this.lblThanks.TabIndex = 55;
-			this.lblThanks.Text = "Thanks...";
-			this.lblThanks.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.lblThanks.Click += new System.EventHandler(this.lblThanks_Click);
+			lblThanks.AutoSize = true;
+			lblThanks.Font = new Font("Calibri", 12F, FontStyle.Italic);
+			lblThanks.ForeColor = Color.DarkGreen;
+			lblThanks.Location = new Point(726, 642);
+			lblThanks.Margin = new Padding(13, 0, 7, 0);
+			lblThanks.MaximumSize = new Size(0, 43);
+			lblThanks.Name = "lblThanks";
+			lblThanks.Size = new Size(132, 39);
+			lblThanks.TabIndex = 55;
+			lblThanks.Text = "Thanks...";
+			lblThanks.TextAlign = ContentAlignment.MiddleLeft;
+			tipTool.SetToolTip(lblThanks, "for all the fish.");
+			lblThanks.Click += lblThanks_Click;
 			// 
 			// lblGitHub
 			// 
-			this.lblGitHub.AutoSize = true;
-			this.lblGitHub.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.lblGitHub.Location = new System.Drawing.Point(30, 317);
-			this.lblGitHub.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.lblGitHub.Name = "lblGitHub";
-			this.lblGitHub.Size = new System.Drawing.Size(196, 14);
-			this.lblGitHub.TabIndex = 56;
-			this.lblGitHub.Text = "Or you can report issues on GitHub";
+			lblGitHub.AutoSize = true;
+			lblGitHub.Font = new Font("Calibri", 9F);
+			lblGitHub.Location = new Point(56, 676);
+			lblGitHub.Margin = new Padding(7, 0, 7, 0);
+			lblGitHub.Name = "lblGitHub";
+			lblGitHub.Size = new Size(355, 29);
+			lblGitHub.TabIndex = 56;
+			lblGitHub.Text = "Or you can report issues on GitHub";
 			// 
 			// lblGitIssues
 			// 
-			this.lblGitIssues.AutoEllipsis = true;
-			this.lblGitIssues.AutoSize = true;
-			this.lblGitIssues.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.lblGitIssues.Location = new System.Drawing.Point(222, 317);
-			this.lblGitIssues.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.lblGitIssues.Name = "lblGitIssues";
-			this.lblGitIssues.Size = new System.Drawing.Size(33, 14);
-			this.lblGitIssues.TabIndex = 57;
-			this.lblGitIssues.TabStop = true;
-			this.lblGitIssues.Text = "Here";
-			this.lblGitIssues.TextAlign = System.Drawing.ContentAlignment.TopRight;
-			this.lblGitIssues.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblGitIssues_LinkClicked);
+			lblGitIssues.AutoEllipsis = true;
+			lblGitIssues.AutoSize = true;
+			lblGitIssues.Font = new Font("Calibri", 9F);
+			lblGitIssues.Location = new Point(412, 676);
+			lblGitIssues.Margin = new Padding(7, 0, 7, 0);
+			lblGitIssues.Name = "lblGitIssues";
+			lblGitIssues.Size = new Size(60, 29);
+			lblGitIssues.TabIndex = 57;
+			lblGitIssues.TabStop = true;
+			lblGitIssues.Text = "Here";
+			lblGitIssues.TextAlign = ContentAlignment.TopRight;
+			tipTool.SetToolTip(lblGitIssues, "ttps://github.com/DoctorWiz/Util-O-Rama4/issues");
+			lblGitIssues.LinkClicked += lblGitIssues_LinkClicked;
 			// 
 			// linkCharity
 			// 
-			this.linkCharity.AutoEllipsis = true;
-			this.linkCharity.AutoSize = true;
-			this.linkCharity.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.linkCharity.Location = new System.Drawing.Point(307, 189);
-			this.linkCharity.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.linkCharity.Name = "linkCharity";
-			this.linkCharity.Size = new System.Drawing.Size(87, 19);
-			this.linkCharity.TabIndex = 58;
-			this.linkCharity.TabStop = true;
-			this.linkCharity.Text = "Charityware";
-			this.linkCharity.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkCharity_LinkClicked);
+			linkCharity.AutoEllipsis = true;
+			linkCharity.AutoSize = true;
+			linkCharity.Font = new Font("Calibri", 12F);
+			linkCharity.Location = new Point(570, 403);
+			linkCharity.Margin = new Padding(7, 0, 7, 0);
+			linkCharity.Name = "linkCharity";
+			linkCharity.Size = new Size(174, 39);
+			linkCharity.TabIndex = 58;
+			linkCharity.TabStop = true;
+			linkCharity.Text = "Charityware";
+			tipTool.SetToolTip(linkCharity, "https://wizlights.org/charitylist.html");
+			linkCharity.LinkClicked += linkCharity_LinkClicked;
 			// 
 			// lblProgram
 			// 
-			this.lblProgram.AutoSize = true;
-			this.lblProgram.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.lblProgram.Location = new System.Drawing.Point(10, 189);
-			this.lblProgram.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.lblProgram.Name = "lblProgram";
-			this.lblProgram.Size = new System.Drawing.Size(135, 19);
-			this.lblProgram.TabIndex = 59;
-			this.lblProgram.Text = "Something-O-Rama";
+			lblProgram.AutoSize = true;
+			lblProgram.Font = new Font("Calibri", 12F);
+			lblProgram.Location = new Point(19, 403);
+			lblProgram.Margin = new Padding(7, 0, 7, 0);
+			lblProgram.Name = "lblProgram";
+			lblProgram.Size = new Size(272, 39);
+			lblProgram.TabIndex = 59;
+			lblProgram.Text = "Something-O-Rama";
 			// 
 			// lblCompiled
 			// 
-			this.lblCompiled.AutoSize = true;
-			this.lblCompiled.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.lblCompiled.ForeColor = System.Drawing.Color.Gray;
-			this.lblCompiled.Location = new System.Drawing.Point(177, 72);
-			this.lblCompiled.Margin = new System.Windows.Forms.Padding(7, 0, 4, 0);
-			this.lblCompiled.MaximumSize = new System.Drawing.Size(0, 20);
-			this.lblCompiled.Name = "lblCompiled";
-			this.lblCompiled.Size = new System.Drawing.Size(104, 13);
-			this.lblCompiled.TabIndex = 60;
-			this.lblCompiled.Text = "Compiled 6/22/2022";
-			this.lblCompiled.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			lblCompiled.AutoSize = true;
+			lblCompiled.Font = new Font("Calibri", 8.25F);
+			lblCompiled.ForeColor = Color.Gray;
+			lblCompiled.Location = new Point(329, 154);
+			lblCompiled.Margin = new Padding(13, 0, 7, 0);
+			lblCompiled.MaximumSize = new Size(0, 43);
+			lblCompiled.Name = "lblCompiled";
+			lblCompiled.Size = new Size(199, 27);
+			lblCompiled.TabIndex = 60;
+			lblCompiled.Text = "Compiled 6/22/2022";
+			lblCompiled.TextAlign = ContentAlignment.MiddleLeft;
 			// 
 			// lblEXEfile
 			// 
-			this.lblEXEfile.AutoSize = true;
-			this.lblEXEfile.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.lblEXEfile.ForeColor = System.Drawing.Color.Goldenrod;
-			this.lblEXEfile.Location = new System.Drawing.Point(177, 86);
-			this.lblEXEfile.Margin = new System.Windows.Forms.Padding(7, 0, 4, 0);
-			this.lblEXEfile.MaximumSize = new System.Drawing.Size(0, 20);
-			this.lblEXEfile.Name = "lblEXEfile";
-			this.lblEXEfile.Size = new System.Drawing.Size(222, 13);
-			this.lblEXEfile.TabIndex = 61;
-			this.lblEXEfile.Text = "C:\\PortableApps\\UtilORama\\BlankORama.exe";
-			this.lblEXEfile.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.lblEXEfile.Visible = false;
+			lblEXEfile.AutoSize = true;
+			lblEXEfile.Font = new Font("Calibri", 8.25F);
+			lblEXEfile.ForeColor = Color.Goldenrod;
+			lblEXEfile.Location = new Point(329, 183);
+			lblEXEfile.Margin = new Padding(13, 0, 7, 0);
+			lblEXEfile.MaximumSize = new Size(0, 43);
+			lblEXEfile.Name = "lblEXEfile";
+			lblEXEfile.Size = new Size(432, 27);
+			lblEXEfile.TabIndex = 61;
+			lblEXEfile.Text = "C:\\PortableApps\\UtilORama\\BlankORama.exe";
+			lblEXEfile.TextAlign = ContentAlignment.MiddleLeft;
+			lblEXEfile.Visible = false;
+			// 
+			// lblFor
+			// 
+			lblFor.AutoSize = true;
+			lblFor.Font = new Font("Calibri", 12F);
+			lblFor.Location = new Point(737, 403);
+			lblFor.Margin = new Padding(7, 0, 7, 0);
+			lblFor.Name = "lblFor";
+			lblFor.Size = new Size(112, 39);
+			lblFor.TabIndex = 62;
+			lblFor.Text = " for the";
+			// 
+			// lblReleased
+			// 
+			lblReleased.AutoSize = true;
+			lblReleased.Font = new Font("Calibri", 12F);
+			lblReleased.Location = new Point(285, 401);
+			lblReleased.Margin = new Padding(7, 0, 7, 0);
+			lblReleased.Name = "lblReleased";
+			lblReleased.Size = new Size(190, 39);
+			lblReleased.TabIndex = 63;
+			lblReleased.Text = "is released as";
+			// 
+			// lblAnd2
+			// 
+			lblAnd2.Font = new Font("Calibri", 12F);
+			lblAnd2.Location = new Point(367, 448);
+			lblAnd2.Margin = new Padding(7, 0, 7, 0);
+			lblAnd2.Name = "lblAnd2";
+			lblAnd2.Size = new Size(71, 43);
+			lblAnd2.TabIndex = 64;
+			lblAnd2.Text = "and";
+			// 
+			// lblCommunity
+			// 
+			lblCommunity.Font = new Font("Calibri", 12F);
+			lblCommunity.Location = new Point(677, 442);
+			lblCommunity.Margin = new Padding(7, 0, 7, 0);
+			lblCommunity.Name = "lblCommunity";
+			lblCommunity.Size = new Size(168, 43);
+			lblCommunity.TabIndex = 65;
+			lblCommunity.Text = "community.";
 			// 
 			// frmAbout
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(492, 408);
-			this.Controls.Add(this.lblEXEfile);
-			this.Controls.Add(this.lblCompiled);
-			this.Controls.Add(this.lblProgram);
-			this.Controls.Add(this.okButton);
-			this.Controls.Add(this.linkCharity);
-			this.Controls.Add(this.lblGitIssues);
-			this.Controls.Add(this.lblGitHub);
-			this.Controls.Add(this.lblThanks);
-			this.Controls.Add(this.lblBeta);
-			this.Controls.Add(this.lblAlpha);
-			this.Controls.Add(this.picLOR);
-			this.Controls.Add(this.lblDisclaimer);
-			this.Controls.Add(this.lblSuite);
-			this.Controls.Add(this.labelUtils);
-			this.Controls.Add(this.labelSuite);
-			this.Controls.Add(this.picxLights);
-			this.Controls.Add(this.picGPL);
-			this.Controls.Add(this.lblEmail);
-			this.Controls.Add(this.lblInfo);
-			this.Controls.Add(this.labelGPL);
-			this.Controls.Add(this.lblSourceCode);
-			this.Controls.Add(this.labelAnd);
-			this.Controls.Add(this.labelAuthorName);
-			this.Controls.Add(this.labelCompanyName);
-			this.Controls.Add(this.picIcon);
-			this.Controls.Add(this.labelProductName);
-			this.Controls.Add(this.labelVersion);
-			this.Controls.Add(this.labelCopyright);
-			this.Controls.Add(this.lblFreeware);
-			this.Controls.Add(this.lblCommunity);
-			this.Controls.Add(this.picDrWiz);
-			this.Controls.Add(this.textBoxDescription);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.MaximizeBox = false;
-			this.MinimizeBox = false;
-			this.Name = "frmAbout";
-			this.Padding = new System.Windows.Forms.Padding(10);
-			this.ShowInTaskbar = false;
-			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-			this.Text = "About Program";
-			this.Load += new System.EventHandler(this.frmAbout_Load);
-			this.Shown += new System.EventHandler(this.frmAbout_Shown);
-			((System.ComponentModel.ISupportInitialize)(this.picIcon)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.picGPL)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.picxLights)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.picLOR)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.picDrWiz)).EndInit();
-			this.ResumeLayout(false);
-			this.PerformLayout();
+			AutoScaleDimensions = new SizeF(13F, 32F);
+			AutoScaleMode = AutoScaleMode.Font;
+			ClientSize = new Size(914, 870);
+			Controls.Add(lblCommunity);
+			Controls.Add(lblAnd2);
+			Controls.Add(lblReleased);
+			Controls.Add(lblFor);
+			Controls.Add(lblEXEfile);
+			Controls.Add(lblCompiled);
+			Controls.Add(lblProgram);
+			Controls.Add(btnOK);
+			Controls.Add(linkCharity);
+			Controls.Add(lblGitIssues);
+			Controls.Add(lblGitHub);
+			Controls.Add(lblThanks);
+			Controls.Add(lblBeta);
+			Controls.Add(lblAlpha);
+			Controls.Add(picLOR);
+			Controls.Add(lblDisclaimer);
+			Controls.Add(lblSuite);
+			Controls.Add(labelUtils);
+			Controls.Add(lblMember);
+			Controls.Add(picxLights);
+			Controls.Add(picGPL);
+			Controls.Add(linkEmail);
+			Controls.Add(lblInfo);
+			Controls.Add(linkGPL);
+			Controls.Add(lblSourceCode);
+			Controls.Add(lblAnd1);
+			Controls.Add(linkAuthorName);
+			Controls.Add(linkCompanyName);
+			Controls.Add(picIcon);
+			Controls.Add(lblProductName);
+			Controls.Add(lblVersion);
+			Controls.Add(lblCopyright);
+			Controls.Add(lblFreeware);
+			Controls.Add(lblBenefit);
+			Controls.Add(picDrWiz);
+			Controls.Add(textBoxDescription);
+			FormBorderStyle = FormBorderStyle.FixedDialog;
+			Icon = (Icon)resources.GetObject("$this.Icon");
+			Margin = new Padding(7, 6, 7, 6);
+			MaximizeBox = false;
+			MinimizeBox = false;
+			Name = "frmAbout";
+			Padding = new Padding(19, 21, 19, 21);
+			ShowInTaskbar = false;
+			StartPosition = FormStartPosition.CenterParent;
+			Text = "About Program";
+			Load += frmAbout_Load;
+			Shown += frmAbout_Shown;
+			((System.ComponentModel.ISupportInitialize)picIcon).EndInit();
+			((System.ComponentModel.ISupportInitialize)picGPL).EndInit();
+			((System.ComponentModel.ISupportInitialize)picxLights).EndInit();
+			((System.ComponentModel.ISupportInitialize)picLOR).EndInit();
+			((System.ComponentModel.ISupportInitialize)picDrWiz).EndInit();
+			ResumeLayout(false);
+			PerformLayout();
 
 		}
 
 		#endregion
-		private System.Windows.Forms.Label labelVersion;
-		private System.Windows.Forms.Label labelCopyright;
-		private System.Windows.Forms.Button okButton;
+		private System.Windows.Forms.Label lblVersion;
+		private System.Windows.Forms.Label lblCopyright;
+		private System.Windows.Forms.Button btnOK;
 		public System.Windows.Forms.PictureBox picIcon;
-		private System.Windows.Forms.Label labelProductName;
+		private System.Windows.Forms.Label lblProductName;
 		private System.Windows.Forms.TextBox textBoxDescription;
-		private System.Windows.Forms.LinkLabel labelCompanyName;
-		private System.Windows.Forms.LinkLabel labelAuthorName;
-		private System.Windows.Forms.Label labelAnd;
+		private System.Windows.Forms.LinkLabel linkCompanyName;
+		private System.Windows.Forms.LinkLabel linkAuthorName;
+		private System.Windows.Forms.Label lblAnd1;
 		private System.Windows.Forms.Label lblFreeware;
 		private System.Windows.Forms.Label lblSourceCode;
-		private System.Windows.Forms.LinkLabel labelGPL;
+		private System.Windows.Forms.LinkLabel linkGPL;
 		private System.Windows.Forms.Label lblInfo;
-		private System.Windows.Forms.LinkLabel lblEmail;
+		private System.Windows.Forms.LinkLabel linkEmail;
 		private System.Windows.Forms.PictureBox picGPL;
 		private System.Windows.Forms.PictureBox picxLights;
-		private System.Windows.Forms.Label labelSuite;
+		private System.Windows.Forms.Label lblMember;
 		private System.Windows.Forms.LinkLabel labelUtils;
 		private System.Windows.Forms.Label lblSuite;
-		private System.Windows.Forms.Label lblCommunity;
+		private System.Windows.Forms.Label lblBenefit;
 		private System.Windows.Forms.Label lblDisclaimer;
 		private System.Windows.Forms.PictureBox picLOR;
 		private Label lblAlpha;
@@ -554,5 +628,10 @@
 		private Label lblProgram;
 		private Label lblCompiled;
 		private Label lblEXEfile;
+		private Label lblFor;
+		private Label lblReleased;
+		private ToolTip tipTool;
+		private Label lblAnd2;
+		private Label lblCommunity;
 	}
 }

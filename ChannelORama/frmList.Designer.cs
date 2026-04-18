@@ -56,6 +56,7 @@
 			changeDatabaseLocationToolStripMenuItem = new ToolStripMenuItem();
 			dropModeToolStripMenuItem = new ToolStripMenuItem();
 			preferencesToolStripMenuItem = new ToolStripMenuItem();
+			btnDevices = new Button();
 			imlTreeIcons = new ImageList(components);
 			treeChannels = new Syncfusion.Windows.Forms.Tools.TreeViewAdv();
 			dlgFileOpen = new OpenFileDialog();
@@ -189,7 +190,7 @@
 			btnReport.Enabled = false;
 			btnReport.Image = (Image)resources.GetObject("btnReport.Image");
 			btnReport.ImageAlign = ContentAlignment.MiddleRight;
-			btnReport.Location = new Point(851, 482);
+			btnReport.Location = new Point(851, 586);
 			btnReport.Margin = new Padding(7, 6, 7, 6);
 			btnReport.Name = "btnReport";
 			btnReport.Size = new Size(163, 98);
@@ -229,7 +230,7 @@
 			btnFind.Enabled = false;
 			btnFind.Image = (Image)resources.GetObject("btnFind.Image");
 			btnFind.ImageAlign = ContentAlignment.MiddleRight;
-			btnFind.Location = new Point(851, 369);
+			btnFind.Location = new Point(851, 476);
 			btnFind.Margin = new Padding(7, 6, 7, 6);
 			btnFind.Name = "btnFind";
 			btnFind.Size = new Size(163, 98);
@@ -242,7 +243,7 @@
 			// btnWiz
 			// 
 			btnWiz.Image = (Image)resources.GetObject("btnWiz.Image");
-			btnWiz.Location = new Point(851, 595);
+			btnWiz.Location = new Point(851, 696);
 			btnWiz.Margin = new Padding(7, 6, 7, 6);
 			btnWiz.Name = "btnWiz";
 			btnWiz.Size = new Size(163, 98);
@@ -287,7 +288,7 @@
 			// 
 			btnRemove.Image = (Image)resources.GetObject("btnRemove.Image");
 			btnRemove.ImageAlign = ContentAlignment.MiddleRight;
-			btnRemove.Location = new Point(851, 706);
+			btnRemove.Location = new Point(983, 732);
 			btnRemove.Margin = new Padding(7, 6, 7, 6);
 			btnRemove.Name = "btnRemove";
 			btnRemove.Size = new Size(163, 98);
@@ -368,6 +369,21 @@
 			preferencesToolStripMenuItem.Size = new Size(372, 38);
 			preferencesToolStripMenuItem.Text = "Preferences";
 			preferencesToolStripMenuItem.Click += preferencesToolStripMenuItem_Click;
+			// 
+			// btnDevices
+			// 
+			btnDevices.Image = (Image)resources.GetObject("btnDevices.Image");
+			btnDevices.ImageAlign = ContentAlignment.MiddleRight;
+			btnDevices.Location = new Point(851, 366);
+			btnDevices.Margin = new Padding(7, 6, 7, 6);
+			btnDevices.Name = "btnDevices";
+			btnDevices.Size = new Size(163, 98);
+			btnDevices.TabIndex = 128;
+			btnDevices.Text = "Device\r\nTypes\r\n";
+			btnDevices.TextAlign = ContentAlignment.MiddleLeft;
+			tipTool.SetToolTip(btnDevices, "Channel Comparison Wizard\r\n\r\nCompare Managed Channels to:\r\n    Light-O-Rama Showtime S4 Channels\r\n    Light-O-Rama Visualizer Channels & Groups\r\n    xLights Models and Groups");
+			btnDevices.UseVisualStyleBackColor = true;
+			btnDevices.Click += btnDevices_Click;
 			// 
 			// imlTreeIcons
 			// 
@@ -497,6 +513,7 @@
 			AutoScaleDimensions = new SizeF(13F, 32F);
 			AutoScaleMode = AutoScaleMode.Font;
 			ClientSize = new Size(1059, 1169);
+			Controls.Add(btnDevices);
 			Controls.Add(lblLoading);
 			Controls.Add(lblVersions);
 			Controls.Add(btnSettings);
@@ -504,14 +521,11 @@
 			Controls.Add(btnMoveUp);
 			Controls.Add(lblDirty);
 			Controls.Add(lblxChannel);
-			Controls.Add(btnRemove);
-			Controls.Add(btnExportSeq);
 			Controls.Add(treeChannels);
 			Controls.Add(btnSave);
 			Controls.Add(btnWiz);
 			Controls.Add(btnFind);
 			Controls.Add(btnComparex);
-			Controls.Add(btnCompareLOR);
 			Controls.Add(btnReport);
 			Controls.Add(btnChannel);
 			Controls.Add(btnController);
@@ -519,6 +533,9 @@
 			Controls.Add(btnOK);
 			Controls.Add(staStatus);
 			Controls.Add(picAboutIcon);
+			Controls.Add(btnCompareLOR);
+			Controls.Add(btnRemove);
+			Controls.Add(btnExportSeq);
 			Cursor = Cursors.WaitCursor;
 			Enabled = false;
 			Icon = (Icon)resources.GetObject("$this.Icon");
@@ -578,6 +595,7 @@
 		private ToolStripMenuItem preferencesToolStripMenuItem;
 		private Label lblVersions;
 		private Label lblLoading;
+		private Button btnDevices;
 	}
 }
 

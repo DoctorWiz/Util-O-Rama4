@@ -16,14 +16,66 @@ using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 using Windows.ApplicationModel.Preview.InkWorkspace;
 using Windows.Graphics.Printing.Workflow;
 using Windows.Management.Update;
 
 
 
+
 namespace UtilORama4
 {
+	/*
+	public class HoverComboBox : ComboBox
+	{
+		// WinAPI Constants
+		private const int WM_CTLCOLORLISTBOX = 0x0134;
+		private const int LB_GETCURSEL = 0x0188;
+
+		public event EventHandler<HoverIndexChangedEventArgs> HoverIndexChanged;
+		private int _lastHoveredIndex = -1;
+
+		[DllImport("user32.dll", CharSet = CharSet.Auto)]
+		private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
+
+		protected override void WndProc(ref Message m)
+		{
+			base.WndProc(ref m);
+
+			// When the dropdown list is about to be drawn or updated
+			if (m.Msg == WM_CTLCOLORLISTBOX)
+			{
+				// m.LParam is the handle (HWND) to the internal DropDown ListBox
+				IntPtr indexPtr = SendMessage(m.LParam, LB_GETCURSEL, IntPtr.Zero, IntPtr.Zero);
+				int currentIndex = indexPtr.ToInt32();
+
+				if (currentIndex != _lastHoveredIndex)
+				{
+					_lastHoveredIndex = currentIndex;
+					OnHoverIndexChanged(new HoverIndexChangedEventArgs(currentIndex));
+				}
+			}
+
+			// Reset index when the dropdown closes
+			if (m.Msg == 0x0201) // WM_LBUTTONDOWN or similar can be used to detect closure
+			{
+				_lastHoveredIndex = -1;
+			}
+		}
+
+		protected virtual void OnHoverIndexChanged(HoverIndexChangedEventArgs e)
+		{
+			HoverIndexChanged?.Invoke(this, e);
+		}
+	}
+
+	public class HoverIndexChangedEventArgs : EventArgs
+	{
+		public int Index { get; }
+		public HoverIndexChangedEventArgs(int index) => Index = index;
+	}
+	*/
 	public partial class frmChannel : Form
 	{
 		public Channel chanOriginal = null;
@@ -61,6 +113,27 @@ namespace UtilORama4
 		private frmColors picker = null;
 		private FormWindowState prevWindowState = FormWindowState.Normal;
 
+		[DllImport("user32.dll", CharSet = CharSet.Auto)]
+		public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+		protected override void WndProc(ref Message m)
+		{
+			const int WM_CTLCOLORLISTBOX = 0x0134;
+			const int LB_GETCURSEL = 0x0188;
+
+			if (m.Msg == WM_CTLCOLORLISTBOX)
+			{
+				// m.LParam is the handle to the dropdown list box
+				// LB_GETCURSEL retrieves the index of the hovered/selected item
+				IntPtr index = SendMessage(m.LParam, LB_GETCURSEL, IntPtr.Zero, IntPtr.Zero);
+				//Console.WriteLine("Hovered Index: " + index.ToInt32());
+				int i = index.ToInt32();
+				DeviceType device = (DeviceType)hcboDevic3.Items[i];
+				string ttxt = device.Comment;
+				tipTool.SetToolTip(hcboDevic3, ttxt);
+			}
+			base.WndProc(ref m);
+		}
 		public frmChannel()
 		{
 			InitializeComponent();
@@ -103,23 +176,23 @@ namespace UtilORama4
 		public void FillCombos()
 		{
 			// Device Types
-			cboType.Items.Clear();
-			for (int d = 0; d < owner.DeviceTypes.Count; d++)
+			hcboDevic3.Items.Clear();
+			for (int d = 0; d < frmList.DeviceTypes.Count; d++)
 			{
-				string dn = owner.DeviceTypes[d].Name;
-				int di = owner.DeviceTypes[d].ID;
-				cboType.Items.Add(owner.DeviceTypes[d]);
+				string dn = frmList.DeviceTypes[d].Name;
+				int di = frmList.DeviceTypes[d].ID;
+				hcboDevic3.Items.Add(frmList.DeviceTypes[d]);
 				if (di == channel.DeviceType.ID)
 				{
-					cboType.SelectedIndex = d;
+					hcboDevic3.SelectedIndex = d;
 				}
 			}
 
 			// Controllers
 			cboController.Items.Clear();
-			for (int c = 0; c < owner.AllControllers.Count; c++)
+			for (int c = 0; c < frmList.AllControllers.Count; c++)
 			{
-				Controller controller = owner.AllControllers[c];
+				Controller controller = frmList.AllControllers[c];
 				string ctxt = "";
 				if (controller.Identifier.Length > 0)
 				{
@@ -320,9 +393,9 @@ namespace UtilORama4
 		{
 		}
 
-		private void cboType_Validating(object sender, CancelEventArgs e)
+		private void hcboDevic3_Validating(object sender, CancelEventArgs e)
 		{
-			//channel.ChannelType = (ChannelType)cboType.SelectedIndex;
+			//channel.ChannelType = (ChannelType)hcboDevic3.SelectedIndex;
 			//if (!loading) MakeDirty(true);
 		}
 
@@ -540,11 +613,11 @@ namespace UtilORama4
 			}
 		}
 
-		private void cboType_SelectedIndexChanged(object sender, EventArgs e)
+		private void hcboDevic3_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (!loading)
 			{
-				if (cboType.SelectedIndex != lastDeviceIndex)
+				if (hcboDevic3.SelectedIndex != lastDeviceIndex)
 				{
 					MakeDirty(true);
 				}
@@ -624,18 +697,18 @@ namespace UtilORama4
 			}
 		}
 
-		private void cboType_Leave(object sender, EventArgs e)
+		private void hcboDevic3_Leave(object sender, EventArgs e)
 		{
 			if (!loading)
 			{
-				if (cboType.SelectedIndex >= 0)
+				if (hcboDevic3.SelectedIndex >= 0)
 				{
-					if (cboType.SelectedItem != null)
+					if (hcboDevic3.SelectedItem != null)
 					{
-						DeviceTypes device = (DeviceTypes)cboType.SelectedItem;
+						DeviceType device = (DeviceType)hcboDevic3.SelectedItem;
 						if (device.Name != chanOriginal.DeviceType.Name)
 						{
-							//channel.ChannelType = (ChannelType)cboType.SelectedIndex;
+							//channel.ChannelType = (ChannelType)hcboDevic3.SelectedIndex;
 							//string dn = device.Name;
 							channel.DeviceType = device;
 							changes |= CHANGE_TYPE;
@@ -646,41 +719,41 @@ namespace UtilORama4
 			}
 		}
 
-		private void cboType_Enter(object sender, EventArgs e)
+		private void hcboDevic3_Enter(object sender, EventArgs e)
 		{
 			string tipText = "The type of device this channel is connected to";
-			tipTool.SetToolTip(cboType, tipText);
+			tipTool.SetToolTip(hcboDevic3, tipText);
 			tipTool.SetToolTip(lblType, tipText);
 		}
 
-		private void cboType_KeyDown(object sender, KeyEventArgs e)
+		private void hcboDevic3_KeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.KeyCode == Keys.Escape)
 			{
 				if (chanOriginal.DeviceType != null)
 				{
-					for (int d = 0; d < cboType.Items.Count; d++)
+					for (int d = 0; d < hcboDevic3.Items.Count; d++)
 					{
-						DeviceTypes de = (DeviceTypes)cboType.Items[d];
+						DeviceType de = (DeviceType)hcboDevic3.Items[d];
 						string dn = de.Name;
 						if (de.ID == chanOriginal.DeviceType.ID)
 						{
-							cboType.SelectedIndex = d;
-							d = cboType.Items.Count; // Force exit loop
+							hcboDevic3.SelectedIndex = d;
+							d = hcboDevic3.Items.Count; // Force exit loop
 						}
 					}
 				}
 			}
 			else if (e.KeyCode == Keys.Enter)
 			{
-				if (cboType.SelectedIndex >= 0)
+				if (hcboDevic3.SelectedIndex >= 0)
 				{
-					if (cboType.SelectedItem != null)
+					if (hcboDevic3.SelectedItem != null)
 					{
-						DeviceTypes device = (DeviceTypes)cboType.SelectedItem;
+						DeviceType device = (DeviceType)hcboDevic3.SelectedItem;
 						if (device.Name != chanOriginal.DeviceType.Name)
 						{
-							//channel.ChannelType = (ChannelType)cboType.SelectedIndex;
+							//channel.ChannelType = (ChannelType)hcboDevic3.SelectedIndex;
 							//string dn = device.Name;
 							channel.DeviceType = device;
 							changes |= CHANGE_TYPE;
@@ -755,9 +828,9 @@ namespace UtilORama4
 					changes |= CHANGE_CONTROLLER;
 					MakeDirty(true);
 					// Now we have to find it...
-					for (int u = 0; u < owner.AllUniverses.Count; u++)
+					for (int u = 0; u < frmList.AllUniverses.Count; u++)
 					{
-						Universe universe = owner.AllUniverses[u];
+						Universe universe = frmList.AllUniverses[u];
 						for (int c = 0; c < universe.Controllers.Count; c++)
 						{
 							Controller controller = universe.Controllers[c];
@@ -765,7 +838,7 @@ namespace UtilORama4
 							{
 								channel.Controller = controller;
 								c = universe.Controllers.Count;
-								u = owner.AllUniverses.Count;
+								u = frmList.AllUniverses.Count;
 							}
 						}
 					}
@@ -783,9 +856,9 @@ namespace UtilORama4
 			{
 				if (chanOriginal.Controller != null)
 				{
-					for (int u = 0; u < owner.AllUniverses.Count; u++)
+					for (int u = 0; u < frmList.AllUniverses.Count; u++)
 					{
-						Universe uni = owner.AllUniverses[u];
+						Universe uni = frmList.AllUniverses[u];
 						for (int c = 0; c < uni.Controllers.Count; c++)
 						{
 							ListItem li = new ListItem(uni.Controllers[c].ToString(), uni.Controllers[c].ID);
@@ -793,7 +866,7 @@ namespace UtilORama4
 							{
 								cboController.SelectedIndex = cboController.Items.IndexOf(li);
 								c = uni.Controllers.Count; // Force exit loop
-								u = owner.AllUniverses.Count;
+								u = frmList.AllUniverses.Count;
 							}
 						}
 					}
@@ -810,9 +883,9 @@ namespace UtilORama4
 						changes |= CHANGE_CONTROLLER;
 						MakeDirty(true);
 						// Now we have to find it...
-						for (int u = 0; u < owner.AllUniverses.Count; u++)
+						for (int u = 0; u < frmList.AllUniverses.Count; u++)
 						{
-							Universe universe = owner.AllUniverses[u];
+							Universe universe = frmList.AllUniverses[u];
 							for (int c = 0; c < universe.Controllers.Count; c++)
 							{
 								Controller controller = universe.Controllers[c];
@@ -820,7 +893,7 @@ namespace UtilORama4
 								{
 									channel.Controller = controller;
 									c = universe.Controllers.Count;
-									u = owner.AllUniverses.Count;
+									u = frmList.AllUniverses.Count;
 								}
 							}
 						}
@@ -950,11 +1023,11 @@ namespace UtilORama4
 			}
 		}
 
-		private void cboType_DropDown(object sender, EventArgs e)
+		private void hcboDevic3_DropDown(object sender, EventArgs e)
 		{
 			if (!loading)
 			{
-				lastDeviceIndex = cboType.SelectedIndex;
+				lastDeviceIndex = hcboDevic3.SelectedIndex;
 			}
 		}
 
@@ -1020,7 +1093,7 @@ namespace UtilORama4
 				if (this.WindowState == FormWindowState.Minimized)
 				{
 					// Minimize my owner/parent
-					owner.WindowState = FormWindowState.Minimized;
+					frmList.WindowState = FormWindowState.Minimized;
 					// It should (?) minimize this form when the parent/owner is minimized
 					// So set prevWindowState to minimized
 					prevWindowState = FormWindowState.Minimized;
@@ -1054,6 +1127,16 @@ namespace UtilORama4
 				}
 			}
 			picker.Dispose();
+		}
+
+		private void lblName_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void picRGBW_Click(object sender, EventArgs e)
+		{
+
 		}
 	} // End class frmChannel
 }  // End namespace
