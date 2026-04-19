@@ -76,6 +76,7 @@ namespace UtilORama4
 		public HoverIndexChangedEventArgs(int index) => Index = index;
 	}
 	*/
+
 	public partial class frmChannel : Form
 	{
 		public Channel chanOriginal = null;
@@ -128,9 +129,9 @@ namespace UtilORama4
 				IntPtr index = SendMessage(m.LParam, LB_GETCURSEL, IntPtr.Zero, IntPtr.Zero);
 				//Console.WriteLine("Hovered Index: " + index.ToInt32());
 				int i = index.ToInt32();
-				DeviceType device = (DeviceType)hcboDevic3.Items[i];
+				DeviceType device = (DeviceType)cboDevice.Items[i];
 				string ttxt = device.Comment;
-				tipTool.SetToolTip(hcboDevic3, ttxt);
+				tipTool.SetToolTip(cboDevice, ttxt);
 			}
 			base.WndProc(ref m);
 		}
@@ -176,15 +177,15 @@ namespace UtilORama4
 		public void FillCombos()
 		{
 			// Device Types
-			hcboDevic3.Items.Clear();
+			cboDevice.Items.Clear();
 			for (int d = 0; d < frmList.DeviceTypes.Count; d++)
 			{
 				string dn = frmList.DeviceTypes[d].Name;
 				int di = frmList.DeviceTypes[d].ID;
-				hcboDevic3.Items.Add(frmList.DeviceTypes[d]);
+				cboDevice.Items.Add(frmList.DeviceTypes[d]);
 				if (di == channel.DeviceType.ID)
 				{
-					hcboDevic3.SelectedIndex = d;
+					cboDevice.SelectedIndex = d;
 				}
 			}
 
@@ -393,7 +394,7 @@ namespace UtilORama4
 		{
 		}
 
-		private void hcboDevic3_Validating(object sender, CancelEventArgs e)
+		private void cboDevice_Validating(object sender, CancelEventArgs e)
 		{
 			//channel.ChannelType = (ChannelType)hcboDevic3.SelectedIndex;
 			//if (!loading) MakeDirty(true);
@@ -613,17 +614,6 @@ namespace UtilORama4
 			}
 		}
 
-		private void hcboDevic3_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			if (!loading)
-			{
-				if (hcboDevic3.SelectedIndex != lastDeviceIndex)
-				{
-					MakeDirty(true);
-				}
-			}
-		}
-
 		private void lblColor_Click(object sender, EventArgs e)
 		{
 			//picColor_Click(sender, e);
@@ -693,73 +683,6 @@ namespace UtilORama4
 					txtLocation.Text = trimloc;
 					changes |= CHANGE_LOCATION;
 					MakeDirty(true);
-				}
-			}
-		}
-
-		private void hcboDevic3_Leave(object sender, EventArgs e)
-		{
-			if (!loading)
-			{
-				if (hcboDevic3.SelectedIndex >= 0)
-				{
-					if (hcboDevic3.SelectedItem != null)
-					{
-						DeviceType device = (DeviceType)hcboDevic3.SelectedItem;
-						if (device.Name != chanOriginal.DeviceType.Name)
-						{
-							//channel.ChannelType = (ChannelType)hcboDevic3.SelectedIndex;
-							//string dn = device.Name;
-							channel.DeviceType = device;
-							changes |= CHANGE_TYPE;
-							MakeDirty(true);
-						}
-					}
-				}
-			}
-		}
-
-		private void hcboDevic3_Enter(object sender, EventArgs e)
-		{
-			string tipText = "The type of device this channel is connected to";
-			tipTool.SetToolTip(hcboDevic3, tipText);
-			tipTool.SetToolTip(lblType, tipText);
-		}
-
-		private void hcboDevic3_KeyDown(object sender, KeyEventArgs e)
-		{
-			if (e.KeyCode == Keys.Escape)
-			{
-				if (chanOriginal.DeviceType != null)
-				{
-					for (int d = 0; d < hcboDevic3.Items.Count; d++)
-					{
-						DeviceType de = (DeviceType)hcboDevic3.Items[d];
-						string dn = de.Name;
-						if (de.ID == chanOriginal.DeviceType.ID)
-						{
-							hcboDevic3.SelectedIndex = d;
-							d = hcboDevic3.Items.Count; // Force exit loop
-						}
-					}
-				}
-			}
-			else if (e.KeyCode == Keys.Enter)
-			{
-				if (hcboDevic3.SelectedIndex >= 0)
-				{
-					if (hcboDevic3.SelectedItem != null)
-					{
-						DeviceType device = (DeviceType)hcboDevic3.SelectedItem;
-						if (device.Name != chanOriginal.DeviceType.Name)
-						{
-							//channel.ChannelType = (ChannelType)hcboDevic3.SelectedIndex;
-							//string dn = device.Name;
-							channel.DeviceType = device;
-							changes |= CHANGE_TYPE;
-							MakeDirty(true);
-						}
-					}
 				}
 			}
 		}
@@ -1023,14 +946,6 @@ namespace UtilORama4
 			}
 		}
 
-		private void hcboDevic3_DropDown(object sender, EventArgs e)
-		{
-			if (!loading)
-			{
-				lastDeviceIndex = hcboDevic3.SelectedIndex;
-			}
-		}
-
 		private void cboController_DropDown(object sender, EventArgs e)
 		{
 			if (!loading)
@@ -1137,6 +1052,86 @@ namespace UtilORama4
 		private void picRGBW_Click(object sender, EventArgs e)
 		{
 
+		}
+
+		private void cboDevice_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (!loading)
+			{
+				if (cboDevice.SelectedIndex != lastDeviceIndex)
+				{
+					MakeDirty(true);
+					DeviceType device = (DeviceType)cboDevice.Items[cboDevice.SelectedIndex];
+					lblDevice.Text = device.Comment;
+				}
+			}
+		}
+
+		private void cboDevice_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Escape)
+			{
+				if (chanOriginal.DeviceType != null)
+				{
+					for (int d = 0; d < cboDevice.Items.Count; d++)
+					{
+						DeviceType de = (DeviceType)cboDevice.Items[d];
+						string dn = de.Name;
+						if (de.ID == chanOriginal.DeviceType.ID)
+						{
+							cboDevice.SelectedIndex = d;
+							d = cboDevice.Items.Count; // Force exit loop
+						}
+					}
+				}
+			}
+			else if (e.KeyCode == Keys.Enter)
+			{
+				if (cboDevice.SelectedIndex >= 0)
+				{
+					if (cboDevice.SelectedItem != null)
+					{
+						DeviceType device = (DeviceType)cboDevice.SelectedItem;
+						if (device.Name != chanOriginal.DeviceType.Name)
+						{
+							//channel.ChannelType = (ChannelType)hcboDevic3.SelectedIndex;
+							//string dn = device.Name;
+							channel.DeviceType = device;
+							changes |= CHANGE_TYPE;
+							MakeDirty(true);
+						}
+					}
+				}
+			}
+		}
+
+		private void cboDevice_Leave(object sender, EventArgs e)
+		{
+			if (!loading)
+			{
+				if (cboDevice.SelectedIndex >= 0)
+				{
+					if (cboDevice.SelectedItem != null)
+					{
+						DeviceType device = (DeviceType)cboDevice.SelectedItem;
+						if (device.Name != chanOriginal.DeviceType.Name)
+						{
+							//channel.ChannelType = (ChannelType)hcboDevic3.SelectedIndex;
+							//string dn = device.Name;
+							channel.DeviceType = device;
+							changes |= CHANGE_TYPE;
+							MakeDirty(true);
+						}
+					}
+				}
+			}
+		}
+
+		private void cboDevice_Enter(object sender, EventArgs e)
+		{
+			string tipText = "The type of device this channel is connected to";
+			tipTool.SetToolTip(cboDevice, tipText);
+			tipTool.SetToolTip(lblType, tipText);
 		}
 	} // End class frmChannel
 }  // End namespace

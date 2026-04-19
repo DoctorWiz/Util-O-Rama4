@@ -1,5 +1,36 @@
-ID,Universe#,Name,Location,Comment,Active,Size Limit,xLights Start#,Connection
-1,1,Left Universe 1,Left Yard,,True,112,1,Falcon F16v3 Port 2
-2,3,Top Universe 3,The Roof,,True,16,1,E1.31 to DMX Bridge
-3,2,Right Universe 2,Garage and Right Yard,,True,56,129,Falcon F16v3 Port 3
-4,999,Universe 999 - Retired or Offline,Retired or Offline,,True,0,9901,None
+ID,Order,Name,Comment
+0,1,1,LED String,A simple string of LEDs
+1,2,2,Outline,A string of lights outlining something
+2,3,3,Tree,A single tree
+3,4,4,VW Tree,A tree with two channels for Violet and White
+4,5,5,RGBW Tree,A tree with four channels for Red
+5,6,6,Spiral Tree,"A spiral tree, usually one channel"
+6,7,7,Candy Cane,"A candy cane, usually one channel"
+7,8,8,Inflatable,The light(s) in an inflatable
+8,9,9,Blowmold,The light(s) inside a blowmold
+9,10,10,Wreath,A wreath
+10,11,11,Wireframe,"A wireframe, usually one channel"
+11,12,12,Cutout,A wood (or other material) painted cutout
+12,13,13,Ornament,A light up tree ornament
+13,14,14,Floodlight,A single colored floodlight on one channel
+14,15,15,Single Light,A single light bulb on one channel
+15,16,16,RGB Flood,An RGB floodlight using three channels
+16,17,17,Ropelight,A section of rope light
+17,18,18,Present,A light up box that looks like a gift box
+18,19,19,LED Strip,A strip of LEDs using one channel
+19,20,20,RGB Strip,A strip of RGB LEDs using three channels
+20,21,21,Ground Cover,Lights covering an area of the ground
+21,22,22,Projector,A device that projects patterns or video
+22,23,23,Laser,A laser projector
+23,24,24,Beacon,A bright or flashing light meant to attract attention
+24,25,25,Strobe,A single strobe light or a string of them
+25,26,26,Flicker Bulb,A bulb that looks like a flickering candle or flame
+26,27,27,Box,A box...
+27,28,28,Sign,A light up sign (such as Tune-To)
+28,29,29,Neon,A neon tube (authentic or LED)
+29,30,30,Motor,A motorized device
+30,31,31,Zone Power,Power to a zone or area
+31,32,32,Other...,Other...
+32,33,33,Spare,A spare unused channel
+33,34,34,Bad Triac,A controller channel with a blown Triac
+34,35,35,Undefined,No device type has been assigned to this channel

@@ -58,7 +58,7 @@ namespace UtilORama4
 			picRGBW = new PictureBox();
 			picMulti = new PictureBox();
 			picColor = new PictureBox();
-			hcboDevic3 = new ComboBox();
+			cboDevice = new ComboBox();
 			((System.ComponentModel.ISupportInitialize)numOutput).BeginInit();
 			((System.ComponentModel.ISupportInitialize)picRGB).BeginInit();
 			((System.ComponentModel.ISupportInitialize)picRGBW).BeginInit();
@@ -103,12 +103,12 @@ namespace UtilORama4
 			// 
 			// txtName
 			// 
-			txtName.Location = new Point(152, 118);
+			txtName.Location = new Point(152, 39);
 			txtName.Margin = new Padding(7, 6, 7, 6);
 			txtName.MaxLength = 100;
 			txtName.Name = "txtName";
 			txtName.Size = new Size(645, 39);
-			txtName.TabIndex = 1;
+			txtName.TabIndex = 4;
 			txtName.TextChanged += txtName_TextChanged;
 			txtName.Enter += txtName_Enter;
 			txtName.KeyDown += txtName_KeyDown;
@@ -117,12 +117,12 @@ namespace UtilORama4
 			// 
 			// txtLocation
 			// 
-			txtLocation.Location = new Point(152, 39);
+			txtLocation.Location = new Point(152, 118);
 			txtLocation.Margin = new Padding(7, 6, 7, 6);
 			txtLocation.MaxLength = 40;
 			txtLocation.Name = "txtLocation";
 			txtLocation.Size = new Size(429, 39);
-			txtLocation.TabIndex = 3;
+			txtLocation.TabIndex = 1;
 			tipTool.SetToolTip(txtLocation, "Where is the item(s) on this channel located?");
 			txtLocation.Enter += txtLocation_Enter;
 			txtLocation.KeyDown += txtLocation_KeyDown;
@@ -136,7 +136,7 @@ namespace UtilORama4
 			lblLocation.Margin = new Padding(7, 0, 7, 0);
 			lblLocation.Name = "lblLocation";
 			lblLocation.Size = new Size(109, 32);
-			lblLocation.TabIndex = 2;
+			lblLocation.TabIndex = 3;
 			lblLocation.Text = "Location:";
 			// 
 			// lblType
@@ -146,17 +146,17 @@ namespace UtilORama4
 			lblType.Margin = new Padding(7, 0, 7, 0);
 			lblType.Name = "lblType";
 			lblType.Size = new Size(70, 32);
-			lblType.TabIndex = 6;
+			lblType.TabIndex = 9;
 			lblType.Text = "Type:";
 			// 
 			// lblColorLabel
 			// 
 			lblColorLabel.AutoSize = true;
-			lblColorLabel.Location = new Point(641, 42);
+			lblColorLabel.Location = new Point(631, 121);
 			lblColorLabel.Margin = new Padding(7, 0, 7, 0);
 			lblColorLabel.Name = "lblColorLabel";
 			lblColorLabel.Size = new Size(76, 32);
-			lblColorLabel.TabIndex = 4;
+			lblColorLabel.TabIndex = 2;
 			lblColorLabel.Text = "Color:";
 			lblColorLabel.Click += Pick_Color_Click;
 			// 
@@ -168,7 +168,7 @@ namespace UtilORama4
 			cboController.Margin = new Padding(7, 6, 7, 6);
 			cboController.Name = "cboController";
 			cboController.Size = new Size(429, 40);
-			cboController.TabIndex = 10;
+			cboController.TabIndex = 6;
 			tipTool.SetToolTip(cboController, "Select the controller this channel is connected to.");
 			cboController.DropDown += cboController_DropDown;
 			cboController.SelectedIndexChanged += cboController_SelectedIndexChanged;
@@ -184,7 +184,7 @@ namespace UtilORama4
 			lblController.Margin = new Padding(7, 0, 7, 0);
 			lblController.Name = "lblController";
 			lblController.Size = new Size(125, 32);
-			lblController.TabIndex = 9;
+			lblController.TabIndex = 5;
 			lblController.Text = "Controller:";
 			// 
 			// numOutput
@@ -195,7 +195,7 @@ namespace UtilORama4
 			numOutput.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
 			numOutput.Name = "numOutput";
 			numOutput.Size = new Size(95, 39);
-			numOutput.TabIndex = 12;
+			numOutput.TabIndex = 8;
 			tipTool.SetToolTip(numOutput, "Select the output # on this controller that this channel is connected to.");
 			numOutput.Value = new decimal(new int[] { 1, 0, 0, 0 });
 			numOutput.ValueChanged += numOutput_ValueChanged;
@@ -211,7 +211,7 @@ namespace UtilORama4
 			lblOutput.Margin = new Padding(7, 0, 7, 0);
 			lblOutput.Name = "lblOutput";
 			lblOutput.Size = new Size(95, 32);
-			lblOutput.TabIndex = 11;
+			lblOutput.TabIndex = 7;
 			lblOutput.Text = "Output:";
 			// 
 			// lblUniverse
@@ -221,7 +221,7 @@ namespace UtilORama4
 			lblUniverse.Margin = new Padding(7, 0, 7, 0);
 			lblUniverse.Name = "lblUniverse";
 			lblUniverse.Size = new Size(131, 32);
-			lblUniverse.TabIndex = 14;
+			lblUniverse.TabIndex = 13;
 			lblUniverse.Text = "Universe: 1";
 			tipTool.SetToolTip(lblUniverse, "The DMX Universe this controller and this channel are connected to.");
 			// 
@@ -256,7 +256,7 @@ namespace UtilORama4
 			chkActive.Margin = new Padding(7, 6, 7, 6);
 			chkActive.Name = "chkActive";
 			chkActive.Size = new Size(111, 36);
-			chkActive.TabIndex = 8;
+			chkActive.TabIndex = 11;
 			chkActive.Text = "Active";
 			tipTool.SetToolTip(chkActive, "Is this channel in active use?");
 			chkActive.UseVisualStyleBackColor = true;
@@ -273,7 +273,7 @@ namespace UtilORama4
 			lblModel.Margin = new Padding(7, 0, 7, 0);
 			lblModel.Name = "lblModel";
 			lblModel.Size = new Size(242, 32);
-			lblModel.TabIndex = 13;
+			lblModel.TabIndex = 14;
 			lblModel.Text = "LOR LOR1602W Gen3";
 			tipTool.SetToolTip(lblModel, "The brand and model of this controller.");
 			// 
@@ -310,7 +310,7 @@ namespace UtilORama4
 			lblDevice.Margin = new Padding(7, 0, 7, 0);
 			lblDevice.Name = "lblDevice";
 			lblDevice.Size = new Size(102, 25);
-			lblDevice.TabIndex = 6;
+			lblDevice.TabIndex = 12;
 			lblDevice.Text = "Unassigned";
 			tipTool.SetToolTip(lblDevice, "No device assigned.");
 			// 
@@ -371,7 +371,7 @@ namespace UtilORama4
 			picColor.BackColor = SystemColors.ButtonFace;
 			picColor.BorderStyle = BorderStyle.Fixed3D;
 			picColor.Image = (Image)resources.GetObject("picColor.Image");
-			picColor.Location = new Point(727, 25);
+			picColor.Location = new Point(717, 107);
 			picColor.Name = "picColor";
 			picColor.Size = new Size(80, 64);
 			picColor.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -380,13 +380,18 @@ namespace UtilORama4
 			picColor.Click += picColor_Click;
 			picColor.Paint += picColor_Paint;
 			// 
-			// hcboDevic3
+			// cboDevice
 			// 
-			hcboDevic3.FormattingEnabled = true;
-			hcboDevic3.Location = new Point(152, 276);
-			hcboDevic3.Name = "hcboDevic3";
-			hcboDevic3.Size = new Size(429, 40);
-			hcboDevic3.TabIndex = 91;
+			cboDevice.FormattingEnabled = true;
+			cboDevice.Location = new Point(152, 276);
+			cboDevice.Name = "cboDevice";
+			cboDevice.Size = new Size(429, 40);
+			cboDevice.TabIndex = 10;
+			cboDevice.SelectedIndexChanged += cboDevice_SelectedIndexChanged;
+			cboDevice.Enter += cboDevice_Enter;
+			cboDevice.KeyDown += cboDevice_KeyDown;
+			cboDevice.Leave += cboDevice_Leave;
+			cboDevice.Validating += cboDevice_Validating;
 			// 
 			// frmChannel
 			// 
@@ -395,7 +400,7 @@ namespace UtilORama4
 			AutoScaleMode = AutoScaleMode.Font;
 			CancelButton = btnCancel;
 			ClientSize = new Size(832, 1011);
-			Controls.Add(hcboDevic3);
+			Controls.Add(cboDevice);
 			Controls.Add(picMulti);
 			Controls.Add(picRGBW);
 			Controls.Add(picRGB);
@@ -474,6 +479,6 @@ namespace UtilORama4
 		private System.Windows.Forms.PictureBox picRGBW;
 		private System.Windows.Forms.PictureBox picMulti;
 		private System.Windows.Forms.PictureBox picColor;
-		private System.Windows.Forms.ComboBox hcboDevic3;
+		private System.Windows.Forms.ComboBox cboDevice;
 	}
 }

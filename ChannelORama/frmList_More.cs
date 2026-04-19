@@ -14,6 +14,9 @@ namespace UtilORama4
 	public class DesignerWorkaround { } // This stops VS from seeing this file as a 'Form'
 	public partial class frmList : Form
 	{
+		private string spreadInfo = "";
+		// Columns                    A     B     C     D     E     F     G     H     I     J     K     L     M     N
+		private float[] colSizes = { 0.3F, 0.3F, 0.3F, 0.3F, 0.3F, 0.3F, 0.5F, 2.5F, 1.0F, 0.8F, 0.3F, 0.7F, 2.0F, 3.0F };
 
 		public void BuildSpreadsheet(string filename)
 		{
@@ -27,6 +30,7 @@ namespace UtilORama4
 			using (var workbook = new XLWorkbook())
 			{
 				var worksheet = workbook.Worksheets.Add("Channel List");
+				worksheet.SheetView.Freeze(2, 5);
 
 				// ===== Title =====
 				var titleCell = worksheet.Cell("A1");
@@ -58,6 +62,7 @@ namespace UtilORama4
 
 				for (int i = 0; i < headers.Length; i++)
 				{
+					worksheet.Column(i+1).Width = colSizes[i]*10;
 					var cell = worksheet.Cell(2, i + 1);
 					cell.Value = headers[i];
 
@@ -67,6 +72,10 @@ namespace UtilORama4
 					cell.Style.Font.FontColor = XLColor.White;
 					cell.Style.Alignment.Horizontal = ColumnAlignment(i);
 					cell.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+					if ((i < 6) || (i==10))
+					{
+						cell.Style.Alignment.SetTextRotation(90);
+					}
 				}
 				lineCount++;
 				foreach (Universe universe in AllUniverses)
@@ -103,7 +112,7 @@ namespace UtilORama4
 					foreach (Controller controller in universe.Controllers)
 					{
 						string[] ctlline = {
-							controller.Universe.ToString(),        // Column A [0]
+							controller.Universe.Number.ToString(),        // Column A [0]
 							controller.Identifier,                 // Column B [1]
 							controller.UnitID.ToString(),          // C
 							"",                                    // D
@@ -192,7 +201,8 @@ namespace UtilORama4
 				Fyle.MakeNoise(Fyle.Noises.Excellent);
 				string msg = AllUniverses.Count.ToString() + " " + uniName + "s and " + AllControllers.Count.ToString() + " Controllers and " + AllChannels.Count.ToString();
 				msg += " Channels exported to spreadsheet file " + filename;
-				MessageBox.Show(this,msg,"Export to Spreadsheet",MessageBoxButtons.OK, MessageBoxIcon.Information);
+				spreadInfo = msg;
+				//MessageBox.Show(this,msg,"Export to Spreadsheet",MessageBoxButtons.OK, MessageBoxIcon.Information);
 			} // End Using Workbook
 		} // End BuildSpreadsheet
 

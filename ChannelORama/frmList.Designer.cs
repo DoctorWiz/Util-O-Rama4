@@ -80,7 +80,7 @@
 			staStatus.Name = "staStatus";
 			staStatus.Padding = new Padding(2, 0, 30, 0);
 			staStatus.Size = new Size(1059, 46);
-			staStatus.TabIndex = 8;
+			staStatus.TabIndex = 21;
 			// 
 			// pnlHelp
 			// 
@@ -122,7 +122,7 @@
 			btnOK.Margin = new Padding(7, 6, 7, 6);
 			btnOK.Name = "btnOK";
 			btnOK.Size = new Size(163, 58);
-			btnOK.TabIndex = 11;
+			btnOK.TabIndex = 1;
 			btnOK.Text = "OK";
 			btnOK.UseVisualStyleBackColor = true;
 			btnOK.Visible = false;
@@ -147,7 +147,7 @@
 			btnUniverse.Margin = new Padding(7, 6, 7, 6);
 			btnUniverse.Name = "btnUniverse";
 			btnUniverse.Size = new Size(163, 98);
-			btnUniverse.TabIndex = 1;
+			btnUniverse.TabIndex = 2;
 			btnUniverse.Text = "Edit\r\nUniverse\r\n";
 			btnUniverse.TextAlign = ContentAlignment.MiddleLeft;
 			tipTool.SetToolTip(btnUniverse, "Edit the selected Universe");
@@ -162,7 +162,7 @@
 			btnController.Margin = new Padding(7, 6, 7, 6);
 			btnController.Name = "btnController";
 			btnController.Size = new Size(163, 98);
-			btnController.TabIndex = 2;
+			btnController.TabIndex = 3;
 			btnController.Text = "Edit\r\nController";
 			btnController.TextAlign = ContentAlignment.MiddleLeft;
 			tipTool.SetToolTip(btnController, "Edit the selected Controller");
@@ -178,7 +178,7 @@
 			btnChannel.Margin = new Padding(7, 6, 7, 6);
 			btnChannel.Name = "btnChannel";
 			btnChannel.Size = new Size(163, 98);
-			btnChannel.TabIndex = 3;
+			btnChannel.TabIndex = 4;
 			btnChannel.Text = "Edit\r\nChannel\r\n";
 			btnChannel.TextAlign = ContentAlignment.MiddleLeft;
 			tipTool.SetToolTip(btnChannel, "Edit the selected Channel");
@@ -194,8 +194,8 @@
 			btnReport.Margin = new Padding(7, 6, 7, 6);
 			btnReport.Name = "btnReport";
 			btnReport.Size = new Size(163, 98);
-			btnReport.TabIndex = 5;
-			btnReport.Text = "Export\r\nCSV";
+			btnReport.TabIndex = 7;
+			btnReport.Text = "Export\r\nSheet\r\n";
 			btnReport.TextAlign = ContentAlignment.MiddleLeft;
 			tipTool.SetToolTip(btnReport, "Export everything to a .CSV Spreadsheet");
 			btnReport.UseVisualStyleBackColor = true;
@@ -220,7 +220,7 @@
 			btnComparex.Margin = new Padding(7, 6, 7, 6);
 			btnComparex.Name = "btnComparex";
 			btnComparex.Size = new Size(163, 98);
-			btnComparex.TabIndex = 10;
+			btnComparex.TabIndex = 13;
 			btnComparex.Text = "Compare\r\nxLights\r\n";
 			btnComparex.UseVisualStyleBackColor = true;
 			btnComparex.Visible = false;
@@ -234,7 +234,7 @@
 			btnFind.Margin = new Padding(7, 6, 7, 6);
 			btnFind.Name = "btnFind";
 			btnFind.Size = new Size(163, 98);
-			btnFind.TabIndex = 4;
+			btnFind.TabIndex = 6;
 			btnFind.Text = "Find...";
 			btnFind.TextAlign = ContentAlignment.MiddleLeft;
 			tipTool.SetToolTip(btnFind, "Find a Channel...");
@@ -247,7 +247,7 @@
 			btnWiz.Margin = new Padding(7, 6, 7, 6);
 			btnWiz.Name = "btnWiz";
 			btnWiz.Size = new Size(163, 98);
-			btnWiz.TabIndex = 6;
+			btnWiz.TabIndex = 8;
 			tipTool.SetToolTip(btnWiz, "Channel Comparison Wizard\r\n\r\nCompare Managed Channels to:\r\n    Light-O-Rama Showtime S4 Channels\r\n    Light-O-Rama Visualizer Channels & Groups\r\n    xLights Models and Groups");
 			btnWiz.UseVisualStyleBackColor = true;
 			btnWiz.Visible = false;
@@ -261,7 +261,7 @@
 			btnSave.Margin = new Padding(7, 6, 7, 6);
 			btnSave.Name = "btnSave";
 			btnSave.Size = new Size(163, 98);
-			btnSave.TabIndex = 7;
+			btnSave.TabIndex = 0;
 			btnSave.Text = "Save";
 			btnSave.TextAlign = ContentAlignment.MiddleLeft;
 			tipTool.SetToolTip(btnSave, "Save Everything!");
@@ -277,7 +277,7 @@
 			btnExportSeq.Margin = new Padding(7, 6, 7, 6);
 			btnExportSeq.Name = "btnExportSeq";
 			btnExportSeq.Size = new Size(163, 98);
-			btnExportSeq.TabIndex = 119;
+			btnExportSeq.TabIndex = 12;
 			btnExportSeq.Text = "Export\r\nSequence";
 			btnExportSeq.TextAlign = ContentAlignment.MiddleLeft;
 			tipTool.SetToolTip(btnExportSeq, "Export everything to a .CSV Spreadsheet");
@@ -292,7 +292,7 @@
 			btnRemove.Margin = new Padding(7, 6, 7, 6);
 			btnRemove.Name = "btnRemove";
 			btnRemove.Size = new Size(163, 98);
-			btnRemove.TabIndex = 120;
+			btnRemove.TabIndex = 14;
 			btnRemove.Text = "Remove\r\nChannel";
 			btnRemove.TextAlign = ContentAlignment.MiddleLeft;
 			tipTool.SetToolTip(btnRemove, "Export everything to a .CSV Spreadsheet");
@@ -308,7 +308,7 @@
 			btnMoveUp.Margin = new Padding(7, 6, 7, 6);
 			btnMoveUp.Name = "btnMoveUp";
 			btnMoveUp.Size = new Size(89, 45);
-			btnMoveUp.TabIndex = 123;
+			btnMoveUp.TabIndex = 17;
 			btnMoveUp.Text = "^";
 			tipTool.SetToolTip(btnMoveUp, "Move Up");
 			btnMoveUp.UseVisualStyleBackColor = true;
@@ -321,7 +321,7 @@
 			btnMoveDown.Margin = new Padding(7, 6, 7, 6);
 			btnMoveDown.Name = "btnMoveDown";
 			btnMoveDown.Size = new Size(89, 45);
-			btnMoveDown.TabIndex = 124;
+			btnMoveDown.TabIndex = 18;
 			btnMoveDown.Text = "v";
 			tipTool.SetToolTip(btnMoveDown, "Move Down");
 			btnMoveDown.UseVisualStyleBackColor = true;
@@ -336,7 +336,7 @@
 			btnSettings.Margin = new Padding(7, 6, 7, 6);
 			btnSettings.Name = "btnSettings";
 			btnSettings.Size = new Size(69, 46);
-			btnSettings.TabIndex = 125;
+			btnSettings.TabIndex = 19;
 			btnSettings.Text = "*";
 			tipTool.SetToolTip(btnSettings, "Settings");
 			btnSettings.UseVisualStyleBackColor = true;
@@ -378,7 +378,7 @@
 			btnDevices.Margin = new Padding(7, 6, 7, 6);
 			btnDevices.Name = "btnDevices";
 			btnDevices.Size = new Size(163, 98);
-			btnDevices.TabIndex = 128;
+			btnDevices.TabIndex = 5;
 			btnDevices.Text = "Device\r\nTypes\r\n";
 			btnDevices.TextAlign = ContentAlignment.MiddleLeft;
 			tipTool.SetToolTip(btnDevices, "Channel Comparison Wizard\r\n\r\nCompare Managed Channels to:\r\n    Light-O-Rama Showtime S4 Channels\r\n    Light-O-Rama Visualizer Channels & Groups\r\n    xLights Models and Groups");
@@ -439,7 +439,7 @@
 			treeChannels.Name = "treeChannels";
 			treeChannels.SelectedNodeForeColor = SystemColors.HighlightText;
 			treeChannels.Size = new Size(775, 1034);
-			treeChannels.TabIndex = 118;
+			treeChannels.TabIndex = 1;
 			treeChannels.Text = "Source Channels";
 			treeChannels.ThemeStyle.TreeNodeAdvStyle.CheckBoxTickThickness = 0;
 			treeChannels.ThemeStyle.TreeNodeAdvStyle.EnsureDefaultOptionedChild = true;
@@ -469,7 +469,7 @@
 			lblxChannel.Margin = new Padding(6, 0, 6, 0);
 			lblxChannel.Name = "lblxChannel";
 			lblxChannel.Size = new Size(29, 32);
-			lblxChannel.TabIndex = 121;
+			lblxChannel.TabIndex = 15;
 			lblxChannel.Text = "...";
 			// 
 			// lblDirty
@@ -480,7 +480,7 @@
 			lblDirty.Margin = new Padding(6, 0, 6, 0);
 			lblDirty.Name = "lblDirty";
 			lblDirty.Size = new Size(29, 32);
-			lblDirty.TabIndex = 122;
+			lblDirty.TabIndex = 16;
 			lblDirty.Text = "...";
 			// 
 			// lblVersions
@@ -491,7 +491,7 @@
 			lblVersions.Margin = new Padding(6, 0, 6, 0);
 			lblVersions.Name = "lblVersions";
 			lblVersions.Size = new Size(29, 32);
-			lblVersions.TabIndex = 126;
+			lblVersions.TabIndex = 20;
 			lblVersions.Text = "...";
 			// 
 			// lblLoading
@@ -504,7 +504,7 @@
 			lblLoading.Margin = new Padding(6, 0, 6, 0);
 			lblLoading.Name = "lblLoading";
 			lblLoading.Size = new Size(192, 50);
-			lblLoading.TabIndex = 127;
+			lblLoading.TabIndex = 0;
 			lblLoading.Text = "Loading...";
 			// 
 			// frmList

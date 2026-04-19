@@ -120,30 +120,21 @@
   <metadata name="tipTool.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>186, 17</value>
   </metadata>
-  <metadata name="tipTool.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>186, 17</value>
-  </metadata>
-  <metadata name="tipTool.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>186, 17</value>
-  </metadata>
   <metadata name="clrColors.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
-  </metadata>
-  <metadata name="tipTool.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>186, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="picRGB.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAJAAAACABAMAAAAWvv0QAAAABGdBTUEAALGPC/xhBQAAAAlQTFRF/wAA
-        AP8AAAD/LUrNigAAAAlwSFlzAAAOwQAADsEBuJFr7QAAAD9JREFUaN7tzIEAAAAIA7AUUrg/ZAQnaAPY
+        AP8AAAD/LUrNigAAAAlwSFlzAAAOvAAADrwBlbxySQAAAD9JREFUaN7tzIEAAAAIA7AUUrg/ZAQnaAPY
         NFukEIlEIpFIJBKJRCKRSCQSiUQikUgkEolEIpFIJBKJRM+i5ABw02QfDYOeoAAAAABJRU5ErkJggg==
 </value>
   </data>
   <data name="picRGBW.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAJAAAACABAMAAAAWvv0QAAAABGdBTUEAALGPC/xhBQAAAAxQTFRF/wAA
-        AP8AAAD/////+wBg9gAAAAlwSFlzAAAOwQAADsEBuJFr7QAAAEFJREFUaN7tzIEAADAMA7ArTOEK9Xcb
+        AP8AAAD/////+wBg9gAAAAlwSFlzAAAOvAAADrwBlbxySQAAAEFJREFUaN7tzIEAADAMA7ArTOEK9Xcb
         QBGWAOS1Kb+kiEQikUgkEolEIpFIJBKJRCKRSCQSiUQikUgkEolEomNRsq0xli5lyBC7AAAAAElFTkSu
         QmCC
 </value>
@@ -151,7 +142,7 @@
   <data name="picMulti.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAJAAAACACAIAAABr8nd0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wgAADsIBFShKgAAApeNJREFUeF6M/WWQ3VeW7YsqXh/sPs2nuqqrurqYy0V2GcqWbdmWLcmybDErlalk
+        vAAADrwBlbxySQAApeNJREFUeF6M/WWQ3VeW7YsqXh/sPs2nuqqrurqYy0V2GcqWbdmWLcmybDErlalk
         JShZmUpmZmZmZmZmZmbYiTt5Z+bv7qXu++G9eCfu3bFC4XBIG/6L5phzjDHP/fKXv/zxbz7/m3cb/+o8
         /+U8//08f32e/3WevzvPP5znn8/zrfN8+zzfPc+/neffz/PD8/z4PD89z8/P86vz/Po8vz3P787zh/P8
         6TxvfcCfP+CdD3jvA95/n/MfcOFDPvuYSxf48hO+/owbF7n9Bfcv8egyCl+idBWVa6hf4/nX6F5H7waG
@@ -865,7 +856,7 @@
   <data name="picColor.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAJAAAACACAIAAABr8nd0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wgAADsIBFShKgAAApeNJREFUeF6M/WWQ3VeW7YsqXh/sPs2nuqqrurqYy0V2GcqWbdmWLcmybDErlalk
+        vAAADrwBlbxySQAApeNJREFUeF6M/WWQ3VeW7YsqXh/sPs2nuqqrurqYy0V2GcqWbdmWLcmybDErlalk
         JShZmUpmZmZmZmZmZmbYiTt5Z+bv7qXu++G9eCfu3bFC4XBIG/6L5phzjDHP/fKXv/zxbz7/m3cb/+o8
         /+U8//08f32e/3WevzvPP5znn8/zrfN8+zzfPc+/neffz/PD8/z4PD89z8/P86vz/Po8vz3P787zh/P8
         6TxvfcCfP+CdD3jvA95/n/MfcOFDPvuYSxf48hO+/owbF7n9Bfcv8egyCl+idBWVa6hf4/nX6F5H7waG

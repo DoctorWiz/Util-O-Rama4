@@ -69,11 +69,15 @@ namespace UtilORama4
 					if (chan.DeviceType.ID == myID)
 					{
 						// add this channel's name + a CR/LF
-						ret += chan.FullName + "\r\n";
+						ret += chan.Address.ToString("000") + " ";
+						ret += chan.Name + "\r\n";
 					}
 				}
-				// Remove the very last CR/LF
-				ret = ret.Substring(0, ret.Length - 4);
+				if (ret.Length > 4)
+				{
+					// Remove the very last CR/LF
+					ret = ret.Substring(0, ret.Length - 2);
+				}
 				return ret;
 			}
 		} // End (read-only) Property UsedByChannels

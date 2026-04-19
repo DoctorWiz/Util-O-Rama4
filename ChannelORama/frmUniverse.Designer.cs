@@ -68,7 +68,7 @@ namespace UtilORama4
 			btnOK.Margin = new Padding(6, 7, 6, 7);
 			btnOK.Name = "btnOK";
 			btnOK.Size = new Size(162, 57);
-			btnOK.TabIndex = 0;
+			btnOK.TabIndex = 22;
 			btnOK.Text = "OK";
 			btnOK.UseVisualStyleBackColor = true;
 			btnOK.Click += btnOK_Click;
@@ -80,7 +80,7 @@ namespace UtilORama4
 			btnCancel.Margin = new Padding(6, 7, 6, 7);
 			btnCancel.Name = "btnCancel";
 			btnCancel.Size = new Size(162, 57);
-			btnCancel.TabIndex = 1;
+			btnCancel.TabIndex = 23;
 			btnCancel.Text = "Cancel";
 			btnCancel.UseVisualStyleBackColor = true;
 			btnCancel.Click += btnCancel_Click;
@@ -92,7 +92,7 @@ namespace UtilORama4
 			lblName.Margin = new Padding(6, 0, 6, 0);
 			lblName.Name = "lblName";
 			lblName.Size = new Size(83, 32);
-			lblName.TabIndex = 2;
+			lblName.TabIndex = 0;
 			lblName.Text = "Name:";
 			// 
 			// txtName
@@ -101,7 +101,7 @@ namespace UtilORama4
 			txtName.Margin = new Padding(6, 7, 6, 7);
 			txtName.Name = "txtName";
 			txtName.Size = new Size(645, 39);
-			txtName.TabIndex = 3;
+			txtName.TabIndex = 1;
 			txtName.TextChanged += txtName_TextChanged;
 			txtName.Enter += txtName_Enter;
 			txtName.KeyDown += txtName_KeyDown;
@@ -115,7 +115,7 @@ namespace UtilORama4
 			txtComment.Multiline = true;
 			txtComment.Name = "txtComment";
 			txtComment.Size = new Size(645, 233);
-			txtComment.TabIndex = 18;
+			txtComment.TabIndex = 20;
 			txtComment.Enter += txtComment_Enter;
 			txtComment.KeyDown += txtComment_KeyDown;
 			txtComment.Leave += txtComment_Leave;
@@ -128,7 +128,7 @@ namespace UtilORama4
 			lblComment.Margin = new Padding(6, 0, 6, 0);
 			lblComment.Name = "lblComment";
 			lblComment.Size = new Size(125, 32);
-			lblComment.TabIndex = 17;
+			lblComment.TabIndex = 19;
 			lblComment.Text = "Comment:";
 			// 
 			// chkActive
@@ -140,7 +140,7 @@ namespace UtilORama4
 			chkActive.Margin = new Padding(6, 7, 6, 7);
 			chkActive.Name = "chkActive";
 			chkActive.Size = new Size(111, 36);
-			chkActive.TabIndex = 10;
+			chkActive.TabIndex = 9;
 			chkActive.Text = "Active";
 			chkActive.UseVisualStyleBackColor = true;
 			chkActive.CheckedChanged += chkActive_CheckedChanged;
@@ -155,7 +155,7 @@ namespace UtilORama4
 			lblNumber.Margin = new Padding(6, 0, 6, 0);
 			lblNumber.Name = "lblNumber";
 			lblNumber.Size = new Size(107, 32);
-			lblNumber.TabIndex = 6;
+			lblNumber.TabIndex = 5;
 			lblNumber.Text = "Number:";
 			// 
 			// numNumber
@@ -166,7 +166,7 @@ namespace UtilORama4
 			numNumber.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
 			numNumber.Name = "numNumber";
 			numNumber.Size = new Size(95, 39);
-			numNumber.TabIndex = 7;
+			numNumber.TabIndex = 6;
 			numNumber.Value = new decimal(new int[] { 1, 0, 0, 0 });
 			numNumber.ValueChanged += numNumber_ValueChanged;
 			numNumber.Enter += numNumber_Enter;
@@ -181,7 +181,7 @@ namespace UtilORama4
 			lblSize.Margin = new Padding(6, 0, 6, 0);
 			lblSize.Name = "lblSize";
 			lblSize.Size = new Size(62, 32);
-			lblSize.TabIndex = 11;
+			lblSize.TabIndex = 12;
 			lblSize.Text = "Size:";
 			// 
 			// lblConnection
@@ -191,7 +191,7 @@ namespace UtilORama4
 			lblConnection.Margin = new Padding(6, 0, 6, 0);
 			lblConnection.Name = "lblConnection";
 			lblConnection.Size = new Size(142, 32);
-			lblConnection.TabIndex = 8;
+			lblConnection.TabIndex = 7;
 			lblConnection.Text = "Connection:";
 			// 
 			// txtLocation
@@ -201,7 +201,7 @@ namespace UtilORama4
 			txtLocation.MaxLength = 40;
 			txtLocation.Name = "txtLocation";
 			txtLocation.Size = new Size(429, 39);
-			txtLocation.TabIndex = 5;
+			txtLocation.TabIndex = 4;
 			txtLocation.Enter += txtLocation_Enter;
 			txtLocation.KeyDown += txtLocation_KeyDown;
 			txtLocation.Leave += txtLocation_Leave;
@@ -214,7 +214,7 @@ namespace UtilORama4
 			lblLocation.Margin = new Padding(6, 0, 6, 0);
 			lblLocation.Name = "lblLocation";
 			lblLocation.Size = new Size(109, 32);
-			lblLocation.TabIndex = 4;
+			lblLocation.TabIndex = 3;
 			lblLocation.Text = "Location:";
 			// 
 			// txtConnection
@@ -224,7 +224,7 @@ namespace UtilORama4
 			txtConnection.MaxLength = 40;
 			txtConnection.Name = "txtConnection";
 			txtConnection.Size = new Size(429, 39);
-			txtConnection.TabIndex = 9;
+			txtConnection.TabIndex = 8;
 			txtConnection.Enter += txtConnection_Enter;
 			txtConnection.KeyDown += txtConnection_KeyDown;
 			txtConnection.Leave += txtConnection_Leave;
@@ -237,7 +237,7 @@ namespace UtilORama4
 			lblxStart.Margin = new Padding(6, 0, 6, 0);
 			lblxStart.Name = "lblxStart";
 			lblxStart.Size = new Size(148, 32);
-			lblxStart.TabIndex = 13;
+			lblxStart.TabIndex = 10;
 			lblxStart.Text = "xLights Start:";
 			// 
 			// numxStart
@@ -249,7 +249,7 @@ namespace UtilORama4
 			numxStart.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
 			numxStart.Name = "numxStart";
 			numxStart.Size = new Size(121, 39);
-			numxStart.TabIndex = 14;
+			numxStart.TabIndex = 11;
 			numxStart.Value = new decimal(new int[] { 1, 0, 0, 0 });
 			numxStart.ValueChanged += numxStart_ValueChanged;
 			numxStart.Enter += numxStart_Enter;
@@ -265,7 +265,7 @@ namespace UtilORama4
 			numSize.Minimum = new decimal(new int[] { 16, 0, 0, 0 });
 			numSize.Name = "numSize";
 			numSize.Size = new Size(95, 39);
-			numSize.TabIndex = 12;
+			numSize.TabIndex = 13;
 			numSize.Value = new decimal(new int[] { 128, 0, 0, 0 });
 			numSize.ValueChanged += numSize_ValueChanged;
 			numSize.Enter += numSize_Enter;
@@ -279,7 +279,7 @@ namespace UtilORama4
 			label1.Margin = new Padding(6, 0, 6, 0);
 			label1.Name = "label1";
 			label1.Size = new Size(135, 32);
-			label1.TabIndex = 15;
+			label1.TabIndex = 17;
 			label1.Text = "Controllers:";
 			// 
 			// lblControllers
@@ -288,7 +288,7 @@ namespace UtilORama4
 			lblControllers.Margin = new Padding(6, 0, 6, 0);
 			lblControllers.Name = "lblControllers";
 			lblControllers.Size = new Size(650, 249);
-			lblControllers.TabIndex = 16;
+			lblControllers.TabIndex = 18;
 			lblControllers.Text = "List\r\nOf\r\nControllers\r\nGoes\r\nHere\r\n";
 			// 
 			// lblDirty
@@ -300,7 +300,7 @@ namespace UtilORama4
 			lblDirty.Margin = new Padding(7, 0, 7, 0);
 			lblDirty.Name = "lblDirty";
 			lblDirty.Size = new Size(51, 25);
-			lblDirty.TabIndex = 23;
+			lblDirty.TabIndex = 21;
 			lblDirty.Text = "Dirty";
 			lblDirty.Visible = false;
 			// 
@@ -313,7 +313,7 @@ namespace UtilORama4
 			label2.Margin = new Padding(7, 0, 7, 0);
 			label2.Name = "label2";
 			label2.Size = new Size(378, 25);
-			label2.TabIndex = 24;
+			label2.TabIndex = 2;
 			label2.Text = "(Or what group of controllers use this universe)";
 			// 
 			// lblChannelsUsed
@@ -325,7 +325,7 @@ namespace UtilORama4
 			lblChannelsUsed.Margin = new Padding(6, 0, 6, 0);
 			lblChannelsUsed.Name = "lblChannelsUsed";
 			lblChannelsUsed.Size = new Size(172, 25);
-			lblChannelsUsed.TabIndex = 25;
+			lblChannelsUsed.TabIndex = 16;
 			lblChannelsUsed.Text = "128 Channels Used";
 			lblChannelsUsed.Click += lblChannelsUsed_Click;
 			lblChannelsUsed.DoubleClick += lblChannelsUsed_DoubleClick;
@@ -339,7 +339,7 @@ namespace UtilORama4
 			lblLastUniNum.Margin = new Padding(6, 0, 6, 0);
 			lblLastUniNum.Name = "lblLastUniNum";
 			lblLastUniNum.Size = new Size(348, 25);
-			lblLastUniNum.TabIndex = 26;
+			lblLastUniNum.TabIndex = 15;
 			lblLastUniNum.Text = "128 Channels used by 2 lower Universes";
 			lblLastUniNum.Click += lblLastUniNum_Click;
 			// 
@@ -350,7 +350,7 @@ namespace UtilORama4
 			lblxlEnd.Margin = new Padding(6, 0, 6, 0);
 			lblxlEnd.Name = "lblxlEnd";
 			lblxlEnd.Size = new Size(186, 32);
-			lblxlEnd.TabIndex = 27;
+			lblxlEnd.TabIndex = 14;
 			lblxlEnd.Text = "xLights End: 128";
 			// 
 			// frmUniverse

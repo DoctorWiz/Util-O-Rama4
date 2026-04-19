@@ -5,42 +5,43 @@ ID, Name, Display Order
 # Third column is the order to display in.  Should be contiguous from zero to ...?
 #   but won't cause serious problems if there are duplicates or missing numbers.
 #     (But if so they may not sort into the display order you want!)
-#       You will probably want to display them in order from most used to the rarest. (but hey, that's up to you!)
+#       You will probably want to display them in order from most used to the rarest. (but hey- that's up to you!)
 # First device type with ID of 0 is reserved for unknown/unclassified/whuteva
 # Do not (dramatically) change the name of a device for a certain ID.
-# If you do, all channels using that old device ID will get the new name.
+# If you do all channels using that old device ID will get the new name.
 #   (Unless none of your channels are assigned that device type)
-0,Unclassified, 99
-1,LED String, 1
-2,Outline, 2
-3,Tree, 3
-5,RGBW Tree, 5
-4,RGB Tree, 4
-6,VW Tree,6
-7,Candy Cane, 6
-8,Inflatable, 7
-9,Blowmold, 8
-10,Single Light,10
-11,Floodlight (single color),11
-12,RGB Flood, 12
-13,Ropelight, 13
-14,LED Strip, 14
-15,RGB Strip, 15
-16,Cutout, 16
-17,Wireframe- Flat, 17
-18,Wireframe- 3D, 18
-19,Ground Cover, 19
-20,Projector, 20
-21,Laser, 21
-22,Beacon, 22
-23,Strobe(s), 23
-24,Flicker Bulb, 24
-25,Box, 25
-26,Zone Power, 26
-27,Sign, 26
-28,Neon, 28
-29,Motor, 29
-30,UFO, 30
-31,Other..., 31
-32,Spare, 32
-33,Bad Triac, 33
+0,99,Undefined,No device type has been assigned to this channel
+1,1,LED String,A simple string of LEDs
+2,2,Outline,A string of lights outlining something
+3,3,Tree,A single tree, using a single channel
+4,5,RGBW Tree,A tree with four channels for Red, Green, Blue, and White
+5,4,RGB Tree,A tree with three channels for Red, Green, and Blue
+6,7,Spiral Tree,"A spiral tree, usually one channel"
+7,8,Candy Cane,"A candy cane, usually one channel"
+8,9,Inflatable,The light(s) in an inflatable
+9,11,Blowmold,The light(s) inside a blowmold
+10,17,Single Light,A single light bulb on one channel
+11,16,Floodlight,A single colored floodlight on one channel
+12,18,RGB Flood,An RGB floodlight using three channels
+13,19,Ropelight,A section of rope light
+14,20,LED Strip,A strip of LEDs using one channel
+15,21,RGB Strip,A strip of RGB LEDs using three channels
+16,14,Cutout,A wood (or other material) painted cutout
+17,19,Present,A light up box that looks like a gift box
+18,13,Wireframe,"A wireframe, usually one channel"
+19,22,Ground Cover,Lights covering an area of the ground
+20,23,Projector,A device that projects patterns or video
+21,24,Laser,A laser projector
+22,25,Beacon,A bright or flashing light meant to attract attention
+23,26,Strobe,"A single strobe light or a string of them"
+24,27,Flicker Bulb,A bulb that looks like a flickering candle or flame
+25,28,Box,A box...
+26,35,Zone Power,Power to a zone or area
+27,32,Sign,A light up sign (such as Tune-To)
+28,33,Neon,A neon tube (authentic or LED)
+29,34,Motor,A motorized device
+30,15,Ornament,A light up tree ornament
+31,12,Wreath,A wreath
+32,36,Other...,Other...
+33,37,Spare,A spare unused channel
+34,38,Bad Triac,A controller channel with a blown Triac

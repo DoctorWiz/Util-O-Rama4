@@ -42,51 +42,51 @@
 			// 
 			// txtComment
 			// 
-			txtComment.Location = new Point(165, 181);
+			txtComment.Location = new Point(148, 109);
 			txtComment.Margin = new Padding(6, 7, 6, 7);
 			txtComment.Multiline = true;
 			txtComment.Name = "txtComment";
-			txtComment.Size = new Size(645, 233);
-			txtComment.TabIndex = 29;
+			txtComment.Size = new Size(559, 147);
+			txtComment.TabIndex = 4;
 			txtComment.KeyPress += txtComment_KeyPress;
 			// 
 			// lblComment
 			// 
 			lblComment.AutoSize = true;
-			lblComment.Location = new Point(13, 184);
+			lblComment.Location = new Point(13, 112);
 			lblComment.Margin = new Padding(6, 0, 6, 0);
 			lblComment.Name = "lblComment";
-			lblComment.Size = new Size(140, 32);
-			lblComment.TabIndex = 28;
+			lblComment.Size = new Size(125, 32);
+			lblComment.TabIndex = 3;
 			lblComment.Text = "Comment:";
 			// 
 			// txtName
 			// 
-			txtName.Location = new Point(165, 122);
+			txtName.Location = new Point(148, 48);
 			txtName.Margin = new Padding(6, 7, 6, 7);
 			txtName.Name = "txtName";
-			txtName.Size = new Size(645, 39);
-			txtName.TabIndex = 27;
+			txtName.Size = new Size(559, 39);
+			txtName.TabIndex = 2;
 			txtName.KeyPress += txtName_KeyPress;
 			// 
 			// lblName
 			// 
 			lblName.AutoSize = true;
-			lblName.Location = new Point(13, 125);
+			lblName.Location = new Point(15, 55);
 			lblName.Margin = new Padding(6, 0, 6, 0);
 			lblName.Name = "lblName";
 			lblName.Size = new Size(83, 32);
-			lblName.TabIndex = 26;
+			lblName.TabIndex = 1;
 			lblName.Text = "Name:";
 			// 
 			// btnCancel
 			// 
 			btnCancel.DialogResult = DialogResult.Cancel;
-			btnCancel.Location = new Point(474, 438);
+			btnCancel.Location = new Point(545, 270);
 			btnCancel.Margin = new Padding(6, 7, 6, 7);
 			btnCancel.Name = "btnCancel";
 			btnCancel.Size = new Size(162, 57);
-			btnCancel.TabIndex = 25;
+			btnCancel.TabIndex = 6;
 			btnCancel.Text = "Cancel";
 			btnCancel.UseVisualStyleBackColor = true;
 			btnCancel.Click += btnCancel_Click;
@@ -94,11 +94,11 @@
 			// btnOK
 			// 
 			btnOK.DialogResult = DialogResult.OK;
-			btnOK.Location = new Point(648, 438);
+			btnOK.Location = new Point(371, 270);
 			btnOK.Margin = new Padding(6, 7, 6, 7);
 			btnOK.Name = "btnOK";
 			btnOK.Size = new Size(162, 57);
-			btnOK.TabIndex = 24;
+			btnOK.TabIndex = 5;
 			btnOK.Text = "OK";
 			btnOK.UseVisualStyleBackColor = true;
 			btnOK.Click += btnOK_Click;
@@ -106,17 +106,18 @@
 			// lblInput
 			// 
 			lblInput.AutoSize = true;
-			lblInput.Location = new Point(15, 27);
+			lblInput.Location = new Point(13, 9);
 			lblInput.Margin = new Padding(6, 0, 6, 0);
 			lblInput.Name = "lblInput";
 			lblInput.Size = new Size(401, 32);
-			lblInput.TabIndex = 30;
+			lblInput.TabIndex = 0;
 			lblInput.Text = "Enter the new name and description";
+			lblInput.Click += lblInput_Click;
 			// 
 			// picIcon
 			// 
 			picIcon.Image = (Image)resources.GetObject("picIcon.Image");
-			picIcon.Location = new Point(733, 27);
+			picIcon.Location = new Point(737, 48);
 			picIcon.Name = "picIcon";
 			picIcon.Size = new Size(60, 60);
 			picIcon.TabIndex = 31;
@@ -126,7 +127,7 @@
 			// 
 			AutoScaleDimensions = new SizeF(13F, 32F);
 			AutoScaleMode = AutoScaleMode.Font;
-			ClientSize = new Size(826, 508);
+			ClientSize = new Size(826, 338);
 			Controls.Add(picIcon);
 			Controls.Add(lblInput);
 			Controls.Add(txtComment);

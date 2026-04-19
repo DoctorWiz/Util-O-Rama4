@@ -357,5 +357,29 @@ namespace UtilORama4
 		{
 
 		}
+
+		private void color_Common_DoubleClick(object sender, EventArgs e)
+		{
+			color_Common_Click(sender, e);
+			btnOK_Click(btnOK, null);
+		}
+
+		private void color_Special_DoubleClick(object sender, EventArgs e)
+		{
+			color_Special_Click(sender, e);
+			btnOK_Click(btnOK, null);
+		}
+
+		private void color_Additional_DoubleClick(object sender, EventArgs e)
+		{
+			color_Additional_Click(sender, e);
+			btnOK_Click(btnOK, null);
+		}
+
+		private void color_Custom_DoubleClick(object sender, EventArgs e)
+		{
+			color_Custom_Click(sender, e);
+			btnOK_Click(btnOK, null);
+		}
 	} // End form class
 } // End namespace

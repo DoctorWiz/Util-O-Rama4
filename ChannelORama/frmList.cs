@@ -45,6 +45,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using UtilORama4;
+using Windows.Devices.Sms;
 using xLights22;    // xLights RGBEffects and Sequences
 
 
@@ -939,7 +940,7 @@ namespace UtilORama4
 								}
 								else
 								{
-									if (row.Count < 3)
+									if (row.Count > 3)
 									{
 										int devID = -1;
 										int.TryParse(row[0], out devID); // Field 0 = Device ID
@@ -949,7 +950,8 @@ namespace UtilORama4
 										{
 											int.TryParse(row[1], out ord); // Field 1 = Display Order
 										} 
-										string descr = row[30].Trim();	
+										string descr = row[3].Trim();	
+										if (devID == 0) { ord=9999; }
 										DeviceType device = new DeviceType(devName, devID, ord);
 										device.Comment = descr;	
 										DeviceTypes.Add(device);
@@ -1326,7 +1328,7 @@ namespace UtilORama4
 			writeID = 0;
 			int errs = 0;
 			string devName = "";
-			string devFile = filePath + fileUniverses;
+			string devFile = filePath + fileDeviceTypes;
 			try
 			{
 				CsvFileWriter writer = new CsvFileWriter(devFile);
@@ -1353,12 +1355,20 @@ namespace UtilORama4
 						row.Add(writeID.ToString());              // Field 0
 						device.ID = writeID;
 						writeID++;
-						//row.Add(device.DisplayOrder.ToString()); // Field 1
-						// And lets renumber the display order too while we're at it
-						row.Add(writeID.ToString());              // Field 1
-						device.DisplayOrder = writeID;
+						row.Add(writeID.ToString());              
+						// Device with ID=0 is special, it is for undefined types.
+						// Even though it's ID is zero, the display order should be very high so it's at the end.
+						if (writeID == 0)
+						{
+							device.ID = 9999;
+						}
+						else
+						{
+							device.DisplayOrder = writeID;
+						}
+						row.Add(device.DisplayOrder.ToString()); // Field 1
 						row.Add(device.Name);                    // Field 2
-						row.Add(device.Comment);                      // Field 3
+						row.Add(device.Comment);                 // Field 3
 
 						writer.WriteRow(row);
 					}
@@ -3174,11 +3184,20 @@ using (ctlrForm modalChild = new ctlrForm())
 		private void btnReport_Click(object sender, EventArgs e)
 		{
 			//ExportToSpreadsheet(dbPath, true);
-			string sfile = "X:\\2026\\Documents_2026\\!Channels\\My Channel Spreadsheet.xlsx";
+			// TODO Open SaveAs Dialog
+			string sfile = "X:\\2026\\Documents_2026\\!Channels\\";
+			sfile += DateTime.Now.Year.ToString() + " Channel Spreadsheet.xlsx";
 			BuildSpreadsheet(sfile);
-			if (Fyle.Exists(sfile))
+			string msg = spreadInfo;
+			msg += "\r\nTo File:\r\n" + sfile;
+			msg += "\r\n\r\n\r\nOpen the file now?";
+			DialogResult dr = MessageBox.Show(this,msg,"Export to Spreadsheet",MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+			if (dr == DialogResult.Yes)
 			{
-				Fyle.LaunchFile(sfile);
+				if (Fyle.Exists(sfile))
+				{
+					Fyle.LaunchFile2(sfile);
+				}
 			}
 		}
 
@@ -4266,8 +4285,32 @@ using (ctlrForm modalChild = new ctlrForm())
 			{
 				// This form's DeviceType list has been updated by the btnOK event on the devices form
 				// BUT we now need to save it to the data file
+				string tp = Fyle.GetUserTempPath;
+				string f = "";
+				string g = "";
 
-			
+				this.Enabled = false;
+				this.Cursor = Cursors.WaitCursor;
+				lblLoading.Text = "Saving...";
+				lblLoading.Visible = true;
+				lblLoading.BringToFront();
+
+				int errs = SaveDevices(tp);
+				string tf = tp + fileDeviceTypes;
+				if (Fyle.Exists(tf))
+				{
+					f = dbPath + "Backup." + fileDeviceTypes;
+					if (Fyle.Exists(f))
+						Fyle.SafeDelete(f);
+					g = dbPath + fileDeviceTypes;
+					Fyle.SafeCopy(g, f);
+				}
+
+				this.Enabled = true;
+				this.Cursor = Cursors.Default;
+				lblLoading.Visible = false;
+				lblLoading.SendToBack();
+				treeChannels.Select();
 			}
 		}
 	}

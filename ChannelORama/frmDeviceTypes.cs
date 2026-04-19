@@ -1,5 +1,6 @@
 ﻿using FileHelper;
 using Syncfusion.Windows.Forms.Grid;
+using Syncfusion.Windows.Forms.Tools;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,7 +20,10 @@ namespace UtilORama4
 		public bool isDirty = false;
 		private frmList Owner = null;
 		//private List<DeviceType> NewList = new List<DeviceType>();
+		private int selectedIndex = -1;
 		private DeviceType selectedDevice = null;
+		private bool loading = true;
+
 		public frmDeviceTypes()
 		{
 			InitializeComponent();
@@ -34,31 +38,42 @@ namespace UtilORama4
 
 		public void LoadDevices(List<DeviceType> DeviceTypes)
 		{
+			loading = true;
 			// Start with index 1, not 0, because index 0 is "Undefined" and is immutable
-			for (int dt = 1; dt < DeviceTypes.Count; dt++)
+			for (int dt = 0; dt < DeviceTypes.Count - 1; dt++)
 			{
 				DeviceType device = DeviceTypes[dt];
 				//NewList.Add(device);
 				lstDevices.Items.Add(device);
 			}
 			lstDevices.SelectedIndex = 0;
+			selectedDevice = (DeviceType)lstDevices.Items[0];
 			btnDown.Enabled = true;
 			lstDevices.Select();
+			isDirty = false;
+			loading = false;
 		}
 
 		public bool MakeDirty(bool dirty)
 		{
 			bool ret = isDirty;
-			if (dirty != isDirty)
+			if (!loading)
 			{
-				if (dirty)
+				if (dirty != isDirty)
 				{
-					btnOK.Enabled = true;
+					if (dirty)
+					{
+						btnOK.Enabled = true;
+						lblDirty.Text = "Dirty";
+						lblDirty.ForeColor = Color.LightCoral;
+					}
+					else
+					{
+						lblDirty.Text = "Clean";
+						lblDirty.ForeColor = Color.LimeGreen;
+					}
+					isDirty = dirty;
 				}
-				else
-				{
-				}
-				isDirty = dirty;
 			}
 			return ret;
 		}
@@ -86,48 +101,58 @@ namespace UtilORama4
 
 		private void lstDevices_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			selectedDevice = (DeviceType)lstDevices.Items[lstDevices.SelectedIndex];
-			string ttxt = "";
-			if (lstDevices.SelectedIndex < 1)
+			selectedIndex = lstDevices.SelectedIndex;
+			int count = lstDevices.Items.Count;
+			if (selectedIndex >= 0)
 			{
-				btnUp.Enabled = false;
-			}
-			else
-			{
-				btnUp.Enabled = true;
-				ttxt = "Move " + selectedDevice.Name + " above ";
-				DeviceType d2 = (DeviceType)lstDevices.Items[lstDevices.SelectedIndex - 1];
-				ttxt += d2.Name + ".";
-				tipTool.SetToolTip(btnUp, ttxt);
-			}
-			if (lstDevices.SelectedIndex < lstDevices.Items.Count - 1)
-			{
-				btnDown.Enabled = false;
-			}
-			else
-			{
-				btnDown.Enabled = true;
-				ttxt = "Move " + selectedDevice.Name + " below ";
-				DeviceType d2 = (DeviceType)lstDevices.Items[lstDevices.SelectedIndex + 1];
-				ttxt += d2.Name + ".";
-				tipTool.SetToolTip(btnDown, ttxt);
-			}
-			if (selectedDevice.UsedByCount > 0)
-			{
-				btnDelete.Enabled = false;
-				ttxt = selectedDevice.Name + " cannot be deleted because it is used by " + selectedDevice.UsedByCount.ToString() + " channels.";
-				tipTool.SetToolTip(btnDelete, ttxt);
-				ttxt = "The following channels are of type " + selectedDevice.Name + " type:\r\n";
-				ttxt += selectedDevice.UsedByChannels;
-				tipTool.SetToolTip(lstDevices, ttxt);
-			}
-			else
-			{
-				btnDelete.Enabled = true;
-				ttxt = "Delete unused " + selectedDevice.Name + " type.";
-				tipTool.SetToolTip(btnDelete, ttxt);
-				ttxt = "No channels are of type " + selectedDevice.Name + ".";
-				tipTool.SetToolTip(lstDevices, ttxt);
+				selectedDevice = (DeviceType)lstDevices.Items[selectedIndex];
+				string ttxt = "";
+				if (selectedIndex <= 0)
+				{
+					btnUp.Enabled = false;
+				}
+				else
+				{
+					btnUp.Enabled = true;
+					ttxt = "Move " + selectedDevice.Name + " above ";
+					DeviceType d2 = (DeviceType)lstDevices.Items[selectedIndex - 1];
+					ttxt += d2.Name + ".";
+					tipTool.SetToolTip(btnUp, ttxt);
+				}
+
+				if (selectedIndex > count - 2)
+				{
+					btnDown.Enabled = false;
+				}
+				else
+				{
+					btnDown.Enabled = true;
+					ttxt = "Move " + selectedDevice.Name + " below ";
+					DeviceType d2 = (DeviceType)lstDevices.Items[selectedIndex + 1];
+					ttxt += d2.Name + ".";
+					tipTool.SetToolTip(btnDown, ttxt);
+				}
+
+				lblUsedBy.Text = "Used by " + selectedDevice.UsedByCount.ToString() + " channels.";
+				ttxt = selectedDevice.UsedByChannels;
+				tipTool.SetToolTip(lblUsedBy, ttxt);
+				if (selectedDevice.UsedByCount > 0)
+				{
+					btnDelete.Enabled = false;
+					ttxt = selectedDevice.Name + " cannot be deleted because it is used by " + selectedDevice.UsedByCount.ToString() + " channels.";
+					tipTool.SetToolTip(btnDelete, ttxt);
+					ttxt = "The following channels are of type " + selectedDevice.Name + " type:\r\n";
+					ttxt += selectedDevice.UsedByChannels;
+					tipTool.SetToolTip(lstDevices, ttxt);
+				}
+				else
+				{
+					btnDelete.Enabled = true;
+					ttxt = "Delete unused " + selectedDevice.Name + " type.";
+					tipTool.SetToolTip(btnDelete, ttxt);
+					ttxt = "No channels are of type " + selectedDevice.Name + ".";
+					tipTool.SetToolTip(lstDevices, ttxt);
+				}
 			}
 		} // End Selection Changed
 
@@ -137,32 +162,38 @@ namespace UtilORama4
 			{
 				if (Fyle.isWiz)
 				{
-					string WTF = "Trying to delete when nothing is selected";
+					string WTF = "Trying to add when nothing is selected";
 					Debugger.Break();
 				}
-				else
+			}
+			else
+			{
+				frmInput inForm = new frmInput();
+				inForm.txtName.Text = "";
+				inForm.txtComment.Text = "";
+				inForm.Text = "Add New Device Type";
+				DialogResult dr = inForm.ShowDialog(this);
+				if (dr == DialogResult.OK)
 				{
-					frmInput inForm = new frmInput();
-					inForm.txtName.Text = selectedDevice.Name;
-					inForm.txtComment.Text = selectedDevice.Comment;
-					DialogResult dr = inForm.Show(this);
-					if (dr == DialogResult.OK)
+					DeviceType device = new DeviceType();
+					device.Name = inForm.txtName.Text.Trim();
+					device.Comment = inForm.txtComment.Text.Trim();
+					// Find the next unused ID
+					int id = 1;
+					for (int d = 1; d < lstDevices.Items.Count; d++)
 					{
-						DeviceType device = new DeviceType();
-						device.Name = inForm.txtName.Text.Trim();
-						device.Comment = inForm.txtComment.Text.Trim();
-						// Find the next unused ID
-						int id = 1;
-						for (int d = 1; d < lstDevices.Items.Count; d++)
-						{
-							DeviceType dx = (DeviceType)lstDevices.Items[d];
-							id = Math.Max(id, dx.ID);
-						}
-						device.ID = id;
-						lstDevices.Items.Insert(lstDevices.SelectedIndex, device);
+						DeviceType dx = (DeviceType)lstDevices.Items[d];
+						id = Math.Max(id, dx.ID);
 					}
-					inForm.Dispose();
+					device.ID = id;
+					lstDevices.Items.Insert(selectedIndex+1, device);
+					lstDevices.SelectedIndex = selectedIndex + 1;
+					lstDevices.Refresh();
+					MakeDirty(true);
 				}
+				inForm.Dispose();
+				lstDevices.Select();
+
 			}
 		}
 
@@ -178,10 +209,14 @@ namespace UtilORama4
 			}
 			else
 			{
-				int si = lstDevices.SelectedIndex;
-				// Use Tuple Deconstruction to perform the swap
-				(lstDevices.Items[si], lstDevices.Items[si - 1]) = (lstDevices.Items[si - 1], lstDevices.Items[si]);
-				MakeDirty(true);
+				if (selectedIndex > 0)
+				{
+					// Use Tuple Deconstruction to perform the swap
+					(lstDevices.Items[selectedIndex], lstDevices.Items[selectedIndex - 1]) = (lstDevices.Items[selectedIndex - 1], lstDevices.Items[selectedIndex]);
+					lstDevices.SelectedIndex = selectedIndex - 1;
+					MakeDirty(true);
+					lstDevices.Select();
+				}
 			}
 		}
 
@@ -197,10 +232,14 @@ namespace UtilORama4
 			}
 			else
 			{
-				int si = lstDevices.SelectedIndex;
-				// Use Tuple Deconstruction to perform the swap
-				(lstDevices.Items[si], lstDevices.Items[si + 1]) = (lstDevices.Items[si + 1], lstDevices.Items[si]);
-				MakeDirty(true);
+				if (selectedIndex < lstDevices.Items.Count - 1)
+				{
+					// Use Tuple Deconstruction to perform the swap
+					(lstDevices.Items[selectedIndex], lstDevices.Items[selectedIndex + 1]) = (lstDevices.Items[selectedIndex + 1], lstDevices.Items[selectedIndex]);
+					lstDevices.SelectedIndex = selectedIndex + 1;
+					MakeDirty(true);
+					lstDevices.Select();
+				}
 			}
 
 		}
@@ -214,19 +253,24 @@ namespace UtilORama4
 					string WTF = "Trying to delete when nothing is selected";
 					Debugger.Break();
 				}
-				else
+			}
+			else
+			{
+				frmInput inForm = new frmInput();
+				inForm.txtName.Text = selectedDevice.Name;
+				inForm.txtComment.Text = selectedDevice.Comment;
+				inForm.Text = "Edit Device: " + selectedDevice.Name;
+				DialogResult dr = inForm.ShowDialog(this);
+				if (dr == DialogResult.OK)
 				{
-					frmInput inForm = new frmInput();
-					inForm.txtName.Text = selectedDevice.Name;
-					inForm.txtComment.Text = selectedDevice.Comment;
-					DialogResult dr = inForm.Show(this);
-					if (dr == DialogResult.OK)
-					{
-						selectedDevice.Name = inForm.txtName.Text.Trim();
-						selectedDevice.Comment = inForm.txtComment.Text.Trim();
-					}
-					inForm.Dispose();
+					selectedDevice.Name = inForm.txtName.Text.Trim();
+					selectedDevice.Comment = inForm.txtComment.Text.Trim();
+					lstDevices.Items[selectedIndex]= selectedDevice;
+					//lstDevices.Refresh();
+					MakeDirty(true);
+					lstDevices.Select();
 				}
+				inForm.Dispose();
 			}
 		}
 
@@ -299,6 +343,7 @@ namespace UtilORama4
 			float mag = frmList.magnification;
 			this.MinimumSize = new System.Drawing.Size((int)(300 * mag), (int)(500 * mag));
 			this.MaximumSize = new System.Drawing.Size((int)(700 * mag), (int)(1000 * mag));
+			frmDeviceTypes_ResizeEnd(this, null);
 		}
 
 		private void lstDevices_MouseMove(object sender, MouseEventArgs e)
@@ -318,9 +363,24 @@ namespace UtilORama4
 			{
 				//this.Text = "Not over any item";
 				string ttxt = "List of Device Types, in the order they will be displayed.";
-				tipTool.SetToolTip(lstDevices,ttxt);	
+				tipTool.SetToolTip(lstDevices, ttxt);
 			}
-		
+
+		}
+
+		private void frmDeviceTypes_ResizeEnd(object sender, EventArgs e)
+		{
+			int w = this.ClientRectangle.Width;
+			int h = this.ClientRectangle.Height;
+			lstDevices.Width = w - 100;
+			lstDevices.Height = h - 100;
+			btnCancel.Left = w - btnCancel.Width - 10;
+			btnCancel.Top = h - btnCancel.Height - 10;
+			btnOK.Left = btnCancel.Left - btnOK.Width - 10;
+			btnOK.Top = btnCancel.Top;
+			lblDirty.Left = btnCancel.Left;
+			lblDirty.Top = btnCancel.Top - lblDirty.Height + 3;
+			lblUsedBy.Top = btnOK.Top;
 		}
 	} // End form
 } // End namespace

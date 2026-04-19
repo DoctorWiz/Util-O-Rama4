@@ -73,5 +73,10 @@ namespace UtilORama4
 		{
 			isDirty = true;
 		}
+
+		private void lblInput_Click(object sender, EventArgs e)
+		{
+
+		}
 	}
 }
