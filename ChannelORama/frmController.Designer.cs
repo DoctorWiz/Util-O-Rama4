@@ -203,6 +203,8 @@ namespace UtilORama4
 			// cboBrand
 			// 
 			cboBrand.AutoCompleteCustomSource.AddRange(new string[] { "LOR", "Renard", "Chinese" });
+			cboBrand.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+			cboBrand.AutoCompleteSource = AutoCompleteSource.ListItems;
 			cboBrand.DropDownStyle = ComboBoxStyle.DropDownList;
 			cboBrand.FormattingEnabled = true;
 			cboBrand.Items.AddRange(new object[] { "LOR", "Renard", "Chinese", "Chauvet", "American DJ", "Genius" });
@@ -228,6 +230,8 @@ namespace UtilORama4
 			// 
 			// cboUniverse
 			// 
+			cboUniverse.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+			cboUniverse.AutoCompleteSource = AutoCompleteSource.ListItems;
 			cboUniverse.DropDownStyle = ComboBoxStyle.DropDownList;
 			cboUniverse.FormattingEnabled = true;
 			cboUniverse.Location = new Point(152, 197);
@@ -361,6 +365,8 @@ namespace UtilORama4
 			// cboLORModels
 			// 
 			cboLORModels.AutoCompleteCustomSource.AddRange(new string[] { "CTB16PC Gen 1", "CTB16PC Gen 2", "CTB16PC Gen 3", "LOR1602W Gen 1", "LOR1602W Gen 2", "LOR1602Wg3", "CMB24D Gen 3" });
+			cboLORModels.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+			cboLORModels.AutoCompleteSource = AutoCompleteSource.ListItems;
 			cboLORModels.DropDownStyle = ComboBoxStyle.DropDownList;
 			cboLORModels.FormattingEnabled = true;
 			cboLORModels.Items.AddRange(new object[] { "CTB04PC", "CTB16PC gen 1", "CTB16PC gen 3", "CTB24D", "LOR1600 gen 1", "LOR1600Wg3", "LOR1602 gen 1", "LOR1602Wg3" });

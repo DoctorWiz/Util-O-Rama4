@@ -104,6 +104,8 @@ namespace UtilORama4
 		public int changes = 0;
 		private const int WM_SYSCOMMAND = 0x0112;
 		private const int SC_MINIMIZE = 0xf020;
+		private bool editing = false;
+		private bool adding = false;
 
 		private int lastDeviceIndex = -1;
 		private int lastControllerIndex = -1;
@@ -1133,5 +1135,41 @@ namespace UtilORama4
 			tipTool.SetToolTip(cboDevice, tipText);
 			tipTool.SetToolTip(lblType, tipText);
 		}
+
+		public bool Editing
+		{
+			get
+			{
+				return editing;
+			}
+			set
+			{
+				editing = value;
+				if (editing)
+				{
+					{
+						adding = false;
+					}
+				}
+			}
+		}
+		public bool Adding
+		{
+			get
+			{
+				return adding;
+			}
+			set
+			{
+				adding = value;
+				if (adding)
+				{
+					editing = false;
+				}
+			}
+		}
+
+
+
 	} // End class frmChannel
 }  // End namespace

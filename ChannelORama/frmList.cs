@@ -1,16 +1,9 @@
 ﻿/*
- * TODO: Allow anything for Controller ID (Currently A,B,C. etc.)
- *           And then order them by Universe and Start Channel.
+ * TODO: 
  *       Add a "None" option for Controller and make sure it works correctly. (?)
- *       Add a "Multi" option for color and make sure it works correctly.
- *       Add a list of LOR Controller Models (with channel count) and make sure it works correctly.
  *       Add check for overlapping controller start channels, and gaps between channels, and warn about them.
- *       Track down index out of range error when loading files, and fix it, and make file loading more robust in general.
- *       Add a "New Channel" button to the main form and make sure it works correctly. (?)
- *       Add a "Delete Channel" button to the main form and make sure it works correctly. (?)
  *       Add Chain Location (how far down the dmx cable, 1 being closest to controller).
  *           And then add a warning if there are multiple channels with the same location on the same controller.
- *       Detect DPI and scale icons accordingly. (Currently hard coded for 96 DPI)
  */
 
 
@@ -21,6 +14,7 @@ using FormHelper;   // Extended WinForms functions such as SaveView and RestoreV
 using FuzzORama;    // Fuzzy String Matching-- Util-O-Rama version (optimized for channel names)
 using LOR4;     // Light-O-Rama Showtime vS4 Sequences and Visualizations
 using ReadWriteCsv;   // Comma Separated Values
+using Syncfusion.ComponentModel;
 using Syncfusion.Grouping;
 using Syncfusion.Linq;
 using Syncfusion.Windows.Forms.Tools;   // SyncFusion TreeView Advanced
@@ -46,9 +40,8 @@ using System.Windows.Forms;
 using System.Xml;
 using UtilORama4;
 using Windows.Devices.Sms;
+using Windows.Graphics.Printing.Workflow;
 using xLights22;    // xLights RGBEffects and Sequences
-
-
 
 namespace UtilORama4
 {
@@ -61,8 +54,6 @@ namespace UtilORama4
 		public static List<Channel> AllChannels = Universe.AllChannels;
 		public static List<DeviceType> DeviceTypes = new List<DeviceType>();
 		private string myTitle = "Channel-O-Rama  Channel Manager";
-
-
 		LOR4Visualization lViz = null;
 		private string lastFile = "";
 		private bool formShown = false;
@@ -80,7 +71,6 @@ namespace UtilORama4
 		public static bool hasLOR = false;
 		public static string uniName = "Universe";
 		public static float magnification = 1.0F;
-
 		public static readonly Color Color_RGB = ColorTranslator.FromHtml("#000001");
 		public static readonly Color Color_RGBW = ColorTranslator.FromHtml("#000100");
 		public static readonly Color Color_Multi = ColorTranslator.FromHtml("#010000");
@@ -97,13 +87,11 @@ namespace UtilORama4
 		private static readonly int[] TREEICONred = { 8 };
 		private static readonly int[] TREEICONgreen = { 11 };
 		private static readonly int[] TREEICONblue = { 12 };
-
 		private static string fileUniverses = "Universes.csv";
 		//		private static string fileNetworks = "Networks.csv";
 		private static readonly string fileControllers = "Controllers.csv";
 		private static readonly string fileChannels = "Channels.csv";
 		private static readonly string fileDeviceTypes = "DeviceTypes.csv";
-
 		private frmUniverse uniForm = null;
 		private frmController ctlForm = null;
 		private frmChannel chanForm = null;
@@ -114,7 +102,7 @@ namespace UtilORama4
 			InitializeComponent();
 		}
 
-		private void btnWiz_Click(object sender, EventArgs e)
+		private void DoTheWizardThing()
 		{
 			//////////////////////////////
 			//!/  WIZARD TEST BUTTON   ///
@@ -142,8 +130,11 @@ namespace UtilORama4
 		}
 
 
-		private void frmList_Load(object sender, EventArgs e)
-		{
+		#region Form Functions
+
+		private void LoadForm()
+		{ 
+			// Called from frmList_Load()
 			this.dpi = this.DeviceDpi;
 			this.RestoreView(); // Use default parameters
 			RestoreUserSettings();
@@ -178,8 +169,6 @@ namespace UtilORama4
 					hasLOR = false;
 			}
 
-
-
 			if (hasLOR && !hasxLights)
 			{
 				fileUniverses = "Networks.csv";
@@ -193,7 +182,6 @@ namespace UtilORama4
 				magnification = dpiX / 96.0f;
 			}
 		}
-
 
 		private void SaveUserSettings()
 		{
@@ -221,11 +209,8 @@ namespace UtilORama4
 			}
 		}
 
-		private void pnlHelp_Click(object sender, EventArgs e)
-		{ System.Diagnostics.Process.Start(helpPage); }
-
-		private void pnlAbout_Click(object sender, EventArgs e)
-		{
+		private void ShowAbout()
+		{ 
 			ImBusy(true);
 			frmAbout aboutBox = new frmAbout("Channel-O-Rama");
 			aboutBox.Icon = this.Icon;
@@ -234,179 +219,6 @@ namespace UtilORama4
 			aboutBox.AppIcon = picAboutIcon.Image;
 			aboutBox.ShowDialog(this);
 			ImBusy(false);
-		}
-
-		private string SelectDBPath(bool required = false)
-		{
-			string ret = "";
-			// Never run before ?
-			// Prompt user to select the base path for the channel database, which should be the folder that contains the year folders (e.g. "Christmas 2023", "Christmas 2024", etc.)
-			FolderBrowserDialog fbd = new FolderBrowserDialog();
-			string dtxt = "Select the base folder for the channel database."; // (the folder that contains the year folders such as Christmas 2023, Christmas 2024, etc.)";
-			dtxt += "\r\n\r\nIf you have not yet created a channel database, you can just select or create an empty folder to use as the base path for the channel database.";
-			dtxt += "\r\n\t (Hint: You may wish to include the holiday and/or year in the folder name, such as 'Christmas 2026', to help keep things organized.)";
-			fbd.Description = dtxt;
-			DialogResult dr = fbd.ShowDialog(this);
-			if (dr == DialogResult.OK)
-			{
-				ret = fbd.SelectedPath;
-			}
-			else
-			{
-				if (required)
-				{
-					MessageBox.Show(this, "No folder selected.  Cannot continue.", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
-					Application.Exit();
-				}
-			}
-
-			string dtfile = ret + fileDeviceTypes;
-			bool datExists = Fyle.Exists(dtfile);
-			if (datExists)
-			{
-				dtfile = ret + fileUniverses;
-				datExists = Fyle.Exists(dtfile);
-				if (datExists)
-				{
-					dtfile = ret + fileControllers;
-					datExists = Fyle.Exists(dtfile);
-					if (datExists)
-					{
-						dtfile = ret + fileChannels;
-						datExists = Fyle.Exists(dtfile);
-					}
-				}
-			}
-			if (!datExists)
-			{
-				dtxt = "Folder '" + ret + "' does not contain a channel database.";
-				dtxt += "\r\nCreate a new channel database here?";
-				dtxt += "\r\n\r\n\tYes to creat a new database in '" + ret + "'.";
-				dtxt += "\r\n\tNo to go back and select a different folder.";
-				dtxt += "\r\n\tCancel to exit the program.";
-				dr = MessageBox.Show(this, dtxt, "Create new database?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-				if (dr == DialogResult.Cancel)
-				{
-					Application.Exit();
-				}
-				else if (dr == DialogResult.No)
-				{
-					ret = SelectDBPath(required); // Recursive call to prompt user to select a different folder
-				}
-				else if (dr == DialogResult.Yes)
-				{
-					CreateNewDatabase(ret + "\\ChannelDB");
-				}
-			}
-			return ret;
-		}
-
-		private string PathToDB()
-		{
-			string dpth = Settings.Default.DBPath;
-			string ret = dpth;
-
-			if (ret.Length < 4)
-			{
-				// Never run before ?
-				// Prompt user to select the base path for the channel database, which should be the folder that contains the year folders (e.g. "Christmas 2023", "Christmas 2024", etc.)
-				FolderBrowserDialog fbd = new FolderBrowserDialog();
-				string dtxt = "Select the new base folder for the new channel database."; // (the folder that contains the year folders such as Christmas 2023, Christmas 2024, etc.)";
-				dtxt += "\r\n\r\nIf you have not yet created a channel database, you can just select or create an empty folder to use as the base path for the channel database.";
-				dtxt += "\r\n\t (Hint: You may wish to include the holiday and/or year in the folder name, such as 'Christmas 2026', to help keep things organized.)";
-				fbd.Description = dtxt;
-				DialogResult dr = fbd.ShowDialog(this);
-				if (dr == DialogResult.OK)
-				{
-					ret = fbd.SelectedPath;
-				}
-				else
-				{
-					MessageBox.Show(this, "No folder selected.  Cannot continue.", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
-					Application.Exit();
-				}
-			}
-			// Already have a path, but check that it exists
-			if (!Fyle.PathExists(ret))
-			{
-				ret = SelectDBPath(true) + "\\";
-
-				string dtfile = ret + fileDeviceTypes;
-				bool datExists = Fyle.Exists(dtfile);
-				if (datExists)
-				{
-					dtfile = ret + fileUniverses;
-					datExists = Fyle.Exists(dtfile);
-					if (datExists)
-					{
-						dtfile = ret + fileControllers;
-						datExists = Fyle.Exists(dtfile);
-						if (datExists)
-						{
-							dtfile = ret + fileChannels;
-							datExists = Fyle.Exists(dtfile);
-						}
-					}
-				}
-				if (!datExists)
-				{
-					string dtxt = "Folder '" + ret + "' does not contain a channel database.";
-					dtxt += "\r\nCreate a new channel database here?";
-					dtxt += "\r\n\r\n\tYes to creat a new database in '" + ret + "'.";
-					dtxt += "\r\n\tNo to go back and select a different folder.";
-					dtxt += "\r\n\tCancel to exit the program.";
-					DialogResult dr = MessageBox.Show(this, dtxt, "Create new database?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-					if (dr == DialogResult.Cancel)
-					{
-						Application.Exit();
-					}
-					else if (dr == DialogResult.Yes)
-					{
-						CreateNewDatabase(ret + "\\ChannelDB");
-					}
-					else if (dr == DialogResult.No)
-					{
-						ret = PathToDB(); // Recursive call to prompt user to select a different folder
-					}
-				}
-			}
-			return ret;
-		}
-
-		private void CreateNewDatabase(string folder)
-		{
-			Fyle.SafeCopy(Application.StartupPath + "\\TemplateDB\\desktop.ini", folder + "\\desktop.ini");
-			Fyle.SafeCopy(Application.StartupPath + "\\TemplateDB\\folder.ico", folder + "\\folder.ico");
-			Fyle.SafeCopy(Application.StartupPath + "\\TemplateDB\\" + fileDeviceTypes, folder + fileDeviceTypes);
-			Fyle.SafeCopy(Application.StartupPath + "\\TemplateDB\\" + fileUniverses, folder + fileUniverses);
-			Fyle.SafeCopy(Application.StartupPath + "\\TemplateDB\\" + fileControllers, folder + fileControllers);
-			Fyle.SafeCopy(Application.StartupPath + "\\TemplateDB\\" + fileChannels, folder + fileChannels);
-			Settings.Default.DBPath = folder;
-			Settings.Default.Save();
-		}
-		public int LoadData(string filePath)
-		{
-			this.Enabled = false;
-			this.Cursor = Cursors.WaitCursor;
-			lblLoading.Text = "Loading...";
-			lblLoading.Visible = true;
-			lblLoading.BringToFront();
-			treeChannels.Select();
-
-			int errs = LoadDevices(filePath);
-			errs = LoadUniverses(filePath);
-			errs += LoadControllers(filePath);
-			errs += LoadChannels(filePath);
-			UpdateStatus();
-			this.Text = filePath + " - " + myTitle;
-
-			this.Enabled = true;
-			this.Cursor = Cursors.Default;
-			lblLoading.Visible = false;
-			lblLoading.SendToBack();
-			treeChannels.Select();
-
-			return errs;
 		}
 
 		private void UpdateStatus()
@@ -421,1254 +233,8 @@ namespace UtilORama4
 			stxt += AllChannels.Count.ToString() + " Channels";
 			pnlStatus.Text = stxt;
 		}
-
-
-		public int LoadUniverses(string filePath)
-		{
-			int errs = 0;
-			string uniName = ""; // for debugging exceptions
-			string uniFile = filePath + fileUniverses;
-			try
-			{
-				CsvFileReader reader = new CsvFileReader(uniFile);
-				CsvRow row = new CsvRow();
-				// Read and throw away first line which is headers;
-				reader.ReadRow(row);
-				while (reader.ReadRow(row))
-				{
-					try
-					{
-						Universe universe = new Universe();
-
-						int uid = 1;
-						int.TryParse(row[0], out uid);   // Field 0 Universe ID
-						universe.ID = uid;
-
-						int i = -1;
-						int.TryParse(row[1], out i);   // Field 0 Universe Number
-						universe.UniverseNumber = i;
-
-						universe.Name = row[2];  // Field 1 Name
-						uniName = universe.Name;  // For debugging exceptions
-						universe.Location = row[3]; // Field 2 Location
-						universe.Comment = row[4]; // Field 3 Comment
-
-						bool b = true;
-						bool.TryParse(row[5], out b); // Field 4 Active
-						universe.Active = b;
-
-						i = 512;
-						int.TryParse(row[6], out i);   // Field 5 Size Limit
-						universe.MaxChannelsAllowed = i;
-
-						i = 1;
-						int.TryParse(row[7], out i);   // Field 6 xLights Start
-						universe.xLightsAddress = i;
-
-						universe.Connection = row[8];  // Field 7 Connection
-						lastID = Math.Max(lastID, universe.ID);
-						//universe.ID = lastID;
-						AllUniverses.Add(universe);
-					}
-					catch (Exception ex)
-					{
-						string msg = "Error " + ex.ToString() + " while reading " + uniName; // + " " + uniName;
-						if (isWiz)
-						{
-							DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
-						}
-						errs++;
-					}
-				}
-				reader.Close();
-				AllUniverses.Sort();
-				Universe.AllUniverses = AllUniverses; // Set the static list in Universe class to the list we just loaded and sorted, so that it can be accessed from the Controller and Channel classes when they are loading and need to find their parent universe.
-			}
-			catch (Exception ex)
-			{
-				string msg = "Error " + ex.ToString() + " while reading " + uniName + "s file " + uniFile;
-				if (isWiz)
-				{
-					DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				}
-				errs++;
-			}
-			return errs;
-		}
-
-		public int LoadControllers(string filePath)
-		{
-			//("ID");           // Field 0
-			//("Universe");     // Field 1
-			//("Controller");   // Field 2
-			//("Name");         // Field 3
-			//("Location");     // Field 4
-			//("Comment");      // Field 5
-			//("Active");       // Field 6
-			//("Brand");        // Field 7
-			//("Model");        // Field 8
-			//("Unit#");        // Field 9
-			//("Output Count"); // Field 10
-			//("DMX Start");    // Field 11
-			//("Voltage");      // Field 12
-
-			int errs = 0;
-			string ctlName = ""; // For debugging exceptions
-			if (AllUniverses.Count > 0)
-			{
-				string ctlFile = filePath + fileControllers;
-				try
-				{
-					CsvFileReader reader = new CsvFileReader(ctlFile);
-					CsvRow row = new CsvRow();
-					// Read and throw away first line which is headers;
-					reader.ReadRow(row);
-					while (reader.ReadRow(row))
-					{
-						try
-						{
-							Controller controller = new Controller();
-							int ctlid = 1;
-							int.TryParse(row[0], out ctlid);   // Field 1 Controller ID (number)
-							controller.ID = ctlid;
-
-							int uniID = -1;
-							int.TryParse(row[1], out uniID);   // Field 0 Universe ID (number)
-							controller.Universe = GetUniverseByID(uniID);
-							//controller.Universe = GetUniverseByNumber(uniID); // TEMP!!!
-							if (controller.Universe == null)
-							{
-								//string msg = "Universe not found for controller:" + controller.Name;
-								if (Fyle.isWiz)
-								{
-									string mtxt = "Controller with ID:" + uniID.ToString() + " not found for controller:" + row[3];
-									MessageBox.Show(this, mtxt, uniName + " Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-									int xx = 0;
-								}
-							}
-							else
-							{
-								controller.Universe.Controllers.Add(controller);
-							}
-
-							controller.Identifier = row[2];  // Field 1 Letter ID
-							controller.Name = row[3];  // Field 2 Name
-							ctlName = controller.Name; // For debugging exceptions
-							controller.Location = row[4]; // Field 3 Location
-							controller.Comment = row[5]; // Field 4 Comment
-
-							bool b = true;
-							bool.TryParse(row[6], out b); // Field 5 Active
-							controller.Active = b;
-
-							controller.ControllerBrand = row[7];
-							controller.ControllerModel = row[8];
-
-							int un = -1;
-							int.TryParse(row[9], out un);
-
-							int cnt = 16;
-							int.TryParse(row[10], out cnt);   // Field 8 Channel Count
-							controller.OutputCount = cnt;
-
-							int adr = 1;
-							int.TryParse(row[11], out adr);   // Field 9 DMX Start LOR4Channel
-							controller.StartAddress = adr;
-
-							int volts = 120;
-							int.TryParse(row[12], out volts);   // Field 10 voltage
-							controller.Voltage = volts;
-
-							/*
-							bool uniFound = false;
-							for (int u = 0; u < AllUniverses.Count; u++)
-							{
-								if (universe == AllUniverses[u].UniverseNumber)
-								{
-									AllUniverses[u].Controllers.Add(controller);
-									controller.Universe = AllUniverses[u];
-									uniFound = true;
-									u = AllUniverses.Count; // Exit loop
-								}
-							}
-							if (!uniFound)
-							{
-								string msg = "Universe not found for controller:" + controller.Name;
-								int qqqqq = 1;
-							}
-							*/
-
-							// Unit Number Madness
-							if (controller.ControllerBrand == "LOR")
-							{
-								if (un < 2)
-								{
-									if (adr > 16)
-									{
-										un = (adr - 1) / 16 + 1;
-									}
-									int sc = (un - 1) * 16 + 1;
-									adr = sc;
-								}
-								else
-								{
-									if (un > 0)
-									{
-										int sc = (un - 1) * 16 + 1;
-										adr = sc;
-									}
-									else
-									{
-										int un2 = (adr - 1) / 16 + 1;
-									}
-								}
-							}
-							string foo = ctlName;
-							controller.UnitID = un;
-							controller.StartAddress = adr;
-							controller.OutputCount = cnt;
-
-
-
-
-							lastID = Math.Max(lastID, controller.ID);
-							//controller.ID = lastID;
-							AllControllers.Add(controller);
-						}
-						catch (Exception ex)
-						{
-							string msg = "Error " + ex.ToString() + " while reading Controller " + ctlName;
-							if (isWiz)
-							{
-								DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
-							}
-							errs++;
-						}
-					}
-
-					reader.Close();
-					for (int u = 0; u < AllUniverses.Count; u++)
-					{
-						AllUniverses[u].Controllers.Sort();
-					}
-				}
-				catch (Exception ex)
-				{
-					string msg = "Error " + ex.ToString() + " while reading Controllers file " + ctlFile;
-					if (isWiz)
-					{
-						DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
-					}
-					errs++;
-
-				}
-				Universe.AllControllers = AllControllers; // Set the static list in Universe class to the list we just loaded and sorted, so that it can be accessed from the Channel class when it is loading and needs to find its parent controller.
-			}
-			return errs;
-		}
-
-		public int LoadChannels(string filePath)
-		{
-			int errs = 0;
-			int nextID = 1;
-			string chanName = ""; // for debugging exceptions
-			if (AllUniverses.Count > 0)
-			{
-				string chnFile = filePath + fileChannels;
-				try
-				{
-					CsvFileReader reader = new CsvFileReader(chnFile);
-					CsvRow row = new CsvRow();
-					// Read and throw away first line which is headers;
-					reader.ReadRow(row);
-					while (reader.ReadRow(row))
-					{
-						try
-						{
-							Channel channel = new Channel();
-							int ix = 1;
-							int.TryParse(row[0], out ix); // Field 0 = Channel ID
-																						// Ignore it.  We are going to renumber them as we read them in
-							channel.ID = nextID;
-							nextID++;
-
-							int uniNum = 1;
-							int.TryParse(row[1], out uniNum); // Field 1 = Universe Number
-																								// Ignore the universe number, get it from the controller's universe number instead
-
-							int ctlid = 1;
-							int.TryParse(row[2], out ctlid);
-							//channel.Controller = AllControllers[ctlid-1]; // Field 2 = Controller ID
-							// Safert way to get controller by ID instead of assuming they are in order and contigous in memory
-							channel.Controller = GetControllerByID(ctlid); // Field 2 = Controller ID
-							if (channel.Controller == null)
-							{
-								string mtxt = "Controller with ID:" + ctlid.ToString() + " not found for channel:" + row[5];
-								MessageBox.Show(this, mtxt, "Controller Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-							}
-							else
-							{
-								channel.Controller.Channels.Add(channel); // Add the channel to the controller's list of channels
-							}
-
-							//string ctlIdentifier = row[3]; // Field 2 = Controller Letter or ID
-							// Ignore it, we have the controller already, and can get the identifier from the controller
-
-							int nout = 1;
-							int.TryParse(row[3], out nout);
-							channel.OutputNum = nout;               // Field 4 = Output Number
-
-							channel.Name = row[4];                // Field 5 = Name
-							chanName = channel.Name;              // For debugging exceptions
-							channel.Location = row[5];            // Field 6 = Location
-							channel.Comment = row[6];             // Field 7 = Comment
-
-							bool b = true;
-							bool.TryParse(row[7], out b);     // Field 8 = Active
-							channel.Active = b;
-
-							int devID = -1;
-							int.TryParse(row[8], out devID);      // Field 9 = Channel Type
-
-
-
-							//! ONE TIME FIX
-							//if (devID == 0) devID = 22;
-
-
-
-
-
-							if (devID >= 0 && devID < DeviceTypes.Count)
-							{
-								//! Note: Devices should not yet be sorted by Display Order
-								//! Should still be sorted by ID
-								//string dn = DeviceTypes[devID].Name;
-								//channel.DeviceType = DeviceTypes[devID];
-								channel.DeviceType = GetDeviceTypeByID(devID);
-							}
-
-							string colhex = row[9];           // Field 9 = Color (hex)
-
-							// TEMPORARY!  Convert all my plain white to cool white
-							if (colhex == "#FFFFFF")
-								colhex = "#D0FFFF";
-							// END Temporary conversion
-
-							Color color = LOR4.LOR4Admin.HexToColor(colhex);
-							channel.Color = color;
-
-							if (row.Count > 10)
-							{
-								string coname = row[10];
-								channel.ColorName = coname;           // Field 10 = Color Name (optional)
-							}
-							else
-							{
-								channel.ColorName = LOR4Admin.NearestColorName(channel.Color); //Etc.ColorName(channel.Color);
-							}
-
-
-							AllChannels.Add(channel);
-							/*
-							bool ctlFound = false;
-							for (int u = 0; u < AllUniverses.Count; u++)
-							{
-								Universe universe = AllUniverses[u];
-								for (int c = 0; c < universe.Controllers.Count; c++)
-								{
-									if (ctlid == universe.Controllers[c].ID)
-									{
-										channel.Controller = universe.Controllers[c];
-										universe.Controllers[c].Channels.Add(channel);
-										ctlFound = true;
-										c = universe.Controllers.Count;
-										u = AllUniverses.Count; // Exit loop
-									}
-								}
-							}
-							if (!ctlFound)
-							{
-								string msg = "Controller not found for channel " + channel.Name;
-								int qqq5 = 5;
-							}
-							*/
-							lastID = Math.Max(lastID, channel.ID);
-							//channel.ID = lastID;
-						}
-						catch (Exception ex)
-						{
-							int ln = LOR4.LOR4Admin.ExceptionLineNumber(ex);
-							string msg = "Error on line " + ln.ToString() + "\r\n";
-							msg += ex.ToString() + " while reading Channel " + chanName;
-							if (isWiz)
-							{
-								DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
-							}
-							errs++;
-						}
-					}
-					reader.Close();
-					for (int u = 0; u < AllUniverses.Count; u++)
-					{
-						Universe universe = AllUniverses[u];
-						for (int c = 0; c < universe.Controllers.Count; c++)
-						{
-							universe.Controllers[c].Channels.Sort();
-						}
-					}
-					// *NOW* we can sort the deviceTypes by display order
-					DeviceTypes.Sort();
-				}
-				catch (Exception ex)
-				{
-					int ln = LOR4.LOR4Admin.ExceptionLineNumber(ex);
-					string msg = "Error " + ex.ToString() + " on line " + ln.ToString() + " while reading Channels file " + chnFile;
-					if (isWiz)
-					{
-						DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
-					}
-					errs++;
-
-				}
-				Universe.AllChannels = AllChannels; // Set the static list in Universe class to the list we just loaded and sorted, so that it can be accessed from anywhere if needed.
-			}
-			return errs;
-		}
-
-		private Universe GetUniverseByID(int ID)
-		{
-			Universe ret = null;
-			for (int c = 0; c < AllUniverses.Count; c++)
-			{
-				if (AllUniverses[c].ID == ID)
-				{
-					ret = AllUniverses[c];
-					c = AllUniverses.Count; // Exit loop
-				}
-			}
-			return ret;
-		}
-
-		private Universe GetUniverseByNumber(int unum)
-		{
-			Universe ret = null;
-			for (int c = 0; c < AllUniverses.Count; c++)
-			{
-				int uid = AllUniverses[c].ID;
-				string uname = AllUniverses[c].Name;
-				if (AllUniverses[c].UniverseNumber == unum)
-				{
-					ret = AllUniverses[c];
-					c = AllUniverses.Count; // Exit loop
-				}
-			}
-			return ret;
-		}
-
-
-
-		private Controller GetControllerByID(int ID)
-		{
-			Controller ret = null;
-			for (int c = 0; c < AllControllers.Count; c++)
-			{
-				int cid = AllControllers[c].ID;
-				string cname = AllControllers[c].Name;
-				if (AllControllers[c].ID == ID)
-				{
-					ret = AllControllers[c];
-					c = AllControllers.Count; // Exit loop
-				}
-			}
-			return ret;
-		}
-
-		private Channel GetChannelByID(int ID)
-		{
-			Channel ret = null;
-			for (int c = 0; c < AllChannels.Count; c++)
-			{
-				if (AllChannels[c].ID == ID)
-				{
-					ret = AllChannels[c];
-					c = AllChannels.Count; // Exit loop
-				}
-			}
-			return ret;
-		}
-
-		private DeviceType GetDeviceTypeByID(int ID)
-		{
-			DeviceType ret = null;
-			for (int c = 0; c < DeviceTypes.Count; c++)
-			{
-				if (DeviceTypes[c].ID == ID)
-				{
-					ret = DeviceTypes[c];
-					c = DeviceTypes.Count; // Exit loop
-				}
-			}
-			return ret;
-		}
-
-		public int LoadDevices(string filePath)
-		{
-			int errs = 0;
-			string devName = ""; // for debugging exceptions
-													 //if (AllUniverses.Count > 0)
-			{
-				string chnFile = filePath + fileDeviceTypes;
-				try
-				{
-					CsvFileReader reader = new CsvFileReader(chnFile);
-					CsvRow row = new CsvRow();
-					// Read and throw away first line which is headers;
-					reader.ReadRow(row);
-					while (reader.ReadRow(row))
-					{
-						try
-						{
-							string col1 = row[0].Trim();
-							if (col1.Length == 0) // Skip blank lines in the devices file
-							{  // Ignore completely, do not even try to parse them 
-							}
-							else
-							{
-								if (col1.Trim().StartsWith("#")) // Skip comment lines that start with # in the devices file
-								{  // Ignore completely, do not even try to parse them 
-								}
-								else
-								{
-									if (row.Count > 3)
-									{
-										int devID = -1;
-										int.TryParse(row[0], out devID); // Field 0 = Device ID
-										devName = row[2].Trim();   // Field 2 = Name
-										int ord = 0;
-										if (row.Count > 2)
-										{
-											int.TryParse(row[1], out ord); // Field 1 = Display Order
-										} 
-										string descr = row[3].Trim();	
-										if (devID == 0) { ord=9999; }
-										DeviceType device = new DeviceType(devName, devID, ord);
-										device.Comment = descr;	
-										DeviceTypes.Add(device);
-									} // End if less than three 'rows' (columns actually)
-								} // End if line isn't a comment
-							} // End if line isn't blank
-						}  // End try
-						catch (Exception ex)
-						{
-							int ln = LOR4.LOR4Admin.ExceptionLineNumber(ex);
-							string msg = "Error on line " + ln.ToString() + "\r\n";
-							msg += ex.ToString() + " while reading Channel " + devName;
-							if (isWiz)
-							{
-								DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
-							}
-							errs++;
-						}
-					}
-					reader.Close();
-				}
-				catch (Exception ex)
-				{
-					int ln = LOR4.LOR4Admin.ExceptionLineNumber(ex);
-					string msg = "Error " + ex.ToString() + " on line " + ln.ToString() + " while reading Channels file " + chnFile;
-					if (isWiz)
-					{
-						DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
-					}
-					errs++;
-				}
-			}
-			int dc = DeviceTypes.Count;
-			//! No! do not sort [by display order] yet!  Leave sorted by order added which is also by ID until AFTER the channels have been
-			//! loaded, THEN sort by display order
-			//deviceTypes.Sort();
-			return errs;
-		}
-
-		public int SaveData(string filePath)
-		{
-			string tp = Fyle.GetUserTempPath;
-			string f = "";
-			string g = "";
-
-			this.Enabled = false;
-			this.Cursor = Cursors.WaitCursor;
-			lblLoading.Text = "Saving...";
-			lblLoading.Visible = true;
-			lblLoading.BringToFront();
-
-			int errs = SaveUniverses(tp);
-			string tf = tp + fileUniverses;
-			if (Fyle.Exists(tf))
-			{
-				f = filePath + "Backup." + fileUniverses;
-				if (Fyle.Exists(f))
-					Fyle.SafeDelete(f);
-				g = filePath + fileUniverses;
-				Fyle.SafeCopy(g, f);
-			}
-
-			errs += SaveControllers(tp);
-			tf = tp + fileControllers;
-			if (Fyle.Exists(tf))
-			{
-				f = filePath + "Backup." + fileControllers;
-				if (Fyle.Exists(f))
-					Fyle.SafeDelete(f);
-				g = filePath + fileControllers;
-				Fyle.SafeCopy(g, f);
-			}
-
-			errs += SaveChannels(tp);
-			tf = tp + fileChannels;
-			if (Fyle.Exists(tf))
-			{
-				f = filePath + "Backup." + fileChannels;
-				if (Fyle.Exists(f))
-					Fyle.SafeDelete(f);
-				g = filePath + fileChannels;
-				Fyle.SafeCopy(g, f);
-			}
-
-			f = filePath + "Backup." + fileDeviceTypes;
-			if (Fyle.Exists(f))
-				Fyle.SafeDelete(f);
-			g = filePath + fileDeviceTypes;
-			Fyle.SafeCopy(g, f);
-
-			MakeDirty(false);
-
-			this.Enabled = true;
-			this.Cursor = Cursors.Default;
-			lblLoading.Visible = false;
-			lblLoading.SendToBack();
-			treeChannels.Select();
-
-			return errs;
-		}
-
-		public void ClearData()
-		{
-			treeChannels.Nodes.Clear();
-			AllUniverses = new List<Universe>();
-			AllChannels = Universe.AllChannels;
-			lViz = null;
-			lastFile = "";
-			lastID = -1;
-			dirty = false;
-
-			//private xRGBEffects xSeq = null;
-			//private LOR4Visualization lViz = null;
-
-		}
-
-
-		public int SaveUniverses(string filePath)
-		{
-			// Start ID numering at ONE instead of zero for user friendliness when editing raw CSV files.
-			// Note that they may be out of order or non-contigous in memory, but when we save them, we renumber them starting at 1 and make them contigous for user friendliness when editing raw CSV files.
-			writeID = 1;
-			int errs = 0;
-			string uniName = "";
-			string uniFile = filePath + fileUniverses;
-			try
-			{
-				CsvFileWriter writer = new CsvFileWriter(uniFile);
-				CsvRow row = new CsvRow();
-				// Create first line which is headers;
-				row.Add("ID"); // Field 0
-				row.Add(uniName + "#");      // Field 1
-				row.Add("Name");           // Field 2
-				row.Add("Location");       // Field 3
-				row.Add("Comment");        // Field 4
-				row.Add("Active");         // Field 5
-				row.Add("Size Limit");     // Field 6
-				row.Add("xLights Start#"); // Field 7
-				row.Add("Connection");     // Field 8
-				writer.WriteRow(row);
-
-				// Make sure they are sorted by universe number before we write them out, so that they will be in order when we read them back in, and also so that they will be in order for the user when they open the CSV file to edit it.
-				AllUniverses.Sort();
-				for (int u = 0; u < AllUniverses.Count; u++)
-				{
-					try
-					{
-						Universe universe = AllUniverses[u];
-						uniName = universe.Name;
-						row = new CsvRow();
-
-						//row.Add(universe.ID.ToString());                 // Field 0
-						// Lets renumber all the IDs while we'ere at it.
-						row.Add(writeID.ToString());                     // Field 0
-						universe.ID = writeID;
-						writeID++;
-						row.Add(universe.UniverseNumber.ToString());     // Field 1
-						row.Add(universe.Name);                          // Field 1
-						row.Add(universe.Location);                      // Field 3
-						row.Add(universe.Comment);                       // Field 4
-						row.Add(universe.Active.ToString());             // Field 5
-						row.Add(universe.MaxChannelsAllowed.ToString()); // Field 6
-						row.Add(universe.xLightsAddress.ToString());     // Field 7
-						row.Add(universe.Connection);                    // Field 8
-
-						writer.WriteRow(row);
-					}
-					catch (Exception ex)
-					{
-						string msg = "Error " + ex.ToString() + " while saving " + uniName; // + " " + uniName;
-						if (isWiz)
-						{
-							DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
-						}
-						errs++;
-					}
-				}
-				writer.Close();
-			}
-			catch (Exception ex)
-			{
-				string msg = "Error " + ex.ToString() + " while saving " + uniName + "s file " + uniFile;
-				if (isWiz)
-				{
-					DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				}
-				errs++;
-			}
-			return errs;
-		}
-
-		public int SaveControllers(string filePath)
-		{
-			// Start ID numering at ONE instead of zero for user friendliness when editing raw CSV files.
-			// Note that they may be out of order or non-contigous in memory, but when we save them, we renumber them starting at 1 and make them contigous for user friendliness when editing raw CSV files.
-			writeID = 1;
-			int errs = 0;
-			string ctlName = ""; // For debugging exceptions
-			string ctlFile = filePath + fileControllers;
-			try
-			{
-				CsvFileWriter writer = new CsvFileWriter(ctlFile);
-				CsvRow row = new CsvRow();
-				// Create first line which is headers;
-				row.Add("ID");           // Field 0
-				row.Add(uniName);     // Field 1
-				row.Add("Controller");   // Field 2
-				row.Add("Name");         // Field 3
-				row.Add("Location");     // Field 4
-				row.Add("Comment");      // Field 5
-				row.Add("Active");       // Field 6
-				row.Add("Brand");        // Field 7
-				row.Add("Model");        // Field 8
-				row.Add("Unit#");        // Field 9
-				row.Add("Output Count"); // Field 10
-				row.Add("DMX Start");    // Field 11
-				row.Add("Voltage");      // Field 12
-
-				writer.WriteRow(row);
-
-				for (int u = 0; u < AllUniverses.Count; u++)
-				{
-					Universe universe = AllUniverses[u];
-					universe.Controllers.Sort();
-					for (int c = 0; c < universe.Controllers.Count; c++)
-					{
-						try
-						{
-							Controller controller = universe.Controllers[c];
-							ctlName = controller.Name;
-							row = new CsvRow();
-
-							//row.Add(controller.Universe.ID.ToString());             // Field 0
-							// Lets renumber all the IDs while we'ere at it.
-							row.Add(writeID.ToString());                     // Field 0
-							controller.ID = writeID;
-							writeID++;
-							row.Add(controller.Universe.ID.ToString()); // Field 1
-							row.Add(controller.Identifier);                            // Field 2
-							row.Add(controller.Name);                                  // Field 3
-							row.Add(controller.Location);                              // Field 4
-							row.Add(controller.Comment);                               // Field 5
-							row.Add(controller.Active.ToString());                     // Field 6
-							row.Add(controller.ControllerBrand);                       // field 7
-							row.Add(controller.ControllerModel);                       // Field 8
-							row.Add(controller.UnitID.ToString());                     // Filed 9									
-							row.Add(controller.OutputCount.ToString());                // Field 10
-							row.Add(controller.StartAddress.ToString());            // Field 11
-							row.Add(controller.Voltage.ToString());                    // Field 12
-
-							writer.WriteRow(row);
-						}
-						catch (Exception ex)
-						{
-							string msg = "Error " + ex.ToString() + " while saving Controller " + ctlName;
-							if (isWiz)
-							{
-								DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
-							}
-							errs++;
-						}
-					}
-				}
-				writer.Close();
-			}
-			catch (Exception ex)
-			{
-				string msg = "Error " + ex.ToString() + " while saving Controllers file " + ctlFile;
-				if (isWiz)
-				{
-					DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				}
-				errs++;
-			}
-			return errs;
-		}
-		public int SaveChannels(string filePath)
-		{
-			// Note: Channels are saved in order of universe, then controller, then output number.
-			// Also, we need to save the universe and controller IDs in the channel file so that we can link the channels to the correct universe and controller when loading, rather than relying on the order of the universes and controllers in the file which could get messed up if there are any errors in the file
-			// Start ID numering at ONE instead of zero for user friendliness when editing raw CSV files.
-			// Note that they may be out of order or non-contigous in memory, but when we save them, we renumber them starting at 1 and make them contigous for user friendliness when editing raw CSV files.
-			writeID = 1;
-			int errs = 0;
-			string chnName = ""; // debugging exceptions
-			string chnFile = filePath + fileChannels;
-
-			try
-			{
-				CsvFileWriter writer = new CsvFileWriter(chnFile);
-				CsvRow row = new CsvRow();
-				// Create first line which is headers;
-				row.Add("ID");           // Field 0
-				row.Add(uniName + "#");    // Field 1
-				row.Add("ControllerID"); // Field 2
-				row.Add("Output#");      // Field 3
-				row.Add("Name");         // Field 4
-				row.Add("Location");     // Field 5
-				row.Add("Comment");      // Field 6
-				row.Add("Active");       // Field 7
-				row.Add("Type");         // Field 8
-				row.Add("Color");        // Field 9
-				row.Add("ColorName");    // Field 10
-
-				writer.WriteRow(row);
-
-				AllUniverses.Sort();
-				for (int u = 0; u < AllUniverses.Count; u++)
-				{
-					Universe universe = AllUniverses[u];
-					universe.Controllers.Sort();
-					for (int q = 0; q < universe.Controllers.Count; q++)
-					{
-						Controller controller = universe.Controllers[q];
-						controller.Channels.Sort();
-						for (int c = 0; c < controller.Channels.Count; c++)
-						{
-							try
-							{
-								Channel channel = controller.Channels[c];
-								chnName = channel.Name;
-								row = new CsvRow();
-
-								//row.Add(channel.Universe.ID.ToString());           // Field 0
-								// Lets renumber all the IDs while we'ere at it.
-								row.Add(writeID.ToString());                            // Field 0
-								channel.ID = writeID;
-								writeID++;
-								row.Add(channel.Universe.UniverseNumber.ToString()); // Field 1
-								row.Add(channel.Controller.ID.ToString());           // Field 2
-																																		 //row.Add(channel.Controller.Identifier);            // Field 2
-								row.Add(channel.OutputNum.ToString());                  // Field 3
-								row.Add(channel.Name);                                  // Field 4
-								row.Add(channel.Location);                              // Field 5
-								row.Add(channel.Comment);                               // Field 6
-								row.Add(channel.Active.ToString());                     // Field 7
-								row.Add(channel.DeviceType.ID.ToString());              // Field 8
-								row.Add(LOR4.LOR4Admin.ColorToHex(channel.Color));      // Field 9
-								row.Add(LOR4.LOR4Admin.NearestColorName(channel.Color));       // Field 10
-																																							 //row.Add(Etc.ColorName(channel.Color));       // Field 10
-
-								writer.WriteRow(row);
-							} // end try for Channels
-							catch (Exception ex)
-							{
-								string msg = "Error " + ex.ToString() + " while saving Channel " + chnName;
-								if (isWiz)
-								{
-									DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
-								}
-								errs++;
-							}
-						} // End Channel loop
-					} // End Controller loop
-				} // End Universe loop
-				writer.Close();
-			} // End try for StreamWriter (create file)
-			catch (Exception ex)
-			{
-				string msg = "Error " + ex.ToString() + " while saving Channels file " + chnFile;
-				if (isWiz)
-				{
-					DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				}
-				errs++;
-			}
-			return errs;
-		}
-
-		public int SaveDevices(string filePath)
-		{
-			// Start ID numering at zero, but ID=0 is the undefined/undeclared one
-			// Note that they are in display order in memory, but when we save them, we renumber the ID starting at 0 and make them contigous for user friendliness when editing raw CSV files.
-			writeID = 0;
-			int errs = 0;
-			string devName = "";
-			string devFile = filePath + fileDeviceTypes;
-			try
-			{
-				CsvFileWriter writer = new CsvFileWriter(devFile);
-				CsvRow row = new CsvRow();
-				// Create first line which is headers;
-				row.Add("ID");          // Field 0
-				row.Add("Order");       // Field 1
-				row.Add("Name");        // Field 2
-				row.Add("Comment"); // Field 3
-				writer.WriteRow(row);
-
-				// Make sure they are sorted before we write them out, so that they will be in order when we read them back in, and also so that they will be in order for the user when they open the CSV file to edit it.
-				DeviceTypes.Sort();
-				for (int d = 0; d < DeviceTypes.Count; d++)
-				{
-					try
-					{
-						DeviceType device = DeviceTypes[d];
-						devName = device.Name;
-						row = new CsvRow();
-
-						//row.Add(universe.ID.ToString());                 // Field 0
-						// Lets renumber all the IDs while we'ere at it.
-						row.Add(writeID.ToString());              // Field 0
-						device.ID = writeID;
-						writeID++;
-						row.Add(writeID.ToString());              
-						// Device with ID=0 is special, it is for undefined types.
-						// Even though it's ID is zero, the display order should be very high so it's at the end.
-						if (writeID == 0)
-						{
-							device.ID = 9999;
-						}
-						else
-						{
-							device.DisplayOrder = writeID;
-						}
-						row.Add(device.DisplayOrder.ToString()); // Field 1
-						row.Add(device.Name);                    // Field 2
-						row.Add(device.Comment);                 // Field 3
-
-						writer.WriteRow(row);
-					}
-					catch (Exception ex)
-					{
-						string msg = "Error " + ex.ToString() + " while saving " + uniName; // + " " + uniName;
-						if (isWiz)
-						{
-							DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
-						}
-						errs++;
-					}
-				}
-				writer.Close();
-			}
-			catch (Exception ex)
-			{
-				string msg = "Error " + ex.ToString() + " while saving " + uniName + "s file " + devFile;
-				if (isWiz)
-				{
-					DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				}
-				errs++;
-			}
-			return errs;
-		}
-		public int ExportChannels(string filePath)
-		{
-			// Note: Channels are saved in order of universe, then controller, then output number.
-			// Also, we need to save the universe and controller IDs in the channel file so that we can link the channels to the correct universe and controller when loading, rather than relying on the order of the universes and controllers in the file which could get messed up if there are any errors in the file
-			// Start ID numering at ONE instead of zero for user friendliness when editing raw CSV files.
-			// Note that they may be out of order or non-contigous in memory, but when we save them, we renumber them starting at 1 and make them contigous for user friendliness when editing raw CSV files.
-			writeID = 1;
-			int errs = 0;
-			string chnName = ""; // debugging exceptions
-			string chnFile = filePath + "Channels.csv";
-
-			try
-			{
-				CsvFileWriter writer = new CsvFileWriter(chnFile);
-				CsvRow row = new CsvRow();
-				// Create first line which is headers;
-				row.Add(uniName + "#");      // Field 0
-				row.Add(uniName + "Name");   // Field 1
-				row.Add("ControllerID");   // Field 2
-				row.Add("ControllerName"); // Field 3
-				row.Add("Output#");        // Field 4
-				row.Add("Address");     // Field 5
-				row.Add("Name");           // Field 6
-				row.Add("Location");       // Field 7
-				row.Add("Comment");        // Field 8
-				row.Add("Active");         // Field 9
-				row.Add("Type");           // Field 10
-				row.Add("Color");          // Field 11
-				row.Add("ColorName");      // Field 12
-
-				writer.WriteRow(row);
-
-				AllUniverses.Sort();
-				for (int u = 0; u < AllUniverses.Count; u++)
-				{
-					Universe universe = AllUniverses[u];
-					universe.Controllers.Sort();
-					for (int q = 0; q < universe.Controllers.Count; q++)
-					{
-						Controller controller = universe.Controllers[q];
-						controller.Channels.Sort();
-						for (int c = 0; c < controller.Channels.Count; c++)
-						{
-							try
-							{
-								Channel channel = controller.Channels[c];
-								chnName = channel.Name;
-								row = new CsvRow();
-								row.Add(channel.UniverseNumber.ToString());        // Field 0
-								row.Add(channel.Universe.Name);                // Field 1
-								row.Add(channel.Controller.Identifier);         // Field 2
-								row.Add(channel.Controller.Name);              // Field 3
-								row.Add(channel.OutputNum.ToString());             // Field 4
-								row.Add(channel.Address.ToString());            // Field 5
-								row.Add(channel.Name);                             // Field 6
-								row.Add(channel.Location);                         // Field 7
-								row.Add(channel.Comment);                          // Field 8
-								row.Add(channel.Active.ToString());                // Field 9
-								row.Add(channel.DeviceType.Name);                  // Field 10
-								row.Add(LOR4.LOR4Admin.ColorToHex(channel.Color)); // Field 11
-								row.Add(channel.ColorName);                        // Field 12
-								writer.WriteRow(row);
-							} // end try for Channels
-							catch (Exception ex)
-							{
-								string msg = "Error " + ex.ToString() + " while saving Channel " + chnName;
-								if (isWiz)
-								{
-									DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
-								}
-								errs++;
-							}
-						} // End Channel loop
-					} // End Controller loop
-				} // End Universe loop
-				writer.Close();
-			} // End try for StreamWriter (create file)
-			catch (Exception ex)
-			{
-				string msg = "Error " + ex.ToString() + " while saving Channels file " + chnFile;
-				if (isWiz)
-				{
-					DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				}
-				errs++;
-			}
-			return errs;
-		}
-
-		public int OLD_SaveChannels(string filePath)
-		{
-			int errs = 0;
-			string chnName = ""; // debugging exceptions
-			string chnFile = filePath + "Channels.csv";
-			try
-			{
-				CsvFileWriter writer = new CsvFileWriter(chnFile);
-				CsvRow row = new CsvRow();
-				// Create first line which is headers;
-				row.Add(uniName);    // Field 0
-				row.Add("Controller");  // Field 1
-				row.Add("LOR4Output");      // Field 2
-				row.Add("Name");        // Field 3
-				row.Add("Location");    // Field 4
-				row.Add("Comment");     // Field 5
-				row.Add("Active");      // Field 6
-				row.Add("Type");        // Field 7
-				row.Add("Color");       // Field 8
-
-				writer.WriteRow(row);
-
-				AllChannels.Sort();
-				for (int c = 0; c < AllChannels.Count; c++)
-				{
-					try
-					{
-						Channel channel = AllChannels[c];
-						chnName = channel.Name;
-						row = new CsvRow();
-
-						row.Add(channel.Universe.UniverseNumber.ToString()); // Field 0
-						row.Add(channel.Controller.Identifier);                // Field 1
-						row.Add(channel.OutputNum.ToString());                 // Field 2
-						row.Add(channel.Name);                                  // Field 3
-						row.Add(channel.Location);                              // Field 4
-						row.Add(channel.Comment);                               // Field 5
-						row.Add(channel.Active.ToString());                     // Field 6
-						row.Add(channel.DeviceType.ID.ToString());         // Field 7
-						row.Add(LOR4.LOR4Admin.ColorToHex(channel.Color));                // Field 8
-
-						writer.WriteRow(row);
-					}
-					catch (Exception ex)
-					{
-						string msg = "Error " + ex.ToString() + " while saving Channel " + chnName;
-						if (isWiz)
-						{
-							DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
-						}
-						errs++;
-					}
-				}
-				writer.Close();
-			}
-			catch (Exception ex)
-			{
-				string msg = "Error " + ex.ToString() + " while saving Channels file " + chnFile;
-				if (isWiz)
-				{
-					DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				}
-				errs++;
-			}
-			return errs;
-		}
-
-		private void frmList_Shown(object sender, EventArgs e)
-		{
-			bool gotData = false;
-			int errs = 0;
-
-			if (!formShown)
-			{
-				dbPath = userSettings.DBPath;
-				if (dbPath.Length > 6)
-				{
-					if (Fyle.IsValidPath(dbPath))
-					{
-						string testFile = dbPath + "Channels.csv";
-						if (Fyle.Exists(testFile))
-						{
-							gotData = true;
-						}
-					}
-				}
-
-				if (!gotData)
-				{
-					year = DateTime.Now.Year;  // Get it and store it so don't have to keep looking it back up
-					dbPath = PathToDB();  // Get and save this too
-					dlgFileOpen.InitialDirectory = dbPath;
-					dlgFileOpen.Filter = "Channels.csv|Channels.csv";
-					dlgFileOpen.DefaultExt = "csv";
-					dlgFileOpen.Title = "Location of Channel Database";
-					dlgFileOpen.CheckPathExists = true;
-					dlgFileOpen.FileName = "Channels.csv";
-
-
-					DialogResult dr = dlgFileOpen.ShowDialog();
-					if (dr == DialogResult.OK)
-					{
-						if (Fyle.Exists(dlgFileOpen.FileName))
-						{
-							dbPath = System.IO.Path.GetDirectoryName(dlgFileOpen.FileName) + "\\";
-							userSettings.DBPath = dbPath;
-							userSettings.Save();
-							gotData = true;
-						}
-						else
-						{
-							//TODO: Handle file not found, perhaps prompt to create new database?
-						}
-					}
-					else
-					{
-						//TODO: Handle file open dialog canceled
-					}
-				}
-				if (gotData)
-				{
-					errs = LoadData(dbPath);
-					if (AllUniverses.Count > 0)
-					{
-						BuildTree();
-						btnCompareLOR.Enabled = true;
-						btnComparex.Enabled = true;
-						btnReport.Enabled = true;
-					}
-				}
-				else
-				{
-					//TODO: Handle still not having data, perhaps prompt to create new database?
-				}
-				this.Enabled = true;
-				this.Cursor = Cursors.Default;
-				lblLoading.Visible = false;
-				lblLoading.SendToBack();
-				treeChannels.Select();
-				formShown = true;
-				// End of things to do when the form first loads
-
-			} // End if form has not been shown yet
-		}
-
-		private void frmList_Shown_Old(object sender, EventArgs e)
-		{
-			if (!formShown)
-			{
-				year = DateTime.Now.Year;  // Get it and store it so don't have to keep looking it back up
-				dbPath = PathToDB();  // Get and save this too
-
-				string uniFile = dbPath + fileUniverses;
-				if (File.Exists(uniFile))
-				{
-					int errs = LoadData(dbPath);
-				}
-				else
-				{
-					string msg = "Data files not found in folder " + dbPath;
-					msg += ".  If you have never used Channel-O-Rama, create some " + uniName + "s, Controllers, and Channels.  ";
-					msg += "If you have used Channel-O-Rama in previous years, create a folder for this year's data and ";
-					msg += "copy last year's data to it as a starting point.  If you have already used it this year and ";
-					msg += "think you should have data with " + uniName + ", Controllers, and Channels, please check the path ";
-					msg += dbPath + " and make sure it exists, has not been deleted or moved, and that it contains 3 ";
-					msg += "csv datafiles for " + uniName + "s, Controllers, and Channels.";
-
-					DialogResult dr = MessageBox.Show(this, msg, "No Data", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-				}
-
-				if (AllUniverses.Count > 0)
-				{
-					BuildTree();
-					btnCompareLOR.Enabled = true;
-					btnComparex.Enabled = true;
-					btnReport.Enabled = true;
-
-				}
-
-				formShown = true;
-			}
-		}
-
-		private void frmList_Resize(object sender, EventArgs e)
-		{
+		private void FormResize()
+		{ 
 			/*
 			if (this.WindowState == FormWindowState.Normal)
 			{
@@ -1729,302 +295,140 @@ namespace UtilORama4
 			treeChannels.SelectedNode = treeChannels.Nodes[0];
 		}
 
-		public void BuildUniverseTree(List<Universe> uniList)
+		public void MakeDirty(bool isDirty)
 		{
-			// Erases and rebuilds the entire tree from the Universes list.
-			// Note: Clears the universes list.
-			treeChannels.Nodes.Clear();
-			// Loop thru all universes and add them to the tree, then loop thru their controllers and add them, then loop thru their channels and add them.
-			for (int u = 0; u < uniList.Count; u++)
+			if (isDirty != dirty)
 			{
-				// Grab a convenient reference to this universe.
-				Universe universe = uniList[u];
-				// Create new node for this universe and add to tree.
-				TreeNodeAdv uniNode = new TreeNodeAdv("(New " + uniName + ")");
-				// Use the node's tag to hold a reference to the Universe object, and the universe's tag to hold a reference to the node so we can easily find the node later when we need to update it
-				uniNode.Tag = uniList[u];
-				uniList[u].Tag = uniNode;
-				// Add the universe to the tree as a top level node.
-				treeChannels.Nodes.Add(uniNode);
-				// Build the text and icon for this node based on the properties of the universe.
-				BuildUniverseNode(uniNode);
-				// Now loop thru the controllers for this universe and add them as child nodes, then loop thru their channels and add them as child nodes of the controller nodes.
-				BuildControllerTree(uniNode);
-			} // End loop for universes
-		}
-
-		private void BuildUniverseNode(TreeNodeAdv uniNode)
-		{
-			// Updates the text and icon for a universe node based on the current properties of the Universe object in the tag for this node.
-			if (uniNode != null)
-			{
-				if (uniNode.Tag != null)
+				if (isDirty)
 				{
-					if (uniNode.Tag.GetType() == typeof(Universe))
-					{
-						Universe universe = (Universe)uniNode.Tag;
-						//string nodeText = universe.UniverseNumber.ToString() + ": " + universe.Name;
-						string nodeText = universe.FullName;
-						int ImageIndex = TREEICONuniverse[0];
-						int[] ico = { ImageIndex };
-						uniNode.LeftImageIndices = ico;
-						uniNode.Text = nodeText;
-						if (universe.BadName || universe.BadNumber)
-						{
-							uniNode.TextColor = Color.Red;
-						}
-						else
-						{
-							uniNode.TextColor = Color.Black;
-						}
-					}
-					else
-					{
-						string msg = "ERROR: BuildUniverseNode called for a node that does not have a Universe in its tag.";
-						if (isWiz)
-						{
-							DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
-						}
-					}
+					// anything else we need to do?
+					dirty = isDirty;
+					btnSave.Enabled = true;
+					this.Text = myTitle + " *";
+				}
+				else
+				{
+					// anything else we need to do?
+					dirty = isDirty;
+					btnSave.Enabled = false;
+					this.Text = myTitle;
 				}
 			}
 		}
 
-		public void BuildControllerTree(TreeNodeAdv uniNode)
-		{
-			// Builds the subtree for the controllers under a universe node, then calls BuildChannelTree for each controller node to build the channels under each controller.
-			// Note: Does not clear existing controller nodes before building, so if rebuilding, be sure to clear them first.
-			if (uniNode.Tag.GetType() == typeof(Universe))
+		private void CloseForm(ref FormClosingEventArgs args)
+		{ 
+			CloseReason cr = args.CloseReason;
+			string rc = cr.ToString();
+
+			if (dirty)
 			{
-				// Get the Universe object for this node from the tag.
-				Universe universe = (Universe)uniNode.Tag;
-				// Loop thru all it's child controllers.
-				for (int ct = 0; ct < universe.Controllers.Count; ct++)
+				string msg = "Channel information has changed.\r\nSave?";
+				DialogResult dr = MessageBox.Show(this, msg, "Save Changes?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+				if (dr == DialogResult.Cancel)
 				{
-					// Grab a convenient reference to this controller.
-					Controller controller = universe.Controllers[ct];
-					// Make a new node for this controller and add it to the tree as a child of the universe node.	
-					TreeNodeAdv ctlNode = new TreeNodeAdv("(New Controller)");
-					// Add a reference to the Controller object in the tag for this node,
-					ctlNode.Tag = controller;
-					controller.Tag = ctlNode;
-					// Add the node to the tree as a child of the universe node.
-					uniNode.Nodes.Add(ctlNode);
-					// Build the text for the node, include the Identifier only if it is not blank.
-					BuildControllerNode(ctlNode);
-					// Now loop thru the channels for this controller and add them as child nodes of this controller node.
-					BuildChannelTree(ctlNode);
-				} // End loop for controllers
+					args.Cancel = true;
+				}
+				if (dr == DialogResult.Yes)
+				{
+					SaveData(dbPath);
+				}
 			}
-			else
+			if (!args.Cancel)
 			{
-				string msg = "ERROR: BuildControllerTree called for a node that does not have a Universe in its tag.";
+				this.SaveView();
+				RestoreUserSettings();
+			}
+		}
+		#endregion // Form Functions
+
+		#region Tree Actions
+		private void Tree_SelectNode()
+		// Triggered by clicking on any nod in the tree
+		{
+			TreeNodeAdv node = treeChannels.SelectedNode;
+			string msg = "";
+			if (node == null)
+			{
+				msg = "ERROR! Select Node called, but selected node is null!";
+				Debug.WriteLine(msg);
 				if (isWiz)
 				{
-					DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				}
-			} // End if node's tag IS a universe
-		}
-
-		private void BuildControllerNode(TreeNodeAdv ctlNode)
-		{
-			// Updates the text and icon for a controller node based on the current properties of the Controller object in the tag for this node.
-			if (ctlNode != null)
-			{
-				if (ctlNode.Tag != null)
-				{
-					if (ctlNode.Tag.GetType() == typeof(Controller))
-					{
-						Controller controller = (Controller)ctlNode.Tag;
-						string nodeText = controller.FullName;
-						int foo = controller.UnitID;
-						foo = controller.StartAddress;
-						foo = controller.OutputCount;
-						/*
-						if (hasLOR > 0)
-						{
-							 nodeText = "Unit:" + controller.UnitID.ToString("00") + ": ";
-						}
-						nodeText += controller.StartAddress.ToString("000") + "-";
-						nodeText += l.ToString("000") + ": ";
-						if (controller.Identifier.Length > 0)
-						{
-							nodeText += controller.Identifier + ": ";
-						}
-						nodeText += controller.Name;
-						*/
-						ctlNode.Text = nodeText;
-						int l = controller.StartAddress + controller.OutputCount - 1;
-						int ImageIndex = TREEICONcontroller[0];
-						int[] ico = { ImageIndex };
-						ctlNode.LeftImageIndices = ico;
-						if (controller.BadIdentity || controller.BadName || controller.BadAddress)
-						{
-							ctlNode.TextColor = Color.Red;
-						}
-						else
-						{
-							ctlNode.TextColor = Color.Black;
-						}
-					}
-					else
-					{
-						string msg = "ERROR: BuildControllerNode called for a node that does not have a Controller in its tag.";
-						if (isWiz)
-						{
-							DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
-						}
-					}
-				}
-			}
-		}
-		public void BuildChannelTree(TreeNodeAdv ctlNode)
-		{
-			// Builds the subtree for the channels under a controller node.
-			// Note: Does not clear existing channel nodes before building, so if rebuilding, be sure to clear them first.
-			// Grab a handy-dandy reference to the Controller object for this node from the tag.
-			if (ctlNode.Tag.GetType() == typeof(Controller))
-			{
-				Controller controller = (Controller)ctlNode.Tag;
-				// Loop thru all channels for this controller and add them as child nodes of this controller node.
-				for (int ch = 0; ch < controller.Channels.Count; ch++)
-				{
-					// Make a new channel node
-					Channel channel = controller.Channels[ch];
-					// Make a new node for this channel and add it to the tree as a child of the controller node.
-					TreeNodeAdv chanNode = new TreeNodeAdv("(New Channel)");
-					// Add a reference to the Channel object in the tag for this node, and a reference to this node in the channel's tag so we can easily find it later when we need to update it.
-					chanNode.Tag = channel;
-					channel.Tag = chanNode;
-					ctlNode.Nodes.Add(chanNode);
-					// Add the node to the tree as a child of the controller node.
-					BuildChannelNode(chanNode);
-
-
-				} // End loop for channels
-			} // End if node's tag IS a controller
-			else
-			{
-				string msg = "ERROR: BuildChannelTree called for a node that does not have a Controller in its tag.";
-				if (isWiz)
-				{
-					DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				}
-				return;
-			}
-		}
-
-		private void BuildChannelNode(TreeNodeAdv chanNode)
-		{
-			// Updates the text and icon for a channel node based on the current properties of the Channel object in the tag for this node.
-			if (chanNode != null)
-			{
-				if (chanNode.Tag != null)
-				{
-					IDMXThingy thing = (IDMXThingy)chanNode.Tag;
-					string sinfo = "Edit Node for " + thing.ObjectType.ToString() + thing.FullName;
-					Debug.WriteLine(sinfo);
-					if (chanNode.Tag.GetType() == typeof(Channel))
-					{
-						Channel channel = (Channel)chanNode.Tag;
-						//string nodeText = channel.OutputNum.ToString() + ": " + channel.Name;
-						string nodeText = channel.FullName;
-						chanNode.Text = nodeText;
-						ImageList icons = treeChannels.LeftImageList;
-						int iconIndex = LOR4.LOR4Admin.ColorIcon(icons, channel.Color, 24);
-						int[] ico = { iconIndex };
-						chanNode.LeftImageIndices = ico;
-						if (channel.BadName || channel.BadOutput)
-						{
-							chanNode.TextColor = Color.Red;
-						}
-						else
-						{
-							chanNode.TextColor = Color.Black;
-						}
-					}
-					else
-					{
-						string msg = "ERROR: BuildChannelNode called for a node that does not have a Channel in its tag.";
-						if (isWiz)
-						{
-							DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
-						}
-					}
+					MessageBox.Show(this, msg, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); 
 				}
 			}
 			else
 			{
-				string sinfo = "BuildChannelNode called, but node.tag is null for " + chanNode.Text;
-				Debug.WriteLine(sinfo);
-				if (isWiz)
+				if (node.Tag == null)
 				{
-					Debugger.Break();
-				}
-			}
-		}
-
-		public void UpdateUniveseNode(TreeNodeAdv node)
-		{
-			if (node != null)
-			{
-				if (node.Tag != null)
-				{
-					if (node.Tag.GetType() == typeof(Universe))
+					msg = "ERROR! Selected Node's tag is null!";
+					Debug.WriteLine(msg);
+					if (isWiz)
 					{
-						Universe univ = (Universe)node.Tag;
-						//string nodeText = univ.UniverseNumber.ToString() + ": " + univ.Name;
-						string nodeText = univ.ToString();
-						node.Text = nodeText;
+						MessageBox.Show(this, msg, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					}
+				}
+				else
+				{
+					IDMXThingy obj = (IDMXThingy)node.Tag;
+					if (obj.ObjectType == DMXObjectType.Channel)
+					{
+						Channel channel = (Channel)obj;
+						btnChannel.Text = "Edit\r\nChannel";
+						btnChannel.Enabled = false;
+						msg = "Add or Edit a Channel";
+						tipTool.SetToolTip(btnChannel, msg);
+
+						btnUniverse.Text = "Add\r\n" + uniName;
+						btnUniverse.Enabled = false;
+						msg = "Add a new " + uniName;
+						tipTool.SetToolTip(btnUniverse, msg);
+						btnController.Text = "Add\r\nController";
+						btnController.Enabled = true;
+						msg = "Add a new controller to the selected " + uniName + " " + channel.Universe.Name;
+						tipTool.SetToolTip(btnController, msg);
+					}
+					else if (obj.ObjectType == DMXObjectType.Controller)
+					{
+						Controller controller = (Controller)obj;
+						btnController.Text = "Edit\r\nController";
+						btnController.Enabled = true;
+						msg = "Edit the selected controller " + controller.Name;
+						tipTool.SetToolTip(btnController, msg);
+
+						Universe universe = (Universe)obj;
+						btnUniverse.Text = "Add\r\n" + uniName;
+						btnUniverse.Enabled = true;
+						msg = "Add a new universe";
+						tipTool.SetToolTip(btnUniverse, msg);
+						btnChannel.Text = "Add\r\nChannel";
+						btnChannel.Enabled = false;
+						msg = "Add a new Channel to the selected controller " + controller.Name;
+						tipTool.SetToolTip(btnChannel, msg);
+					}
+					else if (obj.ObjectType == DMXObjectType.Universe)
+					{
+						Universe universe = (Universe)obj;
+						btnUniverse.Text = "Edit\r\n" + uniName;
+						btnUniverse.Enabled = true;
+						msg= "Edit the selected " + uniName + " " + universe.Name;
+						tipTool.SetToolTip(btnUniverse, msg);
+						
+						btnController.Text = "Add\r\nController";
+						btnController.Enabled = true;
+						msg= "Add a controller to the selected " + uniName+ " " + universe.Name;
+						tipTool.SetToolTip(btnController, msg);
+						btnChannel.Text = "Edit\r\nChannel";
+						btnChannel.Enabled = false;
+						msg = "Add or Edit a Channel";
+						tipTool.SetToolTip(btnChannel, msg);
 					}
 				}
 			}
+			// Return focus to the tree
+			//treeChannels.Select();
 		}
-
-		public void UpdateControllerNode(TreeNodeAdv node)
-		{
-			if (node != null)
-			{
-				if (node.Tag != null)
-				{
-					if (node.Tag.GetType() == typeof(Controller))
-					{
-						Controller ctlr = (Controller)node.Tag;
-						//string nodeText = ctlr.StartAddress.ToString("000") + "-";
-						//int l = ctlr.StartAddress + ctlr.OutputCount - 1;
-						//nodeText += l.ToString("000") + ": ";
-						//nodeText += ctlr.ControllerID + ": " + ctlr.Name;
-						string nodeText = ctlr.ToString();
-						node.Text = nodeText;
-					}
-				}
-			}
-		}
-
-		public void UpdateChannelNode(TreeNodeAdv node)
-		{
-			if (node != null)
-			{
-				if (node.Tag != null)
-				{
-					if (node.Tag.GetType() == typeof(Channel))
-					{
-						Channel channel = (Channel)node.Tag;
-						//string nodeText = channel.LOR4Output.ToString() + ": " + channel.Name;
-						string nodeText = channel.ToString();
-						node.Text = nodeText;
-						ImageList icons = treeChannels.LeftImageList;
-						int iconIndex = LOR4.LOR4Admin.ColorIcon(icons, channel.Color);
-						int[] ico = { iconIndex };
-						node.LeftImageIndices = ico;
-						//TODO: Check for problem and update foreground text color (either way)
-					}
-				}
-			}
-		}
-
-
-		private void treeChannels_AfterSelect(object sender, EventArgs e)
+		private void OLD_Tree_SelectNode()
 		{
 			TreeNodeAdv node = treeChannels.SelectedNode;
 			string ttxt = "";
@@ -2157,176 +561,580 @@ namespace UtilORama4
 					tipTool.SetToolTip(btnChannel, "Add a new Channel to the selected Controller.");
 					btnRemove.Visible = false;
 				}
-
-
-
 			}
 		}
 
-		private void treeChannelList_DoubleClick(object sender, EventArgs e)
+		private void OpenSelectedNode()
+		// Triggered by a double-click on a node, or by pressing Enter
 		{
-			bool needRebuild = false;
 			TreeNodeAdv node = treeChannels.SelectedNode;
-			if (node != null)
+			string msg = "";
+			if (node == null)
 			{
-				int[] ni = node.LeftImageIndices;
-				if (ni == TREEICONcontroller)
+				msg = "ERROR! Select Node called, but selected node is null!";
+				Debug.WriteLine(msg);
+				if (isWiz)
 				{
-					EditControllerNode(node);
+					MessageBox.Show(this, msg, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}
-				else
-				{
-					if (ni == TREEICONuniverse)
-					{
-						EditUniverseNode(node);
-					}
-					else
-					{
-						int ix = ni[0];
-						if (ix > 2)
-						{
-							EditChannelNode(node);
-						}
-					}
-				}
-			}
-		}
-
-		private bool EditUniverseNode(TreeNodeAdv node)
-		{
-			//bool needSort = false;
-			Universe universe = (Universe)node.Tag;
-			bool success = EditUniverse(universe);
-			/*
-			universe.Editing = true;
-			Universe newUni = universe.Clone();
-			int oldUniNum = universe.UniverseNumber;
-			frmUniverse uniForm = new frmUniverse(newUni);
-			//uniForm.universes = Universes;
-			DialogResult dr = uniForm.ShowDialog(this);
-			if (dr == DialogResult.OK)
-			{
-				if (uniForm.dirty)
-				{
-					MakeDirty(true);
-					universe.Clone(newUni);
-					UpdateUniveseNode(node);
-					// Did the Universe Number change?
-					if (universe.UniverseNumber != oldUniNum)
-					{
-						needSort = true;
-					}
-					if (needSort)
-					{
-						treeChannels.Nodes.Sort();
-					}
-				}
-			}
-			if (universe.BadName || universe.BadNumber)
-			{
-				node.TextColor = Color.Red;
 			}
 			else
 			{
-				node.TextColor = Color.Black;
+				if (node.Tag == null)
+				{
+					msg = "ERROR! Selected Node's tag is null!";
+					Debug.WriteLine(msg);
+					if (isWiz)
+					{
+						MessageBox.Show(this, msg, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					}
+				}
+				else
+				{
+					IDMXThingy obj = (IDMXThingy)node.Tag;
+					if (obj.ObjectType == DMXObjectType.Channel)
+					{
+						Channel channel = (Channel)obj;
+						EditChannel(channel);
+					}
+					else if (obj.ObjectType == DMXObjectType.Controller)
+					{
+						Controller controller = (Controller)obj;
+						EditController(controller);
+					}
+					else if (obj.ObjectType == DMXObjectType.Universe)
+					{
+						Universe universe = (Universe)obj;
+						EditUniverse(universe);
+					}
+				}
 			}
+		}
+		private void Tree_KeyPress(KeyPressEventArgs key)
+		// Triggered by pressing any key (while Tree has focus, which should be always)
+		{
+			TreeNodeAdv node = treeChannels.SelectedNode;
+			string msg = "";
+			if (node == null)
+			{
+				msg = "ERROR! Select Node called, but selected node is null!";
+				Debug.WriteLine(msg);
+				if (isWiz)
+				{
+					MessageBox.Show(this, msg, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+			}
+			else
+			{
+				if (node.Tag == null)
+				{
+					msg = "ERROR! Selected Node's tag is null!";
+					Debug.WriteLine(msg);
+					if (isWiz)
+					{
+						MessageBox.Show(this, msg, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					}
+				}
+				else
+				{
+					IDMXThingy obj = (IDMXThingy)node.Tag;
+					if (obj.ObjectType == DMXObjectType.Channel)
+					{
+						Channel channel = (Channel)obj;
+						if (key.KeyChar == (char)Keys.Delete)
+						{
+							bool deleted = DeleteChannel(channel);
+						}
+						if ((key.KeyChar == (char)Keys.Enter) || (key.KeyChar == (char)Keys.Return))
+						{
+							EditChannel(channel);
+						}
+						if ((key.KeyChar == 99) || (key.KeyChar == (char)Keys.Space))
+						{
+							string theName = channel.Name;
+							Clipboard.SetText(theName);
+							Fyle.MakeNoise(Fyle.Noises.Pop);
+						}
+					}
+					else if (obj.ObjectType == DMXObjectType.Controller)
+					{
+						Controller controller = (Controller)obj;
+						if (key.KeyChar == (char)Keys.Delete)
+						{
+							bool deleted = DeleteController(controller);
+						}
+						if ((key.KeyChar == (char)Keys.Enter) || (key.KeyChar == (char)Keys.Return))
+						{
+							EditController(controller);
+						}
+						if ((key.KeyChar == 99) || (key.KeyChar == (char)Keys.Space))
+						{
+							string theName = controller.Name;
+							Clipboard.SetText(theName);
+							Fyle.MakeNoise(Fyle.Noises.Pop);
+						}
+					}
+					else if (obj.ObjectType == DMXObjectType.Channel)
+					{
+						Universe universe = (Universe)obj;
+						if (key.KeyChar == (char)Keys.Delete)
+						{
+							bool deleted = DeleteUniverse(universe);
+						}
+						if ((key.KeyChar == (char)Keys.Enter) || (key.KeyChar == (char)Keys.Return))
+						{
+							EditUniverse(universe);
+						}
+						if ((key.KeyChar == 99) || (key.KeyChar == (char)Keys.Space))
+						{
+							string theName = universe.Name;
+							Clipboard.SetText(theName);
+							Fyle.MakeNoise(Fyle.Noises.Pop);
+						}
+					}
+				}
+			}
+			treeChannels.Select();
+		}
 
+		private bool DeleteNode(TreeNodeAdv node)
+		{
+			// Note: non-success does not mean the code failed, it's pro'ly cuz the user said 'No' to delete
+			bool success = false;
+			string msg = "";
+
+			if (node.Tag != null)
+			{
+				if (node.Tag.GetType() == typeof(Channel))
+				{
+					Channel channel = (Channel)node.Tag;
+					msg = "Are you sure you want to delete channel ";
+					msg += channel.OutputNum + ": " + channel.Name + "?";
+					DialogResult dr = MessageBox.Show(this, msg, "Delete LOR4Channel?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+					if (dr == DialogResult.Yes)
+					{
+						node.Parent.Nodes.Remove(node);
+						AllChannels.Remove(channel);
+						channel.Controller.Channels.Remove(channel);
+						MakeDirty(true);
+						success = true;
+					}
+				}
+				else
+				{
+					if (node.Tag.GetType() == typeof(Controller))
+					{
+						Controller controller = (Controller)node.Tag;
+						msg = "Are you sure you want to delete controller ";
+						if (controller.Identifier.Length > 0)
+						{
+							msg += controller.Identifier + ": ";
+						}
+						msg += controller.Name + " which has ";
+						msg += controller.Channels.Count.ToString() + " channels?";
+						DialogResult dr = MessageBox.Show(this, msg, "Delete Controller?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+						if (dr == DialogResult.Yes)
+						{
+							for (int c = 0; c < controller.Channels.Count; c++)
+							{
+								Channel channel = controller.Channels[c];
+								AllChannels.Remove(channel);
+							}
+							node.Parent.Nodes.Remove(node);
+							AllControllers.Remove(controller);
+							controller.Universe.Controllers.Remove(controller);
+							MakeDirty(true);
+							success = true;
+						}
+					}
+					else
+					{
+						if (node.Tag.GetType() == typeof(Universe))
+						{
+							Universe universe = (Universe)node.Tag;
+							msg = "Are you really sure you want to delete " + uniName + " ";
+							msg += universe.UniverseNumber + ": " + universe.Name + " which has ";
+							msg += universe.Controllers.Count.ToString() + " controllers and ";
+							int chanCount = 0;
+							for (int c1 = 0; c1 < universe.Controllers.Count; c1++)
+							{
+								Controller controller = universe.Controllers[c1];
+								chanCount += controller.Channels.Count;
+							}
+							msg += chanCount.ToString() + " channels?";
+							DialogResult dr = MessageBox.Show(this, msg, "Delete " + uniName + "?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+							if ((universe.Controllers.Count > 2) || (chanCount > 23))
+							{
+								msg = "That's a lot of controllers (" + universe.Controllers.Count.ToString() + ") and ";
+								msg += " a lot of channels (" + chanCount.ToString() + ").";
+								msg += "\r\n\r\nAre you really really sure?";
+								dr = MessageBox.Show(this, msg, "Delete " + uniName + "?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+							}
+							if (dr == DialogResult.Yes)
+							{
+								for (int c1 = 0; c1 < universe.Controllers.Count; c1++)
+								{
+									Controller controller = universe.Controllers[c1];
+									for (int c2 = 0; c2 < controller.Channels.Count; c2++)
+									{
+										Channel channel = controller.Channels[c2];
+										AllChannels.Remove(channel);
+									} // End loop thru controller's channels
+								} // End loop thru universe's controllers
+								node.Parent.Nodes.Remove(node);
+								AllUniverses.Remove(universe);
+								MakeDirty(true);
+								success = true;
+							} // End if user said Yes
+						} // End if selected node was a Universe
+					} // End if selected node was a controller, or not
+				} // End if selected node was a channel, or not
+			} // End if node's .Tag was not null
+			return success;
+		}
+
+		private void RemoveNode()
+		{ 
+			TreeNodeAdv node = treeChannels.SelectedNode;
+			if (node != null)
+			{
+				Channel killChannel = (Channel)node.Tag;
+				RemoveChannel(killChannel);
+			}
+		}
+
+		#endregion // Tree Actions
+
+		#region Device Types
+		private DeviceType GetDeviceTypeByID(int ID)
+		{
+			DeviceType ret = null;
+			for (int c = 0; c < DeviceTypes.Count; c++)
+			{
+				if (DeviceTypes[c].ID == ID)
+				{
+					ret = DeviceTypes[c];
+					c = DeviceTypes.Count; // Exit loop
+				}
+			}
+			return ret;
+		}
+
+		private void EditDevices()
+		{
+			frmDeviceTypes devform = new frmDeviceTypes();
+			devform.LoadDevices(DeviceTypes);
+			DialogResult dr = devform.ShowDialog(this);
+			if (dr == DialogResult.OK)
+			{
+				// This form's DeviceType list has been updated by the btnOK event on the devices form
+				// BUT we now need to save it to the data file
+				string tp = Fyle.GetUserTempPath;
+				string f = "";
+				string g = "";
+
+				this.Enabled = false;
+				this.Cursor = Cursors.WaitCursor;
+				lblLoading.Text = "Saving...";
+				lblLoading.Visible = true;
+				lblLoading.BringToFront();
+
+				int errs = SaveDevices(tp);
+				string tf = tp + fileDeviceTypes;
+				if (Fyle.Exists(tf))
+				{
+					f = dbPath + "Backup." + fileDeviceTypes;
+					if (Fyle.Exists(f))
+						Fyle.SafeDelete(f);
+					g = dbPath + fileDeviceTypes;
+					Fyle.SafeCopy(g, f);
+				}
+
+				this.Enabled = true;
+				this.Cursor = Cursors.Default;
+				lblLoading.Visible = false;
+				lblLoading.SendToBack();
+				treeChannels.Select();
+			}
+		}
+		public DeviceType GetTypeByName(string theName)
+		{
+			string tn = theName.ToLower();
+			DeviceType ret = null;
+			for (int i = 0; i < DeviceTypes.Count; i++)
+			{
+				if (tn == DeviceTypes[i].Name.ToLower())
+				{
+					ret = DeviceTypes[i];
+					i = DeviceTypes.Count; // Force exit of loop
+				}
+			}
+			return ret;
+		}
+
+
+		#endregion // Device Types
+
+		#region Universes
+		private Universe GetUniverseByID(int ID)
+		{
+			Universe ret = null;
+			for (int c = 0; c < AllUniverses.Count; c++)
+			{
+				if (AllUniverses[c].ID == ID)
+				{
+					ret = AllUniverses[c];
+					c = AllUniverses.Count; // Exit loop
+				}
+			}
+			return ret;
+		}
+
+		private Universe GetUniverseByNumber(int unum)
+		{
+			Universe ret = null;
+			for (int c = 0; c < AllUniverses.Count; c++)
+			{
+				int uid = AllUniverses[c].ID;
+				string uname = AllUniverses[c].Name;
+				if (AllUniverses[c].UniverseNumber == unum)
+				{
+					ret = AllUniverses[c];
+					c = AllUniverses.Count; // Exit loop
+				}
+			}
+			return ret;
+		}
+		public void BuildUniverseTree(List<Universe> uniList)
+		{
+			// Erases and rebuilds the entire tree from the Universes list.
+			// Note: Clears the universes list.
+			treeChannels.Nodes.Clear();
+			// Loop thru all universes and add them to the tree, then loop thru their controllers and add them, then loop thru their channels and add them.
+			for (int u = 0; u < uniList.Count; u++)
+			{
+				// Grab a convenient reference to this universe.
+				Universe universe = uniList[u];
+				// Create new node for this universe and add to tree.
+				TreeNodeAdv uniNode = new TreeNodeAdv("(New " + uniName + ")");
+				// Use the node's tag to hold a reference to the Universe object, and the universe's tag to hold a reference to the node so we can easily find the node later when we need to update it
+				uniNode.Tag = uniList[u];
+				uniList[u].Tag = uniNode;
+				// Add the universe to the tree as a top level node.
+				treeChannels.Nodes.Add(uniNode);
+				// Build the text and icon for this node based on the properties of the universe.
+				BuildUniverseNode(uniNode);
+				// Now loop thru the controllers for this universe and add them as child nodes, then loop thru their channels and add them as child nodes of the controller nodes.
+				BuildControllerTree(uniNode);
+			} // End loop for universes
+		}
+
+		private void BuildUniverseNode(TreeNodeAdv uniNode)
+		{
+			// Updates the text and icon for a universe node based on the current properties of the Universe object in the tag for this node.
+			if (uniNode != null)
+			{
+				if (uniNode.Tag != null)
+				{
+					if (uniNode.Tag.GetType() == typeof(Universe))
+					{
+						Universe universe = (Universe)uniNode.Tag;
+						//string nodeText = universe.UniverseNumber.ToString() + ": " + universe.Name;
+						string nodeText = universe.FullName;
+						int ImageIndex = TREEICONuniverse[0];
+						int[] ico = { ImageIndex };
+						uniNode.LeftImageIndices = ico;
+						uniNode.Text = nodeText;
+						if (universe.BadName || universe.BadNumber)
+						{
+							uniNode.TextColor = Color.Red;
+						}
+						else
+						{
+							uniNode.TextColor = Color.Black;
+						}
+					}
+					else
+					{
+						string msg = "ERROR: BuildUniverseNode called for a node that does not have a Universe in its tag.";
+						if (isWiz)
+						{
+							DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						}
+					}
+				}
+			}
+		}
+
+		public void UpdateUniveseNode(TreeNodeAdv node)
+		{
+			if (node != null)
+			{
+				if (node.Tag != null)
+				{
+					if (node.Tag.GetType() == typeof(Universe))
+					{
+						Universe univ = (Universe)node.Tag;
+						//string nodeText = univ.UniverseNumber.ToString() + ": " + univ.Name;
+						string nodeText = univ.ToString();
+						node.Text = nodeText;
+					}
+				}
+			}
+		}
+		private void Universe_AddEdit()
+		{
+
+			TreeNodeAdv node = treeChannels.SelectedNode;
+			if (node != null)
+			{
+
+				string funct = btnUniverse.Text.Substring(0, 3);
+
+				if (funct == "Add")
+				{
+
+
+					AddNewUniverse();
+				} // End funct [first 3 characters of button text] was "Add";
+
+				if (funct == "Edi")
+				{
+					int[] ni = node.LeftImageIndices;
+					bool en = (ni[0] == TREEICONuniverse[0]);
+					if (en)
+					{
+						Universe uniOriginal = (Universe)node.Tag;
+						EditUniverse(uniOriginal);
+					}
+				} // End funct [first 4 characters of button text] was "Edi";
+			}
+			treeChannels.Select();
+		}
+		private bool AddNewUniverse()
+		{
+			bool success = false;
+			//TreeNodeAdv parentNode = treeChannels.SelectedNode;
+			Universe universe = new Universe();
+			lastID++;
+			universe.ID = lastID;
+			//universe.Universe = parentUni;
+			universe.Editing = true;
+			//Universe universe = universe.Universe;
+			uniForm = new frmUniverse(universe, this);
+			//ctlForm.universes = universes;
+
+			// Try to find an unused start address
+			int uni = 1;
+			for (int ui = 0; ui < AllUniverses.Count; ui++)
+			{
+				Universe verse = AllUniverses[ui];
+				if (verse.UniverseNumber <= uni)
+				{
+					// This unit number is already used, so try the next one
+					uni++;
+				}
+				else
+				{
+					// This start address is not used, so start with it
+					// Break from loop
+					universe.UniverseNumber = uni;
+					ui = AllUniverses.Count; // Force exit of loop
+				}
+			}
+			// Show the Channel edit dialog, modal
+			DialogResult dr = ctlForm.ShowDialog(this);
+			if (dr == DialogResult.OK)
+			{
+				// User accepted changes on the ChannelEdit form (clicked OK)
+				if (ctlForm.isDirty)
+				{
+					AllUniverses.Add(universe);
+					AllUniverses.Sort();
+					//parentNode = (TreeNodeAdv)universe.Universe.Tag;
+					//BuildChannelTree(parentNode);
+					BuildTree();
+					//Alluniverses.Add(universe);
+					//Alluniverses.Sort();
+					int ImageIndex = TREEICONuniverse[0];
+					int[] ico = { ImageIndex };
+					MakeDirty(true);
+					UpdateStatus();
+					success = true;
+				}
+			}
+			TreeNodeAdv parentNode = (TreeNodeAdv)universe.Tag;
+			if (universe.BadName || universe.BadNumber)
+			{
+				parentNode.TextColor = Color.Red;
+			}
+			else
+			{
+				parentNode.TextColor = Color.Black;
+			}
 			universe.Editing = false;
 			uniForm.Dispose();
-			*/
+			treeChannels.Focus();
 			return success;
 		}
 
-		public bool EditControllerNode(TreeNodeAdv node)
+		private bool EditUniverse(Universe universe)
 		{
-			Controller controller = (Controller)node.Tag;
-			bool success = EditController(controller);
-			return success;
-		}
-
-		public bool EditChannelNode(TreeNodeAdv node)
-		{
-			//bool needSort = false;
-			Channel channel = (Channel)node.Tag;
-			bool success = EditChannel(channel);
-			return success;
-		}
-
-		public bool EditChannel(Channel channel)
-		{
-			// Return True if channel was (successfully) edited.
+			// Return True if universe was (successfully) edited.
 			// Returns False if User Canceled the Edit dialog, or in case of an error.
 			bool success = false;
-			// Get the controller it is connnected to, in case that changes
-			Controller controller = channel.Controller;
-			channel.Editing = true;
-			// Create a new instance of the channel edit form, passing the channel to edit and a reference to this form (for callbacks and such)
-			chanForm = new frmChannel(channel, this);
-			// Show the channel edit dialog, modal
-			DialogResult dr = chanForm.ShowDialog(this);
+
+			int oldUni = universe.UniverseNumber;
+			universe.Editing = true;
+			// Create a new instance of the universe edit form, passing the universe to edit and a reference to this form (for callbacks and such)
+			uniForm = new frmUniverse(universe, this);
+			// Show the universe edit dialog, modal
+			DialogResult dr = ctlForm.ShowDialog(this);
 			try
 			{
 				// Upon return from the edit dialog, did they Cancel, or Accept Changes
-				if (dr == DialogResult.OK)  // Clicked OK
+				if (dr == DialogResult.OK)
 				{
-					if (controller.Tag.GetType() == typeof(TreeNodeAdv))
+					//lblDirty.Text = ctlForm.changes.ToString();
+					if (ctlForm.isDirty)
 					{
-						//TreeNodeAdv ctlNode = (TreeNodeAdv)controller.Tag;
-						lblDirty.Text = chanForm.changes.ToString();
-						// Was anything even changed (on the channel)?
-						if (chanForm.isDirty)
+						TreeNodeAdv uniNode = (TreeNodeAdv)universe.Tag;
+						// Did the universe change?
+						if (universe.UniverseNumber != oldUni)
 						{
-							// Declare here, cuz will need later
-							TreeNodeAdv ctlNode = (TreeNodeAdv)controller.Tag;
-							TreeNodeAdv chNode = (TreeNodeAdv)channel.Tag;
-							// Did the Controller change?
-							if (channel.Controller.ID != controller.ID)
-							{
-								// Find old controller and remove the Original Channel
-								for (int c = 0; c < controller.Channels.Count; c++)
-								{
-									if (channel.ID == controller.Channels[c].ID)
-									{
-										controller.Channels.RemoveAt(c);
-										chNode.Remove();
-										c = controller.Channels.Count; // Force loop exit
-									}
-								}
-								// Fetch the new controller, that the channel was moved _TO_
-								controller = channel.Controller;
-								// And add the modified channel
-								controller.Channels.Add(channel);
-								// Re-Sort the controller channels (by number) to put the newly moved channel in proper position
-								controller.Channels.Sort();
-								// Fetch the node of the new controller
-								ctlNode = (TreeNodeAdv)controller.Tag;
-								// Rebuild it
-								ctlNode.Nodes.Clear();
-								BuildChannelTree(ctlNode);
-							} // End Controller Changed
-							else // Still on the same controller
-							{
-								// Update the same node, which should be the same controller node, since still on same controller
-								controller.Channels.Sort(); // In case the output number changed, need to re-sort the channels on this controller
-																						// Get the (original) controller node (Note: did not change)
-																						// And re-build it
-								BuildChannelNode(chNode); // Just update this one node, since still on same controller, so no need to re-build the entire tree for this controller
-																					//BuildChannelTree(ctlrNode);
-																					//}
-							} // End Still on same controller
-							MakeDirty(true);
-							success = true;
-						} // End dirty
-					} // End controller's tag is a TreeNodeAdv
-					else
-					{
-						string msg = "ERROR: Channel's controller does not have a TreeNodeAdv in its tag.";
-						if (isWiz)
+							// Find old Universe and remove the Original universe
+							//for (int c = 0; c < universe.Universes.Count; c++)
+							//{
+							//	if (universe.ID == universe.Universes[c].ID)
+							//	{
+							//		universe.Universes.RemoveAt(c);
+							//		BuildChannelTree(uniNode);
+							//		c = universe.Channels.Count; // Force loop exit
+							//	}
+							//}
+							// Fetch the new universe, that the channel was moved _TO_
+							//universe = universe.Universe;
+							// And add the modified channel
+							//universe.Universes.Add(universe);
+							// Re-Sort the universe channels (by number) to put the newly moved channel in proper position
+							//universe.Universes.Sort();
+							treeChannels.Nodes.Sort();
+							// Fetch the node of the new universe
+							//uniNode = (TreeNodeAdv)universe.Tag;
+							// Rebuild it
+							//BuildChannelTree(uniNode);
+						}  // End Universe Changed
+						else
 						{
-							DialogResult dr2 = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+							// Update the same node, which should be the same universe node, since still on same universe
+							//universe.Universes.Sort(); // In case the start address changed, need to re-sort the universes on this universe
+							//uniNode = (TreeNodeAdv)universe.Tag;
+							//BuildChannelTree(uniNode);
 						}
-					}
-				} // End DialogResult is OK
+						MakeDirty(true);
+						success = true;
+					} // End dirty
+				} // End DialogResult is OK\
 			} // End Try
 			catch (Exception ex)
 			{
@@ -2335,140 +1143,242 @@ namespace UtilORama4
 				// Consider that a cancel
 				int ln = LOR4.LOR4Admin.ExceptionLineNumber(ex);
 				string msg = "Error on line " + ln.ToString() + "\r\n";
-				msg += ex.ToString() + " while exiting Channel editor " + channel.Name;
+				msg += ex.ToString() + " while exiting " + uniName + " editor " + universe.Name;
+
 				if (Fyle.isWiz || Fyle.InIDE)
 				{
-					Fyle.BUG("EditChannel", ex);
+					Fyle.BUG("Edituniverse", ex);
 					//DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}
 			}
-			// Clear the editing flag (necessary if cloned back)
-			channel.Editing = false;
-			// Dispose of, clear, and remove Channel Editor form from memory
-			chanForm.Dispose();
+
+			if (universe.BadName || universe.BadNumber)
+			{
+				TreeNodeAdv node = (TreeNodeAdv)universe.Tag;
+				node.TextColor = Color.Red;
+			}
+			else
+			{
+				TreeNodeAdv node = (TreeNodeAdv)universe.Tag;
+				node.TextColor = Color.Black;
+			}
+			universe.Editing = false;
+			uniForm.Dispose();
 			return success;
 		}
 
-		private void btnChannel_Click(object sender, EventArgs e)
+		private bool DeleteUniverse(Universe universe)
+		// Triggered by the user attempting to delete the universe (likely by pressing the delete key on a universe node)
+		{
+			bool success = false;
+			string msg = "Are you really sure you want to delete " + uniName + " ";
+			msg += universe.UniverseNumber + ": " + universe.Name + " which has ";
+			msg += universe.Controllers.Count.ToString() + " controllers and ";
+			int chanCount = 0;
+			for (int c1 = 0; c1 < universe.Controllers.Count; c1++)
+			{
+				Controller controller = universe.Controllers[c1];
+				chanCount += controller.Channels.Count;
+			}
+			msg += chanCount.ToString() + " channels?";
+			DialogResult dr = MessageBox.Show(this, msg, "Delete " + uniName + "?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+			if ((universe.Controllers.Count > 2) || (chanCount > 16))
+			{
+				msg = "That's a lot of controllers (" + universe.Controllers.Count.ToString() + ") and ";
+				msg += " a lot of channels (" + chanCount.ToString() + ").";
+				msg += "\r\n\r\nAre you really really sure?";
+				msg += "\r\n(This cannot be undone!)";
+				dr = MessageBox.Show(this, msg, "Delete " + uniName + "?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+			}
+			if (dr == DialogResult.Yes)
+			{
+				success = RemoveUniverse(universe);
+			}
+			return success;
+		}
+
+		private bool RemoveUniverse(Universe universe)
+		{
+			// Returns True if universe successfully removed
+			// Important: Does NOT ask the user for confirmation, so be sure to call this from a method that does (like DeleteNode)
+			bool success = false;
+			foreach (Controller controller in universe.Controllers)
+			{
+				RemoveController(controller);
+			}
+			TreeNodeAdv node = (TreeNodeAdv)universe.Tag;
+			treeChannels.Nodes.Remove(node);
+			AllUniverses.Remove(universe);
+			MakeDirty(true);
+			UpdateStatus();
+			success = true;
+			return success;
+		}
+
+		#endregion // Universes
+
+		#region Controllers
+		private Controller GetControllerByID(int ID)
+		{
+			Controller ret = null;
+			for (int c = 0; c < AllControllers.Count; c++)
+			{
+				int cid = AllControllers[c].ID;
+				string cname = AllControllers[c].Name;
+				if (AllControllers[c].ID == ID)
+				{
+					ret = AllControllers[c];
+					c = AllControllers.Count; // Exit loop
+				}
+			}
+			return ret;
+		}
+		public void BuildControllerTree(TreeNodeAdv uniNode)
+		{
+			// Builds the subtree for the controllers under a universe node, then calls BuildChannelTree for each controller node to build the channels under each controller.
+			// Note: Does not clear existing controller nodes before building, so if rebuilding, be sure to clear them first.
+			if (uniNode.Tag.GetType() == typeof(Universe))
+			{
+				// Get the Universe object for this node from the tag.
+				Universe universe = (Universe)uniNode.Tag;
+				// Loop thru all it's child controllers.
+				for (int ct = 0; ct < universe.Controllers.Count; ct++)
+				{
+					// Grab a convenient reference to this controller.
+					Controller controller = universe.Controllers[ct];
+					// Make a new node for this controller and add it to the tree as a child of the universe node.	
+					TreeNodeAdv ctlNode = new TreeNodeAdv("(New Controller)");
+					// Add a reference to the Controller object in the tag for this node,
+					ctlNode.Tag = controller;
+					controller.Tag = ctlNode;
+					// Add the node to the tree as a child of the universe node.
+					uniNode.Nodes.Add(ctlNode);
+					// Build the text for the node, include the Identifier only if it is not blank.
+					BuildControllerNode(ctlNode);
+					// Now loop thru the channels for this controller and add them as child nodes of this controller node.
+					BuildChannelTree(ctlNode);
+				} // End loop for controllers
+			}
+			else
+			{
+				string msg = "ERROR: BuildControllerTree called for a node that does not have a Universe in its tag.";
+				if (isWiz)
+				{
+					DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+			} // End if node's tag IS a universe
+		}
+
+		private void BuildControllerNode(TreeNodeAdv ctlNode)
+		{
+			// Updates the text and icon for a controller node based on the current properties of the Controller object in the tag for this node.
+			if (ctlNode != null)
+			{
+				if (ctlNode.Tag != null)
+				{
+					if (ctlNode.Tag.GetType() == typeof(Controller))
+					{
+						Controller controller = (Controller)ctlNode.Tag;
+						string nodeText = controller.FullName;
+						int foo = controller.UnitID;
+						foo = controller.StartAddress;
+						foo = controller.OutputCount;
+						/*
+						if (hasLOR > 0)
+						{
+							 nodeText = "Unit:" + controller.UnitID.ToString("00") + ": ";
+						}
+						nodeText += controller.StartAddress.ToString("000") + "-";
+						nodeText += l.ToString("000") + ": ";
+						if (controller.Identifier.Length > 0)
+						{
+							nodeText += controller.Identifier + ": ";
+						}
+						nodeText += controller.Name;
+						*/
+						ctlNode.Text = nodeText;
+						int l = controller.StartAddress + controller.OutputCount - 1;
+						int ImageIndex = TREEICONcontroller[0];
+						int[] ico = { ImageIndex };
+						ctlNode.LeftImageIndices = ico;
+						if (controller.BadIdentity || controller.BadName || controller.BadAddress)
+						{
+							ctlNode.TextColor = Color.Red;
+						}
+						else
+						{
+							ctlNode.TextColor = Color.Black;
+						}
+					}
+					else
+					{
+						string msg = "ERROR: BuildControllerNode called for a node that does not have a Controller in its tag.";
+						if (isWiz)
+						{
+							DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						}
+					}
+				}
+			}
+		}
+		public bool EditControllerNode(TreeNodeAdv node)
+		{
+			Controller controller = (Controller)node.Tag;
+			bool success = EditController(controller);
+			return success;
+		}
+
+		public void UpdateControllerNode(TreeNodeAdv node)
+		{
+			if (node != null)
+			{
+				if (node.Tag != null)
+				{
+					if (node.Tag.GetType() == typeof(Controller))
+					{
+						Controller ctlr = (Controller)node.Tag;
+						//string nodeText = ctlr.StartAddress.ToString("000") + "-";
+						//int l = ctlr.StartAddress + ctlr.OutputCount - 1;
+						//nodeText += l.ToString("000") + ": ";
+						//nodeText += ctlr.ControllerID + ": " + ctlr.Name;
+						string nodeText = ctlr.ToString();
+						node.Text = nodeText;
+					}
+				}
+			}
+		}
+		private void Controller_AddEdit()
 		{
 			TreeNodeAdv node = treeChannels.SelectedNode;
 			if (node != null)
 			{
-				//if (treeChannels.SelectedNode.Tag.GetType() == typeof(Controller))
-				string funct = btnChannel.Text.Substring(0, 3);
-				// ** ADD MODE **
+				//if (treeChannels.SelectedNode.Tag.GetType() == typeof(Universe))
+				string funct = btnController.Text.Substring(0, 3);
 				if (funct == "Add")
 				{
+					//TODO: Make sure selected node is a Universe
+					//TODO: Or if not, traverse up the tree to find the parent universe
 					TreeNodeAdv parentNode = treeChannels.SelectedNode;
-					Controller parentCtl = (Controller)treeChannels.SelectedNode.Tag;
-					AddNewChannel(parentCtl);
+					Universe parentUni = (Universe)treeChannels.SelectedNode.Tag;
+					AddNewController(parentUni);
+
 				} // End funct [first 3 characters of button text] was "Add";
-					// ** EDIT MODE **
-				else if (funct == "Edi")
+				if (funct == "Edi")
 				{
 					int[] ni = node.LeftImageIndices;
-					bool en = ((ni != TREEICONuniverse) && (ni != TREEICONcontroller));
+					bool en = (ni[0] == TREEICONcontroller[0]);
 					if (en)
 					{
-						Channel chanOriginal = (Channel)node.Tag;
-						EditChannel(chanOriginal);
+						Controller ctlrOriginal = (Controller)node.Tag;
+						EditController(ctlrOriginal);
+						//EditController(controller);
 					}
-				} // End funct [first 4 characters of button text] was "Edit";
-			} // End a node was selected (treeChannels.selectedNode != null)
+
+				} // End funct [first 3 characters of button text] was "Edi";
+			}
 			treeChannels.Select();
 
 		}
-
-		private bool AddNewChannel(Controller parentCtl)
-		{
-			// Create and prepare the new channel to be added to the parent controller
-			TreeNodeAdv parentNode = treeChannels.SelectedNode;
-			Channel channel = new Channel();
-			bool success = false;
-			lastID++;
-			channel.ID = lastID;
-			channel.Controller = parentCtl;
-			channel.Editing = true;
-			Controller oldCtlr = channel.Controller;
-			chanForm = new frmChannel(channel, this);
-
-			// Try to find an unused output
-			int o = 1;
-			// Loop thru all channels/outputs already on this controller
-			for (int ci = 0; ci < oldCtlr.Channels.Count; ci++)
-			{
-				if (oldCtlr.Channels[ci].OutputNum == o)
-				{
-					// If this output number is already used, try the next one
-					o++;
-				}
-				else
-				{
-					// output number 'o' is not used, so start with it
-					// Break from loop
-					ci = oldCtlr.Channels.Count;
-				}
-			}
-			channel.OutputNum = o;
-
-			// Show the Channel edit dialog, modal
-			DialogResult dr = chanForm.ShowDialog();
-			if (dr == DialogResult.OK)
-			{
-				// User accepted changes on the ChannelEdit form (clicked OK)
-				if (chanForm.isDirty)
-				{
-					channel.Controller.Channels.Add(channel);
-					channel.Controller.Channels.Sort();
-					parentNode = (TreeNodeAdv)channel.Controller.Tag;
-					BuildChannelTree(parentNode);
-					AllChannels.Add(channel);
-					AllChannels.Sort();
-					//TreeNodeAdv nodeNewChan = new TreeNodeAdv(channel.ToString());
-					//parentNode.Nodes.Add(nodeNewChan);
-					//nodeNewChan.Tag = channel;
-					int ImageIndex = LOR4.LOR4Admin.ColorIcon(imlTreeIcons, channel.Color);
-					int[] ico = { ImageIndex };
-					//nodeNewChan.LeftImageIndices = ico;
-					//channel.Tag = nodeNewChan;
-					success = true;
-					MakeDirty(true);
-					UpdateStatus();
-
-					//BuildTree();
-					//treeChannels.Nodes.Sort();
-					//BuildChannelTree(parentNode);
-				}
-				if (channel.BadName || channel.BadOutput)
-				{
-					parentNode.TextColor = Color.Red;
-				}
-				else
-				{
-					parentNode.TextColor = Color.Black;
-				}
-				treeChannels.SelectedNode = parentNode;
-			} // End user accepted changes on ChannelEdit form (clicked OK)
-			else
-			{
-				// User canceled out of the ChannelEdit form
-				// Remove the new temporary channel from the parent controller's channel list
-				for (int c = 0; c < oldCtlr.Channels.Count; c++)
-				{
-					if (channel.ID == oldCtlr.Channels[c].ID)
-					{
-						oldCtlr.Channels.RemoveAt(c);
-						//BuildChannelTree(parentNode);
-						c = oldCtlr.Channels.Count; // Force loop exit
-					}
-				}
-			}
-			treeChannels.Focus();
-			channel.Editing = false;
-			chanForm.Dispose();
-			return success;
-		}
-
 		private bool AddNewController(Universe parentUni)
 		{
 			bool success = false;
@@ -2550,73 +1460,6 @@ namespace UtilORama4
 			}
 			controller.Editing = false;
 			ctlForm.Dispose();
-			treeChannels.Focus();
-			return success;
-		}
-
-		private bool AddNewUniverse()
-		{
-			bool success = false;
-			//TreeNodeAdv parentNode = treeChannels.SelectedNode;
-			Universe universe = new Universe();
-			lastID++;
-			universe.ID = lastID;
-			//universe.Universe = parentUni;
-			universe.Editing = true;
-			//Universe universe = universe.Universe;
-			uniForm = new frmUniverse(universe, this);
-			//ctlForm.universes = universes;
-
-			// Try to find an unused start address
-			int uni = 1;
-			for (int ui = 0; ui < AllUniverses.Count; ui++)
-			{
-				Universe verse = AllUniverses[ui];
-				if (verse.UniverseNumber <= uni)
-				{
-					// This unit number is already used, so try the next one
-					uni++;
-				}
-				else
-				{
-					// This start address is not used, so start with it
-					// Break from loop
-					universe.UniverseNumber = uni;
-					ui = AllUniverses.Count; // Force exit of loop
-				}
-			}
-			// Show the Channel edit dialog, modal
-			DialogResult dr = ctlForm.ShowDialog(this);
-			if (dr == DialogResult.OK)
-			{
-				// User accepted changes on the ChannelEdit form (clicked OK)
-				if (ctlForm.isDirty)
-				{
-					AllUniverses.Add(universe);
-					AllUniverses.Sort();
-					//parentNode = (TreeNodeAdv)universe.Universe.Tag;
-					//BuildChannelTree(parentNode);
-					BuildTree();
-					//Alluniverses.Add(universe);
-					//Alluniverses.Sort();
-					int ImageIndex = TREEICONuniverse[0];
-					int[] ico = { ImageIndex };
-					MakeDirty(true);
-					UpdateStatus();
-					success = true;
-				}
-			}
-			TreeNodeAdv parentNode = (TreeNodeAdv)universe.Tag;
-			if (universe.BadName || universe.BadNumber)
-			{
-				parentNode.TextColor = Color.Red;
-			}
-			else
-			{
-				parentNode.TextColor = Color.Black;
-			}
-			universe.Editing = false;
-			uniForm.Dispose();
 			treeChannels.Focus();
 			return success;
 		}
@@ -2728,63 +1571,333 @@ namespace UtilORama4
 			return success;
 		}
 
-		private bool EditUniverse(Universe universe)
+		private bool DeleteController(Controller controller)
+		// Triggered by the user attempting to delete the controller (likely by pressing the delete key on a controller node)
 		{
-			// Return True if universe was (successfully) edited.
+			bool success = false;
+			string msg = "Are you sure you want to delete controller ";
+			if (controller.Identifier.Length > 0)
+			{
+				msg += controller.Identifier + ": ";
+			}
+			msg += controller.Name;
+			if (controller.Channels.Count > 0)
+			{
+				msg += " which has " + controller.Channels.Count.ToString() + " channels?";
+			}
+			DialogResult dr = MessageBox.Show(this, msg, "Delete Controller?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+			if (dr == DialogResult.Yes)
+			{
+				success = RemoveController(controller);
+			}
+			return success;
+		}
+
+		private bool RemoveController(Controller controller)
+		{
+			// Returns True if controller successfully removed
+			// Important: Does NOT ask the user for confirmation, so be sure to call this from a method that does (like DeleteNode)
+			bool success = false;
+			foreach (Channel channel in controller.Channels)
+			{
+				RemoveChannel(channel);
+			}
+			TreeNodeAdv node = (TreeNodeAdv)controller.Tag;
+			node.Parent.Nodes.Remove(node);
+			Universe universe = controller.Universe;
+			universe.Controllers.Remove(controller);
+			AllControllers.Remove(controller);
+			MakeDirty(true);
+			UpdateStatus();
+			success = true;
+			return success;
+		}
+
+
+		#endregion // Controllers
+
+		#region Channels
+
+		public void BuildChannelTree(TreeNodeAdv ctlNode)
+		{
+			// Builds the subtree for the channels under a controller node.
+			// Note: Does not clear existing channel nodes before building, so if rebuilding, be sure to clear them first.
+			// Grab a handy-dandy reference to the Controller object for this node from the tag.
+			if (ctlNode.Tag.GetType() == typeof(Controller))
+			{
+				Controller controller = (Controller)ctlNode.Tag;
+				// Loop thru all channels for this controller and add them as child nodes of this controller node.
+				for (int ch = 0; ch < controller.Channels.Count; ch++)
+				{
+					// Make a new channel node
+					Channel channel = controller.Channels[ch];
+					// Make a new node for this channel and add it to the tree as a child of the controller node.
+					TreeNodeAdv chanNode = new TreeNodeAdv("(New Channel)");
+					// Add a reference to the Channel object in the tag for this node, and a reference to this node in the channel's tag so we can easily find it later when we need to update it.
+					chanNode.Tag = channel;
+					channel.Tag = chanNode;
+					ctlNode.Nodes.Add(chanNode);
+					// Add the node to the tree as a child of the controller node.
+					BuildChannelNode(chanNode);
+
+
+				} // End loop for channels
+			} // End if node's tag IS a controller
+			else
+			{
+				string msg = "ERROR: BuildChannelTree called for a node that does not have a Controller in its tag.";
+				if (isWiz)
+				{
+					DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+				return;
+			}
+		}
+
+		private void BuildChannelNode(TreeNodeAdv chanNode)
+		{
+			// Updates the text and icon for a channel node based on the current properties of the Channel object in the tag for this node.
+			if (chanNode != null)
+			{
+				if (chanNode.Tag != null)
+				{
+					IDMXThingy thing = (IDMXThingy)chanNode.Tag;
+					string sinfo = "Edit Node for " + thing.ObjectType.ToString() + thing.FullName;
+					Debug.WriteLine(sinfo);
+					if (chanNode.Tag.GetType() == typeof(Channel))
+					{
+						Channel channel = (Channel)chanNode.Tag;
+						//string nodeText = channel.OutputNum.ToString() + ": " + channel.Name;
+						string nodeText = channel.FullName;
+						chanNode.Text = nodeText;
+						ImageList icons = treeChannels.LeftImageList;
+						int iconIndex = LOR4.LOR4Admin.ColorIcon(icons, channel.Color, 24);
+						int[] ico = { iconIndex };
+						chanNode.LeftImageIndices = ico;
+						if (channel.BadName || channel.BadOutput)
+						{
+							chanNode.TextColor = Color.Red;
+						}
+						else
+						{
+							chanNode.TextColor = Color.Black;
+						}
+					}
+					else
+					{
+						string msg = "ERROR: BuildChannelNode called for a node that does not have a Channel in its tag.";
+						if (isWiz)
+						{
+							DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						}
+					}
+				}
+			}
+			else
+			{
+				string sinfo = "BuildChannelNode called, but node.tag is null for " + chanNode.Text;
+				Debug.WriteLine(sinfo);
+				if (isWiz)
+				{
+					Debugger.Break();
+				}
+			}
+		}
+
+		private void Channel_AddEdit()
+		{
+			TreeNodeAdv node = treeChannels.SelectedNode;
+			if (node != null)
+			{
+				string funct = btnChannel.Text.Substring(0, 3);
+				// ** ADD MODE **
+				if (funct == "Add")
+				{
+					TreeNodeAdv parentNode = treeChannels.SelectedNode;
+					Controller parentCtl = (Controller)treeChannels.SelectedNode.Tag;
+					AddNewChannel(parentCtl);
+				} // End funct [first 3 characters of button text] was "Add";
+					// ** EDIT MODE **
+				else if (funct == "Edi")
+				{
+					//int[] ni = node.LeftImageIndices;
+					//bool en = ((ni != TREEICONuniverse) && (ni != TREEICONcontroller));
+					//if (en)
+					//{
+						Channel chanOriginal = (Channel)node.Tag;
+						EditChannel(chanOriginal);
+					//}
+				} // End funct [first 4 characters of button text] was "Edit";
+			} // End a node was selected (treeChannels.selectedNode != null)
+			treeChannels.Select();
+
+		}
+
+		private bool AddNewChannel(Controller parentCtl)
+		{
+			// Create and prepare the new channel to be added to the parent controller
+			TreeNodeAdv parentNode = treeChannels.SelectedNode;
+			Channel channel = new Channel();
+			bool success = false;
+			lastID++;
+			channel.ID = lastID;
+			channel.Controller = parentCtl;
+			channel.Editing = true;
+			Controller oldCtlr = channel.Controller;
+			chanForm = new frmChannel(channel, this);
+
+			// Try to find an unused output
+			int o = 1;
+			// Loop thru all channels/outputs already on this controller
+			for (int ci = 0; ci < oldCtlr.Channels.Count; ci++)
+			{
+				if (oldCtlr.Channels[ci].OutputNum == o)
+				{
+					// If this output number is already used, try the next one
+					o++;
+				}
+				else
+				{
+					// output number 'o' is not used, so start with it
+					// Break from loop
+					ci = oldCtlr.Channels.Count;
+				}
+			}
+			channel.OutputNum = o;
+
+			// Show the Channel edit dialog, modal
+			DialogResult dr = chanForm.ShowDialog();
+			if (dr == DialogResult.OK)
+			{
+				// User accepted changes on the ChannelEdit form (clicked OK)
+				if (chanForm.isDirty)
+				{
+					channel.Controller.Channels.Add(channel);
+					channel.Controller.Channels.Sort();
+					parentNode = (TreeNodeAdv)channel.Controller.Tag;
+					BuildChannelTree(parentNode);
+					AllChannels.Add(channel);
+					AllChannels.Sort();
+					//TreeNodeAdv nodeNewChan = new TreeNodeAdv(channel.ToString());
+					//parentNode.Nodes.Add(nodeNewChan);
+					//nodeNewChan.Tag = channel;
+					int ImageIndex = LOR4.LOR4Admin.ColorIcon(imlTreeIcons, channel.Color);
+					int[] ico = { ImageIndex };
+					//nodeNewChan.LeftImageIndices = ico;
+					//channel.Tag = nodeNewChan;
+					success = true;
+					MakeDirty(true);
+					UpdateStatus();
+
+					//BuildTree();
+					//treeChannels.Nodes.Sort();
+					//BuildChannelTree(parentNode);
+				}
+				if (channel.BadName || channel.BadOutput)
+				{
+					parentNode.TextColor = Color.Red;
+				}
+				else
+				{
+					parentNode.TextColor = Color.Black;
+				}
+				treeChannels.SelectedNode = parentNode;
+			} // End user accepted changes on ChannelEdit form (clicked OK)
+			else
+			{
+				// User canceled out of the ChannelEdit form
+				// Remove the new temporary channel from the parent controller's channel list
+				for (int c = 0; c < oldCtlr.Channels.Count; c++)
+				{
+					if (channel.ID == oldCtlr.Channels[c].ID)
+					{
+						oldCtlr.Channels.RemoveAt(c);
+						//BuildChannelTree(parentNode);
+						c = oldCtlr.Channels.Count; // Force loop exit
+					}
+				}
+			}
+			treeChannels.Focus();
+			channel.Editing = false;
+			chanForm.Dispose();
+			return success;
+		}
+
+		public bool EditChannel(Channel channel)
+		{
+			// Return True if channel was (successfully) edited.
 			// Returns False if User Canceled the Edit dialog, or in case of an error.
 			bool success = false;
-
-			int oldUni = universe.UniverseNumber;
-			universe.Editing = true;
-			// Create a new instance of the universe edit form, passing the universe to edit and a reference to this form (for callbacks and such)
-			uniForm = new frmUniverse(universe, this);
-			// Show the universe edit dialog, modal
-			DialogResult dr = ctlForm.ShowDialog(this);
+			// Get the controller it is connnected to, in case that changes
+			Controller controller = channel.Controller;
+			channel.Editing = true;
+			// Create a new instance of the channel edit form, passing the channel to edit and a reference to this form (for callbacks and such)
+			chanForm = new frmChannel(channel, this);
+			// Show the channel edit dialog, modal
+			DialogResult dr = chanForm.ShowDialog(this);
 			try
 			{
 				// Upon return from the edit dialog, did they Cancel, or Accept Changes
-				if (dr == DialogResult.OK)
+				if (dr == DialogResult.OK)  // Clicked OK
 				{
-					//lblDirty.Text = ctlForm.changes.ToString();
-					if (ctlForm.isDirty)
+					if (controller.Tag.GetType() == typeof(TreeNodeAdv))
 					{
-						TreeNodeAdv uniNode = (TreeNodeAdv)universe.Tag;
-						// Did the universe change?
-						if (universe.UniverseNumber != oldUni)
+						//TreeNodeAdv ctlNode = (TreeNodeAdv)controller.Tag;
+						lblDirty.Text = chanForm.changes.ToString();
+						// Was anything even changed (on the channel)?
+						if (chanForm.isDirty)
 						{
-							// Find old Universe and remove the Original universe
-							//for (int c = 0; c < universe.Universes.Count; c++)
-							//{
-							//	if (universe.ID == universe.Universes[c].ID)
-							//	{
-							//		universe.Universes.RemoveAt(c);
-							//		BuildChannelTree(uniNode);
-							//		c = universe.Channels.Count; // Force loop exit
-							//	}
-							//}
-							// Fetch the new universe, that the channel was moved _TO_
-							//universe = universe.Universe;
-							// And add the modified channel
-							//universe.Universes.Add(universe);
-							// Re-Sort the universe channels (by number) to put the newly moved channel in proper position
-							//universe.Universes.Sort();
-							treeChannels.Nodes.Sort();
-							// Fetch the node of the new universe
-							//uniNode = (TreeNodeAdv)universe.Tag;
-							// Rebuild it
-							//BuildChannelTree(uniNode);
-						}  // End Universe Changed
-						else
+							// Declare here, cuz will need later
+							TreeNodeAdv ctlNode = (TreeNodeAdv)controller.Tag;
+							TreeNodeAdv chNode = (TreeNodeAdv)channel.Tag;
+							// Did the Controller change?
+							if (channel.Controller.ID != controller.ID)
+							{
+								// Find old controller and remove the Original Channel
+								for (int c = 0; c < controller.Channels.Count; c++)
+								{
+									if (channel.ID == controller.Channels[c].ID)
+									{
+										controller.Channels.RemoveAt(c);
+										chNode.Remove();
+										c = controller.Channels.Count; // Force loop exit
+									}
+								}
+								// Fetch the new controller, that the channel was moved _TO_
+								controller = channel.Controller;
+								// And add the modified channel
+								controller.Channels.Add(channel);
+								// Re-Sort the controller channels (by number) to put the newly moved channel in proper position
+								controller.Channels.Sort();
+								// Fetch the node of the new controller
+								ctlNode = (TreeNodeAdv)controller.Tag;
+								// Rebuild it
+								ctlNode.Nodes.Clear();
+								BuildChannelTree(ctlNode);
+							} // End Controller Changed
+							else // Still on the same controller
+							{
+								// Update the same node, which should be the same controller node, since still on same controller
+								controller.Channels.Sort(); // In case the output number changed, need to re-sort the channels on this controller
+																						// Get the (original) controller node (Note: did not change)
+																						// And re-build it
+								BuildChannelNode(chNode); // Just update this one node, since still on same controller, so no need to re-build the entire tree for this controller
+																					//BuildChannelTree(ctlrNode);
+																					//}
+							} // End Still on same controller
+							MakeDirty(true);
+							success = true;
+						} // End dirty
+					} // End controller's tag is a TreeNodeAdv
+					else
+					{
+						string msg = "ERROR: Channel's controller does not have a TreeNodeAdv in its tag.";
+						if (isWiz)
 						{
-							// Update the same node, which should be the same universe node, since still on same universe
-							//universe.Universes.Sort(); // In case the start address changed, need to re-sort the universes on this universe
-							//uniNode = (TreeNodeAdv)universe.Tag;
-							//BuildChannelTree(uniNode);
+							DialogResult dr2 = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
 						}
-						MakeDirty(true);
-						success = true;
-					} // End dirty
-				} // End DialogResult is OK\
+					}
+				} // End DialogResult is OK
 			} // End Try
 			catch (Exception ex)
 			{
@@ -2793,239 +1906,67 @@ namespace UtilORama4
 				// Consider that a cancel
 				int ln = LOR4.LOR4Admin.ExceptionLineNumber(ex);
 				string msg = "Error on line " + ln.ToString() + "\r\n";
-				msg += ex.ToString() + " while exiting " + uniName + " editor " + universe.Name;
-
+				msg += ex.ToString() + " while exiting Channel editor " + channel.Name;
 				if (Fyle.isWiz || Fyle.InIDE)
 				{
-					Fyle.BUG("Edituniverse", ex);
+					Fyle.BUG("EditChannel", ex);
 					//DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}
 			}
+			// Clear the editing flag (necessary if cloned back)
+			channel.Editing = false;
+			// Dispose of, clear, and remove Channel Editor form from memory
+			chanForm.Dispose();
+			return success;
+		}
 
-			if (universe.BadName || universe.BadNumber)
+		private bool DeleteChannel(Channel channel)
+		// Triggered by the user deleting the channel (likely by pressing the delete key on a channel node)
+		{
+			// Note: non-success does not mean the code failed, it's pro'ly cuz the user said 'No' to delete
+			bool success = false;
+			string msg = "Are you sure you want to delete channel ";
+			msg += channel.OutputNum + ": " + channel.Name + "?";
+			DialogResult dr = MessageBox.Show(this, msg, "Delete LOR4Channel?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+			if (dr == DialogResult.Yes)
 			{
-				TreeNodeAdv node = (TreeNodeAdv)universe.Tag;
-				node.TextColor = Color.Red;
+				success = RemoveChannel(channel);
 			}
-			else
-			{
-				TreeNodeAdv node = (TreeNodeAdv)universe.Tag;
-				node.TextColor = Color.Black;
-			}
-			universe.Editing = false;
-			uniForm.Dispose();
+			return success;
+		}
+		
+		private bool RemoveChannel(Channel channel)
+		{
+			// Returns True if channel successfully removed
+			bool success = false;
+			TreeNodeAdv node = (TreeNodeAdv)channel.Tag;
+			node.Parent.Nodes.Remove(node);
+			AllChannels.Remove(channel);
+			channel.Controller.Channels.Remove(channel);
+			MakeDirty(true);
+			UpdateStatus();
+			success = true;
 			return success;
 		}
 
 
-
-		private void btnController_Click(object sender, EventArgs e)
+		private Channel GetChannelByID(int ID)
 		{
-			TreeNodeAdv node = treeChannels.SelectedNode;
-			if (node != null)
+			Channel ret = null;
+			for (int c = 0; c < AllChannels.Count; c++)
 			{
-				//if (treeChannels.SelectedNode.Tag.GetType() == typeof(Universe))
-				string funct = btnController.Text.Substring(0, 3);
-				if (funct == "Add")
+				if (AllChannels[c].ID == ID)
 				{
-					//TODO: Make sure selected node is a Universe
-					//TODO: Or if not, traverse up the tree to find the parent universe
-					TreeNodeAdv parentNode = treeChannels.SelectedNode;
-					Universe parentUni = (Universe)treeChannels.SelectedNode.Tag;
-					AddNewController(parentUni);
-
-				} // End funct [first 3 characters of button text] was "Add";
-				if (funct == "Edi")
-				{
-					int[] ni = node.LeftImageIndices;
-					bool en = (ni[0] == TREEICONcontroller[0]);
-					if (en)
-					{
-						Controller ctlrOriginal = (Controller)node.Tag;
-						EditController(ctlrOriginal);
-						//EditController(controller);
-					}
-
-				} // End funct [first 3 characters of button text] was "Edi";
-			}
-			treeChannels.Select();
-
-		}
-
-		private void btnControllerOldCode()
-		{
-			/*
-//Controller ctlr = new Controller();
-//lastID++;
-//ctlr.ID = lastID;
-//ctlr.Universe = parentUni;
-//ctlr.Editing = true;
-//Universe oldUniv = ctlr.Universe;
-//Controller newCtlr = ctlr.Clone();
-frmController ctlrForm = new frmController(ctlr, universes);
-//ctlrForm.AllChannels = AllChannels;
-//ctlrForm.universes = universes;
-
-// This is _supposed_ to minimize the main form when the modal child is minimized, but it is not working, and I don't know why, so commenting out for now.  May revisit later.
-using (ctlrForm modalChild = new ctlrForm())
-{
-	// Subscribe to the child's Resize event
-	modalChild.Resize += (s, ev) =>
-	{
-		if (modalChild.WindowState == FormWindowState.Minimized)
-		{
-			this.WindowState = FormWindowState.Minimized;
-		}
-	};
-
-	modalChild.ShowDialog(this);
-}
-
-//DialogResult dr = ctlrForm.ShowDialog(this);
-//if (dr == DialogResult.OK)
-//{
-	// Find its universe (may have changed)
-	for (int u = 0; u < Universes.Count; u++)
-	{
-		if (ctlr.UniverseNumber == AllUniverses[u].UniverseNumber)
-		{
-			parentUni = AllUniverses[u];
-			u = AllUniverses.Count; // Force loop exit
-		}
-	}
-	parentUni.Controllers.Add(ctlr);
-	parentUni.Controllers.Sort();
-	parentNode = (TreeNodeAdv)parentUni.Tag;
-	// Create a bunch of channels for it
-	// 'Silver' color is a light grayish color #C0C0C0
-	//   Not the same as the 'Light Gray' color which is #D3D3D3
-	int ImageIndex = LOR4.LOR4Admin.ColorIcon(imlTreeIcons, Color.Silver);
-	int[] ico = { ImageIndex };
-	TreeNodeAdv ctlrNode = new TreeNodeAdv(ctlr.ToString());
-	ctlrNode.LeftImageIndices = TREEICONcontroller;
-	ctlrNode.Tag = ctlr;
-	ctlr.Tag = ctlrNode;
-	for (int chx = 1; chx <= ctlr.OutputCount; chx++)
-	{
-		string chName = "Spare " + ctlr.ControllerID + chx.ToString("00");
-		Channel dch = new Channel(ctlr, chName);
-		dch.OutputNum = chx;
-		dch.Color = Color.Silver;
-		dch.DeviceType = GetTypeByName("Spare");
-		lastID++;
-		dch.ID = lastID;
-		dch.Active = true;
-		//dch.Controller = ctlr; // Shouldn't need this, should be assigned at creation
-		dch.Dirty = true;
-		TreeNodeAdv chNode = new TreeNodeAdv(dch.Name);
-		chNode.LeftImageIndices = ico;
-		dch.Tag = chNode;
-		chNode.Tag = dch;
-		//ctlr.Channels.Add(dch); // Shouldn't need this either
-		ctlrNode.Nodes.Add(chNode);
-		AllChannels.Add(dch);
-	}
-	ctlr.Channels.Sort();
-	parentNode.Nodes.Add(ctlrNode);
-	//ImageIndex = TREEICONcontroller[0];
-	//ico = { ImageIndex};
-	//ico = TREEICONcontroller;
-	//node.LeftImageIndices = ico;
-	parentNode.Sort();
-
-	MakeDirty(true);
-	//BuildTree();
-		}
-					//ctlr.Editing = false;
-					//ctlrForm.Dispose();
-*/
-
-		}
-
-
-
-		private void btnUniverse_Click(object sender, EventArgs e)
-		{
-			TreeNodeAdv node = treeChannels.SelectedNode;
-			if (node != null)
-			{
-
-				string funct = btnUniverse.Text.Substring(0, 3);
-
-				if (funct == "Add")
-				{
-
-
-					AddNewUniverse();
-				} // End funct [first 3 characters of button text] was "Add";
-
-				if (funct == "Edi")
-				{
-					int[] ni = node.LeftImageIndices;
-					bool en = (ni[0] == TREEICONuniverse[0]);
-					if (en)
-					{
-						Universe uniOriginal = (Universe)node.Tag;
-						EditUniverse(uniOriginal);
-					}
-				} // End funct [first 4 characters of button text] was "Edi";
-			}
-			treeChannels.Select();
-		}
-
-		public void MakeDirty(bool isDirty)
-		{
-			if (isDirty != dirty)
-			{
-				if (isDirty)
-				{
-					// anything else we need to do?
-					dirty = isDirty;
-					btnSave.Enabled = true;
-					this.Text = myTitle + " *";
-				}
-				else
-				{
-					// anything else we need to do?
-					dirty = isDirty;
-					btnSave.Enabled = false;
-					this.Text = myTitle;
+					ret = AllChannels[c];
+					c = AllChannels.Count; // Exit loop
 				}
 			}
+			return ret;
 		}
 
+		#endregion // Channels
 
-		private void frmList_Click(object sender, EventArgs e)
-		{
-			int x = 1;
-
-		}
-
-		private void frmList_FormClosing(object sender, FormClosingEventArgs e)
-		{
-			CloseReason cr = e.CloseReason;
-			string rc = cr.ToString();
-
-			if (dirty)
-			{
-				string msg = "Channel information has changed.\r\nSave?";
-				DialogResult dr = MessageBox.Show(this, msg, "Save Changes?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-				if (dr == DialogResult.Cancel)
-				{
-					e.Cancel = true;
-				}
-				if (dr == DialogResult.Yes)
-				{
-					SaveData(dbPath);
-				}
-			}
-			if (!e.Cancel)
-			{
-				this.SaveView();
-				RestoreUserSettings();
-			}
-		}
-
+		#region Import, Export, Reports, and Spreadsheets
 		private int ExportToSpreadsheet(string filePath, bool includeHeaders = false)
 		{
 			int errs = 0;
@@ -3180,8 +2121,7 @@ using (ctlrForm modalChild = new ctlrForm())
 
 			return errs;
 		}
-
-		private void btnReport_Click(object sender, EventArgs e)
+		private void GenerateReports()
 		{
 			//ExportToSpreadsheet(dbPath, true);
 			// TODO Open SaveAs Dialog
@@ -3191,7 +2131,7 @@ using (ctlrForm modalChild = new ctlrForm())
 			string msg = spreadInfo;
 			msg += "\r\nTo File:\r\n" + sfile;
 			msg += "\r\n\r\n\r\nOpen the file now?";
-			DialogResult dr = MessageBox.Show(this,msg,"Export to Spreadsheet",MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+			DialogResult dr = MessageBox.Show(this, msg, "Export to Spreadsheet", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 			if (dr == DialogResult.Yes)
 			{
 				if (Fyle.Exists(sfile))
@@ -3201,160 +2141,17 @@ using (ctlrForm modalChild = new ctlrForm())
 			}
 		}
 
-		private void treeChannels_KeyPress(object sender, KeyPressEventArgs e)
+		private void ReportMatch(StreamWriter writer, double score, string name1, string name2)
 		{
-			if (treeChannels.SelectedNode != null)
-			{
-				if (e.KeyChar == (char)Keys.Delete)
-				{
-					// Note: non-success does not mean the code failed, it's pro'ly cuz the user said 'No' to delete
-					bool deleted = DeleteNode(treeChannels.SelectedNode);
-				}
-				if ((e.KeyChar == (char)Keys.Enter) || (e.KeyChar == (char)Keys.Return))
-				{
-					treeChannelList_DoubleClick(sender, e);
-				}
-				if ((e.KeyChar == 99) || (e.KeyChar == (char)Keys.Space))
-				{
-					IDMXThingy d = (IDMXThingy)treeChannels.SelectedNode.Tag;
-					string theName = d.Name;
-					Clipboard.SetText(theName);
-					Fyle.MakeNoise(Fyle.Noises.Pop);
-				}
-			}
-			treeChannels.Select();
-
-		}
-
-		private bool DeleteNode(TreeNodeAdv node)
-		{
-			// Note: non-success does not mean the code failed, it's pro'ly cuz the user said 'No' to delete
-			bool success = false;
-			string msg = "";
-
-			if (node.Tag != null)
-			{
-				if (node.Tag.GetType() == typeof(Channel))
-				{
-					Channel channel = (Channel)node.Tag;
-					msg = "Are you sure you want to delete channel ";
-					msg += channel.OutputNum + ": " + channel.Name + "?";
-					DialogResult dr = MessageBox.Show(this, msg, "Delete LOR4Channel?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-					if (dr == DialogResult.Yes)
-					{
-						node.Parent.Nodes.Remove(node);
-						AllChannels.Remove(channel);
-						channel.Controller.Channels.Remove(channel);
-						MakeDirty(true);
-						success = true;
-					}
-				}
-				else
-				{
-					if (node.Tag.GetType() == typeof(Controller))
-					{
-						Controller controller = (Controller)node.Tag;
-						msg = "Are you sure you want to delete controller ";
-						if (controller.Identifier.Length > 0)
-						{
-							msg += controller.Identifier + ": ";
-						}
-						msg += controller.Name + " which has ";
-						msg += controller.Channels.Count.ToString() + " channels?";
-						DialogResult dr = MessageBox.Show(this, msg, "Delete Controller?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
-						if (dr == DialogResult.Yes)
-						{
-							for (int c = 0; c < controller.Channels.Count; c++)
-							{
-								Channel channel = controller.Channels[c];
-								AllChannels.Remove(channel);
-							}
-							node.Parent.Nodes.Remove(node);
-							AllControllers.Remove(controller);
-							controller.Universe.Controllers.Remove(controller);
-							MakeDirty(true);
-							success = true;
-						}
-					}
-					else
-					{
-						if (node.Tag.GetType() == typeof(Universe))
-						{
-							Universe universe = (Universe)node.Tag;
-							msg = "Are you really sure you want to delete " + uniName + " ";
-							msg += universe.UniverseNumber + ": " + universe.Name + " which has ";
-							msg += universe.Controllers.Count.ToString() + " controllers and ";
-							int chanCount = 0;
-							for (int c1 = 0; c1 < universe.Controllers.Count; c1++)
-							{
-								Controller controller = universe.Controllers[c1];
-								chanCount += controller.Channels.Count;
-							}
-							msg += chanCount.ToString() + " channels?";
-							DialogResult dr = MessageBox.Show(this, msg, "Delete " + uniName + "?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
-							if ((universe.Controllers.Count > 2) || (chanCount > 23))
-							{
-								msg = "That's a lot of controllers (" + universe.Controllers.Count.ToString() + ") and ";
-								msg += " a lot of channels (" + chanCount.ToString() + ").";
-								msg += "\r\n\r\nAre you really really sure?";
-								dr = MessageBox.Show(this, msg, "Delete " + uniName + "?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
-							}
-							if (dr == DialogResult.Yes)
-							{
-								for (int c1 = 0; c1 < universe.Controllers.Count; c1++)
-								{
-									Controller controller = universe.Controllers[c1];
-									for (int c2 = 0; c2 < controller.Channels.Count; c2++)
-									{
-										Channel channel = controller.Channels[c2];
-										AllChannels.Remove(channel);
-									} // End loop thru controller's channels
-								} // End loop thru universe's controllers
-								node.Parent.Nodes.Remove(node);
-								AllUniverses.Remove(universe);
-								MakeDirty(true);
-								success = true;
-							} // End if user said Yes
-						} // End if selected node was a Universe
-					} // End if selected node was a controller, or not
-				} // End if selected node was a channel, or not
-			} // End if node's .Tag was not null
-				// Note: non-success does not mean the code failed, it's pro'ly cuz the user said 'No' to delete
-			return success;
-		}
-
-		private void treeChannels_KeyUp(object sender, KeyEventArgs e)
-		{
-			if (treeChannels.SelectedNode != null)
-			{
-				if (e.KeyCode == Keys.Delete)
-				{
-					// Note: non-success does not mean the code failed, it's pro'ly cuz the user said 'No' to delete
-					bool deleted = DeleteNode(treeChannels.SelectedNode);
-				}
-				else
-				{
-					if ((e.KeyCode == Keys.Enter) || (e.KeyCode == Keys.Return))
-					{
-						treeChannelList_DoubleClick(sender, e);
-					}
-				}
-			}
-		}
-
-		public DeviceType GetTypeByName(string theName)
-		{
-			string tn = theName.ToLower();
-			DeviceType ret = null;
-			for (int i = 0; i < DeviceTypes.Count; i++)
-			{
-				if (tn == DeviceTypes[i].Name.ToLower())
-				{
-					ret = DeviceTypes[i];
-					i = DeviceTypes.Count; // Force exit of loop
-				}
-			}
-			return ret;
+			StringBuilder sb = new StringBuilder();
+			string scr = score.ToString("0.0000");
+			sb.Append(scr);
+			sb.Append(" = ");
+			string n1 = name1.PadRight(33);
+			sb.Append(n1);
+			sb.Append(" --> ");
+			sb.Append(name2.ToLower());
+			writer.WriteLine(sb);
 		}
 
 		private int MatchUp(string seqFile, bool sortByName)
@@ -4127,22 +2924,674 @@ using (ctlrForm modalChild = new ctlrForm())
 		}
 		*/
 
+		#endregion // Import, Export, Reports, and Spreadsheets
 
-
-		private void ReportMatch(StreamWriter writer, double score, string name1, string name2)
+		#region Save & Load Data Files (Not including import, export, reports, spreadsheet, etc.)
+		private string SelectDBPath(bool required = false)
 		{
-			StringBuilder sb = new StringBuilder();
-			string scr = score.ToString("0.0000");
-			sb.Append(scr);
-			sb.Append(" = ");
-			string n1 = name1.PadRight(33);
-			sb.Append(n1);
-			sb.Append(" --> ");
-			sb.Append(name2.ToLower());
-			writer.WriteLine(sb);
+			string ret = "";
+			// Never run before ?
+			// Prompt user to select the base path for the channel database, which should be the folder that contains the year folders (e.g. "Christmas 2023", "Christmas 2024", etc.)
+			FolderBrowserDialog fbd = new FolderBrowserDialog();
+			string dtxt = "Select the base folder for the channel database."; // (the folder that contains the year folders such as Christmas 2023, Christmas 2024, etc.)";
+			dtxt += "\r\n\r\nIf you have not yet created a channel database, you can just select or create an empty folder to use as the base path for the channel database.";
+			dtxt += "\r\n\t (Hint: You may wish to include the holiday and/or year in the folder name, such as 'Christmas 2026', to help keep things organized.)";
+			fbd.Description = dtxt;
+			DialogResult dr = fbd.ShowDialog(this);
+			if (dr == DialogResult.OK)
+			{
+				ret = fbd.SelectedPath;
+			}
+			else
+			{
+				if (required)
+				{
+					MessageBox.Show(this, "No folder selected.  Cannot continue.", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					Application.Exit();
+				}
+			}
+
+			string dtfile = ret + fileDeviceTypes;
+			bool datExists = Fyle.Exists(dtfile);
+			if (datExists)
+			{
+				dtfile = ret + fileUniverses;
+				datExists = Fyle.Exists(dtfile);
+				if (datExists)
+				{
+					dtfile = ret + fileControllers;
+					datExists = Fyle.Exists(dtfile);
+					if (datExists)
+					{
+						dtfile = ret + fileChannels;
+						datExists = Fyle.Exists(dtfile);
+					}
+				}
+			}
+			if (!datExists)
+			{
+				dtxt = "Folder '" + ret + "' does not contain a channel database.";
+				dtxt += "\r\nCreate a new channel database here?";
+				dtxt += "\r\n\r\n\tYes to creat a new database in '" + ret + "'.";
+				dtxt += "\r\n\tNo to go back and select a different folder.";
+				dtxt += "\r\n\tCancel to exit the program.";
+				dr = MessageBox.Show(this, dtxt, "Create new database?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+				if (dr == DialogResult.Cancel)
+				{
+					Application.Exit();
+				}
+				else if (dr == DialogResult.No)
+				{
+					ret = SelectDBPath(required); // Recursive call to prompt user to select a different folder
+				}
+				else if (dr == DialogResult.Yes)
+				{
+					CreateNewDatabase(ret + "\\ChannelDB");
+				}
+			}
+			return ret;
 		}
 
-		private void btnSave_Click(object sender, EventArgs e)
+		private string PathToDB()
+		{
+			string dpth = Settings.Default.DBPath;
+			string ret = dpth;
+
+			if (ret.Length < 4)
+			{
+				// Never run before ?
+				// Prompt user to select the base path for the channel database, which should be the folder that contains the year folders (e.g. "Christmas 2023", "Christmas 2024", etc.)
+				FolderBrowserDialog fbd = new FolderBrowserDialog();
+				string dtxt = "Select the new base folder for the new channel database."; // (the folder that contains the year folders such as Christmas 2023, Christmas 2024, etc.)";
+				dtxt += "\r\n\r\nIf you have not yet created a channel database, you can just select or create an empty folder to use as the base path for the channel database.";
+				dtxt += "\r\n\t (Hint: You may wish to include the holiday and/or year in the folder name, such as 'Christmas 2026', to help keep things organized.)";
+				fbd.Description = dtxt;
+				DialogResult dr = fbd.ShowDialog(this);
+				if (dr == DialogResult.OK)
+				{
+					ret = fbd.SelectedPath;
+				}
+				else
+				{
+					MessageBox.Show(this, "No folder selected.  Cannot continue.", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					Application.Exit();
+				}
+			}
+			// Already have a path, but check that it exists
+			if (!Fyle.PathExists(ret))
+			{
+				ret = SelectDBPath(true) + "\\";
+
+				string dtfile = ret + fileDeviceTypes;
+				bool datExists = Fyle.Exists(dtfile);
+				if (datExists)
+				{
+					dtfile = ret + fileUniverses;
+					datExists = Fyle.Exists(dtfile);
+					if (datExists)
+					{
+						dtfile = ret + fileControllers;
+						datExists = Fyle.Exists(dtfile);
+						if (datExists)
+						{
+							dtfile = ret + fileChannels;
+							datExists = Fyle.Exists(dtfile);
+						}
+					}
+				}
+				if (!datExists)
+				{
+					string dtxt = "Folder '" + ret + "' does not contain a channel database.";
+					dtxt += "\r\nCreate a new channel database here?";
+					dtxt += "\r\n\r\n\tYes to creat a new database in '" + ret + "'.";
+					dtxt += "\r\n\tNo to go back and select a different folder.";
+					dtxt += "\r\n\tCancel to exit the program.";
+					DialogResult dr = MessageBox.Show(this, dtxt, "Create new database?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+					if (dr == DialogResult.Cancel)
+					{
+						Application.Exit();
+					}
+					else if (dr == DialogResult.Yes)
+					{
+						CreateNewDatabase(ret + "\\ChannelDB");
+					}
+					else if (dr == DialogResult.No)
+					{
+						ret = PathToDB(); // Recursive call to prompt user to select a different folder
+					}
+				}
+			}
+			return ret;
+		}
+		private void CreateNewDatabase(string folder)
+		{
+			Fyle.SafeCopy(Application.StartupPath + "\\TemplateDB\\desktop.ini", folder + "\\desktop.ini");
+			Fyle.SafeCopy(Application.StartupPath + "\\TemplateDB\\folder.ico", folder + "\\folder.ico");
+			Fyle.SafeCopy(Application.StartupPath + "\\TemplateDB\\" + fileDeviceTypes, folder + fileDeviceTypes);
+			Fyle.SafeCopy(Application.StartupPath + "\\TemplateDB\\" + fileUniverses, folder + fileUniverses);
+			Fyle.SafeCopy(Application.StartupPath + "\\TemplateDB\\" + fileControllers, folder + fileControllers);
+			Fyle.SafeCopy(Application.StartupPath + "\\TemplateDB\\" + fileChannels, folder + fileChannels);
+			Settings.Default.DBPath = folder;
+			Settings.Default.Save();
+		}
+		public int LoadData(string filePath)
+		{
+			this.Enabled = false;
+			this.Cursor = Cursors.WaitCursor;
+			lblLoading.Text = "Loading...";
+			lblLoading.Visible = true;
+			lblLoading.BringToFront();
+			treeChannels.Select();
+
+			int errs = LoadDevices(filePath);
+			errs = LoadUniverses(filePath);
+			errs += LoadControllers(filePath);
+			errs += LoadChannels(filePath);
+			UpdateStatus();
+			this.Text = filePath + " - " + myTitle;
+
+			this.Enabled = true;
+			this.Cursor = Cursors.Default;
+			lblLoading.Visible = false;
+			lblLoading.SendToBack();
+			treeChannels.Select();
+
+			return errs;
+		}
+
+		public int LoadDevices(string filePath)
+		{
+			int errs = 0;
+			string devName = ""; // for debugging exceptions
+													 //if (AllUniverses.Count > 0)
+			{
+				string chnFile = filePath + fileDeviceTypes;
+				try
+				{
+					CsvFileReader reader = new CsvFileReader(chnFile);
+					CsvRow row = new CsvRow();
+					// Read and throw away first line which is headers;
+					reader.ReadRow(row);
+					while (reader.ReadRow(row))
+					{
+						try
+						{
+							string col1 = row[0].Trim();
+							if (col1.Length == 0) // Skip blank lines in the devices file
+							{  // Ignore completely, do not even try to parse them 
+							}
+							else
+							{
+								if (col1.Trim().StartsWith("#")) // Skip comment lines that start with # in the devices file
+								{  // Ignore completely, do not even try to parse them 
+								}
+								else
+								{
+									if (row.Count > 3)
+									{
+										int devID = -1;
+										int.TryParse(row[0], out devID); // Field 0 = Device ID
+										devName = row[2].Trim();   // Field 2 = Name
+										int ord = 0;
+										if (row.Count > 2)
+										{
+											int.TryParse(row[1], out ord); // Field 1 = Display Order
+										}
+										string descr = row[3].Trim();
+										if (devID == 0) { ord = 9999; }
+										DeviceType device = new DeviceType(devName, devID, ord);
+										device.Comment = descr;
+										DeviceTypes.Add(device);
+									} // End if less than three 'rows' (columns actually)
+								} // End if line isn't a comment
+							} // End if line isn't blank
+						}  // End try
+						catch (Exception ex)
+						{
+							int ln = LOR4.LOR4Admin.ExceptionLineNumber(ex);
+							string msg = "Error on line " + ln.ToString() + "\r\n";
+							msg += ex.ToString() + " while reading Channel " + devName;
+							if (isWiz)
+							{
+								DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+							}
+							errs++;
+						}
+					}
+					reader.Close();
+				}
+				catch (Exception ex)
+				{
+					int ln = LOR4.LOR4Admin.ExceptionLineNumber(ex);
+					string msg = "Error " + ex.ToString() + " on line " + ln.ToString() + " while reading Channels file " + chnFile;
+					if (isWiz)
+					{
+						DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					}
+					errs++;
+				}
+			}
+			int dc = DeviceTypes.Count;
+			//! No! do not sort [by display order] yet!  Leave sorted by order added which is also by ID until AFTER the channels have been
+			//! loaded, THEN sort by display order
+			//deviceTypes.Sort();
+			return errs;
+		}
+
+		public int LoadUniverses(string filePath)
+		{
+			int errs = 0;
+			string uniName = ""; // for debugging exceptions
+			string uniFile = filePath + fileUniverses;
+			try
+			{
+				CsvFileReader reader = new CsvFileReader(uniFile);
+				CsvRow row = new CsvRow();
+				// Read and throw away first line which is headers;
+				reader.ReadRow(row);
+				while (reader.ReadRow(row))
+				{
+					try
+					{
+						Universe universe = new Universe();
+
+						int uid = 1;
+						int.TryParse(row[0], out uid);   // Field 0 Universe ID
+						universe.ID = uid;
+
+						int i = -1;
+						int.TryParse(row[1], out i);   // Field 0 Universe Number
+						universe.UniverseNumber = i;
+
+						universe.Name = row[2];  // Field 1 Name
+						uniName = universe.Name;  // For debugging exceptions
+						universe.Location = row[3]; // Field 2 Location
+						universe.Comment = row[4]; // Field 3 Comment
+
+						bool b = true;
+						bool.TryParse(row[5], out b); // Field 4 Active
+						universe.Active = b;
+
+						i = 512;
+						int.TryParse(row[6], out i);   // Field 5 Size Limit
+						universe.MaxChannelsAllowed = i;
+
+						i = 1;
+						int.TryParse(row[7], out i);   // Field 6 xLights Start
+						universe.xLightsAddress = i;
+
+						universe.Connection = row[8];  // Field 7 Connection
+						lastID = Math.Max(lastID, universe.ID);
+						//universe.ID = lastID;
+						AllUniverses.Add(universe);
+					}
+					catch (Exception ex)
+					{
+						string msg = "Error " + ex.ToString() + " while reading " + uniName; // + " " + uniName;
+						if (isWiz)
+						{
+							DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						}
+						errs++;
+					}
+				}
+				reader.Close();
+				AllUniverses.Sort();
+				Universe.AllUniverses = AllUniverses; // Set the static list in Universe class to the list we just loaded and sorted, so that it can be accessed from the Controller and Channel classes when they are loading and need to find their parent universe.
+			}
+			catch (Exception ex)
+			{
+				string msg = "Error " + ex.ToString() + " while reading " + uniName + "s file " + uniFile;
+				if (isWiz)
+				{
+					DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+				errs++;
+			}
+			return errs;
+		}
+
+		public int LoadControllers(string filePath)
+		{
+			//("ID");           // Field 0
+			//("Universe");     // Field 1
+			//("Controller");   // Field 2
+			//("Name");         // Field 3
+			//("Location");     // Field 4
+			//("Comment");      // Field 5
+			//("Active");       // Field 6
+			//("Brand");        // Field 7
+			//("Model");        // Field 8
+			//("Unit#");        // Field 9
+			//("Output Count"); // Field 10
+			//("DMX Start");    // Field 11
+			//("Voltage");      // Field 12
+
+			int errs = 0;
+			string ctlName = ""; // For debugging exceptions
+			if (AllUniverses.Count > 0)
+			{
+				string ctlFile = filePath + fileControllers;
+				try
+				{
+					CsvFileReader reader = new CsvFileReader(ctlFile);
+					CsvRow row = new CsvRow();
+					// Read and throw away first line which is headers;
+					reader.ReadRow(row);
+					while (reader.ReadRow(row))
+					{
+						try
+						{
+							Controller controller = new Controller();
+							int ctlid = 1;
+							int.TryParse(row[0], out ctlid);   // Field 1 Controller ID (number)
+							controller.ID = ctlid;
+
+							int uniID = -1;
+							int.TryParse(row[1], out uniID);   // Field 0 Universe ID (number)
+							controller.Universe = GetUniverseByID(uniID);
+							//controller.Universe = GetUniverseByNumber(uniID); // TEMP!!!
+							if (controller.Universe == null)
+							{
+								//string msg = "Universe not found for controller:" + controller.Name;
+								if (Fyle.isWiz)
+								{
+									string mtxt = "Controller with ID:" + uniID.ToString() + " not found for controller:" + row[3];
+									MessageBox.Show(this, mtxt, uniName + " Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+									int xx = 0;
+								}
+							}
+							else
+							{
+								controller.Universe.Controllers.Add(controller);
+							}
+
+							controller.Identifier = row[2];  // Field 1 Letter ID
+							controller.Name = row[3];  // Field 2 Name
+							ctlName = controller.Name; // For debugging exceptions
+							controller.Location = row[4]; // Field 3 Location
+							controller.Comment = row[5]; // Field 4 Comment
+
+							bool b = true;
+							bool.TryParse(row[6], out b); // Field 5 Active
+							controller.Active = b;
+
+							controller.ControllerBrand = row[7];
+							controller.ControllerModel = row[8];
+
+							int un = -1;
+							int.TryParse(row[9], out un);
+
+							int cnt = 16;
+							int.TryParse(row[10], out cnt);   // Field 8 Channel Count
+							controller.OutputCount = cnt;
+
+							int adr = 1;
+							int.TryParse(row[11], out adr);   // Field 9 DMX Start LOR4Channel
+							controller.StartAddress = adr;
+
+							int volts = 120;
+							int.TryParse(row[12], out volts);   // Field 10 voltage
+							controller.Voltage = volts;
+
+							/*
+							bool uniFound = false;
+							for (int u = 0; u < AllUniverses.Count; u++)
+							{
+								if (universe == AllUniverses[u].UniverseNumber)
+								{
+									AllUniverses[u].Controllers.Add(controller);
+									controller.Universe = AllUniverses[u];
+									uniFound = true;
+									u = AllUniverses.Count; // Exit loop
+								}
+							}
+							if (!uniFound)
+							{
+								string msg = "Universe not found for controller:" + controller.Name;
+								int qqqqq = 1;
+							}
+							*/
+
+							// Unit Number Madness
+							if (controller.ControllerBrand == "LOR")
+							{
+								if (un < 2)
+								{
+									if (adr > 16)
+									{
+										un = (adr - 1) / 16 + 1;
+									}
+									int sc = (un - 1) * 16 + 1;
+									adr = sc;
+								}
+								else
+								{
+									if (un > 0)
+									{
+										int sc = (un - 1) * 16 + 1;
+										adr = sc;
+									}
+									else
+									{
+										int un2 = (adr - 1) / 16 + 1;
+									}
+								}
+							}
+							string foo = ctlName;
+							controller.UnitID = un;
+							controller.StartAddress = adr;
+							controller.OutputCount = cnt;
+
+
+
+
+							lastID = Math.Max(lastID, controller.ID);
+							//controller.ID = lastID;
+							AllControllers.Add(controller);
+						}
+						catch (Exception ex)
+						{
+							string msg = "Error " + ex.ToString() + " while reading Controller " + ctlName;
+							if (isWiz)
+							{
+								DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+							}
+							errs++;
+						}
+					}
+
+					reader.Close();
+					for (int u = 0; u < AllUniverses.Count; u++)
+					{
+						AllUniverses[u].Controllers.Sort();
+					}
+				}
+				catch (Exception ex)
+				{
+					string msg = "Error " + ex.ToString() + " while reading Controllers file " + ctlFile;
+					if (isWiz)
+					{
+						DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					}
+					errs++;
+
+				}
+				Universe.AllControllers = AllControllers; // Set the static list in Universe class to the list we just loaded and sorted, so that it can be accessed from the Channel class when it is loading and needs to find its parent controller.
+			}
+			return errs;
+		}
+
+		public int LoadChannels(string filePath)
+		{
+			int errs = 0;
+			int nextID = 1;
+			string chanName = ""; // for debugging exceptions
+			if (AllUniverses.Count > 0)
+			{
+				string chnFile = filePath + fileChannels;
+				try
+				{
+					CsvFileReader reader = new CsvFileReader(chnFile);
+					CsvRow row = new CsvRow();
+					// Read and throw away first line which is headers;
+					reader.ReadRow(row);
+					while (reader.ReadRow(row))
+					{
+						try
+						{
+							Channel channel = new Channel();
+							int ix = 1;
+							int.TryParse(row[0], out ix); // Field 0 = Channel ID
+																						// Ignore it.  We are going to renumber them as we read them in
+							channel.ID = nextID;
+							nextID++;
+
+							int uniNum = 1;
+							int.TryParse(row[1], out uniNum); // Field 1 = Universe Number
+																								// Ignore the universe number, get it from the controller's universe number instead
+
+							int ctlid = 1;
+							int.TryParse(row[2], out ctlid);
+							//channel.Controller = AllControllers[ctlid-1]; // Field 2 = Controller ID
+							// Safert way to get controller by ID instead of assuming they are in order and contigous in memory
+							channel.Controller = GetControllerByID(ctlid); // Field 2 = Controller ID
+							if (channel.Controller == null)
+							{
+								string mtxt = "Controller with ID:" + ctlid.ToString() + " not found for channel:" + row[5];
+								MessageBox.Show(this, mtxt, "Controller Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+							}
+							else
+							{
+								channel.Controller.Channels.Add(channel); // Add the channel to the controller's list of channels
+							}
+
+							//string ctlIdentifier = row[3]; // Field 2 = Controller Letter or ID
+							// Ignore it, we have the controller already, and can get the identifier from the controller
+
+							int nout = 1;
+							int.TryParse(row[3], out nout);
+							channel.OutputNum = nout;               // Field 4 = Output Number
+
+							channel.Name = row[4];                // Field 5 = Name
+							chanName = channel.Name;              // For debugging exceptions
+							channel.Location = row[5];            // Field 6 = Location
+							channel.Comment = row[6];             // Field 7 = Comment
+
+							bool b = true;
+							bool.TryParse(row[7], out b);     // Field 8 = Active
+							channel.Active = b;
+
+							int devID = -1;
+							int.TryParse(row[8], out devID);      // Field 9 = Channel Type
+
+
+
+							//! ONE TIME FIX
+							//if (devID == 0) devID = 22;
+
+
+
+
+
+							if (devID >= 0 && devID < DeviceTypes.Count)
+							{
+								//! Note: Devices should not yet be sorted by Display Order
+								//! Should still be sorted by ID
+								//string dn = DeviceTypes[devID].Name;
+								//channel.DeviceType = DeviceTypes[devID];
+								channel.DeviceType = GetDeviceTypeByID(devID);
+							}
+
+							string colhex = row[9];           // Field 9 = Color (hex)
+
+							// TEMPORARY!  Convert all my plain white to cool white
+							if (colhex == "#FFFFFF")
+								colhex = "#D0FFFF";
+							// END Temporary conversion
+
+							Color color = LOR4.LOR4Admin.HexToColor(colhex);
+							channel.Color = color;
+
+							if (row.Count > 10)
+							{
+								string coname = row[10];
+								channel.ColorName = coname;           // Field 10 = Color Name (optional)
+							}
+							else
+							{
+								channel.ColorName = LOR4Admin.NearestColorName(channel.Color); //Etc.ColorName(channel.Color);
+							}
+
+
+							AllChannels.Add(channel);
+							/*
+							bool ctlFound = false;
+							for (int u = 0; u < AllUniverses.Count; u++)
+							{
+								Universe universe = AllUniverses[u];
+								for (int c = 0; c < universe.Controllers.Count; c++)
+								{
+									if (ctlid == universe.Controllers[c].ID)
+									{
+										channel.Controller = universe.Controllers[c];
+										universe.Controllers[c].Channels.Add(channel);
+										ctlFound = true;
+										c = universe.Controllers.Count;
+										u = AllUniverses.Count; // Exit loop
+									}
+								}
+							}
+							if (!ctlFound)
+							{
+								string msg = "Controller not found for channel " + channel.Name;
+								int qqq5 = 5;
+							}
+							*/
+							lastID = Math.Max(lastID, channel.ID);
+							//channel.ID = lastID;
+						}
+						catch (Exception ex)
+						{
+							int ln = LOR4.LOR4Admin.ExceptionLineNumber(ex);
+							string msg = "Error on line " + ln.ToString() + "\r\n";
+							msg += ex.ToString() + " while reading Channel " + chanName;
+							if (isWiz)
+							{
+								DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+							}
+							errs++;
+						}
+					}
+					reader.Close();
+					for (int u = 0; u < AllUniverses.Count; u++)
+					{
+						Universe universe = AllUniverses[u];
+						for (int c = 0; c < universe.Controllers.Count; c++)
+						{
+							universe.Controllers[c].Channels.Sort();
+						}
+					}
+					// *NOW* we can sort the deviceTypes by display order
+					DeviceTypes.Sort();
+				}
+				catch (Exception ex)
+				{
+					int ln = LOR4.LOR4Admin.ExceptionLineNumber(ex);
+					string msg = "Error " + ex.ToString() + " on line " + ln.ToString() + " while reading Channels file " + chnFile;
+					if (isWiz)
+					{
+						DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					}
+					errs++;
+
+				}
+				Universe.AllChannels = AllChannels; // Set the static list in Universe class to the list we just loaded and sorted, so that it can be accessed from anywhere if needed.
+			}
+			return errs;
+		}
+
+		private void SaveDataFiles()
 		{
 			pnlStatus.Text = "Saving...";
 			SaveData(dbPath);
@@ -4159,162 +3608,597 @@ using (ctlrForm modalChild = new ctlrForm())
 			treeChannels.Select();
 		}
 
+		public int SaveData(string filePath)
+		{
+			string tp = Fyle.GetUserTempPath;
+			string f = "";
+			string g = "";
+
+			this.Enabled = false;
+			this.Cursor = Cursors.WaitCursor;
+			lblLoading.Text = "Saving...";
+			lblLoading.Visible = true;
+			lblLoading.BringToFront();
+
+			int errs = SaveUniverses(tp);
+			string tf = tp + fileUniverses;
+			if (Fyle.Exists(tf))
+			{
+				f = filePath + "Backup." + fileUniverses;
+				if (Fyle.Exists(f))
+					Fyle.SafeDelete(f);
+				g = filePath + fileUniverses;
+				Fyle.SafeCopy(g, f);
+			}
+
+			errs += SaveControllers(tp);
+			tf = tp + fileControllers;
+			if (Fyle.Exists(tf))
+			{
+				f = filePath + "Backup." + fileControllers;
+				if (Fyle.Exists(f))
+					Fyle.SafeDelete(f);
+				g = filePath + fileControllers;
+				Fyle.SafeCopy(g, f);
+			}
+
+			errs += SaveChannels(tp);
+			tf = tp + fileChannels;
+			if (Fyle.Exists(tf))
+			{
+				f = filePath + "Backup." + fileChannels;
+				if (Fyle.Exists(f))
+					Fyle.SafeDelete(f);
+				g = filePath + fileChannels;
+				Fyle.SafeCopy(g, f);
+			}
+
+			f = filePath + "Backup." + fileDeviceTypes;
+			if (Fyle.Exists(f))
+				Fyle.SafeDelete(f);
+			g = filePath + fileDeviceTypes;
+			Fyle.SafeCopy(g, f);
+
+			MakeDirty(false);
+
+			this.Enabled = true;
+			this.Cursor = Cursors.Default;
+			lblLoading.Visible = false;
+			lblLoading.SendToBack();
+			treeChannels.Select();
+
+			return errs;
+		}
+
+
+		public int SaveDevices(string filePath)
+		{
+			// Start ID numering at zero, but ID=0 is the undefined/undeclared one
+			// Note that they are in display order in memory, but when we save them, we renumber the ID starting at 0 and make them contigous for user friendliness when editing raw CSV files.
+			writeID = 0;
+			int errs = 0;
+			string devName = "";
+			string devFile = filePath + fileDeviceTypes;
+			try
+			{
+				CsvFileWriter writer = new CsvFileWriter(devFile);
+				CsvRow row = new CsvRow();
+				// Create first line which is headers;
+				row.Add("ID");          // Field 0
+				row.Add("Order");       // Field 1
+				row.Add("Name");        // Field 2
+				row.Add("Comment"); // Field 3
+				writer.WriteRow(row);
+
+				// Make sure they are sorted before we write them out, so that they will be in order when we read them back in, and also so that they will be in order for the user when they open the CSV file to edit it.
+				DeviceTypes.Sort();
+				for (int d = 0; d < DeviceTypes.Count; d++)
+				{
+					try
+					{
+						DeviceType device = DeviceTypes[d];
+						devName = device.Name;
+						row = new CsvRow();
+
+						//row.Add(universe.ID.ToString());                 // Field 0
+						// Lets renumber all the IDs while we'ere at it.
+						row.Add(writeID.ToString());              // Field 0
+						device.ID = writeID;
+						writeID++;
+						row.Add(writeID.ToString());
+						// Device with ID=0 is special, it is for undefined types.
+						// Even though it's ID is zero, the display order should be very high so it's at the end.
+						if (writeID == 0)
+						{
+							device.ID = 9999;
+						}
+						else
+						{
+							device.DisplayOrder = writeID;
+						}
+						row.Add(device.DisplayOrder.ToString()); // Field 1
+						row.Add(device.Name);                    // Field 2
+						row.Add(device.Comment);                 // Field 3
+
+						writer.WriteRow(row);
+					}
+					catch (Exception ex)
+					{
+						string msg = "Error " + ex.ToString() + " while saving " + uniName; // + " " + uniName;
+						if (isWiz)
+						{
+							DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						}
+						errs++;
+					}
+				}
+				writer.Close();
+			}
+			catch (Exception ex)
+			{
+				string msg = "Error " + ex.ToString() + " while saving " + uniName + "s file " + devFile;
+				if (isWiz)
+				{
+					DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+				errs++;
+			}
+			return errs;
+		}
+
+		public void ClearData()
+		{
+			treeChannels.Nodes.Clear();
+			AllUniverses = new List<Universe>();
+			AllChannels = Universe.AllChannels;
+			lViz = null;
+			lastFile = "";
+			lastID = -1;
+			dirty = false;
+
+			//private xRGBEffects xSeq = null;
+			//private LOR4Visualization lViz = null;
+
+		}
+
+
+		public int SaveUniverses(string filePath)
+		{
+			// Start ID numering at ONE instead of zero for user friendliness when editing raw CSV files.
+			// Note that they may be out of order or non-contigous in memory, but when we save them, we renumber them starting at 1 and make them contigous for user friendliness when editing raw CSV files.
+			writeID = 1;
+			int errs = 0;
+			string uniName = "";
+			string uniFile = filePath + fileUniverses;
+			try
+			{
+				CsvFileWriter writer = new CsvFileWriter(uniFile);
+				CsvRow row = new CsvRow();
+				// Create first line which is headers;
+				row.Add("ID"); // Field 0
+				row.Add(uniName + "#");      // Field 1
+				row.Add("Name");           // Field 2
+				row.Add("Location");       // Field 3
+				row.Add("Comment");        // Field 4
+				row.Add("Active");         // Field 5
+				row.Add("Size Limit");     // Field 6
+				row.Add("xLights Start#"); // Field 7
+				row.Add("Connection");     // Field 8
+				writer.WriteRow(row);
+
+				// Make sure they are sorted by universe number before we write them out, so that they will be in order when we read them back in, and also so that they will be in order for the user when they open the CSV file to edit it.
+				AllUniverses.Sort();
+				for (int u = 0; u < AllUniverses.Count; u++)
+				{
+					try
+					{
+						Universe universe = AllUniverses[u];
+						uniName = universe.Name;
+						row = new CsvRow();
+
+						//row.Add(universe.ID.ToString());                 // Field 0
+						// Lets renumber all the IDs while we'ere at it.
+						row.Add(writeID.ToString());                     // Field 0
+						universe.ID = writeID;
+						writeID++;
+						row.Add(universe.UniverseNumber.ToString());     // Field 1
+						row.Add(universe.Name);                          // Field 1
+						row.Add(universe.Location);                      // Field 3
+						row.Add(universe.Comment);                       // Field 4
+						row.Add(universe.Active.ToString());             // Field 5
+						row.Add(universe.MaxChannelsAllowed.ToString()); // Field 6
+						row.Add(universe.xLightsAddress.ToString());     // Field 7
+						row.Add(universe.Connection);                    // Field 8
+
+						writer.WriteRow(row);
+					}
+					catch (Exception ex)
+					{
+						string msg = "Error " + ex.ToString() + " while saving " + uniName; // + " " + uniName;
+						if (isWiz)
+						{
+							DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						}
+						errs++;
+					}
+				}
+				writer.Close();
+			}
+			catch (Exception ex)
+			{
+				string msg = "Error " + ex.ToString() + " while saving " + uniName + "s file " + uniFile;
+				if (isWiz)
+				{
+					DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+				errs++;
+			}
+			return errs;
+		}
+
+		public int SaveControllers(string filePath)
+		{
+			// Start ID numering at ONE instead of zero for user friendliness when editing raw CSV files.
+			// Note that they may be out of order or non-contigous in memory, but when we save them, we renumber them starting at 1 and make them contigous for user friendliness when editing raw CSV files.
+			writeID = 1;
+			int errs = 0;
+			string ctlName = ""; // For debugging exceptions
+			string ctlFile = filePath + fileControllers;
+			try
+			{
+				CsvFileWriter writer = new CsvFileWriter(ctlFile);
+				CsvRow row = new CsvRow();
+				// Create first line which is headers;
+				row.Add("ID");           // Field 0
+				row.Add(uniName);     // Field 1
+				row.Add("Controller");   // Field 2
+				row.Add("Name");         // Field 3
+				row.Add("Location");     // Field 4
+				row.Add("Comment");      // Field 5
+				row.Add("Active");       // Field 6
+				row.Add("Brand");        // Field 7
+				row.Add("Model");        // Field 8
+				row.Add("Unit#");        // Field 9
+				row.Add("Output Count"); // Field 10
+				row.Add("DMX Start");    // Field 11
+				row.Add("Voltage");      // Field 12
+
+				writer.WriteRow(row);
+
+				for (int u = 0; u < AllUniverses.Count; u++)
+				{
+					Universe universe = AllUniverses[u];
+					universe.Controllers.Sort();
+					for (int c = 0; c < universe.Controllers.Count; c++)
+					{
+						try
+						{
+							Controller controller = universe.Controllers[c];
+							ctlName = controller.Name;
+							row = new CsvRow();
+
+							//row.Add(controller.Universe.ID.ToString());             // Field 0
+							// Lets renumber all the IDs while we'ere at it.
+							row.Add(writeID.ToString());                     // Field 0
+							controller.ID = writeID;
+							writeID++;
+							row.Add(controller.Universe.ID.ToString()); // Field 1
+							row.Add(controller.Identifier);                            // Field 2
+							row.Add(controller.Name);                                  // Field 3
+							row.Add(controller.Location);                              // Field 4
+							row.Add(controller.Comment);                               // Field 5
+							row.Add(controller.Active.ToString());                     // Field 6
+							row.Add(controller.ControllerBrand);                       // field 7
+							row.Add(controller.ControllerModel);                       // Field 8
+							row.Add(controller.UnitID.ToString());                     // Filed 9									
+							row.Add(controller.OutputCount.ToString());                // Field 10
+							row.Add(controller.StartAddress.ToString());            // Field 11
+							row.Add(controller.Voltage.ToString());                    // Field 12
+
+							writer.WriteRow(row);
+						}
+						catch (Exception ex)
+						{
+							string msg = "Error " + ex.ToString() + " while saving Controller " + ctlName;
+							if (isWiz)
+							{
+								DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+							}
+							errs++;
+						}
+					}
+				}
+				writer.Close();
+			}
+			catch (Exception ex)
+			{
+				string msg = "Error " + ex.ToString() + " while saving Controllers file " + ctlFile;
+				if (isWiz)
+				{
+					DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+				errs++;
+			}
+			return errs;
+		}
+		public int SaveChannels(string filePath)
+		{
+			// Note: Channels are saved in order of universe, then controller, then output number.
+			// Also, we need to save the universe and controller IDs in the channel file so that we can link the channels to the correct universe and controller when loading, rather than relying on the order of the universes and controllers in the file which could get messed up if there are any errors in the file
+			// Start ID numering at ONE instead of zero for user friendliness when editing raw CSV files.
+			// Note that they may be out of order or non-contigous in memory, but when we save them, we renumber them starting at 1 and make them contigous for user friendliness when editing raw CSV files.
+			writeID = 1;
+			int errs = 0;
+			string chnName = ""; // debugging exceptions
+			string chnFile = filePath + fileChannels;
+
+			try
+			{
+				CsvFileWriter writer = new CsvFileWriter(chnFile);
+				CsvRow row = new CsvRow();
+				// Create first line which is headers;
+				row.Add("ID");           // Field 0
+				row.Add(uniName + "#");    // Field 1
+				row.Add("ControllerID"); // Field 2
+				row.Add("Output#");      // Field 3
+				row.Add("Name");         // Field 4
+				row.Add("Location");     // Field 5
+				row.Add("Comment");      // Field 6
+				row.Add("Active");       // Field 7
+				row.Add("Type");         // Field 8
+				row.Add("Color");        // Field 9
+				row.Add("ColorName");    // Field 10
+
+				writer.WriteRow(row);
+
+				AllUniverses.Sort();
+				for (int u = 0; u < AllUniverses.Count; u++)
+				{
+					Universe universe = AllUniverses[u];
+					universe.Controllers.Sort();
+					for (int q = 0; q < universe.Controllers.Count; q++)
+					{
+						Controller controller = universe.Controllers[q];
+						controller.Channels.Sort();
+						for (int c = 0; c < controller.Channels.Count; c++)
+						{
+							try
+							{
+								Channel channel = controller.Channels[c];
+								chnName = channel.Name;
+								row = new CsvRow();
+
+								//row.Add(channel.Universe.ID.ToString());           // Field 0
+								// Lets renumber all the IDs while we'ere at it.
+								row.Add(writeID.ToString());                            // Field 0
+								channel.ID = writeID;
+								writeID++;
+								row.Add(channel.Universe.UniverseNumber.ToString()); // Field 1
+								row.Add(channel.Controller.ID.ToString());           // Field 2
+																																		 //row.Add(channel.Controller.Identifier);            // Field 2
+								row.Add(channel.OutputNum.ToString());                  // Field 3
+								row.Add(channel.Name);                                  // Field 4
+								row.Add(channel.Location);                              // Field 5
+								row.Add(channel.Comment);                               // Field 6
+								row.Add(channel.Active.ToString());                     // Field 7
+								row.Add(channel.DeviceType.ID.ToString());              // Field 8
+								row.Add(LOR4.LOR4Admin.ColorToHex(channel.Color));      // Field 9
+								row.Add(LOR4.LOR4Admin.NearestColorName(channel.Color));       // Field 10
+																																							 //row.Add(Etc.ColorName(channel.Color));       // Field 10
+
+								writer.WriteRow(row);
+							} // end try for Channels
+							catch (Exception ex)
+							{
+								string msg = "Error " + ex.ToString() + " while saving Channel " + chnName;
+								if (isWiz)
+								{
+									DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+								}
+								errs++;
+							}
+						} // End Channel loop
+					} // End Controller loop
+				} // End Universe loop
+				writer.Close();
+			} // End try for StreamWriter (create file)
+			catch (Exception ex)
+			{
+				string msg = "Error " + ex.ToString() + " while saving Channels file " + chnFile;
+				if (isWiz)
+				{
+					DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+				errs++;
+			}
+			return errs;
+		}
+
+		public int ExportChannels(string filePath)
+		{
+			// Note: Channels are saved in order of universe, then controller, then output number.
+			// Also, we need to save the universe and controller IDs in the channel file so that we can link the channels to the correct universe and controller when loading, rather than relying on the order of the universes and controllers in the file which could get messed up if there are any errors in the file
+			// Start ID numering at ONE instead of zero for user friendliness when editing raw CSV files.
+			// Note that they may be out of order or non-contigous in memory, but when we save them, we renumber them starting at 1 and make them contigous for user friendliness when editing raw CSV files.
+			writeID = 1;
+			int errs = 0;
+			string chnName = ""; // debugging exceptions
+			string chnFile = filePath + "Channels.csv";
+
+			try
+			{
+				CsvFileWriter writer = new CsvFileWriter(chnFile);
+				CsvRow row = new CsvRow();
+				// Create first line which is headers;
+				row.Add(uniName + "#");      // Field 0
+				row.Add(uniName + "Name");   // Field 1
+				row.Add("ControllerID");   // Field 2
+				row.Add("ControllerName"); // Field 3
+				row.Add("Output#");        // Field 4
+				row.Add("Address");     // Field 5
+				row.Add("Name");           // Field 6
+				row.Add("Location");       // Field 7
+				row.Add("Comment");        // Field 8
+				row.Add("Active");         // Field 9
+				row.Add("Type");           // Field 10
+				row.Add("Color");          // Field 11
+				row.Add("ColorName");      // Field 12
+
+				writer.WriteRow(row);
+
+				AllUniverses.Sort();
+				for (int u = 0; u < AllUniverses.Count; u++)
+				{
+					Universe universe = AllUniverses[u];
+					universe.Controllers.Sort();
+					for (int q = 0; q < universe.Controllers.Count; q++)
+					{
+						Controller controller = universe.Controllers[q];
+						controller.Channels.Sort();
+						for (int c = 0; c < controller.Channels.Count; c++)
+						{
+							try
+							{
+								Channel channel = controller.Channels[c];
+								chnName = channel.Name;
+								row = new CsvRow();
+								row.Add(channel.UniverseNumber.ToString());        // Field 0
+								row.Add(channel.Universe.Name);                // Field 1
+								row.Add(channel.Controller.Identifier);         // Field 2
+								row.Add(channel.Controller.Name);              // Field 3
+								row.Add(channel.OutputNum.ToString());             // Field 4
+								row.Add(channel.Address.ToString());            // Field 5
+								row.Add(channel.Name);                             // Field 6
+								row.Add(channel.Location);                         // Field 7
+								row.Add(channel.Comment);                          // Field 8
+								row.Add(channel.Active.ToString());                // Field 9
+								row.Add(channel.DeviceType.Name);                  // Field 10
+								row.Add(LOR4.LOR4Admin.ColorToHex(channel.Color)); // Field 11
+								row.Add(channel.ColorName);                        // Field 12
+								writer.WriteRow(row);
+							} // end try for Channels
+							catch (Exception ex)
+							{
+								string msg = "Error " + ex.ToString() + " while saving Channel " + chnName;
+								if (isWiz)
+								{
+									DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+								}
+								errs++;
+							}
+						} // End Channel loop
+					} // End Controller loop
+				} // End Universe loop
+				writer.Close();
+			} // End try for StreamWriter (create file)
+			catch (Exception ex)
+			{
+				string msg = "Error " + ex.ToString() + " while saving Channels file " + chnFile;
+				if (isWiz)
+				{
+					DialogResult dr = MessageBox.Show(this, msg, "EXCEPTION", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+				errs++;
+			}
+			return errs;
+		}
+
+		#endregion // Save and Load Data Files
+
+		#region Form Events
+		private void frmList_Load(object sender, EventArgs e)
+		{
+			LoadForm();
+		}
+		private void treeChannels_KeyUp(object sender, KeyEventArgs e)
+		{
+			//Tree_KeyUp(e);
+		}
+		private void treeChannels_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			Tree_KeyPress(e);
+		}
+		private void treeChannelList_DoubleClick(object sender, EventArgs e)
+		{
+			OpenSelectedNode();
+		}
+		private void btnWiz_Click(object sender, EventArgs e)
+		{
+			DoTheWizardThing();
+		}
+		private void btnSave_Click(object sender, EventArgs e)
+		{
+			SaveDataFiles();
+		}
+		private void btnSettings_Click(object sender, EventArgs e)
+		{
+			mnuSettings.Show(btnSettings, new System.Drawing.Point(0, btnSettings.Height));
+		}
+		private void btnDevices_Click(object sender, EventArgs e)
+		{
+			EditDevices();
+		}
 		private void btnRemove_Click(object sender, EventArgs e)
 		{
-			TreeNodeAdv node = treeChannels.SelectedNode;
-			if (node != null)
-			{
-				Channel killChannel = (Channel)node.Tag;
-				RemoveChannel(killChannel);
-			}
-		}
-
-		private bool RemoveChannel(Channel channel)
-		{
-			// Returns True if channel successfully removed
-			bool success = false;
-			Controller controller = channel.Controller;
-			int foundAt = -1;
-			for (int i = 0; i < controller.Channels.Count; i++)
-			{
-				if (controller.Channels[i].ID == channel.ID)
-				{
-					controller.Channels.RemoveAt(i);
-					foundAt = i;
-					i = controller.Channels.Count; // Break out of loop
-				}
-			}
-			if (foundAt >= 0)
-			{
-				TreeNodeAdv chNode = (TreeNodeAdv)channel.Tag;
-				chNode.Remove();
-				if (AllChannels.Contains(channel))
-				{
-					AllChannels.Remove(channel);
-				}
-				UpdateStatus();
-				success = true;
-			}
-			return success;
-		}
-
-		private bool RemoveController(Controller controller)
-		{
-			// Returns True if controller successfully removed
-			// Important: Does NOT ask the user for confirmation, so be sure to call this from a method that does (like DeleteNode)
-			bool success = false;
-			Universe universe = controller.Universe;
-			int foundAt = -1;
-			for (int i = 0; i < universe.Controllers.Count; i++)
-			{
-				if (universe.Controllers[i].ID == controller.ID)
-				{
-					universe.Controllers.RemoveAt(i);
-					foundAt = i;
-					i = universe.Controllers.Count; // Break out of loop
-				}
-			}
-			if (foundAt >= 0)
-			{
-				TreeNodeAdv ctrlNode = (TreeNodeAdv)controller.Tag;
-				ctrlNode.Remove();
-				if (AllControllers.Contains(controller))
-				{
-					AllControllers.Remove(controller);
-				}
-				UpdateStatus();
-				success = true;
-			}
-			return success;
-		}
-
-		private bool RemoveUniverse(Universe universe)
-		{
-			// Returns True if universe successfully removed
-			// Important: Does NOT ask the user for confirmation, so be sure to call this from a method that does (like DeleteNode)
-			bool success = false;
-			int foundAt = -1;
-			for (int i = 0; i < AllUniverses.Count; i++)
-			{
-				if (AllUniverses[i].ID == universe.ID)
-				{
-					AllUniverses.RemoveAt(i);
-					foundAt = i;
-					i = AllUniverses.Count; // Break out of loop
-				}
-			}
-			if (foundAt >= 0)
-			{
-				TreeNodeAdv uniNode = (TreeNodeAdv)universe.Tag;
-				uniNode.Remove();
-				if (AllUniverses.Contains(universe))
-				{
-					AllUniverses.Remove(universe);
-				}
-				UpdateStatus();
-				success = true;
-			}
-			return success;
+			RemoveNode();
 		}
 		private void changeDatabaseLocationToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			SelectDBPath();
 		}
-
+		private void pnlHelp_Click(object sender, EventArgs e)
+		{
+			System.Diagnostics.Process.Start(helpPage);
+		}
+		private void pnlAbout_Click(object sender, EventArgs e)
+		{
+			ShowAbout();
+		}
+		private void btnReport_Click(object sender, EventArgs e)
+		{
+			GenerateReports();
+		}
+		private void frmList_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			CloseForm(ref e);
+		}
+		private void frmList_Click(object sender, EventArgs e)
+		{
+			int x = 1;
+		}
+		private void btnUniverse_Click(object sender, EventArgs e)
+		{
+			Universe_AddEdit();
+		}
+		private void btnController_Click(object sender, EventArgs e)
+		{
+			Controller_AddEdit();
+		}
+		private void btnChannel_Click(object sender, EventArgs e)
+		{
+			Channel_AddEdit();
+		}
+		private void treeChannels_AfterSelect(object sender, EventArgs e)
+		{
+			Tree_SelectNode();
+		}
+		private void frmList_Resize(object sender, EventArgs e)
+		{
+			FormResize();
+		}
 		private void dropModeToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 
 		}
-
 		private void preferencesToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 
 		}
+		#endregion // Form Events
 
-		private void btnSettings_Click(object sender, EventArgs e)
-		{
-			mnuSettings.Show(btnSettings, new System.Drawing.Point(0, btnSettings.Height));
-		}
+	} // End Form Class
 
-		private void btnDevices_Click(object sender, EventArgs e)
-		{
-			frmDeviceTypes devform = new frmDeviceTypes();
-			devform.LoadDevices(DeviceTypes);
-			DialogResult dr = devform.ShowDialog(this);
-			if (dr == DialogResult.OK) 
-			{
-				// This form's DeviceType list has been updated by the btnOK event on the devices form
-				// BUT we now need to save it to the data file
-				string tp = Fyle.GetUserTempPath;
-				string f = "";
-				string g = "";
-
-				this.Enabled = false;
-				this.Cursor = Cursors.WaitCursor;
-				lblLoading.Text = "Saving...";
-				lblLoading.Visible = true;
-				lblLoading.BringToFront();
-
-				int errs = SaveDevices(tp);
-				string tf = tp + fileDeviceTypes;
-				if (Fyle.Exists(tf))
-				{
-					f = dbPath + "Backup." + fileDeviceTypes;
-					if (Fyle.Exists(f))
-						Fyle.SafeDelete(f);
-					g = dbPath + fileDeviceTypes;
-					Fyle.SafeCopy(g, f);
-				}
-
-				this.Enabled = true;
-				this.Cursor = Cursors.Default;
-				lblLoading.Visible = false;
-				lblLoading.SendToBack();
-				treeChannels.Select();
-			}
-		}
-	}
-
+	#region Fuzzy List Class
 	public class FuzzyList : IComparable<FuzzyList>
 	{
 		public double Score = 0;
@@ -4334,6 +4218,9 @@ using (ctlrForm modalChild = new ctlrForm())
 			// Note: Compare other item to this item (instead of normal this item to other) to get a REVERSE sort with highest scores first
 			return otherItem.Score.CompareTo(Score);
 		}
-	}
-}
+
+
+	} // End class FuzzyList
+	#endregion // Fuzzy List Class
+} // End namespace
 

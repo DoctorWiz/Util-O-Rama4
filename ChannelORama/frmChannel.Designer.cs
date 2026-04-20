@@ -59,6 +59,9 @@ namespace UtilORama4
 			picMulti = new PictureBox();
 			picColor = new PictureBox();
 			cboDevice = new ComboBox();
+			btnPrevious = new Button();
+			btnNext = new Button();
+			label1 = new Label();
 			((System.ComponentModel.ISupportInitialize)numOutput).BeginInit();
 			((System.ComponentModel.ISupportInitialize)picRGB).BeginInit();
 			((System.ComponentModel.ISupportInitialize)picRGBW).BeginInit();
@@ -319,7 +322,7 @@ namespace UtilORama4
 			lblDirty.AutoSize = true;
 			lblDirty.Font = new Font("Segoe UI", 6.75F, FontStyle.Italic);
 			lblDirty.ForeColor = SystemColors.GrayText;
-			lblDirty.Location = new Point(37, 952);
+			lblDirty.Location = new Point(609, 895);
 			lblDirty.Margin = new Padding(7, 0, 7, 0);
 			lblDirty.Name = "lblDirty";
 			lblDirty.Size = new Size(58, 25);
@@ -331,7 +334,7 @@ namespace UtilORama4
 			picRGB.BackColor = Color.FromArgb(0, 0, 1);
 			picRGB.BorderStyle = BorderStyle.Fixed3D;
 			picRGB.Image = (Image)resources.GetObject("picRGB.Image");
-			picRGB.Location = new Point(123, 877);
+			picRGB.Location = new Point(37, 717);
 			picRGB.Name = "picRGB";
 			picRGB.Size = new Size(80, 72);
 			picRGB.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -344,7 +347,7 @@ namespace UtilORama4
 			picRGBW.BackColor = Color.FromArgb(0, 1, 0);
 			picRGBW.BorderStyle = BorderStyle.Fixed3D;
 			picRGBW.Image = (Image)resources.GetObject("picRGBW.Image");
-			picRGBW.Location = new Point(37, 877);
+			picRGBW.Location = new Point(15, 693);
 			picRGBW.Name = "picRGBW";
 			picRGBW.Size = new Size(80, 72);
 			picRGBW.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -358,7 +361,7 @@ namespace UtilORama4
 			picMulti.BackColor = Color.FromArgb(1, 0, 0);
 			picMulti.BorderStyle = BorderStyle.Fixed3D;
 			picMulti.Image = (Image)resources.GetObject("picMulti.Image");
-			picMulti.Location = new Point(209, 877);
+			picMulti.Location = new Point(57, 741);
 			picMulti.Name = "picMulti";
 			picMulti.Size = new Size(80, 72);
 			picMulti.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -382,6 +385,8 @@ namespace UtilORama4
 			// 
 			// cboDevice
 			// 
+			cboDevice.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+			cboDevice.AutoCompleteSource = AutoCompleteSource.ListItems;
 			cboDevice.FormattingEnabled = true;
 			cboDevice.Location = new Point(152, 276);
 			cboDevice.Name = "cboDevice";
@@ -393,6 +398,44 @@ namespace UtilORama4
 			cboDevice.Leave += cboDevice_Leave;
 			cboDevice.Validating += cboDevice_Validating;
 			// 
+			// btnPrevious
+			// 
+			btnPrevious.DialogResult = DialogResult.OK;
+			btnPrevious.Enabled = false;
+			btnPrevious.Image = (Image)resources.GetObject("btnPrevious.Image");
+			btnPrevious.Location = new Point(16, 926);
+			btnPrevious.Margin = new Padding(7, 6, 7, 6);
+			btnPrevious.Name = "btnPrevious";
+			btnPrevious.Size = new Size(58, 58);
+			btnPrevious.TabIndex = 91;
+			tipTool.SetToolTip(btnPrevious, "Save and move to the previous channel on this controller.");
+			btnPrevious.UseVisualStyleBackColor = true;
+			// 
+			// btnNext
+			// 
+			btnNext.DialogResult = DialogResult.OK;
+			btnNext.Enabled = false;
+			btnNext.Image = (Image)resources.GetObject("btnNext.Image");
+			btnNext.Location = new Point(88, 926);
+			btnNext.Margin = new Padding(7, 6, 7, 6);
+			btnNext.Name = "btnNext";
+			btnNext.Size = new Size(58, 58);
+			btnNext.TabIndex = 92;
+			tipTool.SetToolTip(btnNext, "Save and move to the next channel on this controller.");
+			btnNext.UseVisualStyleBackColor = true;
+			// 
+			// label1
+			// 
+			label1.AutoSize = true;
+			label1.Location = new Point(22, 856);
+			label1.Margin = new Padding(7, 0, 7, 0);
+			label1.Name = "label1";
+			label1.Size = new Size(124, 64);
+			label1.TabIndex = 93;
+			label1.Text = "Prev  Next\r\nChannel";
+			label1.TextAlign = ContentAlignment.TopCenter;
+			tipTool.SetToolTip(label1, "Save and move to the previous or next channel on this controller.");
+			// 
 			// frmChannel
 			// 
 			AcceptButton = btnOK;
@@ -400,6 +443,8 @@ namespace UtilORama4
 			AutoScaleMode = AutoScaleMode.Font;
 			CancelButton = btnCancel;
 			ClientSize = new Size(832, 1011);
+			Controls.Add(btnNext);
+			Controls.Add(btnPrevious);
 			Controls.Add(cboDevice);
 			Controls.Add(picMulti);
 			Controls.Add(picRGBW);
@@ -426,6 +471,7 @@ namespace UtilORama4
 			Controls.Add(btnOK);
 			Controls.Add(picColor);
 			Controls.Add(lblDevice);
+			Controls.Add(label1);
 			FormBorderStyle = FormBorderStyle.FixedDialog;
 			Margin = new Padding(7, 6, 7, 6);
 			MaximizeBox = false;
@@ -480,5 +526,8 @@ namespace UtilORama4
 		private System.Windows.Forms.PictureBox picMulti;
 		private System.Windows.Forms.PictureBox picColor;
 		private System.Windows.Forms.ComboBox cboDevice;
+		private Button btnPrevious;
+		private Button btnNext;
+		private Label label1;
 	}
 }
